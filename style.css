@@ -859,3 +859,222 @@ body {
     animation: floatToddy 3s ease-in-out infinite;
     filter: drop-shadow(0 0 20px rgba(153, 69, 255, 0.5));
 }
+/* ============================================
+   FIX 1: TOKENOMICS MASCOT TRANSPARENCY
+   This makes the white box behind Toddy
+   in tokenomics section disappear!
+   ============================================ */
+.tokenomics-mascot img {
+    background: transparent !important;
+    mix-blend-mode: screen;
+    filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.5));
+}
+
+/* ============================================
+   FIX 2: SECTION DIVIDER SIZE — HALF SIZE
+   This makes the divider image show at
+   half size and centred — not full width!
+   ============================================ */
+.section-divider {
+    width: 100%;
+    text-align: center;
+    line-height: 0;
+    margin: -5px 0;
+}
+.section-divider img {
+    width: 50% !important;
+    max-width: 500px !important;
+    height: auto !important;
+    display: block !important;
+    margin: 0 auto !important;
+    opacity: 0.75 !important;
+}
+
+/* ============================================
+   FIX 3: FLOAT ANIMATION ALL MASCOTS
+   Every Toddy image on every section
+   will gently float up and down!
+   ============================================ */
+.about-mascot img,
+.tokenomics-mascot img,
+.howtobuy-mascot img,
+.roadmap-mascot img,
+.community-mascot img {
+    animation: float 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(153, 69, 255, 0.5));
+}
+
+/* ============================================
+   FIX 4: MOBILE — ABOUT SECTION LAYOUT
+   On mobile: Toddy image goes on TOP,
+   then text below. Clean and clear!
+   ============================================ */
+@media (max-width: 768px) {
+    .about-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 30px !important;
+    }
+    .about-mascot {
+        order: 1 !important;
+        width: 100% !important;
+        text-align: center !important;
+    }
+    .about-mascot img {
+        max-width: 280px !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+    .about-text {
+        order: 2 !important;
+    }
+    .about-stats {
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+}
+
+/* ============================================
+   FIX 5: MOBILE — TOKENOMICS SECTION LAYOUT
+   On mobile: Stats go on TOP,
+   Toddy image goes BELOW stats.
+   This prevents two Toddys appearing
+   back to back in the middle!
+   ============================================ */
+@media (max-width: 768px) {
+    .tokenomics-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 30px !important;
+    }
+    .tokenomics-cards {
+        order: 1 !important;
+        width: 100% !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 15px !important;
+    }
+    .tokenomics-mascot {
+        order: 2 !important;
+        text-align: center !important;
+    }
+    .tokenomics-mascot img {
+        max-width: 280px !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+    .token-card {
+        padding: 20px 15px !important;
+    }
+}
+
+/* ============================================
+   FIX 6: MOBILE — HOW TO BUY LAYOUT
+   On mobile: Toddy image on TOP,
+   steps listed clearly below!
+   ============================================ */
+@media (max-width: 768px) {
+    .howtobuy-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 30px !important;
+    }
+    .howtobuy-mascot {
+        order: 1 !important;
+        text-align: center !important;
+    }
+    .howtobuy-mascot img {
+        max-width: 280px !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+    .steps {
+        order: 2 !important;
+        width: 100% !important;
+    }
+}
+
+/* ============================================
+   FIX 7: MOBILE — COMMUNITY SECTION LAYOUT
+   YOU REPORTED THIS BUG!
+   On mobile: Title + text FIRST,
+   then social buttons,
+   then Toddy image at BOTTOM.
+   ============================================ */
+@media (max-width: 768px) {
+    .community-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 30px !important;
+    }
+    .community-text {
+        order: 1 !important;
+    }
+    .community-socials {
+        order: 2 !important;
+    }
+    .community-mascot {
+        order: 3 !important;
+        text-align: center !important;
+    }
+    .community-mascot img {
+        max-width: 280px !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+    .social-buttons {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 15px !important;
+    }
+}
+
+/* ============================================
+   FIX 8: MOBILE — HERO SECTION
+   Title size reduced for small screens.
+   Buttons become full width.
+   Layout stacks vertically.
+   ============================================ */
+@media (max-width: 768px) {
+    .hero-content {
+        flex-direction: column !important;
+        text-align: center !important;
+        padding: 0 20px !important;
+    }
+    .hero-title {
+        font-size: 2.2rem !important;
+    }
+    .hero-buttons {
+        justify-content: center !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    .btn-primary,
+    .btn-secondary {
+        width: 100% !important;
+        text-align: center !important;
+    }
+    .hero-mascot img {
+        width: 280px !important;
+    }
+}
+
+/* ============================================
+   FIX 9: MOBILE — ROADMAP CARDS
+   Phase cards stack to single column
+   on mobile screens!
+   ============================================ */
+@media (max-width: 768px) {
+    .roadmap-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+    .roadmap-card {
+        padding: 25px 20px !important;
+    }
+}
