@@ -64,7 +64,7 @@ window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.heig
       alt="Toddy Logo"/>
     <span>$TODDY</span>
   </div>
-  <ul class="nav-links">
+  <ul class="nav-links" id="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#tokenomics">
       Tokenomics</a></li>
@@ -77,8 +77,15 @@ window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.heig
   </ul>
   <a href="#howtobuy" 
     class="nav-btn">Buy $TODDY</a>
+  <button class="hamburger"
+        id="hamburger"
+        aria-label="Menu">
+    <span></span>
+    <span></span>
+    <span></span>
+</button>
 </nav>
-
+  
 <!-- HERO SECTION -->
 <section class="hero" id="home">
   <div class="hero-bg">
