@@ -1218,3 +1218,225 @@ body {
         font-size: 2rem !important;
     }
 }
+/* =============================================
+   MOBILE HAMBURGER MENU
+   ============================================= */
+.hamburger {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+    gap: 5px;
+    background: none;
+    border: none;
+    padding: 5px;
+}
+.hamburger span {
+    width: 25px;
+    height: 3px;
+    background: var(--gold);
+    border-radius: 3px;
+    transition: all 0.3s ease;
+    display: block;
+}
+
+/* =============================================
+   MOBILE RESPONSIVE — ALL SECTIONS
+   ============================================= */
+@media (max-width: 768px) {
+
+    /* NAV */
+    .hamburger {
+        display: flex !important;
+    }
+    .nav-links {
+        display: none !important;
+        position: fixed !important;
+        top: 70px !important;
+        left: 0 !important;
+        right: 0 !important;
+        background: rgba(5,5,5,0.98) !important;
+        flex-direction: column !important;
+        padding: 20px !important;
+        gap: 20px !important;
+        border-bottom: 1px solid
+            rgba(201,168,76,0.3) !important;
+        z-index: 999 !important;
+    }
+    .nav-links.open {
+        display: flex !important;
+    }
+    .nav-links a {
+        font-size: 1.1rem !important;
+        padding: 10px 0 !important;
+    }
+    .nav-btn {
+        display: none !important;
+    }
+    .navbar {
+        padding: 15px 20px !important;
+    }
+
+    /* HERO */
+    .hero-content {
+        flex-direction: column !important;
+        text-align: center !important;
+        padding: 0 20px !important;
+        gap: 30px !important;
+        justify-content: center !important;
+    }
+    .hero-title {
+        font-size: 2.2rem !important;
+        line-height: 1.2 !important;
+    }
+    .hero-subtitle {
+        font-size: 1rem !important;
+    }
+    .hero-buttons {
+        justify-content: center !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    .btn-primary, .btn-secondary {
+        width: 100% !important;
+        text-align: center !important;
+        font-size: 1rem !important;
+    }
+    .hero-mascot img {
+        width: 260px !important;
+    }
+    .hero-badge {
+        font-size: 0.8rem !important;
+    }
+
+    /* ABOUT */
+    .about-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 30px !important;
+    }
+    .about-mascot {
+        order: 1 !important;
+        width: 100% !important;
+    }
+    .about-mascot img {
+        max-width: 260px !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+    .about-text {
+        order: 2 !important;
+    }
+    .about-stats {
+        flex-direction: column !important;
+        gap: 15px !important;
+        align-items: center !important;
+    }
+    .stat {
+        width: 100% !important;
+        max-width: 280px !important;
+    }
+
+    /* TOKENOMICS */
+    .tokenomics-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 30px !important;
+    }
+    .tokenomics-cards {
+        order: 1 !important;
+        width: 100% !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 15px !important;
+    }
+    .tokenomics-mascot {
+        order: 2 !important;
+        text-align: center !important;
+    }
+    .tokenomics-mascot img {
+        max-width: 260px !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+    .token-card {
+        padding: 20px 15px !important;
+    }
+
+    /* HOW TO BUY */
+    .howtobuy-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 30px !important;
+    }
+    .howtobuy-mascot {
+        order: 1 !important;
+        text-align: center !important;
+    }
+    .howtobuy-mascot img {
+        max-width: 260px !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+    .steps {
+        order: 2 !important;
+        width: 100% !important;
+    }
+
+    /* ROADMAP */
+    .roadmap-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+    .roadmap-card, .phase {
+        padding: 25px 20px !important;
+    }
+
+    /* COMMUNITY — YOUR BUG FIXED */
+    .community-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 30px !important;
+    }
+    .community-text {
+        order: 1 !important;
+    }
+    .community-socials {
+        order: 2 !important;
+    }
+    .community-mascot {
+        order: 3 !important;
+        text-align: center !important;
+    }
+    .community-mascot img {
+        max-width: 260px !important;
+        margin: 0 auto !important;
+        display: block !important;
+    }
+    .social-buttons {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 15px !important;
+        width: 100% !important;
+    }
+    .social-btn {
+        width: 100% !important;
+        text-align: center !important;
+        justify-content: center !important;
+    }
+
+    /* GENERAL */
+    .section-title {
+        font-size: 2rem !important;
+    }
+    .container {
+        padding: 0 15px !important;
+    }
+    section {
+        padding: 60px 0 !important;
+    }
+}
