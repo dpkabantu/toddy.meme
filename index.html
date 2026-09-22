@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport"
+    content="width=device-width,
+             initial-scale=1.0" />
+  <title>
+    $TODDY — The Night Trader of Crypto
+  </title>
+
+  <!-- SEO -->
+  <meta name="description"
+    content="$TODDY is the Kopi Luwak
+    Meme Coin on Solana. The Night
+    Trader of Crypto. Fair Launch.
+    0% Team Tokens. 90% Liquidity
+    Locked Forever." />
+  <meta name="keywords"
+    content="TODDY, meme coin, Solana,
+    Kopi Luwak, civet cat, night trader,
+    crypto, fair launch" />
+
+  <!-- Open Graph -->
+  <meta property="og:type"
+    content="website" />
+  <meta property="og:url"
+    content="https://toddy.meme/" />
+  <meta property="og:title"
+    content="$TODDY — The Night Trader
+    of Crypto" />
+  <meta property="og:description"
+    content="The Kopi Luwak Meme Coin
+    on Solana. Fair Launch. 0% Team
+    Tokens. 90% Liquidity Locked." />
+  <meta property="og:image"
+    content="https://toddy.meme/assets/og-image.jpg" />
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card"
+    content="summary_large_image" />
+  <meta name="twitter:title"
+    content="$TODDY — The Night Trader
+    of Crypto" />
+  <meta name="twitter:description"
+    content="The Kopi Luwak Meme Coin
+    on Solana. Fair Launch." />
+  <meta name="twitter:image"
+    content="https://toddy.meme/assets/twitter-banner.jpg" />
+
+  <!-- Favicon — SINGLE, CLEAN -->
+  <link rel="icon" type="image/png"
+    href="assets/coin-logo.png" />
+
+  <!-- Google Fonts -->
+  <link rel="preconnect"
+    href="https://fonts.googleapis.com" />
+  <link rel="preconnect"
+    href="https://fonts.gstatic.com"
+    crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cinzel:wght@400;700&display=swap"
+    rel="stylesheet" />
+
+  <!-- Stylesheet -->
+  <link rel="stylesheet" href="style.css" />
+
+  <!-- NO inline scripts or canvas in head
+       Everything is in script.js at body end -->
+</head>
+<body>
+
+<!-- ===================================
+     NAVBAR
+     =================================== -->
+<nav class="navbar" id="navbar">
+
+  <div class="nav-logo">
+    <img src="assets/coin-logo.png"
+         alt="$TODDY Logo" />
+    <span>$TODDY</span>
+  </div>
+
+  <ul class="nav-links" id="nav-links">
+    <li><a href="#about">About</a></li>
+    <li>
+      <a href="#tokenomics">Tokenomics</a>
+    </li>
+    <li>
+      <a href="#howtobuy">How To Buy</a>
+    </li>
+    <li>
+      <a href="#roadmap">Roadmap</a>
+    </li>
+    <li>
+      <a href="#community">Community</a>
+    </li>
+  </ul>
+
+  <a href="#howtobuy" class="nav-btn">
+    Buy $TODDY
+  </a>
+
+  <button class="hamburger"
+          id="hamburger"
+          aria-label="Open Menu"
+          aria-expanded="false">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
+</nav>
+
+<!-- ===================================
+     HERO
+     =================================== -->
+<section class="hero" id="home">
+
+  <div class="hero-bg">
+    <img src="assets/hero-bg.jpg"
+         alt="Night Sky"
+         class="hero-bg-img" />
+  </div>
+
+  <!-- Sparkle canvas: ONE instance only -->
+  <canvas id="sparkle-canvas"></canvas>
+
+  <div class="hero-content">
+
+    <div class="hero-text">
+
+      <div class="hero-badge">
+        🌙 Fair Launch on Solana
+      </div>
+
+      <h1 class="hero-title">
+        The Night Trader<br />
+        <span class="gold-text">
+          of Crypto
+        </span>
+      </h1>
+
+      <p class="hero-subtitle">
+        Same Caffeine. Different Life.<br />
+        $TODDY — The Kopi Luwak Meme Coin
+        on Solana.
+      </p>
+
+      <div class="hero-buttons">
+        <a href="#howtobuy"
+           class="btn-primary">
+          Buy $TODDY 🚀
+        </a>
+        <a href="#about"
+           class="btn-secondary">
+          Learn More
+        </a>
+      </div>
+
+      <!-- CA box with copy button -->
+      <div class="hero-contract"
+           id="ca-box">
+        <span id="ca-text">
+          CA: TBA — Fair Launch
+        </span>
+        <button class="copy-btn"
+                id="copy-btn"
+                aria-label="Copy address">
+          📋
+        </button>
+      </div>
+
+    </div>
+
+    <!-- FIXED: was toddy-hero.png
+         NOW: assets/hero-mascot.png -->
+    <div class="hero-mascot">
+      <img src="assets/hero-mascot.png"
+           alt="Toddy the Night Trader" />
+    </div>
+
+  </div>
+
+  <div class="hero-scroll">
+    ↓ Scroll Down
+  </div>
+
+</section>
+
+<!-- Section Divider -->
+<div class="section-divider">
+  <img src="assets/section-divider.png"
+       alt="" />
+</div>
+
+<!-- ===================================
+     ABOUT
+     =================================== -->
+<section class="about" id="about">
+
+  <div class="about-bg">
+    <img src="assets/about-bg-pattern.png"
+         alt=""
+         class="about-bg-img" />
+  </div>
+
+  <div class="container">
+    <div class="about-grid">
+
+      <div class="about-mascot">
+        <img src="assets/about-mascot.png"
+             alt="Toddy the Civet" />
+      </div>
+
+      <div class="about-text">
+        <h2 class="section-title">
+          Who is
+          <span class="gold-text">
+            Toddy?
+          </span>
+        </h2>
+        <p>
+          Deep in the jungles of Southeast
+          Asia lives the most legendary
+          coffee connoisseur in the animal
+          kingdom — Toddy the Civet.
+        </p>
+        <p>
+          By day he sleeps. By night he
+          trades. Fueled by the rarest
+          coffee on earth — Kopi Luwak —
+          Toddy navigates the crypto
+          markets with the precision of
+          a seasoned night trader.
+        </p>
+        <p>
+          <span class="gold-text">
+            Coffee Big Dreams.
+            Bigger Gains.
+          </span>
+        </p>
+        <div class="about-stats">
+          <div class="stat">
+            <span class="stat-number">
+              100%
+            </span>
+            <span class="stat-label">
+              Fair Launch
+            </span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">
+              0%
+            </span>
+            <span class="stat-label">
+              Team Tokens
+            </span>
+          </div>
+          <div class="stat">
+            <span class="stat-number">
+              SOL
+            </span>
+            <span class="stat-label">
+              Blockchain
+            </span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Section Divider -->
+<div class="section-divider">
+  <img src="assets/section-divider.png"
+       alt="" />
+</div>
+
+<!-- ===================================
+     TOKENOMICS — TYPO FIXED
+     =================================== -->
+<section class="tokenomics"
+         id="tokenomics">
+  <div class="container">
+
+    <h2 class="section-title center">
+      <span class="gold-text">
+        Tokenomics
+      </span> ☕
+    </h2>
+
+    <div class="tokenomics-grid">
+
+      <div class="tokenomics-cards">
+
+        <div class="token-card">
+          <div class="token-icon">🪙</div>
+          <div class="token-label">
+            Total Supply
+          </div>
+          <div class="token-value">
+            1,000,000,000
+          </div>
+          <div class="token-sub">
+            1 Billion $TODDY
+          </div>
+        </div>
+
+        <div class="token-card">
+          <div class="token-icon">🌙</div>
+          <div class="token-label">
+            Liquidity
+          </div>
+          <div class="token-value">90%</div>
+          <div class="token-sub">
+            Locked Forever 🔥
+          </div>
+        </div>
+
+        <div class="token-card">
+          <div class="token-icon">🚀</div>
+          <div class="token-label">
+            Team Tokens
+          </div>
+          <div class="token-value">0%</div>
+          <div class="token-sub">
+            No Team Allocation
+          </div>
+        </div>
+
+        <div class="token-card">
+          <div class="token-icon">👥</div>
+          <div class="token-label">
+            Community
+          </div>
+          <div class="token-value">10%</div>
+          <div class="token-sub">
+            Marketing &amp; Growth
+          </div>
+        </div>
+
+      </div>
+
+      <div class="tokenomics-mascot">
+        <img
+          src="assets/tokenomics-mascot.png"
+          alt="Toddy Tokenomics" />
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Section Divider -->
+<div class="section-divider">
+  <img src="assets/section-divider.png"
+       alt="" />
+</div>
+
+<!-- ===================================
+     HOW TO BUY
+     =================================== -->
+<section class="howtobuy" id="howtobuy">
+  <div class="container">
+
+    <h2 class="section-title center">
+      How To Buy
+      <span class="gold-text">$TODDY</span>
+    </h2>
+
+    <div class="howtobuy-grid">
+
+      <div class="howtobuy-mascot">
+        <img
+          src="assets/howtobuy-mascot.png"
+          alt="Toddy How To Buy" />
+      </div>
+
+      <div class="steps">
+
+        <div class="step">
+          <div class="step-number">01</div>
+          <div class="step-content">
+            <h3>Get a Solana Wallet</h3>
+            <p>Download Phantom Wallet
+            from phantom.app — it is free
+            and takes 2 minutes to set up
+            on your phone or browser.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">02</div>
+          <div class="step-content">
+            <h3>Buy Solana (SOL)</h3>
+            <p>Buy SOL from any exchange
+            like Binance, Coinbase or
+            Kraken. Send it to your Phantom
+            wallet address.</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">03</div>
+          <div class="step-content">
+            <h3>Go to Jupiter or Raydium</h3>
+            <p>Visit jup.ag or raydium.io —
+            Connect your Phantom wallet by
+            clicking "Connect Wallet".</p>
+          </div>
+        </div>
+
+        <div class="step">
+          <div class="step-number">04</div>
+          <div class="step-content">
+            <h3>Swap SOL for $TODDY</h3>
+            <p>Paste the $TODDY contract
+            address, enter the amount of
+            SOL you want to swap and click
+            Swap. Done! You now hold
+            $TODDY ☕🌙</p>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Section Divider -->
+<div class="section-divider">
+  <img src="assets/section-divider.png"
+       alt="" />
+</div>
+
+<!-- ===================================
+     ROADMAP — TYPO FIXED
+     =================================== -->
+<section class="roadmap" id="roadmap">
+  <div class="container">
+
+    <h2 class="section-title center">
+      <span class="gold-text">
+        Roadmap
+      </span>
+    </h2>
+
+    <div class="roadmap-mascot-row">
+      <img src="assets/roadmap-mascot.png"
+           alt="Toddy Roadmap" />
+    </div>
+
+    <div class="roadmap-grid">
+
+      <div class="phase">
+        <div class="phase-tag">Phase 1</div>
+        <div class="phase-icon">☕</div>
+        <h3 class="phase-title">Wake Up</h3>
+        <ul class="phase-list">
+          <li>Website Launch</li>
+          <li>Token Fair Launch</li>
+          <li>Community Building</li>
+          <li>Twitter/Telegram Growth</li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <div class="phase-tag">Phase 2</div>
+        <div class="phase-icon">🌙</div>
+        <h3 class="phase-title">Brew</h3>
+        <ul class="phase-list">
+          <li>CoinGecko Listing</li>
+          <li>CoinMarketCap Listing</li>
+          <li>1000+ Holders</li>
+          <li>Influencer Partnerships</li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <div class="phase-tag">Phase 3</div>
+        <div class="phase-icon">🚀</div>
+        <h3 class="phase-title">Trade</h3>
+        <ul class="phase-list">
+          <li>CEX Listings</li>
+          <li>10,000+ Holders</li>
+          <li>Major Partnerships</li>
+          <li>$TODDY Merch Store</li>
+        </ul>
+      </div>
+
+      <div class="phase">
+        <div class="phase-tag">Phase 4</div>
+        <div class="phase-icon">🌕</div>
+        <h3 class="phase-title">Moon</h3>
+        <ul class="phase-list">
+          <li>Top Tier CEX Listing</li>
+          <li>100,000+ Holders</li>
+          <li>$TODDY Ecosystem</li>
+          <li>The Night Trader Wins</li>
+        </ul>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Section Divider -->
+<div class="section-divider">
+  <img src="assets/section-divider.png"
+       alt="" />
+</div>
+
+<!-- ===================================
+     COMMUNITY
+     =================================== -->
+<section class="community" id="community">
+  <div class="container">
+    <div class="community-grid">
+
+      <!-- Text FIRST — fixes mobile order -->
+      <div class="community-text">
+        <h2 class="section-title">
+          Join the<br />
+          <span class="gold-text">
+            Night Traders
+          </span>
+        </h2>
+        <p class="community-desc">
+          Fueled by Coffee and Conviction.
+          The $TODDY community trades while
+          the world sleeps.
+        </p>
+        <div class="social-buttons">
+          <a href="#"
+             class="social-btn twitter"
+             target="_blank"
+             rel="noopener noreferrer">
+            🐦 Twitter / X
+          </a>
+          <a href="#"
+             class="social-btn telegram"
+             target="_blank"
+             rel="noopener noreferrer">
+            ✈️ Telegram
+          </a>
+          <a href="#"
+             class="social-btn dex"
+             target="_blank"
+             rel="noopener noreferrer">
+            📊 DEX Screener
+          </a>
+        </div>
+      </div>
+
+      <!-- Mascot SECOND -->
+      <div class="community-mascot">
+        <img
+          src="assets/community-mascot.png"
+          alt="Toddy Community" />
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- ===================================
+     FOOTER
+     =================================== -->
+<footer class="footer">
+  <div class="container">
+
+    <div class="footer-brand">
+      <img src="assets/coin-logo.png"
+           alt="$TODDY"
+           class="footer-logo" />
+      <span class="footer-name">
+        $TODDY
+      </span>
+    </div>
+
+    <p class="footer-tagline">
+      The Night Trader of Crypto ☕🌙
+    </p>
+
+    <nav class="footer-nav"
+         aria-label="Footer">
+      <a href="#about">About</a>
+      <a href="#tokenomics">Tokenomics</a>
+      <a href="#howtobuy">How To Buy</a>
+      <a href="#roadmap">Roadmap</a>
+      <a href="#community">Community</a>
+    </nav>
+
+    <div class="footer-socials">
+      <a href="#"
+         class="footer-social-btn"
+         target="_blank"
+         rel="noopener noreferrer">
+        🐦 Twitter
+      </a>
+      <a href="#"
+         class="footer-social-btn"
+         target="_blank"
+         rel="noopener noreferrer">
+        ✈️ Telegram
+      </a>
+      <a href="#"
+         class="footer-social-btn"
+         target="_blank"
+         rel="noopener noreferrer">
+        📊 DEX Screener
+      </a>
+    </div>
+
+    <div class="footer-divider"></div>
+
+    <p class="footer-disclaimer">
+      $TODDY is a meme coin with no
+      intrinsic value or financial return
+      expectation. Always do your own
+      research. Not financial advice.
+    </p>
+
+    <p class="footer-copy">
+      © 2026 toddy.meme —
+      All Rights Reserved
+    </p>
+
+  </div>
+</footer>
+
+<!-- Scroll To Top -->
+<button class="scroll-top-btn"
+        id="scroll-top-btn"
+        aria-label="Back to top">
+  ↑
+</button>
+
+<!-- Toast Notification -->
+<div class="toast" id="toast"></div>
+
+<!-- All JS in one external file
+     No inline scripts anywhere -->
+<script src="script.js"></script>
+
+</body>
+</html>
