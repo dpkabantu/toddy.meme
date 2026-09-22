@@ -283,8 +283,12 @@ body {
 }
 
 .section-divider img {
-  width: 100%;
-  display: block;
+    width: 50%;
+    max-width: 500px;
+    height: auto;
+    display: block;
+    margin: 0 auto;
+    opacity: 0.75;
 }
 
 /* ===== ABOUT ===== */
@@ -395,6 +399,8 @@ body {
     rgba(255,215,0,0.4));
   animation: float 3.5s ease-in-out 
     infinite;
+  mix-blend-mode: screen;
+  background: transparent;
 }
 
 .tokenomics-cards {
@@ -1076,5 +1082,139 @@ body {
     }
     .roadmap-card {
         padding: 25px 20px !important;
+    }
+}
+/* ============================================
+   MOBILE RESPONSIVE — ALL SECTIONS
+   ============================================ */
+@media (max-width: 768px) {
+
+    /* HERO */
+    .hero-content {
+        flex-direction: column !important;
+        text-align: center !important;
+        padding: 0 20px !important;
+        gap: 30px !important;
+    }
+    .hero-title {
+        font-size: 2.2rem !important;
+    }
+    .hero-buttons {
+        justify-content: center !important;
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+    .btn-primary, .btn-secondary {
+        width: 100% !important;
+        text-align: center !important;
+    }
+    .hero-mascot img {
+        width: 260px !important;
+    }
+
+    /* ABOUT */
+    .about-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 30px !important;
+    }
+    .about-mascot {
+        order: 1 !important;
+        width: 100% !important;
+        text-align: center !important;
+    }
+    .about-mascot img {
+        max-width: 260px !important;
+        margin: 0 auto !important;
+    }
+    .about-text {
+        order: 2 !important;
+    }
+    .about-stats {
+        flex-direction: column !important;
+        gap: 15px !important;
+    }
+
+    /* TOKENOMICS */
+    .tokenomics-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 30px !important;
+    }
+    .tokenomics-cards {
+        order: 1 !important;
+        width: 100% !important;
+        grid-template-columns: 1fr 1fr !important;
+        gap: 15px !important;
+    }
+    .tokenomics-mascot {
+        order: 2 !important;
+        text-align: center !important;
+    }
+    .tokenomics-mascot img {
+        max-width: 260px !important;
+        margin: 0 auto !important;
+    }
+
+    /* HOW TO BUY */
+    .howtobuy-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 30px !important;
+    }
+    .howtobuy-mascot {
+        order: 1 !important;
+        text-align: center !important;
+    }
+    .howtobuy-mascot img {
+        max-width: 260px !important;
+        margin: 0 auto !important;
+    }
+    .steps {
+        order: 2 !important;
+        width: 100% !important;
+    }
+
+    /* ROADMAP */
+    .roadmap-grid {
+        grid-template-columns: 1fr !important;
+        gap: 20px !important;
+    }
+
+    /* COMMUNITY — YOUR REPORTED BUG FIXED! */
+    .community-grid {
+        display: flex !important;
+        flex-direction: column !important;
+        align-items: center !important;
+        text-align: center !important;
+        gap: 30px !important;
+    }
+    .community-text {
+        order: 1 !important;
+    }
+    .community-socials {
+        order: 2 !important;
+    }
+    .community-mascot {
+        order: 3 !important;
+        text-align: center !important;
+    }
+    .community-mascot img {
+        max-width: 260px !important;
+        margin: 0 auto !important;
+    }
+    .social-buttons {
+        flex-direction: column !important;
+        align-items: center !important;
+        gap: 15px !important;
+    }
+
+    /* SECTION TITLES */
+    .section-title {
+        font-size: 2rem !important;
     }
 }
