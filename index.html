@@ -22,7 +22,9 @@
     href="assets/coin-logo.png"/>
   <link rel="stylesheet" 
     href="style.css"/>
-</head>
+<link rel="icon"
+      type="image/png"
+      href="assets/coin-logo.png"/></head>
 <body>
 
 <!-- NAVIGATION -->
@@ -92,7 +94,10 @@
 </section>
 
 <!-- DIVIDER -->
-<div class="section-divider"></div>
+<div class="section-divider">
+    <img src="assets/section-divider.png"
+         alt="divider"/>
+</div>
 
 <!-- ABOUT SECTION -->
 <section class="about" id="about">
@@ -157,8 +162,10 @@
 </section>
 
 <!-- DIVIDER -->
-<div class="section-divider"></div>
-
+<div class="section-divider">
+    <img src="assets/section-divider.png"
+         alt="divider"/>
+</div>
 <!-- TOKENOMICS SECTION -->
 <section class="tokenomics" 
   id="tokenomics">
@@ -211,7 +218,10 @@
 </section>
 
 <!-- DIVIDER -->
-<div class="section-divider"></div>
+<div class="section-divider">
+    <img src="assets/section-divider.png"
+         alt="divider"/>
+</div>
 
 <!-- HOW TO BUY SECTION -->
 <section class="howtobuy" id="howtobuy">
@@ -281,7 +291,10 @@
 </section>
 
 <!-- DIVIDER -->
-<div class="section-divider"></div>
+<div class="section-divider">
+    <img src="assets/section-divider.png"
+         alt="divider"/>
+</div>
 
 <!-- ROADMAP SECTION -->
 <section class="roadmap" id="roadmap">
@@ -358,7 +371,10 @@
 </section>
 
 <!-- DIVIDER -->
-<div class="section-divider"></div>
+<div class="section-divider">
+    <img src="assets/section-divider.png"
+         alt="divider"/>
+</div>
 
 <!-- COMMUNITY SECTION -->
 <section class="community" id="community">
@@ -481,6 +497,58 @@ function animateParticles() {
 
 animateParticles();
 
+window.addEventListener('resize', () => {
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+});
+</script>
+<!-- Gold Sparkle Particles -->
+<canvas id="sparkle-canvas" style="
+    position:fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    pointer-events:none;
+    z-index:0;
+"></canvas>
+<script>
+const canvas = document.getElementById('sparkle-canvas');
+const ctx = canvas.getContext('2d');
+canvas.width = window.innerWidth;
+canvas.height = window.innerHeight;
+const particles = [];
+for (let i = 0; i < 60; i++) {
+    particles.push({
+        x: Math.random() * canvas.width,
+        y: Math.random() * canvas.height,
+        size: Math.random() * 3 + 1,
+        speedX: (Math.random() - 0.5) * 0.5,
+        speedY: -Math.random() * 0.8 - 0.2,
+        opacity: Math.random(),
+        color: Math.random() > 0.5
+            ? 'rgba(255,215,0,'
+            : 'rgba(153,69,255,'
+    });
+}
+function animateParticles() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+        p.x += p.speedX;
+        p.y += p.speedY;
+        p.opacity -= 0.003;
+        if (p.opacity <= 0 || p.y < 0) {
+            p.x = Math.random() * canvas.width;
+            p.y = canvas.height;
+            p.opacity = Math.random();
+            p.size = Math.random() * 3 + 1;
+        }
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = p.color + p.opacity + ')';
+        ctx.fill();
+    });
+    requestAnimationFrame(animateParticles);
+}
+animateParticles();
 window.addEventListener('resize', () => {
     canvas.width = window.innerWidth;
     canvas.height = window.innerHeight;
