@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cinzel:wght@400;700&display=swap');
 /* ===== RESET & BASE ===== */
 * {
   margin: 0;
@@ -6,12 +7,16 @@
 }
 
 :root {
-  --purple: #9945FF;
-  --gold: #FFD700;
+  --purple: #C9A84C;
+  --gold: #C9A84C;
   --dark-green: #0d1f0d;
   --black: #050505;
   --white: #ffffff;
-  --gold-dark: #b8860b;
+  --gold-dark: #8B6914;
+  --gold-light: #F0C96B;
+  --brown-deep: #1A0A00;
+  --brown-dark: #2C1500;
+  --cream: #F5E6C8;
 }
 
 html {
@@ -19,9 +24,9 @@ html {
 }
 
 body {
-  font-family: 'Segoe UI', 
+  font-family: 'Playfair Display',
     sans-serif;
-  background: var(--black);
+  background: var(--brown-deep);
   color: var(--white);
   overflow-x: hidden;
 }
@@ -49,7 +54,7 @@ body {
   padding: 15px 40px;
   background: rgba(5,5,5,0.95);
   border-bottom: 1px solid 
-    rgba(153,69,255,0.3);
+    rgba(201,168,76,0.3);
   backdrop-filter: blur(10px);
 }
 
@@ -91,7 +96,7 @@ body {
 .nav-btn {
   background: linear-gradient(
     135deg, 
-    var(--purple), 
+    var(--gold), 
     var(--gold-dark));
   color: white;
   padding: 10px 24px;
@@ -105,7 +110,7 @@ body {
 .nav-btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 5px 20px 
-    rgba(153,69,255,0.5);
+    rgba(201,168,76,0.5);
 }
 
 /* ===== HERO ===== */
@@ -146,7 +151,7 @@ body {
 
 .hero-badge {
   display: inline-block;
-  background: rgba(153,69,255,0.3);
+  background: rgba(201,168,76,0.1);
   border: 1px solid var(--purple);
   padding: 8px 20px;
   border-radius: 25px;
@@ -183,8 +188,8 @@ body {
 .btn-primary {
   background: linear-gradient(
     135deg, 
-    var(--purple), 
-    #6600cc);
+    var(--gold-light), 
+    var(--gold-dark));
   color: white;
   padding: 15px 35px;
   border-radius: 30px;
@@ -193,13 +198,13 @@ body {
   font-size: 1.1rem;
   transition: all 0.3s;
   box-shadow: 0 5px 25px 
-    rgba(153,69,255,0.4);
+    rgba(201,168,76,0.4);
 }
 
 .btn-primary:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 35px 
-    rgba(153,69,255,0.6);
+    rgba(201,168,76,0.6);
 }
 
 .btn-secondary {
@@ -239,7 +244,7 @@ body {
   width: 480px;
   max-width: 100%;
   filter: drop-shadow(0 0 40px 
-    rgba(153,69,255,0.6));
+    rgba(201,168,76,0.6));
   animation: float 3s ease-in-out 
     infinite;
 }
@@ -286,7 +291,7 @@ body {
 .about {
   position: relative;
   padding: 100px 0;
-  background: var(--dark-green);
+  background: var(--brown-dark);
   overflow: hidden;
 }
 
@@ -319,7 +324,7 @@ body {
   width: 100%;
   max-width: 450px;
   filter: drop-shadow(0 0 30px 
-    rgba(153,69,255,0.5));
+    rgba(201,168,76,0.5));
   animation: float 4s ease-in-out 
     infinite;
 }
@@ -350,9 +355,9 @@ body {
 
 .stat {
   text-align: center;
-  background: rgba(153,69,255,0.15);
+  background: rgba(201,168,76,0.08);
   border: 1px solid 
-    rgba(153,69,255,0.4);
+    rgba(201,168,76,0.4);
   padding: 20px 25px;
   border-radius: 15px;
   flex: 1;
@@ -373,7 +378,7 @@ body {
 /* ===== TOKENOMICS ===== */
 .tokenomics {
   padding: 100px 0;
-  background: var(--black);
+  background: var(--brown-deep);
 }
 
 .tokenomics-grid {
@@ -399,9 +404,9 @@ body {
 }
 
 .token-card {
-  background: rgba(153,69,255,0.1);
+  background: rgba(201,168,76,0.08);
   border: 1px solid 
-    rgba(153,69,255,0.35);
+    rgba(201,168,76,0.35);
   border-radius: 20px;
   padding: 30px 20px;
   text-align: center;
@@ -474,7 +479,7 @@ body {
   align-items: flex-start;
   background: rgba(0,0,0,0.4);
   border: 1px solid 
-    rgba(153,69,255,0.3);
+    rgba(201,168,76,0.3);
   border-radius: 15px;
   padding: 20px;
   transition: border-color 0.3s,
@@ -489,7 +494,7 @@ body {
 .step-number {
   font-size: 2rem;
   font-weight: 900;
-  color: var(--purple);
+  color: var(--gold);
   min-width: 55px;
   line-height: 1;
 }
@@ -510,7 +515,7 @@ body {
   width: 100%;
   max-width: 430px;
   filter: drop-shadow(0 0 30px 
-    rgba(153,69,255,0.5));
+    rgba(201,168,76,0.5));
   animation: float 4s ease-in-out 
     infinite;
 }
@@ -518,7 +523,7 @@ body {
 /* ===== ROADMAP ===== */
 .roadmap {
   padding: 100px 0;
-  background: var(--black);
+  background: var(--brown-deep);
 }
 
 .roadmap-grid {
@@ -532,7 +537,7 @@ body {
   width: 100%;
   max-width: 420px;
   filter: drop-shadow(0 0 30px 
-    rgba(153,69,255,0.5));
+    rgba(201,168,76,0.5));
   animation: float 5s ease-in-out 
     infinite;
   position: sticky;
@@ -546,10 +551,10 @@ body {
 }
 
 .phase {
-  background: rgba(153,69,255,0.08);
+  background: rgba(201,168,76,0.06);
   border: 1px solid 
-    rgba(153,69,255,0.3);
-  border-left: 4px solid var(--purple);
+    rgba(201,168,76,0.3);
+  border-left: 4px solid var(--gold);
   border-radius: 15px;
   padding: 25px;
   transition: border-color 0.3s,
@@ -557,7 +562,7 @@ body {
 }
 
 .phase:hover {
-  background: rgba(153,69,255,0.15);
+  background: rgba(201,168,76,0.08);
   border-left-color: var(--gold);
 }
 
@@ -569,7 +574,7 @@ body {
 }
 
 .phase-num {
-  color: var(--purple);
+  color: var(--gold);
   font-weight: 800;
   font-size: 0.9rem;
   text-transform: uppercase;
@@ -606,7 +611,7 @@ body {
 .community {
   position: relative;
   padding: 100px 0;
-  background: var(--dark-green);
+  background: var(--brown-dark);
   overflow: hidden;
 }
 
@@ -677,20 +682,20 @@ body {
 }
 
 .btn-dexscreener {
-  background: rgba(153,69,255,0.2);
-  color: var(--purple);
+  background: rgba(201,168,76,0.1);
+  color: var(--gold);
   padding: 15px 30px;
   border-radius: 30px;
   text-decoration: none;
   font-weight: 700;
   text-align: center;
-  border: 2px solid var(--purple);
+  border: 2px solid var(--gold);
   transition: all 0.3s;
   font-size: 1rem;
 }
 
 .btn-dexscreener:hover {
-  background: var(--purple);
+  background: var(--gold);
   color: white;
   transform: translateY(-3px);
 }
@@ -699,7 +704,7 @@ body {
   width: 100%;
   max-width: 450px;
   filter: drop-shadow(0 0 30px 
-    rgba(153,69,255,0.5));
+    rgba(201,168,76,0.5));
   animation: float 3s ease-in-out 
     infinite;
 }
@@ -708,7 +713,7 @@ body {
 .footer {
   background: #000000;
   border-top: 1px solid 
-    rgba(153,69,255,0.3);
+    rgba(201,168,76,0.3);
   padding: 50px 20px;
   text-align: center;
 }
