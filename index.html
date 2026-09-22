@@ -3,69 +3,66 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport"
-    content="width=device-width,
-             initial-scale=1.0" />
-  <title>
-    $TODDY — The Night Trader of Crypto
-  </title>
+        content="width=device-width,
+                 initial-scale=1.0" />
+  <title>$TODDY — The Night Trader of Crypto</title>
 
   <!-- SEO -->
   <meta name="description"
-    content="$TODDY is the Kopi Luwak
-    Meme Coin on Solana. The Night
-    Trader of Crypto. Fair Launch.
-    0% Team Tokens. 90% Liquidity
-    Locked Forever." />
+        content="$TODDY is the Kopi Luwak
+        Meme Coin on Solana. The Night
+        Trader of Crypto. Fair Launch.
+        0% Team Tokens. 90% Liquidity
+        Locked Forever." />
   <meta name="keywords"
-    content="TODDY, meme coin, Solana,
-    Kopi Luwak, civet cat, night trader,
-    crypto, fair launch" />
+        content="TODDY, meme coin, Solana,
+        Kopi Luwak, civet cat, night trader,
+        crypto, fair launch" />
 
   <!-- Open Graph -->
   <meta property="og:type"
-    content="website" />
+        content="website" />
   <meta property="og:url"
-    content="https://toddy.meme/" />
+        content="https://toddy.meme/" />
   <meta property="og:title"
-    content="$TODDY — The Night Trader
-    of Crypto" />
+        content="$TODDY — The Night Trader
+                 of Crypto" />
   <meta property="og:description"
-    content="The Kopi Luwak Meme Coin
-    on Solana. Fair Launch. 0% Team
-    Tokens. 90% Liquidity Locked." />
+        content="The Kopi Luwak Meme Coin
+        on Solana. Fair Launch. 0% Team
+        Tokens. 90% Liquidity Locked." />
   <meta property="og:image"
-    content="https://toddy.meme/assets/og-image.jpg" />
+        content="https://toddy.meme/
+                 assets/og-image.jpg" />
 
   <!-- Twitter Card -->
   <meta name="twitter:card"
-    content="summary_large_image" />
+        content="summary_large_image" />
   <meta name="twitter:title"
-    content="$TODDY — The Night Trader
-    of Crypto" />
+        content="$TODDY — The Night Trader
+                 of Crypto" />
   <meta name="twitter:description"
-    content="The Kopi Luwak Meme Coin
-    on Solana. Fair Launch." />
+        content="The Kopi Luwak Meme Coin
+        on Solana. Fair Launch." />
   <meta name="twitter:image"
-    content="https://toddy.meme/assets/twitter-banner.jpg" />
+        content="https://toddy.meme/
+                 assets/twitter-banner.jpg" />
 
-  <!-- Favicon — SINGLE, CLEAN -->
+  <!-- Favicon -->
   <link rel="icon" type="image/png"
-    href="assets/coin-logo.png" />
+        href="assets/coin-logo.png" />
 
   <!-- Google Fonts -->
   <link rel="preconnect"
-    href="https://fonts.googleapis.com" />
+        href="https://fonts.googleapis.com" />
   <link rel="preconnect"
-    href="https://fonts.gstatic.com"
-    crossorigin />
+        href="https://fonts.gstatic.com"
+        crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cinzel:wght@400;700&display=swap"
-    rel="stylesheet" />
+        rel="stylesheet" />
 
   <!-- Stylesheet -->
   <link rel="stylesheet" href="style.css" />
-
-  <!-- NO inline scripts or canvas in head
-       Everything is in script.js at body end -->
 </head>
 <body>
 
@@ -73,13 +70,11 @@
      NAVBAR
      =================================== -->
 <nav class="navbar" id="navbar">
-
   <div class="nav-logo">
     <img src="assets/coin-logo.png"
          alt="$TODDY Logo" />
     <span>$TODDY</span>
   </div>
-
   <ul class="nav-links" id="nav-links">
     <li><a href="#about">About</a></li>
     <li>
@@ -95,11 +90,9 @@
       <a href="#community">Community</a>
     </li>
   </ul>
-
   <a href="#howtobuy" class="nav-btn">
     Buy $TODDY
   </a>
-
   <button class="hamburger"
           id="hamburger"
           aria-label="Open Menu"
@@ -108,44 +101,38 @@
     <span></span>
     <span></span>
   </button>
-
 </nav>
 
 <!-- ===================================
      HERO
+     ✅ CHANGE: canvas REMOVED from here
      =================================== -->
 <section class="hero" id="home">
-
   <div class="hero-bg">
     <img src="assets/hero-bg.jpg"
          alt="Night Sky"
          class="hero-bg-img" />
   </div>
 
-  <!-- Sparkle canvas: ONE instance only -->
-  <canvas id="sparkle-canvas"></canvas>
+  <!-- ✅ NO canvas here anymore -->
+  <!-- Canvas moved to just before </body> -->
 
   <div class="hero-content">
-
     <div class="hero-text">
-
       <div class="hero-badge">
         🌙 Fair Launch on Solana
       </div>
-
       <h1 class="hero-title">
         The Night Trader<br />
         <span class="gold-text">
           of Crypto
         </span>
       </h1>
-
       <p class="hero-subtitle">
         Same Caffeine. Different Life.<br />
         $TODDY — The Kopi Luwak Meme Coin
         on Solana.
       </p>
-
       <div class="hero-buttons">
         <a href="#howtobuy"
            class="btn-primary">
@@ -156,8 +143,6 @@
           Learn More
         </a>
       </div>
-
-      <!-- CA box with copy button -->
       <div class="hero-contract"
            id="ca-box">
         <span id="ca-text">
@@ -169,22 +154,16 @@
           📋
         </button>
       </div>
-
     </div>
-
-    <!-- FIXED: was toddy-hero.png
-         NOW: assets/hero-mascot.png -->
     <div class="hero-mascot">
       <img src="assets/hero-mascot.png"
            alt="Toddy the Night Trader" />
     </div>
-
   </div>
 
   <div class="hero-scroll">
     ↓ Scroll Down
   </div>
-
 </section>
 
 <!-- Section Divider -->
@@ -197,21 +176,17 @@
      ABOUT
      =================================== -->
 <section class="about" id="about">
-
   <div class="about-bg">
     <img src="assets/about-bg-pattern.png"
          alt=""
          class="about-bg-img" />
   </div>
-
   <div class="container">
     <div class="about-grid">
-
       <div class="about-mascot">
         <img src="assets/about-mascot.png"
              alt="Toddy the Civet" />
       </div>
-
       <div class="about-text">
         <h2 class="section-title">
           Who is
@@ -266,7 +241,6 @@
           </div>
         </div>
       </div>
-
     </div>
   </div>
 </section>
@@ -278,22 +252,17 @@
 </div>
 
 <!-- ===================================
-     TOKENOMICS — TYPO FIXED
+     TOKENOMICS
      =================================== -->
-<section class="tokenomics"
-         id="tokenomics">
+<section class="tokenomics" id="tokenomics">
   <div class="container">
-
     <h2 class="section-title center">
       <span class="gold-text">
         Tokenomics
       </span> ☕
     </h2>
-
     <div class="tokenomics-grid">
-
       <div class="tokenomics-cards">
-
         <div class="token-card">
           <div class="token-icon">🪙</div>
           <div class="token-label">
@@ -306,7 +275,6 @@
             1 Billion $TODDY
           </div>
         </div>
-
         <div class="token-card">
           <div class="token-icon">🌙</div>
           <div class="token-label">
@@ -317,7 +285,6 @@
             Locked Forever 🔥
           </div>
         </div>
-
         <div class="token-card">
           <div class="token-icon">🚀</div>
           <div class="token-label">
@@ -328,7 +295,6 @@
             No Team Allocation
           </div>
         </div>
-
         <div class="token-card">
           <div class="token-icon">👥</div>
           <div class="token-label">
@@ -339,15 +305,12 @@
             Marketing &amp; Growth
           </div>
         </div>
-
       </div>
-
       <div class="tokenomics-mascot">
         <img
           src="assets/tokenomics-mascot.png"
           alt="Toddy Tokenomics" />
       </div>
-
     </div>
   </div>
 </section>
@@ -363,22 +326,17 @@
      =================================== -->
 <section class="howtobuy" id="howtobuy">
   <div class="container">
-
     <h2 class="section-title center">
       How To Buy
       <span class="gold-text">$TODDY</span>
     </h2>
-
     <div class="howtobuy-grid">
-
       <div class="howtobuy-mascot">
         <img
           src="assets/howtobuy-mascot.png"
           alt="Toddy How To Buy" />
       </div>
-
       <div class="steps">
-
         <div class="step">
           <div class="step-number">01</div>
           <div class="step-content">
@@ -389,7 +347,6 @@
             on your phone or browser.</p>
           </div>
         </div>
-
         <div class="step">
           <div class="step-number">02</div>
           <div class="step-content">
@@ -400,7 +357,6 @@
             wallet address.</p>
           </div>
         </div>
-
         <div class="step">
           <div class="step-number">03</div>
           <div class="step-content">
@@ -410,7 +366,6 @@
             clicking "Connect Wallet".</p>
           </div>
         </div>
-
         <div class="step">
           <div class="step-number">04</div>
           <div class="step-content">
@@ -422,7 +377,6 @@
             $TODDY ☕🌙</p>
           </div>
         </div>
-
       </div>
     </div>
   </div>
@@ -435,24 +389,20 @@
 </div>
 
 <!-- ===================================
-     ROADMAP — TYPO FIXED
+     ROADMAP
      =================================== -->
 <section class="roadmap" id="roadmap">
   <div class="container">
-
     <h2 class="section-title center">
       <span class="gold-text">
         Roadmap
       </span>
     </h2>
-
     <div class="roadmap-mascot-row">
       <img src="assets/roadmap-mascot.png"
            alt="Toddy Roadmap" />
     </div>
-
     <div class="roadmap-grid">
-
       <div class="phase">
         <div class="phase-tag">Phase 1</div>
         <div class="phase-icon">☕</div>
@@ -464,7 +414,6 @@
           <li>Twitter/Telegram Growth</li>
         </ul>
       </div>
-
       <div class="phase">
         <div class="phase-tag">Phase 2</div>
         <div class="phase-icon">🌙</div>
@@ -476,7 +425,6 @@
           <li>Influencer Partnerships</li>
         </ul>
       </div>
-
       <div class="phase">
         <div class="phase-tag">Phase 3</div>
         <div class="phase-icon">🚀</div>
@@ -488,7 +436,6 @@
           <li>$TODDY Merch Store</li>
         </ul>
       </div>
-
       <div class="phase">
         <div class="phase-tag">Phase 4</div>
         <div class="phase-icon">🌕</div>
@@ -500,7 +447,6 @@
           <li>The Night Trader Wins</li>
         </ul>
       </div>
-
     </div>
   </div>
 </section>
@@ -517,8 +463,6 @@
 <section class="community" id="community">
   <div class="container">
     <div class="community-grid">
-
-      <!-- Text FIRST — fixes mobile order -->
       <div class="community-text">
         <h2 class="section-title">
           Join the<br />
@@ -552,14 +496,11 @@
           </a>
         </div>
       </div>
-
-      <!-- Mascot SECOND -->
       <div class="community-mascot">
         <img
           src="assets/community-mascot.png"
           alt="Toddy Community" />
       </div>
-
     </div>
   </div>
 </section>
@@ -569,20 +510,15 @@
      =================================== -->
 <footer class="footer">
   <div class="container">
-
     <div class="footer-brand">
       <img src="assets/coin-logo.png"
            alt="$TODDY"
            class="footer-logo" />
-      <span class="footer-name">
-        $TODDY
-      </span>
+      <span class="footer-name">$TODDY</span>
     </div>
-
     <p class="footer-tagline">
       The Night Trader of Crypto ☕🌙
     </p>
-
     <nav class="footer-nav"
          aria-label="Footer">
       <a href="#about">About</a>
@@ -591,7 +527,6 @@
       <a href="#roadmap">Roadmap</a>
       <a href="#community">Community</a>
     </nav>
-
     <div class="footer-socials">
       <a href="#"
          class="footer-social-btn"
@@ -612,36 +547,35 @@
         📊 DEX Screener
       </a>
     </div>
-
     <div class="footer-divider"></div>
-
     <p class="footer-disclaimer">
       $TODDY is a meme coin with no
       intrinsic value or financial return
       expectation. Always do your own
       research. Not financial advice.
     </p>
-
     <p class="footer-copy">
       © 2026 toddy.meme —
       All Rights Reserved
     </p>
-
   </div>
 </footer>
 
 <!-- Scroll To Top -->
 <button class="scroll-top-btn"
         id="scroll-top-btn"
-        aria-label="Back to top">
-  ↑
-</button>
+        aria-label="Back to top">↑</button>
 
 <!-- Toast Notification -->
 <div class="toast" id="toast"></div>
 
-<!-- All JS in one external file
-     No inline scripts anywhere -->
+<!-- ✅ CANVAS MOVED HERE — outside all sections
+     direct child of <body>
+     overflow:hidden from .hero can no longer
+     clip sparkles on Safari/iOS/Android -->
+<canvas id="sparkle-canvas"></canvas>
+
+<!-- JS -->
 <script src="script.js"></script>
 
 </body>
