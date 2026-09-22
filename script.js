@@ -1,89 +1,57 @@
-// ============================================
-// $TODDY — The Night Trader of Crypto
-// script.js
-// ============================================
-
-// FLOATING PARTICLES in hero
-function createParticles() {
-  const container = document.getElementById('particles');
-  if (!container) return;
-  for (let i = 0; i < 30; i++) {
-    const p = document.createElement('div');
-    p.classList.add('particle');
-    p.style.left = Math.random() * 100 + '%';
-    p.style.top = (50 + Math.random() * 50) + '%';
-    p.style.animationDuration = (4 + Math.random() * 6) + 's';
-    p.style.animationDelay = (Math.random() * 6) + 's';
-    p.style.width = p.style.height = (2 + Math.random() * 3) + 'px';
-    container.appendChild(p);
+// Navbar scroll effect
+window.addEventListener('scroll', 
+  function() {
+  const navbar = 
+    document.getElementById('navbar');
+  if (window.scrollY > 50) {
+    navbar.style.background = 
+      'rgba(5,5,5,0.98)';
+    navbar.style.boxShadow = 
+      '0 2px 20px rgba(153,69,255,0.3)';
+  } else {
+    navbar.style.background = 
+      'rgba(5,5,5,0.95)';
+    navbar.style.boxShadow = 'none';
   }
-}
+});
 
-// SCROLL FADE IN
-function initFadeIn() {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry, i) => {
-      if (entry.isIntersecting) {
-        setTimeout(() => {
-          entry.target.classList.add('visible');
-        }, i * 100);
-        observer.unobserve(entry.target);
-      }
-    });
-  }, { threshold: 0.15 });
-
-  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
-}
-
-// NAVBAR scroll effect
-function initNavbar() {
-  const navbar = document.querySelector('.navbar');
-  window.addEventListener('scroll', () => {
-    if (window.scrollY > 50) {
-      navbar.style.background = 'rgba(26, 10, 0, 0.98)';
-      navbar.style.borderBottomColor = 'rgba(201, 168, 76, 0.4)';
-    } else {
-      navbar.style.background = 'rgba(26, 10, 0, 0.92)';
-      navbar.style.borderBottomColor = 'rgba(201, 168, 76, 0.25)';
+// Smooth scroll for nav links
+document.querySelectorAll('a[href^="#"]')
+  .forEach(anchor => {
+  anchor.addEventListener('click', 
+    function(e) {
+    e.preventDefault();
+    const target = document.querySelector(
+      this.getAttribute('href'));
+    if (target) {
+      target.scrollIntoView({
+        behavior: 'smooth',
+        block: 'start'
+      });
     }
   });
-}
+});
 
-// SMOOTH SCROLL for nav links
-function initSmoothScroll() {
-  document.querySelectorAll('a[href^="#"]').forEach(a => {
-    a.addEventListener('click', function(e) {
-      const target = document.querySelector(this.getAttribute('href'));
-      if (target) {
-        e.preventDefault();
-        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-      }
-    });
-  });
-}
-
-// ANIMATE progress bars when visible
-function initBars() {
-  const bars = document.querySelectorAll('.bar-fill');
-  const observer = new IntersectionObserver((entries) => {
+// Fade in animation on scroll
+const observer = 
+  new IntersectionObserver(
+  (entries) => {
     entries.forEach(entry => {
       if (entry.isIntersecting) {
-        const fill = entry.target;
-        const target = fill.style.width;
-        fill.style.width = '0%';
-        setTimeout(() => { fill.style.width = target; }, 200);
-        observer.unobserve(fill);
+        entry.target.style.opacity = '1';
+        entry.target.style.transform = 
+          'translateY(0)';
       }
     });
-  }, { threshold: 0.5 });
-  bars.forEach(b => observer.observe(b));
-}
+  }, { threshold: 0.1 }
+);
 
-// INIT ALL
-document.addEventListener('DOMContentLoaded', () => {
-  createParticles();
-  initFadeIn();
-  initNavbar();
-  initSmoothScroll();
-  initBars();
+document.querySelectorAll(
+  '.step, .token-card, .phase, .stat'
+).forEach(el => {
+  el.style.opacity = '0';
+  el.style.transform = 'translateY(30px)';
+  el.style.transition = 
+    'opacity 0.6s ease, transform 0.6s ease';
+  observer.observe(el);
 });
