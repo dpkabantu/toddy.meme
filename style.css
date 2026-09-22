@@ -829,3 +829,33 @@ body {
 }
 
 }
+/* =============================
+   CLEAN GOLD PURPLE DIVIDER
+   ============================= */
+.section-divider {
+    width: 80%;
+    height: 2px;
+    margin: 10px auto;
+    background: linear-gradient(
+        to right,
+        transparent,
+        #FFD700,
+        #9945FF,
+        #FFD700,
+        transparent
+    );
+    border: none;
+    display: block;
+}
+
+/* =============================
+   FLOAT ANIMATION ALL MASCOTS
+   ============================= */
+.about-mascot img,
+.tokenomics-mascot img,
+.howtobuy-mascot img,
+.roadmap-mascot img,
+.community-mascot img {
+    animation: floatToddy 3s ease-in-out infinite;
+    filter: drop-shadow(0 0 20px rgba(153, 69, 255, 0.5));
+}
