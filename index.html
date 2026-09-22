@@ -24,7 +24,20 @@
     href="style.css"/>
 <link rel="icon"
       type="image/png"
-      href="assets/coin-logo.png"/></head>
+ <link rel="icon" type="image/png"
+      href="assets/coin-logo.png"/><canvas id="sparkle-canvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;"></canvas>
+<script>
+const canvas=document.getElementById('sparkle-canvas');
+const ctx=canvas.getContext('2d');
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+const P=[];
+for(let i=0;i<60;i++){P.push({x:Math.random()*canvas.width,y:Math.random()*canvas.height,size:Math.random()*3+1,sx:(Math.random()-0.5)*0.5,sy:-Math.random()*0.8-0.2,o:Math.random(),c:Math.random()>0.5?'rgba(255,215,0,':'rgba(153,69,255,'});}
+function draw(){ctx.clearRect(0,0,canvas.width,canvas.height);P.forEach(p=>{p.x+=p.sx;p.y+=p.sy;p.o-=0.003;if(p.o<=0||p.y<0){p.x=Math.random()*canvas.width;p.y=canvas.height;p.o=Math.random();p.size=Math.random()*3+1;}ctx.beginPath();ctx.arc(p.x,p.y,p.size,0,Math.PI*2);ctx.fillStyle=p.c+p.o+')';ctx.fill();});requestAnimationFrame(draw);}
+draw();
+window.addEventListener('resize',()=>{canvas.width=window.innerWidth;canvas.height=window.innerHeight;});
+</script>
+</head>
 <body>
 
 <!-- NAVIGATION -->
@@ -433,7 +446,7 @@
     research. Not financial advice.
   </p>
   <p class="footer-copy">
-    © 2025 toddy.meme — 
+    © 2026 toddy.meme — 
     All Rights Reserved
   </p>
 </footer>
