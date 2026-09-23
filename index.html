@@ -32,8 +32,7 @@
   <meta name="twitter:title"
         content="$TODDY — The Night Trader of Crypto" />
   <meta name="twitter:description"
-        content="The Kopi Luwak Meme Coin on Solana.
-        Fair Launch." />
+        content="The Kopi Luwak Meme Coin on Solana. Fair Launch." />
   <meta name="twitter:image"
         content="https://toddy.meme/assets/twitter-banner.jpg" />
   <link rel="icon" type="image/png"
@@ -41,19 +40,17 @@
   <link rel="preconnect"
         href="https://fonts.googleapis.com" />
   <link rel="preconnect"
-        href="https://fonts.gstatic.com"
-        crossorigin />
+        href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cinzel:wght@400;700&display=swap"
         rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
 
-<!-- NAVBAR -->
+<!-- ===== NAVBAR ===== -->
 <nav class="navbar" id="navbar">
   <div class="nav-logo">
-    <img src="assets/coin-logo.png"
-         alt="$TODDY Logo" />
+    <img src="assets/coin-logo.png" alt="$TODDY Logo" />
     <span>$TODDY</span>
   </div>
   <ul class="nav-links" id="nav-links">
@@ -64,19 +61,14 @@
     <li><a href="#community">Community</a></li>
     <li><a href="#faq">FAQ</a></li>
   </ul>
-  <a href="#howtobuy" class="nav-btn">
-    Buy $TODDY
-  </a>
+  <a href="#howtobuy" class="nav-btn">Buy $TODDY</a>
   <button class="hamburger" id="hamburger"
-          aria-label="Open Menu"
-          aria-expanded="false">
-    <span></span>
-    <span></span>
-    <span></span>
+          aria-label="Open Menu" aria-expanded="false">
+    <span></span><span></span><span></span>
   </button>
 </nav>
 
-<!-- HERO -->
+<!-- ===== HERO ===== -->
 <section class="hero" id="home">
   <div class="hero-bg">
     <img src="assets/hero-bg.jpg"
@@ -84,17 +76,14 @@
   </div>
   <div class="hero-content">
     <div class="hero-text">
-      <div class="hero-badge">
-        🌙 Fair Launch on Solana
-      </div>
+      <div class="hero-badge">🌙 Fair Launch on Solana</div>
       <h1 class="hero-title">
         The Night Trader<br />
         <span class="gold-text">of Crypto</span>
       </h1>
       <p class="hero-subtitle">
         Same Caffeine. Different Life.<br />
-        $TODDY — The Kopi Luwak Meme Coin
-        on Solana.
+        $TODDY — The Kopi Luwak Meme Coin on Solana.
       </p>
       <div class="hero-buttons">
         <a href="#howtobuy" class="btn-primary">
@@ -118,12 +107,16 @@
   <div class="hero-scroll">↓ Scroll Down</div>
 </section>
 
-<!-- DIVIDER -->
 <div class="section-divider">
   <img src="assets/section-divider.png" alt="" />
 </div>
 
-<!-- ABOUT -->
+<!-- ===== ABOUT =====
+     CHANGE: HTML order swapped so on mobile
+     (which follows DOM order before CSS flex/grid)
+     text naturally comes first.
+     Desktop: CSS grid places mascot left, text right.
+     Mobile: text first, mascot below. -->
 <section class="about" id="about">
   <div class="about-bg">
     <img src="assets/about-bg-pattern.png"
@@ -131,14 +124,10 @@
   </div>
   <div class="container">
     <div class="about-grid">
-      <div class="about-mascot">
-        <img src="assets/about-mascot.png"
-             alt="Toddy the Civet" />
-      </div>
+      <!-- TEXT FIRST in DOM order -->
       <div class="about-text">
         <h2 class="section-title">
-          Who is
-          <span class="gold-text">Toddy?</span>
+          Who is <span class="gold-text">Toddy?</span>
         </h2>
         <p>Deep in the jungles of Southeast Asia
           lives the most legendary coffee connoisseur
@@ -167,16 +156,20 @@
           </div>
         </div>
       </div>
+      <!-- MASCOT SECOND in DOM order -->
+      <div class="about-mascot">
+        <img src="assets/about-mascot.png"
+             alt="Toddy the Civet" />
+      </div>
     </div>
   </div>
 </section>
 
-<!-- DIVIDER -->
 <div class="section-divider">
   <img src="assets/section-divider.png" alt="" />
 </div>
 
-<!-- TOKENOMICS -->
+<!-- ===== TOKENOMICS ===== -->
 <section class="tokenomics" id="tokenomics">
   <div class="container">
     <h2 class="section-title center">
@@ -194,9 +187,7 @@
           <div class="token-icon">🔒</div>
           <div class="token-label">Liquidity</div>
           <div class="token-value">90%</div>
-          <div class="token-sub">
-            Auto-Locked at Launch 🔥
-          </div>
+          <div class="token-sub">Auto-Locked at Launch 🔥</div>
         </div>
         <div class="token-card">
           <div class="token-icon">🚫</div>
@@ -208,9 +199,7 @@
           <div class="token-icon">👥</div>
           <div class="token-label">Community</div>
           <div class="token-value">10%</div>
-          <div class="token-sub">
-            Marketing &amp; Growth
-          </div>
+          <div class="token-sub">Marketing &amp; Growth</div>
         </div>
         <div class="token-card token-card-wide">
           <div class="token-icon">🛡️</div>
@@ -227,7 +216,6 @@
       </div>
     </div>
 
-    <!-- Trust Badge Bar -->
     <div class="trust-bar">
       <div class="trust-badge">
         <span class="trust-icon">🔒</span>
@@ -251,7 +239,6 @@
       </div>
     </div>
 
-    <!-- Why Solana -->
     <div class="why-solana">
       <h3 class="why-solana-title">
         ⚡ Why <span class="gold-text">Solana?</span>
@@ -278,20 +265,16 @@
   </div>
 </section>
 
-<!-- DIVIDER -->
 <div class="section-divider">
   <img src="assets/section-divider.png" alt="" />
 </div>
 
-<!-- HOW TO BUY -->
+<!-- ===== HOW TO BUY ===== -->
 <section class="howtobuy" id="howtobuy">
   <div class="container">
     <h2 class="section-title center">
-      How To Buy
-      <span class="gold-text">$TODDY</span>
+      How To Buy <span class="gold-text">$TODDY</span>
     </h2>
-
-    <!-- Safety Warning Banner -->
     <div class="safety-banner">
       <div class="safety-shield">🛡️</div>
       <div class="safety-text">
@@ -310,7 +293,6 @@
               id="safety-ca-text">TBA at Launch</span>
       </div>
     </div>
-
     <div class="howtobuy-grid">
       <div class="howtobuy-mascot">
         <img src="assets/howtobuy-mascot.png"
@@ -323,8 +305,7 @@
             <h3>Get a Solana Wallet</h3>
             <p>Download <strong>Phantom Wallet</strong>
               from phantom.app — free, takes 2 minutes.
-              Available on iOS, Android and Chrome
-              browser.</p>
+              Available on iOS, Android and Chrome browser.</p>
           </div>
         </div>
         <div class="step">
@@ -350,8 +331,8 @@
           <div class="step-number">04</div>
           <div class="step-content">
             <h3>Swap SOL for $TODDY</h3>
-            <p>Paste the verified $TODDY CA, enter
-              your SOL amount and click Swap. If the
+            <p>Paste the verified $TODDY CA, enter your
+              SOL amount and click Swap. If the
               transaction fails,
               <strong>set slippage to 1–3%</strong>
               and retry. You now hold $TODDY ☕🌙</p>
@@ -359,27 +340,24 @@
         </div>
       </div>
     </div>
-
-    <!-- Verify Strip -->
     <div class="verify-strip">
       <span class="verify-icon">🔍</span>
       <span><strong>Pro Tip:</strong>
-        After buying, verify your $TODDY balance
-        on <a href="#" id="solscan-verify"
-              class="verify-link" target="_blank"
-              rel="noopener noreferrer">
-          Solscan ↗</a> using your wallet address.
+        After buying, verify your $TODDY balance on
+        <a href="#" id="solscan-verify"
+           class="verify-link" target="_blank"
+           rel="noopener noreferrer">Solscan ↗</a>
+        using your wallet address.
         Never share your seed phrase.</span>
     </div>
   </div>
 </section>
 
-<!-- DIVIDER -->
 <div class="section-divider">
   <img src="assets/section-divider.png" alt="" />
 </div>
 
-<!-- ROADMAP -->
+<!-- ===== ROADMAP ===== -->
 <section class="roadmap" id="roadmap">
   <div class="container">
     <h2 class="section-title center">
@@ -398,7 +376,6 @@
     </div>
     <div class="roadmap-grid">
 
-      <!-- Phase 1 — UNCHANGED -->
       <div class="phase">
         <div class="phase-tag">Phase 1</div>
         <div class="phase-icon">☕</div>
@@ -418,7 +395,6 @@
         </ul>
       </div>
 
-      <!-- Phase 2 — UNCHANGED -->
       <div class="phase">
         <div class="phase-tag">Phase 2</div>
         <div class="phase-icon">🌙</div>
@@ -438,7 +414,6 @@
         </ul>
       </div>
 
-      <!-- Phase 3 — REORDERED: Holders first -->
       <div class="phase">
         <div class="phase-tag">Phase 3</div>
         <div class="phase-icon">🚀</div>
@@ -458,7 +433,6 @@
         </ul>
       </div>
 
-      <!-- Phase 4 — REORDERED: Holders first -->
       <div class="phase">
         <div class="phase-tag">Phase 4</div>
         <div class="phase-icon">🌕</div>
@@ -482,78 +456,124 @@
   </div>
 </section>
 
-<!-- DIVIDER -->
 <div class="section-divider">
   <img src="assets/section-divider.png" alt="" />
 </div>
 
-<!-- COMMUNITY — UPDATED with all 7 socials -->
+<!-- ===== COMMUNITY =====
+     CHANGE: Social buttons replaced with
+     round SVG icon buttons in horizontal row.
+     Fixes the broken mobile layout (Picture 2).
+     SVGs are inline — no external dependencies. -->
 <section class="community" id="community">
   <div class="container">
     <div class="community-grid">
       <div class="community-text">
         <h2 class="section-title">
           Join the<br />
-          <span class="gold-text">
-            Night Traders
-          </span>
+          <span class="gold-text">Night Traders</span>
         </h2>
         <p class="community-desc">
           Fueled by Coffee and Conviction.
           The $TODDY community trades while
           the world sleeps.
         </p>
-        <!-- CHANGE 1: All 7 social links added -->
-        <div class="social-buttons">
+
+        <!-- ROUND ICON SOCIAL BUTTONS -->
+        <div class="social-icons-row">
+
+          <!-- Twitter / X -->
           <a href="https://x.com/ToddyCoin"
-             class="social-btn twitter"
-             target="_blank"
-             rel="noopener noreferrer">
-            🐦 Twitter / X
+             class="social-icon-btn"
+             aria-label="Twitter / X"
+             title="Twitter / X"
+             target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+            </svg>
           </a>
+
+          <!-- Telegram -->
           <a href="https://t.me/ToddyCoinCommunity"
-             class="social-btn telegram"
-             target="_blank"
-             rel="noopener noreferrer">
-            ✈️ Telegram
+             class="social-icon-btn"
+             aria-label="Telegram"
+             title="Telegram"
+             target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+            </svg>
           </a>
+
+          <!-- Instagram -->
           <a href="https://www.instagram.com/toddycoin"
-             class="social-btn instagram"
-             target="_blank"
-             rel="noopener noreferrer">
-            📸 Instagram
+             class="social-icon-btn social-icon-instagram"
+             aria-label="Instagram"
+             title="Instagram"
+             target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+            </svg>
           </a>
+
+          <!-- TikTok -->
           <a href="https://www.tiktok.com/@toddycoin"
-             class="social-btn tiktok"
-             target="_blank"
-             rel="noopener noreferrer">
-            🎵 TikTok
+             class="social-icon-btn social-icon-tiktok"
+             aria-label="TikTok"
+             title="TikTok"
+             target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/>
+            </svg>
           </a>
+
+          <!-- Medium -->
           <a href="https://medium.com/@toddycoin"
-             class="social-btn medium"
-             target="_blank"
-             rel="noopener noreferrer">
-            📝 Medium
+             class="social-icon-btn social-icon-medium"
+             aria-label="Medium"
+             title="Medium"
+             target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M13.54 12a6.8 6.8 0 0 1-6.77 6.82A6.8 6.8 0 0 1 0 12a6.8 6.8 0 0 1 6.77-6.82A6.8 6.8 0 0 1 13.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/>
+            </svg>
           </a>
+
+          <!-- Reddit -->
           <a href="https://www.reddit.com/user/toddycoin/"
-             class="social-btn reddit"
-             target="_blank"
-             rel="noopener noreferrer">
-            🤖 Reddit
+             class="social-icon-btn social-icon-reddit"
+             aria-label="Reddit"
+             title="Reddit"
+             target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
+            </svg>
           </a>
+
+          <!-- Discord -->
           <a href="https://discord.com/invite/fV8Vmbp2u"
-             class="social-btn discord"
-             target="_blank"
-             rel="noopener noreferrer">
-            💬 Discord
+             class="social-icon-btn social-icon-discord"
+             aria-label="Discord"
+             title="Discord"
+             target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.031.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+            </svg>
           </a>
+
+          <!-- DEX Screener -->
           <a href="#"
-             class="social-btn dex"
-             target="_blank"
-             rel="noopener noreferrer">
-            📊 DEX Screener
+             class="social-icon-btn social-icon-dex"
+             aria-label="DEX Screener"
+             title="DEX Screener"
+             target="_blank" rel="noopener noreferrer">
+            <svg viewBox="0 0 24 24" fill="currentColor">
+              <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 14H9V8h2v8zm4 0h-2V8h2v8z"/>
+              <path d="M7 10l5-5 5 5H7z"/>
+            </svg>
           </a>
+
         </div>
+        <!-- End social icons row -->
+
       </div>
       <div class="community-mascot">
         <img src="assets/community-mascot.png"
@@ -563,32 +583,27 @@
   </div>
 </section>
 
-<!-- DIVIDER -->
 <div class="section-divider">
   <img src="assets/section-divider.png" alt="" />
 </div>
 
-<!-- FAQ — 16 questions (8+8 balance) -->
+<!-- ===== FAQ ===== -->
 <section class="faq" id="faq">
   <div class="container">
     <h2 class="section-title center">
-      <span class="gold-text">
-        Frequently Asked
-      </span> Questions ☕
+      <span class="gold-text">Frequently Asked</span>
+      Questions ☕
     </h2>
     <p class="faq-subtitle">
       Everything you need to know about $TODDY —
       straight from the jungle. No fluff. Just facts.
     </p>
-
     <div class="faq-grid">
 
       <!-- LEFT COLUMN — 8 questions -->
       <div class="faq-col">
-
         <div class="faq-item">
-          <button class="faq-question"
-                  aria-expanded="false">
+          <button class="faq-question" aria-expanded="false">
             <span>What is $TODDY?</span>
             <span class="faq-arrow">▼</span>
           </button>
@@ -602,28 +617,23 @@
               pre-sale.</p>
           </div>
         </div>
-
         <div class="faq-item">
-          <button class="faq-question"
-                  aria-expanded="false">
+          <button class="faq-question" aria-expanded="false">
             <span>What is Kopi Luwak?</span>
             <span class="faq-arrow">▼</span>
           </button>
           <div class="faq-answer">
-            <p>Kopi Luwak is the world's most
-              expensive and rarest coffee. It is made
-              from coffee beans eaten and naturally
-              processed by the Asian Palm Civet — the
-              same animal as our mascot Toddy. A cup
-              can cost up to $100 USD. We took the
-              rarest coffee and turned it into the
-              rarest meme.</p>
+            <p>Kopi Luwak is the world's most expensive
+              and rarest coffee. It is made from coffee
+              beans eaten and naturally processed by
+              the Asian Palm Civet — the same animal
+              as our mascot Toddy. A cup can cost up
+              to $100 USD. We took the rarest coffee
+              and turned it into the rarest meme.</p>
           </div>
         </div>
-
         <div class="faq-item">
-          <button class="faq-question"
-                  aria-expanded="false">
+          <button class="faq-question" aria-expanded="false">
             <span>Is $TODDY safe to buy?</span>
             <span class="faq-arrow">▼</span>
           </button>
@@ -637,183 +647,154 @@
               before buying.</p>
           </div>
         </div>
-
         <div class="faq-item">
-          <button class="faq-question"
-                  aria-expanded="false">
+          <button class="faq-question" aria-expanded="false">
             <span>Is the liquidity locked?</span>
             <span class="faq-arrow">▼</span>
           </button>
           <div class="faq-answer">
-            <p>Yes. 90% of liquidity is auto-locked
-              at TGE. When $TODDY launches on Solana,
-              the LP is locked/burned automatically
-              via the launchpad. The lock proof
-              transaction will be published here after
-              TGE so anyone can verify on-chain.</p>
+            <p>Yes. 90% of liquidity is auto-locked at
+              TGE. When $TODDY launches on Solana, the
+              LP is locked/burned automatically via the
+              launchpad. The lock proof transaction will
+              be published here after TGE so anyone can
+              verify on-chain.</p>
           </div>
         </div>
-
         <div class="faq-item">
-          <button class="faq-question"
-                  aria-expanded="false">
+          <button class="faq-question" aria-expanded="false">
             <span>What is Mint Authority Revoked?</span>
             <span class="faq-arrow">▼</span>
           </button>
           <div class="faq-answer">
             <p>On Solana, Mint Authority controls the
-              ability to create new tokens. When
-              revoked, the total supply is permanently
-              fixed at 1,000,000,000 $TODDY and no
-              one — including the creators — can ever
-              mint additional tokens. This is the
-              Solana equivalent of a renounced
-              contract on Ethereum.</p>
+              ability to create new tokens. When revoked,
+              the total supply is permanently fixed at
+              1,000,000,000 $TODDY and no one — including
+              the creators — can ever mint additional
+              tokens. This is the Solana equivalent of a
+              renounced contract on Ethereum.</p>
           </div>
         </div>
-
         <div class="faq-item">
-          <button class="faq-question"
-                  aria-expanded="false">
+          <button class="faq-question" aria-expanded="false">
             <span>Where can I buy $TODDY?</span>
             <span class="faq-arrow">▼</span>
           </button>
           <div class="faq-answer">
-            <p>After TGE, $TODDY will be available
-              on Solana DEXs — Jupiter (jup.ag) and
-              Raydium (raydium.io). Simply connect
-              your Phantom wallet, paste the official
-              CA and swap SOL for $TODDY. Follow our
-              How To Buy guide above.</p>
+            <p>After TGE, $TODDY will be available on
+              Solana DEXs — Jupiter (jup.ag) and Raydium
+              (raydium.io). Simply connect your Phantom
+              wallet, paste the official CA and swap SOL
+              for $TODDY. Follow our How To Buy guide
+              above.</p>
           </div>
         </div>
-
         <div class="faq-item">
-          <button class="faq-question"
-                  aria-expanded="false">
+          <button class="faq-question" aria-expanded="false">
             <span>What wallet do I need?</span>
             <span class="faq-arrow">▼</span>
           </button>
           <div class="faq-answer">
-            <p>You need a Solana-compatible wallet.
-              We recommend <strong>Phantom Wallet</strong>
-              (phantom.app) — free and available on
-              iOS, Android and Chrome. Solflare and
-              Backpack wallets also work.</p>
+            <p>You need a Solana-compatible wallet. We
+              recommend <strong>Phantom Wallet</strong>
+              (phantom.app) — free and available on iOS,
+              Android and Chrome. Solflare and Backpack
+              wallets also work.</p>
           </div>
         </div>
-
         <div class="faq-item">
-          <button class="faq-question"
-                  aria-expanded="false">
+          <button class="faq-question" aria-expanded="false">
             <span>My swap failed — what do I do?</span>
             <span class="faq-arrow">▼</span>
           </button>
           <div class="faq-answer">
-            <p>If your swap fails on Jupiter or
-              Raydium, increase slippage tolerance to
-              <strong>1–3%</strong> in settings and
-              try again. High demand during launch
-              can cause failed transactions. Your SOL
-              is never lost on a failed swap — it
-              always returns to your wallet.</p>
+            <p>If your swap fails on Jupiter or Raydium,
+              increase slippage tolerance to
+              <strong>1–3%</strong> in settings and try
+              again. High demand during launch can cause
+              failed transactions. Your SOL is never lost
+              on a failed swap — it always returns to
+              your wallet.</p>
           </div>
         </div>
-
-      </div><!-- end left col -->
+      </div>
 
       <!-- RIGHT COLUMN — 8 questions -->
       <div class="faq-col">
-
         <div class="faq-item">
-          <button class="faq-question"
-                  aria-expanded="false">
+          <button class="faq-question" aria-expanded="false">
             <span>Why was Solana chosen?</span>
             <span class="faq-arrow">▼</span>
           </button>
           <div class="faq-answer">
-            <p>Solana is the #1 chain for meme coins
-              in 2025–2026. It processes 65,000+
-              transactions per second with fees as
-              low as $0.001. Fast, cheap, and the
-              home of the biggest meme coin community
-              on earth.</p>
+            <p>Solana is the #1 chain for meme coins in
+              2025–2026. It processes 65,000+ transactions
+              per second with fees as low as $0.001. Fast,
+              cheap, and the home of the biggest meme coin
+              community on earth.</p>
           </div>
         </div>
-
         <div class="faq-item">
-          <button class="faq-question"
-                  aria-expanded="false">
+          <button class="faq-question" aria-expanded="false">
             <span>How do I add $TODDY to my wallet?</span>
             <span class="faq-arrow">▼</span>
           </button>
           <div class="faq-answer">
             <p>After buying, $TODDY should appear
               automatically in Phantom. If not, click
-              "Manage Token List", search for $TODDY
-              or paste the contract address to add
-              it manually. Your tokens are always
-              safe on the Solana blockchain.</p>
+              "Manage Token List", search for $TODDY or
+              paste the contract address to add it
+              manually. Your tokens are always safe on
+              the Solana blockchain.</p>
           </div>
         </div>
-
         <div class="faq-item">
-          <button class="faq-question"
-                  aria-expanded="false">
+          <button class="faq-question" aria-expanded="false">
             <span>Is there a pre-sale or whitelist?</span>
             <span class="faq-arrow">▼</span>
           </button>
           <div class="faq-answer">
-            <p>No. $TODDY is a 100% fair launch.
-              There is no pre-sale, no whitelist,
-              no private sale and no VC allocation.
-              Every single person gets the same
-              opportunity at launch. This is what
-              true fair launch means.</p>
+            <p>No. $TODDY is a 100% fair launch. There
+              is no pre-sale, no whitelist, no private
+              sale and no VC allocation. Every single
+              person gets the same opportunity at launch.
+              This is what true fair launch means.</p>
           </div>
         </div>
-
         <div class="faq-item">
-          <button class="faq-question"
-                  aria-expanded="false">
-            <span>How do I avoid scams and
-              fake tokens?</span>
+          <button class="faq-question" aria-expanded="false">
+            <span>How do I avoid scams and fake tokens?</span>
             <span class="faq-arrow">▼</span>
           </button>
           <div class="faq-answer">
             <p>Rule 1: The ONLY official CA is on
-              toddy.meme and our verified socials.
-              Never buy from a CA shared in DMs or
-              random groups. Rule 2: Always verify
-              on Solscan before buying. Rule 3:
-              We will NEVER DM you first asking
-              you to buy.</p>
+              toddy.meme and our verified socials. Never
+              buy from a CA shared in DMs or random
+              groups. Rule 2: Always verify on Solscan
+              before buying. Rule 3: We will NEVER DM
+              you first asking you to buy.</p>
           </div>
         </div>
-
         <div class="faq-item">
-          <button class="faq-question"
-                  aria-expanded="false">
-            <span>What is the total supply
-              and why 1 Billion?</span>
+          <button class="faq-question" aria-expanded="false">
+            <span>What is the total supply and why
+              1 Billion?</span>
             <span class="faq-arrow">▼</span>
           </button>
           <div class="faq-answer">
             <p>Total supply is fixed at 1,000,000,000
               $TODDY forever. 1 Billion is a clean,
-              digestible number that works well for
-              meme coin pricing and community
-              distribution. With Mint Authority
-              revoked, this supply can never
+              digestible number for meme coin pricing
+              and community distribution. With Mint
+              Authority revoked, this supply can never
               increase.</p>
           </div>
         </div>
-
         <div class="faq-item">
-          <button class="faq-question"
-                  aria-expanded="false">
-            <span>Will $TODDY be listed on
-              major exchanges?</span>
+          <button class="faq-question" aria-expanded="false">
+            <span>Will $TODDY be listed on major
+              exchanges?</span>
             <span class="faq-arrow">▼</span>
           </button>
           <div class="faq-answer">
@@ -821,59 +802,47 @@
               CoinMarketCap in Phase 2 (TGE + 30 days)
               and CEX listings in Phase 3 (TGE + 90
               days). Exchange listings depend on
-              community size and trading volume.
-              The bigger our community, the
-              faster we list.</p>
+              community size and trading volume. The
+              bigger our community, the faster we list.</p>
           </div>
         </div>
-
         <div class="faq-item">
-          <button class="faq-question"
-                  aria-expanded="false">
-            <span>How can I support and
-              grow $TODDY?</span>
+          <button class="faq-question" aria-expanded="false">
+            <span>How can I support and grow $TODDY?</span>
             <span class="faq-arrow">▼</span>
           </button>
           <div class="faq-answer">
             <p>Join our Telegram and Twitter, share
-              memes, tell your friends and HODL.
-              Meme coins grow through community
-              energy. Every share, every post, every
-              meme brings more night traders into
-              the jungle. The coffee is brewing.
-              Are you in? ☕🌙</p>
+              memes, tell your friends and HODL. Meme
+              coins grow through community energy. Every
+              share, every post, every meme brings more
+              night traders into the jungle. Are you
+              in? ☕🌙</p>
           </div>
         </div>
-
-        <!-- CHANGE 3: 16th FAQ for 8+8 balance -->
         <div class="faq-item">
-          <button class="faq-question"
-                  aria-expanded="false">
-            <span>What makes $TODDY different
-              from other meme coins?</span>
+          <button class="faq-question" aria-expanded="false">
+            <span>What makes $TODDY different from
+              other meme coins?</span>
             <span class="faq-arrow">▼</span>
           </button>
           <div class="faq-answer">
-            <p>$TODDY is the only meme coin built
-              around Kopi Luwak — the world's rarest
-              coffee — and the Asian Palm Civet that
-              produces it. While most meme coins
-              copy dog or frog themes, $TODDY has
-              a unique real-world story, a Southeast
-              Asian cultural identity, and a genuine
-              "night trader" narrative that resonates
-              with the crypto community. Rare coffee.
-              Rare meme. ☕🌙</p>
+            <p>$TODDY is the only meme coin built around
+              Kopi Luwak — the world's rarest coffee —
+              and the Asian Palm Civet that produces it.
+              Unlike dog and frog copy-cats, $TODDY has
+              a real-world story, Southeast Asian
+              identity, and a genuine "night trader"
+              narrative. Rare coffee. Rare meme. ☕🌙</p>
           </div>
         </div>
+      </div>
 
-      </div><!-- end right col -->
-
-    </div><!-- end faq-grid -->
+    </div>
   </div>
 </section>
 
-<!-- FOOTER — UPDATED with all 7 socials -->
+<!-- ===== FOOTER ===== -->
 <footer class="footer">
   <div class="container">
     <div class="footer-brand">
@@ -892,60 +861,103 @@
       <a href="#community">Community</a>
       <a href="#faq">FAQ</a>
     </nav>
-    <!-- CHANGE 1: All 7 socials + DEX in footer -->
-    <div class="footer-socials">
+
+    <!-- FOOTER SOCIAL ICONS — round SVG style -->
+    <div class="footer-social-icons">
+
       <a href="https://x.com/ToddyCoin"
-         class="footer-social-btn"
+         class="footer-icon-btn"
+         aria-label="Twitter / X"
+         title="Twitter / X"
          target="_blank" rel="noopener noreferrer">
-        🐦 Twitter
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.253 5.622zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+        </svg>
       </a>
+
       <a href="https://t.me/ToddyCoinCommunity"
-         class="footer-social-btn"
+         class="footer-icon-btn"
+         aria-label="Telegram"
+         title="Telegram"
          target="_blank" rel="noopener noreferrer">
-        ✈️ Telegram
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M11.944 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0a12 12 0 0 0-.056 0zm4.962 7.224c.1-.002.321.023.465.14a.506.506 0 0 1 .171.325c.016.093.036.306.02.472-.18 1.898-.962 6.502-1.36 8.627-.168.9-.499 1.201-.82 1.23-.696.065-1.225-.46-1.9-.902-1.056-.693-1.653-1.124-2.678-1.8-1.185-.78-.417-1.21.258-1.91.177-.184 3.247-2.977 3.307-3.23.007-.032.014-.15-.056-.212s-.174-.041-.249-.024c-.106.024-1.793 1.14-5.061 3.345-.48.33-.913.49-1.302.48-.428-.008-1.252-.241-1.865-.44-.752-.245-1.349-.374-1.297-.789.027-.216.325-.437.893-.663 3.498-1.524 5.83-2.529 6.998-3.014 3.332-1.386 4.025-1.627 4.476-1.635z"/>
+        </svg>
       </a>
+
       <a href="https://www.instagram.com/toddycoin"
-         class="footer-social-btn"
+         class="footer-icon-btn footer-icon-instagram"
+         aria-label="Instagram"
+         title="Instagram"
          target="_blank" rel="noopener noreferrer">
-        📸 Instagram
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zM12 0C8.741 0 8.333.014 7.053.072 2.695.272.273 2.69.073 7.052.014 8.333 0 8.741 0 12c0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98C8.333 23.986 8.741 24 12 24c3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98C15.668.014 15.259 0 12 0zm0 5.838a6.162 6.162 0 1 0 0 12.324 6.162 6.162 0 0 0 0-12.324zM12 16a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.406-11.845a1.44 1.44 0 1 0 0 2.881 1.44 1.44 0 0 0 0-2.881z"/>
+        </svg>
       </a>
+
       <a href="https://www.tiktok.com/@toddycoin"
-         class="footer-social-btn"
+         class="footer-icon-btn footer-icon-tiktok"
+         aria-label="TikTok"
+         title="TikTok"
          target="_blank" rel="noopener noreferrer">
-        🎵 TikTok
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.75a4.85 4.85 0 0 1-1.01-.06z"/>
+        </svg>
       </a>
+
       <a href="https://medium.com/@toddycoin"
-         class="footer-social-btn"
+         class="footer-icon-btn footer-icon-medium"
+         aria-label="Medium"
+         title="Medium"
          target="_blank" rel="noopener noreferrer">
-        📝 Medium
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M13.54 12a6.8 6.8 0 0 1-6.77 6.82A6.8 6.8 0 0 1 0 12a6.8 6.8 0 0 1 6.77-6.82A6.8 6.8 0 0 1 13.54 12zM20.96 12c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75C23.47 6.25 24 8.83 24 12z"/>
+        </svg>
       </a>
+
       <a href="https://www.reddit.com/user/toddycoin/"
-         class="footer-social-btn"
+         class="footer-icon-btn footer-icon-reddit"
+         aria-label="Reddit"
+         title="Reddit"
          target="_blank" rel="noopener noreferrer">
-        🤖 Reddit
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M12 0A12 12 0 0 0 0 12a12 12 0 0 0 12 12 12 12 0 0 0 12-12A12 12 0 0 0 12 0zm5.01 4.744c.688 0 1.25.561 1.25 1.249a1.25 1.25 0 0 1-2.498.056l-2.597-.547-.8 3.747c1.824.07 3.48.632 4.674 1.488.308-.309.73-.491 1.207-.491.968 0 1.754.786 1.754 1.754 0 .716-.435 1.333-1.01 1.614a3.111 3.111 0 0 1 .042.52c0 2.694-3.13 4.87-7.004 4.87-3.874 0-7.004-2.176-7.004-4.87 0-.183.015-.366.043-.534A1.748 1.748 0 0 1 4.028 12c0-.968.786-1.754 1.754-1.754.463 0 .898.196 1.207.49 1.207-.883 2.878-1.43 4.744-1.487l.885-4.182a.342.342 0 0 1 .14-.197.35.35 0 0 1 .238-.042l2.906.617a1.214 1.214 0 0 1 1.108-.701zM9.25 12C8.561 12 8 12.562 8 13.25c0 .687.561 1.248 1.25 1.248.687 0 1.248-.561 1.248-1.249 0-.688-.561-1.249-1.249-1.249zm5.5 0c-.687 0-1.248.561-1.248 1.25 0 .687.561 1.248 1.249 1.248.688 0 1.249-.561 1.249-1.249 0-.687-.562-1.249-1.25-1.249zm-5.466 3.99a.327.327 0 0 0-.231.094.33.33 0 0 0 0 .463c.842.842 2.484.913 2.961.913.477 0 2.105-.056 2.961-.913a.361.361 0 0 0 .029-.463.33.33 0 0 0-.464 0c-.547.533-1.684.73-2.512.73-.828 0-1.979-.196-2.512-.73a.326.326 0 0 0-.232-.095z"/>
+        </svg>
       </a>
+
       <a href="https://discord.com/invite/fV8Vmbp2u"
-         class="footer-social-btn"
+         class="footer-icon-btn footer-icon-discord"
+         aria-label="Discord"
+         title="Discord"
          target="_blank" rel="noopener noreferrer">
-        💬 Discord
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M20.317 4.37a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057c.002.022.015.043.031.056a19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028 14.09 14.09 0 0 0 1.226-1.994.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128 10.2 10.2 0 0 0 .372-.292.074.074 0 0 1 .077-.01c3.928 1.793 8.18 1.793 12.062 0a.074.074 0 0 1 .078.01c.12.098.246.198.373.292a.077.077 0 0 1-.006.127 12.299 12.299 0 0 1-1.873.892.077.077 0 0 0-.041.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.674-3.549-13.66a.061.061 0 0 0-.031-.03zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.956-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.956 2.418-2.157 2.418zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.419 2.157-2.419 1.21 0 2.176 1.096 2.157 2.42 0 1.333-.946 2.418-2.157 2.418z"/>
+        </svg>
       </a>
+
+      <!-- DEX Screener placeholder -->
       <a href="#"
-         class="footer-social-btn"
+         class="footer-icon-btn footer-icon-dex"
+         aria-label="DEX Screener"
+         title="DEX Screener"
          target="_blank" rel="noopener noreferrer">
-        📊 DEX Screener
+        <svg viewBox="0 0 24 24" fill="currentColor">
+          <path d="M3 3h18v2H3zm0 8h18v2H3zm0 8h18v2H3zM9 7l6 4-6 4V7z"/>
+        </svg>
       </a>
+
     </div>
-    <div class="footer-divider"></div>
-    <!-- CHANGE 2: Linktree link in footer -->
-    <p class="footer-linktree">
-      🔗 All links in one place:
-      <a href="/linktree.html"
+
+    <!-- Linktree link -->
+    <p class="footer-linktree-line">
+      All links:
+      <a href="linktree.html"
          class="footer-linktree-link"
-         target="_blank"
-         rel="noopener noreferrer">
-        toddy.meme/linktree
+         target="_blank" rel="noopener noreferrer">
+        toddy.meme/linktree ↗
       </a>
     </p>
+
     <div class="footer-divider"></div>
     <p class="footer-disclaimer">
       $TODDY is a meme coin with no intrinsic value
