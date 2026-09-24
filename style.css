@@ -1139,3 +1139,135 @@ img { max-width: 100%; height: auto; display: block; }
   .social-icon-btn { width: 44px; height: 44px; }
   .social-icon-btn svg { width: 18px; height: 18px; }
 }
+
+/* ==========================================
+   TODDY SOCIAL BUTTON BRAND SKINS
+   Additive override: preserves existing layout,
+   icon SVGs, URLs, responsive sizing and motion.
+   Mirrors the branded circular buttons used on
+   linktree.html. Keep this block at file end.
+   ========================================== */
+.social-icon-btn,
+.footer-icon-btn {
+  color: #fff;
+  border: 1.5px solid rgba(255,255,255,0.68);
+  box-shadow:
+    0 0 0 2px rgba(201,168,76,0.12),
+    0 4px 12px rgba(0,0,0,0.32),
+    inset 0 1px 0 rgba(255,255,255,0.14);
+}
+
+/* X */
+.social-icon-btn[aria-label="Twitter / X"],
+.footer-icon-btn[aria-label="Twitter / X"] {
+  background: #050505;
+  color: #fff;
+  border-color: rgba(255,255,255,0.78);
+}
+
+/* Telegram */
+.social-icon-btn[aria-label="Telegram"],
+.footer-icon-btn[aria-label="Telegram"] {
+  background: #229ED9;
+  color: #fff;
+  border-color: #BCEBFF;
+}
+
+/* Instagram — recognizable multi-tone brand gradient */
+.social-icon-btn[aria-label="Instagram"],
+.footer-icon-btn[aria-label="Instagram"] {
+  background: radial-gradient(circle at 30% 107%, #FDF497 0%, #FDF497 5%, #FD5949 45%, #D6249F 60%, #285AEB 90%);
+  color: #fff;
+  border-color: rgba(255,255,255,0.82);
+}
+
+/* TikTok */
+.social-icon-btn[aria-label="TikTok"],
+.footer-icon-btn[aria-label="TikTok"] {
+  background: #101010;
+  color: #fff;
+  border-color: #69C9D0;
+}
+
+/* Medium */
+.social-icon-btn[aria-label="Medium"],
+.footer-icon-btn[aria-label="Medium"] {
+  background: #080808;
+  color: #fff;
+  border-color: rgba(255,255,255,0.72);
+}
+
+/* Reddit */
+.social-icon-btn[aria-label="Reddit"],
+.footer-icon-btn[aria-label="Reddit"] {
+  background: #FF4500;
+  color: #fff;
+  border-color: #FFB49B;
+}
+
+/* Discord */
+.social-icon-btn[aria-label="Discord"],
+.footer-icon-btn[aria-label="Discord"] {
+  background: #5865F2;
+  color: #fff;
+  border-color: #B7BEFF;
+}
+
+/* DEX Screener — dark chart-style button with a vivid green rim */
+.social-icon-btn[aria-label="DEX Screener"],
+.footer-icon-btn[aria-label="DEX Screener"] {
+  background: #132019;
+  color: #B8F36B;
+  border-color: #8BC34A;
+}
+
+/* Keep branded fills on hover; add glow/lift instead of swapping colours. */
+.social-icon-btn[aria-label="Twitter / X"]:hover,
+.footer-icon-btn[aria-label="Twitter / X"]:hover {
+  background: #050505; color: #fff; border-color: #fff;
+  box-shadow: 0 0 18px rgba(255,255,255,0.25), 0 8px 22px rgba(0,0,0,0.38);
+}
+.social-icon-btn[aria-label="Telegram"]:hover,
+.footer-icon-btn[aria-label="Telegram"]:hover {
+  background: #229ED9; color: #fff; border-color: #D8F5FF;
+  box-shadow: 0 0 18px rgba(34,158,217,0.55), 0 8px 22px rgba(0,0,0,0.38);
+}
+.social-icon-btn[aria-label="Instagram"]:hover,
+.footer-icon-btn[aria-label="Instagram"]:hover {
+  background: radial-gradient(circle at 30% 107%, #FDF497 0%, #FDF497 5%, #FD5949 45%, #D6249F 60%, #285AEB 90%);
+  color: #fff; border-color: #fff;
+  box-shadow: 0 0 18px rgba(214,36,159,0.52), 0 8px 22px rgba(0,0,0,0.38);
+}
+.social-icon-btn[aria-label="TikTok"]:hover,
+.footer-icon-btn[aria-label="TikTok"]:hover {
+  background: #101010; color: #fff; border-color: #69C9D0;
+  box-shadow: 0 0 18px rgba(105,201,208,0.42), 0 8px 22px rgba(0,0,0,0.38);
+}
+.social-icon-btn[aria-label="Medium"]:hover,
+.footer-icon-btn[aria-label="Medium"]:hover {
+  background: #080808; color: #fff; border-color: #fff;
+  box-shadow: 0 0 18px rgba(255,255,255,0.2), 0 8px 22px rgba(0,0,0,0.38);
+}
+.social-icon-btn[aria-label="Reddit"]:hover,
+.footer-icon-btn[aria-label="Reddit"]:hover {
+  background: #FF4500; color: #fff; border-color: #FFD0C0;
+  box-shadow: 0 0 18px rgba(255,69,0,0.5), 0 8px 22px rgba(0,0,0,0.38);
+}
+.social-icon-btn[aria-label="Discord"]:hover,
+.footer-icon-btn[aria-label="Discord"]:hover {
+  background: #5865F2; color: #fff; border-color: #D4D8FF;
+  box-shadow: 0 0 18px rgba(88,101,242,0.52), 0 8px 22px rgba(0,0,0,0.38);
+}
+.social-icon-btn[aria-label="DEX Screener"]:hover,
+.footer-icon-btn[aria-label="DEX Screener"]:hover {
+  background: #132019; color: #D7FFA5; border-color: #B8F36B;
+  box-shadow: 0 0 18px rgba(139,195,74,0.45), 0 8px 22px rgba(0,0,0,0.38);
+}
+
+/* Visible keyboard focus without changing normal button geometry. */
+.social-icon-btn:focus-visible,
+.footer-icon-btn:focus-visible {
+  outline: 3px solid var(--gold-light);
+  outline-offset: 4px;
+}
+
