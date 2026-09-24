@@ -226,8 +226,11 @@
         drop-shadow(0 3px 8px rgba(0,0,0,0.5));
     }
 
+    .cherry-instagram .cherry-base {
+      fill: url(#instagramGradient);
+    }
     .cherry-instagram:hover .cherry-base {
-      fill: #e1306c; stroke: #f77ab4;
+      fill: url(#instagramGradient); stroke: #ffffff;
       filter:
         drop-shadow(0 0 14px rgba(225,48,108,0.7))
         drop-shadow(0 3px 8px rgba(0,0,0,0.5));
@@ -283,10 +286,12 @@
     .social-dock {
       width: 100%;
       max-width: 480px;
-      display: flex;
-      flex-wrap: wrap;
+      display: grid;
+      /* Fixed four-column layout guarantees exactly 4 icons per row. */
+      grid-template-columns: repeat(4, 48px);
       align-items: center;
       justify-content: center;
+      justify-items: center;
       gap: 14px;
       margin: 4px 0 36px;
       padding: 18px 16px;
@@ -343,7 +348,10 @@
     .social-website { --social-color: #A98122; }
     .social-twitter { --social-color: #080808; }
     .social-telegram { --social-color: #229ED9; }
-    .social-instagram { --social-color: #C13584; }
+    .social-instagram {
+      --social-color: #D62976;
+      background: linear-gradient(135deg, #FEDA75 0%, #FA7E1E 24%, #D62976 55%, #962FBF 78%, #4F5BD5 100%);
+    }
     .social-tiktok { --social-color: #111111; }
     .social-medium { --social-color: #080808; }
     .social-reddit { --social-color: #FF4500; }
@@ -394,16 +402,24 @@
       .lt-wrap { padding: 36px 12px 48px; }
       .lt-logo { width: 68px; height: 68px; }
       .lt-name { font-size: 1.5rem; }
-      .social-dock { gap: 12px; padding: 16px 12px; }
-      .social-dock-btn { width: 46px; height: 46px; flex-basis: 46px; }
-      .social-dock-btn svg { width: 24px; height: 24px; }
+      .social-dock {
+        grid-template-columns: repeat(4, 44px);
+        gap: 12px 10px;
+        padding: 16px 10px;
+      }
+      .social-dock-btn { width: 44px; height: 44px; }
+      .social-dock-btn svg { width: 23px; height: 23px; }
       /* Tree already scales via SVG viewBox */
     }
 
     @media (max-width: 360px) {
-      .social-dock { gap: 10px; padding: 14px 10px; }
-      .social-dock-btn { width: 42px; height: 42px; flex-basis: 42px; }
-      .social-dock-btn svg { width: 22px; height: 22px; }
+      .social-dock {
+        grid-template-columns: repeat(4, 40px);
+        gap: 10px 8px;
+        padding: 14px 8px;
+      }
+      .social-dock-btn { width: 40px; height: 40px; }
+      .social-dock-btn svg { width: 21px; height: 21px; }
     }
   </style>
 </head>
@@ -456,6 +472,17 @@
          xmlns="http://www.w3.org/2000/svg"
          role="img"
          aria-label="Toddy Coffee Tree with social links">
+
+      <defs>
+        <!-- Instagram's familiar warm-to-violet brand gradient -->
+        <linearGradient id="instagramGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+          <stop offset="0%" stop-color="#FEDA75" />
+          <stop offset="24%" stop-color="#FA7E1E" />
+          <stop offset="55%" stop-color="#D62976" />
+          <stop offset="78%" stop-color="#962FBF" />
+          <stop offset="100%" stop-color="#4F5BD5" />
+        </linearGradient>
+      </defs>
 
       <!-- ======= TRUNK ======= -->
       <!-- Main trunk -->
@@ -850,7 +877,7 @@
   </div>
   <!-- end lt-tree-wrap -->
 
-  <!-- Icon-only social dock: no text labels; recognizable brand marks only -->
+  <!-- Icon-only social dock: fixed 4-column x 2-row grid, centred; brand marks only -->
   <nav class="social-dock" aria-label="Official Toddy social links">
     <a class="social-dock-btn social-website" href="https://toddy.meme/" target="_blank" rel="noopener noreferrer" aria-label="Website" title="Website">
       <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10             10 10 10-4.48 10-10S17.52 2 12 2zm-1             17.93c-3.95-.49-7-3.85-7-7.93             0-.62.08-1.21.21-1.79L9 15v1c0 1.1.9             2 2 2v1.93zm6.9-2.54c-.26-.81-1-1.39             -1.9-1.39h-1v-3c0-.55-.45-1-1-1H8v-2h2             c.55 0 1-.45 1-1V7h2c1.1 0 2-.9 2-2v-.41             c2.93 1.19 5 4.06 5 7.41 0 2.08-.8             3.97-2.1 5.39z"/></svg>
