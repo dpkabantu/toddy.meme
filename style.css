@@ -88,11 +88,11 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .nav-links {
   display: flex; list-style: none;
-  gap: 20px; align-items: center;
+  gap: 22px; align-items: center;
 }
 .nav-links a {
   color: var(--white); text-decoration: none;
-  font-weight: 500; font-size: 0.87rem;
+  font-weight: 500; font-size: 0.88rem;
   position: relative; padding-bottom: 3px;
   transition: color 0.3s ease;
   white-space: nowrap;
@@ -112,9 +112,9 @@ img { max-width: 100%; height: auto; display: block; }
   background: linear-gradient(
     135deg, var(--gold-light), var(--gold-dark));
   color: var(--white);
-  padding: 9px 18px; border-radius: 25px;
+  padding: 10px 20px; border-radius: 25px;
   text-decoration: none; font-weight: 700;
-  font-size: 0.87rem; white-space: nowrap;
+  font-size: 0.88rem; white-space: nowrap;
   flex-shrink: 0;
   transition: transform 0.3s ease, box-shadow 0.3s ease;
 }
@@ -309,9 +309,11 @@ img { max-width: 100%; height: auto; display: block; }
 
 /* ==========================================
    ABOUT
-   CHANGE: Desktop grid keeps mascot LEFT,
-   text RIGHT via grid ordering.
-   Mobile: DOM order (text first) is used.
+   CHANGE: Heading (.about-heading) sits
+   ABOVE the grid. On desktop it spans full
+   width above the 2-col grid.
+   .about-body replaces .about-text (same
+   styles — only the heading moved out).
    ========================================== */
 .about {
   position: relative; padding: 100px 0;
@@ -319,31 +321,45 @@ img { max-width: 100%; height: auto; display: block; }
   overflow: hidden; z-index: 3;
 }
 .about-bg {
-  position: absolute; inset: 0;
-  z-index: 0; opacity: 0.4;
+  position: absolute; inset: 0; z-index: 0; opacity: 0.4;
 }
 .about-bg-img {
   width: 100%; height: 100%; object-fit: cover;
 }
 .about .container { position: relative; z-index: 1; }
+
+/* Heading above grid — full width on all screens */
+.about-heading {
+  margin-bottom: 40px;
+}
+
+/* On desktop: left-align heading to match the
+   right-column text position visually */
+@media (min-width: 769px) {
+  .about-heading {
+    /* Heading spans full width above the 2-col grid.
+       Left-aligned to feel anchored to the text side */
+    text-align: left;
+    padding-left: calc(50% + 30px);
+    /* This aligns the heading above the right column
+       (text side) matching desktop layout where
+       mascot is left, text is right */
+  }
+}
+
 .about-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 60px; align-items: center;
 }
-/* On desktop: mascot visually appears LEFT,
-   text visually appears RIGHT.
-   In HTML, text is first in DOM order.
-   We use order property to swap visually. */
-.about-text  { order: 2; }
-.about-mascot { order: 1; }
-
 .about-mascot img {
   width: 100%; max-width: 450px; margin: 0 auto;
   filter: drop-shadow(0 0 30px rgba(201,168,76,0.5));
   animation: float 4s ease-in-out infinite;
 }
-.about-text p {
+
+/* .about-body = former .about-text minus the h2 */
+.about-body p {
   font-size: 1.05rem; line-height: 1.8;
   opacity: 0.9; margin-bottom: 15px;
 }
@@ -376,8 +392,7 @@ img { max-width: 100%; height: auto; display: block; }
   position: relative; z-index: 3;
 }
 .tokenomics-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
+  display: grid; grid-template-columns: 1fr 1fr;
   gap: 60px; align-items: center;
 }
 .tokenomics-mascot img {
@@ -388,8 +403,7 @@ img { max-width: 100%; height: auto; display: block; }
   display: block; margin: 0 auto;
 }
 .tokenomics-cards {
-  display: grid;
-  grid-template-columns: 1fr 1fr; gap: 16px;
+  display: grid; grid-template-columns: 1fr 1fr; gap: 16px;
 }
 .token-card-wide { grid-column: 1 / -1; }
 .token-card {
@@ -455,8 +469,7 @@ img { max-width: 100%; height: auto; display: block; }
   margin-bottom: 22px; text-align: center;
 }
 .why-solana-grid {
-  display: grid; grid-template-columns: repeat(4,1fr);
-  gap: 16px;
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 16px;
 }
 .why-item {
   text-align: center; padding: 16px 10px;
@@ -472,10 +485,7 @@ img { max-width: 100%; height: auto; display: block; }
   display: block; font-size: 1.55rem;
   font-weight: 900; color: var(--purple); margin-bottom: 4px;
 }
-.why-label {
-  font-size: 0.78rem; opacity: 0.75;
-  display: block; line-height: 1.4;
-}
+.why-label { font-size: 0.78rem; opacity: 0.75; display: block; line-height: 1.4; }
 
 /* ==========================================
    HOW TO BUY
@@ -502,9 +512,7 @@ img { max-width: 100%; height: auto; display: block; }
   padding: 20px 18px; border-radius: 15px;
   transition: transform 0.3s ease, border-color 0.3s ease;
 }
-.step:hover {
-  transform: translateX(6px); border-color: var(--gold);
-}
+.step:hover { transform: translateX(6px); border-color: var(--gold); }
 .step-number {
   font-family: 'Cinzel', serif;
   font-size: 1.9rem; font-weight: 900;
@@ -515,9 +523,7 @@ img { max-width: 100%; height: auto; display: block; }
   font-size: 1rem; font-weight: 700;
   color: var(--gold); margin-bottom: 6px;
 }
-.step-content p {
-  font-size: 0.9rem; line-height: 1.65; opacity: 0.85;
-}
+.step-content p { font-size: 0.9rem; line-height: 1.65; opacity: 0.85; }
 
 /* Safety Banner */
 .safety-banner {
@@ -538,10 +544,7 @@ img { max-width: 100%; height: auto; display: block; }
   color: var(--gold); margin-bottom: 5px;
   font-family: 'Cinzel', serif; letter-spacing: 0.5px;
 }
-.safety-text p {
-  font-size: 0.88rem; opacity: 0.85;
-  line-height: 1.6; margin: 0;
-}
+.safety-text p { font-size: 0.88rem; opacity: 0.85; line-height: 1.6; margin: 0; }
 .safety-link {
   color: var(--purple); text-decoration: none;
   font-weight: 700; transition: color 0.3s ease;
@@ -606,8 +609,7 @@ img { max-width: 100%; height: auto; display: block; }
   display: inline-block; margin: 0 auto;
 }
 .roadmap-grid {
-  display: grid; grid-template-columns: repeat(4,1fr);
-  gap: 20px;
+  display: grid; grid-template-columns: repeat(4,1fr); gap: 20px;
 }
 .phase {
   background: linear-gradient(160deg,
@@ -688,25 +690,15 @@ img { max-width: 100%; height: auto; display: block; }
   opacity: 0.9; margin-bottom: 35px; max-width: 460px;
 }
 
-/* ==========================================
-   SOCIAL ICON BUTTONS — round circles
-   Replaces the broken text button layout.
-   8 platforms in a flex-wrap horizontal row.
-   ========================================== */
+/* SOCIAL ICON BUTTONS */
 .social-icons-row {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 14px;
+  display: flex; flex-wrap: wrap; gap: 14px;
   align-items: center;
 }
-
 .social-icon-btn {
-  display: flex;
-  align-items: center;
+  display: flex; align-items: center;
   justify-content: center;
-  width: 52px;
-  height: 52px;
-  border-radius: 50%;
+  width: 52px; height: 52px; border-radius: 50%;
   text-decoration: none;
   background: rgba(255,255,255,0.08);
   border: 2px solid rgba(255,255,255,0.15);
@@ -717,83 +709,44 @@ img { max-width: 100%; height: auto; display: block; }
               box-shadow 0.3s ease;
   flex-shrink: 0;
 }
-
 .social-icon-btn svg {
-  width: 22px;
-  height: 22px;
-  display: block;
+  width: 22px; height: 22px; display: block;
 }
-
 .social-icon-btn:hover {
   transform: translateY(-4px) scale(1.1);
 }
-
-/* Platform-specific colours on hover */
-/* Twitter/X — black with white icon */
-.social-icon-btn:nth-child(1):hover,
 .social-icon-btn[aria-label="Twitter / X"]:hover {
-  background: #000000;
-  border-color: #ffffff;
-  color: #ffffff;
+  background: #000; border-color: #fff; color: #fff;
   box-shadow: 0 8px 24px rgba(255,255,255,0.2);
 }
-
-/* Telegram — blue */
 .social-icon-btn[aria-label="Telegram"]:hover {
-  background: #0088cc;
-  border-color: #0088cc;
-  color: #ffffff;
+  background: #0088cc; border-color: #0088cc; color: #fff;
   box-shadow: 0 8px 24px rgba(0,136,204,0.45);
 }
-
-/* Instagram — gradient via box-shadow trick */
 .social-icon-instagram:hover {
-  background: #e1306c;
-  border-color: #e1306c;
-  color: #ffffff;
+  background: #e1306c; border-color: #e1306c; color: #fff;
   box-shadow: 0 8px 24px rgba(225,48,108,0.5);
 }
-
-/* TikTok */
 .social-icon-tiktok:hover {
-  background: #010101;
-  border-color: #69c9d0;
-  color: #69c9d0;
+  background: #010101; border-color: #69c9d0; color: #69c9d0;
   box-shadow: 0 8px 24px rgba(105,201,208,0.4);
 }
-
-/* Medium */
 .social-icon-medium:hover {
-  background: #000000;
-  border-color: rgba(255,255,255,0.6);
-  color: #ffffff;
+  background: #000; border-color: rgba(255,255,255,0.6); color: #fff;
   box-shadow: 0 8px 24px rgba(255,255,255,0.2);
 }
-
-/* Reddit */
 .social-icon-reddit:hover {
-  background: #ff4500;
-  border-color: #ff4500;
-  color: #ffffff;
+  background: #ff4500; border-color: #ff4500; color: #fff;
   box-shadow: 0 8px 24px rgba(255,69,0,0.45);
 }
-
-/* Discord */
 .social-icon-discord:hover {
-  background: #5865f2;
-  border-color: #5865f2;
-  color: #ffffff;
+  background: #5865f2; border-color: #5865f2; color: #fff;
   box-shadow: 0 8px 24px rgba(88,101,242,0.45);
 }
-
-/* DEX Screener — gold */
 .social-icon-dex:hover {
-  background: var(--gold);
-  border-color: var(--gold);
-  color: var(--black);
+  background: var(--gold); border-color: var(--gold); color: var(--black);
   box-shadow: 0 8px 24px rgba(201,168,76,0.45);
 }
-
 .community-mascot img {
   width: 100%; max-width: 450px;
   filter: drop-shadow(0 0 30px rgba(153,69,255,0.5));
@@ -834,10 +787,9 @@ img { max-width: 100%; height: auto; display: block; }
   box-shadow: 0 6px 28px rgba(201,168,76,0.18);
 }
 .faq-question {
-  width: 100%; display: flex;
-  align-items: center; justify-content: space-between;
-  gap: 12px; padding: 18px 22px;
-  background: none; border: none;
+  width: 100%; display: flex; align-items: center;
+  justify-content: space-between; gap: 12px;
+  padding: 18px 22px; background: none; border: none;
   cursor: pointer; text-align: left; color: var(--white);
   font-family: 'Playfair Display', serif;
   font-size: 0.95rem; font-weight: 700;
@@ -879,9 +831,7 @@ img { max-width: 100%; height: auto; display: block; }
   width: 42px; height: 42px; border-radius: 50%;
   border: 2px solid rgba(201,168,76,0.4);
 }
-.footer-name {
-  font-size: 1.5rem; font-weight: 900; color: var(--gold);
-}
+.footer-name { font-size: 1.5rem; font-weight: 900; color: var(--gold); }
 .footer-tagline {
   font-size: 0.95rem; opacity: 0.62;
   margin-bottom: 28px; font-style: italic;
@@ -896,74 +846,55 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .footer-nav a:hover { color: var(--gold); }
 
-/* FOOTER SOCIAL ICON BUTTONS */
+/* FOOTER SOCIAL ICONS */
 .footer-social-icons {
-  display: flex;
-  justify-content: center;
-  flex-wrap: wrap;
-  gap: 12px;
-  margin-bottom: 20px;
+  display: flex; justify-content: center;
+  flex-wrap: wrap; gap: 12px; margin-bottom: 20px;
 }
-
 .footer-icon-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 44px;
-  height: 44px;
-  border-radius: 50%;
+  display: flex; align-items: center; justify-content: center;
+  width: 44px; height: 44px; border-radius: 50%;
   text-decoration: none;
   background: rgba(201,168,76,0.08);
   border: 1.5px solid rgba(201,168,76,0.3);
   color: rgba(255,255,255,0.75);
-  transition: transform 0.3s ease,
-              background 0.3s ease,
-              border-color 0.3s ease,
-              box-shadow 0.3s ease;
+  transition: transform 0.3s ease, background 0.3s ease,
+              border-color 0.3s ease, box-shadow 0.3s ease;
 }
-
-.footer-icon-btn svg {
-  width: 18px; height: 18px; display: block;
-}
-
-.footer-icon-btn:hover {
-  transform: translateY(-3px) scale(1.12);
-}
-
+.footer-icon-btn svg { width: 18px; height: 18px; display: block; }
+.footer-icon-btn:hover { transform: translateY(-3px) scale(1.12); }
 .footer-icon-btn[aria-label="Twitter / X"]:hover {
-  background: #000; border-color: #fff;
-  color: #fff; box-shadow: 0 6px 18px rgba(255,255,255,0.15);
+  background: #000; border-color: #fff; color: #fff;
+  box-shadow: 0 6px 18px rgba(255,255,255,0.15);
 }
 .footer-icon-btn[aria-label="Telegram"]:hover {
-  background: #0088cc; border-color: #0088cc;
-  color: #fff; box-shadow: 0 6px 18px rgba(0,136,204,0.4);
+  background: #0088cc; border-color: #0088cc; color: #fff;
+  box-shadow: 0 6px 18px rgba(0,136,204,0.4);
 }
 .footer-icon-instagram:hover {
-  background: #e1306c; border-color: #e1306c;
-  color: #fff; box-shadow: 0 6px 18px rgba(225,48,108,0.45);
+  background: #e1306c; border-color: #e1306c; color: #fff;
+  box-shadow: 0 6px 18px rgba(225,48,108,0.45);
 }
 .footer-icon-tiktok:hover {
-  background: #010101; border-color: #69c9d0;
-  color: #69c9d0; box-shadow: 0 6px 18px rgba(105,201,208,0.35);
+  background: #010101; border-color: #69c9d0; color: #69c9d0;
+  box-shadow: 0 6px 18px rgba(105,201,208,0.35);
 }
 .footer-icon-medium:hover {
-  background: #000; border-color: rgba(255,255,255,0.5);
-  color: #fff; box-shadow: 0 6px 18px rgba(255,255,255,0.15);
+  background: #000; border-color: rgba(255,255,255,0.5); color: #fff;
+  box-shadow: 0 6px 18px rgba(255,255,255,0.15);
 }
 .footer-icon-reddit:hover {
-  background: #ff4500; border-color: #ff4500;
-  color: #fff; box-shadow: 0 6px 18px rgba(255,69,0,0.4);
+  background: #ff4500; border-color: #ff4500; color: #fff;
+  box-shadow: 0 6px 18px rgba(255,69,0,0.4);
 }
 .footer-icon-discord:hover {
-  background: #5865f2; border-color: #5865f2;
-  color: #fff; box-shadow: 0 6px 18px rgba(88,101,242,0.4);
+  background: #5865f2; border-color: #5865f2; color: #fff;
+  box-shadow: 0 6px 18px rgba(88,101,242,0.4);
 }
 .footer-icon-dex:hover {
-  background: var(--gold); border-color: var(--gold);
-  color: var(--black); box-shadow: 0 6px 18px rgba(201,168,76,0.4);
+  background: var(--gold); border-color: var(--gold); color: var(--black);
+  box-shadow: 0 6px 18px rgba(201,168,76,0.4);
 }
-
-/* Linktree line */
 .footer-linktree-line {
   font-size: 0.85rem; opacity: 0.6; margin-bottom: 20px;
 }
@@ -972,15 +903,12 @@ img { max-width: 100%; height: auto; display: block; }
   transition: opacity 0.3s ease;
 }
 .footer-linktree-link:hover { opacity: 0.75; }
-
 .footer-divider {
-  height: 1px; background: rgba(255,255,255,0.07);
-  margin: 0 0 25px;
+  height: 1px; background: rgba(255,255,255,0.07); margin: 0 0 25px;
 }
 .footer-disclaimer {
   font-size: 0.8rem; opacity: 0.5;
-  line-height: 1.75; max-width: 580px;
-  margin: 0 auto 12px;
+  line-height: 1.75; max-width: 580px; margin: 0 auto 12px;
 }
 .footer-copy { font-size: 0.82rem; opacity: 0.5; }
 
@@ -990,12 +918,10 @@ img { max-width: 100%; height: auto; display: block; }
 .scroll-top-btn {
   position: fixed; bottom: 28px; right: 24px;
   width: 46px; height: 46px;
-  background: linear-gradient(
-    135deg, var(--gold-light), var(--gold-dark));
+  background: linear-gradient(135deg, var(--gold-light), var(--gold-dark));
   color: var(--white); border: none; border-radius: 50%;
   font-size: 1.2rem; font-weight: 900; cursor: pointer;
-  z-index: 990; opacity: 0; visibility: hidden;
-  pointer-events: none;
+  z-index: 990; opacity: 0; visibility: hidden; pointer-events: none;
   transition: opacity 0.35s ease, visibility 0.35s ease,
               transform 0.3s ease, box-shadow 0.3s ease;
   box-shadow: 0 4px 18px rgba(201,168,76,0.4);
@@ -1054,6 +980,8 @@ img { max-width: 100%; height: auto; display: block; }
   .nav-links { gap: 16px; }
   .nav-links a { font-size: 0.84rem; }
   .nav-btn { padding: 8px 14px; font-size: 0.84rem; }
+  /* About heading alignment at tablet */
+  .about-heading { padding-left: calc(50% + 14px); }
 }
 
 /* ==========================================
@@ -1063,7 +991,6 @@ img { max-width: 100%; height: auto; display: block; }
 
   .container { padding: 0 16px; }
   .navbar { padding: 12px 16px; }
-
   .nav-links {
     display: none; position: fixed;
     top: 68px; left: 0; right: 0;
@@ -1080,8 +1007,7 @@ img { max-width: 100%; height: auto; display: block; }
   .nav-links li { width: 100%; }
   .nav-links a {
     display: block; padding: 13px 12px; font-size: 1.05rem;
-    border-bottom: 1px solid rgba(255,255,255,0.06);
-    border-radius: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.06); border-radius: 8px;
   }
   .nav-links a::after { display: none; }
   .nav-links a:hover, .nav-links a.active {
@@ -1100,16 +1026,13 @@ img { max-width: 100%; height: auto; display: block; }
   .hero-title { font-size: 2.1rem; line-height: 1.2; }
   .hero-subtitle { font-size: 0.98rem; max-width: 100%; }
   .hero-badge { font-size: 0.8rem; }
-  .hero-buttons {
-    flex-direction: column; align-items: center; gap: 11px;
-  }
+  .hero-buttons { flex-direction: column; align-items: center; gap: 11px; }
   .btn-primary, .btn-secondary {
     width: 100%; max-width: 300px; font-size: 1rem;
   }
   .hero-mascot img { width: 260px; margin: 0 auto; }
   .hero-contract {
-    font-size: 0.78rem; justify-content: center;
-    flex-wrap: wrap;
+    font-size: 0.78rem; justify-content: center; flex-wrap: wrap;
   }
 
   .section-title { font-size: 1.95rem; text-align: center; }
@@ -1118,29 +1041,37 @@ img { max-width: 100%; height: auto; display: block; }
   .about, .tokenomics, .howtobuy,
   .roadmap, .community, .faq { padding: 70px 0; }
 
-  /* ABOUT mobile fix:
-     Reset order so DOM order takes effect:
-     text first (order:1), mascot second (order:2) */
+  /* ============================================
+     ABOUT — MOBILE: Heading → Image → Text
+     about-heading is already ABOVE the grid
+     in the DOM, so it renders first naturally.
+     Grid becomes single column:
+       mascot (order:1) = IMAGE second
+       about-body (order:2) = TEXT third
+     ============================================ */
+  .about-heading {
+    padding-left: 0;
+    text-align: center;
+    margin-bottom: 28px;
+    font-size: 1.95rem;
+  }
   .about-grid {
     grid-template-columns: 1fr;
     gap: 28px; text-align: center;
   }
-  .about-text   { order: 1; }
-  .about-mascot { order: 2; }
+  .about-mascot { order: 1; }
   .about-mascot img { max-width: 240px; margin: 0 auto; }
+  .about-body { order: 2; }
   .about-stats { justify-content: center; gap: 12px; }
   .stat { min-width: 75px; padding: 16px 12px; }
 
   .tokenomics-grid { grid-template-columns: 1fr; gap: 28px; }
-  .tokenomics-cards {
-    order: 1; grid-template-columns: 1fr 1fr; gap: 12px;
-  }
+  .tokenomics-cards { order: 1; grid-template-columns: 1fr 1fr; gap: 12px; }
   .token-card-wide { grid-column: 1 / -1; }
   .tokenomics-mascot { order: 2; text-align: center; }
   .tokenomics-mascot img { max-width: 220px; margin: 0 auto; }
   .token-card { padding: 18px 12px; }
   .token-value { font-size: 1.35rem; }
-
   .trust-bar { gap: 8px; padding: 18px 14px; }
   .trust-badge { padding: 8px 13px; font-size: 0.82rem; }
   .why-solana-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
@@ -1165,22 +1096,13 @@ img { max-width: 100%; height: auto; display: block; }
   .phase { padding: 24px 16px; }
   .tge-note { font-size: 0.85rem; margin-bottom: 32px; }
 
-  .community-grid {
-    grid-template-columns: 1fr; gap: 28px; text-align: center;
-  }
+  .community-grid { grid-template-columns: 1fr; gap: 28px; text-align: center; }
   .community-text { order: 1; }
   .community-mascot { order: 2; }
   .community-mascot img { max-width: 240px; margin: 0 auto; }
   .community-desc { max-width: 100%; font-size: 0.98rem; }
-
-  /* Social icons on mobile: centered wrap */
-  .social-icons-row {
-    justify-content: center;
-    gap: 12px;
-  }
-  .social-icon-btn {
-    width: 48px; height: 48px;
-  }
+  .social-icons-row { justify-content: center; gap: 12px; }
+  .social-icon-btn { width: 48px; height: 48px; }
   .social-icon-btn svg { width: 20px; height: 20px; }
 
   .faq-grid { grid-template-columns: 1fr; gap: 10px; }
@@ -1190,7 +1112,6 @@ img { max-width: 100%; height: auto; display: block; }
   .footer-social-icons { gap: 10px; }
   .footer-icon-btn { width: 40px; height: 40px; }
   .footer-icon-btn svg { width: 16px; height: 16px; }
-
   .section-divider img { width: 68%; }
   .scroll-top-btn {
     width: 40px; height: 40px;
@@ -1204,6 +1125,7 @@ img { max-width: 100%; height: auto; display: block; }
 @media (max-width: 420px) {
   .hero-title { font-size: 1.85rem; }
   .section-title { font-size: 1.7rem; }
+  .about-heading { font-size: 1.7rem; }
   .tokenomics-cards { grid-template-columns: 1fr; }
   .token-card-wide { grid-column: 1; }
   .hero-mascot img { width: 210px; }
