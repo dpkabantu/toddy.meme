@@ -1,8 +1,18 @@
 'use strict';
 
 /* ==========================================
-   1. NAVBAR SCROLL EFFECT
+   TODDY.MEME — COMPLETE JAVASCRIPT
+   ==========================================
+   CHANGE from previous version:
+   fadeItems selector updated to include
+   '.about-body' (renamed from '.about-text'
+   in latest index.html restructure).
+   ALL OTHER FUNCTIONS IDENTICAL.
    ========================================== */
+
+/* ------------------------------------------
+   1. NAVBAR SCROLL EFFECT
+   ------------------------------------------ */
 var navbar = document.getElementById('navbar');
 
 function handleNavbarScroll() {
@@ -30,10 +40,10 @@ window.addEventListener(
   { passive: true }
 );
 
-/* ==========================================
+/* ------------------------------------------
    2. HAMBURGER — X anim + ESC +
       outside-click + link-click close
-   ========================================== */
+   ------------------------------------------ */
 var hamburgerEl =
   document.getElementById('hamburger');
 var navLinksEl =
@@ -60,8 +70,9 @@ function closeMenu() {
 }
 
 if (hamburgerEl && navLinksEl) {
+
   hamburgerEl.addEventListener('click',
-    function(e) {
+    function (e) {
       e.stopPropagation();
       navLinksEl.classList.contains('open')
         ? closeMenu()
@@ -69,12 +80,13 @@ if (hamburgerEl && navLinksEl) {
     });
 
   navLinksEl.querySelectorAll('a')
-    .forEach(function(link) {
-      link.addEventListener('click', closeMenu);
+    .forEach(function (link) {
+      link.addEventListener(
+        'click', closeMenu);
     });
 
   document.addEventListener('click',
-    function(e) {
+    function (e) {
       if (!navLinksEl.classList
           .contains('open')) return;
       if (!hamburgerEl.contains(e.target) &&
@@ -84,18 +96,18 @@ if (hamburgerEl && navLinksEl) {
     });
 
   document.addEventListener('keydown',
-    function(e) {
+    function (e) {
       if (e.key === 'Escape') closeMenu();
     });
 }
 
-/* ==========================================
-   3. SMOOTH SCROLL with navbar offset
-   ========================================== */
+/* ------------------------------------------
+   3. SMOOTH SCROLL — with navbar offset
+   ------------------------------------------ */
 document.querySelectorAll('a[href^="#"]')
-  .forEach(function(anchor) {
+  .forEach(function (anchor) {
     anchor.addEventListener('click',
-      function(e) {
+      function (e) {
         var href = this.getAttribute('href');
         if (!href || href === '#') return;
         var target =
@@ -105,8 +117,8 @@ document.querySelectorAll('a[href^="#"]')
         var navH = navbar
           ? navbar.offsetHeight : 80;
         var top =
-          target.getBoundingClientRect().top
-          + window.pageYOffset - navH;
+          target.getBoundingClientRect().top +
+          window.pageYOffset - navH;
         window.scrollTo({
           top: top,
           behavior: 'smooth'
@@ -114,25 +126,28 @@ document.querySelectorAll('a[href^="#"]')
       });
   });
 
-/* ==========================================
+/* ------------------------------------------
    4. ACTIVE NAV LINK ON SCROLL
-   ========================================== */
+   ------------------------------------------ */
 var allSections =
   document.querySelectorAll('section[id]');
 var allNavAs =
   document.querySelectorAll('.nav-links a');
 
 function updateActiveNav() {
-  var scrollY = window.pageYOffset;
-  var navH = navbar
+  var scrollY  = window.pageYOffset;
+  var navH     = navbar
     ? navbar.offsetHeight : 80;
-  var current = '';
-  allSections.forEach(function(sec) {
-    if (scrollY >= sec.offsetTop - navH - 50) {
+  var current  = '';
+
+  allSections.forEach(function (sec) {
+    if (scrollY >=
+        sec.offsetTop - navH - 50) {
       current = sec.getAttribute('id');
     }
   });
-  allNavAs.forEach(function(a) {
+
+  allNavAs.forEach(function (a) {
     a.classList.remove('active');
     if (a.getAttribute('href') ===
         '#' + current) {
@@ -141,24 +156,29 @@ function updateActiveNav() {
   });
 }
 
-/* ==========================================
+/* ------------------------------------------
    5. STAGGERED FADE-IN ON SCROLL
-      Covers all card/step/phase/stat
-      elements including new FAQ items,
-      trust badges and Why Solana items
-   ========================================== */
+   CHANGE: Added '.about-body' to selector.
+   .about-body is the renamed container
+   (was .about-text) in the latest index.html
+   where the h2 heading was moved above
+   the grid for correct mobile order.
+   ------------------------------------------ */
 var fadeItems = document.querySelectorAll(
   '.step, .token-card, .phase, .stat, ' +
-  '.trust-badge, .why-item, .faq-item'
+  '.trust-badge, .why-item, .faq-item, ' +
+  '.about-body'
 );
 
 var fadeObserver = new IntersectionObserver(
-  function(entries) {
-    entries.forEach(function(entry, idx) {
+  function (entries) {
+    entries.forEach(function (entry, idx) {
       if (entry.isIntersecting) {
-        setTimeout(function() {
-          entry.target.classList.add('visible');
-          fadeObserver.unobserve(entry.target);
+        setTimeout(function () {
+          entry.target.classList
+            .add('visible');
+          fadeObserver.unobserve(
+            entry.target);
         }, idx * 70);
       }
     });
@@ -166,14 +186,14 @@ var fadeObserver = new IntersectionObserver(
   { threshold: 0.08 }
 );
 
-fadeItems.forEach(function(el) {
+fadeItems.forEach(function (el) {
   el.classList.add('td-fade');
   fadeObserver.observe(el);
 });
 
-/* ==========================================
-   6. SCROLL-TO-TOP BUTTON
-   ========================================== */
+/* ------------------------------------------
+   6. SCROLL TO TOP BUTTON
+   ------------------------------------------ */
 var scrollTopBtn =
   document.getElementById('scroll-top-btn');
 
@@ -187,22 +207,23 @@ function handleScrollTopVisibility() {
 }
 
 if (scrollTopBtn) {
-  scrollTopBtn.addEventListener('click',
-    function() {
+  scrollTopBtn.addEventListener(
+    'click', function () {
       window.scrollTo({
-        top: 0, behavior: 'smooth'
+        top: 0,
+        behavior: 'smooth'
       });
     });
 }
 
-/* ==========================================
-   7. COPY CA + TOAST
-   ========================================== */
-var copyBtn =
+/* ------------------------------------------
+   7. COPY CA + TOAST NOTIFICATION
+   ------------------------------------------ */
+var copyBtn  =
   document.getElementById('copy-btn');
 var caTextEl =
   document.getElementById('ca-text');
-var toastEl =
+var toastEl  =
   document.getElementById('toast');
 var toastTimer = null;
 
@@ -211,26 +232,28 @@ function showToast(msg) {
   toastEl.textContent = msg;
   toastEl.classList.add('show');
   clearTimeout(toastTimer);
-  toastTimer = setTimeout(function() {
+  toastTimer = setTimeout(function () {
     toastEl.classList.remove('show');
   }, 2600);
 }
 
 if (copyBtn && caTextEl) {
   copyBtn.addEventListener('click',
-    function() {
-      var txt = caTextEl.textContent.trim();
+    function () {
+      var txt =
+        caTextEl.textContent.trim();
       if (/tba/i.test(txt)) {
         showToast('🌙 CA drops at launch!');
         return;
       }
       if (navigator.clipboard &&
           navigator.clipboard.writeText) {
-        navigator.clipboard.writeText(txt)
-          .then(function() {
+        navigator.clipboard
+          .writeText(txt)
+          .then(function () {
             showToast('✅ CA copied!');
           })
-          .catch(function() {
+          .catch(function () {
             legacyCopy(txt);
           });
       } else {
@@ -240,7 +263,8 @@ if (copyBtn && caTextEl) {
 }
 
 function legacyCopy(text) {
-  var ta = document.createElement('textarea');
+  var ta =
+    document.createElement('textarea');
   ta.value = text;
   ta.style.cssText =
     'position:fixed;opacity:0;top:0;';
@@ -249,82 +273,92 @@ function legacyCopy(text) {
   try {
     document.execCommand('copy');
     showToast('✅ CA copied!');
-  } catch(e) {
+  } catch (e) {
     showToast('⚠️ Copy failed');
   }
   document.body.removeChild(ta);
 }
 
-/* ==========================================
-   8. FAQ ACCORDION — ADDED
-   One panel open at a time.
-   Keyboard accessible: Enter / Space.
-   aria-expanded toggled correctly.
-   ========================================== */
+/* ------------------------------------------
+   8. FAQ ACCORDION
+   One open at a time. Keyboard accessible.
+   ------------------------------------------ */
 var faqItems =
   document.querySelectorAll('.faq-item');
 
-faqItems.forEach(function(item) {
+faqItems.forEach(function (item) {
   var btn =
     item.querySelector('.faq-question');
   var answer =
     item.querySelector('.faq-answer');
   if (!btn || !answer) return;
 
-  btn.addEventListener('click', function() {
-    var isOpen =
-      item.classList.contains('open');
+  btn.addEventListener('click',
+    function () {
+      var isOpen =
+        item.classList.contains('open');
 
-    /* Close ALL other open items first */
-    faqItems.forEach(function(other) {
-      if (other !== item) {
-        other.classList.remove('open');
-        var otherBtn =
-          other.querySelector('.faq-question');
-        if (otherBtn) {
-          otherBtn.setAttribute(
-            'aria-expanded', 'false');
+      /* Close all other items first */
+      faqItems.forEach(function (other) {
+        if (other !== item) {
+          other.classList.remove('open');
+          var otherBtn =
+            other.querySelector(
+              '.faq-question');
+          if (otherBtn) {
+            otherBtn.setAttribute(
+              'aria-expanded', 'false');
+          }
         }
+      });
+
+      /* Toggle this item */
+      if (isOpen) {
+        item.classList.remove('open');
+        btn.setAttribute(
+          'aria-expanded', 'false');
+      } else {
+        item.classList.add('open');
+        btn.setAttribute(
+          'aria-expanded', 'true');
       }
     });
 
-    /* Toggle this item */
-    if (isOpen) {
-      item.classList.remove('open');
-      btn.setAttribute('aria-expanded', 'false');
-    } else {
-      item.classList.add('open');
-      btn.setAttribute('aria-expanded', 'true');
-    }
-  });
-
-  /* Keyboard: Enter or Space opens/closes */
-  btn.addEventListener('keydown', function(e) {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      btn.click();
-    }
-  });
+  /* Keyboard: Enter or Space */
+  btn.addEventListener('keydown',
+    function (e) {
+      if (e.key === 'Enter' ||
+          e.key === ' ') {
+        e.preventDefault();
+        btn.click();
+      }
+    });
 });
 
-/* ==========================================
+/* ------------------------------------------
    9. SPARKLE PARTICLES
-   Fixed canvas outside .hero — full page.
-   z-index:2, all sections z-index:3.
-   ========================================== */
+   Canvas is outside .hero — body child.
+   Fixed position covers full page.
+   z-index:2 — behind all sections (z:3)
+   but above background.
+   ------------------------------------------ */
 (function initSparkles() {
   var canvas =
-    document.getElementById('sparkle-canvas');
+    document.getElementById(
+      'sparkle-canvas');
   if (!canvas) return;
 
   var ctx = canvas.getContext('2d');
   var W, H;
 
   function resize() {
-    W = canvas.width  = window.innerWidth;
-    H = canvas.height = window.innerHeight;
+    W = canvas.width  =
+      window.innerWidth;
+    H = canvas.height =
+      window.innerHeight;
   }
   resize();
+
   window.addEventListener(
     'resize', resize, { passive: true });
 
@@ -352,15 +386,18 @@ faqItems.forEach(function(item) {
 
   function draw() {
     ctx.clearRect(0, 0, W, H);
+
     for (var j = 0; j < pts.length; j++) {
       var p = pts[j];
       p.x += p.vx;
       p.y += p.vy;
       p.o -= p.d;
+
       if (p.o <= 0 || p.y < -8) {
         pts[j] = mkPt(true);
         continue;
       }
+
       ctx.beginPath();
       ctx.arc(
         p.x, p.y, p.r, 0, Math.PI * 2);
@@ -369,6 +406,7 @@ faqItems.forEach(function(item) {
         : 'rgba(153,69,255,' + p.o + ')';
       ctx.fill();
     }
+
     requestAnimationFrame(draw);
   }
 
