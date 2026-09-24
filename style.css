@@ -1271,3 +1271,48 @@ img { max-width: 100%; height: auto; display: block; }
   outline-offset: 4px;
 }
 
+/* ==========================================
+   MOBILE-ONLY SECTION ORDER & SPACING FIXES
+   Desktop layout intentionally unchanged.
+   ========================================== */
+@media (max-width: 768px) {
+  /* TOKENOMICS: Heading → Image → information cards */
+  .tokenomics .container {
+    display: flex;
+    flex-direction: column;
+  }
+  .tokenomics .section-title { order: 0; }
+  .tokenomics-grid { display: contents; }
+  .tokenomics-mascot { order: 1; }
+  .tokenomics-cards { order: 2; }
+  .tokenomics .trust-bar { order: 3; }
+  .tokenomics .why-solana { order: 4; }
+
+  /* HOW TO BUY: Heading → Image → safety/steps/context */
+  .howtobuy .container {
+    display: flex;
+    flex-direction: column;
+  }
+  .howtobuy .section-title { order: 0; }
+  .howtobuy-grid { display: contents; }
+  .howtobuy-mascot { order: 1; }
+  .howtobuy .safety-banner { order: 2; }
+  .howtobuy .steps { order: 3; }
+  .howtobuy .verify-strip { order: 4; }
+
+  /* ROADMAP: add breathing room after the heading */
+  .roadmap .section-title.center { margin-bottom: 16px; }
+  .roadmap .tge-note { margin-top: 10px; }
+
+  /* COMMUNITY: Heading → Image → description → social buttons */
+  .community-grid {
+    display: flex;
+    flex-direction: column;
+  }
+  .community-text { display: contents; }
+  .community-text .section-title { order: 0; }
+  .community-mascot { order: 1; }
+  .community-desc { order: 2; }
+  .social-icons-row { order: 3; }
+}
+
