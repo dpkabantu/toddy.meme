@@ -134,19 +134,30 @@
     }
 
     /* ========================================
-       COFFEE TREE CONTAINER
+       COFFEE TREE + TODDY INTERACTION STAGE
        ======================================== */
+    .lt-social-stage {
+      position: relative;
+      width: 100%;
+      max-width: 560px;
+      min-height: 430px;
+      margin: 0 auto 6px;
+      overflow: visible;
+    }
+
     .lt-tree-wrap {
       width: 100%;
       display: flex;
       justify-content: center;
-      margin-bottom: 28px;
+      margin-bottom: 0;
+      position: relative;
+      z-index: 2;
     }
 
     /* The tree SVG scales with the container */
     .lt-tree-svg {
       width: 100%;
-      max-width: 480px;
+      max-width: 440px;
       height: auto;
       overflow: visible;
       /* Gentle sway on the whole canopy */
@@ -282,44 +293,54 @@
 
     /* ========================================
        TODDY SOCIAL INTERACTION GUIDE
+       Toddy sits to the LEFT of the tree and reaches
+       toward the lower-left Medium button.  The
+       character is mirrored so the raised paw points
+       inward toward the tree.
        ======================================== */
     .lt-toddy-guide {
-      width: 100%;
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      margin: -8px 0 30px;
-      position: relative;
-      z-index: 2;
+      position: absolute;
+      left: 4px;
+      top: 138px;
+      width: 190px;
+      margin: 0;
+      z-index: 3;
       pointer-events: none;
     }
 
     .lt-toddy-guide img {
       display: block;
-      width: 220px;
+      width: 190px;
       height: auto;
-      max-width: 62vw;
-      transform: translateX(48px) scaleX(-1);
+      max-width: none;
+      transform: scaleX(-1);
       transform-origin: center bottom;
       filter: drop-shadow(0 10px 18px rgba(0,0,0,0.22));
     }
 
-    /* Keep the guide clearly below the tree while making the raised paw
-       visually point toward the TikTok button on the lower-right canopy. */
+    /* Desktop: keep the tree centred as before; Toddy occupies the
+       open lower-left space without sitting behind the trunk. */
     @media (min-width: 769px) {
-      .lt-tree-wrap {
-        margin-bottom: 4px;
+      .lt-social-stage {
+        min-height: 430px;
       }
+
+      .lt-tree-wrap {
+        margin-bottom: 0;
+      }
+
       .lt-tree-svg {
         max-width: 440px;
       }
+
       .lt-toddy-guide {
-        margin-top: -2px;
-        margin-bottom: 28px;
+        left: 4px;
+        top: 136px;
+        width: 190px;
       }
+
       .lt-toddy-guide img {
-        width: 224px;
-        transform: translateX(54px) scaleX(-1);
+        width: 190px;
       }
     }
 
@@ -363,15 +384,57 @@
 
     /* ========================================
        MOBILE SCALING
+       The tree shifts slightly RIGHT so Toddy remains
+       visible on the LEFT while the complete tree and
+       all social buttons stay inside the viewport.
+       Desktop layout is not affected.
        ======================================== */
     @media (max-width: 480px) {
       .lt-wrap { padding: 36px 12px 48px; }
       .lt-logo { width: 68px; height: 68px; }
       .lt-name { font-size: 1.5rem; }
-      /* Tree already scales via SVG viewBox */
+
+      .lt-social-stage {
+        width: calc(100% + 24px);
+        margin-left: -12px;
+        min-height: 350px;
+      }
+
+      .lt-tree-wrap {
+        width: calc(100% - 24px);
+        margin-left: 24px;
+        justify-content: center;
+      }
+
+      .lt-tree-svg {
+        width: 100%;
+        max-width: none;
+      }
+
+      .lt-toddy-guide {
+        left: 0;
+        top: 116px;
+        width: 150px;
+      }
+
+      .lt-toddy-guide img {
+        width: 150px;
+      }
     }
 
     @media (max-width: 360px) {
+      .lt-social-stage {
+        min-height: 330px;
+      }
+
+      .lt-toddy-guide {
+        top: 108px;
+        width: 138px;
+      }
+
+      .lt-toddy-guide img {
+        width: 138px;
+      }
     }
   </style>
 </head>
@@ -418,8 +481,9 @@
        8. Discord   — bottom-centre  (240, 280)
        ============================================= -->
 
-  <div class="lt-tree-wrap">
-    <svg class="lt-tree-svg"
+  <div class="lt-social-stage">
+    <div class="lt-tree-wrap">
+      <svg class="lt-tree-svg"
          viewBox="0 0 480 420"
          xmlns="http://www.w3.org/2000/svg"
          role="img"
@@ -825,17 +889,19 @@
         </g>
       </a>
 
-    </svg>
-  </div>
-  <!-- end lt-tree-wrap -->
+      </svg>
+    </div>
+    <!-- end lt-tree-wrap -->
 
-  <!-- TODDY interaction guide: visually demonstrates tapping a social button -->
-  <div class="lt-toddy-guide">
-    <img src="assets/toddy-linktree-tap.png"
-         alt="Toddy reaching toward the social buttons"
-         width=224 height=336
-         loading="eager" decoding="async" />
+    <!-- TODDY interaction guide: reaches toward the Medium button -->
+    <div class="lt-toddy-guide">
+      <img src="assets/toddy-linktree-tap.png"
+           alt="Toddy reaching toward the Medium social button"
+           width="190" height="285"
+           loading="eager" decoding="async" />
+    </div>
   </div>
+  <!-- end lt-social-stage -->
 
   <!-- Footer -->
   <div class="lt-footer">
