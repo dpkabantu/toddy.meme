@@ -72,9 +72,19 @@
 
 <!-- HERO -->
 <section class="hero" id="home">
-  <div class="hero-bg">
-    <img src="assets/hero-bg.jpg"
-         alt="Night Sky" class="hero-bg-img" />
+  <div class="hero-bg" aria-hidden="true">
+    <video class="hero-bg-video hero-bg-video-desktop"
+           autoplay muted loop playsinline preload="metadata"
+           poster="assets/toddy-hero-poster-desktop.webp">
+      <source src="assets/toddy-hero-desktop.webm" type="video/webm" />
+      <source src="assets/toddy-hero-desktop.mp4" type="video/mp4" />
+    </video>
+    <video class="hero-bg-video hero-bg-video-mobile"
+           autoplay muted loop playsinline preload="metadata"
+           poster="assets/toddy-hero-poster-mobile.webp">
+      <source src="assets/toddy-hero-mobile.webm" type="video/webm" />
+      <source src="assets/toddy-hero-mobile.mp4" type="video/mp4" />
+    </video>
   </div>
   <div class="hero-content">
     <div class="hero-text">
@@ -102,10 +112,6 @@
         <button class="copy-btn" id="copy-btn"
                 aria-label="Copy address">📋</button>
       </div>
-    </div>
-    <div class="hero-mascot">
-      <img src="assets/hero-mascot.png"
-           alt="Toddy the Night Trader" />
     </div>
   </div>
   <div class="hero-scroll">↓ Scroll Down</div>

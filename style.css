@@ -163,10 +163,12 @@ img { max-width: 100%; height: auto; display: block; }
   z-index: 3;
 }
 .hero-bg { position: absolute; inset: 0; z-index: 0; }
-.hero-bg-img {
+.hero-bg-video {
   width: 100%; height: 100%;
   object-fit: cover; opacity: 0.85;
+  display: block;
 }
+.hero-bg-video-mobile { display: none; }
 .hero-content {
   position: relative; z-index: 2;
   max-width: 1200px; margin: 0 auto;
@@ -1017,6 +1019,8 @@ img { max-width: 100%; height: auto; display: block; }
   .hamburger { display: flex; }
 
   .hero { padding-top: 68px; }
+  .hero-bg-video-desktop { display: none; }
+  .hero-bg-video-mobile { display: block; }
   .hero-content {
     flex-direction: column; text-align: center;
     padding: 36px 16px 80px; gap: 26px;
