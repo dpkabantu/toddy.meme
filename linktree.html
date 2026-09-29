@@ -31,7 +31,7 @@
     :root {
       --gold:       #C9A84C;
       --gold-light: #F0C96B;
-      --purple:     #9945FF;
+      --purple:     #8B5CF6; /* TODDY moon-violet */
       --brown:      #1A0A00;
       --brown2:     #2C1500;
       --brown3:     #3d1900;
@@ -64,7 +64,7 @@
       position: fixed; inset: 0;
       background:
         radial-gradient(ellipse at 20% 60%,
-          rgba(153,69,255,0.07) 0%,
+          rgba(139,92,246,0.07) 0%,
           transparent 55%),
         radial-gradient(ellipse at 80% 20%,
           rgba(201,168,76,0.05) 0%,
@@ -456,7 +456,7 @@
   <div class="lt-name">$TODDY</div>
   <p class="lt-tagline">
     The Night Trader of Crypto ☕🌙<br />
-    Kopi Luwak Meme Coin on Solana
+    Kopi Luwak Meme Coin
   </p>
   <div class="lt-divider"></div>
 
@@ -978,7 +978,7 @@
       ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fillStyle = p.gold
         ? 'rgba(255,215,0,' + p.o + ')'
-        : 'rgba(153,69,255,' + p.o + ')';
+        : 'rgba(139,92,246,' + p.o + ')';
       ctx.fill();
     }
     requestAnimationFrame(draw);

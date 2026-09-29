@@ -21,7 +21,7 @@ function handleNavbarScroll() {
     navbar.style.background =
       'rgba(5,5,5,0.98)';
     navbar.style.boxShadow =
-      '0 2px 20px rgba(153,69,255,0.3)';
+      '0 2px 20px rgba(139,92,246,0.3)';
     navbar.style.borderBottomColor =
       'rgba(201,168,76,0.5)';
   } else {
@@ -403,7 +403,7 @@ faqItems.forEach(function (item) {
         p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fillStyle = p.gold
         ? 'rgba(255,215,0,' + p.o + ')'
-        : 'rgba(153,69,255,' + p.o + ')';
+        : 'rgba(139,92,246,' + p.o + ')';
       ctx.fill();
     }
 

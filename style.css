@@ -12,7 +12,7 @@
    CSS VARIABLES
    ========================================== */
 :root {
-  --purple:     #9945FF;
+  --purple:     #8B5CF6; /* TODDY moon-violet */
   --gold:       #C9A84C;
   --gold-dark:  #8B6914;
   --gold-light: #F0C96B;
@@ -276,7 +276,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 @keyframes cardGlow {
   0%, 100% { box-shadow: 0 0 15px rgba(201,168,76,0.12); }
-  50%       { box-shadow: 0 0 32px rgba(153,69,255,0.32); }
+  50%       { box-shadow: 0 0 32px rgba(139,92,246,0.32); }
 }
 @keyframes progressPulse {
   0%, 100% { opacity: 0.7; }
@@ -410,7 +410,7 @@ img { max-width: 100%; height: auto; display: block; }
 .token-card-wide { grid-column: 1 / -1; }
 .token-card {
   background: linear-gradient(135deg,
-    rgba(201,168,76,0.1), rgba(153,69,255,0.07));
+    rgba(201,168,76,0.1), rgba(139,92,246,0.07));
   border: 1px solid rgba(201,168,76,0.35);
   padding: 24px 18px; border-radius: 20px;
   text-align: center;
@@ -420,7 +420,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .token-card:hover {
   transform: translateY(-8px); border-color: var(--purple);
-  box-shadow: 0 14px 38px rgba(153,69,255,0.28);
+  box-shadow: 0 14px 38px rgba(139,92,246,0.28);
 }
 .token-icon { font-size: 2rem; margin-bottom: 8px; }
 .token-label {
@@ -457,26 +457,26 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .trust-icon { font-size: 1rem; }
 
-/* Why Solana */
-.why-solana {
+/* Why TODDY */
+.toddy-principles {
   margin-top: 36px; padding: 30px;
   background: linear-gradient(135deg,
-    rgba(153,69,255,0.08), rgba(201,168,76,0.06));
-  border: 1px solid rgba(153,69,255,0.3);
+    rgba(139,92,246,0.08), rgba(201,168,76,0.06));
+  border: 1px solid rgba(139,92,246,0.3);
   border-radius: 20px;
 }
-.why-solana-title {
+.toddy-principles-title {
   font-family: 'Cinzel', serif;
   font-size: 1.4rem; font-weight: 700;
   margin-bottom: 22px; text-align: center;
 }
-.why-solana-grid {
+.toddy-principles-grid {
   display: grid; grid-template-columns: repeat(4,1fr); gap: 16px;
 }
 .why-item {
   text-align: center; padding: 16px 10px;
-  background: rgba(153,69,255,0.07);
-  border: 1px solid rgba(153,69,255,0.2);
+  background: rgba(139,92,246,0.07);
+  border: 1px solid rgba(139,92,246,0.2);
   border-radius: 14px;
   transition: transform 0.3s ease, border-color 0.3s ease;
 }
@@ -531,14 +531,14 @@ img { max-width: 100%; height: auto; display: block; }
 .safety-banner {
   display: flex; align-items: center; gap: 20px;
   background: linear-gradient(135deg,
-    rgba(153,69,255,0.12), rgba(201,168,76,0.08));
-  border: 2px solid rgba(153,69,255,0.5);
+    rgba(139,92,246,0.12), rgba(201,168,76,0.08));
+  border: 2px solid rgba(139,92,246,0.5);
   border-radius: 18px; padding: 22px 26px;
   margin-bottom: 44px; flex-wrap: wrap;
 }
 .safety-shield {
   font-size: 2.8rem; flex-shrink: 0;
-  filter: drop-shadow(0 0 12px rgba(153,69,255,0.6));
+  filter: drop-shadow(0 0 12px rgba(139,92,246,0.6));
 }
 .safety-text { flex: 1; min-width: 200px; }
 .safety-text strong {
@@ -615,7 +615,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .phase {
   background: linear-gradient(160deg,
-    rgba(201,168,76,0.1), rgba(153,69,255,0.07));
+    rgba(201,168,76,0.1), rgba(139,92,246,0.07));
   border: 1px solid rgba(201,168,76,0.28);
   padding: 28px 18px; border-radius: 20px;
   position: relative; overflow: hidden;
@@ -629,7 +629,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .phase:hover {
   transform: translateY(-8px); border-color: var(--gold);
-  box-shadow: 0 16px 42px rgba(153,69,255,0.22);
+  box-shadow: 0 16px 42px rgba(139,92,246,0.22);
 }
 .phase-tag {
   font-size: 0.72rem; color: var(--purple);
@@ -751,7 +751,7 @@ img { max-width: 100%; height: auto; display: block; }
 }
 .community-mascot img {
   width: 100%; max-width: 450px;
-  filter: drop-shadow(0 0 30px rgba(153,69,255,0.5));
+  filter: drop-shadow(0 0 30px rgba(139,92,246,0.5));
   animation: float 4s ease-in-out infinite;
   display: block; margin: 0 auto;
 }
@@ -775,7 +775,7 @@ img { max-width: 100%; height: auto; display: block; }
 .faq-col { display: flex; flex-direction: column; gap: 12px; }
 .faq-item {
   background: linear-gradient(135deg,
-    rgba(201,168,76,0.06), rgba(153,69,255,0.04));
+    rgba(201,168,76,0.06), rgba(139,92,246,0.04));
   border: 1px solid rgba(201,168,76,0.22);
   border-radius: 16px; overflow: hidden;
   transition: border-color 0.3s ease, box-shadow 0.3s ease;
@@ -978,7 +978,7 @@ img { max-width: 100%; height: auto; display: block; }
   .hero-mascot img { width: 370px; }
   .roadmap-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
   .container { padding: 0 28px; }
-  .why-solana-grid { grid-template-columns: repeat(2,1fr); }
+  .toddy-principles-grid { grid-template-columns: repeat(2,1fr); }
   .nav-links { gap: 16px; }
   .nav-links a { font-size: 0.84rem; }
   .nav-btn { padding: 8px 14px; font-size: 0.84rem; }
@@ -1078,7 +1078,7 @@ img { max-width: 100%; height: auto; display: block; }
   .token-value { font-size: 1.35rem; }
   .trust-bar { gap: 8px; padding: 18px 14px; }
   .trust-badge { padding: 8px 13px; font-size: 0.82rem; }
-  .why-solana-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .toddy-principles-grid { grid-template-columns: 1fr 1fr; gap: 10px; }
   .why-number { font-size: 1.3rem; }
 
   .safety-banner {
@@ -1138,7 +1138,7 @@ img { max-width: 100%; height: auto; display: block; }
   .howtobuy-mascot img,
   .community-mascot img { max-width: 200px; }
   .btn-primary, .btn-secondary { max-width: 100%; }
-  .why-solana-grid { grid-template-columns: 1fr 1fr; }
+  .toddy-principles-grid { grid-template-columns: 1fr 1fr; }
   .safety-banner { padding: 16px 14px; }
   .social-icon-btn { width: 44px; height: 44px; }
   .social-icon-btn svg { width: 18px; height: 18px; }
@@ -1290,7 +1290,7 @@ img { max-width: 100%; height: auto; display: block; }
   .tokenomics-mascot { order: 1; }
   .tokenomics-cards { order: 2; }
   .tokenomics .trust-bar { order: 3; }
-  .tokenomics .why-solana { order: 4; }
+  .tokenomics .toddy-principles { order: 4; }
 
   /* HOW TO BUY: Heading → Image → safety/steps/context */
   .howtobuy .container {
