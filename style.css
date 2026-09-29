@@ -596,14 +596,14 @@ img { max-width: 100%; height: auto; display: block; }
 .tge-note {
   text-align: center; font-size: 0.92rem;
   opacity: 0.78; max-width: 680px;
-  margin: -30px auto 44px; line-height: 1.7;
+  margin: -30px auto 24px; line-height: 1.7;
   padding: 16px 22px;
   background: rgba(201,168,76,0.06);
   border: 1px solid rgba(201,168,76,0.2);
   border-radius: 14px;
 }
 .tge-note strong { color: var(--gold); }
-.roadmap-mascot-row { text-align: center; margin-bottom: 50px; }
+.roadmap-mascot-row { text-align: center; margin-bottom: 28px; }
 .roadmap-mascot-row img {
   max-width: 200px;
   filter: drop-shadow(0 0 30px rgba(201,168,76,0.5));
@@ -1097,8 +1097,9 @@ img { max-width: 100%; height: auto; display: block; }
 
   .roadmap-grid { grid-template-columns: 1fr; gap: 14px; }
   .roadmap-mascot-row img { max-width: 140px; }
+  .roadmap-mascot-row { margin-bottom: 18px; }
   .phase { padding: 24px 16px; }
-  .tge-note { font-size: 0.85rem; margin-bottom: 32px; }
+  .tge-note { font-size: 0.85rem; margin-bottom: 18px; }
 
   .community-grid { grid-template-columns: 1fr; gap: 28px; text-align: center; }
   .community-text { order: 1; }
