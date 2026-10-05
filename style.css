@@ -1343,3 +1343,32 @@ html{scroll-padding-top:88px}body{font-family:var(--body-font);background:radial
 @media(max-width:768px){.navbar{background:rgba(5,5,5,.88);padding:10px 14px}.nav-logo img{width:36px;height:36px}.nav-logo span{font-size:.96rem}.hero{min-height:100svh;padding-top:64px}.hero-content{min-height:calc(100svh - 64px);justify-content:flex-end;padding:40px 18px 76px}.hero-text{max-width:560px}.hero-badge{margin-bottom:17px;font-size:.64rem;letter-spacing:.11em}.hero-title{font-size:clamp(2.15rem,10vw,3.1rem);line-height:1.05;margin-bottom:17px}.hero-subtitle{font-size:1.03rem}.hero-kicker{font-size:.76rem;margin-bottom:21px}.hero-buttons{width:100%;margin-bottom:14px}.btn-primary,.btn-secondary{width:min(100%,330px);max-width:330px}.hero-contract{margin:0 auto}.hero-scroll{bottom:18px;font-size:.57rem}.section-title{font-size:clamp(1.78rem,8vw,2.25rem)}.about,.tokenomics,.howtobuy,.roadmap,.community,.faq{padding:78px 0}.about-heading{margin-bottom:22px}.about-body{text-align:left}.about-whisper{font-size:.8rem}.night-shift-pills{justify-content:center}.community-invite{text-align:center}.faq-subtitle{padding:0 8px}}
 @media(max-width:420px){.hero-content{padding-left:14px;padding-right:14px}.hero-title{font-size:2rem}.hero-contract{font-size:.68rem}}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+
+
+/* FINAL MOBILE NAVIGATION OVERRIDE — mobile only */
+@media (max-width: 768px) {
+  .nav-links {
+    width: 92%;
+    left: 4%;
+    right: auto;
+    padding: 2px 0 4px;
+    gap: 0;
+  }
+
+  .nav-links li {
+    width: 100%;
+  }
+
+  .nav-links a {
+    width: 100%;
+    min-height: 36px;
+    height: 36px;
+    padding: 0 12px;
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    text-align: left;
+    font-size: 1.1rem !important;
+    line-height: 1.05;
+  }
+}
