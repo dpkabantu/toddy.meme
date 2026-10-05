@@ -412,3 +412,15 @@ faqItems.forEach(function (item) {
 
   draw();
 })();
+
+/* ================= TODDY PREMIUM INTERACTIONS ================= */
+(function(){
+  var bar=document.querySelector('#scroll-progress span');
+  function progress(){if(!bar)return;var d=document.documentElement,m=d.scrollHeight-innerHeight;bar.style.width=(m>0?Math.min(100,Math.max(0,scrollY/m*100)):0)+'%'}
+  addEventListener('scroll',progress,{passive:true});addEventListener('resize',progress,{passive:true});progress();
+  var reduced=matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var bg=document.querySelector('.hero-bg');
+  if(bg&&!reduced&&innerWidth>768){var busy=false;addEventListener('scroll',function(){if(busy)return;busy=true;requestAnimationFrame(function(){bg.style.transform='translate3d(0,'+Math.min(scrollY,innerHeight)*.035+'px,0)';busy=false})},{passive:true})}
+  var vids=document.querySelectorAll('.hero-bg-video');
+  if('IntersectionObserver' in window){var vo=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;if(e.isIntersecting){var p=v.play();if(p&&p.catch)p.catch(function(){})}else v.pause()})},{threshold:.05});vids.forEach(function(v){vo.observe(v)})}
+})();

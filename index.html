@@ -38,11 +38,12 @@
         href="https://fonts.googleapis.com" />
   <link rel="preconnect"
         href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=Cinzel:wght@400;700&display=swap"
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@400;500;600;700;800&family=Playfair+Display:wght@400;700;900&display=swap"
         rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
+<div class="scroll-progress" id="scroll-progress" aria-hidden="true"><span></span></div>
 
 <!-- NAVBAR -->
 <nav class="navbar" id="navbar">
@@ -51,15 +52,15 @@
     <span>$TODDY</span>
   </div>
   <ul class="nav-links" id="nav-links">
-    <li><a href="#about">Meet the Night Trader</a></li>
-    <li><a href="#tokenomics">What’s in TODDY’s Cup?</a></li>
-    <li><a href="#howtobuy">Before the First Sip</a></li>
-    <li><a href="#roadmap">Road to the Night Shift</a></li>
-    <li><a href="#community">Welcome to the Night Shift</a></li>
-    <li><a href="linktree.html">Linktree</a></li>
-    <li><a href="#faq">Curious After Dark?</a></li>
+    <li><a href="#about">Meet Toddy</a></li>
+    <li><a href="#tokenomics">The Brew</a></li>
+    <li><a href="#howtobuy">First Sip</a></li>
+    <li><a href="#roadmap">Night Shift Roadmap</a></li>
+    <li><a href="#community">Night Shift</a></li>
+    <li><a href="linktree.html">All Links</a></li>
+    <li><a href="#faq">Night Notes</a></li>
   </ul>
-  <a href="#community" class="nav-btn">🌙 Join the Night Shift</a>
+  <a href="#community" class="nav-btn">🌙 Enter the Night Shift</a>
   <button class="hamburger" id="hamburger"
           aria-label="Open Menu" aria-expanded="false">
     <span></span><span></span><span></span>
@@ -85,22 +86,20 @@
   <div class="hero-content">
     <div class="hero-text">
       <div class="hero-badge">
-        🌙 Pre-Launch • Chain TBA
+        🌙 TODDY AFTER DARK <span>•</span> PRE-LAUNCH
       </div>
       <h1 class="hero-title">
         The Night Trader<br />
         <span class="gold-text">of Crypto</span>
       </h1>
-      <p class="hero-subtitle">
-        Same Caffeine. Different Life.<br />
-        $TODDY — The Kopi Luwak Meme Coin.
-      </p>
+      <p class="hero-subtitle">Same Caffeine. Different Life.</p>
+      <p class="hero-kicker">$TODDY — The Kopi Luwak meme universe.</p>
       <div class="hero-buttons">
         <a href="#community" class="btn-primary">
-          🌙 Join the Night Shift
+          🌙 Enter the Night Shift
         </a>
         <a href="#about" class="btn-secondary">
-          Learn More
+          Meet Toddy
         </a>
       </div>
       <div class="hero-contract" id="ca-box">
@@ -160,12 +159,15 @@
           Kopi Luwak — Toddy navigates the crypto
           markets with the precision of a seasoned
           night trader.</p>
-        <p><span class="gold-text">
+        <p class="about-signature"><span class="gold-text">
           Coffee. Big Dreams. Night Shift.
         </span></p>
+        <p class="about-whisper">
+          While the world sleeps, Toddy keeps the night shift moving.
+        </p>
         <div class="about-stats">
           <div class="stat">
-            <span class="stat-number">NONE</span>
+            <span class="stat-number">NO</span>
             <span class="stat-label">Presale</span>
           </div>
           <div class="stat">
@@ -409,9 +411,9 @@
                style="width:0%"></div>
         </div>
         <ul class="phase-list">
-          <li>Community programs</li>
-          <li>Meme competitions</li>
-          <li>Creator initiatives</li>
+          <li>Night Shift community programs</li>
+          <li>Meme &amp; art competitions</li>
+          <li>Creator spotlights &amp; initiatives</li>
           <li>Crypto education</li>
           <li>Scam-awareness content</li>
           <li>Community events</li>
@@ -427,12 +429,12 @@
                style="width:0%"></div>
         </div>
         <ul class="phase-list">
-          <li>Community-led projects</li>
-          <li>Creator programs</li>
-          <li>Ecosystem partnerships</li>
+          <li>Community-led Toddy projects</li>
+          <li>Creator collaborations</li>
+          <li>Selective ecosystem partnerships</li>
           <li>Treasury operations</li>
           <li>Governance experiments</li>
-          <li>New TODDY experiences</li>
+          <li>New Toddy experiences</li>
         </ul>
       </div>
       <div class="phase">
@@ -445,7 +447,7 @@
                style="width:0%"></div>
         </div>
         <ul class="phase-list">
-          <li>Global Night Shift</li>
+          <li>Global Night Shift community</li>
           <li>Community-led expansion</li>
           <li>New ecosystem experiences</li>
           <li>Creator &amp; community initiatives</li>
@@ -471,10 +473,14 @@
           <span class="gold-text">Night Shift</span>
         </h2>
         <p class="community-desc">
-          Fueled by Coffee and Curiosity.
+          Fueled by coffee and curiosity.
           The Night Shift learns, creates,
           shares and builds after dark.
         </p>
+        <div class="night-shift-pills" aria-label="Night Shift principles">
+          <span>CREATE</span><span>SHARE</span><span>BUILD</span>
+        </div>
+        <p class="community-invite"><span class="gold-text">The night is open.</span> Follow Toddy after dark.</p>
         <div class="social-icons-row">
           <a href="https://x.com/ToddyCoin"
              class="social-icon-btn"
@@ -558,12 +564,12 @@
 <section class="faq" id="faq">
   <div class="container">
     <h2 class="section-title center">
-      <span class="gold-text">Curious After Dark?</span>
+      <span class="gold-text">Night Notes</span>
       Questions ☕
     </h2>
     <p class="faq-subtitle">
-      Everything you need to know about $TODDY —
-      straight from the jungle. No fluff. Just facts.
+      The useful stuff, straight from the jungle.
+      No fluff. Just facts.
     </p>
     <div class="faq-grid">
       <div class="faq-col">
