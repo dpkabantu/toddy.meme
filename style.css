@@ -1502,3 +1502,19 @@ html{scroll-padding-top:88px}body{font-family:var(--body-font);background:radial
     margin-bottom: 10px;
   }
 }
+/* =========================================================
+   MOBILE-ONLY REMAINING SECTION SPACING REFINEMENT
+   Desktop/tablet layout intentionally unchanged.
+   ========================================================= */
+@media (max-width: 768px) {
+  /* Reduce vertical padding for the remaining main content sections.
+     Community stays at its already-approved 48px spacing. */
+  .about,
+  .tokenomics,
+  .howtobuy,
+  .roadmap,
+  .faq {
+    padding-top: 56px;
+    padding-bottom: 56px;
+  }
+}
