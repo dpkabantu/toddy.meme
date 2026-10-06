@@ -1396,9 +1396,9 @@ html{scroll-padding-top:88px}body{font-family:var(--body-font);background:radial
     font-weight: 650;
     line-height: 1.1;
     letter-spacing: 0.005em;
-    color: rgba(255,255,255,0.92);
+    color: rgba(246,233,208,0.92);
     border: 1px solid transparent;
-    border-bottom-color: rgba(255,255,255,0.075);
+    border-bottom-color: rgba(212,175,90,0.14);
     border-radius: 9px;
     opacity: 1;
     transition:
