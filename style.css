@@ -1457,3 +1457,48 @@ html{scroll-padding-top:88px}body{font-family:var(--body-font);background:radial
     background: linear-gradient(90deg, var(--gold-light), var(--gold));
   }
 }
+
+/* =========================================================
+   MOBILE-ONLY REQUESTED SPACING & SIZING REFINEMENTS
+   Desktop/tablet layout intentionally unchanged.
+   ========================================================= */
+@media (max-width: 768px) {
+  /* HERO: buttons sized to their text instead of full-width */
+  .hero-buttons .btn-primary,
+  .hero-buttons .btn-secondary {
+    width: auto;
+    max-width: none;
+    padding-left: 24px;
+    padding-right: 24px;
+  }
+
+  /* ABOUT: keep the three stat cards contained on small screens */
+  .about-stats .stat-number {
+    font-size: 1.15rem;
+  }
+
+  /* COMMUNITY: reduce only vertical spacing so more of the section
+     fits in a mobile viewport without changing its content/layout */
+  .community {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+
+  .community-grid {
+    gap: 18px;
+  }
+
+  .community-text .section-title {
+    margin-bottom: 10px;
+    line-height: 1.05;
+  }
+
+  .community .night-shift-pills {
+    margin-top: 14px;
+    margin-bottom: 10px;
+  }
+
+  .community-invite {
+    margin-bottom: 10px;
+  }
+}
