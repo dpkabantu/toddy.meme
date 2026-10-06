@@ -873,5 +873,25 @@
 <div class="toast" id="toast"></div>
 <canvas id="sparkle-canvas"></canvas>
 <script src="script.js"></script>
+<!-- TODDY image protection: blocks casual image saving/dragging without changing page UI or navigation. -->
+<script>
+(function () {
+  function isImageTarget(target) {
+    return target && (target.closest && target.closest("img"));
+  }
+
+  document.addEventListener("contextmenu", function (e) {
+    if (isImageTarget(e.target)) e.preventDefault();
+  }, true);
+
+  document.addEventListener("dragstart", function (e) {
+    if (isImageTarget(e.target)) e.preventDefault();
+  }, true);
+
+  document.addEventListener("selectstart", function (e) {
+    if (isImageTarget(e.target)) e.preventDefault();
+  }, true);
+})();
+</script>
 </body>
 </html>

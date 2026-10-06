@@ -442,6 +442,20 @@
         width: 138px;
       }
     }
+  
+
+    /* ===================================================
+       TODDY IMAGE DOWNLOAD PROTECTION — ADDITIVE ONLY
+       Prevents casual drag/save gestures without changing
+       image appearance, sizing, positioning or layout.
+       =================================================== */
+    img {
+      -webkit-user-drag: none;
+      user-drag: none;
+      -webkit-touch-callout: none;
+      user-select: none;
+      -webkit-user-select: none;
+    }
   </style>
 </head>
 <body>
@@ -990,5 +1004,25 @@
 })();
 </script>
 
+<!-- TODDY image protection: blocks casual image saving/dragging without changing page UI or navigation. -->
+<script>
+(function () {
+  function isImageTarget(target) {
+    return target && (target.closest && target.closest("img"));
+  }
+
+  document.addEventListener("contextmenu", function (e) {
+    if (isImageTarget(e.target)) e.preventDefault();
+  }, true);
+
+  document.addEventListener("dragstart", function (e) {
+    if (isImageTarget(e.target)) e.preventDefault();
+  }, true);
+
+  document.addEventListener("selectstart", function (e) {
+    if (isImageTarget(e.target)) e.preventDefault();
+  }, true);
+})();
+</script>
 </body>
 </html>

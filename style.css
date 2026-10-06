@@ -1518,3 +1518,17 @@ html{scroll-padding-top:88px}body{font-family:var(--body-font);background:radial
     padding-bottom: 56px;
   }
 }
+
+
+/* =========================================================
+   TODDY IMAGE DOWNLOAD PROTECTION — ADDITIVE ONLY
+   Prevents casual drag/save gestures without changing
+   image appearance, sizing, positioning or layout.
+   ========================================================= */
+img {
+  -webkit-user-drag: none;
+  user-drag: none;
+  -webkit-touch-callout: none;
+  user-select: none;
+  -webkit-user-select: none;
+}
