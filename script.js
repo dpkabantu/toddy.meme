@@ -39,6 +39,7 @@ window.addEventListener(
   'scroll', handleNavbarScroll,
   { passive: true }
 );
+window.addEventListener('resize', updateActiveNav, { passive: true });
 
 /* ------------------------------------------
    2. HAMBURGER — X anim + ESC +
@@ -149,12 +150,17 @@ function updateActiveNav() {
 
   allNavAs.forEach(function (a) {
     a.classList.remove('active');
+    a.removeAttribute('aria-current');
     if (a.getAttribute('href') ===
         '#' + current) {
       a.classList.add('active');
+      a.setAttribute('aria-current', 'page');
     }
   });
 }
+
+/* Set the correct active navigation state on first paint. */
+handleNavbarScroll();
 
 /* ------------------------------------------
    5. STAGGERED FADE-IN ON SCROLL
@@ -170,26 +176,32 @@ var fadeItems = document.querySelectorAll(
   '.about-body'
 );
 
-var fadeObserver = new IntersectionObserver(
-  function (entries) {
-    entries.forEach(function (entry, idx) {
-      if (entry.isIntersecting) {
-        setTimeout(function () {
-          entry.target.classList
-            .add('visible');
-          fadeObserver.unobserve(
-            entry.target);
-        }, idx * 70);
-      }
-    });
-  },
-  { threshold: 0.08 }
-);
+var fadeObserver = null;
 
-fadeItems.forEach(function (el) {
-  el.classList.add('td-fade');
-  fadeObserver.observe(el);
-});
+if ('IntersectionObserver' in window) {
+  fadeObserver = new IntersectionObserver(
+    function (entries) {
+      entries.forEach(function (entry, idx) {
+        if (entry.isIntersecting) {
+          setTimeout(function () {
+            entry.target.classList.add('visible');
+            fadeObserver.unobserve(entry.target);
+          }, idx * 70);
+        }
+      });
+    },
+    { threshold: 0.08 }
+  );
+
+  fadeItems.forEach(function (el) {
+    el.classList.add('td-fade');
+    fadeObserver.observe(el);
+  });
+} else {
+  fadeItems.forEach(function (el) {
+    el.classList.add('visible');
+  });
+}
 
 /* ------------------------------------------
    6. SCROLL TO TOP BUTTON
@@ -217,70 +229,7 @@ if (scrollTopBtn) {
 }
 
 /* ------------------------------------------
-   7. COPY CA + TOAST NOTIFICATION
-   ------------------------------------------ */
-var copyBtn  =
-  document.getElementById('copy-btn');
-var caTextEl =
-  document.getElementById('ca-text');
-var toastEl  =
-  document.getElementById('toast');
-var toastTimer = null;
-
-function showToast(msg) {
-  if (!toastEl) return;
-  toastEl.textContent = msg;
-  toastEl.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(function () {
-    toastEl.classList.remove('show');
-  }, 2600);
-}
-
-if (copyBtn && caTextEl) {
-  copyBtn.addEventListener('click',
-    function () {
-      var txt =
-        caTextEl.textContent.trim();
-      if (/tba/i.test(txt)) {
-        showToast('🌙 CA drops at launch!');
-        return;
-      }
-      if (navigator.clipboard &&
-          navigator.clipboard.writeText) {
-        navigator.clipboard
-          .writeText(txt)
-          .then(function () {
-            showToast('✅ CA copied!');
-          })
-          .catch(function () {
-            legacyCopy(txt);
-          });
-      } else {
-        legacyCopy(txt);
-      }
-    });
-}
-
-function legacyCopy(text) {
-  var ta =
-    document.createElement('textarea');
-  ta.value = text;
-  ta.style.cssText =
-    'position:fixed;opacity:0;top:0;';
-  document.body.appendChild(ta);
-  ta.select();
-  try {
-    document.execCommand('copy');
-    showToast('✅ CA copied!');
-  } catch (e) {
-    showToast('⚠️ Copy failed');
-  }
-  document.body.removeChild(ta);
-}
-
-/* ------------------------------------------
-   8. FAQ ACCORDION
+   7. FAQ ACCORDION
    One open at a time. Keyboard accessible.
    ------------------------------------------ */
 var faqItems =
@@ -303,11 +252,14 @@ faqItems.forEach(function (item) {
         if (other !== item) {
           other.classList.remove('open');
           var otherBtn =
-            other.querySelector(
-              '.faq-question');
+            other.querySelector('.faq-question');
+          var otherAnswer =
+            other.querySelector('.faq-answer');
           if (otherBtn) {
-            otherBtn.setAttribute(
-              'aria-expanded', 'false');
+            otherBtn.setAttribute('aria-expanded', 'false');
+          }
+          if (otherAnswer) {
+            otherAnswer.style.maxHeight = '0px';
           }
         }
       });
@@ -315,12 +267,12 @@ faqItems.forEach(function (item) {
       /* Toggle this item */
       if (isOpen) {
         item.classList.remove('open');
-        btn.setAttribute(
-          'aria-expanded', 'false');
+        btn.setAttribute('aria-expanded', 'false');
+        answer.style.maxHeight = '0px';
       } else {
         item.classList.add('open');
-        btn.setAttribute(
-          'aria-expanded', 'true');
+        btn.setAttribute('aria-expanded', 'true');
+        answer.style.maxHeight = answer.scrollHeight + 'px';
       }
     });
 
@@ -336,55 +288,59 @@ faqItems.forEach(function (item) {
 });
 
 /* ------------------------------------------
-   9. SPARKLE PARTICLES
+   8. SPARKLE PARTICLES
    Canvas is outside .hero — body child.
    Fixed position covers full page.
    z-index:2 — behind all sections (z:3)
    but above background.
    ------------------------------------------ */
 (function initSparkles() {
-  var canvas =
-    document.getElementById(
-      'sparkle-canvas');
+  var canvas = document.getElementById('sparkle-canvas');
   if (!canvas) return;
 
+  var motionOK = !(
+    window.matchMedia &&
+    window.matchMedia('(prefers-reduced-motion: reduce)').matches
+  );
+  if (!motionOK) return;
+
   var ctx = canvas.getContext('2d');
-  var W, H;
+  if (!ctx) return;
+
+  var W = 0, H = 0;
+  var TOTAL = window.innerWidth <= 768 ? 24 : 60;
+  var pts = [];
+  var raf = 0;
 
   function resize() {
-    W = canvas.width  =
-      window.innerWidth;
-    H = canvas.height =
-      window.innerHeight;
+    W = canvas.width = window.innerWidth;
+    H = canvas.height = window.innerHeight;
   }
-  resize();
-
-  window.addEventListener(
-    'resize', resize, { passive: true });
-
-  var TOTAL = 60;
-  var pts   = [];
 
   function mkPt(atBottom) {
     return {
-      x:    Math.random() * W,
-      y:    atBottom
-              ? H + 4
-              : Math.random() * H,
-      r:    Math.random() * 2.2 + 0.6,
-      vx:   (Math.random() - 0.5) * 0.38,
-      vy:   -(Math.random() * 0.6 + 0.18),
-      o:    Math.random() * 0.6 + 0.12,
-      d:    Math.random() * 0.0025 + 0.001,
+      x: Math.random() * W,
+      y: atBottom ? H + 4 : Math.random() * H,
+      r: Math.random() * 2.2 + 0.6,
+      vx: (Math.random() - 0.5) * 0.38,
+      vy: -(Math.random() * 0.6 + 0.18),
+      o: Math.random() * 0.6 + 0.12,
+      d: Math.random() * 0.0025 + 0.001,
       gold: Math.random() > 0.5
     };
   }
 
-  for (var i = 0; i < TOTAL; i++) {
-    pts.push(mkPt(false));
+  function seed() {
+    pts.length = 0;
+    for (var i = 0; i < TOTAL; i++) pts.push(mkPt(false));
   }
 
   function draw() {
+    if (document.hidden) {
+      raf = requestAnimationFrame(draw);
+      return;
+    }
+
     ctx.clearRect(0, 0, W, H);
 
     for (var j = 0; j < pts.length; j++) {
@@ -399,18 +355,20 @@ faqItems.forEach(function (item) {
       }
 
       ctx.beginPath();
-      ctx.arc(
-        p.x, p.y, p.r, 0, Math.PI * 2);
+      ctx.arc(p.x, p.y, p.r, 0, Math.PI * 2);
       ctx.fillStyle = p.gold
         ? 'rgba(255,215,0,' + p.o + ')'
         : 'rgba(139,92,246,' + p.o + ')';
       ctx.fill();
     }
 
-    requestAnimationFrame(draw);
+    raf = requestAnimationFrame(draw);
   }
 
-  draw();
+  resize();
+  seed();
+  window.addEventListener('resize', resize, { passive: true });
+  raf = requestAnimationFrame(draw);
 })();
 
 /* ================= TODDY PREMIUM INTERACTIONS ================= */
@@ -422,5 +380,23 @@ faqItems.forEach(function (item) {
   var bg=document.querySelector('.hero-bg');
   if(bg&&!reduced&&innerWidth>768){var busy=false;addEventListener('scroll',function(){if(busy)return;busy=true;requestAnimationFrame(function(){bg.style.transform='translate3d(0,'+Math.min(scrollY,innerHeight)*.035+'px,0)';busy=false})},{passive:true})}
   var vids=document.querySelectorAll('.hero-bg-video');
-  if('IntersectionObserver' in window){var vo=new IntersectionObserver(function(es){es.forEach(function(e){var v=e.target;if(e.isIntersecting){var p=v.play();if(p&&p.catch)p.catch(function(){})}else v.pause()})},{threshold:.05});vids.forEach(function(v){vo.observe(v)})}
+  if ('IntersectionObserver' in window) {
+    var vo = new IntersectionObserver(function(es) {
+      es.forEach(function(e) {
+        var v = e.target;
+        if (e.isIntersecting) {
+          var p = v.play();
+          if (p && p.catch) p.catch(function(){});
+        } else {
+          v.pause();
+        }
+      });
+    }, { threshold: .05 });
+    vids.forEach(function(v) { vo.observe(v); });
+  } else {
+    vids.forEach(function(v) {
+      var p = v.play();
+      if (p && p.catch) p.catch(function(){});
+    });
+  }
 })();

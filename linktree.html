@@ -5,13 +5,16 @@
   <meta name="viewport"
         content="width=device-width,
                  initial-scale=1.0" />
+  <meta name="theme-color" content="#1A0A00" />
+  <meta name="robots" content="index, follow" />
+  <link rel="canonical" href="https://toddy.meme/linktree.html" />
   <title>$TODDY — All Links</title>
   <meta name="description"
         content="All official $TODDY links —
         Website, Twitter, Telegram, Instagram,
         TikTok, Medium, Reddit, Discord." />
   <link rel="icon" type="image/png"
-        href="assets/coin-logo.png" />
+        href="assets/favicon.png" />
   <link rel="preconnect"
         href="https://fonts.googleapis.com" />
   <link rel="preconnect"
@@ -48,7 +51,7 @@
     html, body {
       min-height: 100vh;
       background-color: var(--brown);
-      background-image: url('assets/linktree-bg-toddy-night-jungle.png');
+      background-image: url('assets/linktree-bg-toddy-night-jungle.webp');
       background-size: cover;
       background-position: center top;
       background-repeat: no-repeat;
@@ -456,6 +459,31 @@
       user-select: none;
       -webkit-user-select: none;
     }
+
+    /* ========================================
+       POLISH PASS — PERFORMANCE + ACCESSIBILITY
+       ======================================== */
+    .lt-back:focus-visible,
+    .cherry-link:focus-visible {
+      outline: 2px solid var(--gold-light);
+      outline-offset: 4px;
+    }
+
+    @media (max-width: 600px) {
+      html, body {
+        background-attachment: scroll;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .lt-tree-svg {
+        animation: none;
+      }
+      #lt-canvas {
+        display: none;
+      }
+    }
+
   </style>
 </head>
 <body>
@@ -466,7 +494,7 @@
 
   <!-- Header -->
   <a href="index.html#home" aria-label="Go to TODDY home">
-    <img src="assets/coin-logo.png"
+    <img src="assets/coin-logo.webp"
          alt="$TODDY Logo" class="lt-logo" />
   </a>
   <div class="lt-name">$TODDY</div>
@@ -917,7 +945,7 @@
 
     <!-- TODDY interaction guide: reaches toward the Medium button -->
     <div class="lt-toddy-guide">
-      <img src="assets/toddy-linktree-tap.png"
+      <img src="assets/toddy-linktree-tap.webp"
            alt="Toddy reaching toward the Medium social button"
            width="190" height="285"
            loading="eager" decoding="async" />
@@ -957,7 +985,7 @@
     { passive: true });
 
   var pts = [];
-  var TOTAL = 50;
+  var TOTAL = window.innerWidth <= 600 ? 18 : 50;
 
   function mkPt() {
     return {
@@ -980,6 +1008,10 @@
   }
 
   function draw() {
+    if (document.hidden) {
+      requestAnimationFrame(draw);
+      return;
+    }
     ctx.clearRect(0, 0, W, H);
     for (var j = 0; j < pts.length; j++) {
       var p = pts[j];
