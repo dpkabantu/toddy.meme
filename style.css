@@ -1788,3 +1788,16 @@ img {
 @media (prefers-reduced-motion: reduce) {
   #sparkle-canvas { display: none; }
 }
+
+
+/* =========================================================
+   ROADMAP DESKTOP ALIGNMENT FIX — MINIMAL
+   Desktop only. Keeps the lead sentence outside the
+   bordered milestone note and restores clean spacing.
+   No other layout, typography, color, or mobile rules changed.
+   ========================================================= */
+@media (min-width: 769px) {
+  .roadmap .tge-note {
+    margin-top: 0;
+  }
+}
