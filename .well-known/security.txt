@@ -1,0 +1,4 @@
+Contact: https://x.com/ToddyCoin
+Expires: 2027-10-09T00:00:00.000Z
+Preferred-Languages: en
+Canonical: https://toddy.meme/.well-known/security.txt
