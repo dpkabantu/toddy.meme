@@ -1,0 +1,56 @@
+# ============================================================
+#  toddy.meme — HTTP response headers (Cloudflare Workers static assets)
+#  File format: https://developers.cloudflare.com/workers/static-assets/headers/
+#  Applies to every file served from this folder.
+# ============================================================
+
+/*
+# --- Content Security Policy -------------------------------------------
+# Only this site's own files may run or load. No inline scripts/styles.
+# Google Fonts is the single third-party origin (fonts only).
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; media-src 'self'; connect-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+
+# --- Transport / framing / sniffing -------------------------------------
+  Strict-Transport-Security: max-age=31536000
+  X-Content-Type-Options: nosniff
+  X-Frame-Options: DENY
+  Referrer-Policy: strict-origin-when-cross-origin
+  Cross-Origin-Opener-Policy: same-origin
+
+# --- Browser features this site never needs -----------------------------
+  Permissions-Policy: accelerometer=(), camera=(), geolocation=(), gyroscope=(), microphone=(), payment=(), usb=(), interest-cohort=()
+
+# Images, video and icons: cache for a day, then refresh in the background.
+# (File names are not versioned, so a long "immutable" cache would leave
+#  visitors with stale logos after a replacement.)
+/assets/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+# Security contact file must be fetchable by scanners and researchers.
+/.well-known/security.txt
+  Content-Type: text/plain; charset=utf-8
+  Cache-Control: public, max-age=86400
+
+/site.webmanifest
+  Content-Type: application/manifest+json; charset=utf-8
+
+# ------------------------------------------------------------
+#  RESERVED FOR LATER — games (do NOT enable until a game exists)
+# ------------------------------------------------------------
+#  When the first game ships under /games/<game-name>/, add a rule like the
+#  one below so games get the extra permissions an HTML5 engine such as
+#  Phaser may need (blob: images/audio, web workers), WITHOUT loosening the
+#  policy for the rest of the site. Verify in the browser console that no
+#  CSP violations remain before launch, then keep this list as tight as the
+#  game allows. Hashed/versioned game bundles can use long immutable caching.
+#
+#  /games/*
+#    Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; worker-src 'self' blob:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+#  /games/*/assets/*
+#    Cache-Control: public, max-age=31536000, immutable
+#
+#  Note: rules from "/*" AND a more specific path both apply, and a header set
+#  by two rules is combined (two CSPs = the stricter result, so the game
+#  would stay blocked). To drop the site-wide CSP for /games/* first, put
+#  "! Content-Security-Policy" (detach) in that rule before the new one — see
+#  the Cloudflare static-assets headers documentation, and test after deploy.
