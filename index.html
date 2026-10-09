@@ -6,15 +6,12 @@
         content="width=device-width,
                  initial-scale=1.0" />
   <meta name="theme-color" content="#050505" />
-  <meta name="robots" content="index, follow" />
+  <meta name="color-scheme" content="dark" />
+  <meta name="robots" content="index, follow, max-image-preview:large" />
   <link rel="canonical" href="https://toddy.meme/" />
   <title>$TODDY — The Night Trader of Crypto</title>
   <meta name="description"
         content="$TODDY — The Night Trader of Crypto. A Kopi Luwak-inspired meme universe built around coffee, community and the Night Shift. Pre-launch. Chain TBA." />
-  <meta name="keywords"
-        content="TODDY, meme coin, Kopi Luwak,
-        civet cat, night trader, crypto,
-        pre-launch, Night Shift" />
   <meta property="og:type" content="website" />
   <meta property="og:url"
         content="https://toddy.meme/" />
@@ -30,6 +27,9 @@
   <meta property="og:locale" content="en_US" />
   <meta property="og:image:width" content="1730" />
   <meta property="og:image:height" content="909" />
+  <meta property="og:image:type" content="image/jpeg" />
+  <meta property="og:image:alt"
+        content="$TODDY — The Night Trader of Crypto. Toddy the civet in a golden crescent crown, with a backpack and a golden paw-print coffee mug, beside a moonlit jungle river." />
   <meta name="twitter:card"
         content="summary_large_image" />
   <meta name="twitter:site" content="@ToddyCoin" />
@@ -40,8 +40,20 @@
         Pre-launch. No Presale. Chain TBA." />
   <meta name="twitter:image"
         content="https://toddy.meme/assets/twitter-banner.jpg" />
+  <meta name="twitter:image:alt"
+        content="$TODDY — The Night Trader of Crypto. Toddy the civet with a backpack and a golden paw-print coffee mug beside a moonlit jungle river." />
   <link rel="icon" type="image/png"
         href="assets/favicon.png" />
+  <link rel="apple-touch-icon" href="assets/apple-touch-icon.png" />
+  <link rel="manifest" href="site.webmanifest" />
+  <!-- Start downloading the hero poster early (it is the first big image on screen).
+       Only the poster that matches the screen size is fetched. -->
+  <link rel="preload" as="image" type="image/webp"
+        href="assets/toddy-hero-poster-mobile.webp"
+        media="(max-width: 768px)" fetchpriority="high" />
+  <link rel="preload" as="image" type="image/webp"
+        href="assets/toddy-hero-poster-desktop.webp"
+        media="(min-width: 769px)" fetchpriority="high" />
   <link rel="preconnect"
         href="https://fonts.googleapis.com" />
   <link rel="preconnect"
@@ -52,10 +64,33 @@
   <script type="application/ld+json">
   {
     "@context": "https://schema.org",
-    "@type": "WebSite",
-    "name": "$TODDY",
-    "url": "https://toddy.meme/",
-    "description": "$TODDY — The Night Trader of Crypto. A Kopi Luwak-inspired meme universe built around coffee, community and the Night Shift. Pre-launch. Chain TBA."
+    "@graph": [
+      {
+        "@type": "WebSite",
+        "@id": "https://toddy.meme/#website",
+        "name": "$TODDY",
+        "url": "https://toddy.meme/",
+        "inLanguage": "en",
+        "description": "$TODDY — The Night Trader of Crypto. A Kopi Luwak-inspired meme universe built around coffee, community and the Night Shift. Pre-launch. Chain TBA.",
+        "publisher": { "@id": "https://toddy.meme/#organization" }
+      },
+      {
+        "@type": "Organization",
+        "@id": "https://toddy.meme/#organization",
+        "name": "$TODDY",
+        "url": "https://toddy.meme/",
+        "logo": "https://toddy.meme/assets/coin-logo.webp",
+        "sameAs": [
+          "https://x.com/ToddyCoin",
+          "https://t.me/ToddyCoinCommunity",
+          "https://www.instagram.com/toddycoin",
+          "https://www.tiktok.com/@toddycoin",
+          "https://medium.com/@toddycoin",
+          "https://www.reddit.com/user/toddycoin/",
+          "https://discord.com/invite/fV8Vmbp2u"
+        ]
+      }
+    ]
   }
   </script>
 </head>
@@ -68,7 +103,7 @@
 <nav class="navbar" id="navbar" aria-label="Primary navigation">
   <div class="nav-logo">
     <a href="#home" aria-label="Go to TODDY home">
-      <img src="assets/coin-logo.webp" alt="$TODDY Logo" decoding="async" fetchpriority="high" />
+      <img width="512" height="512" src="assets/coin-logo.webp" alt="$TODDY Logo" decoding="async" fetchpriority="high" />
       <span>$TODDY</span>
     </a>
   </div>
@@ -80,8 +115,10 @@
     <li><a href="#community" title="Join the Night Shift">Night Shift</a></li>
     <li><a href="linktree.html" title="All official TODDY links">All Links</a></li>
     <li><a href="#faq" title="Frequently asked questions">FAQ</a></li>
+    <!-- GAMES HOOK: when the first game is live, add here:
+         <li><a href="/games/" title="Play TODDY games">Play</a></li> -->
   </ul>
-  <a href="#community" class="nav-btn">🌙 Enter the Night Shift</a>
+  <a href="#community" class="nav-btn"><span aria-hidden="true">🌙</span> Enter the Night Shift</a>
   <button class="hamburger" id="hamburger"
           aria-label="Open Menu" aria-expanded="false" aria-controls="nav-links">
     <span></span><span></span><span></span>
@@ -91,24 +128,29 @@
 <main id="main-content">
 <!-- HERO -->
 <section class="hero" id="home">
+  <!-- Hero background videos.
+       The video files are NOT listed here on purpose: script.js loads ONLY the one that
+       matches the screen (desktop or mobile), and skips video entirely for visitors who
+       prefer reduced motion or have Data Saver on — they see the poster image instead.
+       data-formats = order to try (mp4 first on phones: smaller file, hardware decoding). -->
   <div class="hero-bg" aria-hidden="true">
     <video class="hero-bg-video hero-bg-video-desktop"
-           autoplay muted loop playsinline preload="none"
-           poster="assets/toddy-hero-poster-desktop.webp">
-      <source src="assets/toddy-hero-desktop.webm" type="video/webm" />
-      <source src="assets/toddy-hero-desktop.mp4" type="video/mp4" />
-    </video>
+           muted loop playsinline preload="none"
+           poster="assets/toddy-hero-poster-desktop.webp"
+           width="1920" height="1080"
+           data-src-base="assets/toddy-hero-desktop"
+           data-formats="webm,mp4"></video>
     <video class="hero-bg-video hero-bg-video-mobile"
-           autoplay muted loop playsinline preload="none"
-           poster="assets/toddy-hero-poster-mobile.webp">
-      <source src="assets/toddy-hero-mobile.webm" type="video/webm" />
-      <source src="assets/toddy-hero-mobile.mp4" type="video/mp4" />
-    </video>
+           muted loop playsinline preload="none"
+           poster="assets/toddy-hero-poster-mobile.webp"
+           width="1080" height="1920"
+           data-src-base="assets/toddy-hero-mobile"
+           data-formats="mp4,webm"></video>
   </div>
   <div class="hero-content">
     <div class="hero-text">
       <div class="hero-badge">
-        🌙 TODDY AFTER DARK <span>•</span> PRE-LAUNCH
+        <span aria-hidden="true">🌙</span> TODDY AFTER DARK <span aria-hidden="true">•</span> PRE-LAUNCH
       </div>
       <h1 class="hero-title">
         The Night Trader<br />
@@ -118,7 +160,7 @@
       <p class="hero-kicker">$TODDY — The Kopi Luwak meme universe.</p>
       <div class="hero-buttons">
         <a href="#community" class="btn-primary">
-          🌙 Enter the Night Shift
+          <span aria-hidden="true">🌙</span> Enter the Night Shift
         </a>
         <a href="#about" class="btn-secondary">
           Meet Toddy
@@ -138,11 +180,18 @@
       </div>
     </div>
   </div>
-  <div class="hero-scroll">↓ Scroll Down</div>
+  <div class="hero-scroll" aria-hidden="true">↓ Scroll Down</div>
+  <!-- Pause control for the moving background (accessibility requirement for
+       auto-playing motion). Revealed by script.js once a video is actually playing. -->
+  <button type="button" class="hero-motion-toggle" id="hero-motion-toggle"
+          aria-label="Pause background video" aria-pressed="false" hidden>
+    <svg class="icon-pause" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M6 4h4v16H6zM14 4h4v16h-4z"/></svg>
+    <svg class="icon-play" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path fill="currentColor" d="M7 4l13 8-13 8z"/></svg>
+  </button>
 </section>
 
 <div class="section-divider">
-  <img loading="lazy" decoding="async" src="assets/section-divider.webp" alt="" />
+  <img width="1200" height="400" loading="lazy" decoding="async" src="assets/section-divider.webp" alt="" />
 </div>
 
 <!-- =============================================
@@ -157,8 +206,8 @@
      ============================================= -->
 <section class="about" id="about">
   <div class="about-bg">
-    <img src="assets/about-bg-pattern.webp"
-         alt="" class="about-bg-img" />
+    <img width="1254" height="1254" src="assets/about-bg-pattern.webp"
+         alt="" class="about-bg-img" loading="lazy" decoding="async" />
   </div>
   <div class="container">
 
@@ -173,8 +222,8 @@
       <!-- Mascot — order:1 on mobile (image second
            after heading, before body text) -->
       <div class="about-mascot">
-        <img loading="lazy" decoding="async" src="assets/about-mascot.webp"
-             alt="Toddy the Civet" />
+        <img width="800" height="800" loading="lazy" decoding="async" src="assets/about-mascot.webp"
+             alt="Toddy the Asian Palm Civet, wearing a golden crescent crown, winking and reading a coffee guidebook beside a golden paw-print mug" />
       </div>
 
       <!-- Body text — order:2 on mobile (after image) -->
@@ -214,14 +263,14 @@
 </section>
 
 <div class="section-divider">
-  <img loading="lazy" decoding="async" src="assets/section-divider.webp" alt="" />
+  <img width="1200" height="400" loading="lazy" decoding="async" src="assets/section-divider.webp" alt="" />
 </div>
 
 <!-- TOKENOMICS -->
 <section class="tokenomics" id="tokenomics">
   <div class="container">
     <h2 class="section-title center">
-      What’s in <span class="gold-text">TODDY’s Cup?</span> ☕
+      What’s in <span class="gold-text">TODDY’s Cup?</span> <span aria-hidden="true">☕</span>
     </h2>
     <p class="section-lead center-lead">
       A clear pre-launch snapshot — planned supply, launch structure and the details that are still TBA.
@@ -229,31 +278,31 @@
     <div class="tokenomics-grid">
       <div class="tokenomics-cards">
         <div class="token-card">
-          <div class="token-icon">🪙</div>
+          <div class="token-icon" aria-hidden="true">🪙</div>
           <div class="token-label">Planned Total Supply</div>
           <div class="token-value">1,000,000,000</div>
           <div class="token-sub">1 Billion $TODDY</div>
         </div>
         <div class="token-card">
-          <div class="token-icon">🚫</div>
+          <div class="token-icon" aria-hidden="true">🚫</div>
           <div class="token-label">Presale</div>
           <div class="token-value">NONE</div>
           <div class="token-sub">No Presale • No Private Sale</div>
         </div>
         <div class="token-card">
-          <div class="token-icon">🚫</div>
+          <div class="token-icon" aria-hidden="true">🚫</div>
           <div class="token-label">Team Allocation</div>
           <div class="token-value">0%</div>
           <div class="token-sub">No Team Tokens</div>
         </div>
         <div class="token-card">
-          <div class="token-icon">🌐</div>
+          <div class="token-icon" aria-hidden="true">🌐</div>
           <div class="token-label">Launch Chain</div>
           <div class="token-value">TBA</div>
           <div class="token-sub">Announced Before TGE</div>
         </div>
         <div class="token-card token-card-wide">
-          <div class="token-icon">🛡️</div>
+          <div class="token-icon" aria-hidden="true">🛡️</div>
           <div class="token-label">Launch Model</div>
           <div class="token-value">PUBLIC</div>
           <div class="token-sub">
@@ -262,51 +311,51 @@
         </div>
       </div>
       <div class="tokenomics-mascot">
-        <img loading="lazy" decoding="async" src="assets/tokenomics-mascot.webp"
-             alt="Toddy Tokenomics" />
+        <img width="800" height="800" loading="lazy" decoding="async" src="assets/tokenomics-mascot.webp"
+             alt="Toddy the civet at a wooden desk with a laptop showing charts, a vault and gold coins" />
       </div>
     </div>
     <div class="trust-bar">
       <div class="trust-badge">
-        <span class="trust-icon">🔒</span>
+        <span class="trust-icon" aria-hidden="true">🔒</span>
         <span>Liquidity Transparency</span>
       </div>
       <div class="trust-badge">
-        <span class="trust-icon">🛡️</span>
+        <span class="trust-icon" aria-hidden="true">🛡️</span>
         <span>Supply Transparency</span>
       </div>
       <div class="trust-badge">
-        <span class="trust-icon">👥</span>
+        <span class="trust-icon" aria-hidden="true">👥</span>
         <span>Community-First</span>
       </div>
       <div class="trust-badge">
-        <span class="trust-icon">✅</span>
+        <span class="trust-icon" aria-hidden="true">✅</span>
         <span>No Presale</span>
       </div>
       <div class="trust-badge">
-        <span class="trust-icon">🌐</span>
+        <span class="trust-icon" aria-hidden="true">🌐</span>
         <span>Launch Chain TBA</span>
       </div>
     </div>
     <div class="toddy-principles">
       <h3 class="toddy-principles-title">
-        ☕ Why <span class="gold-text">TODDY?</span>
+        <span aria-hidden="true">☕</span> Why <span class="gold-text">TODDY?</span>
       </h3>
       <div class="toddy-principles-grid">
         <div class="why-item">
-          <span class="why-number">☕</span>
+          <span class="why-number" aria-hidden="true">☕</span>
           <span class="why-label">Caffeine-Fueled<br />Night Shift</span>
         </div>
         <div class="why-item">
-          <span class="why-number">🌙</span>
+          <span class="why-number" aria-hidden="true">🌙</span>
           <span class="why-label">Night Trader<br />Story &amp; Character</span>
         </div>
         <div class="why-item">
-          <span class="why-number">🔍</span>
+          <span class="why-number" aria-hidden="true">🔍</span>
           <span class="why-label">Verify Everything<br />Before You Trade</span>
         </div>
         <div class="why-item">
-          <span class="why-number">👥</span>
+          <span class="why-number" aria-hidden="true">👥</span>
           <span class="why-label">Community-First<br />No Mystery Promises</span>
         </div>
       </div>
@@ -315,7 +364,7 @@
 </section>
 
 <div class="section-divider">
-  <img loading="lazy" decoding="async" src="assets/section-divider.webp" alt="" />
+  <img width="1200" height="400" loading="lazy" decoding="async" src="assets/section-divider.webp" alt="" />
 </div>
 
 <!-- HOW TO BUY -->
@@ -328,7 +377,7 @@
       Launch &amp; Safety — everything here is designed for the pre-launch stage.
     </p>
     <div class="safety-banner">
-      <div class="safety-shield">🛡️</div>
+      <div class="safety-shield" aria-hidden="true">🛡️</div>
       <div class="safety-text">
         <strong>Verify Before You Trade</strong>
         <p>TODDY is pre-launch. The official contract,
@@ -345,8 +394,8 @@
     </div>
     <div class="howtobuy-grid">
       <div class="howtobuy-mascot">
-        <img loading="lazy" decoding="async" src="assets/howtobuy-mascot.webp"
-             alt="Toddy How To Buy" />
+        <img width="800" height="800" loading="lazy" decoding="async" src="assets/howtobuy-mascot.webp"
+             alt="Toddy the civet at a laptop beside a lamp and coffee, holding up a phone with a green shield and checklist" />
       </div>
       <div class="steps">
         <div class="step">
@@ -388,17 +437,29 @@
       </div>
     </div>
     <div class="verify-strip">
-      <span class="verify-icon">🔍</span>
+      <span class="verify-icon" aria-hidden="true">🔍</span>
       <span><strong>Verify Everything:</strong>
         Use only the official contract and trading links
         published by TODDY. Never share your seed phrase
         or approve an unfamiliar wallet request.</span>
     </div>
+    <div class="official-links" id="official-links">
+      <h3 class="official-links-title">Official links only</h3>
+      <p><strong>toddy.meme</strong> is the only official $TODDY website.
+        The official contract address will be published only on
+        toddy.meme and TODDY’s verified channels.</p>
+      <ul class="official-links-list">
+        <li>Bookmark toddy.meme and check the address bar before you connect a wallet.</li>
+        <li>Treat any contract address, “claim” link or wallet request sent by DM, reply or ad as a scam.</li>
+        <li>TODDY will never ask for your seed phrase or private keys.</li>
+      </ul>
+      <a href="linktree.html" class="official-links-btn">See all official links</a>
+    </div>
   </div>
 </section>
 
 <div class="section-divider">
-  <img loading="lazy" decoding="async" src="assets/section-divider.webp" alt="" />
+  <img width="1200" height="400" loading="lazy" decoding="async" src="assets/section-divider.webp" alt="" />
 </div>
 
 <!-- ROADMAP -->
@@ -411,23 +472,22 @@
       Roadmap — planned stages, not promises of dates or guaranteed integrations.
     </p>
     <p class="tge-note">
-      🌙 Roadmap milestones describe what TODDY
+      <span aria-hidden="true">🌙</span> Roadmap milestones describe what TODDY
       intends to build. Launch dates and integrations
-      depend on real-world conditions. ☕
+      depend on real-world conditions. <span aria-hidden="true">☕</span>
     </p>
     <div class="roadmap-mascot-row">
-      <img src="assets/roadmap-mascot.webp"
-           alt="Toddy Roadmap" />
+      <img width="663" height="800" loading="lazy" decoding="async" src="assets/roadmap-mascot.webp"
+           alt="Toddy the civet in an explorer's backpack, walking with a golden coffee mug" />
     </div>
     <div class="roadmap-grid">
       <div class="phase">
         <div class="phase-tag">Phase 1</div>
-        <div class="phase-icon">☕</div>
+        <div class="phase-icon" aria-hidden="true">☕</div>
         <h3 class="phase-title">Wake Up</h3>
-        <div class="phase-time">🕐 Pre-TGE / TGE</div>
+        <div class="phase-time"><span aria-hidden="true">🕐</span> Pre-TGE / TGE</div>
         <div class="phase-progress">
-          <div class="phase-progress-fill"
-               style="width:0%"></div>
+          <div class="phase-progress-fill"></div>
         </div>
         <ul class="phase-list">
           <li>Finalize launch chain</li>
@@ -440,12 +500,11 @@
       </div>
       <div class="phase">
         <div class="phase-tag">Phase 2</div>
-        <div class="phase-icon">🌙</div>
+        <div class="phase-icon" aria-hidden="true">🌙</div>
         <h3 class="phase-title">Brew</h3>
-        <div class="phase-time">🕐 Post-TGE</div>
+        <div class="phase-time"><span aria-hidden="true">🕐</span> Post-TGE</div>
         <div class="phase-progress">
-          <div class="phase-progress-fill"
-               style="width:0%"></div>
+          <div class="phase-progress-fill"></div>
         </div>
         <ul class="phase-list">
           <li>Night Shift community programs</li>
@@ -458,30 +517,28 @@
       </div>
       <div class="phase">
         <div class="phase-tag">Phase 3</div>
-        <div class="phase-icon">🧭</div>
+        <div class="phase-icon" aria-hidden="true">🧭</div>
         <h3 class="phase-title">Trade</h3>
-        <div class="phase-time">🕐 Growth Phase</div>
+        <div class="phase-time"><span aria-hidden="true">🕐</span> Growth Phase</div>
         <div class="phase-progress">
-          <div class="phase-progress-fill"
-               style="width:0%"></div>
+          <div class="phase-progress-fill"></div>
         </div>
         <ul class="phase-list">
           <li>Community-led Toddy projects</li>
           <li>Creator collaborations</li>
           <li>Selective ecosystem partnerships</li>
-          <li>Treasury operations</li>
+          <li>Regular public progress updates</li>
           <li>Governance experiments</li>
           <li>New Toddy experiences</li>
         </ul>
       </div>
       <div class="phase">
         <div class="phase-tag">Phase 4</div>
-        <div class="phase-icon">🌙</div>
+        <div class="phase-icon" aria-hidden="true">🌙</div>
         <h3 class="phase-title">Night</h3>
-        <div class="phase-time">🕐 Long Term</div>
+        <div class="phase-time"><span aria-hidden="true">🕐</span> Long Term</div>
         <div class="phase-progress">
-          <div class="phase-progress-fill"
-               style="width:0%"></div>
+          <div class="phase-progress-fill"></div>
         </div>
         <ul class="phase-list">
           <li>Global Night Shift community</li>
@@ -497,7 +554,7 @@
 </section>
 
 <div class="section-divider">
-  <img loading="lazy" decoding="async" src="assets/section-divider.webp" alt="" />
+  <img width="1200" height="400" loading="lazy" decoding="async" src="assets/section-divider.webp" alt="" />
 </div>
 
 <!-- COMMUNITY -->
@@ -585,15 +642,15 @@
         </div>
       </div>
       <div class="community-mascot">
-        <img loading="lazy" decoding="async" src="assets/community-mascot.webp"
-             alt="Toddy Community" />
+        <img width="800" height="800" loading="lazy" decoding="async" src="assets/community-mascot.webp"
+             alt="Toddy the civet waving from a lantern-lit café table surrounded by coffee cups and speech bubbles" />
       </div>
     </div>
   </div>
 </section>
 
 <div class="section-divider">
-  <img loading="lazy" decoding="async" src="assets/section-divider.webp" alt="" />
+  <img width="1200" height="400" loading="lazy" decoding="async" src="assets/section-divider.webp" alt="" />
 </div>
 
 <!-- FAQ -->
@@ -601,7 +658,7 @@
   <div class="container">
     <h2 class="section-title center">
       <span class="gold-text">Curious After Dark?</span>
-      Questions ☕
+      Questions <span aria-hidden="true">☕</span>
     </h2>
     <p class="faq-subtitle">
       The useful stuff, straight from the jungle.
@@ -612,9 +669,9 @@
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-1" id="faq-question-1">
             <span>What is $TODDY?</span>
-            <span class="faq-arrow">▼</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
           </button>
-          <div class="faq-answer" id="faq-answer-1" role="region" aria-labelledby="faq-question-1">
+          <div class="faq-answer" id="faq-answer-1">
             <p>$TODDY is a meme coin themed around Toddy the Asian
               Palm Civet and Kopi Luwak. $TODDY is currently
               pre-launch. The launch chain and official
@@ -624,9 +681,9 @@
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-2" id="faq-question-2">
             <span>What is Kopi Luwak?</span>
-            <span class="faq-arrow">▼</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
           </button>
-          <div class="faq-answer" id="faq-answer-2" role="region" aria-labelledby="faq-question-2">
+          <div class="faq-answer" id="faq-answer-2">
             <p>Kopi Luwak is coffee made from beans that have
               passed through the digestive system of the
               Asian Palm Civet. It is the real-world inspiration
@@ -636,9 +693,9 @@
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-3" id="faq-question-3">
             <span>Is $TODDY risk-free?</span>
-            <span class="faq-arrow">▼</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
           </button>
-          <div class="faq-answer" id="faq-answer-3" role="region" aria-labelledby="faq-question-3">
+          <div class="faq-answer" id="faq-answer-3">
             <p>Crypto tokens are high-risk and no launch structure
               makes a token risk-free. Before TGE, TODDY will
               publish the official contract, supply, liquidity
@@ -649,9 +706,9 @@
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-4" id="faq-question-4">
             <span>Is the liquidity locked?</span>
-            <span class="faq-arrow">▼</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
           </button>
-          <div class="faq-answer" id="faq-answer-4" role="region" aria-labelledby="faq-question-4">
+          <div class="faq-answer" id="faq-answer-4">
             <p>The final launch liquidity structure, amount and lock
               details will be published before TGE. Proof will
               be verifiable on-chain after launch.</p>
@@ -660,9 +717,9 @@
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-5" id="faq-question-5">
             <span>How will $TODDY's supply be controlled?</span>
-            <span class="faq-arrow">▼</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
           </button>
-          <div class="faq-answer" id="faq-answer-5" role="region" aria-labelledby="faq-question-5">
+          <div class="faq-answer" id="faq-answer-5">
             <p>The planned total supply is 1,000,000,000 $TODDY. Final contract
               permissions and any ability to mint, pause, upgrade
               or administer the token will be published and
@@ -672,9 +729,9 @@
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-6" id="faq-question-6">
             <span>Where can I buy $TODDY?</span>
-            <span class="faq-arrow">▼</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
           </button>
-          <div class="faq-answer" id="faq-answer-6" role="region" aria-labelledby="faq-question-6">
+          <div class="faq-answer" id="faq-answer-6">
             <p>After TGE, the official trading venue(s) and
               instructions will be published on toddy.meme.
               Only use links and the contract address published
@@ -684,9 +741,9 @@
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-7" id="faq-question-7">
             <span>What wallet do I need?</span>
-            <span class="faq-arrow">▼</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
           </button>
-          <div class="faq-answer" id="faq-answer-7" role="region" aria-labelledby="faq-question-7">
+          <div class="faq-answer" id="faq-answer-7">
             <p>The required wallet will depend on the final launch
               chain. TODDY will publish compatible wallet
               guidance before TGE. Never install a wallet or
@@ -696,13 +753,22 @@
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-8" id="faq-question-8">
             <span>My swap failed — what do I do?</span>
-            <span class="faq-arrow">▼</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
           </button>
-          <div class="faq-answer" id="faq-answer-8" role="region" aria-labelledby="faq-question-8">
+          <div class="faq-answer" id="faq-answer-8">
             <p>Check the official launch instructions first and
               confirm you are using the correct wallet, network,
               trading venue and contract address. Do not blindly
               increase slippage or approve unfamiliar requests.</p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-17" id="faq-question-17">
+            <span>How do I know a link or website is really official?</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
+          </button>
+          <div class="faq-answer" id="faq-answer-17">
+            <p>toddy.meme is the only official $TODDY website, and every official channel is listed on the <a href="linktree.html" class="faq-inline-link">official links page</a>. Check the address bar, bookmark the site, and treat any contract address, “claim” link or wallet request that reaches you by DM, reply or ad as a scam. TODDY will never ask for your seed phrase or private keys.</p>
           </div>
         </div>
       </div>
@@ -710,9 +776,9 @@
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-9" id="faq-question-9">
             <span>How will the launch chain be selected?</span>
-            <span class="faq-arrow">▼</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
           </button>
-          <div class="faq-answer" id="faq-answer-9" role="region" aria-labelledby="faq-question-9">
+          <div class="faq-answer" id="faq-answer-9">
             <p>$TODDY has not finalized its launch chain yet. The
               decision will consider launch infrastructure,
               liquidity, accessibility, ecosystem fit and
@@ -723,9 +789,9 @@
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-10" id="faq-question-10">
             <span>How do I add $TODDY to my wallet?</span>
-            <span class="faq-arrow">▼</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
           </button>
-          <div class="faq-answer" id="faq-answer-10" role="region" aria-labelledby="faq-question-10">
+          <div class="faq-answer" id="faq-answer-10">
             <p>Wallet display steps depend on the final launch chain
               and wallet. Follow the official wallet instructions
               published at TGE and verify the contract address
@@ -735,9 +801,9 @@
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-11" id="faq-question-11">
             <span>Is there a pre-sale or whitelist?</span>
-            <span class="faq-arrow">▼</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
           </button>
-          <div class="faq-answer" id="faq-answer-11" role="region" aria-labelledby="faq-question-11">
+          <div class="faq-answer" id="faq-answer-11">
             <p>No. $TODDY will have no presale, private sale,
               whitelist sale or VC allocation. The public
               launch mechanism will be published before TGE.</p>
@@ -746,9 +812,9 @@
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-12" id="faq-question-12">
             <span>How do I avoid scams and fake tokens?</span>
-            <span class="faq-arrow">▼</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
           </button>
-          <div class="faq-answer" id="faq-answer-12" role="region" aria-labelledby="faq-question-12">
+          <div class="faq-answer" id="faq-answer-12">
             <p>The ONLY official contract address will be published
               on toddy.meme and our verified socials. Never
               buy from a contract address sent by DM or random
@@ -761,9 +827,9 @@
           <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-13" id="faq-question-13">
             <span>What is the total supply and why
               1 Billion?</span>
-            <span class="faq-arrow">▼</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
           </button>
-          <div class="faq-answer" id="faq-answer-13" role="region" aria-labelledby="faq-question-13">
+          <div class="faq-answer" id="faq-answer-13">
             <p>The intended total supply is 1,000,000,000 $TODDY.
               The final on-chain supply and contract permissions
               will be published at TGE so anyone can verify
@@ -774,9 +840,9 @@
           <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-14" id="faq-question-14">
             <span>Will $TODDY be listed on major
               exchanges?</span>
-            <span class="faq-arrow">▼</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
           </button>
-          <div class="faq-answer" id="faq-answer-14" role="region" aria-labelledby="faq-question-14">
+          <div class="faq-answer" id="faq-answer-14">
             <p>Exchange and ecosystem listings depend on the
               relevant platform's requirements and real-world
               opportunities. Any confirmed listing will be
@@ -786,26 +852,35 @@
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-15" id="faq-question-15">
             <span>How can I support and grow $TODDY?</span>
-            <span class="faq-arrow">▼</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
           </button>
-          <div class="faq-answer" id="faq-answer-15" role="region" aria-labelledby="faq-question-15">
+          <div class="faq-answer" id="faq-answer-15">
             <p>Join the Night Shift, create memes, share useful
               crypto education, contribute ideas and take
-              part in community activities. ☕🌙</p>
+              part in community activities. <span aria-hidden="true">☕🌙</span></p>
           </div>
         </div>
         <div class="faq-item">
           <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-16" id="faq-question-16">
             <span>What makes $TODDY different from
               other meme coins?</span>
-            <span class="faq-arrow">▼</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
           </button>
-          <div class="faq-answer" id="faq-answer-16" role="region" aria-labelledby="faq-question-16">
+          <div class="faq-answer" id="faq-answer-16">
             <p>$TODDY is built around a real-world story:
               Kopi Luwak, the Asian Palm Civet and
               the Night Trader character. The identity
               combines coffee culture, jungle storytelling
-              and crypto into one consistent universe. ☕🌙</p>
+              and crypto into one consistent universe. <span aria-hidden="true">☕🌙</span></p>
+          </div>
+        </div>
+        <div class="faq-item">
+          <button class="faq-question" aria-expanded="false" aria-controls="faq-answer-18" id="faq-question-18">
+            <span>Is TODDY a coffee company?</span>
+            <span class="faq-arrow" aria-hidden="true">▼</span>
+          </button>
+          <div class="faq-answer" id="faq-answer-18">
+            <p>No. Toddy is a fictional cartoon character created for a meme universe. $TODDY is a meme coin, not a coffee company or product. Kopi Luwak is the creative inspiration behind his story.</p>
           </div>
         </div>
       </div>
@@ -819,12 +894,12 @@
 <footer class="footer">
   <div class="container">
     <div class="footer-brand">
-      <img src="assets/coin-logo.webp"
-           alt="$TODDY" class="footer-logo" />
+      <img width="512" height="512" src="assets/coin-logo.webp"
+           alt="" class="footer-logo" loading="lazy" decoding="async" />
       <span class="footer-name">$TODDY</span>
     </div>
     <p class="footer-tagline">
-      The Night Trader of Crypto ☕🌙
+      The Night Trader of Crypto <span aria-hidden="true">☕🌙</span>
     </p>
     <nav class="footer-nav" aria-label="Footer">
       <a href="#about">Meet Toddy</a>
@@ -889,6 +964,11 @@
         toddy.meme/linktree ↗
       </a>
     </p>
+    <nav class="footer-legal" aria-label="Legal and security">
+      <a href="privacy.html">Privacy</a>
+      <a href="terms.html">Terms &amp; Disclaimer</a>
+      <a href=".well-known/security.txt">Security contact</a>
+    </nav>
     <div class="footer-divider"></div>
     <p class="footer-disclaimer">
       $TODDY is a meme coin with no intrinsic value
@@ -903,27 +983,7 @@
 
 <button class="scroll-top-btn" id="scroll-top-btn"
         aria-label="Back to top">↑</button>
-<canvas id="sparkle-canvas"></canvas>
-<script src="script.js"></script>
-<!-- TODDY image protection: blocks casual image saving/dragging without changing page UI or navigation. -->
-<script>
-(function () {
-  function isImageTarget(target) {
-    return target && (target.closest && target.closest("img"));
-  }
-
-  document.addEventListener("contextmenu", function (e) {
-    if (isImageTarget(e.target)) e.preventDefault();
-  }, true);
-
-  document.addEventListener("dragstart", function (e) {
-    if (isImageTarget(e.target)) e.preventDefault();
-  }, true);
-
-  document.addEventListener("selectstart", function (e) {
-    if (isImageTarget(e.target)) e.preventDefault();
-  }, true);
-})();
-</script>
+<canvas id="sparkle-canvas" aria-hidden="true"></canvas>
+<script src="script.js" defer></script>
 </body>
 </html>
