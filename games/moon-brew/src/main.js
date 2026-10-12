@@ -3,7 +3,7 @@ import { DX, DY, MAX_BUMPS, generate, newGame, beanAt, frozen, unitOf, traceBean
 import { TRAYS } from './trays.js';
 import { NIGHTS, INTROS, TRAYS_PER_NIGHT, trayConfig, dailyConfig, dailyNumber, endlessConfig, ENDLESS_LINES } from './levels.js';
 
-const BUILD = '1.0.0-rc5';
+const BUILD = '1.0.0-rc6';
 const ASSET = 'assets/';
 const $ = (id) => document.getElementById(id);
 const systemCalm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -192,6 +192,7 @@ function renderTitle() {
   const today = save.daily[dailyNumber()];
   const st = dailyStreak();
   $('daily-status').textContent = today ? `Today: ${today.score || 0} pts${st.current > 1 ? ` · 🔥 ${st.current}` : ''}` : (st.current ? `Keep your ${st.current}-day streak` : 'New tray today');
+  $('btn-daily').classList.toggle('glow', !today); // gentle glow until today's Daily Brew is played
   $('endless-status').textContent = endlessOpen() ? (save.endlessBest ? `Best ${save.endlessBest}` : 'Open') : 'Finish Night 1 to open';
   $('btn-endless').classList.toggle('locked', !endlessOpen());
   $('build-label').textContent = PLAYTEST ? `Playtest build ${BUILD} · nothing here is public yet` : `Moon Brew ${BUILD}`;
@@ -241,6 +242,7 @@ function renderMap() {
 function say2map(t) { $('night-sub').textContent = `Tray ${t} opens after you clear tray ${t - 1}.`; }
 
 // ---------------- My Brew dashboard ----------------
+function dailyWaiting() { return !save.daily[dailyNumber()]; }
 function dailyStreak() { return streaks(Object.keys(save.daily).map(Number), dailyNumber()); }
 function renderStats() {
   const st = dailyStreak();
@@ -700,14 +702,27 @@ function finish(again) {
   const showResult = () => {
     card(`<h3>${finale ? 'Night complete' : 'Moon Brew ready'}</h3>${starRow(s)}<p>${msg}</p>
       ${result.firstClear && mode.n === 0 && finale ? '<p class="stat">Endless Brew is now open on the title screen.</p>' : ''}
-      <div class="btns"><button class="btn ghost" id="o-retry" type="button">Brew again</button><button class="btn primary" id="o-next" type="button">${nextLabel}</button></div>`);
+      <div class="btns"><button class="btn ghost" id="o-retry" type="button">Brew again</button><button class="btn primary" id="o-next" type="button">${nextLabel}</button></div>
+      ${dailyWaiting() ? '<div class="btns"><button class="btn daily-nudge" id="o-daily" type="button">Today\u2019s Daily Brew \u2192</button></div>' : ''}`);
     bind('o-retry', () => startTray(mode.n, mode.t));
+    if (dailyWaiting()) bind('o-daily', () => { track('daily_nudge', { from: 'result' }); startDaily(); });
     bind('o-next', () => {
       if (!finale) startTray(mode.n, mode.t + 1);
       else if (mode.n < NIGHTS.length - 1) { mapNight = mode.n + 1; startTray(mode.n + 1, 1); }
       else show('map');
     });
   };
+  // once ever: after the first clear of tray 2, introduce the Daily Brew (and its shareable score)
+  if (result.firstClear && mode.n === 0 && mode.t === 2 && !save.intros.daily && dailyWaiting()) {
+    save.intros.daily = 1; writeSave();
+    track('tip', { tip: 'daily' });
+    card(`<p class="eyebrow">New</p><img class="tip-img" src="${ASSET}cup_v01.webp" alt=""><h3>Daily Brew</h3>
+      <p>There\u2019s a new Daily Brew every day: the same puzzle for everyone. Finish it and share your score with friends.</p>
+      <div class="btns"><button class="btn ghost" id="o-later" type="button">Later</button><button class="btn primary" id="o-try" type="button">Try it now</button></div>`);
+    bind('o-try', () => { track('daily_nudge', { from: 'tip' }); startDaily(); });
+    bind('o-later', showResult);
+    return;
+  }
   if (result.newCard) {
     card(`<h3>A postcard for you</h3><img class="postcard" src="${ASSET}postcard_n${mode.n + 1}_v01.webp" alt="${night.title} postcard">
       <p><b>${night.title}</b> is now in your postcard album.</p>
