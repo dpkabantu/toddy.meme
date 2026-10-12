@@ -35,22 +35,26 @@
   Content-Type: application/manifest+json; charset=utf-8
 
 # ------------------------------------------------------------
-#  RESERVED FOR LATER — games (do NOT enable until a game exists)
+#  GAMES (added 2026-10-12): /games/moon-brew/ and /games/night-shift/
 # ------------------------------------------------------------
-#  When the first game ships under /games/<game-name>/, add a rule like the
-#  one below so games get the extra permissions an HTML5 engine such as
-#  Phaser may need (blob: images/audio, web workers), WITHOUT loosening the
-#  policy for the rest of the site. Verify in the browser console that no
-#  CSP violations remain before launch, then keep this list as tight as the
-#  game allows. Hashed/versioned game bundles can use long immutable caching.
-#
-#  /games/*
-#    Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; worker-src 'self' blob:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
-#  /games/*/assets/*
-#    Cache-Control: public, max-age=31536000, immutable
-#
-#  Note: rules from "/*" AND a more specific path both apply, and a header set
-#  by two rules is combined (two CSPs = the stricter result, so the game
-#  would stay blocked). To drop the site-wide CSP for /games/* first, put
-#  "! Content-Security-Policy" (detach) in that rule before the new one — see
-#  the Cloudflare static-assets headers documentation, and test after deploy.
+#  Each game folder detaches the site-wide CSP ("! ...") and sets its own,
+#  because two CSPs combine into the stricter one and would block the games.
+#  Differences from the site policy: blob: for share pictures and sound,
+#  workers allowed from blob:, and no Google Fonts (games use their own).
+#  The /games/ page itself keeps the site policy above (it uses Google Fonts).
+#  Same policy as the games' automatic browser tests in the toddy-games repo.
+#  Game files are not all versioned by name, so they get the same day-long
+#  cache as /assets/* instead of a year-long "immutable" one.
+/games/moon-brew/*
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; worker-src 'self' blob:; connect-src 'self'; font-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+
+/games/night-shift/*
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; worker-src 'self' blob:; connect-src 'self'; font-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
+
+/games/*/assets/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800
+
+/games/img/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800

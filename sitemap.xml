@@ -24,5 +24,22 @@
     <changefreq>yearly</changefreq>
     <priority>0.2</priority>
   </url>
-  <!-- GAMES: when a game launches, add its URL here, e.g. https://toddy.meme/games/night-shift/ -->
+  <url>
+    <loc>https://toddy.meme/games/</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://toddy.meme/games/moon-brew/</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://toddy.meme/games/night-shift/</loc>
+    <lastmod>2026-10-12</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>

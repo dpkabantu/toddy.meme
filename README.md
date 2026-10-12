@@ -15,6 +15,7 @@ Official website of **$TODDY — The Night Trader of Crypto**. A static site (pl
 | `wrangler.jsonc` | Cloudflare deployment settings |
 | `.assetsignore` | Files that are **not** published (README, config, docs) |
 | `robots.txt`, `sitemap.xml`, `site.webmanifest` | Search-engine and browser metadata |
+| `games/` | Free TODDY browser games (see Games below) |
 | `.well-known/security.txt` | Where researchers report security problems |
 | `CHANGES.md` | What changed in the 2026-10-09 hardening pass, and why |
 | `CNAME` | Left over from GitHub Pages; ignored on Cloudflare (listed in `.assetsignore`) |
@@ -50,16 +51,16 @@ When the chain and contract are final, update **every** place below in one commi
 - The disabled DEX Screener icons (index + footer) — turn them into real links.
 - Remove "pre-launch" wording and the roadmap "Phase 1" items as they complete.
 
-## Games — planned, **not built yet**
+## Games (added 2026-10-12, beta)
 
-The site is prepared for games without containing any. The agreed plan (one game at a time, Night Shift first):
+| Path | What |
+|---|---|
+| `games/index.html` + `games/games.css` + `games/img/` | The Games page (Moon Brew first, then Night Shift), linked as "Play" in the nav and footer |
+| `games/moon-brew/`, `games/night-shift/` | The built games. **Do not edit here**: they come from the `toddy-games` repo (its "Games bundle for toddy.meme" workflow publishes them on the `website-bundle` branch) and are replaced as a whole on each update |
 
-- **Where games live:** each game gets its own folder `/games/<name>/` with its own `index.html` and script bundle. Game engines (e.g. Phaser) load **only on that route**, so the home page stays light.
-- **Navigation:** add a "Play" link where the `GAMES HOOK` comments are (`index.html` nav, `sitemap.xml`).
-- **Headers:** the `_headers` file contains a commented block for `/games/*` (blob images/audio, web workers, long cache for hashed bundles). Enable it only when a game exists, and test for CSP violations.
-- **Backend:** Cloudflare static assets can't validate scores or run accounts by themselves. When that is needed, add a Worker next to the assets (see the commented `main` / `run_worker_first` lines in `wrangler.jsonc`) plus a database. Scores and XP must be validated on the server; the browser is never trusted.
-- **Before collecting any player data** (accounts, Passport, saved progress): update `privacy.html`, extend `terms.html` with game rules, and add the new endpoints to the CSP `connect-src`.
-- Planned folders when the time comes: `games/`, `platform/` (shared SDK), `server/` (Worker), `config/` (XP policy, achievements).
+- **Headers:** each game folder has its own CSP in `_headers` (the site CSP is detached there; adds `blob:` for share pictures and sound). The Games page keeps the site CSP.
+- **Privacy:** section 5 of `privacy.html` covers the games (progress saved on the device only, no cookies, no play statistics). Update it **before** turning on any analytics, accounts or leaderboards.
+- **Backend (later):** Cloudflare static assets can't validate scores or run accounts. When needed, add a Worker (see the commented lines in `wrangler.jsonc`) plus a database; scores and XP are validated on the server only, and new endpoints go into the game CSP `connect-src`.
 
 ## Known limitations (honest list)
 
