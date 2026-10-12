@@ -35,22 +35,21 @@
   Content-Type: application/manifest+json; charset=utf-8
 
 # ------------------------------------------------------------
-#  RESERVED FOR LATER — games (do NOT enable until a game exists)
+#  GAMES — /games/ hub and every game under /games/<name>/
 # ------------------------------------------------------------
-#  When the first game ships under /games/<game-name>/, add a rule like the
-#  one below so games get the extra permissions an HTML5 engine such as
-#  Phaser may need (blob: images/audio, web workers), WITHOUT loosening the
-#  policy for the rest of the site. Verify in the browser console that no
-#  CSP violations remain before launch, then keep this list as tight as the
-#  game allows. Hashed/versioned game bundles can use long immutable caching.
-#
-#  /games/*
-#    Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data: blob:; media-src 'self' blob:; worker-src 'self' blob:; connect-src 'self'; font-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'
-#  /games/*/assets/*
-#    Cache-Control: public, max-age=31536000, immutable
-#
-#  Note: rules from "/*" AND a more specific path both apply, and a header set
-#  by two rules is combined (two CSPs = the stricter result, so the game
-#  would stay blocked). To drop the site-wide CSP for /games/* first, put
-#  "! Content-Security-Policy" (detach) in that rule before the new one — see
-#  the Cloudflare static-assets headers documentation, and test after deploy.
+#  Rules from "/*" AND this more specific path both apply, and two CSP headers
+#  would combine into the stricter one. So the site-wide CSP is detached first
+#  ("! Content-Security-Policy"), then the games policy is set. It differs from
+#  the site policy only by: blob: images/media/workers (share-card pictures,
+#  game engines), self-hosted fonts allowed. No inline code, no outside scripts.
+#  After every deploy: open /games/moon-brew/ with the browser console open and
+#  confirm there are no "Refused to ... Content Security Policy" messages, and
+#  that `curl -sI https://<preview>/games/moon-brew/` shows ONE CSP header.
+/games/*
+  ! Content-Security-Policy
+  Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src 'self' https://fonts.gstatic.com; img-src 'self' data: blob:; media-src 'self' blob:; worker-src 'self' blob:; connect-src 'self'; manifest-src 'self'; object-src 'none'; base-uri 'none'; form-action 'none'; frame-ancestors 'none'; upgrade-insecure-requests
+
+# Game pictures and sounds have versioned names (zone_asset_vNN): cache a day,
+# refresh in the background (same as the site's /assets/*).
+/games/*/assets/*
+  Cache-Control: public, max-age=86400, stale-while-revalidate=604800

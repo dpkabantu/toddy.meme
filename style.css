@@ -1977,3 +1977,56 @@ main:focus, section[tabindex="-1"]:focus { outline: none; }
    space (flex containers drop whitespace between items); restore the gap. */
 .btn-primary > span[aria-hidden="true"],
 .nav-btn > span[aria-hidden="true"] { margin-right: .4em; }
+
+/* ==========================================
+   PLAY — TODDY games (beta)
+   Moon Brew first, Night Shift second; cards stack on phones.
+   ========================================== */
+.play {
+  position: relative; z-index: 3;
+  padding: 100px 0;
+  background:
+    radial-gradient(circle at 15% 20%, rgba(139,92,246,.10), transparent 34%),
+    var(--brown-deep);
+}
+.play-grid {
+  display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px;
+  max-width: 980px; margin: 0 auto;
+}
+.game-card {
+  display: flex; flex-direction: column; overflow: hidden;
+  border-radius: 20px; text-decoration: none; color: #fff;
+  border: 1px solid rgba(212,175,90,.28);
+  background: linear-gradient(145deg, rgba(255,255,255,.06), rgba(139,92,246,.05));
+  box-shadow: 0 18px 46px rgba(0,0,0,.28);
+  transition: transform .25s ease, border-color .25s ease, box-shadow .25s ease;
+}
+a.game-card:hover { transform: translateY(-4px); border-color: rgba(240,201,107,.7); box-shadow: 0 22px 54px rgba(0,0,0,.36); }
+a.game-card:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 4px; }
+.game-card img { width: 100%; aspect-ratio: 16 / 9; object-fit: cover; }
+.game-card.is-soon img { filter: saturate(.75) brightness(.8); }
+.game-card-body { display: flex; flex-direction: column; gap: 8px; padding: 20px 22px 24px; font-family: 'Inter', system-ui, sans-serif; }
+.game-card-tags { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; }
+.game-tag {
+  padding: 3px 10px; border-radius: 999px;
+  background: var(--gold-light); color: var(--brown-deep);
+  font-size: .68rem; font-weight: 800; letter-spacing: .12em; text-transform: uppercase;
+}
+.game-tag.is-soon { background: rgba(139,92,246,.28); color: #e9ddff; }
+.game-meta { font-size: .8rem; color: rgba(246,233,208,.72); }
+.game-card-title { font-family: 'Cinzel', serif; font-weight: 900; font-size: 1.6rem; line-height: 1.15; color: var(--gold-light); }
+.game-card-text { font-size: .92rem; line-height: 1.55; color: rgba(255,255,255,.8); }
+.game-card-cta { margin-top: 6px; font-weight: 800; color: var(--gold-light); }
+.play-safety {
+  max-width: 640px; margin: 28px auto 0; padding: 12px 16px;
+  border: 1px solid rgba(212,175,90,.3); border-radius: 14px;
+  text-align: center; font-family: 'Inter', system-ui, sans-serif; font-size: .88rem;
+  color: rgba(246,233,208,.86); background: rgba(0,0,0,.2);
+}
+@media (max-width: 768px) {
+  .play { padding: 78px 0; }
+  .play .container { padding: 0 16px; }
+  .play-grid { grid-template-columns: 1fr; gap: 18px; }
+  .game-card-title { font-size: 1.4rem; }
+}
+@media (prefers-reduced-motion: reduce) { .game-card { transition: none; } a.game-card:hover { transform: none; } }

@@ -1,0 +1,164 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>TODDY: Moon Brew</title>
+  <meta name="description" content="A cozy 2-minute coffee-bean puzzle in Toddy's night caf&#233;. New Daily Brew every day. Free, no account, no wallet.">
+  <meta name="theme-color" content="#17112a">
+  <link rel="canonical" href="https://toddy.meme/games/moon-brew/">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="TODDY">
+  <meta property="og:url" content="https://toddy.meme/games/moon-brew/">
+  <meta property="og:title" content="TODDY: Moon Brew (beta)">
+  <meta property="og:description" content="Clear the bean tray, brew for the night visitors. A new Daily Brew every day. Free, no account, no wallet.">
+  <meta property="og:image" content="https://toddy.meme/games/moon-brew/assets/share_moonbrew_v01.jpg">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:image:alt" content="Toddy serves Milo the owl a Moon Brew under the full moon">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:site" content="@ToddyCoin">
+  <meta name="twitter:title" content="TODDY: Moon Brew (beta)">
+  <meta name="twitter:description" content="A cozy 2-minute coffee-bean puzzle. A new Daily Brew every day.">
+  <meta name="twitter:image" content="https://toddy.meme/games/moon-brew/assets/share_moonbrew_v01.jpg">
+  <link rel="stylesheet" href="./style.css">
+</head>
+<body>
+<!--APP-->
+<div id="app">
+  <section id="screen-title" class="screen title-screen">
+    <div class="hero"><img id="title-art" data-src="assets/postcard_n1_v01.webp" alt="Toddy serves Milo the owl a Moon Brew under the full moon" width="1536" height="1024"></div>
+    <div class="title-body">
+      <p class="eyebrow">TODDY <span class="beta-tag">Beta</span></p>
+      <h1 class="logo">Moon Brew</h1>
+      <p class="tag">Clear the bean tray. Brew for the night visitors.</p>
+      <div class="menu">
+        <button id="btn-play" class="btn primary" type="button">Play</button>
+        <button id="btn-daily" class="btn" type="button"><span>Daily Brew</span><small id="daily-status">New tray today</small></button>
+        <button id="btn-endless" class="btn" type="button"><span>Endless Brew</span><small id="endless-status">Finish Night 1 to open</small></button>
+        <div class="menu-row four">
+          <button id="btn-stats" class="btn ghost" type="button">My Brew</button>
+          <button id="btn-album" class="btn ghost" type="button">Postcards</button>
+          <button id="btn-howto" class="btn ghost" type="button">How to play</button>
+          <button id="btn-settings" class="btn ghost" type="button">Settings</button>
+        </div>
+      </div>
+      <p class="safety">TODDY games never ask for your wallet, seed phrase or payment.</p>
+      <p class="build"><span id="build-label">Moon Brew</span> · <button class="linkish" id="btn-about" type="button">About &amp; privacy</button></p>
+    </div>
+  </section>
+
+  <section id="screen-map" class="screen" hidden>
+    <header class="bar">
+      <button class="icon-btn" id="map-back" type="button" aria-label="Back to title">&#8249;</button>
+      <h2 class="bar-title">Choose a tray</h2>
+      <span class="bar-stars" id="map-stars"></span>
+    </header>
+    <div class="tabs" role="tablist" id="night-tabs"></div>
+    <div class="night-head">
+      <img id="night-visitor" alt="">
+      <div>
+        <p class="eyebrow" id="night-name"></p>
+        <h3 id="night-title"></h3>
+        <p class="muted" id="night-sub"></p>
+      </div>
+    </div>
+    <div class="trays" id="trays"></div>
+    <label class="playtest-toggle"><input type="checkbox" id="unlock-all"> Playtest: open every tray and mode</label>
+  </section>
+
+  <section id="screen-play" class="screen play-screen" hidden>
+    <header class="bar">
+      <button class="icon-btn" id="play-back" type="button" aria-label="Back">&#8249;</button>
+      <h2 class="bar-title" id="where">Night 1 · Tray 1</h2>
+      <button class="icon-btn" id="play-sound" type="button" aria-label="Sound on or off">&#9835;</button>
+    </header>
+    <div class="visitor">
+      <img id="vis-img" alt="">
+      <div class="bubble"><b id="vis-name"></b><span id="vis-line"></span></div>
+    </div>
+    <div class="hud">
+      <div class="ticket" id="ticket" aria-label="Order ticket"></div>
+      <div class="cracks" id="cracks" aria-label="Bumps left"><span class="crack"></span><span class="crack"></span><span class="crack"></span></div>
+    </div>
+    <div class="board-wrap" id="board-wrap">
+      <canvas id="board" tabindex="0" aria-label="Bean tray. Tap a bean to roll it."></canvas>
+    </div>
+    <div class="foot">
+      <canvas id="toddy" width="180" height="192" aria-hidden="true"></canvas>
+      <div class="grind">
+        <p class="say" id="say" aria-live="polite"></p>
+        <div class="meter"><i id="meter"></i></div>
+        <p class="count" id="count"></p>
+      </div>
+      <div class="actions">
+        <button class="btn small" id="btn-hint" type="button">Hint</button>
+        <button class="btn small ghost" id="btn-restart" type="button">Restart</button>
+      </div>
+    </div>
+    <div class="overlay" id="overlay" hidden><div class="card" id="overlay-card"></div></div>
+  </section>
+
+  <section id="screen-stats" class="screen" hidden>
+    <header class="bar">
+      <button class="icon-btn" id="stats-back" type="button" aria-label="Back to title">&#8249;</button>
+      <h2 class="bar-title">My Brew</h2>
+      <span></span>
+    </header>
+    <div class="stats" id="stats"></div>
+    <p class="muted center small-note">Saved on this device. Leaderboards and a saved profile arrive later with the optional Passport.</p>
+  </section>
+
+  <section id="screen-about" class="screen" hidden>
+    <header class="bar">
+      <button class="icon-btn" id="about-back" type="button" aria-label="Back to title">&#8249;</button>
+      <h2 class="bar-title">About Moon Brew</h2>
+      <span></span>
+    </header>
+    <div class="about">
+      <div class="rule"><img data-src="assets/cup_v01.webp" alt=""><div><b>The game</b><p>Moon Brew is a cozy puzzle in Toddy&#8217;s night caf&#233;. Free to play, no account, no wallet, no ads.</p></div></div>
+      <div class="rule"><img data-src="assets/visitor_milo_v02.webp" alt=""><div><b>Credits</b><p>Game design, code and story: the TODDY team with Claude (Anthropic). Art: made with Nano Banana and approved by the TODDY team. Sound effects are made in code. Toddy, Milo and the night visitors are original TODDY characters.</p></div></div>
+      <div class="rule"><img data-src="assets/sugar_v01.webp" alt=""><div><b>Privacy</b><p>Your progress (stars, scores, streak, settings) is saved only on this device. If &#8220;Share anonymous play stats&#8221; is on in Settings, the game may send simple counts such as which tray was finished and how long it took, with a random number instead of your name. No personal details, no advertising trackers. Turn it off any time in Settings.</p></div></div>
+      <div class="rule safety-rule"><img data-src="assets/ice_v01.webp" alt=""><div><b>Stay safe</b><p>TODDY games never ask for your wallet, seed phrase, private key or payment. Anyone who does is not TODDY. This game is a free beta: things may change and progress could be reset.</p></div></div>
+      <div class="rule"><img data-src="assets/bean_dark_v01.webp" alt=""><div><b>Report a bug or say hello</b><p>Tell us what happened and on which tray in the TODDY Telegram group. The full privacy policy is on toddy.meme.</p></div></div>
+      <div class="about-btns"><a class="btn" id="about-bug">Report a bug</a><a class="btn ghost" id="about-privacy">Privacy policy</a></div>
+      <p class="stat center" id="about-msg" aria-live="polite"></p>
+      <p class="muted center small-note" id="about-version"></p>
+    </div>
+  </section>
+
+  <section id="screen-album" class="screen" hidden>
+    <header class="bar">
+      <button class="icon-btn" id="album-back" type="button" aria-label="Back to title">&#8249;</button>
+      <h2 class="bar-title">Postcards</h2>
+      <span></span>
+    </header>
+    <p class="muted center">Finish tray 20 of each Night to collect its postcard.</p>
+    <div class="album" id="album"></div>
+  </section>
+
+  <section id="screen-howto" class="screen" hidden>
+    <header class="bar">
+      <button class="icon-btn" id="howto-back" type="button" aria-label="Back">&#8249;</button>
+      <h2 class="bar-title">How to brew</h2>
+      <span></span>
+    </header>
+    <div class="howto">
+      <div class="rule"><img data-src="assets/bean_medium_v01.webp" alt=""><div><b>Tap a bean</b><p>It rolls the way its sharp tip points, off the tray and into the grinder. Clear every bean.</p></div></div>
+      <div class="rule"><img data-src="assets/bean_dark_v01.webp" alt=""><div><b>Bumps</b><p>If another bean is in the way, it bumps and cracks. Three bumps and the brew is burnt.</p></div></div>
+      <div class="rule"><img data-src="assets/cup_v01.webp" alt=""><div><b>Order ticket</b><p>Grind the first beans in the ticket&#8217;s roast order for a Perfect Brew.</p></div></div>
+      <div class="rule"><img data-src="assets/bean_sleepy_v01.webp" alt=""><div><b>Sleepy bean</b><p>Tap once to wake it, then it can roll.</p></div></div>
+      <div class="rule"><img data-src="assets/ice_v01.webp" alt=""><div><b>Ice cube</b><p>Frozen until the number reaches 0. Each bean you grind melts it by one.</p></div></div>
+      <div class="rule"><img data-src="assets/sugar_v01.webp" alt=""><div><b>Sugar pair</b><p>Two beans stuck together. Tap either one and both roll, so both paths must be clear.</p></div></div>
+      <div class="rule"><img data-src="assets/milk_v01.webp" alt=""><div><b>Milk swirl</b><p>A bean that rolls over spilled milk turns a quarter turn to its right.</p></div></div>
+      <div class="rule stars-rule"><span class="big-stars">&#9733;&#9733;&#9733;</span><div><b>Three stars</b><p>Clear the tray, make no bumps, and follow the ticket.</p></div></div>
+      <div class="rule"><img data-src="assets/postcard_n1_v01.webp" alt=""><div><b>Daily Brew</b><p>One new tray a day, the same for everyone. Score out of 1000: clear 400, no bumps 200, Perfect ticket 200, speed up to 200. Each hint costs 50. Play every day to grow your streak.</p></div></div>
+      <div class="rule"><img data-src="assets/visitor_star_v01.webp" alt=""><div><b>Endless Brew</b><p>Opens after Night 1. Trays keep coming and get harder. Three bumps end the run.</p></div></div>
+    </div>
+  </section>
+  <div class="overlay" id="modal" hidden><div class="card" id="modal-card"></div></div>
+</div>
+<!--/APP-->
+<script type="module" src="./src/main.js"></script>
+</body>
+</html>
