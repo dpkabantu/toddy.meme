@@ -50,16 +50,14 @@ When the chain and contract are final, update **every** place below in one commi
 - The disabled DEX Screener icons (index + footer) — turn them into real links.
 - Remove "pre-launch" wording and the roadmap "Phase 1" items as they complete.
 
-## Games — planned, **not built yet**
+## Games (beta, branch `games-beta`)
 
-The site is prepared for games without containing any. The agreed plan (one game at a time, Night Shift first):
-
-- **Where games live:** each game gets its own folder `/games/<name>/` with its own `index.html` and script bundle. Game engines (e.g. Phaser) load **only on that route**, so the home page stays light.
-- **Navigation:** add a "Play" link where the `GAMES HOOK` comments are (`index.html` nav, `sitemap.xml`).
-- **Headers:** the `_headers` file contains a commented block for `/games/*` (blob images/audio, web workers, long cache for hashed bundles). Enable it only when a game exists, and test for CSP violations.
-- **Backend:** Cloudflare static assets can't validate scores or run accounts by themselves. When that is needed, add a Worker next to the assets (see the commented `main` / `run_worker_first` lines in `wrangler.jsonc`) plus a database. Scores and XP must be validated on the server; the browser is never trusted.
-- **Before collecting any player data** (accounts, Passport, saved progress): update `privacy.html`, extend `terms.html` with game rules, and add the new endpoints to the CSP `connect-src`.
-- Planned folders when the time comes: `games/`, `platform/` (shared SDK), `server/` (Worker), `config/` (XP policy, achievements).
+- **Where games live:** `/games/` is the hub; each game has its own folder, e.g. `/games/moon-brew/` (copied from the `toddy-games` repo, folder `moon-brew/`: `index.html`, `style.css`, `src/`, `assets/`). Game code loads only on that route, so the home page stays light.
+- **Home page:** "Play" link in the nav and footer, and a Play section right after Meet Toddy: Moon Brew first, The Night Shift second ("Coming soon" until its build is ready). Cards stack on phones, Moon Brew on top.
+- **Headers:** `_headers` has a `/games/*` rule that detaches the site CSP and sets the games CSP (adds `blob:` for images/media/workers). The rest of the site keeps its stricter policy. After each deploy, check that `/games/moon-brew/` returns exactly one `content-security-policy` header and the console shows no CSP errors.
+- **Privacy:** `privacy.html` section 5 explains game storage (progress saved in the browser) and the planned anonymous play stats (off during beta).
+- **Updating a game:** copy the new files over its folder in one commit; picture names are versioned (`_vNN`), so old caches never show a mismatched picture.
+- **Backend (later):** scores, Passport and stats need a Worker next to the assets (see the commented lines in `wrangler.jsonc`), plus the new endpoint in the games CSP `connect-src`. Scores and XP are validated on the server; the browser is never trusted.
 
 ## Known limitations (honest list)
 

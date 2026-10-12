@@ -5,7 +5,10 @@
     "directory": ".",
     // Serve /404.html (with a real 404 status) for unknown URLs instead of a blank error.
     "not_found_handling": "404-page"
-  }
+  },
+  // Private preview copies for test branches (e.g. games-beta). Needed by
+  // `npx wrangler preview` in Cloudflare's preview builds; the live site is unaffected.
+  "previews": {}
   // GAMES / BACKEND — reserved for later, intentionally not enabled yet.
   // When scores, Passport or server-side validation are built, a Worker script
   // is added alongside these static assets, for example:

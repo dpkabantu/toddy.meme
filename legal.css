@@ -112,3 +112,14 @@
 @media (prefers-reduced-motion: reduce) {
   .legal-body * { transition: none !important; }
 }
+
+/* ---------- /games/ hub (uses the .play-grid / .game-card styles from style.css) ---------- */
+.games-main { width: 100%; max-width: 1040px; margin: 0 auto; padding: clamp(28px, 6vw, 60px) clamp(16px, 4vw, 24px) 72px; flex: 1 0 auto; }
+.games-title { font-family: 'Cinzel', serif; font-weight: 900; font-size: clamp(1.9rem, 5vw, 2.7rem); line-height: 1.15; text-align: center; color: #fff; }
+.games-title .game-tag { font-family: 'Inter', system-ui, sans-serif; font-size: .7rem; vertical-align: middle; }
+.games-lead { max-width: 640px; margin: 12px auto 32px; text-align: center; color: rgba(246,233,208,.8); line-height: 1.65; }
+.games-notes { max-width: 640px; margin: 32px auto 0; color: rgba(255,255,255,.8); line-height: 1.65; }
+.games-notes h2 { font-family: 'Cinzel', serif; color: var(--gold-light); font-size: 1.2rem; margin-bottom: 8px; }
+.games-notes p + p { margin-top: 10px; }
+.games-notes a { color: var(--gold-light); text-underline-offset: 3px; }
+.games-notes a:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 3px; border-radius: 6px; }

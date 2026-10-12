@@ -1,0 +1,37 @@
+{
+ "happy": {
+  "file": "toddy_happy_v02_half.webp",
+  "frames": 50,
+  "w": 178,
+  "h": 192,
+  "cols": 10
+ },
+ "surprised": {
+  "file": "toddy_surprised_v02_half.webp",
+  "frames": 52,
+  "w": 180,
+  "h": 192,
+  "cols": 10
+ },
+ "worried": {
+  "file": "toddy_worried_v02_half.webp",
+  "frames": 48,
+  "w": 183,
+  "h": 192,
+  "cols": 10
+ },
+ "thinking": {
+  "file": "toddy_thinking_v02_half.webp",
+  "frames": 70,
+  "w": 170,
+  "h": 192,
+  "cols": 10
+ },
+ "wave": {
+  "file": "toddy_wave_v02_half.webp",
+  "frames": 49,
+  "w": 179,
+  "h": 192,
+  "cols": 10
+ }
+}
