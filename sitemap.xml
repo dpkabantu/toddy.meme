@@ -36,5 +36,10 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
-  <!-- GAMES: add https://toddy.meme/games/night-shift/ when Night Shift goes public -->
+  <url>
+    <loc>https://toddy.meme/games/night-shift/</loc>
+    <lastmod>2026-10-13</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.7</priority>
+  </url>
 </urlset>
