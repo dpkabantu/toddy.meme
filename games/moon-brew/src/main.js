@@ -3,7 +3,7 @@ import { DX, DY, MAX_BUMPS, generate, newGame, beanAt, frozen, unitOf, traceBean
 import { TRAYS } from './trays.js';
 import { NIGHTS, INTROS, TRAYS_PER_NIGHT, trayConfig, dailyConfig, dailyNumber, endlessConfig, ENDLESS_LINES } from './levels.js';
 
-const BUILD = '1.0.0-rc6';
+const BUILD = '1.0.0-rc7';
 const ASSET = 'assets/';
 const $ = (id) => document.getElementById(id);
 const systemCalm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -123,12 +123,54 @@ function drawToddy(now) {
 }
 
 // ---------------- Sound (made in code, no audio files) ----------------
+// iPhone (owner report 2026-10-13, same fix as Night Shift 1.3.74): Safari only unlocks web sound on a finished tap
+// (touchend / pointerup / click, not touchstart / pointerdown), its sound can be "interrupted" after a call or app
+// switch, and the ringer switch mutes web sound unless the page asks for the "playback" audio session.
 let actx = null;
+let sessionDone = false;
+function iosPlaybackSession() {
+  if (sessionDone) return;
+  sessionDone = true;
+  try {
+    if (navigator.audioSession) { navigator.audioSession.type = 'playback'; return; } // Safari 16.4+
+    const ios = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+    if (!ios) return;
+    // Older iPhones: playing 0.1 s of silence through an <audio> element has the same effect (blob: is allowed by the games CSP).
+    const n = 2205, buf = new ArrayBuffer(44 + n * 2), v = new DataView(buf);
+    const w = (o, s) => { for (let k = 0; k < s.length; k++) v.setUint8(o + k, s.charCodeAt(k)); };
+    w(0, 'RIFF'); v.setUint32(4, 36 + n * 2, true); w(8, 'WAVE'); w(12, 'fmt '); v.setUint32(16, 16, true);
+    v.setUint16(20, 1, true); v.setUint16(22, 1, true); v.setUint32(24, 22050, true); v.setUint32(28, 44100, true);
+    v.setUint16(32, 2, true); v.setUint16(34, 16, true); w(36, 'data'); v.setUint32(40, n * 2, true);
+    const a = new Audio(URL.createObjectURL(new Blob([buf], { type: 'audio/wav' })));
+    a.setAttribute('playsinline', ''); a.play().catch(() => { sessionDone = false; });
+  } catch (e) { /* not supported */ }
+}
+function unlockTick() { // one silent sample: on iPhone this is what actually unlocks sound inside a tap
+  try { const b = actx.createBuffer(1, 1, 22050), s = actx.createBufferSource(); s.buffer = b; s.connect(actx.destination); s.start(0); } catch (e) { /* nothing to unlock */ }
+}
+function wakeAudio() { // called on every real tap / key press; cheap after the first
+  if (!save.sound) return;
+  iosPlaybackSession();
+  try {
+    if (!actx) {
+      const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
+      actx = new AC();
+      unlockTick();
+    }
+    if (actx.state !== 'running') actx.resume().then(unlockTick).catch(() => {});
+  } catch (e) { actx = null; }
+}
+for (const ev of ['pointerdown', 'pointerup', 'touchstart', 'touchend', 'click', 'keydown']) addEventListener(ev, wakeAudio, { passive: true, capture: true });
+document.addEventListener('visibilitychange', () => {
+  if (!actx) return;
+  if (document.hidden) actx.suspend().catch(() => {});
+  else if (save.sound) actx.resume().catch(() => {});
+});
 function audio() {
   if (!save.sound) return null;
   try {
-    if (!actx) actx = new (window.AudioContext || window.webkitAudioContext)();
-    if (actx.state === 'suspended') actx.resume();
+    if (!actx) wakeAudio();
+    if (actx && actx.state !== 'running') actx.resume().catch(() => {});
   } catch (e) { return null; }
   return actx;
 }
@@ -163,7 +205,8 @@ const sfx = {
 function setSound(on) {
   save.sound = on; writeSave();
   $('play-sound').classList.toggle('off', !on);
-  if (on) sfx.tick();
+  if (on) { wakeAudio(); sfx.tick(); } // still inside the tap that switched sound on
+  else if (actx) actx.suspend().catch(() => {});
 }
 
 // ---------------- Screens ----------------
@@ -935,7 +978,7 @@ track('open', { returning: Object.keys(save.stars).length > 0 || Object.keys(sav
 // Hooks for the automatic browser tests (tools/smoke.py). Not used by players.
 window.__moonbrew = {
   get g() { return g; }, get level() { return level; }, get mode() { return mode; }, save,
-  startTray, startDaily, startEndless, show,
+  startTray, startDaily, startEndless, show, audioState: () => actx ? actx.state : "none",
   canRoll(id) { return canRoll(g, g.beans[id]); },
   get stats() { return statsQueue.slice(); },
   beanPoint(id) { const b = g.beans[id]; const r = cv.getBoundingClientRect(); return { x: r.left + cxp(b.x) * r.width / S, y: r.top + cyp(b.y) * r.height / S }; },
