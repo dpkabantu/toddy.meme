@@ -2030,3 +2030,10 @@ a.game-card:focus-visible { outline: 2px solid var(--gold-light); outline-offset
   .game-card-title { font-size: 1.4rem; }
 }
 @media (prefers-reduced-motion: reduce) { .game-card { transition: none; } a.game-card:hover { transform: none; } }
+
+/* Small laptops / tablets sideways (769–960px): the 8 menu links and the
+   "Enter the Night Shift" button don't fit on one line, so hide the button
+   there (the Community link goes to the same place). */
+@media (min-width: 769px) and (max-width: 960px) {
+  .nav-btn { display: none; }
+}
