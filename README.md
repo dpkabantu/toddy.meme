@@ -15,6 +15,7 @@ Official website of **$TODDY — The Night Trader of Crypto**. A static site (pl
 | `wrangler.jsonc` | Cloudflare deployment settings |
 | `.assetsignore` | Files that are **not** published (README, config, docs) |
 | `robots.txt`, `sitemap.xml`, `site.webmanifest` | Search-engine and browser metadata |
+| `games/catalog.json`, `tools/build-games.mjs` | The list of games and the script that writes the game cards into the pages (see `CLAUDE.md`) |
 | `.well-known/security.txt` | Where researchers report security problems |
 | `CHANGES.md` | What changed in the 2026-10-09 hardening pass, and why |
 | `CNAME` | Left over from GitHub Pages; ignored on Cloudflare (listed in `.assetsignore`) |
@@ -50,10 +51,12 @@ When the chain and contract are final, update **every** place below in one commi
 - The disabled DEX Screener icons (index + footer) — turn them into real links.
 - Remove "pre-launch" wording and the roadmap "Phase 1" items as they complete.
 
-## Games (beta, branch `games-beta`)
+## Games (beta)
 
-- **Where games live:** `/games/` is the hub; each game has its own folder, e.g. `/games/moon-brew/` (copied from the `toddy-games` repo, folder `moon-brew/`: `index.html`, `style.css`, `src/`, `assets/`). Game code loads only on that route, so the home page stays light.
-- **Home page:** "Play" link in the nav and footer, and a Play section right after Meet Toddy: Moon Brew first, The Night Shift second ("Coming soon" until its build is ready). Cards stack on phones, Moon Brew on top.
+- **Where games live:** `/games/` is the games page; each game has its own folder, e.g. `/games/moon-brew/` (copied from the `toddy-games` repo). Game code loads only on that route, so the home page stays light.
+- **One list of games:** `games/catalog.json`. `node tools/build-games.mjs` writes the menu Play link, the home Play section (max 4 cards), the whole `/games/` page and the sitemap entries from it. Never hand-edit the generated parts; how to add a game is in `CLAUDE.md`. A GitHub Action (`.github/workflows/games-check.yml`) fails if the catalog is invalid or the pages are stale.
+- **Menu:** every link scrolls on the home page in page order (Meet Toddy · Play · Tokenomics · Launch & Safety · Roadmap · Community · FAQ). "All Links" is in the footer and Launch & Safety, not the menu.
+- **The /games/ page grows by itself:** filters and "New this week" at 6+ games, "Show more games" past 12, search at 20+, "Coming soon" when a game has `status: "soon"`. Behaviour is in `games/hub.js` (the page works without it).
 - **Headers:** `_headers` has a `/games/*` rule that detaches the site CSP and sets the games CSP (adds `blob:` for images/media/workers). The rest of the site keeps its stricter policy. After each deploy, check that `/games/moon-brew/` returns exactly one `content-security-policy` header and the console shows no CSP errors.
 - **Privacy:** `privacy.html` section 5 explains game storage (progress saved in the browser) and the planned anonymous play stats (off during beta).
 - **Updating a game:** copy the new files over its folder in one commit; picture names are versioned (`_vNN`), so old caches never show a mismatched picture.

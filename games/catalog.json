@@ -1,0 +1,44 @@
+{
+  "about": "The ONE list of TODDY games. The home page Play section, the /games/ page, the menu 'new' dot and the sitemap are generated from this file by `node tools/build-games.mjs`. Never edit the generated card HTML by hand. See CLAUDE.md > Adding a game.",
+  "categories": {
+    "puzzle": "Puzzles",
+    "story": "Story",
+    "arcade": "Arcade"
+  },
+  "games": [
+    {
+      "id": "moon-brew",
+      "title": "Moon Brew",
+      "path": "/games/moon-brew/",
+      "status": "beta",
+      "category": "puzzle",
+      "daily": true,
+      "minutes": 2,
+      "orientation": "upright",
+      "meta": "Daily puzzle · 2 min",
+      "text": "Clear the bean tray and brew for the night visitors. A new Daily Brew every day.",
+      "hubText": "Clear the bean tray and brew for the night visitors. A new Daily Brew every day, the same tray for everyone.",
+      "card": "/assets/games/moon-brew-card.webp",
+      "cardAlt": "Toddy serves Milo the owl a Moon Brew under the full moon",
+      "featured": true,
+      "added": "2026-10-12",
+      "updated": "2026-10-13"
+    },
+    {
+      "id": "night-shift",
+      "title": "The Night Shift",
+      "path": "/games/night-shift/",
+      "status": "beta",
+      "category": "story",
+      "daily": false,
+      "minutes": 10,
+      "orientation": "sideways",
+      "meta": "Cozy mystery story · 10 min · phone sideways",
+      "text": "A mysterious cup appears after closing time. Explore the café and find out who left it.",
+      "card": "/assets/games/night-shift-card.webp",
+      "cardAlt": "Toddy in the moonlit café beside a steaming paw-print cup",
+      "added": "2026-10-12",
+      "updated": "2026-10-13"
+    }
+  ]
+}
