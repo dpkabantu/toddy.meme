@@ -18,6 +18,7 @@
      8.  Scroll progress bar + hero parallax
      9.  Hero video loader + pause control
      10. Image-save deterrent (casual drag/right-click)
+     11. Games: "New" badges and the menu Play dot expire by date
    ========================================== */
 (function () {
 
@@ -499,6 +500,27 @@
       document.addEventListener(type, function (e) {
         if (isImageTarget(e.target)) e.preventDefault();
       }, true);
+    });
+  })();
+
+  /* ------------------------------------------
+     11. GAMES — date-limited "New" markers
+         Cards and the menu dot are generated from games/catalog.json
+         with data-new-until="YYYY-MM-DD" (last day shown, visitor's
+         local date). The menu dot only appears with JavaScript; the
+         card badge is visible by default and hidden once expired.
+     ------------------------------------------ */
+  (function initGameNewMarkers() {
+    var d = new Date();
+    var today = d.getFullYear() + '-' + ('0' + (d.getMonth() + 1)).slice(-2) + '-' + ('0' + d.getDate()).slice(-2);
+    document.querySelectorAll('[data-new-until]').forEach(function (el) {
+      var fresh = today <= el.getAttribute('data-new-until');
+      if (el.classList.contains('nav-play')) {
+        el.classList.toggle('has-new', fresh);
+        if (fresh) el.setAttribute('aria-label', 'Play (new game)');
+      } else if (!fresh) {
+        el.classList.add('is-expired');
+      }
     });
   })();
 

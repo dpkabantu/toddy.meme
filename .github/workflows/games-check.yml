@@ -1,0 +1,18 @@
+# Fails if games/catalog.json is invalid or the generated game cards are out of date.
+# Fix: run `node tools/build-games.mjs` and commit. See CLAUDE.md.
+name: Games catalog check
+on:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - run: node tools/build-games.mjs --check

@@ -6,3 +6,6 @@ wrangler.jsonc
 .git
 .gitignore
 docs
+.github
+tools
+CLAUDE.md

@@ -2031,9 +2031,87 @@ a.game-card:focus-visible { outline: 2px solid var(--gold-light); outline-offset
 }
 @media (prefers-reduced-motion: reduce) { .game-card { transition: none; } a.game-card:hover { transform: none; } }
 
-/* Small laptops / tablets sideways (769–960px): the 8 menu links and the
+/* Small laptops / tablets sideways (769–960px): the 7 menu links and the
    "Enter the Night Shift" button don't fit on one line, so hide the button
    there (the Community link goes to the same place). */
 @media (min-width: 769px) and (max-width: 960px) {
   .nav-btn { display: none; }
 }
+
+/* ==========================================
+   GAMES CATALOG (2026-10-13)
+   Cards are generated from games/catalog.json by tools/build-games.mjs.
+   Shared by the home Play section and the /games/ page.
+   ========================================== */
+/* Menu "Play" dot: shown by script.js only until data-new-until. */
+.nav-new-dot {
+  display: none; width: 7px; height: 7px; margin-left: 5px; vertical-align: super;
+  border-radius: 50%; background: var(--gold-light);
+  box-shadow: 0 0 8px rgba(240,201,107,.85);
+}
+.nav-play.has-new .nav-new-dot { display: inline-block; }
+
+/* "New" badge (hidden by script after data-new-until). */
+.game-tag.is-new { background: rgba(139,92,246,.32); color: #efe6ff; }
+.game-tag.is-expired { display: none; }
+
+/* 3–4 cards: one row on desktop, a sideways swipe row on phones. */
+.play-grid.play-row[data-count="3"] { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: 1120px; }
+.play-grid.play-row[data-count="4"] { grid-template-columns: repeat(4, minmax(0, 1fr)); max-width: 1180px; }
+.play-row .game-card-body { padding: 16px 18px 20px; }
+.play-row .game-card-title { font-size: 1.3rem; }
+.play-row .game-card-text { font-size: .86rem; }
+
+.play-all-wrap, .games-more-wrap { margin-top: 26px; text-align: center; }
+.play-all {
+  display: inline-flex; align-items: center; gap: 8px; min-height: 46px;
+  padding: 11px 26px; border-radius: 999px; cursor: pointer;
+  border: 1px solid rgba(240,201,107,.6); background: rgba(240,201,107,.08);
+  color: var(--gold-light); font-family: 'Inter', system-ui, sans-serif; font-weight: 800; font-size: .95rem;
+  text-decoration: none; transition: background .2s ease, transform .2s ease;
+}
+.play-all:hover { background: rgba(240,201,107,.16); transform: translateY(-2px); }
+
+/* /games/ page sections, filters, search */
+.games-section + .games-section { margin-top: 44px; }
+.games-h2 { font-family: 'Cinzel', serif; font-weight: 900; color: var(--gold-light); font-size: clamp(1.25rem, 3.4vw, 1.6rem); margin: 0 0 16px; }
+.games-section .play-grid.play-row { grid-auto-flow: column; grid-auto-columns: minmax(260px, 1fr); grid-template-columns: none; max-width: none;
+  overflow-x: auto; scroll-snap-type: x mandatory; padding-bottom: 8px; }
+.games-section .play-row > .game-card { scroll-snap-align: start; }
+.games-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); max-width: none; }
+.games-grid .game-card-title { font-size: 1.3rem; }
+.games-grid[data-count="1"], .games-grid[data-count="2"] { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 980px; }
+.game-card[hidden], .games-section[hidden], .play-all[hidden] { display: none !important; }
+.games-filters { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+.games-filter {
+  min-height: 40px; padding: 8px 16px; border-radius: 999px; cursor: pointer;
+  border: 1px solid rgba(212,175,90,.4); background: rgba(0,0,0,.25);
+  color: rgba(246,233,208,.9); font: 700 .86rem 'Inter', system-ui, sans-serif;
+}
+.games-filter[aria-pressed="true"] { background: var(--gold-light); border-color: var(--gold-light); color: var(--brown-deep); }
+.games-search { display: block; margin: 0 0 14px; }
+.games-search input {
+  width: 100%; max-width: 420px; min-height: 44px; padding: 10px 16px; border-radius: 12px;
+  border: 1px solid rgba(212,175,90,.4); background: rgba(0,0,0,.3); color: #fff; font: 500 1rem 'Inter', system-ui, sans-serif;
+}
+.games-search input:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 2px; }
+.games-empty { margin: 8px 0 0; color: rgba(246,233,208,.8); text-align: center; }
+
+@media (max-width: 960px) {
+  .play-grid.play-row[data-count="4"] { grid-template-columns: repeat(2, minmax(0, 1fr)); max-width: 980px; }
+  .games-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 768px) {
+  /* Home: 3–4 cards become one swipe row (the next card peeks in, so people see there is more). */
+  .play-grid.play-row[data-count="3"], .play-grid.play-row[data-count="4"] {
+    grid-template-columns: none; grid-auto-flow: column; grid-auto-columns: 82%;
+    overflow-x: auto; scroll-snap-type: x mandatory; gap: 14px; padding-bottom: 8px;
+    margin: 0 -16px; padding-left: 16px; padding-right: 16px; scroll-padding: 0 16px;
+  }
+  .play-row > .game-card { scroll-snap-align: start; }
+  .games-section .play-grid.play-row { grid-auto-columns: 82%; }
+  .games-grid, .games-grid[data-count="1"], .games-grid[data-count="2"] { grid-template-columns: 1fr; }
+  .games-filters { flex-wrap: nowrap; overflow-x: auto; margin-left: -16px; margin-right: -16px; padding: 0 16px 4px; }
+  .games-filter { flex: 0 0 auto; }
+}
+@media (prefers-reduced-motion: reduce) { .play-all { transition: none; } .play-all:hover { transform: none; } }
