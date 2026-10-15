@@ -242,3 +242,95 @@ html.calm *, html.calm *::before, html.calm *::after { animation: none !importan
 .calm #btn-daily.glow { animation: none; box-shadow: 0 0 0 1px var(--gold); }
 @media (prefers-reduced-motion: reduce) { #btn-daily.glow { animation: none; box-shadow: 0 0 0 1px var(--gold); } }
 .card .btn.daily-nudge { border-color: var(--gold); color: var(--gold-hi); }
+
+/* ---------- P0/P1/P2 (rc8): show-don't-tell, the cup, live stars, the serve ---------- */
+/* one line at a time: the visitor's line fades once play starts */
+.bubble { transition: opacity .6s ease; }
+.bubble.faded { opacity: .35; }
+.bubble.faded #vis-line { display: none; }
+.visitor img.pop { animation: vis-pop .7s cubic-bezier(.2, 1.6, .4, 1); }
+@keyframes vis-pop { 0% { transform: scale(.7) translateY(6px); } 100% { transform: none; } }
+
+/* Toddy breathes, and hops a little when a bean is ground */
+#toddy { transform-origin: 50% 100%; animation: breathe 3.2s ease-in-out infinite; }
+#toddy.hop { animation: hop .38s ease-out; }
+@keyframes breathe { 50% { transform: scaleY(1.025); } }
+@keyframes hop { 30% { transform: translateY(-7px) scaleY(1.04); } 60% { transform: translateY(0) scaleY(.97); } 100% { transform: none; } }
+
+/* the cup and the three live stars */
+.brewrow { display: flex; align-items: center; gap: 8px; min-width: 0; }
+#cup { width: 48px; height: 44px; flex: none; }
+.goals { display: flex; gap: 4px; }
+.goal { position: relative; width: 30px; height: 30px; display: grid; place-items: center; border-radius: 9px; background: #0004; border: 1px solid var(--line); }
+.goal b { font-size: 20px; line-height: 1; color: #ffffff30; }
+.goal img, .goal .nobump { position: absolute; right: -3px; bottom: -3px; width: 15px; height: 15px; object-fit: contain; }
+.goal .nobump { border-radius: 50%; background: var(--gold); box-shadow: inset 0 -2px 0 #a65d0e; transform: scale(.75); }
+.goal.keep b { color: #fdaf1e99; }
+.goal.won b { color: var(--gold); text-shadow: 0 0 8px #fdaf1e99; }
+.goal.lost { opacity: .45; }
+.goal.lost b { color: #ffffff22; }
+.goal.lost::after { content: ""; position: absolute; left: 4px; right: 4px; top: 50%; height: 2px; background: var(--bad); transform: rotate(-35deg); }
+.brewrow .count { margin-left: auto; white-space: nowrap; }
+.pulse { animation: pulse-once .5s ease; }
+@keyframes pulse-once { 40% { transform: scale(1.18); } }
+.ticket.lost .chip.next { animation: none; }
+
+/* the serve: the cup slides to the visitor, who reacts; then each star lands */
+.serve { position: relative; width: 100%; height: 150px; display: flex; align-items: flex-end; justify-content: center; }
+.serve.small { height: 110px; }
+.serve-vis { height: 100%; width: auto; animation: vis-pop .8s .35s both cubic-bezier(.2, 1.6, .4, 1); filter: drop-shadow(0 8px 10px #0008); }
+.serve-cup { position: absolute; bottom: 4px; width: 64px; animation: slide-cup .55s ease-out both; }
+.serve.small .serve-cup { width: 48px; }
+@keyframes slide-cup { from { transform: translateX(-120px); opacity: 0; } 70% { opacity: 1; } to { transform: translateX(-70px); opacity: 0; } }
+.goals-big { display: flex; gap: 10px; justify-content: center; }
+.gbig { display: flex; flex-direction: column; align-items: center; gap: 2px; min-width: 76px; animation: star-in .45s both cubic-bezier(.2, 1.8, .4, 1); }
+.gbig b { font-size: 40px; line-height: 1; color: var(--gold); text-shadow: 0 0 14px #fdaf1e88; }
+.gbig small { font-size: 12px; color: var(--muted); font-weight: 700; }
+.gbig.lost b { color: #ffffff22; text-shadow: none; }
+.gbig.d1 { animation-delay: .75s; } .gbig.d2 { animation-delay: 1.03s; } .gbig.d3 { animation-delay: 1.31s; }
+@keyframes star-in { from { transform: scale(0) rotate(-30deg); opacity: 0; } to { transform: none; opacity: 1; } }
+
+/* postcards: the crown mark from the finale bean */
+.pc { position: relative; }
+.pc-wrap { position: relative; width: 100%; }
+.pc img.pc-mark, .card .pc-mark { position: absolute; right: 10px; top: 10px; width: 30px; height: 30px; aspect-ratio: auto; object-fit: contain; border: 0; filter: drop-shadow(0 2px 3px #000a); }
+
+/* the café is alive: the lamp breathes, the background cup steams (placed by code) */
+.ambient { position: fixed; inset: 0; pointer-events: none; z-index: 0; display: none; overflow: hidden; }
+body.playing .ambient { display: block; }
+.play-screen { position: relative; z-index: 1; }
+.amb-lamp, .amb-steam { position: absolute; transform: translate(-50%, -50%) scale(var(--s, 1)); }
+.amb-lamp { width: 220px; height: 220px; border-radius: 50%; background: radial-gradient(circle, #ffc56b55 0%, #ffb34722 35%, transparent 70%); animation: lamp 4.5s ease-in-out infinite; }
+@keyframes lamp { 50% { opacity: .55; } }
+.amb-steam { width: 60px; height: 90px; }
+.amb-steam i { position: absolute; bottom: 0; left: 26px; width: 10px; height: 28px; border-radius: 50%; background: radial-gradient(ellipse, #fff8eec0, transparent 70%); opacity: 0; animation: steam 3.6s ease-in infinite; }
+.amb-steam i:nth-child(2) { left: 16px; animation-delay: 1.2s; }
+.amb-steam i:nth-child(3) { left: 34px; animation-delay: 2.4s; }
+@keyframes steam { 0% { transform: translateY(0) scaleX(1); opacity: 0; } 25% { opacity: .7; } 100% { transform: translateY(-60px) translateX(6px) scaleX(1.8); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { #toddy, .amb-lamp, .amb-steam i { animation: none; } }
+html.calm .serve-cup { display: none; }
+@media (prefers-reduced-motion: reduce) { .serve-cup { display: none; } .serve-vis, .gbig { animation: none; } }
+/* the cup shows progress; the count stays for screen readers only */
+.brewrow .count { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; margin: 0; }
+/* specks of dust drifting in the lamplight */
+.amb-motes i { position: absolute; bottom: -10px; width: 4px; height: 4px; border-radius: 50%; background: #ffd99a; box-shadow: 0 0 6px #ffc56b; opacity: 0; animation: mote 14s linear infinite; }
+.amb-motes i:nth-child(1) { left: 12%; animation-delay: 0s; }
+.amb-motes i:nth-child(2) { left: 30%; animation-delay: 4s; animation-duration: 17s; }
+.amb-motes i:nth-child(3) { left: 52%; animation-delay: 8s; }
+.amb-motes i:nth-child(4) { left: 70%; animation-delay: 2s; animation-duration: 19s; }
+.amb-motes i:nth-child(5) { left: 86%; animation-delay: 10s; }
+.amb-motes i:nth-child(6) { left: 42%; animation-delay: 6s; animation-duration: 21s; }
+@keyframes mote { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: .55; } 85% { opacity: .35; } 100% { transform: translate(30px, -95vh); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .amb-motes { display: none; } }
+html.calm .amb-motes { display: none; }
+
+/* rc9: the journey is visible (Play label, tappable tray title, 20-dot Night path) */
+.btn.play-main { flex-direction: column; gap: 0; padding-block: 10px; }
+.btn.play-main small { color: #5a2e12; font-size: 12px; font-weight: 800; }
+button.where { font: inherit; font-weight: 800; color: var(--cream); cursor: pointer; }
+.path { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; max-width: 300px; }
+.path i { width: 10px; height: 10px; border-radius: 50%; background: #ffffff1f; }
+.path i.done { background: var(--gold); }
+.path i.cur { box-shadow: 0 0 0 3px #fce25d66; transform: scale(1.25); }
+.path i.moon { width: 14px; height: 14px; margin-top: -2px; background: transparent; border-radius: 50%; box-shadow: inset -4px -1px 0 0 var(--gold-hi); opacity: .55; }
+.path i.moon.done { opacity: 1; }

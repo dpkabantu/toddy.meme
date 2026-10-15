@@ -33,7 +33,7 @@
       <h1 class="logo">Moon Brew</h1>
       <p class="tag">Clear the bean tray. Brew for the night visitors.</p>
       <div class="menu">
-        <button id="btn-play" class="btn primary" type="button">Play</button>
+        <button id="btn-play" class="btn primary play-main" type="button"><span>Play</span><small id="play-status">Night 1 · 20 trays</small></button>
         <button id="btn-daily" class="btn" type="button"><span>Daily Brew</span><small id="daily-status">New tray today</small></button>
         <button id="btn-endless" class="btn" type="button"><span>Endless Brew</span><small id="endless-status">Finish Night 1 to open</small></button>
         <div class="menu-row four">
@@ -67,10 +67,11 @@
     <label class="playtest-toggle"><input type="checkbox" id="unlock-all"> Playtest: open every tray and mode</label>
   </section>
 
+  <div class="ambient" id="ambient" aria-hidden="true"><div class="amb-lamp" id="amb-lamp"></div><div class="amb-steam" id="amb-steam"><i></i><i></i><i></i></div><div class="amb-motes"><i></i><i></i><i></i><i></i><i></i><i></i></div></div>
   <section id="screen-play" class="screen play-screen" hidden>
     <header class="bar">
       <button class="icon-btn" id="play-back" type="button" aria-label="Back">&#8249;</button>
-      <h2 class="bar-title" id="where">Night 1 · Tray 1</h2>
+      <button class="bar-title where" id="where" type="button" aria-label="Show all trays">Night 1 · Tray 1</button>
       <button class="icon-btn" id="play-sound" type="button" aria-label="Sound on or off">&#9835;</button>
     </header>
     <div class="visitor">
@@ -88,8 +89,15 @@
       <canvas id="toddy" width="180" height="192" aria-hidden="true"></canvas>
       <div class="grind">
         <p class="say" id="say" aria-live="polite"></p>
-        <div class="meter"><i id="meter"></i></div>
-        <p class="count" id="count"></p>
+        <div class="brewrow">
+          <canvas id="cup" width="96" height="88" role="img" aria-label="Coffee cup"></canvas>
+          <div class="goals" aria-label="Stars for this tray">
+            <span class="goal" id="goal-clear" title="Clear the tray" aria-label="Star 1: clear the tray"><b>&#9733;</b></span>
+            <span class="goal" id="goal-clean" title="No bumps" aria-label="Star 2: no bumps"><b>&#9733;</b></span>
+            <span class="goal" id="goal-order" title="Follow the order" aria-label="Star 3: follow the order"><b>&#9733;</b></span>
+          </div>
+          <p class="count" id="count"></p>
+        </div>
       </div>
       <div class="actions">
         <button class="btn small" id="btn-hint" type="button">Hint</button>
@@ -144,16 +152,16 @@
       <span></span>
     </header>
     <div class="howto">
-      <div class="rule"><img data-src="assets/bean_medium_v01.webp" alt=""><div><b>Tap a bean</b><p>It rolls the way its sharp tip points, off the tray and into the grinder. Clear every bean.</p></div></div>
-      <div class="rule"><img data-src="assets/bean_dark_v01.webp" alt=""><div><b>Bumps</b><p>If another bean is in the way, it bumps and cracks. Three bumps and the brew is burnt.</p></div></div>
-      <div class="rule"><img data-src="assets/cup_v01.webp" alt=""><div><b>Order ticket</b><p>Grind the first beans in the ticket&#8217;s roast order for a Perfect Brew.</p></div></div>
+      <div class="rule"><img data-src="assets/bean_medium_v01.webp" alt=""><div><b>Tap a bean</b><p>It rolls where its tip points. Clear every bean.</p></div></div>
+      <div class="rule"><img data-src="assets/bean_dark_v01.webp" alt=""><div><b>Bumps</b><p>Blocked beans bump. Three bumps burns the brew.</p></div></div>
+      <div class="rule"><img data-src="assets/cup_v01.webp" alt=""><div><b>Order ticket</b><p>Grind the glowing colour first for the third star.</p></div></div>
       <div class="rule"><img data-src="assets/bean_sleepy_v01.webp" alt=""><div><b>Sleepy bean</b><p>Tap once to wake it, then it can roll.</p></div></div>
-      <div class="rule"><img data-src="assets/ice_v01.webp" alt=""><div><b>Ice cube</b><p>Frozen until the number reaches 0. Each bean you grind melts it by one.</p></div></div>
-      <div class="rule"><img data-src="assets/sugar_v01.webp" alt=""><div><b>Sugar pair</b><p>Two beans stuck together. Tap either one and both roll, so both paths must be clear.</p></div></div>
-      <div class="rule"><img data-src="assets/milk_v01.webp" alt=""><div><b>Milk swirl</b><p>A bean that rolls over spilled milk turns a quarter turn to its right.</p></div></div>
+      <div class="rule"><img data-src="assets/ice_v01.webp" alt=""><div><b>Ice cube</b><p>Melts as you grind other beans.</p></div></div>
+      <div class="rule"><img data-src="assets/sugar_v01.webp" alt=""><div><b>Sugar pair</b><p>Two beans roll together. Both paths must be clear.</p></div></div>
+      <div class="rule"><img data-src="assets/milk_v01.webp" alt=""><div><b>Milk swirl</b><p>Turns a rolling bean to its right.</p></div></div>
       <div class="rule stars-rule"><span class="big-stars">&#9733;&#9733;&#9733;</span><div><b>Three stars</b><p>Clear the tray, make no bumps, and follow the ticket.</p></div></div>
-      <div class="rule"><img data-src="assets/postcard_n1_v01.webp" alt=""><div><b>Daily Brew</b><p>One new tray a day, the same for everyone. Score out of 1000: clear 400, no bumps 200, Perfect ticket 200, speed up to 200. Each hint costs 50. Play every day to grow your streak.</p></div></div>
-      <div class="rule"><img data-src="assets/visitor_star_v01.webp" alt=""><div><b>Endless Brew</b><p>Opens after Night 1. Trays keep coming and get harder. Three bumps end the run.</p></div></div>
+      <div class="rule"><img data-src="assets/postcard_n1_v01.webp" alt=""><div><b>Daily Brew</b><p>One new tray a day, same for everyone. Score out of 1000. Play daily to grow your streak.</p></div></div>
+      <div class="rule"><img data-src="assets/visitor_star_v01.webp" alt=""><div><b>Endless Brew</b><p>Opens after Night 1. Trays keep coming until three bumps.</p></div></div>
     </div>
   </section>
   <div class="overlay" id="modal" hidden><div class="card" id="modal-card"></div></div>
