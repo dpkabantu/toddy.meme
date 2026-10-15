@@ -33,7 +33,7 @@
       <h1 class="logo">Moon Brew</h1>
       <p class="tag">Clear the bean tray. Brew for the night visitors.</p>
       <div class="menu">
-        <button id="btn-play" class="btn primary" type="button">Play</button>
+        <button id="btn-play" class="btn primary play-main" type="button"><span>Play</span><small id="play-status">Night 1 · 20 trays</small></button>
         <button id="btn-daily" class="btn" type="button"><span>Daily Brew</span><small id="daily-status">New tray today</small></button>
         <button id="btn-endless" class="btn" type="button"><span>Endless Brew</span><small id="endless-status">Finish Night 1 to open</small></button>
         <div class="menu-row four">
@@ -71,7 +71,7 @@
   <section id="screen-play" class="screen play-screen" hidden>
     <header class="bar">
       <button class="icon-btn" id="play-back" type="button" aria-label="Back">&#8249;</button>
-      <h2 class="bar-title" id="where">Night 1 · Tray 1</h2>
+      <button class="bar-title where" id="where" type="button" aria-label="Show all trays">Night 1 · Tray 1</button>
       <button class="icon-btn" id="play-sound" type="button" aria-label="Sound on or off">&#9835;</button>
     </header>
     <div class="visitor">

@@ -323,3 +323,14 @@ html.calm .serve-cup { display: none; }
 @keyframes mote { 0% { transform: translate(0, 0); opacity: 0; } 15% { opacity: .55; } 85% { opacity: .35; } 100% { transform: translate(30px, -95vh); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .amb-motes { display: none; } }
 html.calm .amb-motes { display: none; }
+
+/* rc9: the journey is visible (Play label, tappable tray title, 20-dot Night path) */
+.btn.play-main { flex-direction: column; gap: 0; padding-block: 10px; }
+.btn.play-main small { color: #5a2e12; font-size: 12px; font-weight: 800; }
+button.where { font: inherit; font-weight: 800; color: var(--cream); cursor: pointer; }
+.path { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; max-width: 300px; }
+.path i { width: 10px; height: 10px; border-radius: 50%; background: #ffffff1f; }
+.path i.done { background: var(--gold); }
+.path i.cur { box-shadow: 0 0 0 3px #fce25d66; transform: scale(1.25); }
+.path i.moon { width: 14px; height: 14px; margin-top: -2px; background: transparent; border-radius: 50%; box-shadow: inset -4px -1px 0 0 var(--gold-hi); opacity: .55; }
+.path i.moon.done { opacity: 1; }

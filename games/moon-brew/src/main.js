@@ -3,7 +3,7 @@ import { DX, DY, MAX_BUMPS, generate, newGame, beanAt, frozen, unitOf, traceBean
 import { TRAYS } from './trays.js';
 import { NIGHTS, INTROS, TRAYS_PER_NIGHT, trayConfig, dailyConfig, dailyNumber, endlessConfig, ENDLESS_LINES } from './levels.js';
 
-const BUILD = '1.0.0-rc8';
+const BUILD = '1.0.0-rc9';
 const ASSET = 'assets/';
 const $ = (id) => document.getElementById(id);
 const systemCalm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -23,7 +23,7 @@ function calm() { return !!(save && save.calm) || systemCalm.matches; }
 
 // ---------------- Saving ----------------
 const SAVE_KEY = 'toddy.moonbrew.v1';
-const save = Object.assign({ stars: {}, daily: {}, endlessBest: 0, postcards: [], intros: {}, sound: true, unlockAll: false, calm: false, bigText: false, stats: true }, readSave());
+const save = Object.assign({ stars: {}, daily: {}, endlessBest: 0, postcards: [], intros: {}, sound: true, music: true, unlockAll: false, calm: false, bigText: false, stats: true }, readSave());
 function readSave() { try { return JSON.parse(localStorage.getItem(SAVE_KEY) || '{}'); } catch (e) { return {}; } }
 function writeSave() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* storage blocked: play still works */ } }
 const trayKey = (n, t) => `n${n + 1}-${t}`;
@@ -157,10 +157,92 @@ function wakeAudio() { // called on every real tap / key press; cheap after the 
     if (!actx) {
       const AC = window.AudioContext || window.webkitAudioContext; if (!AC) return;
       actx = new AC();
+      buildMix();
       unlockTick();
     }
     if (actx.state !== 'running') actx.resume().then(unlockTick).catch(() => {});
+    startMusic();
   } catch (e) { actx = null; }
+}
+
+// ---------------- The mix ----------------
+// Effects and music each get a bus, both go through a soft limiter so nothing ever clips on phone speakers.
+// Levels (owner 2026-10-15: louder, balanced): effects about 1.9x the old level, music clearly underneath them.
+const MIX = { sfx: 1.9, music: 0.4 };
+let sfxBus = null, musicBus = null, mixOut = null;
+function buildMix() {
+  const lim = actx.createDynamicsCompressor();
+  lim.threshold.value = -10; lim.knee.value = 8; lim.ratio.value = 8; lim.attack.value = 0.003; lim.release.value = 0.2;
+  lim.connect(actx.destination); mixOut = lim;
+  sfxBus = actx.createGain(); sfxBus.gain.value = MIX.sfx; sfxBus.connect(lim);
+  musicBus = actx.createGain(); musicBus.gain.value = save.music ? MIX.music : 0;
+  // music is warm and a little far away: low-pass plus a soft echo
+  const lp = actx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2600;
+  const echo = actx.createDelay(1); echo.delayTime.value = 0.375;
+  const fb = actx.createGain(); fb.gain.value = 0.28;
+  const wet = actx.createGain(); wet.gain.value = 0.35;
+  musicBus.connect(lp); lp.connect(lim); lp.connect(echo); echo.connect(fb); fb.connect(echo); echo.connect(wet); wet.connect(lim);
+}
+
+// ---------------- Music: a quiet lo-fi café loop, made in code ----------------
+// C major, so every game sound (wake E-B, win C-E-G-C, stars G-B-D) sits inside the harmony.
+// 80 beats a minute, one chord per bar: Fmaj7 - Em7 - Dm7 - Cmaj9. Soft electric piano chords, a round
+// bass, a brushed shaker on beats 2 and 4, and a few felt-piano notes from the C pentatonic scale.
+const BEAT = 0.75;
+const CHORDS = [[53, 57, 60, 64], [52, 55, 59, 62], [50, 53, 57, 60], [48, 52, 55, 59, 62]]; // MIDI notes
+const BASS = [41, 40, 38, 36];
+const PENTA = [72, 74, 76, 79, 81, 84];
+const hz = (m) => 440 * Math.pow(2, (m - 69) / 12);
+let musicOn = false, musicTimer = 0, bar = 0, nextBar = 0;
+function startMusic() {
+  if (musicOn || !actx || !save.sound || !save.music) return;
+  musicOn = true; bar = 0; nextBar = actx.currentTime + 0.3;
+  scheduleMusic();
+}
+function stopMusic() { musicOn = false; clearTimeout(musicTimer); }
+function scheduleMusic() {
+  if (!musicOn || !actx) return;
+  while (nextBar < actx.currentTime + 1.2) { playBar(nextBar, bar++); nextBar += BEAT * 4; } // schedule ahead, so timing stays steady
+  musicTimer = setTimeout(scheduleMusic, 400);
+}
+function mnote(freq, t, dur, vol, type = 'sine', attack = 0.02) {
+  const o = actx.createOscillator(), g = actx.createGain();
+  o.type = type; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + attack); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(musicBus); o.start(t); o.stop(t + dur + 0.05);
+}
+let shakerBuf = null;
+function playBar(t, i) {
+  const c = i % 4;
+  // electric piano chord: a sine plus a quieter triangle an octave up, gently rolled
+  CHORDS[c].forEach((m, k) => { mnote(hz(m), t + k * 0.03, BEAT * 3.8, 0.035); mnote(hz(m + 12), t + k * 0.03, BEAT * 1.6, 0.008, 'triangle'); });
+  // bass on beats 1 and 3
+  // (one octave up from a real bass: phone speakers cannot play below about 80 Hz)
+  mnote(hz(BASS[c]), t, BEAT * 1.6, 0.07, 'sine', 0.01);
+  mnote(hz(BASS[c] + (i % 2 ? 7 : 0)), t + BEAT * 2, BEAT * 1.4, 0.055, 'sine', 0.01);
+  // brushed shaker on 2 and 4
+  if (!shakerBuf) { const n = Math.floor(actx.sampleRate * 0.12); shakerBuf = actx.createBuffer(1, n, actx.sampleRate); const d = shakerBuf.getChannelData(0); for (let k = 0; k < n; k++) d[k] = (Math.random() * 2 - 1) * Math.pow(1 - k / n, 3); }
+  for (const b of [1, 3]) {
+    const src = actx.createBufferSource(), f = actx.createBiquadFilter(), g = actx.createGain();
+    src.buffer = shakerBuf; f.type = 'highpass'; f.frequency.value = 5000; g.gain.value = 0.05;
+    src.connect(f); f.connect(g); g.connect(musicBus); src.start(t + b * BEAT);
+  }
+  // a few felt-piano notes, never the same twice; every 8th bar rests for air
+  if (i % 8 !== 7) for (let s = 0; s < 8; s++) {
+    if (Math.random() < 0.28) { const m = PENTA[Math.floor(Math.random() * PENTA.length)]; mnote(hz(m), t + s * BEAT / 2, 1.1, 0.03, 'sine', 0.006); mnote(hz(m) * 2, t + s * BEAT / 2, 0.35, 0.006, 'sine', 0.004); }
+  }
+}
+// the music steps back for a moment when something important happens (a win, the stars)
+function duckMusic(secs = 2.5) {
+  if (!musicBus || !save.music) return;
+  const g = musicBus.gain, t = actx.currentTime;
+  g.cancelScheduledValues(t); g.setValueAtTime(g.value, t);
+  g.linearRampToValueAtTime(MIX.music * 0.35, t + 0.15); g.linearRampToValueAtTime(MIX.music, t + secs);
+}
+function setMusic(on) {
+  save.music = on; writeSave();
+  if (musicBus) { const t = actx.currentTime; musicBus.gain.cancelScheduledValues(t); musicBus.gain.setTargetAtTime(on ? MIX.music : 0, t, 0.2); }
+  if (on) { wakeAudio(); startMusic(); } else stopMusic();
 }
 for (const ev of ['pointerdown', 'pointerup', 'touchstart', 'touchend', 'click', 'keydown']) addEventListener(ev, wakeAudio, { passive: true, capture: true });
 document.addEventListener('visibilitychange', () => {
@@ -183,7 +265,7 @@ function tone(freq, dur, type = 'sine', vol = 0.12, slideTo = 0, delay = 0) {
   o.type = type; o.frequency.setValueAtTime(freq, t);
   if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
   g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.01); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-  o.connect(g).connect(a.destination); o.start(t); o.stop(t + dur + 0.02);
+  o.connect(g).connect(sfxBus || a.destination); o.start(t); o.stop(t + dur + 0.02);
 }
 function noise(dur, freq, vol = 0.1, delay = 0) {
   const a = audio(); if (!a) return;
@@ -193,17 +275,17 @@ function noise(dur, freq, vol = 0.1, delay = 0) {
   for (let i = 0; i < d.length; i++) d[i] = (Math.random() * 2 - 1) * (1 - i / d.length);
   const s = a.createBufferSource(), f = a.createBiquadFilter(), g = a.createGain();
   s.buffer = buf; f.type = 'bandpass'; f.frequency.value = freq; f.Q.value = 1.4; g.gain.value = vol;
-  s.connect(f).connect(g).connect(a.destination); s.start(t);
+  s.connect(f).connect(g).connect(sfxBus || a.destination); s.start(t);
 }
 const sfx = {
-  roll: () => { noise(0.18, 1400, 0.08); noise(0.22, 600, 0.09, 0.16); },
-  bump: () => { tone(150, 0.16, 'sine', 0.2, 80); noise(0.06, 300, 0.08); },
+  roll: () => { tone(330, 0.07, 'sine', 0.09, 200); noise(0.18, 1400, 0.22); noise(0.22, 700, 0.24, 0.14); },
+  bump: () => { tone(160, 0.16, 'sine', 0.11, 90); noise(0.07, 400, 0.12); },
   wake: () => { tone(660, 0.09, 'triangle', 0.08); tone(990, 0.12, 'triangle', 0.08, 0, 0.08); },
   frozen: () => { tone(1800, 0.05, 'triangle', 0.05); tone(2400, 0.05, 'triangle', 0.04, 0, 0.05); },
-  win: () => [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.28, 'triangle', 0.1, 0, i * 0.11)),
+  win: () => { duckMusic(3.5); [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.32, 'triangle', 0.1, 0, i * 0.11)); },
   burnt: () => [392, 330, 262].forEach((f, i) => tone(f, 0.3, 'sine', 0.1, 0, i * 0.14)),
   tick: () => tone(880, 0.05, 'triangle', 0.05),
-  grind: () => { noise(0.09, 2600, 0.05); noise(0.12, 900, 0.05, 0.03); },
+  grind: () => { noise(0.09, 2600, 0.13); noise(0.12, 900, 0.13, 0.03); },
   pour: () => { noise(0.7, 500, 0.05); tone(330, 0.5, 'sine', 0.03, 220, 0.1); },
   star: (i) => tone([784, 988, 1175][i] || 1175, 0.18, 'triangle', 0.07),
   lost: () => tone(220, 0.16, 'sine', 0.05, 180),
@@ -212,7 +294,7 @@ function setSound(on) {
   save.sound = on; writeSave();
   $('play-sound').classList.toggle('off', !on);
   if (on) { wakeAudio(); sfx.tick(); } // still inside the tap that switched sound on
-  else if (actx) actx.suspend().catch(() => {});
+  else { stopMusic(); if (actx) actx.suspend().catch(() => {}); }
 }
 
 // ---------------- Screens ----------------
@@ -235,6 +317,11 @@ function unlocked() { return PLAYTEST && save.unlockAll; }
 function nightOpen(n) { return unlocked() || n === 0 || nightCleared(n - 1); }
 function trayOpen(n, t) { return unlocked() || (nightOpen(n) && (t === 1 || !!save.stars[trayKey(n, t - 1)])); }
 function endlessOpen() { return unlocked() || nightCleared(0); }
+function night1Done() { let c = 0; for (let t = 1; t <= TRAYS_PER_NIGHT; t++) if (save.stars[trayKey(0, t)]) c++; return c; }
+function nextTray() { // first tray not cleared yet, in story order
+  for (let n = 0; n < NIGHTS.length; n++) for (let t = 1; t <= TRAYS_PER_NIGHT; t++) if (!save.stars[trayKey(n, t)] && trayOpen(n, t)) return [n, t];
+  return null;
+}
 function totalStars() { return Object.entries(save.stars).filter(([k]) => k.startsWith('n')).reduce((s, [, v]) => s + v, 0); }
 
 function renderTitle() {
@@ -242,7 +329,10 @@ function renderTitle() {
   const st = dailyStreak();
   $('daily-status').textContent = today ? `Today: ${today.score || 0} pts${st.current > 1 ? ` · 🔥 ${st.current}` : ''}` : (st.current ? `Keep your ${st.current}-day streak` : 'New tray today');
   $('btn-daily').classList.toggle('glow', !today); // gentle glow until today's Daily Brew is played
-  $('endless-status').textContent = endlessOpen() ? (save.endlessBest ? `Best ${save.endlessBest}` : 'Open') : 'Finish Night 1 to open';
+  $('endless-status').textContent = endlessOpen() ? (save.endlessBest ? `Best ${save.endlessBest}` : 'Open') : `🔒 After Night 1 · ${night1Done()}/20`;
+  // the Play button says where the player is going: the Night and tray, so the 20-tray journey is visible from the start
+  const nx = nextTray();
+  $('play-status').textContent = !Object.keys(save.stars).length ? `${NIGHTS[0].name} · ${TRAYS_PER_NIGHT} trays` : nx ? `Continue · ${NIGHTS[nx[0]].name}, tray ${nx[1]}` : 'All trays done · replay any';
   $('btn-endless').classList.toggle('locked', !endlessOpen());
   $('build-label').textContent = PLAYTEST ? `Playtest build ${BUILD} · nothing here is public yet` : `Moon Brew ${BUILD}`;
 }
@@ -367,7 +457,7 @@ function load(cfg, ready) {
   if (mode.kind === 'story') {
     const night = NIGHTS[mode.n];
     vis = night.visitor; line = night.lines[mode.t - 1];
-    $('where').textContent = `${night.name} · ${mode.t === TRAYS_PER_NIGHT ? 'Finale' : 'Tray ' + mode.t}`;
+    $('where').textContent = `${night.name} · ${mode.t === TRAYS_PER_NIGHT ? 'Finale' : `Tray ${mode.t}/${TRAYS_PER_NIGHT}`} ▾`;
   } else if (mode.kind === 'daily') {
     vis = mode.visitor;
     line = save.daily[mode.num] ? `Practice run. Today\u2019s score: ${save.daily[mode.num].score}.` : 'Today\u2019s puzzle. Same for everyone.';
@@ -819,6 +909,15 @@ function serveHtml(small) {
   return `<div class="serve${small ? ' small' : ''}"><img class="serve-cup" src="${ASSET}cup_v01.webp" alt=""><img class="serve-vis" src="${ASSET}${pose}" alt="${VISITOR[v][1]} enjoys the coffee"></div>
     <div class="goals-big" aria-label="${stars(g)} of 3 stars">${parts.map(([t, ok], i) => `<span class="gbig d${i + 1}${ok ? '' : ' lost'}"><b>&#9733;</b><small>${t}</small></span>`).join('')}</div>`;
 }
+// The Night as a path of 20 dots (the last one is the postcard moon): shows the journey without words.
+function nightPath(n, cur) {
+  let h = '';
+  for (let t = 1; t <= TRAYS_PER_NIGHT; t++) {
+    const done = !!save.stars[trayKey(n, t)];
+    h += `<i class="${done ? 'done' : ''}${t === cur ? ' cur' : ''}${t === TRAYS_PER_NIGHT ? ' moon' : ''}"></i>`;
+  }
+  return h;
+}
 function serveSounds() {
   if (calm()) return;
   sfx.pour();
@@ -942,6 +1041,8 @@ function finish(again) {
   };
   // the serve comes first: it is the payoff
   card(`${serveHtml(false)}<h3>${finale ? 'Night complete!' : head}</h3>
+    <div class="path" aria-label="${night.name}: tray ${mode.t} of ${TRAYS_PER_NIGHT}">${nightPath(mode.n, mode.t)}</div>
+    <p class="stat">${night.name} · tray ${mode.t} of ${TRAYS_PER_NIGHT}${finale ? '' : ' · ☾ postcard at 20'}</p>
     ${result.firstClear && mode.n === 0 && finale ? '<p class="stat">Endless Brew is now open.</p>' : ''}
     <div class="btns"><button class="btn ghost" id="o-retry" type="button">Brew again</button><button class="btn primary" id="o-next" type="button">${result.newCard ? 'Continue' : nextLabel}</button></div>
     ${dailyWaiting() ? '<div class="btns"><button class="btn daily-nudge" id="o-daily" type="button">Today\u2019s Daily Brew \u2192</button></div>' : ''}`);
@@ -972,13 +1073,15 @@ function openSettings() {
   const row = (id, label, sub, on) => `<label class="setting"><span><b>${label}</b><small>${sub}</small></span><input type="checkbox" id="${id}" ${on ? 'checked' : ''}></label>`;
   modal(`<h3>Settings</h3>
     <div class="settings">
-      ${row('set-sound', 'Sound', 'Bean rolls, bumps and chimes', save.sound)}
+      ${row('set-sound', 'Sound', 'Turns all sound on or off', save.sound)}
+      ${row('set-music', 'Music', 'Quiet café music while you play', save.music)}
       ${row('set-calm', 'Calmer motion', 'Fewer animations', save.calm)}
       ${row('set-big', 'Bigger text', 'Larger words in the game', save.bigText)}
       ${row('set-stats', 'Share anonymous play stats', 'Helps us see which trays are too hard. No name, no account.', save.stats)}
     </div>
     <div class="btns"><button class="btn primary" id="set-done" type="button">Done</button></div>`);
   $('set-sound').addEventListener('change', e => setSound(e.target.checked));
+  $('set-music').addEventListener('change', e => setMusic(e.target.checked));
   $('set-calm').addEventListener('change', e => { save.calm = e.target.checked; writeSave(); applySettings(); });
   $('set-big').addEventListener('change', e => { save.bigText = e.target.checked; writeSave(); applySettings(); });
   $('set-stats').addEventListener('change', e => { save.stats = e.target.checked; writeSave(); });
@@ -1082,7 +1185,19 @@ bind('btn-play', () => {
   mapNight = [2, 1, 0].find(n => nightOpen(n)) ?? 0; show('map');
 });
 bind('btn-daily', () => { sfx.tick(); startDaily(); });
-bind('btn-endless', () => { if (endlessOpen()) startEndless(false); else $('endless-status').textContent = 'Finish Night 1 (tray 20) to open'; });
+bind('btn-endless', () => {
+  if (endlessOpen()) { startEndless(false); return; }
+  // locked: say why and how far along the player is, with a way straight there
+  const done = night1Done();
+  modal(`<p class="eyebrow">🔒 Locked</p><h3>Endless Brew</h3>
+    <p>Opens after ${NIGHTS[0].name}.</p>
+    <div class="path" aria-label="${done} of ${TRAYS_PER_NIGHT} trays cleared">${nightPath(0, -1)}</div>
+    <p class="stat">${done} of ${TRAYS_PER_NIGHT} trays cleared</p>
+    <div class="btns"><button class="btn ghost" id="lk-close" type="button">Close</button><button class="btn primary" id="lk-go" type="button">Play ${NIGHTS[0].name}</button></div>`);
+  bind('lk-close', closeModal);
+  bind('lk-go', () => { closeModal(); const nx = nextTray(); if (nx && nx[0] === 0) startTray(0, nx[1]); else { mapNight = 0; show('map'); } });
+});
+bind('where', () => { if (mode && mode.kind === 'story') { clearTimeout(finishTimer); mapNight = mode.n; show('map'); } });
 bind('btn-album', () => show('album'));
 bind('btn-stats', () => show('stats'));
 bind('stats-back', () => show('title'));
@@ -1151,8 +1266,7 @@ document.documentElement.style.setProperty('--counter-bg', `url("${new URL(ASSET
 toddy.cv = $('toddy'); toddy.ctx = toddy.cv.getContext('2d');
 toddy.cv.addEventListener('animationend', (e) => { if (e.animationName === 'hop') toddy.cv.classList.remove('hop'); });
 
-setSound(save.sound);
-applySettings();
+applySettings(); // (sound itself wakes on the first tap)
 show('title');
 track('open', { returning: Object.keys(save.stars).length > 0 || Object.keys(save.daily).length > 0 });
 
@@ -1160,6 +1274,9 @@ track('open', { returning: Object.keys(save.stars).length > 0 || Object.keys(sav
 window.__moonbrew = {
   get g() { return g; }, get level() { return level; }, get mode() { return mode; }, get coach() { return coach && coach.key; }, save,
   startTray, startDaily, startEndless, show, audioState: () => actx ? actx.state : "none",
+  // test-only level meter: loudest sample and average level of everything leaving the speakers
+  meter() { if (!mixOut) return null; if (!this._an) { this._an = actx.createAnalyser(); this._an.fftSize = 2048; mixOut.connect(this._an); } const d = new Float32Array(2048); this._an.getFloatTimeDomainData(d); let pk = 0, sq = 0; for (const v of d) { pk = Math.max(pk, Math.abs(v)); sq += v * v; } return { peak: pk, rms: Math.sqrt(sq / d.length) }; },
+  sfx: (n) => sfx[n](), music: () => musicOn,
   canRoll(id) { return canRoll(g, g.beans[id]); },
   get stats() { return statsQueue.slice(); },
   beanPoint(id) { const b = g.beans[id]; const r = cv.getBoundingClientRect(); return { x: r.left + cxp(b.x) * r.width / S, y: r.top + cyp(b.y) * r.height / S }; },
