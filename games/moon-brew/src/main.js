@@ -3,7 +3,7 @@ import { DX, DY, MAX_BUMPS, generate, newGame, beanAt, frozen, unitOf, traceBean
 import { TRAYS } from './trays.js';
 import { NIGHTS, INTROS, TRAYS_PER_NIGHT, trayConfig, dailyConfig, dailyNumber, endlessConfig, ENDLESS_LINES } from './levels.js';
 
-const BUILD = '1.0.0-rc9';
+const BUILD = '1.0.0-rc10';
 const ASSET = 'assets/';
 const $ = (id) => document.getElementById(id);
 const systemCalm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -168,7 +168,7 @@ function wakeAudio() { // called on every real tap / key press; cheap after the 
 // ---------------- The mix ----------------
 // Effects and music each get a bus, both go through a soft limiter so nothing ever clips on phone speakers.
 // Levels (owner 2026-10-15: louder, balanced): effects about 1.9x the old level, music clearly underneath them.
-const MIX = { sfx: 1.9, music: 0.4 };
+const MIX = { sfx: 1.9, music: 1.1 }; // owner 2026-10-15: music as loud as the tap sounds
 let sfxBus = null, musicBus = null, mixOut = null;
 function buildMix() {
   const lim = actx.createDynamicsCompressor();
