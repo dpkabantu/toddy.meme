@@ -3,7 +3,7 @@ import { DX, DY, MAX_BUMPS, generate, newGame, beanAt, frozen, unitOf, traceBean
 import { TRAYS } from './trays.js';
 import { NIGHTS, INTROS, TRAYS_PER_NIGHT, trayConfig, dailyConfig, dailyNumber, endlessConfig, ENDLESS_LINES } from './levels.js';
 
-const BUILD = '1.0.0-rc10';
+const BUILD = '1.0.0-rc11';
 const ASSET = 'assets/';
 const $ = (id) => document.getElementById(id);
 const systemCalm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -168,7 +168,7 @@ function wakeAudio() { // called on every real tap / key press; cheap after the 
 // ---------------- The mix ----------------
 // Effects and music each get a bus, both go through a soft limiter so nothing ever clips on phone speakers.
 // Levels (owner 2026-10-15: louder, balanced): effects about 1.9x the old level, music clearly underneath them.
-const MIX = { sfx: 1.9, music: 1.1 }; // owner 2026-10-15: music as loud as the tap sounds
+const MIX = { sfx: 1.9, music: 1.3 }; // owner 2026-10-15: tap sounds sat on top of the music; music up, bean taps down
 let sfxBus = null, musicBus = null, mixOut = null;
 function buildMix() {
   const lim = actx.createDynamicsCompressor();
@@ -278,14 +278,14 @@ function noise(dur, freq, vol = 0.1, delay = 0) {
   s.connect(f).connect(g).connect(sfxBus || a.destination); s.start(t);
 }
 const sfx = {
-  roll: () => { tone(330, 0.07, 'sine', 0.09, 200); noise(0.18, 1400, 0.22); noise(0.22, 700, 0.24, 0.14); },
+  roll: () => { tone(330, 0.07, 'sine', 0.06, 200); noise(0.18, 1400, 0.14); noise(0.22, 700, 0.15, 0.14); },
   bump: () => { tone(160, 0.16, 'sine', 0.11, 90); noise(0.07, 400, 0.12); },
   wake: () => { tone(660, 0.09, 'triangle', 0.08); tone(990, 0.12, 'triangle', 0.08, 0, 0.08); },
   frozen: () => { tone(1800, 0.05, 'triangle', 0.05); tone(2400, 0.05, 'triangle', 0.04, 0, 0.05); },
   win: () => { duckMusic(3.5); [523, 659, 784, 1047].forEach((f, i) => tone(f, 0.32, 'triangle', 0.1, 0, i * 0.11)); },
   burnt: () => [392, 330, 262].forEach((f, i) => tone(f, 0.3, 'sine', 0.1, 0, i * 0.14)),
   tick: () => tone(880, 0.05, 'triangle', 0.05),
-  grind: () => { noise(0.09, 2600, 0.13); noise(0.12, 900, 0.13, 0.03); },
+  grind: () => { noise(0.09, 2600, 0.08); noise(0.12, 900, 0.08, 0.03); },
   pour: () => { noise(0.7, 500, 0.05); tone(330, 0.5, 'sine', 0.03, 220, 0.1); },
   star: (i) => tone([784, 988, 1175][i] || 1175, 0.18, 'triangle', 0.07),
   lost: () => tone(220, 0.16, 'sine', 0.05, 180),
