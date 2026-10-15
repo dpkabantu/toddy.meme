@@ -81,15 +81,17 @@ export const NIGHTS = [
   },
 ];
 
-// New-piece tips shown the first time a piece appears.
+// First-time coaching (owner rule 2026-10-14: show, don't tell). No cards to read: Toddy rings the
+// bean (or piece) that matters and one short line (8 words or fewer) appears. `on` is the target:
+// 'first' = first bean of the solution, 'sleepy' / 'ice' / 'pair' = that piece, 'milk' = a bean whose
+// path crosses milk. Shown once per player; replays of the tray stay clean.
 export const INTROS = {
-  'n1-1': { title: 'Tap a bean', text: 'It rolls the way its tip points. Clear the whole tray into the grinder.' },
-  'n1-3': { title: 'Order ticket', text: 'The beans at the top show which colours to grind first, left to right. The glowing one is next. Follow the order for a Perfect Brew and the 3rd star. Wrong colour? You can still clear the tray, just without the 3rd star.' },
-  'n1-6': { title: 'Watch for bumps', text: 'A blocked bean bumps and cracks. Three bumps and the brew is burnt.' },
-  'n1-8': { title: 'Sleepy bean', text: 'It wears a nightcap. Tap once to wake it, then it can roll.' },
-  'n2-1': { title: 'Ice cube', text: 'A frozen bean cannot move. Each bean you grind melts the ice by one.' },
-  'n2-10': { title: 'Sugar pair', text: 'A sugar cube sticks two beans together. Tap either one and both roll. Both paths must be clear.' },
-  'n3-1': { title: 'Milk swirl', text: 'A bean that rolls over spilled milk turns a quarter turn to its right and keeps going.' },
+  'n1-1': { on: 'first', line: 'Tap a bean. It rolls where it points.' },
+  'n1-3': { on: 'first', line: 'Grind the glowing colour first.' },
+  'n1-4': { on: 'sleepy', line: 'Sleepy bean! Tap once to wake it.' },
+  'n2-1': { on: 'ice', line: 'Ice melts as you grind beans.' },
+  'n2-10': { on: 'pair', line: 'Sugar pairs roll together.' },
+  'n3-1': { on: 'milk', line: 'Milk turns a bean to its right.' },
 };
 
 const SHAPES = ['rect', 'circle', 'diamond', 'heart', 'rect', 'face', 'moon', 'circle', 'cup', 'diamond'];
@@ -103,11 +105,12 @@ export function trayConfig(n, t) {
   else if (band === 'medium') { size = 6 + Math.floor((t - 6) / 3); fill = 0.68 + 0.01 * (t - 6); tight = 0.8; ticket = 4; pick = 10; }
   else if (band === 'hard') { size = 8 + Math.floor((t - 13) / 3); fill = 0.8; tight = 0.9; ticket = 5; pick = 20; }
   else { size = 10; fill = 0.78; tight = 0.9; ticket = 5; pick = 20; }
-  if (n === 0 && t === 1) { size = 4; fill = 0.42; tight = 0.5; }
+  if (n === 0 && t === 1) { size = 4; fill = 0.3; tight = 0.2; pick = 1; } // 5 beans, 4 free: first tap always works
   if (n > 0 && band !== 'finale') size += 1;
   if (n === 0 && band === 'finale') size = 9;
   size = Math.min(10, size);
   if (n === 2 && band === 'hard') ticket = 6;
+  if (n === 0 && t === 3) ticket = 2; // first ticket: just two colours
 
   let shape = SHAPES[(t + n * 3) % SHAPES.length];
   if (band === 'easy') shape = t % 2 ? 'rect' : 'circle';
@@ -115,8 +118,9 @@ export function trayConfig(n, t) {
   if (shape === 'cup' && size < 7) shape = 'rect';
   if ((shape === 'moon' || shape === 'face' || shape === 'heart' || shape === 'star') && size < 7) shape = 'circle';
 
-  const cfg = { w: size, h: size, shape, fill, tight, ticket, pick, seed: (n + 1) * 1000 + t, sleepy: 0, ice: 0, iceAt: 3, pairs: 0, swirls: 0, band };
+  const cfg = { w: size, h: size, shape, fill, tight, ticket, pick, seed: n === 0 && t === 1 ? 1005 : (n + 1) * 1000 + t, sleepy: 0, ice: 0, iceAt: 3, pairs: 0, swirls: 0, band };
   if (n === 0 && t >= 8) cfg.sleepy = Math.min(3, 1 + Math.floor((t - 8) / 4));
+  if (n === 0 && t === 4) cfg.sleepy = 1; // a small surprise in tray 4
   if (n >= 1) { cfg.ice = Math.min(3, 1 + Math.floor(t / 7)); cfg.iceAt = 3 + Math.floor(t / 8); cfg.sleepy = t > 4 ? 1 + Math.floor(t / 10) : 0; }
   if (n === 1 && t >= 10) cfg.pairs = 1 + Math.floor((t - 10) / 4);
   if (n === 2) { cfg.pairs = t > 3 ? 1 + Math.floor(t / 9) : 0; cfg.swirls = t < 5 ? 1 : t < 12 ? 2 : 3; }
