@@ -12,9 +12,9 @@
     "Collect the clues and unmask him."
   ],
   "notify": {
-    "app": "Larkspur",
+    "app": "Hedrio",
     "from": "New NFT received",
-    "text": "🎁 \"Golden Lantern Pass\" arrived in your wallet"
+    "text": "🎁 \"Kelvaro Pass\" arrived in your wallet"
   },
   "screen": {
     "app": "chirp",
@@ -22,7 +22,7 @@
       "name": [
         {
           "clue": "nft",
-          "text": "Golden Lantern Pass 🎁",
+          "text": "Kelvaro Pass 🎁",
           "id": "duel-name"
         }
       ],
@@ -43,7 +43,7 @@
         "msg": [
           {
             "clue": "surprise",
-            "text": "You received a free Golden Lantern Pass!"
+            "text": "You received a free Kelvaro Pass!"
           }
         ]
       },
@@ -52,7 +52,7 @@
           "Claim your bonus at ",
           {
             "clue": "claimsite",
-            "text": "goldenlantern-pass.app",
+            "text": "kelvaro-pass.app",
             "link": true
           },
           " — ",
@@ -68,7 +68,7 @@
     "start": "d1",
     "nodes": {
       "d1": {
-        "rename": "Golden Lantern Support",
+        "rename": "Kelvaro Support",
         "say": [
           {
             "sys": [
@@ -218,7 +218,7 @@
     "nft": {
       "label": "Shiny name",
       "strength": "harmless",
-      "lens": "\"Golden Lantern Pass\".",
+      "lens": "\"Kelvaro Pass\".",
       "why": "Names prove nothing."
     },
     "avatar": {
@@ -350,7 +350,7 @@
         },
         {
           "k": "Name",
-          "v": "\"Golden Lantern Pass\"",
+          "v": "\"Kelvaro Pass\"",
           "clue": "nft"
         }
       ]

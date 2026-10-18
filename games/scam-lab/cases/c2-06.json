@@ -7,13 +7,13 @@
   "disguise": "support",
   "disguise2": "friend",
   "intro": [
-    "This is Mirage's biggest con. A friend of Toddy's, Kiko, joined Redmere Trade Pro months ago.",
+    "This is Mirage's biggest con. A friend of Toddy's, Kiko, joined Brenvoy Trade Pro months ago.",
     "Kiko asked Toddy to handle the withdrawal. Mirage will change faces twice.",
     "Collect the clues. At the end, unmask him on the case board."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Redmere Trade Pro Support",
+    "from": "Brenvoy Trade Pro Support",
     "text": "Your balance: €12,480 💰 Ready to withdraw!"
   },
   "screen": {
@@ -22,12 +22,12 @@
       "name": [
         {
           "clue": "brand",
-          "text": "Redmere Trade Pro Support",
+          "text": "Brenvoy Trade Pro Support",
           "id": "duel-name"
         }
       ],
       "sub": [
-        "@redmere-trade_support_desk"
+        "@brenvoy-trade_support_desk"
       ],
       "avatar": {
         "glyph": "🚀",
@@ -61,7 +61,7 @@
     "start": "d1",
     "nodes": {
       "d1": {
-        "rename": "Agent Mia · Redmere Trade Pro",
+        "rename": "Agent Mia · Brenvoy Trade Pro",
         "say": [
           {
             "sys": [
@@ -120,14 +120,14 @@
         ]
       },
       "d3": {
-        "rename": "Recovery Agent · HartwellLegal Europe",
+        "rename": "Recovery Agent · Hollenor Legal Europe",
         "disguise": "friend",
         "say": [
           {
             "sys": [
               {
                 "clue": "swap",
-                "text": "Agent Mia left. \"Recovery Agent · HartwellLegal Europe\" messaged you."
+                "text": "Agent Mia left. \"Recovery Agent · Hollenor Legal Europe\" messaged you."
               }
             ]
           },
@@ -318,7 +318,7 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check the account",
-      "title": "Redmere Trade Pro Support",
+      "title": "Brenvoy Trade Pro Support",
       "rows": [
         {
           "k": "Balance shown",

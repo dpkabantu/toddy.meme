@@ -6,7 +6,7 @@
   "title": "Two Lunas",
   "disguise": "admin",
   "intro": [
-    "You asked a question in the Brightwater Club group. Now two accounts called Luna say they're the admin.",
+    "You asked a question in the Fenmira Club group. Now two accounts called Luna say they're the admin.",
     "One is real. One is Mirage in a cap. Compare them side by side.",
     "Sniff the details, then decide."
   ],
@@ -17,7 +17,7 @@
   },
   "screen": {
     "app": "compare",
-    "context": "Searching \"Luna\" in the Brightwater Club group shows two profiles.",
+    "context": "Searching \"Luna\" in the Fenmira Club group shows two profiles.",
     "panels": [
       {
         "label": "Profile A",
@@ -29,7 +29,7 @@
           {
             "k": "Name",
             "v": [
-              "Luna ✦ Brightwater"
+              "Luna ✦ Fenmira"
             ]
           },
           {
@@ -46,7 +46,7 @@
             "v": [
               {
                 "clue": "role_a",
-                "text": "🛡 Group admin (set by Wrenly)"
+                "text": "🛡 Group admin (set by Plenvo)"
               }
             ]
           },
@@ -148,7 +148,7 @@
     "role_b": {
       "label": "Not really an admin",
       "strength": "strong",
-      "lens": "Wrenly lists this account as a plain Member.",
+      "lens": "Plenvo lists this account as a plain Member.",
       "why": "The app's own role label can't be faked. A name can."
     },
     "name_b": {
@@ -182,9 +182,9 @@
       "why": "Spelled correctly, letter by letter."
     },
     "role_a": {
-      "label": "Admin set by Wrenly",
+      "label": "Admin set by Plenvo",
       "strength": "harmless",
-      "lens": "Wrenly itself shows this account as a group admin.",
+      "lens": "Plenvo itself shows this account as a group admin.",
       "why": "A role set by the app is real evidence it's the admin."
     },
     "joined_a": {
@@ -220,8 +220,8 @@
     "verify"
   ],
   "trap": {
-    "title": "Brightwater Club · Member check",
-    "url": "brightwater-verify.club/check",
+    "title": "Fenmira Club · Member check",
+    "url": "fenmira-verify.club/check",
     "ask": "Luna sent this link: connect your wallet to prove you're a real member.",
     "go": "Connect wallet",
     "back": "Close this page"
@@ -255,15 +255,15 @@
   },
   "golden_rule": "Check the handle letter by letter. Look-alikes swap rn for m, 0 for o, l for I.",
   "quick_check": {
-    "q": "Which of these is a look-alike of @northvale?",
+    "q": "Which of these is a look-alike of @zelvora?",
     "options": [
       {
         "id": "a",
-        "text": "@northvale"
+        "text": "@zelvora"
       },
       {
         "id": "b",
-        "text": "@n0rthvale"
+        "text": "@zelv0ra"
       },
       {
         "id": "c",
@@ -271,7 +271,7 @@
       }
     ],
     "answer": "b",
-    "explain": "The zero in \"n0rthvale\" pretends to be the letter \"o\". Read handles slowly, letter by letter."
+    "explain": "The zero in \"zelv0ra\" pretends to be the letter \"o\". Read handles slowly, letter by letter."
   },
   "hints": {
     "nudge": "Compare the two handles slowly. Every letter.",
@@ -345,7 +345,7 @@
       "id": "source",
       "icon": "📖",
       "label": "Check the roles",
-      "title": "What Wrenly itself shows",
+      "title": "What Plenvo itself shows",
       "rows": [
         {
           "k": "Profile A",

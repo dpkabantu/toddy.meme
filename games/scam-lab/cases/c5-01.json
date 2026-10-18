@@ -11,19 +11,19 @@
     "Read what the pop-up really allows."
   ],
   "notify": {
-    "app": "Larkspur",
+    "app": "Hedrio",
     "from": "Signature request",
-    "text": "lanternmint-free.xyz wants permission"
+    "text": "kelvaromint-free.xyz wants permission"
   },
   "screen": {
     "app": "wallet",
     "site": [
       {
         "clue": "site",
-        "text": "lanternmint-free.xyz"
+        "text": "kelvaromint-free.xyz"
       }
     ],
-    "title": "Allow access to your NVL?",
+    "title": "Allow access to your ZLV?",
     "context": "You clicked \"Mint for free\" on a site you found in a group chat.",
     "rows": [
       {
@@ -40,7 +40,7 @@
         "v": [
           {
             "clue": "amount",
-            "text": "UNLIMITED NVL"
+            "text": "UNLIMITED ZLV"
           }
         ]
       },
@@ -49,7 +49,7 @@
         "v": [
           {
             "clue": "fee",
-            "text": "0.0004 NVL"
+            "text": "0.0004 ZLV"
           }
         ]
       },
@@ -66,7 +66,7 @@
     "note": [
       {
         "clue": "warning",
-        "text": "Larkspur: This lets the site move your NVL at any time, without asking again."
+        "text": "Hedrio: This lets the site move your ZLV at any time, without asking again."
       }
     ],
     "buttons": [
@@ -78,7 +78,7 @@
     "amount": {
       "label": "Unlimited amount",
       "strength": "strong",
-      "lens": "UNLIMITED: they could take all your NVL, now or later.",
+      "lens": "UNLIMITED: they could take all your ZLV, now or later.",
       "why": "A free mint never needs permission to spend all your coins."
     },
     "spender": {
@@ -149,7 +149,7 @@
       "scene": "drained",
       "mirage": "smug",
       "stamp": "DRAINED",
-      "line": "Days later, every NVL quietly left the wallet. The approval let it happen.",
+      "line": "Days later, every ZLV quietly left the wallet. The approval let it happen.",
       "mirageSays": "Unlimited means unlimited!"
     }
   },

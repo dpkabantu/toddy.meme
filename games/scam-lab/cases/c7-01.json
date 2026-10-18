@@ -12,7 +12,7 @@
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Lantern Signals VIP 🚀",
+    "from": "Kelvaro Signals VIP 🚀",
     "text": "🚨 BIG PUMP TONIGHT 20:00 🚨"
   },
   "screen": {
@@ -21,7 +21,7 @@
       "name": [
         {
           "clue": "group",
-          "text": "Lantern Signals VIP 🚀"
+          "text": "Kelvaro Signals VIP 🚀"
         }
       ],
       "sub": [
@@ -67,7 +67,7 @@
         "msg": [
           {
             "clue": "vip",
-            "text": "VIP members got the coin name 5 minutes early (VIP = 0.5 NVL)."
+            "text": "VIP members got the coin name 5 minutes early (VIP = 0.5 ZLV)."
           }
         ]
       },
@@ -218,7 +218,7 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check the group",
-      "title": "Lantern Signals VIP",
+      "title": "Kelvaro Signals VIP",
       "rows": [
         {
           "k": "You joined?",

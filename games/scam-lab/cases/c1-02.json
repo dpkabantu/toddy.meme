@@ -14,24 +14,24 @@
     {
       "id": "r1",
       "app": "SMS",
-      "from": "Northvale",
-      "text": "Your account is LOCKED. Verify within 1 hour: northvale-secure.co/login",
+      "from": "Zelvora",
+      "text": "Your account is LOCKED. Verify within 1 hour: zelvora-secure.co/login",
       "scam": true,
       "why": "Look-alike link plus a deadline. Real apps tell you to open the app, not a strange link."
     },
     {
       "id": "r2",
       "app": "Chirp",
-      "from": "@northvale ☑",
+      "from": "@zelvora ☑",
       "text": "Planned maintenance tonight, 1–2 AM. Swaps pause for an hour. No action needed.",
       "scam": false,
-      "why": "The official handle with Wrenly's real badge, and it asks you for nothing."
+      "why": "The official handle with Plenvo's real badge, and it asks you for nothing."
     },
     {
       "id": "r3",
-      "app": "Wrenly DM",
+      "app": "Plenvo DM",
       "from": "Admin Luna 💜",
-      "text": "You won the community raffle! 🎉 Send 10 NVL to cover the fee and claim your prize.",
+      "text": "You won the community raffle! 🎉 Send 10 ZLV to cover the fee and claim your prize.",
       "scam": true,
       "why": "Real prizes never cost money to claim, and admins don't DM winners asking for coins."
     },
@@ -45,8 +45,8 @@
     },
     {
       "id": "r5",
-      "app": "Wrenly DM",
-      "from": "Larkspur Support",
+      "app": "Plenvo DM",
+      "from": "Hedrio Support",
       "text": "We detected suspicious activity. Reply with your recovery phrase so we can secure your funds.",
       "scam": true,
       "why": "No real support ever asks for your recovery phrase, whatever the reason."
@@ -54,8 +54,8 @@
     {
       "id": "r6",
       "app": "Email",
-      "from": "no-reply@larkspur.app",
-      "text": "New login from Lisbon. If this wasn't you, open the Larkspur app and go to Security.",
+      "from": "no-reply@hedrio.app",
+      "text": "New login from Lisbon. If this wasn't you, open the Hedrio app and go to Security.",
       "scam": false,
       "why": "From the real domain, no link to click, and it sends you to the app you already have."
     },
@@ -63,13 +63,13 @@
       "id": "r7",
       "app": "SMS",
       "from": "+44 7700 900123",
-      "text": "🎁 Free airdrop waiting for you! Claim at lantern-airdrop.claim-now.xyz. Only 5 min left!",
+      "text": "🎁 Free airdrop waiting for you! Claim at kelvaro-airdrop.claim-now.xyz. Only 5 min left!",
       "scam": true,
       "why": "Unknown sender, strange link, and a countdown. Free money that expires in minutes is bait."
     },
     {
       "id": "r8",
-      "app": "Wrenly DM",
+      "app": "Plenvo DM",
       "from": "HR Recruiter Elena",
       "text": "Earn €250 a day just liking posts! Pay €49 registration and start today.",
       "scam": true,
@@ -78,8 +78,8 @@
     {
       "id": "r9",
       "app": "SMS",
-      "from": "Northvale",
-      "text": "482913 is your Northvale login code. Never share this code with anyone, not even Northvale staff.",
+      "from": "Zelvora",
+      "text": "482913 is your Zelvora login code. Never share this code with anyone, not even Zelvora staff.",
       "scam": false,
       "why": "You just logged in, and the message itself warns you never to share the code. Use it, don't share it."
     },

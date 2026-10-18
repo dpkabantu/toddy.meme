@@ -22,8 +22,8 @@
     {
       "id": "s2",
       "app": "Email",
-      "from": "no-reply@tolbridge.io",
-      "text": "Your password was changed. If this was you, nothing to do. If not, open the Tolbridge app → Security.",
+      "from": "no-reply@ostrel.io",
+      "text": "Your password was changed. If this was you, nothing to do. If not, open the Ostrel app → Security.",
       "scam": false,
       "why": "You just changed it, and it points to the app, not a link."
     },
@@ -69,16 +69,16 @@
     },
     {
       "id": "s8",
-      "app": "Wrenly DM",
+      "app": "Plenvo DM",
       "from": "Account Security",
-      "text": "Your account will be deleted for copyright violation. Appeal here within 2 hours: wrenly-appeal.help",
+      "text": "Your account will be deleted for copyright violation. Appeal here within 2 hours: plenvo-appeal.help",
       "scam": true,
       "why": "Fake \"account violation\" links steal logins."
     },
     {
       "id": "s9",
       "app": "Email",
-      "from": "no-reply@northvale.app",
+      "from": "no-reply@zelvora.app",
       "text": "Scheduled maintenance tonight 1–2 AM. Your funds are safe. No action needed.",
       "scam": false,
       "why": "Real domain, calm, and asks nothing."

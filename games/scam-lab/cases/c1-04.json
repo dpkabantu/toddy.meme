@@ -6,21 +6,21 @@
   "title": "The Verify Bot",
   "disguise": "admin",
   "intro": [
-    "A bot just messaged you about the Brightwater Club group. This time you can talk back.",
+    "A bot just messaged you about the Fenmira Club group. This time you can talk back.",
     "Pick your replies. Sniff its messages as they arrive.",
     "Every chat ends with your choice. Choose wisely."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "🛡️ HelpDeskBot",
-    "text": "Welcome to Brightwater Club! To stay in the group, verify your wallet…"
+    "from": "🛡️ Kelmo Bot",
+    "text": "Welcome to Fenmira Club! To stay in the group, verify your wallet…"
   },
   "screen": {
     "app": "chirp",
     "head": {
       "name": [
         {
-          "text": "🛡️ HelpDeskBot",
+          "text": "🛡️ Kelmo Bot",
           "id": "duel-name"
         }
       ],
@@ -33,7 +33,7 @@
       }
     },
     "banner": [
-      "Message request · from a member of Brightwater Club"
+      "Message request · from a member of Fenmira Club"
     ],
     "items": []
   },
@@ -46,7 +46,7 @@
             "msg": [
               {
                 "clue": "welcome",
-                "text": "Welcome to Brightwater Club! 🎉"
+                "text": "Welcome to Fenmira Club! 🎉"
               }
             ]
           },
@@ -122,7 +122,7 @@
             "sys": [
               {
                 "clue": "rename",
-                "text": "HelpDeskBot changed its name to \"Luna (Admin)\""
+                "text": "Kelmo Bot changed its name to \"Luna (Admin)\""
               }
             ]
           },
@@ -195,7 +195,7 @@
     "link": {
       "label": "Strange verify link",
       "strength": "strong",
-      "lens": "helpdesk-verify.app has nothing to do with Wrenly or Brightwater Club.",
+      "lens": "helpdesk-verify.app has nothing to do with Plenvo or Fenmira Club.",
       "why": "Real groups don't make you verify on an outside website."
     },
     "phrase": {
@@ -272,7 +272,7 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "Reported. Wrenly shut the bot down before it reached anyone else in the group.",
+      "line": "Reported. Plenvo shut the bot down before it reached anyone else in the group.",
       "mirageSays": "My beautiful bot!"
     },
     "verify": {
@@ -340,7 +340,7 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check the account",
-      "title": "HelpDeskBot",
+      "title": "Kelmo Bot",
       "rows": [
         {
           "k": "Picture",
@@ -376,7 +376,7 @@
         },
         {
           "k": "Its site",
-          "v": "Nothing to do with Wrenly or Brightwater Club"
+          "v": "Nothing to do with Plenvo or Fenmira Club"
         }
       ]
     },

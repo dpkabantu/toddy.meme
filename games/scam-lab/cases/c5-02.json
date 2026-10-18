@@ -10,19 +10,19 @@
     "Look closely at your wallet's history before you send. Sniff anything odd, then decide."
   ],
   "intro": [
-    "Toddy wants to pay Kiko back 300 NVL. Kiko's address is in the wallet history.",
+    "Toddy wants to pay Kiko back 300 ZLV. Kiko's address is in the wallet history.",
     "But something new showed up in the history too.",
     "Copy-paste carefully. Sniff the history."
   ],
   "notify": {
-    "app": "Larkspur",
+    "app": "Hedrio",
     "from": "History",
-    "text": "New incoming: 0 NVL"
+    "text": "New incoming: 0 ZLV"
   },
   "screen": {
     "app": "wallet",
     "title": "Recent activity",
-    "context": "You're about to send 300 NVL to Kiko.",
+    "context": "You're about to send 300 ZLV to Kiko.",
     "list": [
       {
         "dir": "in",
@@ -35,7 +35,7 @@
         "amt": [
           {
             "clue": "zero",
-            "text": "0 NVL"
+            "text": "0 ZLV"
           }
         ]
       },
@@ -48,7 +48,7 @@
           }
         ],
         "amt": [
-          "150 NVL"
+          "150 ZLV"
         ]
       },
       {
@@ -56,11 +56,11 @@
         "what": [
           {
             "clue": "salary",
-            "text": "From Tolbridge (your exchange)"
+            "text": "From Ostrel (your exchange)"
           }
         ],
         "amt": [
-          "500 NVL"
+          "500 ZLV"
         ]
       }
     ],
@@ -79,7 +79,7 @@
       "why": "Scammers create look-alike addresses and \"poison\" your history."
     },
     "zero": {
-      "label": "0 NVL transfer",
+      "label": "0 ZLV transfer",
       "strength": "strong",
       "lens": "A worthless transfer you didn't expect.",
       "why": "Zero-value transfers are how look-alike addresses get into your history."
@@ -114,7 +114,7 @@
     },
     {
       "id": "block_report",
-      "label": "Hide the 0 NVL transfer and report the address"
+      "label": "Hide the 0 ZLV transfer and report the address"
     }
   ],
   "best_action": "verify",
@@ -133,14 +133,14 @@
       "scene": "drained",
       "mirage": "smug",
       "stamp": "DRAINED",
-      "line": "The newest entry was Mirage's look-alike address. 300 NVL gone.",
+      "line": "The newest entry was Mirage's look-alike address. 300 ZLV gone.",
       "mirageSays": "Close enough!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Saved contact, full address checked. Kiko got the 300 NVL.",
+      "line": "Saved contact, full address checked. Kiko got the 300 ZLV.",
       "mirageSays": "He checked the middle!"
     }
   },

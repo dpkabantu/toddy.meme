@@ -558,3 +558,25 @@ button.kit-row { cursor: pointer; border-color: rgba(176,96,0,.45); }
 .kit-new { animation: pop .35s ease both; }
 .kit-new:nth-child(2) { animation-delay: .12s; } .kit-new:nth-child(3) { animation-delay: .24s; } .kit-new:nth-child(4) { animation-delay: .36s; }
 .kit-btn.glow { animation: glow 1.2s ease-in-out infinite; }
+
+/* ---------- desktop only ----------
+   Wide screen + mouse/trackpad. Phones, tablets and small windows never match, so they are untouched.
+   The game keeps its phone-shaped stage; the desk behind it becomes the lab, and the stage gets a frame. */
+@media (min-width: 1000px) and (hover: hover) and (pointer: fine) {
+  body { align-items: center; position: relative; }
+  body::before {
+    content: ""; position: fixed; inset: -4vmax; z-index: 0; pointer-events: none;
+    background: url("../assets/title_bg.webp") center / cover no-repeat;
+    filter: blur(1.6vmax) brightness(.38) saturate(.9);
+  }
+  body::after {
+    content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background: radial-gradient(ellipse at center, rgba(18,12,9,0) 35%, rgba(18,12,9,.78) 100%);
+  }
+  #stage {
+    --h: min(calc(100dvh - 40px), calc((100vw - 40px) * 16 / 9));
+    z-index: 1; height: var(--h); width: calc(var(--h) * 9 / 16);
+    border-radius: 18px;
+    box-shadow: 0 0 0 2px rgba(253,175,30,.55), 0 0 0 7px rgba(18,12,9,.85), 0 0 0 8px rgba(253,175,30,.22), 0 18px 60px rgba(0,0,0,.65), 0 0 90px rgba(253,175,30,.14);
+  }
+}

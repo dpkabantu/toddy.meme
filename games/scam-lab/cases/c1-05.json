@@ -6,25 +6,25 @@
   "title": "The Real Notice",
   "disguise": null,
   "intro": [
-    "An email from Northvale. After tonight, you might be ready to call everything a scam.",
+    "An email from Zelvora. After tonight, you might be ready to call everything a scam.",
     "But some messages are real. Mirage loves it when you stop trusting the honest ones.",
     "Sniff carefully. Then decide."
   ],
   "notify": {
     "app": "Mail",
-    "from": "Northvale",
+    "from": "Zelvora",
     "text": "We're updating our app on Friday"
   },
   "screen": {
     "app": "mail",
     "head": {
       "from": [
-        "Northvale"
+        "Zelvora"
       ],
       "addr": [
         {
           "clue": "noreply",
-          "text": "no-reply@northvale.app"
+          "text": "no-reply@zelvora.app"
         }
       ],
       "subject": [
@@ -48,7 +48,7 @@
       },
       {
         "p": [
-          "On Friday we're releasing Northvale 4.2 with faster swaps. ",
+          "On Friday we're releasing Zelvora 4.2 with faster swaps. ",
           {
             "clue": "update",
             "text": "Update from your phone's official app store when it appears."
@@ -60,13 +60,13 @@
         "p": [
           {
             "clue": "reminder",
-            "text": "Reminder: Northvale staff will never message you first or ask for your recovery phrase."
+            "text": "Reminder: Zelvora staff will never message you first or ask for your recovery phrase."
           }
         ]
       },
       {
         "p": [
-          "The Northvale team"
+          "The Zelvora team"
         ]
       },
       {
@@ -83,7 +83,7 @@
     "noreply": {
       "label": "no-reply address",
       "strength": "harmless",
-      "lens": "Sent from no-reply@northvale.app, Northvale's real domain.",
+      "lens": "Sent from no-reply@zelvora.app, Zelvora's real domain.",
       "why": "Companies often send from no-reply addresses. The domain is the official one."
     },
     "subject": {
@@ -154,7 +154,7 @@
       "scene": "wolf",
       "mirage": "smug",
       "stamp": "FALSE ALARM",
-      "line": "That was the real Northvale. When every message looks like a scam, the real warnings get lost too.",
+      "line": "That was the real Zelvora. When every message looks like a scam, the real warnings get lost too.",
       "mirageSays": "If you trust nothing, I win anyway."
     }
   },
@@ -203,12 +203,12 @@
       "rows": [
         {
           "k": "Sent from",
-          "v": "no-reply@northvale.app",
+          "v": "no-reply@zelvora.app",
           "clue": "noreply"
         },
         {
           "k": "Official domain",
-          "v": "northvale.app"
+          "v": "zelvora.app"
         },
         {
           "k": "Match?",
@@ -238,7 +238,7 @@
       "id": "source",
       "icon": "📖",
       "label": "Official page",
-      "title": "Northvale's real news page says",
+      "title": "Zelvora's real news page says",
       "rows": [
         {
           "k": "Friday app update",

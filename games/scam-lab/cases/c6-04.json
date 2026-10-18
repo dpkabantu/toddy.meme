@@ -23,23 +23,23 @@
       "id": "q2",
       "app": "Browser",
       "from": "Extension store",
-      "text": "\"ScreenMate Wallet Pro\": 3K users, published last week, asks to read all websites.",
+      "text": "\"Pondra Wallet Pro\": 3K users, published last week, asks to read all websites.",
       "scam": true,
       "why": "Fake wallet extensions copy real names and steal phrases."
     },
     {
       "id": "q3",
       "app": "App store",
-      "from": "Larkspur Ltd",
-      "text": "Larkspur update 7.2: bug fixes. Installed from your usual app store.",
+      "from": "Hedrio Ltd",
+      "text": "Hedrio update 7.2: bug fixes. Installed from your usual app store.",
       "scam": false,
       "why": "An update to the real app, from the store you already use."
     },
     {
       "id": "q4",
-      "app": "Wrenly DM",
+      "app": "Plenvo DM",
       "from": "Support",
-      "text": "Download ViewShare so our agent can fix your wallet remotely.",
+      "text": "Download Lumveo so our agent can fix your wallet remotely.",
       "scam": true,
       "why": "Remote-access apps let scammers control your device."
     },
@@ -55,7 +55,7 @@
       "id": "q6",
       "app": "Flyer",
       "from": "Street poster",
-      "text": "Scan to claim 50 NVL free! Connect your wallet.",
+      "text": "Scan to claim 50 ZLV free! Connect your wallet.",
       "scam": true,
       "why": "A QR that asks you to connect your wallet for free coins is a drainer."
     },
@@ -63,7 +63,7 @@
       "id": "q7",
       "app": "Settings",
       "from": "You",
-      "text": "Setting up an authenticator app for Tolbridge, from Tolbridge's own security page.",
+      "text": "Setting up an authenticator app for Ostrel, from Ostrel's own security page.",
       "scam": false,
       "why": "Moving codes to an app protects you from SIM swaps."
     },
@@ -71,7 +71,7 @@
       "id": "q8",
       "app": "Email",
       "from": "Wallet Sync",
-      "text": "Install \"LinkSync\" to keep all your wallets in one place. Enter phrases to begin.",
+      "text": "Install \"Walvio\" to keep all your wallets in one place. Enter phrases to begin.",
       "scam": true,
       "why": "Any app that collects your phrases is stealing them."
     },
@@ -85,7 +85,7 @@
     },
     {
       "id": "q10",
-      "app": "Wrenly DM",
+      "app": "Plenvo DM",
       "from": "Crack Store",
       "text": "Free \"Pro\" version of a paid trading app! Download the APK here.",
       "scam": true,

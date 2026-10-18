@@ -13,7 +13,7 @@
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Harvest Circle Official",
+    "from": "Pelmora Circle Official",
     "text": "📢 Withdrawals paused for an upgrade"
   },
   "screen": {
@@ -22,7 +22,7 @@
       "name": [
         {
           "clue": "official",
-          "text": "Harvest Circle Official",
+          "text": "Pelmora Circle Official",
           "id": "duel-name"
         }
       ],
@@ -34,7 +34,7 @@
         "clue": "avatar"
       }
     },
-    "context": "You joined Harvest Circle two months ago. Your balance shows 340 NVL.",
+    "context": "You joined Pelmora Circle two months ago. Your balance shows 340 ZLV.",
     "items": [
       {
         "msg": [
@@ -48,7 +48,7 @@
         "msg": [
           {
             "clue": "migrate",
-            "text": "Migrate to our new token NVX by depositing 50% more"
+            "text": "Migrate to our new token ZLX by depositing 50% more"
           },
           " ",
           {
@@ -63,11 +63,11 @@
     "start": "d1",
     "nodes": {
       "d1": {
-        "rename": "Harvest Circle Support",
+        "rename": "Pelmora Circle Support",
         "say": [
           {
             "sys": [
-              "Harvest Circle Support messaged you"
+              "Pelmora Circle Support messaged you"
             ]
           },
           {
@@ -128,7 +128,7 @@
             "sys": [
               {
                 "clue": "swap",
-                "text": "Harvest Circle shut down. \"Asset Recovery Lawyers\" messaged you the next day."
+                "text": "Pelmora Circle shut down. \"Asset Recovery Lawyers\" messaged you the next day."
               }
             ]
           },
@@ -136,7 +136,7 @@
             "msg": [
               {
                 "clue": "lawyer",
-                "text": "We're suing Harvest Circle. Pay €200 to join the case and get your money back."
+                "text": "We're suing Pelmora Circle. Pay €200 to join the case and get your money back."
               }
             ]
           }
@@ -226,7 +226,7 @@
     },
     {
       "id": "block_report",
-      "label": "Stop paying and report Harvest Circle"
+      "label": "Stop paying and report Pelmora Circle"
     },
     {
       "id": "go_ahead",
@@ -323,7 +323,7 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check the channel",
-      "title": "Harvest Circle Official",
+      "title": "Pelmora Circle Official",
       "rows": [
         {
           "k": "It is",

@@ -109,14 +109,14 @@
         ]
       },
       "d3": {
-        "rename": "Wrenly Security Team ✔",
+        "rename": "Plenvo Security Team ✔",
         "disguise": "admin",
         "say": [
           {
             "sys": [
               {
                 "clue": "swap",
-                "text": "Your account was logged in from a new device. Then \"Wrenly Security Team ✔\" messaged you."
+                "text": "Your account was logged in from a new device. Then \"Plenvo Security Team ✔\" messaged you."
               }
             ]
           },
@@ -135,11 +135,11 @@
             "end": "go_ahead"
           },
           {
-            "text": "Wrenly never asks for a wallet phrase. Report.",
+            "text": "Plenvo never asks for a wallet phrase. Report.",
             "end": "block_report"
           },
           {
-            "text": "Use Wrenly's official account recovery myself",
+            "text": "Use Plenvo's official account recovery myself",
             "end": "verify"
           }
         ]
@@ -255,7 +255,7 @@
       },
       {
         "id": "real",
-        "text": "A real glitch and real Wrenly security"
+        "text": "A real glitch and real Plenvo security"
       },
       {
         "id": "unsure",

@@ -13,7 +13,7 @@
   "notify": {
     "app": "Browser",
     "from": "Two staking pages",
-    "text": "Earn with your NVL"
+    "text": "Earn with your ZLV"
   },
   "decide_q": "Which offer is a scam, and what will you do?",
   "screen": {
@@ -21,7 +21,7 @@
     "context": "Two staking offers, side by side.",
     "panels": [
       {
-        "label": "Tolbridge Staking",
+        "label": "Ostrel Staking",
         "avatar": {
           "glyph": "★",
           "clue": "logo_a"
@@ -66,7 +66,7 @@
         ]
       },
       {
-        "label": "Oakfield Yield Max",
+        "label": "Nistora Yield Max",
         "avatar": {
           "glyph": "💰",
           "clue": "logo_b"
@@ -192,16 +192,16 @@
   "actions": [
     {
       "id": "pick_b",
-      "label": "Join Oakfield Yield Max for 3% a day",
+      "label": "Join Nistora Yield Max for 3% a day",
       "trap": true
     },
     {
       "id": "verify",
-      "label": "Stick with what you understand, read Tolbridge's risks first"
+      "label": "Stick with what you understand, read Ostrel's risks first"
     },
     {
       "id": "block_report",
-      "label": "Avoid Oakfield Yield Max and report it"
+      "label": "Avoid Nistora Yield Max and report it"
     }
   ],
   "best_action": "block_report",
@@ -209,10 +209,10 @@
     "verify"
   ],
   "trap": {
-    "title": "Oakfield Yield Max",
-    "url": "oakfieldyield-max.fi",
-    "ask": "Send NVL to start earning 3% every day!",
-    "go": "Send NVL",
+    "title": "Nistora Yield Max",
+    "url": "nistorayield-max.fi",
+    "ask": "Send ZLV to start earning 3% every day!",
+    "go": "Send ZLV",
     "back": "Close this page"
   },
   "outcomes": {
@@ -220,14 +220,14 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "Reported. Oakfield Yield Max later appeared on an official warning list.",
+      "line": "Reported. Nistora Yield Max later appeared on an official warning list.",
       "mirageSays": "My money machine!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Toddy read the risks and decided slowly. Oakfield Yield Max vanished at day 80.",
+      "line": "Toddy read the risks and decided slowly. Nistora Yield Max vanished at day 80.",
       "mirageSays": "Slow and careful… boring!"
     },
     "pick_b": {

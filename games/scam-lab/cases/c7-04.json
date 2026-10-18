@@ -6,13 +6,13 @@
   "title": "The Deepfake",
   "disguise": "influencer",
   "intro": [
-    "A video is spreading: Northvale's CEO announces a \"thank-you giveaway\".",
+    "A video is spreading: Zelvora's CEO announces a \"thank-you giveaway\".",
     "It looks real. It sounds real. Is it?",
     "Sniff the post around the video."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Northvale Live 🎥",
+    "from": "Zelvora Live 🎥",
     "text": "▶ CEO announces 2x giveaway!"
   },
   "screen": {
@@ -21,13 +21,13 @@
       "name": [
         {
           "clue": "chan",
-          "text": "Northvale Live 🎥"
+          "text": "Zelvora Live 🎥"
         }
       ],
       "sub": [
         {
           "clue": "age",
-          "text": "@northvale_live_event · joined 3 days ago"
+          "text": "@zelvora_live_event · joined 3 days ago"
         }
       ],
       "avatar": {
@@ -46,7 +46,7 @@
       },
       {
         "msg": [
-          "\"Send NVL to the address below and ",
+          "\"Send ZLV to the address below and ",
           {
             "clue": "double",
             "text": "we'll send back double"
@@ -111,7 +111,7 @@
     "chan": {
       "label": "Brand in the name",
       "strength": "harmless",
-      "lens": "Northvale in the name.",
+      "lens": "Zelvora in the name.",
       "why": "Names prove nothing."
     },
     "views": {
@@ -130,11 +130,11 @@
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Send NVL to double it"
+      "label": "Send ZLV to double it"
     },
     {
       "id": "verify",
-      "label": "Check Northvale's official account"
+      "label": "Check Zelvora's official account"
     },
     {
       "id": "block_report",
@@ -157,7 +157,7 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Official Northvale: \"That video is fake. We never do giveaways.\"",
+      "line": "Official Zelvora: \"That video is fake. We never do giveaways.\"",
       "mirageSays": "They checked the real channel!"
     },
     "go_ahead": {
@@ -208,11 +208,11 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check the channel",
-      "title": "Northvale Live",
+      "title": "Zelvora Live",
       "rows": [
         {
           "k": "Name",
-          "v": "Has Northvale in it",
+          "v": "Has Zelvora in it",
           "clue": "chan"
         },
         {

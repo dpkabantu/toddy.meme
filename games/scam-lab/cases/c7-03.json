@@ -12,7 +12,7 @@
   ],
   "notify": {
     "app": "Chirp",
-    "from": "NoraInvests Ava ✔",
+    "from": "Kirsta Invests Ava ✔",
     "text": "Hey! Loved your comment 💜"
   },
   "screen": {
@@ -20,14 +20,14 @@
     "head": {
       "name": [
         {
-          "text": "NoraInvests Ava ✔",
+          "text": "Kirsta Invests Ava ✔",
           "id": "duel-name"
         }
       ],
       "sub": [
         {
           "clue": "handle",
-          "text": "@norainvests_ava_vip"
+          "text": "@kirstainvests_ava_vip"
         }
       ],
       "avatar": {
@@ -72,7 +72,7 @@
             "next": "n2"
           },
           {
-            "text": "Your real account is @norainvests_ava. Who are you?",
+            "text": "Your real account is @kirstainvests_ava. Who are you?",
             "next": "n3"
           },
           {
@@ -87,7 +87,7 @@
             "msg": [
               {
                 "clue": "pay",
-                "text": "Send 300 NVL to my team wallet"
+                "text": "Send 300 ZLV to my team wallet"
               },
               " ",
               {
@@ -99,7 +99,7 @@
         ],
         "replies": [
           {
-            "text": "Sending 300 NVL",
+            "text": "Sending 300 ZLV",
             "end": "go_ahead"
           },
           {
@@ -144,7 +144,7 @@
     "handle": {
       "label": "Extra \"_vip\"",
       "strength": "strong",
-      "lens": "@norainvests_ava_vip: not her real handle.",
+      "lens": "@kirstainvests_ava_vip: not her real handle.",
       "why": "Impostor accounts add small extras."
     },
     "request": {
@@ -273,11 +273,11 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check the account",
-      "title": "NoraInvests Ava",
+      "title": "Kirsta Invests Ava",
       "rows": [
         {
           "k": "Handle",
-          "v": "@norainvests_ava_vip, not her real one",
+          "v": "@kirstainvests_ava_vip, not her real one",
           "clue": "handle"
         },
         {

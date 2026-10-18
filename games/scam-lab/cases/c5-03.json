@@ -6,19 +6,19 @@
   "title": "Two Swap Sites",
   "disguise": "support",
   "intro": [
-    "Toddy searched \"Northvale\" and clicked the first result: an ad.",
+    "Toddy searched \"Zelvora\" and clicked the first result: an ad.",
     "Two sites look almost identical.",
     "Compare them before connecting anything."
   ],
   "notify": {
     "app": "Browser",
     "from": "Search results",
-    "text": "Northvale — the #1 swap (Ad)"
+    "text": "Zelvora — the #1 swap (Ad)"
   },
   "decide_q": "Which site is real, and what will you do?",
   "screen": {
     "app": "compare",
-    "context": "Two Northvale sites, side by side.",
+    "context": "Two Zelvora sites, side by side.",
     "panels": [
       {
         "label": "From your bookmark",
@@ -32,7 +32,7 @@
             "v": [
               {
                 "clue": "addr_a",
-                "text": "northvale.app"
+                "text": "zelvora.app"
               }
             ]
           },
@@ -68,7 +68,7 @@
             "v": [
               {
                 "clue": "addr_b",
-                "text": "northvale.app-secure.io"
+                "text": "zelvora.app-secure.io"
               }
             ]
           },
@@ -107,7 +107,7 @@
     "addr_b": {
       "label": "Look-alike address",
       "strength": "strong",
-      "lens": "northvale.app-secure.io: the real name is just the start of a different site.",
+      "lens": "zelvora.app-secure.io: the real name is just the start of a different site.",
       "why": "Read web addresses from the right: the real site is \"app-secure.io\"."
     },
     "ad": {
@@ -131,7 +131,7 @@
     "addr_a": {
       "label": "Real address",
       "strength": "harmless",
-      "lens": "northvale.app.",
+      "lens": "zelvora.app.",
       "why": "The real address, letter by letter."
     },
     "asks_a": {
@@ -149,7 +149,7 @@
     "logo_a": {
       "label": "Logo",
       "strength": "harmless",
-      "lens": "Northvale logo.",
+      "lens": "Zelvora logo.",
       "why": "Proves nothing."
     },
     "logo_b": {
@@ -179,8 +179,8 @@
     "verify"
   ],
   "trap": {
-    "title": "Northvale · Validate wallet",
-    "url": "northvale.app-secure.io",
+    "title": "Zelvora · Validate wallet",
+    "url": "zelvora.app-secure.io",
     "ask": "Sign this message to validate your wallet before swapping.",
     "go": "Sign",
     "back": "Close this page"
@@ -213,11 +213,11 @@
   },
   "golden_rule": "Reach crypto sites from your own bookmarks, never from ads or links.",
   "quick_check": {
-    "q": "What is the real website in \"northvale.app-secure.io\"?",
+    "q": "What is the real website in \"zelvora.app-secure.io\"?",
     "options": [
       {
         "id": "a",
-        "text": "northvale.app"
+        "text": "zelvora.app"
       },
       {
         "id": "b",
@@ -251,12 +251,12 @@
       "rows": [
         {
           "k": "Site A",
-          "v": "northvale.app",
+          "v": "zelvora.app",
           "clue": "addr_a"
         },
         {
           "k": "Site B",
-          "v": "northvale.app-secure.io",
+          "v": "zelvora.app-secure.io",
           "clue": "addr_b"
         },
         {

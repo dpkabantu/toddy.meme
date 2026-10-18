@@ -14,15 +14,15 @@
     {
       "id": "p1",
       "app": "Email",
-      "from": "Northvale Rewards",
-      "text": "You won 2,000 NVL! Connect your wallet at northvale-rewards.co to claim.",
+      "from": "Zelvora Rewards",
+      "text": "You won 2,000 ZLV! Connect your wallet at zelvora-rewards.co to claim.",
       "scam": true,
       "why": "A look-alike link plus \"connect to claim\"."
     },
     {
       "id": "p2",
       "app": "App",
-      "from": "Tolbridge (in-app)",
+      "from": "Ostrel (in-app)",
       "text": "You earned 40 points this month. See them in the Rewards tab.",
       "scam": false,
       "why": "Inside the real app, asking nothing."
@@ -45,7 +45,7 @@
     },
     {
       "id": "p5",
-      "app": "Wrenly DM",
+      "app": "Plenvo DM",
       "from": "NFT Gifts 🎁",
       "text": "A free NFT was sent to your wallet! Visit nft-gift.claim to view it.",
       "scam": true,
@@ -61,9 +61,9 @@
     },
     {
       "id": "p7",
-      "app": "Wrenly DM",
+      "app": "Plenvo DM",
       "from": "Giveaway Bot",
-      "text": "You're winner #3! Send 0.01 NVL to verify your wallet and receive 500 NVL.",
+      "text": "You're winner #3! Send 0.01 ZLV to verify your wallet and receive 500 ZLV.",
       "scam": true,
       "why": "Sending first to \"verify\" is the scam."
     },
@@ -85,7 +85,7 @@
     },
     {
       "id": "p10",
-      "app": "Wrenly DM",
+      "app": "Plenvo DM",
       "from": "Airdrop Hunter",
       "text": "Airdrop ends in 10 min! Enter your recovery phrase to check eligibility.",
       "scam": true,
