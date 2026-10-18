@@ -1,0 +1,117 @@
+{
+  "id": "c6-04",
+  "type": "rush",
+  "chapter": 6,
+  "difficulty": 2,
+  "title": "Apps, Links and QR Codes",
+  "seconds": 60,
+  "intro": [
+    "Ten apps, links and QR codes. One minute.",
+    "Swipe left if it's dangerous, right if it's safe.",
+    "Not every QR code is a trap."
+  ],
+  "cards": [
+    {
+      "id": "q1",
+      "app": "Sticker",
+      "from": "Parking meter",
+      "text": "New! Pay parking by QR (sticker on top of the old one).",
+      "scam": true,
+      "why": "Fake QR stickers on top of real ones lead to fake payment sites."
+    },
+    {
+      "id": "q2",
+      "app": "Browser",
+      "from": "Extension store",
+      "text": "\"ScreenMate Wallet Pro\": 3K users, published last week, asks to read all websites.",
+      "scam": true,
+      "why": "Fake wallet extensions copy real names and steal phrases."
+    },
+    {
+      "id": "q3",
+      "app": "App store",
+      "from": "Larkspur Ltd",
+      "text": "Larkspur update 7.2: bug fixes. Installed from your usual app store.",
+      "scam": false,
+      "why": "An update to the real app, from the store you already use."
+    },
+    {
+      "id": "q4",
+      "app": "Wrenly DM",
+      "from": "Support",
+      "text": "Download ViewShare so our agent can fix your wallet remotely.",
+      "scam": true,
+      "why": "Remote-access apps let scammers control your device."
+    },
+    {
+      "id": "q5",
+      "app": "Café table",
+      "from": "Kopi Corner",
+      "text": "Scan for the menu (printed on the table card). Opens kopicorner.eu/menu.",
+      "scam": false,
+      "why": "A menu QR that opens the café's own site and asks for nothing."
+    },
+    {
+      "id": "q6",
+      "app": "Flyer",
+      "from": "Street poster",
+      "text": "Scan to claim 50 NVL free! Connect your wallet.",
+      "scam": true,
+      "why": "A QR that asks you to connect your wallet for free coins is a drainer."
+    },
+    {
+      "id": "q7",
+      "app": "Settings",
+      "from": "You",
+      "text": "Setting up an authenticator app for Tolbridge, from Tolbridge's own security page.",
+      "scam": false,
+      "why": "Moving codes to an app protects you from SIM swaps."
+    },
+    {
+      "id": "q8",
+      "app": "Email",
+      "from": "Wallet Sync",
+      "text": "Install \"LinkSync\" to keep all your wallets in one place. Enter phrases to begin.",
+      "scam": true,
+      "why": "Any app that collects your phrases is stealing them."
+    },
+    {
+      "id": "q9",
+      "app": "SMS",
+      "from": "Marco (friend)",
+      "text": "This is the authenticator app I use, here's its page in the official store.",
+      "scam": false,
+      "why": "A friend sharing an official store page and asking nothing."
+    },
+    {
+      "id": "q10",
+      "app": "Wrenly DM",
+      "from": "Crack Store",
+      "text": "Free \"Pro\" version of a paid trading app! Download the APK here.",
+      "scam": true,
+      "why": "Cracked apps from random links often carry malware that steals wallets."
+    }
+  ],
+  "golden_rule": "Install apps only from official stores via official links, and check where a QR code takes you before you act.",
+  "quick_check": {
+    "q": "A sticker QR code on a parking meter covers another one. What should you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Scan the sticker"
+      },
+      {
+        "id": "b",
+        "text": "Use the official parking app or the meter itself"
+      }
+    ],
+    "answer": "b",
+    "explain": "Stuck-on QR codes are a common trick."
+  },
+  "sources": [
+    "cafc-wallet",
+    "ftc-phishing",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-10-13"
+}

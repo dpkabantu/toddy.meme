@@ -1,0 +1,337 @@
+{
+  "id": "c4-02",
+  "type": "duel",
+  "chapter": 4,
+  "difficulty": 2,
+  "title": "The Bank Call",
+  "disguise": "support",
+  "intro": [
+    "Toddy's phone rings. \"Bank fraud department\" shows on screen.",
+    "This is a call, shown as live subtitles. You choose what Toddy says.",
+    "Stay calm. You can hang up any time."
+  ],
+  "notify": {
+    "app": "Phone",
+    "from": "Bank Fraud Dept",
+    "text": "📞 Incoming call…"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "text": "📞 \"Bank Fraud Dept\"",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "callerid",
+          "text": "+44 7700 900800 · caller ID"
+        }
+      ],
+      "avatar": {
+        "glyph": "🏦",
+        "clue": "avatar"
+      }
+    },
+    "context": "Live call subtitles",
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "hello",
+            "text": "Good evening, this is the fraud team at your bank."
+          }
+        ]
+      }
+    ]
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "attack",
+                "text": "Your account is under attack right now!"
+              },
+              " We must protect your savings."
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "safe",
+                "text": "Move your money to a safe account"
+              },
+              " ",
+              {
+                "clue": "stay",
+                "text": "and stay on the line."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "What safe account?",
+            "next": "n2"
+          },
+          {
+            "text": "I'll hang up and call the number on my bank card.",
+            "end": "verify"
+          },
+          {
+            "text": "Hang up and report the number",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              "Go to a crypto ATM, ",
+              {
+                "clue": "atm",
+                "text": "convert your cash to crypto"
+              },
+              " and scan our QR code."
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "tell",
+                "text": "If anyone asks, say it's for a holiday."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, going to the ATM now",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Banks never ask that. I'm hanging up.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll call my bank myself",
+            "end": "verify"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "attack": {
+      "label": "Panic opener",
+      "strength": "strong",
+      "lens": "\"Under attack right now!\"",
+      "why": "Panic stops careful thinking."
+    },
+    "safe": {
+      "label": "\"Safe account\"",
+      "strength": "strong",
+      "lens": "Move your money somewhere \"safe\".",
+      "why": "Banks never ask you to move money to a \"safe account\"."
+    },
+    "stay": {
+      "label": "Stay on the line",
+      "strength": "strong",
+      "lens": "They don't want you to hang up and check.",
+      "why": "Keeping you on the phone stops you calling the real bank."
+    },
+    "atm": {
+      "label": "Cash into a crypto ATM",
+      "strength": "strong",
+      "lens": "Convert cash to crypto for them.",
+      "why": "No bank or government asks you to use a crypto ATM."
+    },
+    "tell": {
+      "label": "Lie if asked",
+      "strength": "strong",
+      "lens": "They script a lie for you.",
+      "why": "Being told to lie to staff means someone is stealing from you."
+    },
+    "callerid": {
+      "label": "Caller ID",
+      "strength": "harmless",
+      "lens": "A number on screen.",
+      "why": "Caller ID can be faked, so it proves nothing either way."
+    },
+    "hello": {
+      "label": "Polite greeting",
+      "strength": "harmless",
+      "lens": "A professional hello.",
+      "why": "Politeness proves nothing."
+    },
+    "avatar": {
+      "label": "Bank icon",
+      "strength": "harmless",
+      "lens": "A bank emoji.",
+      "why": "Proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Do what they say"
+    },
+    {
+      "id": "verify",
+      "label": "Hang up and call the bank yourself"
+    },
+    {
+      "id": "block_report",
+      "label": "Hang up and report the number"
+    }
+  ],
+  "best_action": "verify",
+  "acceptable_actions": [
+    "block_report"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "You hung up and reported it. The fake \"bank\" lost its target.",
+      "mirageSays": "Hung up on me!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "The \"safe account\" was Mirage's wallet. The cash was gone.",
+      "mirageSays": "Safe with me!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The real bank, on the number on Toddy's card: \"That wasn't us. Your account is fine.\"",
+      "mirageSays": "He called the REAL bank!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Hanging up and calling the number on your card is always safe.",
+    "block_report": "Reporting was good. Calling your real bank also confirms your money is safe."
+  },
+  "golden_rule": "Hang up and call your bank on the number on your card. No bank asks you to move money or use a crypto ATM.",
+  "quick_check": {
+    "q": "A caller from \"your bank\" says move your money to a safe account. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Do it quickly"
+      },
+      {
+        "id": "b",
+        "text": "Hang up and call the number on your card"
+      },
+      {
+        "id": "c",
+        "text": "Ask them to call back later"
+      }
+    ],
+    "answer": "b",
+    "explain": "Calling the real number yourself is the best way to check."
+  },
+  "hints": {
+    "nudge": "Would a real bank ask this?",
+    "glow_order": [
+      "safe",
+      "atm",
+      "stay",
+      "tell",
+      "attack"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-data-2024",
+    "ic3-2024",
+    "ftc-phishing"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the caller",
+      "title": "Bank Fraud Dept",
+      "rows": [
+        {
+          "k": "Caller ID",
+          "v": "A number on screen",
+          "clue": "callerid"
+        },
+        {
+          "k": "Greeting",
+          "v": "A professional hello",
+          "clue": "hello"
+        },
+        {
+          "k": "Picture",
+          "v": "A bank emoji",
+          "clue": "avatar"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check what they say",
+      "title": "The \"emergency\"",
+      "rows": [
+        {
+          "k": "They say",
+          "v": "You are under attack right now",
+          "clue": "attack"
+        },
+        {
+          "k": "Move your money",
+          "v": "Somewhere \"safe\"",
+          "clue": "safe"
+        },
+        {
+          "k": "Hang up and check?",
+          "v": "They do not want you to",
+          "clue": "stay"
+        },
+        {
+          "k": "Real banks",
+          "v": "Never ask you to move money to a safe account"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the plan",
+      "title": "What they want",
+      "rows": [
+        {
+          "k": "Cash",
+          "v": "Converted to crypto for them",
+          "clue": "atm"
+        },
+        {
+          "k": "A lie",
+          "v": "They script one for you",
+          "clue": "tell"
+        },
+        {
+          "k": "If unsure",
+          "v": "Hang up and call the number on your card"
+        }
+      ]
+    }
+  ]
+}

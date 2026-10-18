@@ -1,0 +1,401 @@
+{
+  "id": "c7-06",
+  "type": "boss",
+  "chapter": 7,
+  "difficulty": 3,
+  "title": "The Rug Pull",
+  "disguise": "influencer",
+  "disguise2": "admin",
+  "intro": [
+    "Mirage's biggest show: a whole token with a hype team, a \"dev\" and a crash.",
+    "Follow it from the hype to the end.",
+    "Then unmask him on the case board."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "$MIRAGECOIN Army 🚀",
+    "text": "Up 900% today. Last chance before the big listing!"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "army",
+          "text": "$MIRAGECOIN Army 🚀",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "bots",
+          "text": "12,000 members · 400 joined in the last hour"
+        }
+      ],
+      "avatar": {
+        "glyph": "🚀",
+        "clue": "avatar"
+      }
+    },
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "up",
+            "text": "📈 Up 900% today!"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "listing",
+            "text": "Big exchange listing \"coming soon\""
+          },
+          " ",
+          {
+            "clue": "last",
+            "text": "Last chance to get in!"
+          }
+        ]
+      }
+    ]
+  },
+  "duel": {
+    "start": "d1",
+    "nodes": {
+      "d1": {
+        "rename": "Dev Kai · $MIRAGECOIN",
+        "say": [
+          {
+            "sys": [
+              "\"Dev Kai\" messaged you"
+            ]
+          },
+          {
+            "msg": [
+              "Welcome! ",
+              {
+                "clue": "locked",
+                "text": "Liquidity is \"locked\" (trust me, the lock is coming next week)."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Can I sell any time?",
+            "next": "d2"
+          },
+          {
+            "text": "Buying 500 NVL worth",
+            "next": "d3"
+          },
+          {
+            "text": "Leave and report the group",
+            "end": "block_report"
+          }
+        ]
+      },
+      "d2": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "sellfee",
+                "text": "Selling has a small \"anti-dump\" fee, only 45%."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "45% to sell is a trap. Report.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll check it on a token scanner first",
+            "end": "verify"
+          },
+          {
+            "text": "Buying anyway",
+            "next": "d3"
+          }
+        ]
+      },
+      "d3": {
+        "rename": "Recovery Admin · $MIRAGECOIN",
+        "disguise": "admin",
+        "say": [
+          {
+            "sys": [
+              {
+                "clue": "rug",
+                "text": "The price fell 98% in one minute. The dev's wallet sold everything."
+              }
+            ]
+          },
+          {
+            "msg": [
+              "Admin here. ",
+              {
+                "clue": "unlock",
+                "text": "Pay a 100 NVL \"unlock fee\" and we'll refund holders."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Pay the unlock fee",
+            "end": "go_ahead"
+          },
+          {
+            "text": "That's the second half of the scam. Report.",
+            "end": "block_report"
+          },
+          {
+            "text": "Report to the police myself",
+            "end": "verify"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "up": {
+      "label": "Up 900% today",
+      "strength": "strong",
+      "lens": "A huge, sudden rise.",
+      "why": "Hype spikes draw people in just before a dump."
+    },
+    "last": {
+      "label": "\"Last chance\"",
+      "strength": "strong",
+      "lens": "Pressure to buy now.",
+      "why": "FOMO is the fuel."
+    },
+    "listing": {
+      "label": "Vague big listing",
+      "strength": "strong",
+      "lens": "A big listing \"coming soon\".",
+      "why": "Unconfirmed listing rumours are classic hype."
+    },
+    "bots": {
+      "label": "Hundreds joining an hour",
+      "strength": "strong",
+      "lens": "Sudden member flood.",
+      "why": "Bot-filled groups fake popularity."
+    },
+    "locked": {
+      "label": "\"Lock coming next week\"",
+      "strength": "strong",
+      "lens": "Liquidity isn't actually locked.",
+      "why": "Unlocked liquidity can be pulled any time."
+    },
+    "sellfee": {
+      "label": "45% sell fee",
+      "strength": "strong",
+      "lens": "Massive fee to sell.",
+      "why": "Built so you can't get out."
+    },
+    "rug": {
+      "label": "Dev sold everything",
+      "strength": "strong",
+      "lens": "The creator dumped the coins.",
+      "why": "That's a rug pull."
+    },
+    "unlock": {
+      "label": "Fee for a refund",
+      "strength": "strong",
+      "lens": "Pay to get money back.",
+      "why": "Refund fees are the scam's second act."
+    },
+    "army": {
+      "label": "Group name",
+      "strength": "harmless",
+      "lens": "\"Army\" in the name.",
+      "why": "Names prove nothing."
+    },
+    "avatar": {
+      "label": "Rocket",
+      "strength": "harmless",
+      "lens": "A rocket.",
+      "why": "Proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "open_chat",
+      "label": "Talk to the dev",
+      "goto": "duel"
+    },
+    {
+      "id": "verify",
+      "label": "Check the token on a scanner first"
+    },
+    {
+      "id": "block_report",
+      "label": "Leave and report the group"
+    },
+    {
+      "id": "go_ahead",
+      "label": "Pay",
+      "hidden": true
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "caught",
+      "stamp": "CASE CLOSED",
+      "line": "Reported. Toddy never bought, so there was nothing to lose.",
+      "mirageSays": "My whole army, gone!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The scanner showed: unlocked liquidity, huge sell fee. Toddy stayed out.",
+      "mirageSays": "Scanners spoil everything!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "RUGGED",
+      "line": "First the rug, then the \"unlock fee\". Mirage took it twice.",
+      "mirageSays": "Double rug!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Unlocked liquidity and a 45% sell fee were the signs. And refunds never cost a fee."
+  },
+  "board": {
+    "q": "What's really going on?",
+    "verdicts": [
+      {
+        "id": "scam",
+        "text": "Hype, a trap token, a rug pull, then a fake refund"
+      },
+      {
+        "id": "real",
+        "text": "A real project that had bad luck"
+      },
+      {
+        "id": "unsure",
+        "text": "Not enough evidence"
+      }
+    ],
+    "answer": "scam",
+    "pick": 3,
+    "explain": "Fake hype, a token you can't sell, the dev dumping, then a fee for a \"refund\". One plan from start to finish."
+  },
+  "golden_rule": "Sudden hype, \"last chance\" and tokens you can't sell are a rug pull in progress.",
+  "quick_check": {
+    "q": "After a rug pull, an admin asks for a fee to refund you. What is it?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A fair refund process"
+      },
+      {
+        "id": "b",
+        "text": "The second half of the scam"
+      }
+    ],
+    "answer": "b",
+    "explain": "Refunds never require a fee."
+  },
+  "hints": {
+    "nudge": "Can you sell? Is the liquidity really locked?",
+    "glow_order": [
+      "sellfee",
+      "locked",
+      "up",
+      "last",
+      "rug",
+      "unlock"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "chainalysis-2025",
+    "ic3-2024"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the group",
+      "title": "$MIRAGECOIN Army",
+      "rows": [
+        {
+          "k": "Name",
+          "v": "Has \"Army\" in it",
+          "clue": "army"
+        },
+        {
+          "k": "Members",
+          "v": "A sudden flood, likely bots",
+          "clue": "bots"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the chart",
+      "title": "The coin",
+      "rows": [
+        {
+          "k": "Price",
+          "v": "A huge, sudden rise",
+          "clue": "up"
+        },
+        {
+          "k": "Selling",
+          "v": "A massive fee to sell",
+          "clue": "sellfee"
+        },
+        {
+          "k": "Liquidity",
+          "v": "Not actually locked",
+          "clue": "locked"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the story",
+      "title": "What they say",
+      "rows": [
+        {
+          "k": "Listing",
+          "v": "A big one \"coming soon\"",
+          "clue": "listing"
+        },
+        {
+          "k": "Pressure",
+          "v": "Buy now",
+          "clue": "last"
+        },
+        {
+          "k": "Creator",
+          "v": "Dumped the coins",
+          "clue": "rug"
+        },
+        {
+          "k": "Pay to get money back",
+          "v": "Another scam",
+          "clue": "unlock"
+        }
+      ]
+    }
+  ]
+}

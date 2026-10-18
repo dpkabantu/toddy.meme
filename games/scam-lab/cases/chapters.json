@@ -1,0 +1,142 @@
+{
+  "order_note": "Chapters are ordered by how many people each scam type hurts and how much they lose (FTC Consumer Sentinel 2024, FBI IC3 2024, Chainalysis 2025), after the Chapter 1 basics every later case builds on.",
+  "chapters": [
+    {
+      "n": 1,
+      "title": "The Fake Helpers",
+      "blurb": "Impostor scams: the most reported kind.",
+      "card": "chapter_1",
+      "cases": [
+        "c1-01",
+        "c1-02",
+        "c1-03",
+        "c1-04",
+        "c1-05",
+        "c1-06"
+      ],
+      "status": "open",
+      "learn": "fake support accounts, look-alike admins, \"verify your wallet\" bots, and when a message is simply honest."
+    },
+    {
+      "n": 2,
+      "title": "The Long Con",
+      "blurb": "Fake investments and friendly strangers: the biggest money losses.",
+      "card": "chapter_5",
+      "cases": [
+        "c2-01",
+        "c2-02",
+        "c2-03",
+        "c2-04",
+        "c2-05",
+        "c2-06"
+      ],
+      "status": "open",
+      "learn": "\"wrong number\" friendships, guaranteed-profit trading apps, task-job scams and paid \"recovery\" agents."
+    },
+    {
+      "n": 3,
+      "title": "Too Good To Be True",
+      "blurb": "Free coins, prizes and presales that cost you everything.",
+      "card": "chapter_2",
+      "cases": [
+        "c3-01",
+        "c3-02",
+        "c3-03",
+        "c3-04",
+        "c3-05",
+        "c3-06"
+      ],
+      "status": "open",
+      "learn": "free airdrops and giveaways, fake presales, \"send 1 get 2\" streams and look-alike links."
+    },
+    {
+      "n": 4,
+      "title": "Threats & Panic",
+      "blurb": "Scams that scare you into paying.",
+      "card": "chapter_6",
+      "cases": [
+        "c4-01",
+        "c4-02",
+        "c4-03",
+        "c4-04",
+        "c4-05",
+        "c4-06"
+      ],
+      "status": "open",
+      "learn": "fake police and tax threats, \"bank\" calls, crypto ATM demands and fake virus pop-ups."
+    },
+    {
+      "n": 5,
+      "title": "The Silent Drain",
+      "blurb": "One click, one signature, an empty wallet.",
+      "card": "chapter_3",
+      "cases": [
+        "c5-01",
+        "c5-02",
+        "c5-03",
+        "c5-04",
+        "c5-05",
+        "c5-06"
+      ],
+      "status": "open",
+      "learn": "unlimited approvals, poisoned addresses, fake swap sites, blind signing and surprise NFTs."
+    },
+    {
+      "n": 6,
+      "title": "Hijacked",
+      "blurb": "When the scammer wears your friend's account, or your phone number.",
+      "card": "chapter_7",
+      "cases": [
+        "c6-01",
+        "c6-02",
+        "c6-03",
+        "c6-04",
+        "c6-05",
+        "c6-06"
+      ],
+      "status": "open",
+      "learn": "hacked friend accounts, fake wallet apps, SIM swaps, fake QR codes and \"codes sent by mistake\"."
+    },
+    {
+      "n": 7,
+      "title": "The Hype Machine",
+      "blurb": "Pumps, rugs, fake influencers and deepfakes.",
+      "card": "chapter_4",
+      "cases": [
+        "c7-01",
+        "c7-02",
+        "c7-03",
+        "c7-04",
+        "c7-05",
+        "c7-06"
+      ],
+      "status": "open",
+      "learn": "pump-and-dump groups, honeypot tokens, fake influencers, deepfake videos and rug pulls."
+    },
+    {
+      "n": 8,
+      "title": "Get-Rich Schemes",
+      "blurb": "Pyramids, money machines and the final collapse.",
+      "card": "chapter_8",
+      "cases": [
+        "c8-01",
+        "c8-02",
+        "c8-03",
+        "c8-04",
+        "c8-05",
+        "c8-06"
+      ],
+      "status": "open",
+      "learn": "pyramid \"invite friends\" plans, fake staking and mining, trading bots and collapsing schemes.",
+      "focus": "top"
+    }
+  ],
+  "missions": {
+    "hunt": "Red Flag Hunt",
+    "rush": "Inbox Rush",
+    "duel": "Chat Duel",
+    "boss": "Boss Case",
+    "compare": "Spot the Fake",
+    "wallet": "Wallet Pop-up"
+  }
+}

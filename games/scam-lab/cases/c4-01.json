@@ -1,0 +1,280 @@
+{
+  "id": "c4-01",
+  "type": "hunt",
+  "chapter": 4,
+  "difficulty": 2,
+  "title": "Police Warning",
+  "disguise": "admin",
+  "intro": [
+    "Chapter 4. These scams don't charm you. They scare you.",
+    "Fear makes people skip every check. That's the whole trick.",
+    "An official-looking email just arrived. Breathe, then sniff."
+  ],
+  "notify": {
+    "app": "Mail",
+    "from": "Cyber Crime Unit",
+    "text": "URGENT: Your wallet is linked to a criminal case"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        {
+          "clue": "from",
+          "text": "Cyber Crime Unit"
+        }
+      ],
+      "addr": [
+        {
+          "clue": "addr",
+          "text": "cyber.unit.office@mailbox-eu.com"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "URGENT: Case #EU-4471 — your wallet"
+        }
+      ],
+      "time": [
+        "11:52 PM"
+      ]
+    },
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "crime",
+            "text": "Your crypto wallet has been linked to money laundering."
+          }
+        ]
+      },
+      {
+        "p": [
+          "To avoid arrest, ",
+          {
+            "clue": "fine",
+            "text": "pay a €1,500 fine in crypto"
+          },
+          " ",
+          {
+            "clue": "deadline",
+            "text": "within 24 hours"
+          },
+          "."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "secret",
+            "text": "Do not discuss this case with anyone, including your bank."
+          }
+        ]
+      },
+      {
+        "foot": [
+          {
+            "clue": "badge",
+            "text": "🛡️ Official seal · Case #EU-4471"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "fine": {
+      "label": "Fine paid in crypto",
+      "strength": "strong",
+      "lens": "Police don't take fines in crypto.",
+      "why": "Only scammers demand payment in crypto."
+    },
+    "deadline": {
+      "label": "24-hour threat",
+      "strength": "strong",
+      "lens": "Pay fast or be arrested.",
+      "why": "Real police don't threaten arrest by email to get paid."
+    },
+    "secret": {
+      "label": "Tell no one",
+      "strength": "strong",
+      "lens": "Not even your bank.",
+      "why": "Scammers isolate you so nobody can warn you."
+    },
+    "addr": {
+      "label": "Free webmail address",
+      "strength": "strong",
+      "lens": "mailbox-eu.com is a generic mail service.",
+      "why": "Real authorities use their official domain."
+    },
+    "crime": {
+      "label": "Scary accusation",
+      "strength": "strong",
+      "lens": "You're accused of a crime out of nowhere.",
+      "why": "Fear is the hook."
+    },
+    "from": {
+      "label": "Official-sounding name",
+      "strength": "harmless",
+      "lens": "\"Cyber Crime Unit\".",
+      "why": "Any name can be typed in. Proves nothing."
+    },
+    "subject": {
+      "label": "Case number",
+      "strength": "harmless",
+      "lens": "A case number.",
+      "why": "Numbers look official but are easy to invent."
+    },
+    "badge": {
+      "label": "Seal emoji",
+      "strength": "harmless",
+      "lens": "A shield and \"official seal\".",
+      "why": "Pictures and seals prove nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Pay the fine to avoid trouble"
+    },
+    {
+      "id": "verify",
+      "label": "Call the police on their official number from their website"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as phishing and delete it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Reported. The same email went to thousands of crypto holders that night.",
+      "mirageSays": "Not scary enough?!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The real police: \"We never ask for fines in crypto. That's a scam.\"",
+      "mirageSays": "The real police?!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "There was no case. The €1,500 went straight to Mirage.",
+      "mirageSays": "Case closed: in my favour!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Police never ask for fines in crypto, and never tell you to keep it from your bank."
+  },
+  "golden_rule": "Real police, tax offices and banks never demand payment in crypto, and never tell you to keep it secret.",
+  "quick_check": {
+    "q": "An email says pay a fine in crypto within 24 hours or be arrested. What is it?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Probably real, pay to be safe"
+      },
+      {
+        "id": "b",
+        "text": "A scam: real authorities never ask for crypto"
+      },
+      {
+        "id": "c",
+        "text": "Reply and ask for a discount"
+      }
+    ],
+    "answer": "b",
+    "explain": "Fear plus crypto payment is always a scam."
+  },
+  "hints": {
+    "nudge": "How do they want you to pay?",
+    "glow_order": [
+      "fine",
+      "secret",
+      "deadline",
+      "addr",
+      "crime"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-data-2024",
+    "ic3-2024",
+    "ftc-phishing"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Who really sent it",
+      "rows": [
+        {
+          "k": "Address",
+          "v": "mailbox-eu.com, a generic mail service",
+          "clue": "addr"
+        },
+        {
+          "k": "Name shown",
+          "v": "\"Cyber Crime Unit\"",
+          "clue": "from"
+        },
+        {
+          "k": "Subject",
+          "v": "A case number",
+          "clue": "subject"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check demands",
+      "title": "What it wants",
+      "rows": [
+        {
+          "k": "Payment",
+          "v": "In crypto",
+          "clue": "fine"
+        },
+        {
+          "k": "Deadline",
+          "v": "Pay fast or be arrested",
+          "clue": "deadline"
+        },
+        {
+          "k": "Secrecy",
+          "v": "Do not tell your bank",
+          "clue": "secret"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official page",
+      "title": "What real police say",
+      "rows": [
+        {
+          "k": "Do police fine you in crypto?",
+          "v": "Never"
+        },
+        {
+          "k": "Do they email arrest threats?",
+          "v": "Never"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,121 @@
+{
+  "id": "c8-04",
+  "type": "rush",
+  "chapter": 8,
+  "difficulty": 2,
+  "title": "Money Machines",
+  "seconds": 60,
+  "intro": [
+    "Ten \"ways to get rich\". One minute.",
+    "Swipe left for scam, right for safe.",
+    "A couple are just boring and honest!"
+  ],
+  "cards": [
+    {
+      "id": "m1",
+      "app": "Ad",
+      "from": "SkyHarvest Pro",
+      "text": "Rent mining power, earn 5% a day! Withdraw after 60 days.",
+      "scam": true,
+      "why": "Fixed daily returns plus a withdrawal wait is a classic fake mining scheme."
+    },
+    {
+      "id": "m2",
+      "app": "App",
+      "from": "Tolbridge (in-app)",
+      "text": "Staking rewards are variable, about 3–5% a year. You can lose money if prices fall.",
+      "scam": false,
+      "why": "Small, variable, honest about risk."
+    },
+    {
+      "id": "m3",
+      "app": "Wrenly DM",
+      "from": "Millionaire Mentor",
+      "text": "Buy my €499 course and I'll show you my secret 10x method.",
+      "scam": true,
+      "why": "Paying for \"secret\" get-rich methods is the business."
+    },
+    {
+      "id": "m4",
+      "app": "Wrenly DM",
+      "from": "Doubler Bot",
+      "text": "Send NVL to this bot and it doubles your coins in 24 hours!",
+      "scam": true,
+      "why": "Doubler bots are always scams."
+    },
+    {
+      "id": "m5",
+      "app": "SMS",
+      "from": "Marco (friend)",
+      "text": "I just save a little each month. Slow, but I sleep well 😴",
+      "scam": false,
+      "why": "A friend sharing a habit, asking nothing."
+    },
+    {
+      "id": "m6",
+      "app": "Wrenly DM",
+      "from": "Matrix Club",
+      "text": "Pay 50 NVL, recruit 2 people, they recruit 2… earn forever!",
+      "scam": true,
+      "why": "A pyramid by design."
+    },
+    {
+      "id": "m7",
+      "app": "Email",
+      "from": "Gold Token Fund",
+      "text": "Guaranteed 20% a month, backed by real gold!",
+      "scam": true,
+      "why": "Guarantees are the giveaway, whatever \"backs\" them."
+    },
+    {
+      "id": "m8",
+      "app": "App",
+      "from": "Your bank (in-app)",
+      "text": "Your savings interest for October: €1.84.",
+      "scam": false,
+      "why": "Small, real and boring. That's what real interest looks like."
+    },
+    {
+      "id": "m9",
+      "app": "Wrenly DM",
+      "from": "Lucky Spin",
+      "text": "Spin the crypto wheel! Deposit 20 NVL to unlock 10 free spins.",
+      "scam": true,
+      "why": "Gambling dressed up as a prize, with a deposit first."
+    },
+    {
+      "id": "m10",
+      "app": "Ad",
+      "from": "NFT Flip Academy",
+      "text": "Flip NFTs for €3,000 a week, no experience needed! Join the paid VIP group.",
+      "scam": true,
+      "why": "Easy money with no skill, behind a paid group."
+    }
+  ],
+  "golden_rule": "Real money grows slowly and comes with risks. Guaranteed, fast and recruit-to-earn are the warning signs.",
+  "quick_check": {
+    "q": "Which is the most realistic?",
+    "options": [
+      {
+        "id": "a",
+        "text": "5% a day from cloud mining"
+      },
+      {
+        "id": "b",
+        "text": "A few percent a year, with risks explained"
+      },
+      {
+        "id": "c",
+        "text": "A bot that doubles your coins"
+      }
+    ],
+    "answer": "b",
+    "explain": "Real returns are small and honest about risk."
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-data-2024",
+    "ic3-2024"
+  ],
+  "checked_on": "2026-10-13"
+}

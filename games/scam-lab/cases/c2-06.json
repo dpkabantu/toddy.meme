@@ -1,0 +1,381 @@
+{
+  "id": "c2-06",
+  "type": "boss",
+  "chapter": 2,
+  "difficulty": 3,
+  "title": "The Withdrawal Trap",
+  "disguise": "support",
+  "disguise2": "friend",
+  "intro": [
+    "This is Mirage's biggest con. A friend of Toddy's, Kiko, joined Redmere Trade Pro months ago.",
+    "Kiko asked Toddy to handle the withdrawal. Mirage will change faces twice.",
+    "Collect the clues. At the end, unmask him on the case board."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Redmere Trade Pro Support",
+    "text": "Your balance: €12,480 💰 Ready to withdraw!"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "brand",
+          "text": "Redmere Trade Pro Support",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        "@redmere-trade_support_desk"
+      ],
+      "avatar": {
+        "glyph": "🚀",
+        "clue": "avatar"
+      }
+    },
+    "context": "Kiko deposited €2,000 in total. The site now shows a huge balance.",
+    "items": [
+      {
+        "msg": [
+          "Great news! ",
+          {
+            "clue": "balance",
+            "text": "Your balance is €12,480 💰"
+          }
+        ]
+      },
+      {
+        "msg": [
+          "To withdraw, first pay ",
+          {
+            "clue": "tax",
+            "text": "20% tax (€2,496) in crypto"
+          },
+          " to our tax wallet."
+        ]
+      }
+    ]
+  },
+  "duel": {
+    "start": "d1",
+    "nodes": {
+      "d1": {
+        "rename": "Agent Mia · Redmere Trade Pro",
+        "say": [
+          {
+            "sys": [
+              "Agent Mia joined the chat"
+            ]
+          },
+          {
+            "msg": [
+              "Hi! I'm Mia. ",
+              {
+                "clue": "frozen",
+                "text": "If the tax isn't paid in 24 hours, the account is frozen forever."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Why can't you take the tax from the balance?",
+            "next": "d2"
+          },
+          {
+            "text": "OK, paying the €2,496",
+            "next": "d3"
+          },
+          {
+            "text": "Stop. Stop paying and report this.",
+            "end": "block_report"
+          }
+        ]
+      },
+      "d2": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "rules",
+                "text": "System rules, sorry 🙏 The balance is locked until the fee arrives."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Real platforms take fees from the balance. Report it.",
+            "end": "block_report"
+          },
+          {
+            "text": "Kiko should report this to the police first",
+            "end": "verify"
+          },
+          {
+            "text": "Fine, paying now",
+            "next": "d3"
+          }
+        ]
+      },
+      "d3": {
+        "rename": "Recovery Agent · HartwellLegal Europe",
+        "disguise": "friend",
+        "say": [
+          {
+            "sys": [
+              {
+                "clue": "swap",
+                "text": "Agent Mia left. \"Recovery Agent · HartwellLegal Europe\" messaged you."
+              }
+            ]
+          },
+          {
+            "msg": [
+              "We know you've been scammed. ",
+              {
+                "clue": "recovery",
+                "text": "For a €500 fee we recover 100% of your funds."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Pay the €500 recovery fee",
+            "end": "go_ahead"
+          },
+          {
+            "text": "\"Recovery agents\" who charge first are a second scam. Report both.",
+            "end": "block_report"
+          },
+          {
+            "text": "Kiko will report to the police directly",
+            "end": "verify"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "balance": {
+      "label": "Too-good balance",
+      "strength": "strong",
+      "lens": "€2,000 in, €12,480 on screen. Numbers on a fake site mean nothing.",
+      "why": "Fake platforms show huge gains so you pay more."
+    },
+    "tax": {
+      "label": "Pay \"tax\" first",
+      "strength": "strong",
+      "lens": "A \"tax\" you must pay before you get anything.",
+      "why": "Real taxes aren't paid to the platform's crypto wallet."
+    },
+    "frozen": {
+      "label": "Frozen-forever threat",
+      "strength": "strong",
+      "lens": "Pay in 24 hours or lose it all.",
+      "why": "Deadlines and threats stop you checking."
+    },
+    "rules": {
+      "label": "\"System rules\"",
+      "strength": "strong",
+      "lens": "An excuse for why they can't take the fee from the balance.",
+      "why": "If the balance were real, they could deduct the fee from it."
+    },
+    "swap": {
+      "label": "New face appears",
+      "strength": "strong",
+      "lens": "Right after the first trick, a \"recovery agent\" turns up.",
+      "why": "Scammers sell lists of victims, or come back in a new costume."
+    },
+    "recovery": {
+      "label": "Paid \"recovery\"",
+      "strength": "strong",
+      "lens": "They promise 100% back, for a fee up front.",
+      "why": "Recovery scams target people who've already lost money."
+    },
+    "brand": {
+      "label": "Company name",
+      "strength": "harmless",
+      "lens": "The platform's name.",
+      "why": "Any site can name its support desk. Proves nothing alone."
+    },
+    "avatar": {
+      "label": "Rocket logo",
+      "strength": "harmless",
+      "lens": "A rocket logo.",
+      "why": "Logos are easy to copy."
+    }
+  },
+  "actions": [
+    {
+      "id": "open_chat",
+      "label": "Open the support chat",
+      "goto": "duel"
+    },
+    {
+      "id": "verify",
+      "label": "Tell Kiko to report it to the police"
+    },
+    {
+      "id": "block_report",
+      "label": "Stop paying and report the platform"
+    },
+    {
+      "id": "go_ahead",
+      "label": "Pay",
+      "hidden": true
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "caught",
+      "stamp": "CASE CLOSED",
+      "line": "No more money went in. The report helped investigators link the fake platform and the fake recovery agent.",
+      "mirageSays": "Both my costumes, unmasked!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "The police confirmed: no real tax, no real recovery agents. Kiko paid nothing more.",
+      "mirageSays": "Not the police!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "The tax, then the recovery fee. Both went to the same con artist.",
+      "mirageSays": "Twice the fun!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Paying to unlock money, then paying to \"recover\" it, is the same scam twice. Stop paying and report.",
+    "verify": "Going to the police was right. Reporting the platform as well helps others."
+  },
+  "board": {
+    "q": "What's really going on?",
+    "verdicts": [
+      {
+        "id": "scam",
+        "text": "A fake platform, then a fake recovery agent: the same con twice"
+      },
+      {
+        "id": "real",
+        "text": "Real profits, a real tax and a real lawyer"
+      },
+      {
+        "id": "unsure",
+        "text": "Not enough evidence to tell"
+      }
+    ],
+    "answer": "scam",
+    "pick": 3,
+    "explain": "Pay-to-withdraw, a frozen-account threat, then a paid \"recovery\". One con artist, two masks."
+  },
+  "golden_rule": "Never pay to get money back. Fees to withdraw and fees to \"recover\" are the same scam.",
+  "quick_check": {
+    "q": "Someone offers to recover your lost crypto for a fee. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay, it's worth a try"
+      },
+      {
+        "id": "b",
+        "text": "Don't pay; report to the police yourself"
+      }
+    ],
+    "answer": "b",
+    "explain": "Real police don't charge you to investigate."
+  },
+  "hints": {
+    "nudge": "Ask yourself: why must you pay before you get anything?",
+    "glow_order": [
+      "tax",
+      "balance",
+      "frozen",
+      "rules",
+      "swap",
+      "recovery"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "cafc-wallet",
+    "europol-report",
+    "ic3-2024"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the account",
+      "title": "Redmere Trade Pro Support",
+      "rows": [
+        {
+          "k": "Balance shown",
+          "v": "€12,480 for €2,000 in",
+          "clue": "balance"
+        },
+        {
+          "k": "Brand name",
+          "v": "Just a name, proves nothing",
+          "clue": "brand"
+        },
+        {
+          "k": "Another voice",
+          "v": "A \"recovery agent\" turns up",
+          "clue": "swap"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the rules",
+      "title": "Why you cannot withdraw",
+      "rows": [
+        {
+          "k": "You must first pay",
+          "v": "A \"tax\"",
+          "clue": "tax"
+        },
+        {
+          "k": "The excuse",
+          "v": "They cannot take it from your balance",
+          "clue": "rules"
+        },
+        {
+          "k": "Deadline",
+          "v": "24 hours or lose it all",
+          "clue": "frozen"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What real regulators say",
+      "rows": [
+        {
+          "k": "Fee to withdraw your own money?",
+          "v": "A real platform never asks"
+        },
+        {
+          "k": "Recovery for a fee up front?",
+          "v": "A second scam",
+          "clue": "recovery"
+        }
+      ]
+    }
+  ]
+}

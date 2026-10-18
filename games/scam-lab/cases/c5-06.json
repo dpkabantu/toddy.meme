@@ -1,0 +1,399 @@
+{
+  "id": "c5-06",
+  "type": "boss",
+  "chapter": 5,
+  "difficulty": 3,
+  "title": "The Drainer Kit",
+  "disguise": "influencer",
+  "disguise2": "support",
+  "intro": [
+    "Mirage's quietest trap: a drainer kit with a friendly face.",
+    "It starts with a \"free NFT\" and ends with \"help\" to fix it.",
+    "Collect the clues and unmask him."
+  ],
+  "notify": {
+    "app": "Larkspur",
+    "from": "New NFT received",
+    "text": "🎁 \"Golden Lantern Pass\" arrived in your wallet"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "nft",
+          "text": "Golden Lantern Pass 🎁",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "collection",
+          "text": "unverified collection"
+        }
+      ],
+      "avatar": {
+        "glyph": "🎁",
+        "clue": "avatar"
+      }
+    },
+    "context": "An NFT you never asked for appeared in your wallet.",
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "surprise",
+            "text": "You received a free Golden Lantern Pass!"
+          }
+        ]
+      },
+      {
+        "msg": [
+          "Claim your bonus at ",
+          {
+            "clue": "claimsite",
+            "text": "goldenlantern-pass.app",
+            "link": true
+          },
+          " — ",
+          {
+            "clue": "setall",
+            "text": "approve \"all NFTs\" to activate"
+          }
+        ]
+      }
+    ]
+  },
+  "duel": {
+    "start": "d1",
+    "nodes": {
+      "d1": {
+        "rename": "Golden Lantern Support",
+        "say": [
+          {
+            "sys": [
+              "You opened the help chat on the site"
+            ]
+          },
+          {
+            "msg": [
+              "To activate your pass, ",
+              {
+                "clue": "approveall",
+                "text": "approve access to all your NFTs"
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Why does a pass need all my NFTs?",
+            "next": "d2"
+          },
+          {
+            "text": "Approve all",
+            "next": "d3"
+          },
+          {
+            "text": "Close it and report",
+            "end": "block_report"
+          }
+        ]
+      },
+      "d2": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "standard",
+                "text": "Standard for all NFT passes 👍"
+              },
+              " Other holders already did it."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Not standard. Report.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll hide the NFT and ask in the wallet's official help",
+            "end": "verify"
+          },
+          {
+            "text": "OK, approving",
+            "next": "d3"
+          }
+        ]
+      },
+      "d3": {
+        "rename": "Wallet Rescue Desk",
+        "disguise": "support",
+        "say": [
+          {
+            "sys": [
+              {
+                "clue": "swap",
+                "text": "A \"Wallet Rescue Desk\" messaged you right after."
+              }
+            ]
+          },
+          {
+            "msg": [
+              "We saw a drainer hit you! ",
+              {
+                "clue": "revoke",
+                "text": "Use our revoke tool and enter your phrase to save the rest."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Use their tool",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Rescuers who want my phrase are the same scam. Report.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll revoke it myself from the wallet's settings",
+            "end": "verify"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "surprise": {
+      "label": "NFT you never asked for",
+      "strength": "strong",
+      "lens": "It appeared out of nowhere.",
+      "why": "Surprise NFTs are bait."
+    },
+    "collection": {
+      "label": "Unverified collection",
+      "strength": "strong",
+      "lens": "Your wallet marks it unverified.",
+      "why": "Unknown collections are often scams."
+    },
+    "claimsite": {
+      "label": "Claim site",
+      "strength": "strong",
+      "lens": "An outside site to \"claim\" a bonus.",
+      "why": "Claim sites are drainers."
+    },
+    "setall": {
+      "label": "Approve all NFTs",
+      "strength": "strong",
+      "lens": "Access to every NFT you own.",
+      "why": "\"Approve all\" hands over the whole collection."
+    },
+    "approveall": {
+      "label": "Approve-all request again",
+      "strength": "strong",
+      "lens": "Support repeats it.",
+      "why": "No real pass needs all your NFTs."
+    },
+    "standard": {
+      "label": "\"Standard\" excuse",
+      "strength": "strong",
+      "lens": "Calls it normal.",
+      "why": "Calling something \"standard\" is not an explanation."
+    },
+    "swap": {
+      "label": "A rescuer appears",
+      "strength": "strong",
+      "lens": "Help arrives right after the attack.",
+      "why": "Scammers come back as rescuers."
+    },
+    "revoke": {
+      "label": "Phrase to \"revoke\"",
+      "strength": "strong",
+      "lens": "A revoke tool that wants your phrase.",
+      "why": "Revoking never needs your phrase."
+    },
+    "nft": {
+      "label": "Shiny name",
+      "strength": "harmless",
+      "lens": "\"Golden Lantern Pass\".",
+      "why": "Names prove nothing."
+    },
+    "avatar": {
+      "label": "Gift icon",
+      "strength": "harmless",
+      "lens": "A gift emoji.",
+      "why": "Proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "open_chat",
+      "label": "Open the claim site's help chat",
+      "goto": "duel"
+    },
+    {
+      "id": "verify",
+      "label": "Hide the NFT and ask the wallet's official help"
+    },
+    {
+      "id": "block_report",
+      "label": "Hide the NFT and report it"
+    },
+    {
+      "id": "go_ahead",
+      "label": "Use tool",
+      "hidden": true
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "caught",
+      "stamp": "CASE CLOSED",
+      "line": "Hidden and reported. The wallet now warns everyone about that collection.",
+      "mirageSays": "My golden bait!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Official help: \"Never interact with surprise NFTs. Just hide them.\"",
+      "mirageSays": "Hidden?! Boring!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "The approval took the NFTs, and the \"rescue\" took the phrase and everything else.",
+      "mirageSays": "Rescued… into my pocket!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Hiding the surprise NFT and walking away was all it took."
+  },
+  "board": {
+    "q": "What's really going on?",
+    "verdicts": [
+      {
+        "id": "scam",
+        "text": "Bait NFT, approve-all drainer, then a fake rescuer"
+      },
+      {
+        "id": "real",
+        "text": "A real free pass with normal settings"
+      },
+      {
+        "id": "unsure",
+        "text": "Not enough evidence"
+      }
+    ],
+    "answer": "scam",
+    "pick": 3,
+    "explain": "A surprise NFT, an approve-all request and a rescuer who wants your phrase. One kit, three steps."
+  },
+  "golden_rule": "Surprise NFTs are bait. Hide them, never \"claim\" them, and never let a \"rescuer\" have your phrase.",
+  "quick_check": {
+    "q": "A free NFT appears with a link to claim a bonus. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Claim it"
+      },
+      {
+        "id": "b",
+        "text": "Hide it and ignore the link"
+      }
+    ],
+    "answer": "b",
+    "explain": "Surprise NFTs lead to drainer sites."
+  },
+  "hints": {
+    "nudge": "Did you ask for this NFT?",
+    "glow_order": [
+      "surprise",
+      "setall",
+      "claimsite",
+      "collection",
+      "revoke",
+      "swap"
+    ]
+  },
+  "sources": [
+    "cafc-wallet",
+    "ftc-crypto",
+    "chainalysis-2025"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the NFT",
+      "title": "What arrived",
+      "rows": [
+        {
+          "k": "Appeared",
+          "v": "Out of nowhere",
+          "clue": "surprise"
+        },
+        {
+          "k": "Collection",
+          "v": "Marked unverified by your wallet",
+          "clue": "collection"
+        },
+        {
+          "k": "Name",
+          "v": "\"Golden Lantern Pass\"",
+          "clue": "nft"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the claim site",
+      "title": "Where it sends you",
+      "rows": [
+        {
+          "k": "To claim a bonus",
+          "v": "An outside site",
+          "clue": "claimsite"
+        },
+        {
+          "k": "What it asks",
+          "v": "Access to every NFT you own",
+          "clue": "setall"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official page",
+      "title": "What the wallet says",
+      "rows": [
+        {
+          "k": "Real wallets",
+          "v": "Never ask for your phrase to revoke anything"
+        },
+        {
+          "k": "Is \"approve all\" normal?",
+          "v": "No, it hands over everything",
+          "clue": "standard"
+        },
+        {
+          "k": "Revoke tool asking for your phrase",
+          "v": "Fake",
+          "clue": "revoke"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,321 @@
+{
+  "id": "c6-02",
+  "type": "hunt",
+  "chapter": 6,
+  "difficulty": 2,
+  "title": "Two Wallet Apps",
+  "disguise": "support",
+  "intro": [
+    "Toddy got a new phone and is reinstalling the wallet app.",
+    "The app store shows two \"Larkspur\" apps.",
+    "Compare them before you install."
+  ],
+  "notify": {
+    "app": "App store",
+    "from": "Search: Larkspur",
+    "text": "2 results"
+  },
+  "decide_q": "Which app is real, and what will you do?",
+  "screen": {
+    "app": "compare",
+    "context": "Two app-store listings, side by side.",
+    "panels": [
+      {
+        "label": "Larkspur",
+        "avatar": {
+          "glyph": "🐾",
+          "clue": "icon_a"
+        },
+        "rows": [
+          {
+            "k": "Publisher",
+            "v": [
+              {
+                "clue": "pub_a",
+                "text": "Larkspur Ltd (link on larkspur.app)"
+              }
+            ]
+          },
+          {
+            "k": "Downloads",
+            "v": [
+              {
+                "clue": "dl_a",
+                "text": "1M+ · since 2020"
+              }
+            ]
+          },
+          {
+            "k": "Reviews",
+            "v": [
+              {
+                "clue": "rev_a",
+                "text": "4.4★, mixed, over years"
+              }
+            ]
+          },
+          {
+            "k": "First screen",
+            "v": [
+              {
+                "clue": "first_a",
+                "text": "Create wallet or restore"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Larkspur - Crypto Wallet",
+        "avatar": {
+          "glyph": "🐾",
+          "clue": "icon_b"
+        },
+        "rows": [
+          {
+            "k": "Publisher",
+            "v": [
+              {
+                "clue": "pub_b",
+                "text": "Larkspur Apps Inc"
+              }
+            ]
+          },
+          {
+            "k": "Downloads",
+            "v": [
+              {
+                "clue": "dl_b",
+                "text": "5K+ · last week"
+              }
+            ]
+          },
+          {
+            "k": "Reviews",
+            "v": [
+              {
+                "clue": "rev_b",
+                "text": "5.0★, 300 reviews in one day"
+              }
+            ]
+          },
+          {
+            "k": "First screen",
+            "v": [
+              {
+                "clue": "first_b",
+                "text": "\"Enter your 12 words to sync\""
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "pub_b": {
+      "label": "Different publisher",
+      "strength": "strong",
+      "lens": "A similar but different publisher name.",
+      "why": "Fake apps copy names. Check the publisher matches the official website."
+    },
+    "dl_b": {
+      "label": "New, few downloads",
+      "strength": "strong",
+      "lens": "Only a week old.",
+      "why": "Real wallet apps have long histories."
+    },
+    "rev_b": {
+      "label": "Instant 5-star reviews",
+      "strength": "strong",
+      "lens": "300 perfect reviews in one day.",
+      "why": "Bought reviews are a giveaway."
+    },
+    "first_b": {
+      "label": "Asks for your phrase at once",
+      "strength": "strong",
+      "lens": "The first screen wants your 12 words.",
+      "why": "A fake app asking for your phrase steals the wallet."
+    },
+    "pub_a": {
+      "label": "Publisher linked from site",
+      "strength": "harmless",
+      "lens": "The official website links to this listing.",
+      "why": "The safest way to find the real app."
+    },
+    "dl_a": {
+      "label": "Long history",
+      "strength": "harmless",
+      "lens": "1M+ since 2020.",
+      "why": "Consistent with a real app."
+    },
+    "rev_a": {
+      "label": "Mixed reviews",
+      "strength": "harmless",
+      "lens": "Mixed reviews over years.",
+      "why": "Real apps have real, mixed reviews."
+    },
+    "first_a": {
+      "label": "Normal first screen",
+      "strength": "harmless",
+      "lens": "Create or restore.",
+      "why": "Restoring on a real app you chose is fine."
+    },
+    "icon_a": {
+      "label": "Paw icon",
+      "strength": "harmless",
+      "lens": "A paw icon.",
+      "why": "Icons prove nothing."
+    },
+    "icon_b": {
+      "label": "Same icon",
+      "strength": "harmless",
+      "lens": "A copied icon.",
+      "why": "Icons prove nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "pick_b",
+      "label": "Install \"Larkspur - Crypto Wallet\"",
+      "trap": true
+    },
+    {
+      "id": "verify",
+      "label": "Open larkspur.app and use its app-store link"
+    },
+    {
+      "id": "block_report",
+      "label": "Install the real one and report the fake listing"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "trap": {
+    "title": "Larkspur - Crypto Wallet",
+    "url": "app: Larkspur Apps Inc",
+    "ask": "Enter your 12-word recovery phrase to sync your wallet.",
+    "go": "Sync wallet",
+    "back": "Close the app"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Reported. The store removed the fake app.",
+      "mirageSays": "My copycat app!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The official site's link went straight to the real listing.",
+      "mirageSays": "He used the official link!"
+    },
+    "pick_b": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "The \"sync\" sent the phrase to Mirage. The wallet was emptied.",
+      "mirageSays": "Synced… to me!"
+    }
+  },
+  "what_if": {
+    "pick_b": "The real app was linked from larkspur.app. A week-old app asking for your phrase was the fake."
+  },
+  "golden_rule": "Install wallet apps only from the link on the official website.",
+  "quick_check": {
+    "q": "What's the safest way to find the real wallet app?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pick the one with the most stars"
+      },
+      {
+        "id": "b",
+        "text": "Use the store link on the official website"
+      }
+    ],
+    "answer": "b",
+    "explain": "Stars can be bought. The official link can't be faked so easily."
+  },
+  "hints": {
+    "nudge": "What does each app ask for first?",
+    "glow_order": [
+      "first_b",
+      "pub_b",
+      "rev_b",
+      "dl_b"
+    ]
+  },
+  "sources": [
+    "cafc-wallet",
+    "ftc-phishing",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check publisher",
+      "title": "Who made it",
+      "rows": [
+        {
+          "k": "Listing A",
+          "v": "Linked from the official website",
+          "clue": "pub_a"
+        },
+        {
+          "k": "Listing B",
+          "v": "A similar but different publisher name",
+          "clue": "pub_b"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check history",
+      "title": "Downloads and reviews",
+      "rows": [
+        {
+          "k": "Listing A",
+          "v": "1M+ since 2020, mixed reviews",
+          "clue": "dl_a"
+        },
+        {
+          "k": "Listing B",
+          "v": "Only a week old",
+          "clue": "dl_b"
+        },
+        {
+          "k": "B reviews",
+          "v": "300 perfect ones in one day",
+          "clue": "rev_b"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the first screen",
+      "title": "When you open it",
+      "rows": [
+        {
+          "k": "App A",
+          "v": "Create or restore",
+          "clue": "first_a"
+        },
+        {
+          "k": "App B",
+          "v": "Wants your 12 words at once",
+          "clue": "first_b"
+        }
+      ]
+    }
+  ]
+}

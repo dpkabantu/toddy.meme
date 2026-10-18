@@ -1,0 +1,255 @@
+{
+  "id": "c1-05",
+  "type": "hunt",
+  "chapter": 1,
+  "difficulty": 2,
+  "title": "The Real Notice",
+  "disguise": null,
+  "intro": [
+    "An email from Northvale. After tonight, you might be ready to call everything a scam.",
+    "But some messages are real. Mirage loves it when you stop trusting the honest ones.",
+    "Sniff carefully. Then decide."
+  ],
+  "notify": {
+    "app": "Mail",
+    "from": "Northvale",
+    "text": "We're updating our app on Friday"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        "Northvale"
+      ],
+      "addr": [
+        {
+          "clue": "noreply",
+          "text": "no-reply@northvale.app"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "IMPORTANT: We're updating our app on Friday"
+        }
+      ],
+      "time": [
+        "9:12 AM"
+      ]
+    },
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "name",
+            "text": "Hi Toddy,"
+          }
+        ]
+      },
+      {
+        "p": [
+          "On Friday we're releasing Northvale 4.2 with faster swaps. ",
+          {
+            "clue": "update",
+            "text": "Update from your phone's official app store when it appears."
+          },
+          " There's nothing else you need to do."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "reminder",
+            "text": "Reminder: Northvale staff will never message you first or ask for your recovery phrase."
+          }
+        ]
+      },
+      {
+        "p": [
+          "The Northvale team"
+        ]
+      },
+      {
+        "foot": [
+          {
+            "clue": "unsub",
+            "text": "Unsubscribe · Privacy"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "noreply": {
+      "label": "no-reply address",
+      "strength": "harmless",
+      "lens": "Sent from no-reply@northvale.app, Northvale's real domain.",
+      "why": "Companies often send from no-reply addresses. The domain is the official one."
+    },
+    "subject": {
+      "label": "IMPORTANT in caps",
+      "strength": "harmless",
+      "lens": "Capital letters, but no deadline, no threat.",
+      "why": "Shouting alone isn't a scam sign. Threats and deadlines are."
+    },
+    "name": {
+      "label": "Uses your name",
+      "strength": "harmless",
+      "lens": "It greets you by name.",
+      "why": "Real companies know your name. (Scammers can too, so it proves nothing on its own.)"
+    },
+    "update": {
+      "label": "Asks you to update",
+      "strength": "harmless",
+      "lens": "It sends you to the official app store. No link to click.",
+      "why": "Pointing you to the official store, not a link, is what honest companies do."
+    },
+    "reminder": {
+      "label": "Safety reminder",
+      "strength": "harmless",
+      "lens": "It repeats the Golden Rule from your first case.",
+      "why": "Real companies warn you about scams."
+    },
+    "unsub": {
+      "label": "Unsubscribe link",
+      "strength": "harmless",
+      "lens": "Standard unsubscribe and privacy links.",
+      "why": "Normal in real newsletters."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Update from the app store when it appears"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "Friday came, the update arrived in the app store, and swaps got faster. Nothing to fear.",
+      "toddy": "happy"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "SAFE",
+      "line": "Nothing bad happened. It was a real notice, and the app updated itself on Friday.",
+      "toddy": "happy"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was the real Northvale. When every message looks like a scam, the real warnings get lost too.",
+      "mirageSays": "If you trust nothing, I win anyway."
+    }
+  },
+  "what_if": {
+    "block_report": "Nothing in it asked for money, codes, a phrase or a link. That calm is what real messages look like.",
+    "ignore": "Ignoring was safe. Recognising a real message is the skill: it asked for nothing secret."
+  },
+  "golden_rule": "Real messages ask for nothing secret and point you to the official app, not a link.",
+  "quick_check": {
+    "q": "What showed this email was genuine?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It said \"Hi Toddy\""
+      },
+      {
+        "id": "b",
+        "text": "It asked for nothing and pointed to the official app store"
+      },
+      {
+        "id": "c",
+        "text": "It arrived in the morning"
+      },
+      {
+        "id": "d",
+        "text": "It had an Unsubscribe link"
+      }
+    ],
+    "answer": "b",
+    "explain": "Names, times and footers can all be copied. Asking for nothing secret, and no link to click, is the real sign."
+  },
+  "hints": {
+    "nudge": "What is this email actually asking you to do?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-phishing"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Sender check",
+      "rows": [
+        {
+          "k": "Sent from",
+          "v": "no-reply@northvale.app",
+          "clue": "noreply"
+        },
+        {
+          "k": "Official domain",
+          "v": "northvale.app"
+        },
+        {
+          "k": "Match?",
+          "v": "Same domain, letter for letter"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check links",
+      "title": "What the email asks you to click",
+      "rows": [
+        {
+          "k": "Update button",
+          "v": "None. It points to the app store",
+          "clue": "update"
+        },
+        {
+          "k": "Footer links",
+          "v": "Unsubscribe and privacy, standard",
+          "clue": "unsub"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official page",
+      "title": "Northvale's real news page says",
+      "rows": [
+        {
+          "k": "Friday app update",
+          "v": "Announced there too"
+        },
+        {
+          "k": "Safety reminder",
+          "v": "Same wording as this email",
+          "clue": "reminder"
+        }
+      ]
+    }
+  ]
+}

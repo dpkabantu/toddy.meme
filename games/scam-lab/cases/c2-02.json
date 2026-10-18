@@ -1,0 +1,391 @@
+{
+  "id": "c2-02",
+  "type": "duel",
+  "chapter": 2,
+  "difficulty": 2,
+  "title": "The Friendly Trader",
+  "disguise": "influencer",
+  "intro": [
+    "Three weeks later. \"Sophie\" and Toddy chat every day now.",
+    "Today she has a surprise. Talk back, and sniff every message.",
+    "Remember: you can leave the chat any time."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Sophie 🌸",
+    "text": "Look what I made this week!! 📈"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "text": "Sophie 🌸",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        "chatting for 3 weeks"
+      ],
+      "avatar": {
+        "glyph": "🌸",
+        "clue": "avatar"
+      }
+    },
+    "context": "You've chatted every day for three weeks: food, music, her cat.",
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "goodmorning",
+            "text": "Good morning sunshine ☀️"
+          }
+        ]
+      }
+    ]
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "profit",
+                "text": "📈 [screenshot: +€3,400 this week]"
+              }
+            ]
+          },
+          {
+            "msg": [
+              "My uncle is an analyst. ",
+              {
+                "clue": "insider",
+                "text": "He shares secret signals with family"
+              },
+              ". Want me to teach you?"
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "How does it work?",
+            "next": "n2"
+          },
+          {
+            "text": "I don't invest with people I've only met online.",
+            "next": "n3"
+          },
+          {
+            "text": "Block and report Sophie",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              "Easy! Use ",
+              {
+                "clue": "platform",
+                "text": "redmere-trade-pro.app",
+                "link": true
+              },
+              ". ",
+              {
+                "clue": "guaranteed",
+                "text": "It's guaranteed 2% a day"
+              },
+              " 💸"
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "small",
+                "text": "Start small, just €100. I'll guide you step by step."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Guaranteed? Nothing is guaranteed.",
+            "next": "n3"
+          },
+          {
+            "text": "OK, depositing €100",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Block and report Sophie",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n3": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "guilt",
+                "text": "I thought we were friends 🥺"
+              },
+              " ",
+              {
+                "clue": "secret",
+                "text": "Don't tell your family, they won't understand."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Real friends don't push investments. Bye.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll check whether Redmere Trade Pro is a licensed firm first",
+            "end": "verify"
+          },
+          {
+            "text": "Fine, I'll try it",
+            "end": "go_ahead"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "profit": {
+      "label": "Profit screenshot",
+      "strength": "strong",
+      "lens": "A screenshot of big profits. Screenshots are easy to fake.",
+      "why": "Showing off wins is the bait in investment scams."
+    },
+    "insider": {
+      "label": "Secret insider tips",
+      "strength": "strong",
+      "lens": "\"Secret signals\" from an analyst uncle.",
+      "why": "Nobody shares real secret profits with strangers."
+    },
+    "platform": {
+      "label": "Unknown trading site",
+      "strength": "strong",
+      "lens": "A trading site you've never heard of, chosen by her.",
+      "why": "Fake platforms show fake gains so you keep depositing."
+    },
+    "guaranteed": {
+      "label": "Guaranteed returns",
+      "strength": "strong",
+      "lens": "\"Guaranteed 2% a day.\" That's over 1,000% a year.",
+      "why": "Only scammers guarantee profits."
+    },
+    "small": {
+      "label": "Start small",
+      "strength": "strong",
+      "lens": "\"Just €100\" to start.",
+      "why": "Small first deposits build trust before the big ask."
+    },
+    "guilt": {
+      "label": "Guilt trip",
+      "strength": "strong",
+      "lens": "She acts hurt when you hesitate.",
+      "why": "Guilt is pressure wearing a friendly face."
+    },
+    "secret": {
+      "label": "Keep it secret",
+      "strength": "strong",
+      "lens": "She wants you to hide it from family.",
+      "why": "Scammers cut you off from people who would warn you."
+    },
+    "goodmorning": {
+      "label": "Sweet good morning",
+      "strength": "harmless",
+      "lens": "A daily sweet message.",
+      "why": "Kind messages are normal between friends. Watch what comes next."
+    },
+    "avatar": {
+      "label": "Flower picture",
+      "strength": "harmless",
+      "lens": "A flower emoji.",
+      "why": "Proves nothing alone."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Invest through Sophie's site",
+      "trap": true
+    },
+    {
+      "id": "verify",
+      "label": "Check the firm with the official regulator"
+    },
+    {
+      "id": "block_report",
+      "label": "Block and report Sophie"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "trap": {
+    "title": "Redmere Trade Pro · Deposit",
+    "url": "redmere-trade-pro.app/deposit",
+    "ask": "Deposit €100 to start earning a guaranteed 2% a day.",
+    "go": "Deposit €100",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Reported. \"Sophie\" was one of hundreds of fake profiles run by the same group.",
+      "mirageSays": "Three weeks of work, wasted!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Redmere Trade Pro wasn't on any official register. It was on a warning list instead.",
+      "mirageSays": "They looked us up?!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "The site showed big \"profits\" until Toddy tried to withdraw. Then Sophie vanished.",
+      "mirageSays": "Thanks, partner!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "\"Guaranteed 2% a day\" was the moment to stop. No real investment can promise that.",
+    "verify": "Checking the register was smart. Reporting Sophie too stops her reaching the next person."
+  },
+  "golden_rule": "Only scammers guarantee profits. Never invest because someone you met online tells you to.",
+  "quick_check": {
+    "q": "An online friend says a trading site gives \"guaranteed 2% a day\". What's true?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It's fine if you start small"
+      },
+      {
+        "id": "b",
+        "text": "Guaranteed returns are a sure sign of a scam"
+      },
+      {
+        "id": "c",
+        "text": "It's safe because you've chatted for weeks"
+      }
+    ],
+    "answer": "b",
+    "explain": "No real investment can guarantee profits. Weeks of chatting are part of the con."
+  },
+  "hints": {
+    "nudge": "What is she really asking you to do with your money?",
+    "glow_order": [
+      "guaranteed",
+      "platform",
+      "insider",
+      "profit",
+      "secret",
+      "guilt",
+      "small"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "chainalysis-2025",
+    "ic3-2024"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check profile",
+      "title": "Sophie",
+      "rows": [
+        {
+          "k": "Picture",
+          "v": "A flower emoji",
+          "clue": "avatar"
+        },
+        {
+          "k": "Daily message",
+          "v": "A sweet good morning",
+          "clue": "goodmorning"
+        },
+        {
+          "k": "Real friends",
+          "v": "Do not need to sell you anything"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the platform",
+      "title": "Where she sends you",
+      "rows": [
+        {
+          "k": "Platform",
+          "v": "A site you have never heard of, chosen by her",
+          "clue": "platform"
+        },
+        {
+          "k": "Promise",
+          "v": "Guaranteed 2% a day",
+          "clue": "guaranteed"
+        },
+        {
+          "k": "Start with",
+          "v": "Just €100",
+          "clue": "small"
+        },
+        {
+          "k": "Is it registered?",
+          "v": "Look it up on your regulator's list first"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check her story",
+      "title": "Proof and pressure",
+      "rows": [
+        {
+          "k": "Proof",
+          "v": "A screenshot of big profits",
+          "clue": "profit"
+        },
+        {
+          "k": "Her source",
+          "v": "Secret signals from an analyst uncle",
+          "clue": "insider"
+        },
+        {
+          "k": "If you hesitate",
+          "v": "She acts hurt",
+          "clue": "guilt"
+        },
+        {
+          "k": "Family",
+          "v": "She wants you to hide it",
+          "clue": "secret"
+        },
+        {
+          "k": "Screenshots",
+          "v": "Easy to edit"
+        }
+      ]
+    }
+  ]
+}

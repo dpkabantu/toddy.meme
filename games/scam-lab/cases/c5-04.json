@@ -1,0 +1,325 @@
+{
+  "id": "c5-04",
+  "type": "duel",
+  "chapter": 5,
+  "difficulty": 3,
+  "title": "The Helpful Dev",
+  "disguise": "support",
+  "intro": [
+    "Toddy asked a question in a project's community chat. A \"developer\" replied privately.",
+    "He's very friendly and very technical.",
+    "Talk back. Watch what he wants you to sign."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Dev Arno 🛠️",
+    "text": "Saw your question! You have a pending airdrop."
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "text": "Dev Arno 🛠️",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@arno_dev_team"
+        }
+      ],
+      "avatar": {
+        "glyph": "🛠️",
+        "clue": "avatar"
+      }
+    },
+    "banner": [
+      {
+        "clue": "dm",
+        "text": "Message request · from the project's group"
+      }
+    ],
+    "items": []
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              "Hi! ",
+              {
+                "clue": "pending",
+                "text": "Your wallet has a pending airdrop stuck in the contract."
+              }
+            ]
+          },
+          {
+            "msg": [
+              "To release it, ",
+              {
+                "clue": "sign",
+                "text": "sign this message: 0x095ea7b3…ffff"
+              },
+              " on ",
+              {
+                "clue": "tool",
+                "text": "release-tool.dev",
+                "link": true
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "What does that message do?",
+            "next": "n2"
+          },
+          {
+            "text": "OK, signing",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Devs don't DM first. Block and report.",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "trust",
+                "text": "Just a standard release, trust me, I built the contract 😊"
+              },
+              " ",
+              {
+                "clue": "soon",
+                "text": "It expires tonight."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "I don't sign things I can't read. Report.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll ask in the public group if this is real",
+            "end": "verify"
+          },
+          {
+            "text": "Fine, signing",
+            "end": "go_ahead"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "dm": {
+      "label": "DM after a public question",
+      "strength": "strong",
+      "lens": "A \"dev\" messaged you privately.",
+      "why": "Real team members answer in public."
+    },
+    "pending": {
+      "label": "Stuck airdrop",
+      "strength": "strong",
+      "lens": "Money \"stuck\" for you.",
+      "why": "A story to make you act."
+    },
+    "sign": {
+      "label": "Unreadable signature",
+      "strength": "strong",
+      "lens": "A string of code you can't read.",
+      "why": "Never sign something you can't read. It can be an approval in disguise."
+    },
+    "tool": {
+      "label": "Special \"release tool\"",
+      "strength": "strong",
+      "lens": "An outside tool you've never heard of.",
+      "why": "Drainers hide behind \"tools\"."
+    },
+    "trust": {
+      "label": "\"Trust me\"",
+      "strength": "strong",
+      "lens": "No explanation, just trust.",
+      "why": "Scammers fear clear questions."
+    },
+    "soon": {
+      "label": "Expires tonight",
+      "strength": "strong",
+      "lens": "Deadline again.",
+      "why": "Pressure stops checking."
+    },
+    "handle": {
+      "label": "Dev handle",
+      "strength": "harmless",
+      "lens": "\"dev_team\" in the name.",
+      "why": "Names prove nothing."
+    },
+    "avatar": {
+      "label": "Tool emoji",
+      "strength": "harmless",
+      "lens": "A tools emoji.",
+      "why": "Proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Sign the message"
+    },
+    {
+      "id": "verify",
+      "label": "Ask in the public group"
+    },
+    {
+      "id": "block_report",
+      "label": "Block and report"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Reported. The real team confirmed: \"We never DM first.\"",
+      "mirageSays": "My tool, unused!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The public group: \"That's not our dev. Don't sign anything!\"",
+      "mirageSays": "Exposed in public!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "The \"release\" message was an approval. The wallet was drained overnight.",
+      "mirageSays": "Released… to me!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "\"What does it do?\" was the right question. If nobody can answer it clearly, don't sign."
+  },
+  "golden_rule": "Never sign something you can't read, especially for someone who messaged you first.",
+  "quick_check": {
+    "q": "Someone asks you to sign a message you can't read to \"release\" funds. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Sign; signatures are harmless"
+      },
+      {
+        "id": "b",
+        "text": "Don't sign; ask in public and report"
+      }
+    ],
+    "answer": "b",
+    "explain": "Signatures can grant spending rights."
+  },
+  "hints": {
+    "nudge": "Do you know what the message does?",
+    "glow_order": [
+      "sign",
+      "tool",
+      "dm",
+      "pending",
+      "trust",
+      "soon"
+    ]
+  },
+  "sources": [
+    "cafc-wallet",
+    "ftc-crypto",
+    "chainalysis-2025"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the account",
+      "title": "Dev Arno",
+      "rows": [
+        {
+          "k": "Messaged you",
+          "v": "Privately, first",
+          "clue": "dm"
+        },
+        {
+          "k": "Name",
+          "v": "Has \"dev_team\" in it",
+          "clue": "handle"
+        },
+        {
+          "k": "Picture",
+          "v": "A tools emoji",
+          "clue": "avatar"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the request",
+      "title": "What he sends",
+      "rows": [
+        {
+          "k": "Your money",
+          "v": "\"Stuck\" for you",
+          "clue": "pending"
+        },
+        {
+          "k": "A string of code",
+          "v": "You cannot read it",
+          "clue": "sign"
+        },
+        {
+          "k": "A tool",
+          "v": "One you have never heard of",
+          "clue": "tool"
+        },
+        {
+          "k": "Real developers",
+          "v": "Never need your signature in a DM"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the reasons",
+      "title": "Why trust him?",
+      "rows": [
+        {
+          "k": "His reason",
+          "v": "None, just trust",
+          "clue": "trust"
+        },
+        {
+          "k": "Deadline",
+          "v": "Soon",
+          "clue": "soon"
+        },
+        {
+          "k": "Official help",
+          "v": "Lives in the project's public channel"
+        }
+      ]
+    }
+  ]
+}

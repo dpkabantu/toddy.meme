@@ -1,0 +1,398 @@
+{
+  "id": "c4-06",
+  "type": "boss",
+  "chapter": 4,
+  "difficulty": 3,
+  "title": "Operation Panic",
+  "disguise": "support",
+  "disguise2": "admin",
+  "intro": [
+    "Mirage's scariest act. It starts with a screen full of red warnings.",
+    "Then \"support\", then \"police\". Each mask is scarier.",
+    "Keep calm, collect the clues, and unmask him."
+  ],
+  "notify": {
+    "app": "Browser",
+    "from": "⚠️ Security Alert",
+    "text": "Your device is infected! Call support immediately."
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "popup",
+          "text": "⚠️ Larkspur Security Alert",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "site",
+          "text": "larkspur-alert.support"
+        }
+      ],
+      "avatar": {
+        "glyph": "⚠️",
+        "clue": "avatar"
+      }
+    },
+    "context": "A full-screen warning popped up in your browser.",
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "infected",
+            "text": "⚠️ Your wallet is infected and being emptied!"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "chatnow",
+            "text": "Chat with a security agent now"
+          },
+          " ",
+          {
+            "clue": "noclose",
+            "text": "— do NOT close this page"
+          }
+        ]
+      }
+    ]
+  },
+  "duel": {
+    "start": "d1",
+    "nodes": {
+      "d1": {
+        "rename": "Agent Tom · Larkspur Security",
+        "say": [
+          {
+            "sys": [
+              "\"Agent Tom\" joined"
+            ]
+          },
+          {
+            "msg": [
+              "I can save your funds. ",
+              {
+                "clue": "remote",
+                "text": "Install RemoteHelp so I can fix your device."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Why do you need control of my device?",
+            "next": "d2"
+          },
+          {
+            "text": "Installing it",
+            "next": "d3"
+          },
+          {
+            "text": "Close the page and report it",
+            "end": "block_report"
+          }
+        ]
+      },
+      "d2": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "hackers",
+                "text": "Hackers are inside right now! No time to explain!"
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Real security never needs control of my phone. Report.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll check Larkspur's official support myself",
+            "end": "verify"
+          },
+          {
+            "text": "OK, installing",
+            "next": "d3"
+          }
+        ]
+      },
+      "d3": {
+        "rename": "Inspector Varga · Cyber Police",
+        "disguise": "admin",
+        "say": [
+          {
+            "sys": [
+              {
+                "clue": "swap",
+                "text": "Agent Tom left. \"Inspector Varga · Cyber Police\" joined."
+              }
+            ]
+          },
+          {
+            "msg": [
+              "The hackers are in your bank too. ",
+              {
+                "clue": "move",
+                "text": "Move everything to this police-protected wallet now."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Move the funds",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Police don't hold your money. Stop and report.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll go to a real police station",
+            "end": "verify"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "infected": {
+      "label": "Panic pop-up",
+      "strength": "strong",
+      "lens": "A scary full-screen warning.",
+      "why": "Real wallets don't show browser pop-ups like this."
+    },
+    "site": {
+      "label": "Odd website",
+      "strength": "strong",
+      "lens": "larkspur-alert.support isn't the real site.",
+      "why": "Fake alerts live on look-alike sites."
+    },
+    "noclose": {
+      "label": "\"Do NOT close\"",
+      "strength": "strong",
+      "lens": "They forbid you from leaving.",
+      "why": "Closing the page is exactly what keeps you safe."
+    },
+    "chatnow": {
+      "label": "Chat with an \"agent\"",
+      "strength": "strong",
+      "lens": "An agent appears inside a pop-up.",
+      "why": "Real support never starts from a pop-up."
+    },
+    "remote": {
+      "label": "Remote-control app",
+      "strength": "strong",
+      "lens": "They want control of your device.",
+      "why": "Never install remote-access apps because someone asks."
+    },
+    "hackers": {
+      "label": "No time to explain",
+      "strength": "strong",
+      "lens": "Pure pressure.",
+      "why": "Scammers fear questions."
+    },
+    "swap": {
+      "label": "A \"police\" officer joins",
+      "strength": "strong",
+      "lens": "Support swaps for police in the same chat.",
+      "why": "One con artist, two masks."
+    },
+    "move": {
+      "label": "\"Police-protected wallet\"",
+      "strength": "strong",
+      "lens": "Police asking you to move your money.",
+      "why": "Police never hold or move your money."
+    },
+    "popup": {
+      "label": "Brand name",
+      "strength": "harmless",
+      "lens": "It uses the wallet's name.",
+      "why": "Names are easy to copy."
+    },
+    "avatar": {
+      "label": "Warning sign",
+      "strength": "harmless",
+      "lens": "A warning emoji.",
+      "why": "Proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "open_chat",
+      "label": "Chat with the agent",
+      "goto": "duel"
+    },
+    {
+      "id": "verify",
+      "label": "Close the page and contact Larkspur through its app"
+    },
+    {
+      "id": "block_report",
+      "label": "Close the page and report the site"
+    },
+    {
+      "id": "go_ahead",
+      "label": "Move funds",
+      "hidden": true
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "caught",
+      "stamp": "CASE CLOSED",
+      "line": "Page closed, site reported. The \"agent\" and the \"inspector\" were the same person.",
+      "mirageSays": "Unmasked again!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Larkspur support: \"That pop-up wasn't us. Your wallet is fine.\"",
+      "mirageSays": "They asked the real company!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "Remote access, then a \"police wallet\". Every coin went to Mirage.",
+      "mirageSays": "Police-protected… by me!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Closing the pop-up at the start would have ended it. Real support never needs control of your device."
+  },
+  "board": {
+    "q": "What's really going on?",
+    "verdicts": [
+      {
+        "id": "scam",
+        "text": "Fake alert, fake support, then fake police: one con"
+      },
+      {
+        "id": "real",
+        "text": "A real virus and real police"
+      },
+      {
+        "id": "unsure",
+        "text": "Not enough evidence"
+      }
+    ],
+    "answer": "scam",
+    "pick": 3,
+    "explain": "A panic pop-up, a remote-control request and a \"police wallet\". Fear, then control, then money."
+  },
+  "golden_rule": "When a screen screams at you to act now, close it. Real help never starts with a pop-up.",
+  "quick_check": {
+    "q": "A pop-up says your wallet is infected and an agent can fix it. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Chat with the agent"
+      },
+      {
+        "id": "b",
+        "text": "Close it and contact the company through its app"
+      }
+    ],
+    "answer": "b",
+    "explain": "Real support never starts from a pop-up."
+  },
+  "hints": {
+    "nudge": "What does the pop-up stop you from doing?",
+    "glow_order": [
+      "noclose",
+      "remote",
+      "site",
+      "infected",
+      "move",
+      "swap"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-data-2024",
+    "ic3-2024",
+    "ftc-phishing",
+    "cafc-wallet"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the pop-up",
+      "title": "Who is \"Security Alert\"?",
+      "rows": [
+        {
+          "k": "It uses",
+          "v": "The wallet's name",
+          "clue": "popup"
+        },
+        {
+          "k": "Scary warning",
+          "v": "Full screen, cannot be closed",
+          "clue": "infected"
+        },
+        {
+          "k": "Closing it",
+          "v": "They forbid you",
+          "clue": "noclose"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the site",
+      "title": "Where it is",
+      "rows": [
+        {
+          "k": "Address",
+          "v": "larkspur-alert.support",
+          "clue": "site"
+        },
+        {
+          "k": "An \"agent\" appears",
+          "v": "Inside the pop-up",
+          "clue": "chatnow"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official page",
+      "title": "What the real wallet says",
+      "rows": [
+        {
+          "k": "Real wallet support",
+          "v": "Never opens a pop-up like this"
+        },
+        {
+          "k": "Will support control your device?",
+          "v": "Never",
+          "clue": "remote"
+        },
+        {
+          "k": "Will police ask you to move money?",
+          "v": "Never",
+          "clue": "move"
+        }
+      ]
+    }
+  ]
+}

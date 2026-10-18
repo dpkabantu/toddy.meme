@@ -1,0 +1,245 @@
+{
+  "id": "c6-05",
+  "type": "hunt",
+  "chapter": 6,
+  "difficulty": 2,
+  "title": "Moving Day",
+  "disguise": null,
+  "intro": [
+    "Lena sends a voice message on Wrenly, from her usual account.",
+    "After hacked accounts, every friend's message feels suspicious.",
+    "Sniff it. Is anything actually wrong?"
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Lena",
+    "text": "🎤 Voice message (0:14)"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "Lena"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@lena_draws · friends since 2019"
+        }
+      ],
+      "avatar": {
+        "glyph": "🦊",
+        "clue": "avatar"
+      }
+    },
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "voice",
+            "text": "🎤 Voice message (0:14): \"Hey Toddy! It's me, Lena…\""
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "ask",
+            "text": "Can you help me move flats on Saturday? 📦"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "pizza",
+            "text": "Pizza's on me! 🍕"
+          },
+          " ",
+          {
+            "clue": "plan",
+            "text": "Like we talked about at lunch last week."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "voice": {
+      "label": "Her voice",
+      "strength": "harmless",
+      "lens": "A voice message in Lena's own voice.",
+      "why": "Normal for Lena."
+    },
+    "ask": {
+      "label": "Asks for help, not money",
+      "strength": "harmless",
+      "lens": "She asks for help carrying boxes.",
+      "why": "No money, codes or links."
+    },
+    "pizza": {
+      "label": "Pizza offer",
+      "strength": "harmless",
+      "lens": "She offers pizza.",
+      "why": "Friendly and normal."
+    },
+    "plan": {
+      "label": "Matches real life",
+      "strength": "harmless",
+      "lens": "You talked about this in person.",
+      "why": "It matches something only the real Lena knows."
+    },
+    "name": {
+      "label": "Lena's account",
+      "strength": "harmless",
+      "lens": "Her usual account.",
+      "why": "Normal."
+    },
+    "handle": {
+      "label": "Old friendship",
+      "strength": "harmless",
+      "lens": "Friends since 2019.",
+      "why": "Normal."
+    },
+    "avatar": {
+      "label": "Her usual picture",
+      "strength": "harmless",
+      "lens": "Her usual fox avatar.",
+      "why": "Normal."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Reply: \"Of course! See you Saturday\""
+    },
+    {
+      "id": "verify",
+      "label": "Call her to confirm the time"
+    },
+    {
+      "id": "block_report",
+      "label": "Report her account as hacked"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "Saturday: boxes, stairs, and a lot of pizza. Lena was thrilled.",
+      "toddy": "happy"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "Lena's real account got locked for a day. Nothing was wrong.",
+      "mirageSays": "Suspect your friends? Excellent."
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "CHECKED",
+      "line": "Lena picked up laughing: \"Yes, 10 am! Bring gloves!\"",
+      "toddy": "happy"
+    }
+  },
+  "what_if": {
+    "block_report": "No money, no codes, no link, and it matched a real conversation. That's just a friend."
+  },
+  "golden_rule": "A friend asking for help, not money, matching something real, is just a friend.",
+  "quick_check": {
+    "q": "Which message from a friend needs checking?",
+    "options": [
+      {
+        "id": "a",
+        "text": "\"Help me move on Saturday, pizza on me\""
+      },
+      {
+        "id": "b",
+        "text": "\"Send 200 NVUSD to this new wallet, can't talk\""
+      }
+    ],
+    "answer": "b",
+    "explain": "Money to new details plus \"can't talk\" is the warning sign."
+  },
+  "hints": {
+    "nudge": "What is Lena asking for?",
+    "glow_order": []
+  },
+  "sources": [
+    "cafc-wallet",
+    "ftc-phishing",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check profile",
+      "title": "Lena",
+      "rows": [
+        {
+          "k": "Account",
+          "v": "Her usual one",
+          "clue": "name"
+        },
+        {
+          "k": "Friends since",
+          "v": "2019",
+          "clue": "handle"
+        },
+        {
+          "k": "Avatar",
+          "v": "Her usual fox",
+          "clue": "avatar"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the message",
+      "title": "What she says",
+      "rows": [
+        {
+          "k": "Voice message",
+          "v": "In Lena's own voice",
+          "clue": "voice"
+        },
+        {
+          "k": "She asks",
+          "v": "To help carry boxes",
+          "clue": "ask"
+        },
+        {
+          "k": "She offers",
+          "v": "Pizza",
+          "clue": "pizza"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the plan",
+      "title": "Does it fit?",
+      "rows": [
+        {
+          "k": "You talked about it",
+          "v": "In person",
+          "clue": "plan"
+        }
+      ]
+    }
+  ]
+}

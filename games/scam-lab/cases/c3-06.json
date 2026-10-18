@@ -1,0 +1,396 @@
+{
+  "id": "c3-06",
+  "type": "boss",
+  "chapter": 3,
+  "difficulty": 3,
+  "title": "The Giveaway Empire",
+  "disguise": "influencer",
+  "disguise2": "support",
+  "intro": [
+    "Mirage has built a whole giveaway empire: fake winners, fake support, fake sites.",
+    "Follow the trail. He'll switch costumes.",
+    "Then pin the evidence on the case board."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Maple Drop Official 🎁",
+    "text": "You won 1,000 NVL in our community giveaway!"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "Maple Drop Official 🎁",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@mapledrop_0fficial"
+        }
+      ],
+      "avatar": {
+        "glyph": "🎁",
+        "clue": "avatar"
+      }
+    },
+    "banner": [
+      {
+        "clue": "never",
+        "text": "Message request · you never entered a giveaway"
+      }
+    ],
+    "items": [
+      {
+        "msg": [
+          "Congrats! ",
+          {
+            "clue": "won",
+            "text": "You won 1,000 NVL 🎉"
+          }
+        ]
+      },
+      {
+        "msg": [
+          "Our support team will help you claim: ",
+          {
+            "clue": "chat",
+            "text": "wrenly.me/mapledrop-claim",
+            "link": true
+          }
+        ]
+      }
+    ]
+  },
+  "duel": {
+    "start": "d1",
+    "nodes": {
+      "d1": {
+        "rename": "Claim Support · Maple Drop",
+        "disguise": "support",
+        "say": [
+          {
+            "sys": [
+              "You joined \"Claim Support · Maple Drop\""
+            ]
+          },
+          {
+            "msg": [
+              "To release your prize, ",
+              {
+                "clue": "gas",
+                "text": "pay a 20 NVL gas fee first"
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Why not take the fee from the prize?",
+            "next": "d2"
+          },
+          {
+            "text": "Paying 20 NVL",
+            "next": "d3"
+          },
+          {
+            "text": "Leave and report",
+            "end": "block_report"
+          }
+        ]
+      },
+      "d2": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "policy",
+                "text": "Blockchain policy, sorry 🙏"
+              },
+              " ",
+              {
+                "clue": "expire",
+                "text": "Prize expires in 15 minutes!"
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Real prizes don't charge fees. Report.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll check Maple Drop's official site first",
+            "end": "verify"
+          },
+          {
+            "text": "Fine, paying",
+            "next": "d3"
+          }
+        ]
+      },
+      "d3": {
+        "say": [
+          {
+            "msg": [
+              "Fee received ✅ Last step: ",
+              {
+                "clue": "verify_site",
+                "text": "verify your wallet at mapledrop-verify.app"
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Connect and verify",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Stop. This is a scam. Report everything.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll ask in the official community first",
+            "end": "verify"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "never": {
+      "label": "A giveaway you never entered",
+      "strength": "strong",
+      "lens": "You never entered anything.",
+      "why": "Winning something you never entered is a classic lure."
+    },
+    "handle": {
+      "label": "Zero instead of o",
+      "strength": "strong",
+      "lens": "@mapledrop_0-fficial uses a zero.",
+      "why": "Look-alike handles swap 0 for o."
+    },
+    "chat": {
+      "label": "Moves you to a private chat",
+      "strength": "strong",
+      "lens": "A link to a separate \"support\" chat.",
+      "why": "Moving you somewhere private is a warning sign."
+    },
+    "gas": {
+      "label": "Fee to claim",
+      "strength": "strong",
+      "lens": "Pay first, receive later.",
+      "why": "Real prizes never cost money to claim."
+    },
+    "policy": {
+      "label": "Fake \"policy\"",
+      "strength": "strong",
+      "lens": "A made-up rule.",
+      "why": "If the prize were real, the fee could come out of it."
+    },
+    "expire": {
+      "label": "Expires soon",
+      "strength": "strong",
+      "lens": "Pressure again.",
+      "why": "Deadlines stop you checking."
+    },
+    "verify_site": {
+      "label": "Wallet \"verification\" site",
+      "strength": "strong",
+      "lens": "A site that asks your wallet to sign.",
+      "why": "Verify-your-wallet sites are drainers."
+    },
+    "won": {
+      "label": "Prize amount",
+      "strength": "harmless",
+      "lens": "1,000 NVL.",
+      "why": "The amount itself proves nothing."
+    },
+    "name": {
+      "label": "\"Official\" name",
+      "strength": "harmless",
+      "lens": "\"Official\" in the name.",
+      "why": "Anyone can type \"Official\"."
+    },
+    "avatar": {
+      "label": "Gift picture",
+      "strength": "harmless",
+      "lens": "A gift emoji.",
+      "why": "Proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "open_chat",
+      "label": "Open the claim chat",
+      "goto": "duel"
+    },
+    {
+      "id": "verify",
+      "label": "Check Maple Drop's official site"
+    },
+    {
+      "id": "block_report",
+      "label": "Report the account"
+    },
+    {
+      "id": "go_ahead",
+      "label": "Verify",
+      "hidden": true
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "caught",
+      "stamp": "CASE CLOSED",
+      "line": "Reported. Every fake Maple Drop account traced back to one con artist.",
+      "mirageSays": "My whole empire!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The real site: \"We never DM winners. We never charge fees.\"",
+      "mirageSays": "Checked AGAIN?"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "The fee was gone, then the \"verification\" drained the rest.",
+      "mirageSays": "Thanks for the fee AND the wallet!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "The first fee was the moment to stop. Prizes that cost money aren't prizes."
+  },
+  "board": {
+    "q": "What's really going on?",
+    "verdicts": [
+      {
+        "id": "scam",
+        "text": "A fake giveaway: fee first, then a wallet drainer"
+      },
+      {
+        "id": "real",
+        "text": "A real prize with a normal fee"
+      },
+      {
+        "id": "unsure",
+        "text": "Not enough evidence"
+      }
+    ],
+    "answer": "scam",
+    "pick": 3,
+    "explain": "A prize you never entered, a fee to claim, then a wallet \"verification\". Three tricks, one con."
+  },
+  "golden_rule": "A prize that costs money to claim is not a prize.",
+  "quick_check": {
+    "q": "A prize needs a \"gas fee\" before it's released. What is it?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Normal"
+      },
+      {
+        "id": "b",
+        "text": "A scam"
+      }
+    ],
+    "answer": "b",
+    "explain": "Real prizes never cost money."
+  },
+  "hints": {
+    "nudge": "Did you ever enter this giveaway?",
+    "glow_order": [
+      "never",
+      "gas",
+      "handle",
+      "chat",
+      "policy",
+      "expire",
+      "verify_site"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-phishing",
+    "cafc-wallet"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check account",
+      "title": "@mapledrop_0fficial",
+      "rows": [
+        {
+          "k": "Handle",
+          "v": "Uses a zero instead of an o",
+          "clue": "handle"
+        },
+        {
+          "k": "Name",
+          "v": "Has \"Official\" in it",
+          "clue": "name"
+        },
+        {
+          "k": "Did you enter?",
+          "v": "No giveaway of yours",
+          "clue": "never"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the chat link",
+      "title": "Where it leads",
+      "rows": [
+        {
+          "k": "Support chat",
+          "v": "Separate chat they control",
+          "clue": "chat"
+        },
+        {
+          "k": "Verify site",
+          "v": "Asks your wallet to sign",
+          "clue": "verify_site"
+        },
+        {
+          "k": "Fee to claim",
+          "v": "\"Gas\" first, prize later",
+          "clue": "gas"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official page",
+      "title": "What the real team says",
+      "rows": [
+        {
+          "k": "Do they DM winners?",
+          "v": "Never"
+        },
+        {
+          "k": "The fee rule",
+          "v": "Made up; a real prize could cover it itself",
+          "clue": "policy"
+        }
+      ]
+    }
+  ]
+}
