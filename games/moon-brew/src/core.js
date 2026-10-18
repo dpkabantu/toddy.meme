@@ -79,22 +79,39 @@ function inPoly(x, y, p) {
 }
 
 // ---------- Paths ----------
-// Follows a bean from (x,y) heading d. Milk swirls turn it 90° clockwise.
+// Follows a bean from (x,y) heading d. Milk swirls turn it 90° clockwise. env (optional) holds the fixed pieces:
+//   walls   - Set of "x,y" cells that stay forever (cinnamon sticks): a bean cannot pass
+//   portals - Map "x,y" -> "x,y" of its twin (moon doors): a bean that enters one comes out of the twin, same direction
 // Returns { block: {x,y} } if something is in the way, { loop: true } if it would circle forever,
 // otherwise { cells: [{x,y,d}], exit: {x,y,d} } with every cell it passes and where it leaves the tray.
-export function trace(w, h, swirls, occupied, x, y, d) {
+// A portal shows up in cells twice: the door it entered (portal: 'in') and the twin it left by (portal: 'out').
+export function trace(w, h, swirls, occupied, x, y, d, env) {
   const cells = [];
   const seen = new Set();
+  const walls = env && env.walls, portals = env && env.portals;
   let cx = x + DX[d], cy = y + DY[d];
+  let steps = 0;
   while (cx >= 0 && cy >= 0 && cx < w && cy < h) {
+    if (++steps > w * h * 4 + 8) return { loop: true };
+    const k = key(cx, cy);
+    if (walls && walls.has(k)) return { block: { x: cx, y: cy } };
     if (occupied(cx, cy)) return { block: { x: cx, y: cy } };
-    if (swirls.has(key(cx, cy))) {
+    if (swirls.has(k)) {
       d = (d + 1) % 4;
       const s = cx + ',' + cy + ',' + d;
       if (seen.has(s)) return { loop: true };
       seen.add(s);
     }
     cells.push({ x: cx, y: cy, d });
+    if (portals && portals.has(k)) {
+      const s = 'p' + k + ',' + d;
+      if (seen.has(s)) return { loop: true };
+      seen.add(s);
+      const [tx, ty] = portals.get(k).split(',').map(Number);
+      cells[cells.length - 1].portal = 'in';
+      cells.push({ x: tx, y: ty, d, portal: 'out' });
+      cx = tx; cy = ty;
+    }
     cx += DX[d]; cy += DY[d];
   }
   return { cells, exit: { x: cx, y: cy, d } };
@@ -141,8 +158,34 @@ function build(cfg, seed) {
     if (!near && !swirls.has(key(x, y))) swirls.add(key(x, y));
   }
 
-  const free = new Set(all.filter(([x, y]) => !swirls.has(key(x, y))).map(([x, y]) => key(x, y)));
-  const target = Math.max(2, Math.round(free.size * (cfg.fill || 0.6)));
+  // fixed pieces (only drawn from the random stream when the tray has them, so older trays stay the same):
+  // cinnamon walls (Night 4+) and moon doors (Night 7+). Never next to milk, each other, or the tray edge for walls.
+  const walls = new Set();
+  const portals = new Map(); // "x,y" -> twin "x,y" (both directions)
+  const portalList = [];
+  const taken = new Set(swirls);
+  const crowded = (x, y) => { for (let dx = -1; dx <= 1; dx++) for (let dy = -1; dy <= 1; dy++) if (taken.has(key(x + dx, y + dy))) return true; return false; };
+  if (cfg.walls) {
+    for (const [x, y] of all) {
+      if (walls.size >= cfg.walls) break;
+      if (x === 0 || y === 0 || x === w - 1 || y === h - 1 || crowded(x, y)) continue;
+      walls.add(key(x, y)); taken.add(key(x, y));
+    }
+  }
+  for (let p = 0; p < (cfg.portals || 0); p++) {
+    const a = all.find(([x, y]) => !taken.has(key(x, y)) && !crowded(x, y));
+    if (!a) break;
+    taken.add(key(a[0], a[1]));
+    const b = all.find(([x, y]) => !taken.has(key(x, y)) && !crowded(x, y) && Math.abs(x - a[0]) + Math.abs(y - a[1]) >= 4);
+    if (!b) { taken.delete(key(a[0], a[1])); break; }
+    taken.add(key(b[0], b[1]));
+    portals.set(key(a[0], a[1]), key(b[0], b[1])); portals.set(key(b[0], b[1]), key(a[0], a[1]));
+    portalList.push([key(a[0], a[1]), key(b[0], b[1]), p]);
+  }
+  const env = { walls, portals };
+
+  const free = new Set(all.filter(([x, y]) => !taken.has(key(x, y))).map(([x, y]) => key(x, y)));
+  const target = cfg.beans ? Math.max(2, Math.min(cfg.beans, free.size)) : Math.max(2, Math.round(free.size * (cfg.fill || 0.6)));
   const occ = new Set();
   const isOcc = (x, y) => occ.has(key(x, y));
   const cover = new Map(); // how many placed beans would roll through each cell
@@ -168,7 +211,7 @@ function build(cfg, seed) {
 
     const dirs = [];
     for (let d = 0; d < 4; d++) {
-      const t = trace(w, h, swirls, isOcc, x, y, d);
+      const t = trace(w, h, swirls, isOcc, x, y, d, env);
       if (t.cells) dirs.push({ d, t });
     }
     if (!dirs.length) continue; // blocked every way, and can only get worse
@@ -184,7 +227,7 @@ function build(cfg, seed) {
         for (const p of [(d + 1) % 4, (d + 3) % 4]) {
           const x2 = x + DX[p], y2 = y + DY[p];
           if (!free.has(key(x2, y2))) continue;
-          const t2 = trace(w, h, swirls, isOcc, x2, y2, d);
+          const t2 = trace(w, h, swirls, isOcc, x2, y2, d, env);
           if (!t2.cells) continue;
           placed = [{ x, y, dir: d, cells: t.cells }, { x: x2, y: y2, dir: d, cells: t2.cells }];
           free.delete(key(x2, y2));
@@ -224,11 +267,28 @@ function build(cfg, seed) {
   pickSome(singles.filter(b => b.id >= iceAt), cfg.ice || 0, R).forEach(b => { b.ice = iceAt; });
   // sleepy beans are always medium roast (that is how the sleepy bean art is painted)
   pickSome(singles.filter(b => !b.ice), cfg.sleepy || 0, R).forEach(b => { b.sleepy = true; b.roast = 1; });
+  // spinner bean (Night 5+): turns a quarter clockwise every time a bean is ground. It is only chosen where all four
+  // straight lines to the edge are clear of walls, milk and doors, so it can never be shut in. Its starting direction
+  // is worked back from the way it must point when the solution reaches it.
+  if (cfg.spin) {
+    const rayFree = (b) => {
+      for (let d = 0; d < 4; d++) for (let cx = b.x + DX[d], cy = b.y + DY[d]; cx >= 0 && cy >= 0 && cx < w && cy < h; cx += DX[d], cy += DY[d]) {
+        const k = key(cx, cy);
+        if (walls.has(k) || swirls.has(k) || portals.has(k)) return false;
+      }
+      return true;
+    };
+    pickSome(singles.filter(b => !b.ice && !b.sleepy && b.id >= 1 && rayFree(b)), cfg.spin, R).forEach(b => {
+      const idx = solution.findIndex(ids => ids[0] === b.id);
+      b.spin = true; b.roast = 1;
+      b.dir = (((b.dir - idx) % 4) + 4) % 4;
+    });
+  }
   const ticketLen = Math.min(cfg.ticket || 0, beans.length);
   const ticket = beans.slice(0, ticketLen).map(b => b.roast);
 
   return {
-    w, h, shape: cfg.shape, mask, swirls: [...swirls], beans, ticket, solution, target, seed: cfg.seed,
+    w, h, shape: cfg.shape, mask, swirls: [...swirls], walls: [...walls], portals: portalList, beans, ticket, solution, target, seed: cfg.seed,
   };
 }
 function shuffle(a, R) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(R() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
@@ -237,16 +297,21 @@ function pickSome(arr, n, R) { return shuffle(arr.slice(), R).slice(0, n); }
 // A frozen tray (from src/trays.js) back to a full level object.
 export function fromFrozen(f) {
   return {
-    w: f.w, h: f.h, shape: f.shape, mask: makeMask(f.shape, f.w, f.h), swirls: f.swirls, ticket: f.ticket, solution: f.solution,
-    beans: f.beans.map(([x, y, dir, roast, sleepy, ice, pair], id) => ({ id, x, y, dir, roast, sleepy: !!sleepy, ice, pair })),
+    w: f.w, h: f.h, shape: f.shape, mask: makeMask(f.shape, f.w, f.h), swirls: f.swirls, walls: f.walls || [], portals: f.portals || [],
+    ticket: f.ticket, solution: f.solution,
+    beans: f.beans.map(([x, y, dir, roast, sleepy, ice, pair, spin], id) => ({ id, x, y, dir, roast, sleepy: !!sleepy, ice, pair, spin: !!spin })),
   };
 }
 
 // ---------- Playing ----------
 export function newGame(level) {
+  const portals = new Map();
+  for (const [a, b] of level.portals || []) { portals.set(a, b); portals.set(b, a); }
   return {
     level,
     swirls: new Set(level.swirls),
+    walls: new Set(level.walls || []),
+    portals,
     beans: level.beans.map(b => ({ ...b, awake: !b.sleepy, gone: false })),
     bumps: 0, rolled: 0, removedRoasts: [], perfect: true, status: 'playing', log: [],
   };
@@ -257,7 +322,7 @@ export function unitOf(g, b) { return b.pair >= 0 ? [b, g.beans[b.pair]] : [b]; 
 export function traceBean(g, b, ignore) {
   const skip = new Set(ignore.map(o => key(o.x, o.y)));
   const occ = (x, y) => !skip.has(key(x, y)) && !!beanAt(g, x, y);
-  return trace(g.level.w, g.level.h, g.swirls, occ, b.x, b.y, b.dir);
+  return trace(g.level.w, g.level.h, g.swirls, occ, b.x, b.y, b.dir, { walls: g.walls, portals: g.portals });
 }
 export function canRoll(g, b) {
   if (b.gone || !b.awake || frozen(g, b)) return false;
@@ -270,7 +335,18 @@ export function tap(g, b, t = 0) {
   if (g.status !== 'playing' || !b || b.gone) return { type: 'none' };
   const ev = doTap(g, b);
   g.log.push([b.id, ev.type[0], Math.round(t)]);
+  if (g.status === 'playing') ev.rescued = unstick(g);
   return ev;
+}
+// A spinner that is facing the wrong way must never leave the player stuck: when no bean can move (and none is asleep),
+// the spinners turn a quarter by themselves until one can. Always works within three turns (see the tests).
+function unstick(g) {
+  const spinners = () => g.beans.filter(b => b.spin && !b.gone);
+  const canAct = () => g.beans.some(b => !b.gone && (!b.awake || (!frozen(g, b) && canRoll(g, b))));
+  if (!spinners().length || canAct()) return [];
+  const turned = [];
+  for (let i = 0; i < 3 && !canAct(); i++) { for (const s of spinners()) { s.dir = (s.dir + 1) % 4; turned.push(s); } }
+  return turned;
 }
 function doTap(g, b) {
   if (!b.awake) { b.awake = true; return { type: 'wake', bean: b }; }
@@ -290,8 +366,11 @@ function doTap(g, b) {
     g.removedRoasts.push(x.roast);
     if (i < g.level.ticket.length && g.level.ticket[i] !== x.roast) g.perfect = false;
   }
+  // spinner beans turn a quarter clockwise whenever beans are ground
+  const spun = [];
+  for (const x of g.beans) if (x.spin && !x.gone) { x.dir = (x.dir + 1) % 4; spun.push(x); }
   if (g.beans.every(x => x.gone)) g.status = 'won';
-  return { type: 'roll', unit, traces };
+  return { type: 'roll', unit, traces, spun };
 }
 export function stars(g) {
   if (g.status !== 'won') return 0;
@@ -319,14 +398,33 @@ export function measure(level) {
   const g = newGame(level);
   g.beans.forEach(b => { b.awake = true; b.ice = 0; });
   const free0 = g.beans.filter(b => canRoll(g, b)).length;
-  let layers = 0;
+  let layers = 0, rescue = 0;
+  const spin = (n) => { for (const b of g.beans) if (b.spin && !b.gone) b.dir = (b.dir + n) % 4; };
   while (g.beans.some(b => !b.gone)) {
     const now = g.beans.filter(b => !b.gone && canRoll(g, b));
-    if (!now.length) return { free0, layers: -1 };
+    if (!now.length) {
+      if (g.beans.some(b => b.spin && !b.gone) && rescue++ < 4) { spin(1); continue; }
+      return { free0, layers: -1 };
+    }
     now.forEach(b => { b.gone = true; });
     layers++;
+    spin(new Set(now.map(b => (b.pair >= 0 ? Math.min(b.id, b.pair) : b.id))).size % 4);
   }
   return { free0, layers, beans: level.beans.length };
+}
+
+// One number for "how hard is this tray" (used for the Easy / Medium / Hard / Expert badge and the tests).
+// Bigger trays, more waves, fewer beans free at the start, and every special piece add to it.
+export function difficulty(level) {
+  const m = measure(level);
+  const n = level.beans.length;
+  const count = (f) => level.beans.filter(f).length;
+  const layers = Math.max(1, m.layers);
+  const d = n * 0.9 + layers * 3.5 + (1 - m.free0 / n) * 12
+    + count(b => b.sleepy) * 1.5 + count(b => b.ice) * 3 + count(b => b.pair >= 0 && b.pair > b.id) * 2.5
+    + level.swirls.length * 2 + (level.walls || []).length * 1.5 + (level.portals || []).length * 4 + count(b => b.spin) * 4
+    + level.ticket.length * 0.8;
+  return Math.round(d * 10) / 10;
 }
 
 // ---------- Daily Brew score (out of 1000) ----------

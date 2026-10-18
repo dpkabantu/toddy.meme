@@ -87,8 +87,10 @@ img { max-width: 100%; }
 .center { text-align: center; }
 
 /* ---------- Map ---------- */
-.tabs { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; flex: none; }
-.tab { border: 1px solid var(--line); background: var(--panel); border-radius: 12px; padding: 8px 4px; font-weight: 800; font-size: 13px; }
+/* the Nights never run out, so the Night tabs scroll sideways */
+.tabs { display: flex; gap: 6px; flex: none; overflow-x: auto; scrollbar-width: none; padding-bottom: 2px; }
+.tabs::-webkit-scrollbar { display: none; }
+.tab { flex: 0 0 auto; min-width: 88px; border: 1px solid var(--line); background: var(--panel); border-radius: 12px; padding: 8px 12px; font-weight: 800; font-size: 13px; }
 .tab[aria-selected="true"] { border-color: var(--gold); background: #3a2a55; }
 .tab[disabled] { opacity: .45; }
 .night-head { display: flex; align-items: center; gap: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 10px 12px; flex: none; }
@@ -97,7 +99,10 @@ img { max-width: 100%; }
 .night-head p { margin: 0; font-size: 12px; }
 .trays { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; }
 .tray-btn { aspect-ratio: 1; border-radius: 14px; border: 1px solid var(--line); background: var(--panel-solid); display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; font-weight: 900; font-size: 17px; font-variant-numeric: tabular-nums; }
+.tray-btn { position: relative; }
 .tray-btn small { font-size: 10px; color: var(--gold); letter-spacing: 1px; min-height: 12px; }
+/* how hard the tray is: one to four dots (Easy, Medium, Hard, Expert) */
+.tray-btn .pips { position: absolute; top: 4px; left: 0; right: 0; text-align: center; font-style: normal; font-size: 5px; letter-spacing: 1.5px; color: var(--muted); line-height: 1; }
 .tray-btn.finale { background: linear-gradient(180deg, #4a3315, #2d200f); border-color: #8a6524; }
 .tray-btn.locked { opacity: .38; }
 .tray-btn.next { border-color: var(--gold); box-shadow: 0 0 0 2px #fdaf1e55; }
@@ -155,7 +160,8 @@ body.playing { background: #120b08 var(--counter-bg, none) center / cover no-rep
 /* ---------- Album / How to ---------- */
 .album { display: grid; gap: 14px; }
 .pc { border-radius: 16px; overflow: hidden; border: 1px solid var(--line); background: var(--panel-solid); }
-.pc img { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.pc img, .pc canvas { display: block; width: 100%; aspect-ratio: 3 / 2; object-fit: cover; }
+.pc .pc-build { width: 100%; aspect-ratio: 3 / 2; background: #1c1530; }
 .pc.locked img { filter: blur(14px) brightness(.35) saturate(.4); }
 .pc .cap { padding: 10px 12px; display: flex; justify-content: space-between; gap: 8px; font-size: 13px; }
 .pc .cap b { color: var(--gold); }
@@ -327,10 +333,14 @@ html.calm .amb-motes { display: none; }
 /* rc9: the journey is visible (Play label, tappable tray title, 20-dot Night path) */
 .btn.play-main { flex-direction: column; gap: 0; padding-block: 10px; }
 .btn.play-main small { color: #5a2e12; font-size: 12px; font-weight: 800; }
-button.where { font: inherit; font-weight: 800; color: var(--cream); cursor: pointer; }
+button.where { font: inherit; font-weight: 800; color: var(--cream); cursor: pointer; display: flex; flex-direction: column; align-items: center; gap: 1px; line-height: 1.15; }
+button.where .tier { font-size: 10px; letter-spacing: .1em; color: var(--gold); font-weight: 800; text-transform: uppercase; }
 .path { display: flex; flex-wrap: wrap; justify-content: center; gap: 5px; max-width: 300px; }
 .path i { width: 10px; height: 10px; border-radius: 50%; background: #ffffff1f; }
 .path i.done { background: var(--gold); }
 .path i.cur { box-shadow: 0 0 0 3px #fce25d66; transform: scale(1.25); }
 .path i.moon { width: 14px; height: 14px; margin-top: -2px; background: transparent; border-radius: 50%; box-shadow: inset -4px -1px 0 0 var(--gold-hi); opacity: .55; }
 .path i.moon.done { opacity: 1; }
+
+.legend { margin: 6px 0 0; text-align: center; font-size: 11px; color: var(--muted); letter-spacing: .02em; }
+.card canvas.postcard { display: block; }

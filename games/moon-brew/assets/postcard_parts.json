@@ -1,0 +1,70 @@
+{
+ "bg": {
+  "counter": {
+   "file": "pcbg_counter_v01.webp",
+   "counter": 478
+  },
+  "roundwindow": {
+   "file": "pcbg_roundwindow_v01.webp",
+   "counter": 491
+  },
+  "bookshelf": {
+   "file": "pcbg_bookshelf_v01.webp",
+   "counter": 491
+  },
+  "terrace": {
+   "file": "pcbg_terrace_v01.webp",
+   "counter": 495
+  }
+ },
+ "sky": {
+  "fullmoon": "pcsky_fullmoon_v01.webp",
+  "crescent": "pcsky_crescent_v01.webp",
+  "rain": "pcsky_rain_v01.webp",
+  "snow": "pcsky_snow_v01.webp",
+  "aurora": "pcsky_aurora_v01.webp"
+ },
+ "size": [
+  1200,
+  800
+ ],
+ "toddy": {
+  "serve": {
+   "file": "pctoddy_serve_v01.webp",
+   "w": 560,
+   "h": 536
+  },
+  "wave": {
+   "file": "pctoddy_wave_v01.webp",
+   "w": 533,
+   "h": 560
+  },
+  "sip": {
+   "file": "pctoddy_sip_v01.webp",
+   "w": 542,
+   "h": 560
+  }
+ },
+ "prop": {
+  "plant": {
+   "file": "pcprop_plant_v01.webp",
+   "w": 324,
+   "h": 340
+  },
+  "lantern": {
+   "file": "pcprop_lantern_v01.webp",
+   "w": 196,
+   "h": 340
+  },
+  "cakestand": {
+   "file": "pcprop_cakestand_v01.webp",
+   "w": 338,
+   "h": 340
+  },
+  "books": {
+   "file": "pcprop_books_v01.webp",
+   "w": 311,
+   "h": 340
+  }
+ }
+}
