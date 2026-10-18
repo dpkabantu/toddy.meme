@@ -388,6 +388,14 @@ function renderMap() {
   }
   $('unlock-all').checked = !!save.unlockAll;
   $('unlock-all').closest('label').hidden = !PLAYTEST;
+  // on the newest open Night: a shadow of who is coming next, so the journey is never a dead end
+  const nx = $('night-next');
+  nx.hidden = mapNight !== lastOpenNight();
+  if (!nx.hidden) {
+    const nn = nightInfo(mapNight + 1);
+    $('next-visitor').src = ASSET + VISITOR[nn.visitor][0];
+    $('next-text').innerHTML = `<b>Next: ${nn.name}</b> \u00B7 a new visitor and a new postcard. ${mapNight < 2 ? 'Clear tray 20 to open it.' : 'Nights never end.'}`;
+  }
 }
 function say2map(t) { $('night-sub').textContent = `Tray ${t} opens after you clear tray ${t - 1}.`; }
 
@@ -1138,7 +1146,7 @@ function finish(again) {
     const painted = mode.n < 3;
     card(`<h3>A postcard for you</h3><div class="pc-wrap" id="pc-wrap">${painted ? `<img class="postcard" src="${ASSET}postcard_n${mode.n + 1}_v01.webp" alt="${night.title} postcard">${mark}` : '<p class="stat">Making your postcard\u2026</p>'}</div>
       <p><b>${night.title}</b>${marked ? ' \u00B7 that crown mark again\u2026' : ''}</p>
-      ${mode.n === 2 ? '<p class="stat">The first three Nights are done. Someone new is at the door.</p>' : ''}
+      <p class="stat">${mode.n === 2 ? 'The first three Nights are done. Nights never end: someone new is at the door.' : `${nightInfo(mode.n + 1).name} is open: a new visitor and a new postcard.`}</p>
       <div class="btns"><button class="btn primary" id="o-cont" type="button">${nextLabel}</button></div>`);
     bind('o-cont', goNext);
     if (!painted) buildPostcard(mode.n, ASSET).then(cv => { const w = $('pc-wrap'); if (w) { w.textContent = ''; cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', `${night.title} postcard`); w.appendChild(cv); if (marked) w.insertAdjacentHTML('beforeend', mark); } });
