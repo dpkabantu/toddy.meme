@@ -1,0 +1,359 @@
+{
+  "id": "c3-02",
+  "type": "hunt",
+  "chapter": 3,
+  "difficulty": 2,
+  "title": "Two Presale Pages",
+  "disguise": "admin",
+  "intro": [
+    "Someone in a group chat says \"the TODDY presale is live!\"",
+    "Two pages come up. One is the real toddy.meme. One isn't.",
+    "Compare them side by side."
+  ],
+  "notify": {
+    "app": "Browser",
+    "from": "Two pages",
+    "text": "TODDY presale?"
+  },
+  "decide_q": "Which page is real, and what will you do?",
+  "screen": {
+    "app": "compare",
+    "context": "Two pages about TODDY, side by side.",
+    "panels": [
+      {
+        "label": "toddy.meme",
+        "avatar": {
+          "glyph": "☾",
+          "clue": "logo_a"
+        },
+        "rows": [
+          {
+            "k": "Presale",
+            "v": [
+              {
+                "clue": "nopresale",
+                "text": "\"There is no presale\""
+              }
+            ]
+          },
+          {
+            "k": "Team",
+            "v": [
+              {
+                "clue": "team",
+                "text": "\"0% team allocation\""
+              }
+            ]
+          },
+          {
+            "k": "Links",
+            "v": [
+              {
+                "clue": "links_a",
+                "text": "Only official links, listed on the site"
+              }
+            ]
+          },
+          {
+            "k": "Address",
+            "v": [
+              {
+                "clue": "addr_a",
+                "text": "toddy.meme"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "toddy-presale.io",
+        "avatar": {
+          "glyph": "☾",
+          "clue": "logo_b"
+        },
+        "rows": [
+          {
+            "k": "Presale",
+            "v": [
+              {
+                "clue": "live",
+                "text": "\"PRESALE LIVE 🔥\""
+              }
+            ]
+          },
+          {
+            "k": "Bonus",
+            "v": [
+              {
+                "clue": "bonus",
+                "text": "+30% bonus, ends in 2 hours"
+              }
+            ]
+          },
+          {
+            "k": "Pay",
+            "v": [
+              {
+                "clue": "send",
+                "text": "Send coins to 0x9Fa…77c"
+              }
+            ]
+          },
+          {
+            "k": "Help",
+            "v": [
+              {
+                "clue": "dm",
+                "text": "\"DM the admin on Wrenly\""
+              }
+            ]
+          },
+          {
+            "k": "Address",
+            "v": [
+              {
+                "clue": "addr_b",
+                "text": "toddy-presale.io"
+              }
+            ]
+          }
+        ],
+        "note": [
+          {
+            "clue": "padlock",
+            "text": "🔒 Secure site"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "live": {
+      "label": "A presale that doesn't exist",
+      "strength": "strong",
+      "lens": "The real site says there is no presale.",
+      "why": "Fake presales copy real projects' names."
+    },
+    "bonus": {
+      "label": "Bonus with a countdown",
+      "strength": "strong",
+      "lens": "+30% if you hurry.",
+      "why": "Countdown bonuses push you to pay before checking."
+    },
+    "send": {
+      "label": "Send to an address",
+      "strength": "strong",
+      "lens": "Coins sent there go straight to whoever made the page.",
+      "why": "There's no way to get them back."
+    },
+    "dm": {
+      "label": "Help only in DMs",
+      "strength": "strong",
+      "lens": "Support only through private messages.",
+      "why": "Scammers move you somewhere private."
+    },
+    "addr_b": {
+      "label": "Look-alike address",
+      "strength": "strong",
+      "lens": "toddy-presale.io is not toddy.meme.",
+      "why": "Check the exact web address every time."
+    },
+    "nopresale": {
+      "label": "\"No presale\"",
+      "strength": "harmless",
+      "lens": "The official site says there's no presale.",
+      "why": "This is the fact that exposes the fake."
+    },
+    "team": {
+      "label": "Team allocation",
+      "strength": "harmless",
+      "lens": "\"0% team\".",
+      "why": "Normal project information."
+    },
+    "links_a": {
+      "label": "Official links list",
+      "strength": "harmless",
+      "lens": "The site lists its real links.",
+      "why": "A trustworthy place to check any link."
+    },
+    "addr_a": {
+      "label": "Real address",
+      "strength": "harmless",
+      "lens": "toddy.meme.",
+      "why": "The real address, letter by letter."
+    },
+    "logo_a": {
+      "label": "Moon logo",
+      "strength": "harmless",
+      "lens": "The TODDY moon.",
+      "why": "Logos prove nothing either way."
+    },
+    "logo_b": {
+      "label": "Same moon logo",
+      "strength": "harmless",
+      "lens": "An exact copy of the logo.",
+      "why": "Copied in seconds. Proves nothing."
+    },
+    "padlock": {
+      "label": "🔒 Padlock",
+      "strength": "harmless",
+      "lens": "A padlock / \"secure site\".",
+      "why": "A padlock only means the connection is encrypted. Scam sites have them too."
+    }
+  },
+  "actions": [
+    {
+      "id": "pick_b",
+      "label": "Buy in the presale before the bonus ends",
+      "trap": true
+    },
+    {
+      "id": "verify",
+      "label": "Check the official Launch & Safety section on toddy.meme"
+    },
+    {
+      "id": "block_report",
+      "label": "toddy.meme is real. Report the fake page and warn the group."
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "trap": {
+    "title": "TODDY Presale",
+    "url": "toddy-presale.io/buy",
+    "ask": "Send coins now and receive $TODDY + 30% bonus at launch.",
+    "go": "Send now",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Reported, and the group was warned. Nobody else paid.",
+      "mirageSays": "They read the real site!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Launch & Safety: \"There is no presale.\" Case closed.",
+      "mirageSays": "Curse that safety page."
+    },
+    "pick_b": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "There was never a presale. The coins went to Mirage.",
+      "mirageSays": "Thanks for \"investing\"!"
+    }
+  },
+  "what_if": {
+    "pick_b": "The real site said \"There is no presale\". That one line exposes the fake.",
+    "verify": "Checking was right. Warning the group protects everyone else."
+  },
+  "golden_rule": "If the official website says there's no presale, every \"presale\" is a scam.",
+  "quick_check": {
+    "q": "A page says \"TODDY presale live, send coins now\". The official site says there is no presale. What is the page?",
+    "options": [
+      {
+        "id": "a",
+        "text": "An early-bird secret"
+      },
+      {
+        "id": "b",
+        "text": "A scam using TODDY's name"
+      },
+      {
+        "id": "c",
+        "text": "A partner site"
+      }
+    ],
+    "answer": "b",
+    "explain": "The official site is the only source of truth."
+  },
+  "hints": {
+    "nudge": "What does the real site say about a presale?",
+    "glow_order": [
+      "live",
+      "addr_b",
+      "send",
+      "bonus",
+      "dm"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-phishing",
+    "cafc-wallet"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check address",
+      "title": "The two web addresses",
+      "rows": [
+        {
+          "k": "Page A",
+          "v": "toddy.meme",
+          "clue": "addr_a"
+        },
+        {
+          "k": "Page B",
+          "v": "toddy-presale.io",
+          "clue": "addr_b"
+        },
+        {
+          "k": "Padlock on both",
+          "v": "Only means encrypted, not honest",
+          "clue": "padlock"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check where coins go",
+      "title": "Sending coins",
+      "rows": [
+        {
+          "k": "Page B",
+          "v": "Straight to whoever made the page",
+          "clue": "send"
+        },
+        {
+          "k": "Support on Page B",
+          "v": "Private messages only",
+          "clue": "dm"
+        },
+        {
+          "k": "Offer on Page B",
+          "v": "+30% if you hurry",
+          "clue": "bonus"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official page",
+      "title": "What the real site says",
+      "rows": [
+        {
+          "k": "Is there a presale?",
+          "v": "No",
+          "clue": "nopresale"
+        },
+        {
+          "k": "Real links listed on Page A",
+          "v": "Yes",
+          "clue": "links_a"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,79 @@
+{
+  "cafc-wallet": {
+    "title": "Canadian Anti-Fraud Centre bulletin: Cryptocurrency wallet fraud (via FCNB)",
+    "url": "https://fcnb.ca/en/news-alerts/cafc-bulletin-cryptocurrency-wallet-fraud",
+    "published": "2026-08-10",
+    "checked_on": "2026-10-13",
+    "supports": "Never share a recovery phrase; legitimate support never asks for it; unsolicited contact, 'verify/connect your wallet' links, remote-access requests and 'move to this wallet' are warning signs."
+  },
+  "ftc-crypto": {
+    "title": "FTC: What To Know About Cryptocurrency and Scams",
+    "url": "https://consumer.ftc.gov/articles/what-know-about-cryptocurrency-and-scams",
+    "published": "2025-02-10",
+    "checked_on": "2026-10-13",
+    "supports": "Scammers impersonate companies; don't click links in unexpected messages; only scammers demand crypto; free-crypto giveaways are fake."
+  },
+  "ftc-phishing": {
+    "title": "FTC: How To Recognize and Avoid Phishing Scams",
+    "url": "https://consumer.ftc.gov/articles/how-recognize-and-avoid-phishing-scams",
+    "published": "2024-10-11",
+    "checked_on": "2026-10-13",
+    "supports": "Urgency and links are signs; contact companies through a site or app you know is real; real companies won't send a link asking you to update details."
+  },
+  "ftc-impersonator": {
+    "title": "FTC: What To Know About Cryptocurrency and Scams",
+    "url": "https://consumer.ftc.gov/articles/what-know-about-cryptocurrency-and-scams",
+    "published": "2025-02-10",
+    "checked_on": "2026-10-13",
+    "supports": "Legitimate businesses never message you on social media demanding money or crypto."
+  },
+  "ftc-tech-support": {
+    "title": "Canadian Anti-Fraud Centre bulletin: Cryptocurrency wallet fraud (via FCNB)",
+    "url": "https://fcnb.ca/en/news-alerts/cafc-bulletin-cryptocurrency-wallet-fraud",
+    "published": "2026-08-10",
+    "checked_on": "2026-10-13",
+    "supports": "Requests to install software or give remote access are warning signs."
+  },
+  "ftc-family": {
+    "title": "FTC: Family emergency scams (advice and alerts)",
+    "url": "https://consumer.ftc.gov/scams/family-emergency-scams",
+    "published": null,
+    "checked_on": "2026-10-18",
+    "supports": "Check with the family member on a number you already know before sending money."
+  },
+  "ftc-jobs": {
+    "title": "FTC: Task scams create the illusion of making money",
+    "url": "https://consumer.ftc.gov/node/86820",
+    "published": null,
+    "checked_on": "2026-10-18",
+    "supports": "Real jobs never make you pay to start earning."
+  },
+  "europol-report": {
+    "title": "Europol: Report cybercrime online (links to each EU country's reporting site)",
+    "url": "https://www.europol.europa.eu/report-a-crime/report-cybercrime-online",
+    "published": null,
+    "checked_on": "2026-10-13",
+    "supports": "Europe: report online fraud through your country's official police reporting site, listed by Europol; where there is no online option, go to the local police."
+  },
+  "ic3-2024": {
+    "title": "FBI Internet Crime Complaint Center: 2024 Internet Crime Report (summary)",
+    "url": "https://cyberscoop.com/fbi-ic3-cybercrime-report-2024-key-statistics-trends/",
+    "published": "2025-04-23",
+    "checked_on": "2026-10-13",
+    "supports": "Investment fraud was the largest loss category ($6.57B); crypto investment fraud $5.8B; crypto-related losses $9.32B."
+  },
+  "ftc-data-2024": {
+    "title": "FTC: New data show a big jump in reported losses to fraud (2024)",
+    "url": "https://www.ftc.gov/node/87602",
+    "published": "2025-03-10",
+    "checked_on": "2026-10-13",
+    "supports": "Investment scams: highest losses ($5.7B). Imposter scams: most reported. Job scam losses and reports rising sharply."
+  },
+  "chainalysis-2025": {
+    "title": "Chainalysis 2025 Crypto Crime Report: scams (summary)",
+    "url": "https://www.fxstreet.com/cryptocurrencies/news/crypto-scams-drain-10-billion-from-users-in-pig-butchering-ai-and-illicit-schemes-202502141943",
+    "published": "2025-02-14",
+    "checked_on": "2026-10-13",
+    "supports": "Relationship-investment ('pig butchering') scams led crypto scam revenue in 2024, up 40%."
+  }
+}

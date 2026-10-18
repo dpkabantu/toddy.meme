@@ -1,0 +1,243 @@
+{
+  "id": "c6-03",
+  "type": "hunt",
+  "chapter": 6,
+  "difficulty": 3,
+  "title": "Lost Signal",
+  "disguise": "admin",
+  "intro": [
+    "Late at night, Toddy's phone suddenly shows \"No service\".",
+    "Then a few messages arrive on the laptop.",
+    "This isn't a message to judge. It's an attack in progress. What do you do?"
+  ],
+  "notify": {
+    "app": "Mail",
+    "from": "Several emails",
+    "text": "Password reset requested…"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        "Your laptop inbox"
+      ],
+      "addr": [
+        {
+          "clue": "nosignal",
+          "text": "Phone: \"No service\" since 1:02 AM"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "3 new emails"
+        }
+      ],
+      "time": [
+        "1:07 AM"
+      ]
+    },
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "sim",
+            "text": "Mobile provider: \"Your number has been moved to a new SIM card.\""
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "reset",
+            "text": "Tolbridge: \"Password reset requested. Code sent by SMS.\""
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "reset2",
+            "text": "Email provider: \"Someone is trying to sign in to your account.\""
+          }
+        ]
+      },
+      {
+        "foot": [
+          {
+            "clue": "foot",
+            "text": "All from the companies' real addresses"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "nosignal": {
+      "label": "Sudden \"No service\"",
+      "strength": "strong",
+      "lens": "Your phone lost its signal for no reason.",
+      "why": "In a SIM swap, your number moves to the thief's SIM."
+    },
+    "sim": {
+      "label": "SIM moved",
+      "strength": "strong",
+      "lens": "Your number moved to a new SIM you didn't ask for.",
+      "why": "That's a SIM swap: the thief now gets your text codes."
+    },
+    "reset": {
+      "label": "Password reset by SMS",
+      "strength": "strong",
+      "lens": "Someone is resetting your exchange password.",
+      "why": "With your number, they receive the codes."
+    },
+    "reset2": {
+      "label": "Email sign-in attempts",
+      "strength": "strong",
+      "lens": "Someone is going after your email.",
+      "why": "Email unlocks everything else."
+    },
+    "subject": {
+      "label": "Several emails",
+      "strength": "harmless",
+      "lens": "Three emails at once.",
+      "why": "The real alerts are helping you here."
+    },
+    "foot": {
+      "label": "Real senders",
+      "strength": "harmless",
+      "lens": "Real company addresses.",
+      "why": "These alerts are genuine; the attack is real."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Go to sleep and deal with it tomorrow"
+    },
+    {
+      "id": "verify",
+      "label": "Call your mobile provider now from another phone, then lock your accounts"
+    },
+    {
+      "id": "block_report",
+      "label": "Report the emails as spam"
+    }
+  ],
+  "best_action": "verify",
+  "acceptable_actions": [],
+  "outcomes": {
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "STOPPED",
+      "line": "The provider froze the number, and Toddy locked the exchange and email in time.",
+      "mirageSays": "Woken up too soon!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "By morning, the thief had used the text codes to empty the exchange account.",
+      "mirageSays": "Sweet dreams!"
+    },
+    "block_report": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "TOO LATE",
+      "line": "These were real warnings. Marking them as spam gave the thief the night.",
+      "mirageSays": "Thanks for ignoring them!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Losing signal plus reset emails means act now: call the provider from another phone.",
+    "block_report": "These alerts were real. A SIM swap needs action, not deletion."
+  },
+  "golden_rule": "Sudden \"No service\" plus reset emails means a SIM swap. Call your provider at once, and use an app for codes instead of SMS.",
+  "quick_check": {
+    "q": "Your phone loses signal and you get password-reset emails. What's happening?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A network glitch"
+      },
+      {
+        "id": "b",
+        "text": "Probably a SIM swap; act now"
+      }
+    ],
+    "answer": "b",
+    "explain": "Thieves move your number to their SIM to receive your codes."
+  },
+  "hints": {
+    "nudge": "What links the lost signal and the reset emails?",
+    "glow_order": [
+      "sim",
+      "nosignal",
+      "reset",
+      "reset2"
+    ]
+  },
+  "sources": [
+    "cafc-wallet",
+    "ftc-phishing",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check your phone",
+      "title": "What happened",
+      "rows": [
+        {
+          "k": "Signal",
+          "v": "Lost for no reason",
+          "clue": "nosignal"
+        },
+        {
+          "k": "Your number",
+          "v": "Moved to a new SIM you did not ask for",
+          "clue": "sim"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the emails",
+      "title": "What arrived",
+      "rows": [
+        {
+          "k": "Emails",
+          "v": "Three at once",
+          "clue": "subject"
+        },
+        {
+          "k": "Exchange",
+          "v": "Someone is resetting your password",
+          "clue": "reset"
+        },
+        {
+          "k": "Email account",
+          "v": "Someone is going after it",
+          "clue": "reset2"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the senders",
+      "title": "Are they real?",
+      "rows": [
+        {
+          "k": "Addresses",
+          "v": "Real company addresses",
+          "clue": "foot"
+        }
+      ]
+    }
+  ]
+}

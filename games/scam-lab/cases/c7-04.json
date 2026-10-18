@@ -1,0 +1,267 @@
+{
+  "id": "c7-04",
+  "type": "hunt",
+  "chapter": 7,
+  "difficulty": 3,
+  "title": "The Deepfake",
+  "disguise": "influencer",
+  "intro": [
+    "A video is spreading: Northvale's CEO announces a \"thank-you giveaway\".",
+    "It looks real. It sounds real. Is it?",
+    "Sniff the post around the video."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Northvale Live 🎥",
+    "text": "▶ CEO announces 2x giveaway!"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "chan",
+          "text": "Northvale Live 🎥"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "age",
+          "text": "@northvale_live_event · joined 3 days ago"
+        }
+      ],
+      "avatar": {
+        "glyph": "🎥",
+        "clue": "avatar"
+      }
+    },
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "video",
+            "text": "▶ [video: the CEO speaking, mouth slightly out of sync, blurry edges]"
+          }
+        ]
+      },
+      {
+        "msg": [
+          "\"Send NVL to the address below and ",
+          {
+            "clue": "double",
+            "text": "we'll send back double"
+          },
+          ".\""
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "addr",
+            "text": "Address in description: 0x88c…12a"
+          },
+          " ",
+          {
+            "clue": "comments",
+            "text": "· Comments turned off"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "views",
+            "text": "👁 120K views"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "video": {
+      "label": "Odd video",
+      "strength": "strong",
+      "lens": "Lips out of sync, blurry edges.",
+      "why": "AI \"deepfake\" videos copy real faces and voices."
+    },
+    "double": {
+      "label": "Double your money",
+      "strength": "strong",
+      "lens": "Send and get double.",
+      "why": "Always a scam, whoever seems to say it."
+    },
+    "addr": {
+      "label": "Send to an address",
+      "strength": "strong",
+      "lens": "A wallet in the description.",
+      "why": "Coins sent there are gone."
+    },
+    "comments": {
+      "label": "Comments off",
+      "strength": "strong",
+      "lens": "Nobody can warn others.",
+      "why": "Scammers turn off comments so warnings can't appear."
+    },
+    "age": {
+      "label": "3-day-old channel",
+      "strength": "strong",
+      "lens": "Not the official account.",
+      "why": "Deepfakes are posted on new look-alike channels."
+    },
+    "chan": {
+      "label": "Brand in the name",
+      "strength": "harmless",
+      "lens": "Northvale in the name.",
+      "why": "Names prove nothing."
+    },
+    "views": {
+      "label": "Many views",
+      "strength": "harmless",
+      "lens": "120K views.",
+      "why": "Views can be faked or bought."
+    },
+    "avatar": {
+      "label": "Camera icon",
+      "strength": "harmless",
+      "lens": "A camera.",
+      "why": "Proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Send NVL to double it"
+    },
+    {
+      "id": "verify",
+      "label": "Check Northvale's official account"
+    },
+    {
+      "id": "block_report",
+      "label": "Report the video as a deepfake scam"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Reported. The platform took the video down.",
+      "mirageSays": "My best fake yet!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Official Northvale: \"That video is fake. We never do giveaways.\"",
+      "mirageSays": "They checked the real channel!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "Nothing came back. The \"CEO\" was AI.",
+      "mirageSays": "Doubled… for me!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Even a perfect-looking video can't make \"send and get double\" real."
+  },
+  "golden_rule": "Faces and voices can be faked. Judge what a video asks you to do, not who seems to say it.",
+  "quick_check": {
+    "q": "A video of a famous CEO says \"send crypto, get double back\". What is it?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Real, it's their face"
+      },
+      {
+        "id": "b",
+        "text": "A deepfake scam"
+      }
+    ],
+    "answer": "b",
+    "explain": "AI can fake faces. The ask is always the giveaway."
+  },
+  "hints": {
+    "nudge": "Ignore the face. What is the video asking for?",
+    "glow_order": [
+      "double",
+      "addr",
+      "comments",
+      "age",
+      "video"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "chainalysis-2025",
+    "ic3-2024"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the channel",
+      "title": "Northvale Live",
+      "rows": [
+        {
+          "k": "Name",
+          "v": "Has Northvale in it",
+          "clue": "chan"
+        },
+        {
+          "k": "Account",
+          "v": "Not the official one",
+          "clue": "age"
+        },
+        {
+          "k": "Views",
+          "v": "120K",
+          "clue": "views"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the video",
+      "title": "Look closely",
+      "rows": [
+        {
+          "k": "Lips and sound",
+          "v": "Out of sync, blurry edges",
+          "clue": "video"
+        },
+        {
+          "k": "Comments",
+          "v": "Nobody can warn others",
+          "clue": "comments"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the offer",
+      "title": "What they ask",
+      "rows": [
+        {
+          "k": "Send and get",
+          "v": "Double back",
+          "clue": "double"
+        },
+        {
+          "k": "Wallet",
+          "v": "In the description",
+          "clue": "addr"
+        }
+      ]
+    }
+  ]
+}

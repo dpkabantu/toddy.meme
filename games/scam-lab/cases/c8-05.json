@@ -1,0 +1,232 @@
+{
+  "id": "c8-05",
+  "type": "hunt",
+  "chapter": 8,
+  "difficulty": 2,
+  "title": "The Boring Plan",
+  "disguise": null,
+  "intro": [
+    "Toddy asks Marco how he deals with crypto. Marco's answer is… boring.",
+    "After a chapter of get-rich schemes, boring might be good.",
+    "Sniff it."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Marco",
+    "text": "Honestly? I keep it really simple."
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "Marco"
+        }
+      ],
+      "sub": [
+        "friend · you asked him"
+      ],
+      "avatar": {
+        "glyph": "🙂",
+        "clue": "avatar"
+      }
+    },
+    "context": "You asked Marco how he handles crypto.",
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "small",
+            "text": "I only put in a small amount I can afford to lose."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "regulated",
+            "text": "I use a regulated exchange and keep my phrase on paper at home."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "noguar",
+            "text": "No guarantees. Some months it drops."
+          },
+          " ",
+          {
+            "clue": "noinvite",
+            "text": "I don't need you to join anything!"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "small": {
+      "label": "Small amount",
+      "strength": "harmless",
+      "lens": "Only what he can afford to lose.",
+      "why": "Sensible and honest."
+    },
+    "regulated": {
+      "label": "Regulated exchange, phrase at home",
+      "strength": "harmless",
+      "lens": "Normal safety habits.",
+      "why": "Good practice."
+    },
+    "noguar": {
+      "label": "No guarantees",
+      "strength": "harmless",
+      "lens": "He admits it can drop.",
+      "why": "Honest about risk."
+    },
+    "noinvite": {
+      "label": "Doesn't recruit you",
+      "strength": "harmless",
+      "lens": "He doesn't want you to join anything.",
+      "why": "The opposite of a scheme."
+    },
+    "name": {
+      "label": "Your friend",
+      "strength": "harmless",
+      "lens": "Marco, whom you asked.",
+      "why": "You started the conversation."
+    },
+    "avatar": {
+      "label": "Smiley",
+      "strength": "harmless",
+      "lens": "A smiley.",
+      "why": "Proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Thank Marco and do your own research"
+    },
+    {
+      "id": "ignore",
+      "label": "Change the subject"
+    },
+    {
+      "id": "block_report",
+      "label": "Report Marco for promoting crypto"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "Good advice from a good friend. Toddy took notes.",
+      "toddy": "happy"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "Marco was just answering your question honestly. Nothing to report.",
+      "mirageSays": "Report your friends? I love it."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "SAFE",
+      "line": "Fine. Nothing was wrong with what Marco said.",
+      "toddy": "happy"
+    }
+  },
+  "what_if": {
+    "block_report": "He asked for nothing, promised nothing and admitted risks. That's honest advice."
+  },
+  "golden_rule": "Honest advice is boring: small amounts, real risks, no promises, nobody to recruit.",
+  "quick_check": {
+    "q": "Which sounds like honest crypto advice?",
+    "options": [
+      {
+        "id": "a",
+        "text": "\"Only what you can afford to lose, no guarantees\""
+      },
+      {
+        "id": "b",
+        "text": "\"3% a day guaranteed, invite friends for more\""
+      }
+    ],
+    "answer": "a",
+    "explain": "Boring and honest beats exciting and guaranteed."
+  },
+  "hints": {
+    "nudge": "Does Marco want anything from you?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-data-2024",
+    "ic3-2024"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check profile",
+      "title": "Marco",
+      "rows": [
+        {
+          "k": "Who",
+          "v": "Marco, whom you asked",
+          "clue": "name"
+        },
+        {
+          "k": "Avatar",
+          "v": "A smiley",
+          "clue": "avatar"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check his advice",
+      "title": "What he says",
+      "rows": [
+        {
+          "k": "Amount",
+          "v": "Only what he can afford to lose",
+          "clue": "small"
+        },
+        {
+          "k": "He admits",
+          "v": "It can drop",
+          "clue": "noguar"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check his approach",
+      "title": "No hooks",
+      "rows": [
+        {
+          "k": "Joining anything?",
+          "v": "He does not want you to",
+          "clue": "noinvite"
+        },
+        {
+          "k": "Habits",
+          "v": "Normal safety habits",
+          "clue": "regulated"
+        }
+      ]
+    }
+  ]
+}

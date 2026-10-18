@@ -1,0 +1,256 @@
+{
+  "id": "c8-01",
+  "type": "hunt",
+  "chapter": 8,
+  "difficulty": 2,
+  "title": "Invite Three Friends",
+  "disguise": "friend",
+  "intro": [
+    "Chapter 8: get-rich schemes. Old tricks in new crypto clothes.",
+    "A friend of a friend is very excited about a new \"community\".",
+    "Sniff the pitch."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Bruno",
+    "text": "Join Harvest Circle, I'm earning daily! 💸"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "Bruno"
+        }
+      ],
+      "sub": [
+        "friend of Kiko"
+      ],
+      "avatar": {
+        "glyph": "😎",
+        "clue": "avatar"
+      }
+    },
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "join",
+            "text": "Join Harvest Circle with 100 NVL."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "invite",
+            "text": "Invite 3 friends and you earn 30% of what THEY put in!"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "levels",
+            "text": "Get to Gold level and earn from your friends' friends too 🥇"
+          },
+          " ",
+          {
+            "clue": "early",
+            "text": "Early members are already rich!"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "product",
+            "text": "What does it do? It's a community, the money comes from new members 😄"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "invite": {
+      "label": "Earn from friends' money",
+      "strength": "strong",
+      "lens": "Your earnings come from the people you bring in.",
+      "why": "If the money comes from new members, it's a pyramid. It collapses when joining slows."
+    },
+    "levels": {
+      "label": "Levels and down-lines",
+      "strength": "strong",
+      "lens": "Earn from friends of friends.",
+      "why": "Multi-level payouts are the shape of a pyramid scheme."
+    },
+    "product": {
+      "label": "No real product",
+      "strength": "strong",
+      "lens": "The money \"comes from new members\".",
+      "why": "Nothing is being sold or built."
+    },
+    "early": {
+      "label": "\"Early members are rich\"",
+      "strength": "strong",
+      "lens": "Only the first people profit.",
+      "why": "Late joiners pay for early ones."
+    },
+    "join": {
+      "label": "Pay to join",
+      "strength": "strong",
+      "lens": "A joining fee.",
+      "why": "You pay first, then you're asked to recruit."
+    },
+    "name": {
+      "label": "Friend of a friend",
+      "strength": "harmless",
+      "lens": "A real person you half-know.",
+      "why": "Many recruiters believe in it themselves. The pitch is the problem."
+    },
+    "avatar": {
+      "label": "Cool picture",
+      "strength": "harmless",
+      "lens": "Sunglasses emoji.",
+      "why": "Proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Join and invite three friends"
+    },
+    {
+      "id": "ignore",
+      "label": "Say no thanks"
+    },
+    {
+      "id": "block_report",
+      "label": "Say no, and warn Kiko about Harvest Circle"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Toddy declined and warned Kiko. A month later Harvest Circle froze withdrawals.",
+      "mirageSays": "One less recruit!"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "No thanks was the right answer. Warning friends helps more.",
+      "mirageSays": "Fine, Bruno will find others."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "Withdrawals froze when new members stopped joining. Toddy's friends lost money too.",
+      "mirageSays": "Every circle ends with me!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "\"Money comes from new members\" is the definition of a pyramid scheme."
+  },
+  "golden_rule": "If your profit comes from the people you recruit, it's a pyramid, and the last people in lose.",
+  "quick_check": {
+    "q": "Where does the money come from in a pyramid scheme?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Real business profits"
+      },
+      {
+        "id": "b",
+        "text": "New members' payments"
+      }
+    ],
+    "answer": "b",
+    "explain": "That's why it collapses when joining slows."
+  },
+  "hints": {
+    "nudge": "Where does the money actually come from?",
+    "glow_order": [
+      "product",
+      "invite",
+      "levels",
+      "early",
+      "join"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-data-2024",
+    "ic3-2024"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check profile",
+      "title": "Bruno",
+      "rows": [
+        {
+          "k": "Who",
+          "v": "A real person you half-know",
+          "clue": "name"
+        },
+        {
+          "k": "Avatar",
+          "v": "Sunglasses emoji",
+          "clue": "avatar"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check how you earn",
+      "title": "The plan",
+      "rows": [
+        {
+          "k": "Earnings come from",
+          "v": "The people you bring in",
+          "clue": "invite"
+        },
+        {
+          "k": "And from",
+          "v": "Friends of friends",
+          "clue": "levels"
+        },
+        {
+          "k": "To join",
+          "v": "A fee",
+          "clue": "join"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check where money comes from",
+      "title": "The product",
+      "rows": [
+        {
+          "k": "Money comes from",
+          "v": "New members",
+          "clue": "product"
+        },
+        {
+          "k": "Who profits",
+          "v": "Only the first people",
+          "clue": "early"
+        }
+      ]
+    }
+  ]
+}

@@ -39,6 +39,22 @@
       "cardAlt": "Toddy in the moonlit café beside a steaming paw-print cup",
       "added": "2026-10-12",
       "updated": "2026-10-13"
+    },
+    {
+      "id": "scam-lab",
+      "title": "Scam Lab",
+      "path": "/games/scam-lab/",
+      "status": "beta",
+      "category": "puzzle",
+      "daily": true,
+      "minutes": 5,
+      "orientation": "upright",
+      "meta": "Detective game · Daily case · 5 min",
+      "text": "Sniff out the red flags in crypto scams, and don't cry wolf at the honest ones.",
+      "hubText": "Spot the red flags in 48 crypto-scam cases, from fake giveaways to fake support. A new Daily Case every day. Free, no account, no wallet.",
+      "card": "/assets/games/scam-lab-card.webp",
+      "cardAlt": "Toddy with a magnifying glass beside the Scam Lab corkboard",
+      "added": "2026-10-18"
     }
   ]
 }

@@ -1,0 +1,239 @@
+{
+  "id": "c5-02",
+  "type": "hunt",
+  "chapter": 5,
+  "difficulty": 3,
+  "title": "Poisoned Address",
+  "disguise": "friend",
+  "mission": [
+    "Wallet Check",
+    "Look closely at your wallet's history before you send. Sniff anything odd, then decide."
+  ],
+  "intro": [
+    "Toddy wants to pay Kiko back 300 NVL. Kiko's address is in the wallet history.",
+    "But something new showed up in the history too.",
+    "Copy-paste carefully. Sniff the history."
+  ],
+  "notify": {
+    "app": "Larkspur",
+    "from": "History",
+    "text": "New incoming: 0 NVL"
+  },
+  "screen": {
+    "app": "wallet",
+    "title": "Recent activity",
+    "context": "You're about to send 300 NVL to Kiko.",
+    "list": [
+      {
+        "dir": "in",
+        "what": [
+          {
+            "clue": "poison",
+            "text": "From 0x7a3F…9c21 (yesterday)"
+          }
+        ],
+        "amt": [
+          {
+            "clue": "zero",
+            "text": "0 NVL"
+          }
+        ]
+      },
+      {
+        "dir": "out",
+        "what": [
+          {
+            "clue": "real",
+            "text": "To 0x7a3F…9c21 · Kiko (saved contact)"
+          }
+        ],
+        "amt": [
+          "150 NVL"
+        ]
+      },
+      {
+        "dir": "in",
+        "what": [
+          {
+            "clue": "salary",
+            "text": "From Tolbridge (your exchange)"
+          }
+        ],
+        "amt": [
+          "500 NVL"
+        ]
+      }
+    ],
+    "note": [
+      {
+        "clue": "full",
+        "text": "Tap an address to see it in full: 0x7a3F5b…E1d9c21 vs 0x7a3F09…44a9c21"
+      }
+    ]
+  },
+  "clues": {
+    "poison": {
+      "label": "Look-alike address",
+      "strength": "strong",
+      "lens": "Same first and last letters as Kiko, different middle.",
+      "why": "Scammers create look-alike addresses and \"poison\" your history."
+    },
+    "zero": {
+      "label": "0 NVL transfer",
+      "strength": "strong",
+      "lens": "A worthless transfer you didn't expect.",
+      "why": "Zero-value transfers are how look-alike addresses get into your history."
+    },
+    "full": {
+      "label": "Middles differ",
+      "strength": "strong",
+      "lens": "The full addresses are different in the middle.",
+      "why": "Always check the whole address, not just the start and end."
+    },
+    "real": {
+      "label": "Saved contact",
+      "strength": "harmless",
+      "lens": "Kiko, from your saved contacts.",
+      "why": "Sending to a saved contact is safest."
+    },
+    "salary": {
+      "label": "Exchange deposit",
+      "strength": "harmless",
+      "lens": "A deposit from your exchange.",
+      "why": "Normal activity."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Copy the newest address from history and send"
+    },
+    {
+      "id": "verify",
+      "label": "Send to Kiko's saved contact and check the full address"
+    },
+    {
+      "id": "block_report",
+      "label": "Hide the 0 NVL transfer and report the address"
+    }
+  ],
+  "best_action": "verify",
+  "acceptable_actions": [
+    "block_report"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Hidden and reported. Then Toddy paid Kiko using the saved contact.",
+      "mirageSays": "My poison got spotted!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "The newest entry was Mirage's look-alike address. 300 NVL gone.",
+      "mirageSays": "Close enough!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Saved contact, full address checked. Kiko got the 300 NVL.",
+      "mirageSays": "He checked the middle!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "The first and last letters matched, but the middle didn't. Use saved contacts and check the full address."
+  },
+  "golden_rule": "Never copy addresses from your history. Use saved contacts and check the whole address.",
+  "quick_check": {
+    "q": "Two addresses start with 0x7a3F and end with 9c21. Are they the same?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Yes"
+      },
+      {
+        "id": "b",
+        "text": "Not necessarily; check the full address"
+      }
+    ],
+    "answer": "b",
+    "explain": "Look-alike addresses copy the start and end."
+  },
+  "hints": {
+    "nudge": "Compare the full addresses.",
+    "glow_order": [
+      "poison",
+      "zero",
+      "full"
+    ]
+  },
+  "sources": [
+    "cafc-wallet",
+    "ftc-crypto",
+    "chainalysis-2025"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the addresses",
+      "title": "Kiko vs the transfer",
+      "rows": [
+        {
+          "k": "Kiko in contacts",
+          "v": "Saved by you",
+          "clue": "real"
+        },
+        {
+          "k": "Odd transfer",
+          "v": "Same start and end, different middle",
+          "clue": "poison"
+        },
+        {
+          "k": "Full addresses",
+          "v": "Different in the middle",
+          "clue": "full"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the amount",
+      "title": "What moved",
+      "rows": [
+        {
+          "k": "Transfer you did not expect",
+          "v": "Zero value",
+          "clue": "zero"
+        },
+        {
+          "k": "Your salary deposit",
+          "v": "From your exchange",
+          "clue": "salary"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What wallet teams say",
+      "rows": [
+        {
+          "k": "Copy addresses from history?",
+          "v": "Never"
+        },
+        {
+          "k": "Always check",
+          "v": "Every character, or use contacts"
+        }
+      ]
+    }
+  ]
+}

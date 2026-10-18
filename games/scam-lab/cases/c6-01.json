@@ -1,0 +1,271 @@
+{
+  "id": "c6-01",
+  "type": "hunt",
+  "chapter": 6,
+  "difficulty": 2,
+  "title": "Friend in Trouble",
+  "disguise": "friend",
+  "intro": [
+    "Chapter 6. What if the scammer is wearing your friend's account?",
+    "A message from Kiko, Toddy's real friend, on Kiko's real account.",
+    "Sniff it. Does it sound like Kiko?"
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Kiko",
+    "text": "Toddy!! I need help, it's urgent 😭"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "Kiko"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@kiko_bean · friends since 2021"
+        }
+      ],
+      "avatar": {
+        "glyph": "🐨",
+        "clue": "avatar"
+      }
+    },
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "urgent",
+            "text": "Toddy!! I need help, it's urgent 😭"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "story",
+            "text": "I'm stuck at the airport, my cards got blocked."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "usdt",
+            "text": "Can you send 200 NVUSD (a stablecoin) to this new wallet?"
+          },
+          " ",
+          {
+            "clue": "wallet",
+            "text": "0x5Bd…e01"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "nocall",
+            "text": "Can't talk now, battery dying, just send pls"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "usdt": {
+      "label": "Crypto to a new wallet",
+      "strength": "strong",
+      "lens": "Money in crypto, to an address you've never seen.",
+      "why": "A friend in trouble rarely needs crypto sent to a brand-new wallet."
+    },
+    "nocall": {
+      "label": "Can't talk",
+      "strength": "strong",
+      "lens": "They avoid a call.",
+      "why": "A quick call would expose a hacker, so they avoid it."
+    },
+    "urgent": {
+      "label": "Big urgency",
+      "strength": "strong",
+      "lens": "Lots of panic and emoji.",
+      "why": "Urgency stops you checking."
+    },
+    "wallet": {
+      "label": "Unknown address",
+      "strength": "strong",
+      "lens": "A wallet you've never used with Kiko.",
+      "why": "New payment details are a classic sign of a hacked account."
+    },
+    "story": {
+      "label": "Stranded story",
+      "strength": "strong",
+      "lens": "A travel emergency story.",
+      "why": "Common scam script for hacked accounts."
+    },
+    "name": {
+      "label": "Kiko's real name",
+      "strength": "harmless",
+      "lens": "It's really Kiko's account.",
+      "why": "Real accounts get hacked. The name proves nothing."
+    },
+    "handle": {
+      "label": "Old friendship",
+      "strength": "harmless",
+      "lens": "Friends since 2021.",
+      "why": "True, but the account may be hijacked."
+    },
+    "avatar": {
+      "label": "Kiko's photo",
+      "strength": "harmless",
+      "lens": "Kiko's usual photo.",
+      "why": "Hackers keep the photo."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Send the 200 NVUSD"
+    },
+    {
+      "id": "verify",
+      "label": "Call Kiko on the phone number you already have"
+    },
+    {
+      "id": "block_report",
+      "label": "Report the account as hacked"
+    }
+  ],
+  "best_action": "verify",
+  "acceptable_actions": [
+    "block_report"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Reported. Wrenly locked the account and Kiko got it back the next day.",
+      "mirageSays": "Locked out!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "Kiko was at home, asleep. The account had been hacked.",
+      "mirageSays": "Thanks, \"friend\"!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Kiko answered from home: \"That's not me! My account was hacked!\"",
+      "mirageSays": "He CALLED him?!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "A 30-second call to Kiko's real number would have shown the account was hacked.",
+    "block_report": "Reporting was good. A call to Kiko confirms it and warns them too."
+  },
+  "golden_rule": "If a friend asks for money in a message, call them on a number you already have before sending anything.",
+  "quick_check": {
+    "q": "Your friend's account asks for crypto urgently and says they can't call. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Send it, they're your friend"
+      },
+      {
+        "id": "b",
+        "text": "Call them on their known number first"
+      }
+    ],
+    "answer": "b",
+    "explain": "Hackers avoid calls. A real friend will pick up or call back."
+  },
+  "hints": {
+    "nudge": "What would make this easy to check?",
+    "glow_order": [
+      "nocall",
+      "usdt",
+      "wallet",
+      "urgent",
+      "story"
+    ]
+  },
+  "sources": [
+    "cafc-wallet",
+    "ftc-phishing",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check profile",
+      "title": "Kiko",
+      "rows": [
+        {
+          "k": "Account",
+          "v": "Really Kiko's account",
+          "clue": "name"
+        },
+        {
+          "k": "Friends since",
+          "v": "2021",
+          "clue": "handle"
+        },
+        {
+          "k": "Photo",
+          "v": "Kiko's usual one",
+          "clue": "avatar"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the request",
+      "title": "What is asked",
+      "rows": [
+        {
+          "k": "Send money in",
+          "v": "Crypto, to an address you have never seen",
+          "clue": "usdt"
+        },
+        {
+          "k": "A wallet you used with Kiko?",
+          "v": "Never",
+          "clue": "wallet"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the story",
+      "title": "How it feels",
+      "rows": [
+        {
+          "k": "A phone call?",
+          "v": "They avoid one",
+          "clue": "nocall"
+        },
+        {
+          "k": "Tone",
+          "v": "Panic and lots of emoji",
+          "clue": "urgent"
+        },
+        {
+          "k": "Story",
+          "v": "A travel emergency",
+          "clue": "story"
+        }
+      ]
+    }
+  ]
+}

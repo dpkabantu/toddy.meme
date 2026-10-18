@@ -1,0 +1,242 @@
+{
+  "id": "c4-05",
+  "type": "hunt",
+  "chapter": 4,
+  "difficulty": 2,
+  "title": "The Real Alert",
+  "disguise": null,
+  "intro": [
+    "Another alarming message. After this chapter you might report everything.",
+    "But some alerts are real, and ignoring them is risky too.",
+    "Sniff it. Is it a threat, or your bank doing its job?"
+  ],
+  "notify": {
+    "app": "Bank app",
+    "from": "Your bank (in-app)",
+    "text": "Was this you? Card payment €480 at 03:12"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        "Your bank"
+      ],
+      "addr": [
+        {
+          "clue": "inapp",
+          "text": "inside your banking app"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "Was this you?"
+        }
+      ],
+      "time": [
+        "3:13 AM"
+      ]
+    },
+    "context": "Your phone showed a notification from the banking app you use every day. You opened the app yourself.",
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "payment",
+            "text": "We paused a card payment of €480 to an online shop at 03:12."
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "answer",
+            "text": "Was this you? Tap Yes or No below."
+          },
+          " ",
+          {
+            "clue": "nocode",
+            "text": "We will never ask for your PIN, passwords or codes."
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "card",
+            "text": "If you tap No, we'll block the card and send a new one."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "inapp": {
+      "label": "Inside the bank app",
+      "strength": "harmless",
+      "lens": "You opened the real app yourself.",
+      "why": "Alerts inside your real app are hard to fake."
+    },
+    "subject": {
+      "label": "\"Was this you?\"",
+      "strength": "harmless",
+      "lens": "A simple question.",
+      "why": "Normal wording for a fraud check."
+    },
+    "payment": {
+      "label": "A paused payment",
+      "strength": "harmless",
+      "lens": "A specific payment they stopped.",
+      "why": "Banks do pause suspicious payments."
+    },
+    "answer": {
+      "label": "Yes or No only",
+      "strength": "harmless",
+      "lens": "It only asks Yes or No.",
+      "why": "No codes, no links, no transfers."
+    },
+    "nocode": {
+      "label": "Never asks for codes",
+      "strength": "harmless",
+      "lens": "It says it never asks for PINs or codes.",
+      "why": "Honest banks remind you of this."
+    },
+    "card": {
+      "label": "Blocks the card for you",
+      "strength": "harmless",
+      "lens": "They'll block it and send a new one.",
+      "why": "The bank does the work; you move no money."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Tap \"No, it wasn't me\" in the app"
+    },
+    {
+      "id": "verify",
+      "label": "Call the number on the back of your card"
+    },
+    {
+      "id": "block_report",
+      "label": "Ignore it, it must be a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "The card was blocked and a new one is on its way. The €480 never left.",
+      "toddy": "happy"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "It was the real bank. Ignoring a real alert let the €480 payment go through later.",
+      "mirageSays": "Panic or ignore, I win either way!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "CHECKED",
+      "line": "The bank confirmed it was a real alert and blocked the card.",
+      "toddy": "happy"
+    }
+  },
+  "what_if": {
+    "block_report": "It was inside your real app and asked only Yes or No. Real alerts deserve a response."
+  },
+  "golden_rule": "Real alerts live inside your real app and only ask you to confirm. They never ask for codes or transfers.",
+  "quick_check": {
+    "q": "Why was this alert genuine?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It was urgent"
+      },
+      {
+        "id": "b",
+        "text": "It was inside your bank app and asked only Yes or No"
+      },
+      {
+        "id": "c",
+        "text": "It used the word \"bank\""
+      }
+    ],
+    "answer": "b",
+    "explain": "Where it appears and what it asks matter most."
+  },
+  "hints": {
+    "nudge": "Where did this alert appear, and what does it ask you to do?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-data-2024",
+    "ic3-2024",
+    "ftc-phishing"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check where you are",
+      "title": "The alert",
+      "rows": [
+        {
+          "k": "You opened it in",
+          "v": "The real bank app, yourself",
+          "clue": "inapp"
+        },
+        {
+          "k": "Subject",
+          "v": "A simple question",
+          "clue": "subject"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check what it asks",
+      "title": "The question",
+      "rows": [
+        {
+          "k": "It asks",
+          "v": "Yes or No only",
+          "clue": "answer"
+        },
+        {
+          "k": "Payment",
+          "v": "A specific one they stopped",
+          "clue": "payment"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official page",
+      "title": "What your bank says",
+      "rows": [
+        {
+          "k": "Do they ask for PINs or codes?",
+          "v": "Never",
+          "clue": "nocode"
+        },
+        {
+          "k": "If you say No",
+          "v": "They block the card and send a new one",
+          "clue": "card"
+        }
+      ]
+    }
+  ]
+}

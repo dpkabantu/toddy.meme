@@ -1,0 +1,281 @@
+{
+  "id": "c2-01",
+  "type": "hunt",
+  "chapter": 2,
+  "difficulty": 2,
+  "title": "Wrong Number",
+  "disguise": "friend",
+  "intro": [
+    "Chapter 2, Toddy. These scams don't rush you. They make friends first.",
+    "It's how the scams that cost people the most money begin: with a harmless-looking text.",
+    "Read the whole chat. Sniff what's odd, then decide."
+  ],
+  "notify": {
+    "app": "Messages",
+    "from": "+44 7700 900288",
+    "text": "Hi Anna! Is dinner still on for 8? 😊"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "unknown",
+          "text": "+44 7700 900288"
+        }
+      ]
+    },
+    "items": [
+      {
+        "time": [
+          {
+            "clue": "time",
+            "text": "Today 7:42 PM"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "wrong",
+            "text": "Hi Anna! Is dinner still on for 8? 😊"
+          }
+        ]
+      },
+      {
+        "msg": [
+          "Sorry, wrong number. I'm not Anna!"
+        ],
+        "from": "me"
+      },
+      {
+        "msg": [
+          {
+            "clue": "sorry",
+            "text": "Oh no, so sorry! 🙈"
+          },
+          " ",
+          {
+            "clue": "keep",
+            "text": "But you seem lovely. Maybe it was fate? I'm Sophie."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "brag",
+            "text": "I live in Zurich and trade crypto, it's going really well this year 📈"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "move",
+            "text": "Texts are expensive, can we chat on Wrenly instead?"
+          },
+          " ",
+          {
+            "clue": "photo",
+            "text": "📷 [selfie at a beach café]"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "wrong": {
+      "label": "\"Wrong number\" opener",
+      "strength": "strong",
+      "lens": "A friendly text meant for someone else. Long cons often start exactly like this.",
+      "why": "\"Wrong number\" texts are a common way to start a friendship scam."
+    },
+    "keep": {
+      "label": "Keeps chatting",
+      "strength": "strong",
+      "lens": "After the mistake, she doesn't say bye. She wants to keep talking.",
+      "why": "A real wrong-number sender apologises and leaves."
+    },
+    "brag": {
+      "label": "Money success, early",
+      "strength": "strong",
+      "lens": "Within two messages: \"I trade crypto, it's going really well.\"",
+      "why": "Mentioning trading wins early sets up the investment pitch later."
+    },
+    "move": {
+      "label": "Move to another app",
+      "strength": "strong",
+      "lens": "She wants to switch to a different chat app.",
+      "why": "Moving you to another app makes the conversation harder to trace and report."
+    },
+    "unknown": {
+      "label": "Unknown number",
+      "strength": "harmless",
+      "lens": "A number you don't have saved.",
+      "why": "Real wrong numbers happen too. The number alone proves nothing."
+    },
+    "time": {
+      "label": "Evening text",
+      "strength": "harmless",
+      "lens": "Sent at 7:42 in the evening.",
+      "why": "A normal time for dinner plans."
+    },
+    "sorry": {
+      "label": "Polite apology",
+      "strength": "harmless",
+      "lens": "A polite \"so sorry\".",
+      "why": "Being polite isn't suspicious by itself."
+    },
+    "photo": {
+      "label": "Nice selfie",
+      "strength": "harmless",
+      "lens": "An attractive photo at a beach café.",
+      "why": "Photos are easy to steal, so a nice one proves nothing either way."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Keep chatting and add her on Wrenly"
+    },
+    {
+      "id": "ignore",
+      "label": "Don't reply"
+    },
+    {
+      "id": "block_report",
+      "label": "Block the number and report it as spam"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Blocked. \"Sophie\" had sent the same \"wrong number\" text to 2,000 people that night.",
+      "mirageSays": "My best opener!"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "No reply means no hook. Blocking as well stops the next message.",
+      "mirageSays": "I'll try someone else."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "HOOKED",
+      "line": "Weeks of sweet chats later, \"Sophie\" asked Toddy to invest with her. The money never came back.",
+      "mirageSays": "Friends share everything!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "If you'd blocked after \"wrong number, but maybe it was fate\", the long con would never have started.",
+    "ignore": "Ignoring was safe. Blocking and reporting helps your phone network stop the same text reaching others."
+  },
+  "golden_rule": "A friendly stranger who brings up money or crypto is a red flag, however long you've chatted.",
+  "quick_check": {
+    "q": "A stranger texts the wrong number, then keeps chatting and mentions their crypto profits. What is this most likely?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A lucky new friendship"
+      },
+      {
+        "id": "b",
+        "text": "The start of an investment scam"
+      },
+      {
+        "id": "c",
+        "text": "A delivery problem"
+      }
+    ],
+    "answer": "b",
+    "explain": "Friendship first, money later. That's how the most costly crypto scams work."
+  },
+  "hints": {
+    "nudge": "Read Sophie's messages after you said \"wrong number\".",
+    "glow_order": [
+      "keep",
+      "brag",
+      "move",
+      "wrong"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "chainalysis-2025",
+    "ic3-2024"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check number",
+      "title": "Who is texting?",
+      "rows": [
+        {
+          "k": "Number",
+          "v": "Not in your contacts",
+          "clue": "unknown"
+        },
+        {
+          "k": "Opening line",
+          "v": "Meant for someone else",
+          "clue": "wrong"
+        },
+        {
+          "k": "Her apology",
+          "v": "Polite, but she stays",
+          "clue": "sorry"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the chat",
+      "title": "How the chat goes",
+      "rows": [
+        {
+          "k": "After the mix-up",
+          "v": "She keeps chatting",
+          "clue": "keep"
+        },
+        {
+          "k": "Within two messages",
+          "v": "She says she trades crypto",
+          "clue": "brag"
+        },
+        {
+          "k": "She wants to move to",
+          "v": "A different chat app",
+          "clue": "move"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What fraud-prevention pages say",
+      "rows": [
+        {
+          "k": "A real wrong number",
+          "v": "One apology, and it ends"
+        },
+        {
+          "k": "A long con",
+          "v": "Starts friendly, then turns to investing"
+        }
+      ]
+    }
+  ]
+}
