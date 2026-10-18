@@ -1,9 +1,10 @@
 // TODDY: Moon Brew — screens, drawing, sound and saving.
-import { DX, DY, MAX_BUMPS, generate, newGame, beanAt, frozen, unitOf, traceBean, canRoll, tap, stars, hint, useHint, dailyScore, streaks, fromFrozen } from './core.js';
+import { DX, DY, MAX_BUMPS, generate, newGame, beanAt, frozen, unitOf, traceBean, canRoll, tap, stars, hint, useHint, dailyScore, streaks, fromFrozen, difficulty } from './core.js';
 import { TRAYS } from './trays.js';
-import { NIGHTS, INTROS, TRAYS_PER_NIGHT, trayConfig, dailyConfig, dailyNumber, endlessConfig, ENDLESS_LINES } from './levels.js';
+import { INTROS, TRAYS_PER_NIGHT, trayLevelConfig, dailyConfig, dailyNumber, endlessConfig, ENDLESS_LINES, nightInfo, VISITORS, VISITOR_ORDER, TIER_NAMES, trayTier, tierOf } from './levels.js';
+import { buildPostcard } from './postcard.js';
 
-const BUILD = '1.0.0-rc11';
+const BUILD = '1.0.0-rc12';
 const ASSET = 'assets/';
 const $ = (id) => document.getElementById(id);
 const systemCalm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -77,7 +78,7 @@ function img(name) {
 const ready = (im) => im && im.complete && im.naturalWidth > 0;
 const BEAN_IMG = ['bean_light_v01.webp', 'bean_medium_v01.webp', 'bean_dark_v01.webp'];
 const ROAST_NAME = ['light', 'medium', 'dark'];
-const VISITOR = { milo: ['visitor_milo_v02.webp', 'Milo the owl'], moth: ['visitor_moth_v01.webp', 'The sleepy moth'], star: ['visitor_star_v01.webp', 'The lost star'] };
+const VISITOR = Object.fromEntries(VISITOR_ORDER.map(v => [v, [v === 'milo' ? 'visitor_milo_v02.webp' : `visitor_${v}_v01.webp`, VISITORS[v].name]]));
 // Reaction poses (approved 2026-10-15): "happy" after a cleared tray, "wow" for 3 stars.
 const VISITOR_POSE = (v, pose) => `visitor_${v}_${pose}_v01.webp`;
 [...BEAN_IMG, 'bean_sleepy_v01.webp', 'ice_v01.webp', 'sugar_v01.webp', 'milk_v01.webp'].forEach(img);
@@ -289,6 +290,8 @@ const sfx = {
   pour: () => { noise(0.7, 500, 0.05); tone(330, 0.5, 'sine', 0.03, 220, 0.1); },
   star: (i) => tone([784, 988, 1175][i] || 1175, 0.18, 'triangle', 0.07),
   lost: () => tone(220, 0.16, 'sine', 0.05, 180),
+  spin: () => { tone(520, 0.09, 'triangle', 0.05, 780); tone(780, 0.09, 'triangle', 0.04, 520, 0.09); },
+  portal: () => { tone(300, 0.18, 'sine', 0.06, 900); tone(900, 0.2, 'sine', 0.045, 450, 0.2); },
 };
 function setSound(on) {
   save.sound = on; writeSave();
@@ -318,10 +321,12 @@ function nightOpen(n) { return unlocked() || n === 0 || nightCleared(n - 1); }
 function trayOpen(n, t) { return unlocked() || (nightOpen(n) && (t === 1 || !!save.stars[trayKey(n, t - 1)])); }
 function endlessOpen() { return unlocked() || nightCleared(0); }
 function night1Done() { let c = 0; for (let t = 1; t <= TRAYS_PER_NIGHT; t++) if (save.stars[trayKey(0, t)]) c++; return c; }
-function nextTray() { // first tray not cleared yet, in story order
-  for (let n = 0; n < NIGHTS.length; n++) for (let t = 1; t <= TRAYS_PER_NIGHT; t++) if (!save.stars[trayKey(n, t)] && trayOpen(n, t)) return [n, t];
+function nextTray() { // first tray not cleared yet, in story order (the Nights never run out)
+  for (let n = 0; n < 400 && nightOpen(n); n++) for (let t = 1; t <= TRAYS_PER_NIGHT; t++) if (!save.stars[trayKey(n, t)] && trayOpen(n, t)) return [n, t];
   return null;
 }
+function lastOpenNight() { if (unlocked()) return 11; let n = 0; while (n < 400 && nightOpen(n + 1)) n++; return n; }
+function nightsCleared() { let c = 0; while (c < 400 && nightCleared(c)) c++; return c; }
 function totalStars() { return Object.entries(save.stars).filter(([k]) => k.startsWith('n')).reduce((s, [, v]) => s + v, 0); }
 
 function renderTitle() {
@@ -332,34 +337,39 @@ function renderTitle() {
   $('endless-status').textContent = endlessOpen() ? (save.endlessBest ? `Best ${save.endlessBest}` : 'Open') : `🔒 After Night 1 · ${night1Done()}/20`;
   // the Play button says where the player is going: the Night and tray, so the 20-tray journey is visible from the start
   const nx = nextTray();
-  $('play-status').textContent = !Object.keys(save.stars).length ? `${NIGHTS[0].name} · ${TRAYS_PER_NIGHT} trays` : nx ? `Continue · ${NIGHTS[nx[0]].name}, tray ${nx[1]}` : 'All trays done · replay any';
+  $('play-status').textContent = !Object.keys(save.stars).length ? `${nightInfo(0).name} · ${TRAYS_PER_NIGHT} trays` : nx ? `Continue · ${nightInfo(nx[0]).name}, tray ${nx[1]}` : 'Play';
   $('btn-endless').classList.toggle('locked', !endlessOpen());
   $('build-label').textContent = PLAYTEST ? `Playtest build ${BUILD} · nothing here is public yet` : `Moon Brew ${BUILD}`;
 }
 
 // ---------------- Map ----------------
 let mapNight = 0;
+const PIPS = (tier) => '\u25CF'.repeat(tier + 1);
 function renderMap() {
   const tabs = $('night-tabs');
   tabs.textContent = '';
-  NIGHTS.forEach((night, n) => {
+  const top = lastOpenNight() + (unlocked() ? 0 : 1); // every open Night, plus the next one (locked until this one is done)
+  let selected = null;
+  for (let n = 0; n <= top; n++) {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'tab'; b.setAttribute('role', 'tab');
     b.setAttribute('aria-selected', String(n === mapNight));
-    b.textContent = night.name;
-    if (!nightOpen(n)) { b.disabled = true; b.title = `Finish ${NIGHTS[n - 1].name} to open`; }
+    b.textContent = `Night ${n + 1}`;
+    if (!nightOpen(n)) { b.disabled = true; b.title = `Finish Night ${n} to open`; }
     b.addEventListener('click', () => { mapNight = n; renderMap(); });
     tabs.appendChild(b);
-  });
-  const night = NIGHTS[mapNight];
+    if (n === mapNight) selected = b;
+  }
+  if (selected) tabs.scrollLeft = Math.max(0, selected.offsetLeft - (tabs.clientWidth - selected.offsetWidth) / 2);
+  const night = nightInfo(mapNight);
   $('night-visitor').src = ASSET + VISITOR[night.visitor][0];
   $('night-visitor').alt = night.visitorName;
-  $('night-name').textContent = `${night.name} · ${night.visitorName}`;
+  $('night-name').textContent = `${night.name} \u00B7 ${night.visitorName}`;
   $('night-title').textContent = night.title;
   let got = 0;
   for (let t = 1; t <= TRAYS_PER_NIGHT; t++) got += save.stars[trayKey(mapNight, t)] || 0;
-  $('night-sub').textContent = `${got} of ${TRAYS_PER_NIGHT * 3} stars · tray 20 earns a postcard`;
-  $('map-stars').textContent = `★ ${totalStars()}/180`;
+  $('night-sub').textContent = `${got} of ${TRAYS_PER_NIGHT * 3} stars \u00B7 tray 20 earns a postcard`;
+  $('map-stars').textContent = `\u2605 ${totalStars()}`;
   const grid = $('trays');
   grid.textContent = '';
   let nextMarked = false;
@@ -368,15 +378,24 @@ function renderMap() {
     b.type = 'button'; b.className = 'tray-btn' + (t === TRAYS_PER_NIGHT ? ' finale' : '');
     const s = save.stars[trayKey(mapNight, t)] || 0;
     const open = trayOpen(mapNight, t);
+    const tier = trayTier(mapNight, t);
     if (!open) b.classList.add('locked');
     if (open && !s && !nextMarked) { b.classList.add('next'); nextMarked = true; }
-    b.innerHTML = `<span>${t === TRAYS_PER_NIGHT ? '☾' : t}</span><small>${'★'.repeat(s)}</small>`;
-    b.setAttribute('aria-label', `Tray ${t}${s ? `, ${s} stars` : ''}${open ? '' : ', locked'}`);
+    b.innerHTML = `<span>${t === TRAYS_PER_NIGHT ? '\u263E' : t}</span><small>${'\u2605'.repeat(s)}</small><i class="pips" aria-hidden="true">${PIPS(tier)}</i>`;
+    b.setAttribute('aria-label', `Tray ${t}, ${TIER_NAMES[tier]}${s ? `, ${s} stars` : ''}${open ? '' : ', locked'}`);
     b.addEventListener('click', () => { if (open) startTray(mapNight, t); else say2map(t); });
     grid.appendChild(b);
   }
   $('unlock-all').checked = !!save.unlockAll;
   $('unlock-all').closest('label').hidden = !PLAYTEST;
+  // on the newest open Night: a shadow of who is coming next, so the journey is never a dead end
+  const nx = $('night-next');
+  nx.hidden = mapNight !== lastOpenNight();
+  if (!nx.hidden) {
+    const nn = nightInfo(mapNight + 1);
+    $('next-visitor').src = ASSET + VISITOR[nn.visitor][0];
+    $('next-text').innerHTML = `<b>Next: ${nn.name}</b> \u00B7 a new visitor and a new postcard. ${mapNight < 2 ? 'Clear tray 20 to open it.' : 'Nights never end.'}`;
+  }
 }
 function say2map(t) { $('night-sub').textContent = `Tray ${t} opens after you clear tray ${t - 1}.`; }
 
@@ -390,10 +409,12 @@ function renderStats() {
   const today = save.daily[dailyNumber()];
   const cleared = Object.keys(save.stars).length;
   const perfect = Object.values(save.stars).filter(v => v === 3).length;
-  const nightRows = NIGHTS.map((night, n) => {
+  // the Nights you are on (the last four), as bars
+  const startedNights = Math.max(1, Math.min(lastOpenNight() + 1, 400));
+  const nightRows = Array.from({ length: Math.min(4, startedNights) }, (_, i) => startedNights - Math.min(4, startedNights) + i).map(n => {
     let got = 0;
     for (let t = 1; t <= TRAYS_PER_NIGHT; t++) got += save.stars[trayKey(n, t)] || 0;
-    return `<div class="nightbar"><span>${night.name}</span><span class="track"><i data-w="${Math.round(100 * got / 60)}"></i></span><span>★ ${got}</span></div>`;
+    return `<div class="nightbar"><span>Night ${n + 1}</span><span class="track"><i data-w="${Math.round(100 * got / 60)}"></i></span><span>\u2605 ${got}</span></div>`;
   }).join('');
   // last 7 days, oldest first
   const days = [];
@@ -409,25 +430,52 @@ function renderStats() {
     <div class="tile wide"><span class="k">Last 7 Daily Brews</span><div class="week">${days.join('')}</div></div>
     <div class="tile"><span class="k">Best Daily</span><span class="v">${bestDaily || '–'}</span><span class="sub">${dailies.length} played</span></div>
     <div class="tile"><span class="k">Endless best</span><span class="v">${save.endlessBest || '–'}</span><span class="sub">points in one run</span></div>
-    <div class="tile wide"><span class="k">Stars</span><span class="v">${totalStars()} <small>/ 180</small></span>${nightRows}</div>
-    <div class="tile"><span class="k">Trays cleared</span><span class="v">${cleared} <small>/ 60</small></span><span class="sub">${perfect} Perfect Brews</span></div>
-    <div class="tile"><span class="k">Postcards</span><span class="v">${save.postcards.length} <small>/ 3</small></span><span class="sub">tray 20 of each Night</span></div>`;
+    <div class="tile wide"><span class="k">Stars</span><span class="v">${totalStars()}</span>${nightRows}</div>
+    <div class="tile"><span class="k">Trays cleared</span><span class="v">${cleared}</span><span class="sub">${perfect} Perfect Brews</span></div>
+    <div class="tile"><span class="k">Postcards</span><span class="v">${save.postcards.length}</span><span class="sub">tray 20 of each Night</span></div>`;
   $('stats').querySelectorAll('.track i').forEach(el => { el.style.width = el.dataset.w + '%'; });
 }
 
 // ---------------- Album ----------------
+// Nights 1-3 have painted postcards; every later Night's postcard is built by src/postcard.js (same for everyone).
+const ALBUM_PAGE = 12;
+let albumShown = ALBUM_PAGE;
+function postcardNode(n, small) { // an <img> for the painted three, a canvas (drawn when it scrolls into view) for the built ones
+  if (n < 3) { const im = document.createElement('img'); im.src = `${ASSET}postcard_n${n + 1}_v01.webp`; im.alt = `${nightInfo(n).title} postcard`; im.width = 1536; im.height = 1024; return im; }
+  const box = document.createElement('div'); box.className = 'pc-build'; box.setAttribute('role', 'img'); box.setAttribute('aria-label', `${nightInfo(n).title} postcard`);
+  const draw = () => buildPostcard(n, ASSET, small ? 0.5 : 1).then(cv => { box.textContent = ''; box.appendChild(cv); });
+  if (window.IntersectionObserver) { const io = new IntersectionObserver((es) => { if (es.some(e => e.isIntersecting)) { io.disconnect(); draw(); } }, { rootMargin: '200px' }); io.observe(box); }
+  else draw();
+  return box;
+}
 function renderAlbum() {
   const a = $('album');
   a.textContent = '';
-  NIGHTS.forEach((night, n) => {
-    const have = save.postcards.includes(night.id);
+  const nights = [];
+  for (let n = 0; n < 400 && (n === 0 || nightOpen(n) || save.postcards.includes('n' + (n + 1))); n++) nights.push(n);
+  const earned = nights.filter(n => save.postcards.includes('n' + (n + 1)));
+  const shown = earned.slice(0, albumShown);
+  shown.forEach((n) => {
+    const night = nightInfo(n);
     const d = document.createElement('figure');
-    d.className = 'pc' + (have ? '' : ' locked');
-    d.style.margin = '0';
-    const marked = have && (save.marks || []).includes(night.id);
-    d.innerHTML = `<img src="${ASSET}postcard_n${n + 1}_v01.webp" alt="${have ? night.title + ' postcard' : 'Locked postcard'}">${marked ? `<img class="pc-mark" src="${ASSET}mark_v01.svg" alt="A small crown mark">` : ''}<figcaption class="cap"><b>${night.title}</b><span>${have ? night.name : 'Finish ' + night.name}</span></figcaption>`;
-    a.appendChild(d);
+    d.className = 'pc'; d.style.margin = '0';
+    d.appendChild(postcardNode(n, true));
+    if ((save.marks || []).includes(night.id)) { const m = document.createElement('img'); m.className = 'pc-mark'; m.src = ASSET + 'mark_v01.svg'; m.alt = 'A small crown mark'; d.appendChild(m); }
+    const cap = document.createElement('figcaption'); cap.className = 'cap';
+    cap.innerHTML = `<b></b><span></span>`; cap.firstChild.textContent = night.title; cap.lastChild.textContent = night.name;
+    d.appendChild(cap); a.appendChild(d);
   });
+  if (earned.length > shown.length) {
+    const more = document.createElement('button'); more.type = 'button'; more.className = 'btn ghost'; more.textContent = `Show more (${earned.length - shown.length})`;
+    more.addEventListener('click', () => { albumShown += ALBUM_PAGE; renderAlbum(); });
+    a.appendChild(more);
+  }
+  // the next postcard, locked, so there is always one more to look forward to
+  const nextNight = earned.length ? Math.max(...earned) + 1 : 0;
+  const lk = document.createElement('figure'); lk.className = 'pc locked'; lk.style.margin = '0';
+  const lim = document.createElement('img'); lim.src = `${ASSET}postcard_n${(nextNight % 3) + 1}_v01.webp`; lim.alt = 'Locked postcard'; lk.appendChild(lim);
+  const lc = document.createElement('figcaption'); lc.className = 'cap'; lc.innerHTML = '<b></b><span></span>'; lc.firstChild.textContent = 'Next postcard'; lc.lastChild.textContent = `Finish Night ${nextNight + 1}`;
+  lk.appendChild(lc); a.appendChild(lk);
 }
 
 // ---------------- Play state ----------------
@@ -438,11 +486,20 @@ let hintBean = null, cursor = null;
 let startedAt = 0;
 let finishTimer = 0;
 
-function startTray(n, t) { mode = { kind: 'story', n, t }; const f = TRAYS[trayKey(n, t)]; load(f ? null : trayConfig(n, t), f ? fromFrozen(f) : null); }
+function startTray(n, t) { mode = { kind: 'story', n, t }; const f = TRAYS[trayKey(n, t)]; load(f ? null : trayLevelConfig(n, t), f ? fromFrozen(f) : null); }
 function startDaily() { const cfg = dailyConfig(); mode = { kind: 'daily', num: cfg.daily, visitor: cfg.visitor }; load(cfg); }
 function startEndless(cont) {
-  if (!cont) mode = { kind: 'endless', seed: (Date.now() % 1e9) >>> 0, k: 0, score: 0 };
-  load(endlessConfig(mode.seed, mode.k));
+  // pieces the player has already met in the story may show up here too (nothing unexplained)
+  if (!cont) mode = { kind: 'endless', seed: (Date.now() % 1e9) >>> 0, k: 0, score: 0, pieces: { walls: nightOpen(3), spin: nightOpen(4), portals: nightOpen(6) } };
+  load(endlessConfig(mode.seed, mode.k, mode.pieces));
+}
+
+// The title pill: where you are, and under it how hard this tray is (dots as well as the word, never colour alone).
+function setWhere(text, tier) {
+  const w = $('where'); w.textContent = '';
+  const a = document.createElement('span'); a.textContent = text;
+  const b = document.createElement('small'); b.className = 'tier'; b.textContent = `${PIPS(tier)} ${TIER_NAMES[tier]}`;
+  w.append(a, b);
 }
 
 function load(cfg, ready) {
@@ -455,16 +512,16 @@ function load(cfg, ready) {
   $('overlay').hidden = true;
   let vis = 'milo', line = '';
   if (mode.kind === 'story') {
-    const night = NIGHTS[mode.n];
+    const night = nightInfo(mode.n);
     vis = night.visitor; line = night.lines[mode.t - 1];
-    $('where').textContent = `${night.name} · ${mode.t === TRAYS_PER_NIGHT ? 'Finale' : `Tray ${mode.t}/${TRAYS_PER_NIGHT}`} ▾`;
+    setWhere(`${night.name} \u00B7 ${mode.t === TRAYS_PER_NIGHT ? 'Finale' : `Tray ${mode.t}/${TRAYS_PER_NIGHT}`} \u25BE`, trayTier(mode.n, mode.t));
   } else if (mode.kind === 'daily') {
     vis = mode.visitor;
     line = save.daily[mode.num] ? `Practice run. Today\u2019s score: ${save.daily[mode.num].score}.` : 'Today\u2019s puzzle. Same for everyone.';
-    $('where').textContent = 'Daily Brew';
+    setWhere('Daily Brew', tierOf(difficulty(level)));
   } else {
-    vis = ['milo', 'moth', 'star'][mode.k % 3]; line = ENDLESS_LINES[mode.k % ENDLESS_LINES.length];
-    $('where').textContent = `Endless · Tray ${mode.k + 1} · ${mode.score} pts`;
+    vis = VISITOR_ORDER[mode.k % VISITOR_ORDER.length]; line = ENDLESS_LINES[mode.k % ENDLESS_LINES.length];
+    setWhere(`Endless \u00B7 Tray ${mode.k + 1} \u00B7 ${mode.score} pts`, tierOf(difficulty(level)));
   }
   mode.vis = vis;
   coachPerfect = true;
@@ -478,6 +535,10 @@ function load(cfg, ready) {
   bubble.classList.remove('faded'); clearTimeout(bubbleTimer);
   bubbleTimer = setTimeout(() => bubble.classList.add('faded'), 4500);
   [VISITOR_POSE(vis, 'happy'), VISITOR_POSE(vis, 'wow'), 'cup_v01.webp'].forEach(img); // ready for the serve
+  // the special pieces load only when this tray has them
+  if ((level.walls || []).length) img('cinnamon_v01.webp');
+  if ((level.portals || []).length) { img('portal_violet_v01.webp'); img('portal_teal_v01.webp'); }
+  if (level.beans.some(b => b.spin)) img('bean_spinner_v01.webp');
   say('');
   // first-time coaching: ring the bean that matters, one short line
   coach = null;
@@ -507,7 +568,10 @@ function startCoach(k) {
       if (tr && tr.cells && tr.cells.some(cl => level.swirls.includes(cl.x + ',' + cl.y))) { target = b; break; }
     }
     target = target || g.beans[level.solution[0][0]];
-  }
+  } else if (c.on === 'wall') { const k = (level.walls || [])[0]; if (k) { const [x, y] = k.split(',').map(Number); target = { x, y, gone: false }; } }
+  else if (c.on === 'spin') target = g.beans.find(b => b.spin);
+  else if (c.on === 'portal') { const pr = (level.portals || [])[0]; if (pr) { const [x, y] = pr[0].split(',').map(Number); target = { x, y, gone: false }; } }
+  if (!target) return; // the piece is not on this tray: nothing to point at
   coach = { key: k, target, line: c.line, t0: performance.now() };
   say(c.line);
   track('tip', { tip: k });
@@ -647,6 +711,24 @@ function draw(now) {
     ctx.strokeStyle = '#7a4a22'; ctx.lineWidth = Math.max(1.5, cell * 0.05); ctx.lineCap = 'round';
     ctx.beginPath(); ctx.arc(0, 0, cell * 0.1, Math.PI, Math.PI * 2.2); ctx.stroke(); ctx.restore();
   }
+  // cinnamon sticks: they never move, nothing rolls through them
+  const cin = img('cinnamon_v01.webp');
+  for (const k of level.walls || []) {
+    const [x, y] = k.split(',').map(Number);
+    ctx.fillStyle = 'rgba(90,40,14,.32)'; rr(ox + x * cell + 2, oy + y * cell + 2, cell - 4, cell - 4, cell * 0.2); ctx.fill();
+    if (ready(cin)) drawFit(cin, cxp(x), cyp(y), cell * 0.98, (x + y) % 2 ? Math.PI / 2 : 0, 1);
+  }
+  // moon doors: a bean that goes in comes out of the twin (same number on both), still rolling the same way
+  (level.portals || []).forEach(([a, b, ci]) => {
+    const pim = img(ci % 2 ? 'portal_teal_v01.webp' : 'portal_violet_v01.webp');
+    for (const k of [a, b]) {
+      const [x, y] = k.split(',').map(Number);
+      if (ready(pim)) drawFit(pim, cxp(x), cyp(y), cell * 0.92, 0, 1);
+      ctx.save(); ctx.fillStyle = '#17112a'; ctx.beginPath(); ctx.arc(cxp(x) + cell * 0.3, cyp(y) + cell * 0.3, cell * 0.17, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#fff'; ctx.font = `900 ${Math.round(cell * 0.22)}px ui-rounded, system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(String(ci + 1), cxp(x) + cell * 0.3, cyp(y) + cell * 0.31); ctx.restore();
+    }
+  });
   // beans (static first, moving on top)
   const moving = new Map(anims.map(a => [a.bean, a]));
   const drawn = [];
@@ -681,7 +763,8 @@ function draw(now) {
       } else {
         const u = (t - PRE) / (1 - PRE);
         const p = along(a.pts, u * u * (3 - 2 * u) * 0.35 + u * 0.65);
-        drawBean(b, p.x, p.y, p.ang, u > 0.8 ? (1 - u) / 0.2 : 1, 1);
+        const door = p.near < cell * 0.5 ? 0.25 + 0.75 * p.near / (cell * 0.5) : 1; // small as it slips through a moon door
+        drawBean(b, p.x, p.y, p.ang, u > 0.8 ? (1 - u) / 0.2 : 1, door);
       }
     } else if (a.kind === 'bump') {
       // knock forward, bounce back past the start, settle
@@ -689,6 +772,9 @@ function draw(now) {
       drawBean(b, cxp(b.x) + DX[b.dir] * k, cyp(b.y) + DY[b.dir] * k, ANG[b.dir], 1, 1);
     } else if (a.kind === 'shake') {
       drawBean(b, cxp(b.x) + Math.sin(t * Math.PI * 6) * cell * 0.06 * (1 - t), cyp(b.y), ANG[b.dir], 1, 1);
+    } else if (a.kind === 'spin') {
+      const k = Math.max(0, t), e = 1 - Math.pow(1 - k, 3);
+      drawBean(b, cxp(b.x), cyp(b.y), ANG[a.from] + a.turns * Math.PI / 2 * e, 1, 1 + Math.sin(k * Math.PI) * 0.1);
     } else if (a.kind === 'wake') {
       drawBean(b, cxp(b.x), cyp(b.y), ANG[b.dir], 1, 1 + Math.sin(t * Math.PI) * 0.18);
     }
@@ -740,7 +826,7 @@ function drawFit(im, x, y, size, ang, alpha) {
 
 function drawBean(b, x, y, ang, alpha, scale) {
   const sleepy = !b.awake;
-  const im = img(sleepy ? 'bean_sleepy_v01.webp' : BEAN_IMG[b.roast]);
+  const im = img(sleepy ? 'bean_sleepy_v01.webp' : b.spin ? 'bean_spinner_v01.webp' : BEAN_IMG[b.roast]);
   const len = cell * 0.84 * scale;
   ctx.save();
   ctx.globalAlpha = alpha;
@@ -753,6 +839,11 @@ function drawBean(b, x, y, ang, alpha, scale) {
   } else {
     ctx.fillStyle = ['#edc08a', '#b0602a', '#24100a'][b.roast];
     ctx.beginPath(); ctx.ellipse(0, 0, len / 2, len * 0.3, 0, 0, Math.PI * 2); ctx.fill();
+  }
+  if (b.spin && !b.gone) { // a gold turning arrow around the spinner bean: it turns whenever beans are ground
+    ctx.save(); ctx.rotate(-ang); ctx.strokeStyle = '#fdaf1e'; ctx.lineWidth = Math.max(2, cell * 0.06); ctx.lineCap = 'round';
+    const r = cell * 0.46; ctx.beginPath(); ctx.arc(0, 0, r, -2.6, 0.7); ctx.stroke();
+    ctx.beginPath(); ctx.moveTo(r * Math.cos(0.7) + cell * 0.07, r * Math.sin(0.7) - cell * 0.05); ctx.lineTo(r * Math.cos(0.7), r * Math.sin(0.7)); ctx.lineTo(r * Math.cos(0.7) - cell * 0.09, r * Math.sin(0.7) - cell * 0.02); ctx.stroke(); ctx.restore();
   }
   // direction mark just past the tip
   const tip = len / 2 + cell * 0.02;
@@ -773,29 +864,39 @@ function drawBean(b, x, y, ang, alpha, scale) {
   }
 }
 
-// points of a rolling bean: from its cell, through each milk turn, off the tray
+// points of a rolling bean: from its cell, through each milk turn and moon door, off the tray
 function rollPoints(b, tr) {
   const pts = [{ x: cxp(b.x), y: cyp(b.y), d: b.dir }];
   let d = b.dir;
-  for (const c of tr.cells) if (c.d !== d) { pts.push({ x: cxp(c.x), y: cyp(c.y), d: c.d }); d = c.d; }
+  for (const c of tr.cells) {
+    if (c.portal === 'in') pts.push({ x: cxp(c.x), y: cyp(c.y), d: c.d });
+    else if (c.portal === 'out') { pts.push({ x: cxp(c.x), y: cyp(c.y), d: c.d, jump: true }); d = c.d; } // jumps from the door to its twin
+    else if (c.d !== d) { pts.push({ x: cxp(c.x), y: cyp(c.y), d: c.d }); d = c.d; }
+  }
   const e = tr.exit;
   pts.push({ x: cxp(e.x) + DX[e.d] * cell * 0.8, y: cyp(e.y) + DY[e.d] * cell * 0.8, d: e.d });
   let total = 0;
-  for (let i = 1; i < pts.length; i++) { pts[i].len = Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y); total += pts[i].len; }
+  pts.jumps = [];
+  for (let i = 1; i < pts.length; i++) {
+    pts[i].len = pts[i].jump ? 0 : Math.hypot(pts[i].x - pts[i - 1].x, pts[i].y - pts[i - 1].y);
+    total += pts[i].len;
+    if (pts[i].jump) pts.jumps.push(total);
+  }
   pts.total = total;
   return pts;
 }
 function along(pts, t) {
   let dist = t * pts.total;
+  const near = pts.jumps && pts.jumps.length ? Math.min(...pts.jumps.map(j => Math.abs(j - dist))) : 1e9;
   for (let i = 1; i < pts.length; i++) {
     if (dist <= pts[i].len || i === pts.length - 1) {
       const f = pts[i].len ? Math.min(1, dist / pts[i].len) : 1;
-      return { x: pts[i - 1].x + (pts[i].x - pts[i - 1].x) * f, y: pts[i - 1].y + (pts[i].y - pts[i - 1].y) * f, ang: ANG[pts[i].d] };
+      return { x: pts[i - 1].x + (pts[i].x - pts[i - 1].x) * f, y: pts[i - 1].y + (pts[i].y - pts[i - 1].y) * f, ang: ANG[pts[i].d], near };
     }
     dist -= pts[i].len;
   }
   const last = pts[pts.length - 1];
-  return { x: last.x, y: last.y, ang: ANG[last.d] };
+  return { x: last.x, y: last.y, ang: ANG[last.d], near };
 }
 
 // ---------------- Input ----------------
@@ -844,6 +945,7 @@ function act(b) {
     pulse($('cracks'));
     if (g.status === 'burnt') { say('Burnt! Three bumps.'); toddyPlay('worried'); }
     else if (!save.intros.bump) { save.intros.bump = 1; writeSave(); say('Blocked! Three bumps burns the brew.'); toddyPlay('surprised'); }
+    else if (ev.block && (level.walls || []).includes(ev.block.x + ',' + ev.block.y)) { say(`Cinnamon blocks it. Bump! ${MAX_BUMPS - g.bumps} left.`); toddyPlay('surprised'); }
     else { say(ev.loop ? 'It goes round in circles. Bump!' : `Bump! ${MAX_BUMPS - g.bumps} left.`); toddyPlay('surprised'); }
   } else if (ev.type === 'roll') {
     ev.unit.forEach((u, i) => {
@@ -851,6 +953,9 @@ function act(b) {
       anims.push({ bean: u, kind: 'roll', t0: now, dur: calm() ? 1 : 240 + pts.total / cell * 55, pts });
     });
     sfx.roll();
+    for (const sp of ev.spun || []) anims.push({ bean: sp, kind: 'spin', from: (sp.dir + 3) % 4, turns: 1, t0: now, dur: calm() ? 1 : 340 });
+    if (ev.spun && ev.spun.length) setTimeout(sfx.spin, calm() ? 0 : 120);
+    if (ev.traces.some(tr => tr.cells && tr.cells.some(c => c.portal))) setTimeout(sfx.portal, calm() ? 0 : 160);
     if (!calm()) { const longest = Math.max(...anims.filter(a => a.kind === 'roll' && a.t0 === now).map(a => a.dur)); setTimeout(sfx.grind, longest * 0.9); }
     else sfx.grind();
     hop();
@@ -868,6 +973,11 @@ function act(b) {
       say(left === 1 ? 'One more bean!' : left <= 3 ? 'Almost there.' : ['Into the grinder.', 'Crunch.', 'Nice roll.', 'The cup fills up.'][g.rolled % 4]);
     }
   }
+  if (ev.rescued && ev.rescued.length) { // nothing could move, so the spinner turned by itself
+    const turns = new Map(); for (const sb of ev.rescued) turns.set(sb, (turns.get(sb) || 0) + 1);
+    for (const [sb, n] of turns) anims.push({ bean: sb, kind: 'spin', from: (((sb.dir - n) % 4) + 4) % 4, turns: n, t0: now + (calm() ? 0 : 320), dur: calm() ? 1 : 340 + 120 * n });
+    setTimeout(sfx.spin, calm() ? 0 : 340); say('The spinner turned by itself.');
+  }
   coachPerfect = g.perfect;
   hud();
   requestAnimationFrame(draw);
@@ -884,7 +994,7 @@ function act(b) {
 let coachPerfect = true;
 function hop() { if (calm()) return; const t = $('toddy'); t.classList.remove('hop'); void t.offsetWidth; t.classList.add('hop'); }
 function pulse(el) { if (!el || calm()) return; el.classList.remove('pulse'); void el.offsetWidth; el.classList.add('pulse'); }
-function markSeen() { if (!save.marks) save.marks = []; const id = NIGHTS[mode.n].id; if (!save.marks.includes(id)) { save.marks.push(id); writeSave(); } }
+function markSeen() { if (!save.marks) save.marks = []; const id = nightInfo(mode.n).id; if (!save.marks.includes(id)) { save.marks.push(id); writeSave(); } }
 
 // ---------------- Results ----------------
 function card(html) {
@@ -897,7 +1007,6 @@ function bind(id, fn) { const el = $(id); if (el) el.addEventListener('click', f
 function starRow(s) { return `<div class="stars" aria-label="${s} of 3 stars">${'★'.repeat(s)}<span class="off">${'★'.repeat(3 - s)}</span></div>`; }
 
 // The payoff: the full cup slides to the visitor, who reacts; then each star lands with what earned it.
-const SHORT_NAME = { milo: 'Milo', moth: 'The moth', star: 'The star' };
 function serveHtml(small) {
   const v = mode.vis || 'milo', s3 = stars(g) === 3;
   const pose = VISITOR_POSE(v, s3 ? 'wow' : 'happy');
@@ -959,7 +1068,7 @@ function record() {
     const k = trayKey(mode.n, mode.t);
     result.firstClear = !save.stars[k];
     if (!save.stars[k] || result.s > save.stars[k]) save.stars[k] = result.s;
-    const night = NIGHTS[mode.n];
+    const night = nightInfo(mode.n);
     result.newCard = mode.t === TRAYS_PER_NIGHT && !save.postcards.includes(night.id);
     if (result.newCard) save.postcards.push(night.id);
   }
@@ -990,7 +1099,7 @@ function finish(again) {
     return;
   }
 
-  const head = s === 3 ? 'Perfect Brew!' : `${SHORT_NAME[mode.vis] || 'Milo'} is happy`;
+  const head = s === 3 ? 'Perfect Brew!' : `${(VISITORS[mode.vis] || VISITORS.milo).short} is happy`;
 
   if (mode.kind === 'daily') {
     const sc = result.score, st = dailyStreak();
@@ -1013,13 +1122,12 @@ function finish(again) {
     return;
   }
 
-  const night = NIGHTS[mode.n];
+  const night = nightInfo(mode.n);
   const finale = mode.t === TRAYS_PER_NIGHT;
-  const nextLabel = finale ? (mode.n < NIGHTS.length - 1 ? NIGHTS[mode.n + 1].name : 'Trays') : 'Next tray';
+  const nextLabel = finale ? nightInfo(mode.n + 1).name : 'Next tray'; // the Nights never run out
   const goNext = () => {
     if (!finale) startTray(mode.n, mode.t + 1);
-    else if (mode.n < NIGHTS.length - 1) { mapNight = mode.n + 1; startTray(mode.n + 1, 1); }
-    else show('map');
+    else { mapNight = mode.n + 1; startTray(mode.n + 1, 1); }
   };
   // once ever, after the first clear of tray 2: introduce the Daily Brew (and its shareable score)
   const dailyTip = result.firstClear && mode.n === 0 && mode.t === 2 && !save.intros.daily && dailyWaiting();
@@ -1034,10 +1142,14 @@ function finish(again) {
   };
   const showPostcard = () => {
     const marked = (save.marks || []).includes(night.id);
-    card(`<h3>A postcard for you</h3><div class="pc-wrap"><img class="postcard" src="${ASSET}postcard_n${mode.n + 1}_v01.webp" alt="${night.title} postcard">${marked ? `<img class="pc-mark" src="${ASSET}mark_v01.svg" alt="A small crown mark">` : ''}</div>
-      <p><b>${night.title}</b>${marked ? ' · that crown mark again…' : ''}</p>
+    const mark = marked ? `<img class="pc-mark" src="${ASSET}mark_v01.svg" alt="A small crown mark">` : '';
+    const painted = mode.n < 3;
+    card(`<h3>A postcard for you</h3><div class="pc-wrap" id="pc-wrap">${painted ? `<img class="postcard" src="${ASSET}postcard_n${mode.n + 1}_v01.webp" alt="${night.title} postcard">${mark}` : '<p class="stat">Making your postcard\u2026</p>'}</div>
+      <p><b>${night.title}</b>${marked ? ' \u00B7 that crown mark again\u2026' : ''}</p>
+      <p class="stat">${mode.n === 2 ? 'The first three Nights are done. Nights never end: someone new is at the door.' : `${nightInfo(mode.n + 1).name} is open: a new visitor and a new postcard.`}</p>
       <div class="btns"><button class="btn primary" id="o-cont" type="button">${nextLabel}</button></div>`);
     bind('o-cont', goNext);
+    if (!painted) buildPostcard(mode.n, ASSET).then(cv => { const w = $('pc-wrap'); if (w) { w.textContent = ''; cv.setAttribute('role', 'img'); cv.setAttribute('aria-label', `${night.title} postcard`); w.appendChild(cv); if (marked) w.insertAdjacentHTML('beforeend', mark); } });
   };
   // the serve comes first: it is the payoff
   card(`${serveHtml(false)}<h3>${finale ? 'Night complete!' : head}</h3>
@@ -1107,9 +1219,9 @@ async function drawShare(d) {
   const c = document.createElement('canvas'); c.width = W; c.height = H;
   const x = c.getContext('2d');
   x.fillStyle = '#17112a'; x.fillRect(0, 0, W, H);
-  const pc = { milo: 1, moth: 2, star: 3 }[d.visitor] || 1;
-  const art = await loadImg(ASSET + `postcard_n${pc}_v01.webp`);
-  if (art) { const h = W * art.naturalHeight / art.naturalWidth; x.drawImage(art, 0, 0, W, h); }
+  const nn = { milo: 0, moth: 1, star: 2, pip: 3, lumi: 4, velvet: 5, inkwell: 6, biscuit: 7 }[d.visitor] || 0; // the card of that visitor's Night
+  const art = nn < 3 ? await loadImg(ASSET + `postcard_n${nn + 1}_v01.webp`) : await buildPostcard(nn, ASSET, 0.9);
+  if (art) { const aw = art.naturalWidth || art.width, ah = art.naturalHeight || art.height; x.drawImage(art, 0, 0, W, W * ah / aw); }
   const grad = x.createLinearGradient(0, 380, 0, 760);
   grad.addColorStop(0, 'rgba(23,17,42,0)'); grad.addColorStop(1, 'rgba(23,17,42,1)');
   x.fillStyle = grad; x.fillRect(0, 380, W, 400);
@@ -1182,7 +1294,7 @@ async function openShare(d, back) {
 bind('btn-play', () => {
   sfx.tick();
   if (!Object.keys(save.stars).length) { startTray(0, 1); return; } // first time: straight into tray 1
-  mapNight = [2, 1, 0].find(n => nightOpen(n)) ?? 0; show('map');
+  mapNight = (nextTray() || [lastOpenNight()])[0]; show('map');
 });
 bind('btn-daily', () => { sfx.tick(); startDaily(); });
 bind('btn-endless', () => {
@@ -1190,10 +1302,10 @@ bind('btn-endless', () => {
   // locked: say why and how far along the player is, with a way straight there
   const done = night1Done();
   modal(`<p class="eyebrow">🔒 Locked</p><h3>Endless Brew</h3>
-    <p>Opens after ${NIGHTS[0].name}.</p>
+    <p>Opens after ${nightInfo(0).name}.</p>
     <div class="path" aria-label="${done} of ${TRAYS_PER_NIGHT} trays cleared">${nightPath(0, -1)}</div>
     <p class="stat">${done} of ${TRAYS_PER_NIGHT} trays cleared</p>
-    <div class="btns"><button class="btn ghost" id="lk-close" type="button">Close</button><button class="btn primary" id="lk-go" type="button">Play ${NIGHTS[0].name}</button></div>`);
+    <div class="btns"><button class="btn ghost" id="lk-close" type="button">Close</button><button class="btn primary" id="lk-go" type="button">Play ${nightInfo(0).name}</button></div>`);
   bind('lk-close', closeModal);
   bind('lk-go', () => { closeModal(); const nx = nextTray(); if (nx && nx[0] === 0) startTray(0, nx[1]); else { mapNight = 0; show('map'); } });
 });
@@ -1213,7 +1325,7 @@ bind('map-back', () => show('title'));
 bind('album-back', () => show('title'));
 bind('howto-back', () => show('title'));
 bind('play-back', () => { clearTimeout(finishTimer); show(mode && mode.kind === 'story' ? 'map' : 'title'); });
-bind('btn-restart', () => { if (mode.kind === 'endless') { if (g.status === 'playing') load(endlessConfig(mode.seed, mode.k)); } else if (mode.kind === 'daily') startDaily(); else startTray(mode.n, mode.t); });
+bind('btn-restart', () => { if (mode.kind === 'endless') { if (g.status === 'playing') load(endlessConfig(mode.seed, mode.k, mode.pieces)); } else if (mode.kind === 'daily') startDaily(); else startTray(mode.n, mode.t); });
 bind('btn-hint', () => {
   if (!g || g.status !== 'playing') return;
   hintBean = useHint(g, performance.now() - startedAt);
@@ -1273,7 +1385,7 @@ track('open', { returning: Object.keys(save.stars).length > 0 || Object.keys(sav
 // Hooks for the automatic browser tests (tools/smoke.py). Not used by players.
 window.__moonbrew = {
   get g() { return g; }, get level() { return level; }, get mode() { return mode; }, get coach() { return coach && coach.key; }, save,
-  startTray, startDaily, startEndless, show, audioState: () => actx ? actx.state : "none",
+  startTray, startDaily, startEndless, show, buildPostcard: (n, sc = 0.5) => buildPostcard(n, ASSET, sc), nightInfo, audioState: () => actx ? actx.state : "none",
   // test-only level meter: loudest sample and average level of everything leaving the speakers
   meter() { if (!mixOut) return null; if (!this._an) { this._an = actx.createAnalyser(); this._an.fftSize = 2048; mixOut.connect(this._an); } const d = new Float32Array(2048); this._an.getFloatTimeDomainData(d); let pk = 0, sq = 0; for (const v of d) { pk = Math.max(pk, Math.abs(v)); sq += v * v; } return { peak: pk, rms: Math.sqrt(sq / d.length) }; },
   sfx: (n) => sfx[n](), music: () => musicOn,
