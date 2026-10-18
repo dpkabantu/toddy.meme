@@ -441,7 +441,7 @@ function renderStats() {
 const ALBUM_PAGE = 12;
 let albumShown = ALBUM_PAGE;
 function postcardNode(n, small) { // an <img> for the painted three, a canvas (drawn when it scrolls into view) for the built ones
-  if (n < 3) { const im = document.createElement('img'); im.src = `${ASSET}postcard_n${n + 1}_v01.webp`; im.alt = `${nightInfo(n).title} postcard`; im.width = 1536; im.height = 1024; return im; }
+  if (n < 3) { const im = document.createElement('img'); im.src = `${ASSET}postcard_n${n + 1}_v02.webp`; im.alt = `${nightInfo(n).title} postcard`; im.width = 1200; im.height = 800; im.loading = "lazy"; im.decoding = "async"; return im; }
   const box = document.createElement('div'); box.className = 'pc-build'; box.setAttribute('role', 'img'); box.setAttribute('aria-label', `${nightInfo(n).title} postcard`);
   const draw = () => buildPostcard(n, ASSET, small ? 0.5 : 1).then(cv => { box.textContent = ''; box.appendChild(cv); });
   if (window.IntersectionObserver) { const io = new IntersectionObserver((es) => { if (es.some(e => e.isIntersecting)) { io.disconnect(); draw(); } }, { rootMargin: '200px' }); io.observe(box); }
@@ -473,7 +473,7 @@ function renderAlbum() {
   // the next postcard, locked, so there is always one more to look forward to
   const nextNight = earned.length ? Math.max(...earned) + 1 : 0;
   const lk = document.createElement('figure'); lk.className = 'pc locked'; lk.style.margin = '0';
-  const lim = document.createElement('img'); lim.src = `${ASSET}postcard_n${(nextNight % 3) + 1}_v01.webp`; lim.alt = 'Locked postcard'; lk.appendChild(lim);
+  const lim = document.createElement('img'); lim.src = `${ASSET}postcard_n${(nextNight % 3) + 1}_v02.webp`; lim.alt = 'Locked postcard'; lk.appendChild(lim);
   const lc = document.createElement('figcaption'); lc.className = 'cap'; lc.innerHTML = '<b></b><span></span>'; lc.firstChild.textContent = 'Next postcard'; lc.lastChild.textContent = `Finish Night ${nextNight + 1}`;
   lk.appendChild(lc); a.appendChild(lk);
 }
@@ -1144,7 +1144,7 @@ function finish(again) {
     const marked = (save.marks || []).includes(night.id);
     const mark = marked ? `<img class="pc-mark" src="${ASSET}mark_v01.svg" alt="A small crown mark">` : '';
     const painted = mode.n < 3;
-    card(`<h3>A postcard for you</h3><div class="pc-wrap" id="pc-wrap">${painted ? `<img class="postcard" src="${ASSET}postcard_n${mode.n + 1}_v01.webp" alt="${night.title} postcard">${mark}` : '<p class="stat">Making your postcard\u2026</p>'}</div>
+    card(`<h3>A postcard for you</h3><div class="pc-wrap" id="pc-wrap">${painted ? `<img class="postcard" src="${ASSET}postcard_n${mode.n + 1}_v02.webp" alt="${night.title} postcard">${mark}` : '<p class="stat">Making your postcard\u2026</p>'}</div>
       <p><b>${night.title}</b>${marked ? ' \u00B7 that crown mark again\u2026' : ''}</p>
       <p class="stat">${mode.n === 2 ? 'The first three Nights are done. Nights never end: someone new is at the door.' : `${nightInfo(mode.n + 1).name} is open: a new visitor and a new postcard.`}</p>
       <div class="btns"><button class="btn primary" id="o-cont" type="button">${nextLabel}</button></div>`);
@@ -1220,7 +1220,7 @@ async function drawShare(d) {
   const x = c.getContext('2d');
   x.fillStyle = '#17112a'; x.fillRect(0, 0, W, H);
   const nn = { milo: 0, moth: 1, star: 2, pip: 3, lumi: 4, velvet: 5, inkwell: 6, biscuit: 7 }[d.visitor] || 0; // the card of that visitor's Night
-  const art = nn < 3 ? await loadImg(ASSET + `postcard_n${nn + 1}_v01.webp`) : await buildPostcard(nn, ASSET, 0.9);
+  const art = nn < 3 ? await loadImg(ASSET + `postcard_n${nn + 1}_v02.webp`) : await buildPostcard(nn, ASSET, 0.9);
   if (art) { const aw = art.naturalWidth || art.width, ah = art.naturalHeight || art.height; x.drawImage(art, 0, 0, W, W * ah / aw); }
   const grad = x.createLinearGradient(0, 380, 0, 760);
   grad.addColorStop(0, 'rgba(23,17,42,0)'); grad.addColorStop(1, 'rgba(23,17,42,1)');
