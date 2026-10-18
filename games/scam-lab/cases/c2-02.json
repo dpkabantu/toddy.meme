@@ -90,7 +90,7 @@
               "Easy! Use ",
               {
                 "clue": "platform",
-                "text": "redmere-trade-pro.app",
+                "text": "brenvoy-trade-pro.app",
                 "link": true
               },
               ". ",
@@ -147,7 +147,7 @@
             "end": "block_report"
           },
           {
-            "text": "I'll check whether Redmere Trade Pro is a licensed firm first",
+            "text": "I'll check whether Brenvoy Trade Pro is a licensed firm first",
             "end": "verify"
           },
           {
@@ -234,8 +234,8 @@
     "verify"
   ],
   "trap": {
-    "title": "Redmere Trade Pro · Deposit",
-    "url": "redmere-trade-pro.app/deposit",
+    "title": "Brenvoy Trade Pro · Deposit",
+    "url": "brenvoy-trade-pro.app/deposit",
     "ask": "Deposit €100 to start earning a guaranteed 2% a day.",
     "go": "Deposit €100",
     "back": "Close this page"
@@ -252,7 +252,7 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Redmere Trade Pro wasn't on any official register. It was on a warning list instead.",
+      "line": "Brenvoy Trade Pro wasn't on any official register. It was on a warning list instead.",
       "mirageSays": "They looked us up?!"
     },
     "go_ahead": {

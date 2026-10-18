@@ -9,7 +9,7 @@ import { Mirage } from './chars.js';
 import { store } from './store.js';
 
 // The case files keep 'Chirp' as the internal key of the social-app look; players see its made-up name
-const APP_NAMES = { Chirp: 'Wrenly' };
+const APP_NAMES = { Chirp: 'Plenvo' };
 const appName = (k) => APP_NAMES[k] || k;
 const NUDGE_S = 15; const GLOW_S = 25; // nobody should stay stuck for long
 let S = null; let G = null;
@@ -172,7 +172,7 @@ function renderScreen() {
     body = h('div', { class: 'thread wallet', id: 'thread' },
       sc.context ? h('div', { class: 'context', text: sc.context }) : null,
       h('div', { class: 'w-card' },
-        h('div', { class: 'w-top' }, h('span', { class: 'w-logo', text: '🐾' }), h('b', { text: sc.wallet || 'Larkspur' }), h('span', { class: 'w-net', text: sc.network || 'Northvale Chain' })),
+        h('div', { class: 'w-top' }, h('span', { class: 'w-logo', text: '🐾' }), h('b', { text: sc.wallet || 'Hedrio' }), h('span', { class: 'w-net', text: sc.network || 'Zelvora Chain' })),
         sc.site ? h('div', { class: 'w-site' }, h('span', { class: 'w-globe', text: '🌐' }), parts(sc.site)) : null,
         h('h3', { class: 'w-title', text: sc.title }),
         sc.rows ? h('dl', { class: 'w-rows' }, sc.rows.map((r) => [h('dt', { text: r.k }), h('dd', {}, parts(r.v))])) : null,

@@ -6,7 +6,7 @@
   "title": "Moving Day",
   "disguise": null,
   "intro": [
-    "Lena sends a voice message on Wrenly, from her usual account.",
+    "Lena sends a voice message on Plenvo, from her usual account.",
     "After hacked accounts, every friend's message feels suspicious.",
     "Sniff it. Is anything actually wrong?"
   ],
@@ -165,7 +165,7 @@
       },
       {
         "id": "b",
-        "text": "\"Send 200 NVUSD to this new wallet, can't talk\""
+        "text": "\"Send 200 ZLUSD to this new wallet, can't talk\""
       }
     ],
     "answer": "b",

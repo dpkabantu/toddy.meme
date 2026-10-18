@@ -14,7 +14,7 @@
     {
       "id": "m1",
       "app": "Ad",
-      "from": "SkyHarvest Pro",
+      "from": "Hashora Pro",
       "text": "Rent mining power, earn 5% a day! Withdraw after 60 days.",
       "scam": true,
       "why": "Fixed daily returns plus a withdrawal wait is a classic fake mining scheme."
@@ -22,14 +22,14 @@
     {
       "id": "m2",
       "app": "App",
-      "from": "Tolbridge (in-app)",
+      "from": "Ostrel (in-app)",
       "text": "Staking rewards are variable, about 3–5% a year. You can lose money if prices fall.",
       "scam": false,
       "why": "Small, variable, honest about risk."
     },
     {
       "id": "m3",
-      "app": "Wrenly DM",
+      "app": "Plenvo DM",
       "from": "Millionaire Mentor",
       "text": "Buy my €499 course and I'll show you my secret 10x method.",
       "scam": true,
@@ -37,9 +37,9 @@
     },
     {
       "id": "m4",
-      "app": "Wrenly DM",
+      "app": "Plenvo DM",
       "from": "Doubler Bot",
-      "text": "Send NVL to this bot and it doubles your coins in 24 hours!",
+      "text": "Send ZLV to this bot and it doubles your coins in 24 hours!",
       "scam": true,
       "why": "Doubler bots are always scams."
     },
@@ -53,9 +53,9 @@
     },
     {
       "id": "m6",
-      "app": "Wrenly DM",
+      "app": "Plenvo DM",
       "from": "Matrix Club",
-      "text": "Pay 50 NVL, recruit 2 people, they recruit 2… earn forever!",
+      "text": "Pay 50 ZLV, recruit 2 people, they recruit 2… earn forever!",
       "scam": true,
       "why": "A pyramid by design."
     },
@@ -77,9 +77,9 @@
     },
     {
       "id": "m9",
-      "app": "Wrenly DM",
+      "app": "Plenvo DM",
       "from": "Lucky Spin",
-      "text": "Spin the crypto wheel! Deposit 20 NVL to unlock 10 free spins.",
+      "text": "Spin the crypto wheel! Deposit 20 ZLV to unlock 10 free spins.",
       "scam": true,
       "why": "Gambling dressed up as a prize, with a deposit first."
     },

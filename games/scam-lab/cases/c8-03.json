@@ -12,7 +12,7 @@
   ],
   "notify": {
     "app": "Chirp",
-    "from": "TradeHelperBot AI 🤖",
+    "from": "Pivlo AI 🤖",
     "text": "Our AI bot made 312% last month!"
   },
   "screen": {
@@ -20,7 +20,7 @@
     "head": {
       "name": [
         {
-          "text": "TradeHelperBot AI 🤖",
+          "text": "Pivlo AI 🤖",
           "id": "duel-name"
         }
       ],
@@ -96,7 +96,7 @@
               " ",
               {
                 "clue": "or",
-                "text": "Or just deposit 500 NVL into the bot wallet."
+                "text": "Or just deposit 500 ZLV into the bot wallet."
               }
             ]
           }
@@ -192,7 +192,7 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "No regulator had heard of TradeHelperBot, except on a warning list.",
+      "line": "No regulator had heard of Pivlo AI, except on a warning list.",
       "mirageSays": "Warning lists, again!"
     },
     "go_ahead": {
@@ -243,7 +243,7 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check the bot",
-      "title": "TradeHelperBot AI",
+      "title": "Pivlo AI",
       "rows": [
         {
           "k": "Handle",

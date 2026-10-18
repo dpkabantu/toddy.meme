@@ -11,16 +11,16 @@
     "Some offers are real. Don't scare off a good job!"
   ],
   "cards": [
-    { "id": "j1", "app": "Wrenly DM", "from": "Recruiter Elena", "text": "Earn €250 a day just liking videos! Pay €49 registration and start today.", "scam": true, "why": "Real jobs never make you pay to start. Easy money for likes is a task scam." },
+    { "id": "j1", "app": "Plenvo DM", "from": "Recruiter Elena", "text": "Earn €250 a day just liking videos! Pay €49 registration and start today.", "scam": true, "why": "Real jobs never make you pay to start. Easy money for likes is a task scam." },
     { "id": "j2", "app": "Email", "from": "jobs@kopicorner.eu", "text": "Thanks for applying for the barista role. Can you come for an interview on Tuesday at 10:00 at our café?", "scam": false, "why": "You applied, it's an in-person interview, and it asks for nothing." },
-    { "id": "j3", "app": "Wrenly DM", "from": "ShiftBoost Team", "text": "Your account balance is −€120. Top up with crypto to unlock today's commission!", "scam": true, "why": "Task scams invent a \"negative balance\" so you keep paying in." },
+    { "id": "j3", "app": "Plenvo DM", "from": "Taskivo Team", "text": "Your account balance is −€120. Top up with crypto to unlock today's commission!", "scam": true, "why": "Task scams invent a \"negative balance\" so you keep paying in." },
     { "id": "j4", "app": "Email", "from": "hr-portal@yourwork.eu", "text": "Your October payslip is ready. Open the HR app you already use to view it.", "scam": false, "why": "From your real employer, no link, and it points to the app you already use." },
     { "id": "j5", "app": "SMS", "from": "+44 7700 900511", "text": "Remote job: receive money into your bank account and forward it on. Keep 10%!", "scam": true, "why": "Moving money for strangers makes you a \"money mule\". It's illegal and can get your account closed." },
-    { "id": "j6", "app": "Wrenly DM", "from": "Global Recruit HR", "text": "We found your CV online! You're hired, no interview needed. Send a copy of your passport to start.", "scam": true, "why": "Hired with no interview, then asking for ID: that's identity theft." },
-    { "id": "j7", "app": "SMS", "from": "Marco (friend)", "text": "My café is hiring for weekends! Apply on their website, the link is on their Wrenly page.", "scam": false, "why": "A friend you know, pointing you to the official website. Nothing to pay." },
+    { "id": "j6", "app": "Plenvo DM", "from": "Global Recruit HR", "text": "We found your CV online! You're hired, no interview needed. Send a copy of your passport to start.", "scam": true, "why": "Hired with no interview, then asking for ID: that's identity theft." },
+    { "id": "j7", "app": "SMS", "from": "Marco (friend)", "text": "My café is hiring for weekends! Apply on their website, the link is on their Plenvo page.", "scam": false, "why": "A friend you know, pointing you to the official website. Nothing to pay." },
     { "id": "j8", "app": "Email", "from": "StarterKit Ltd", "text": "Congratulations! To begin your work-from-home job, buy our €199 starter kit first.", "scam": true, "why": "Real employers provide the tools. Paying for a \"kit\" first is a scam." },
     { "id": "j9", "app": "Email", "from": "no-reply@jobsboard.eu", "text": "3 new jobs match your saved search \"barista\". Sign in to the Jobsboard app to see them.", "scam": false, "why": "An alert you set up yourself, sending you to the app, asking for nothing." },
-    { "id": "j10", "app": "Wrenly DM", "from": "Crypto Optimizer", "text": "Rate 40 apps a day to \"optimise\" them and earn crypto commission. Deposit first to unlock level 2!", "scam": true, "why": "\"Optimising\" apps for crypto, with deposits to unlock levels, is a task scam." }
+    { "id": "j10", "app": "Plenvo DM", "from": "Crypto Optimizer", "text": "Rate 40 apps a day to \"optimise\" them and earn crypto commission. Deposit first to unlock level 2!", "scam": true, "why": "\"Optimising\" apps for crypto, with deposits to unlock levels, is a task scam." }
   ],
   "golden_rule": "Real jobs pay you. If a job asks you to pay, top up, or move money, it's a scam.",
   "quick_check": {

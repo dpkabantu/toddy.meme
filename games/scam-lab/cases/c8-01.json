@@ -13,7 +13,7 @@
   "notify": {
     "app": "Chirp",
     "from": "Bruno",
-    "text": "Join Harvest Circle, I'm earning daily! 💸"
+    "text": "Join Pelmora Circle, I'm earning daily! 💸"
   },
   "screen": {
     "app": "chirp",
@@ -37,7 +37,7 @@
         "msg": [
           {
             "clue": "join",
-            "text": "Join Harvest Circle with 100 NVL."
+            "text": "Join Pelmora Circle with 100 ZLV."
           }
         ]
       },
@@ -127,7 +127,7 @@
     },
     {
       "id": "block_report",
-      "label": "Say no, and warn Kiko about Harvest Circle"
+      "label": "Say no, and warn Kiko about Pelmora Circle"
     }
   ],
   "best_action": "block_report",
@@ -139,7 +139,7 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "Toddy declined and warned Kiko. A month later Harvest Circle froze withdrawals.",
+      "line": "Toddy declined and warned Kiko. A month later Pelmora Circle froze withdrawals.",
       "mirageSays": "One less recruit!"
     },
     "ignore": {

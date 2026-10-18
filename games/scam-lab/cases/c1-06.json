@@ -13,7 +13,7 @@
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Northvale Help Desk ✔",
+    "from": "Zelvora Help Desk ✔",
     "text": "We've opened ticket #4471 for your stuck swap!"
   },
   "screen": {
@@ -22,14 +22,14 @@
       "name": [
         {
           "clue": "tick",
-          "text": "Northvale Help Desk ✔",
+          "text": "Zelvora Help Desk ✔",
           "id": "duel-name"
         }
       ],
       "sub": [
         {
           "clue": "handle",
-          "text": "@northvale.helpdesk.live"
+          "text": "@zelvora.helpdesk.live"
         }
       ],
       "avatar": {
@@ -43,7 +43,7 @@
         "text": "Message request · they replied to your public post"
       }
     ],
-    "context": "You posted in the Northvale community: \"Swap stuck again, anyone?\"",
+    "context": "You posted in the Zelvora community: \"Swap stuck again, anyone?\"",
     "items": [
       {
         "msg": [
@@ -60,7 +60,7 @@
           "Chat with a live agent here: ",
           {
             "clue": "chatlink",
-            "text": "wrenly.me/northvale-agent-live",
+            "text": "plenvo.me/zelvora-agent-live",
             "link": true
           }
         ]
@@ -71,11 +71,11 @@
     "start": "d1",
     "nodes": {
       "d1": {
-        "rename": "Agent Mira · Northvale",
+        "rename": "Agent Mira · Zelvora",
         "say": [
           {
             "sys": [
-              "You joined a private chat with \"Agent Mira · Northvale\""
+              "You joined a private chat with \"Agent Mira · Zelvora\""
             ]
           },
           {
@@ -83,7 +83,7 @@
               "Hi, I'm Mira! To fix the swap I need to see your screen. Please install ",
               {
                 "clue": "screenshare",
-                "text": "RemoteHelp Pro"
+                "text": "Vewro Pro"
               },
               " and give me the code."
             ]
@@ -133,14 +133,14 @@
         ]
       },
       "d3": {
-        "rename": "Luna (Northvale Admin)",
+        "rename": "Luna (Zelvora Admin)",
         "disguise": "admin",
         "say": [
           {
             "sys": [
               {
                 "clue": "swap",
-                "text": "Agent Mira left. \"Luna (Northvale Admin)\" joined the chat."
+                "text": "Agent Mira left. \"Luna (Zelvora Admin)\" joined the chat."
               }
             ]
           },
@@ -165,7 +165,7 @@
             "end": "block_report"
           },
           {
-            "text": "I'll check on Northvale's official site first",
+            "text": "I'll check on Zelvora's official site first",
             "end": "verify"
           }
         ]
@@ -182,7 +182,7 @@
     "handle": {
       "label": "Not the official handle",
       "strength": "strong",
-      "lens": "@northvale.helpdesk.live, joined last week. The official account is @northvale.",
+      "lens": "@zelvora.helpdesk.live, joined last week. The official account is @zelvora.",
       "why": "Extra words like helpdesk or live are a favourite disguise."
     },
     "dm_first": {
@@ -200,7 +200,7 @@
     "screenshare": {
       "label": "Screen-share app",
       "strength": "strong",
-      "lens": "RemoteHelp Pro would let them see and control your phone.",
+      "lens": "Vewro Pro would let them see and control your phone.",
       "why": "Never install remote-access apps because a stranger asks."
     },
     "otp": {
@@ -230,7 +230,7 @@
     "avatar": {
       "label": "Moon logo",
       "strength": "harmless",
-      "lens": "The Northvale moon logo.",
+      "lens": "The Zelvora moon logo.",
       "why": "Logos are easy to copy."
     }
   },
@@ -242,7 +242,7 @@
     },
     {
       "id": "verify",
-      "label": "Use the help button inside the Northvale app"
+      "label": "Use the help button inside the Zelvora app"
     },
     {
       "id": "block_report",
@@ -263,14 +263,14 @@
       "scene": "safe",
       "mirage": "caught",
       "stamp": "CASE CLOSED",
-      "line": "Reported. Wrenly traced every fake account back to one con artist.",
+      "line": "Reported. Plenvo traced every fake account back to one con artist.",
       "mirageSays": "Unmasked by a civet?!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Northvale's in-app help confirmed: no Agent Mira, no Luna, no ticket #4471.",
+      "line": "Zelvora's in-app help confirmed: no Agent Mira, no Luna, no ticket #4471.",
       "mirageSays": "They checked AGAIN?"
     },
     "go_ahead": {
@@ -290,11 +290,11 @@
     "verdicts": [
       {
         "id": "scam",
-        "text": "One scammer pretending to be Northvale support and an admin"
+        "text": "One scammer pretending to be Zelvora support and an admin"
       },
       {
         "id": "real",
-        "text": "Real Northvale support, just being careful"
+        "text": "Real Zelvora support, just being careful"
       },
       {
         "id": "unsure",
@@ -350,7 +350,7 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check profile",
-      "title": "@northvale.helpdesk.live",
+      "title": "@zelvora.helpdesk.live",
       "rows": [
         {
           "k": "Account created",
@@ -364,7 +364,7 @@
         },
         {
           "k": "Official account",
-          "v": "@northvale"
+          "v": "@zelvora"
         }
       ]
     },
@@ -380,8 +380,8 @@
           "clue": "chatlink"
         },
         {
-          "k": "Northvale's real help",
-          "v": "Inside the Northvale app only"
+          "k": "Zelvora's real help",
+          "v": "Inside the Zelvora app only"
         }
       ]
     },
@@ -389,7 +389,7 @@
       "id": "source",
       "icon": "📖",
       "label": "Official page",
-      "title": "Northvale's real help page says",
+      "title": "Zelvora's real help page says",
       "rows": [
         {
           "k": "Will support ask for a login code?",

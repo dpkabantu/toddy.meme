@@ -88,7 +88,7 @@
             "next": "d2"
           },
           {
-            "text": "Buying 500 NVL worth",
+            "text": "Buying 500 ZLV worth",
             "next": "d3"
           },
           {
@@ -140,7 +140,7 @@
               "Admin here. ",
               {
                 "clue": "unlock",
-                "text": "Pay a 100 NVL \"unlock fee\" and we'll refund holders."
+                "text": "Pay a 100 ZLV \"unlock fee\" and we'll refund holders."
               }
             ]
           }

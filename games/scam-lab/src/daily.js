@@ -4,9 +4,9 @@
 // Pure module (no DOM) so tests and, later, the server can rebuild any day's case.
 
 const BRANDS = [
-  { name: 'Northvale', handle: 'northvale', domain: 'northvale.app' },
-  { name: 'Larkspur', handle: 'larkspur', domain: 'larkspur.app' },
-  { name: 'Tolbridge', handle: 'tolbridge', domain: 'tolbridge.io' },
+  { name: 'Zelvora', handle: 'zelvora', domain: 'zelvora.app' },
+  { name: 'Hedrio', handle: 'hedrio', domain: 'hedrio.app' },
+  { name: 'Ostrel', handle: 'ostrel', domain: 'ostrel.io' },
 ];
 const FRIENDS = ['Kiko', 'Lena', 'Marco', 'Sam'];
 const CITIES = ['Lisbon', 'Vienna', 'Lyon', 'Ghent'];
@@ -46,7 +46,7 @@ export const TEMPLATES = [
         context: 'Yesterday you opened a help ticket inside the app.',
         items: [{ msg: [C('ticket', `Thanks for your ticket #${ticket}.`), ' We\'ll reply inside the app within 24 hours.'] }, { msg: [C('nothing', 'There\'s nothing you need to send us.'), ' We will never ask for your recovery phrase.'] }] },
       clues: {
-        badge: { label: 'Real badge', strength: 'harmless', lens: `@${b.handle}, the official handle, with Wrenly's badge after it.`, why: 'The official handle with the app\'s own badge.' },
+        badge: { label: 'Real badge', strength: 'harmless', lens: `@${b.handle}, the official handle, with Plenvo's badge after it.`, why: 'The official handle with the app\'s own badge.' },
         ticket: { label: 'Your ticket number', strength: 'harmless', lens: 'It matches the ticket you opened yourself.', why: 'You started this conversation in the app.' },
         nothing: { label: 'Asks for nothing', strength: 'harmless', lens: 'No link, no code, no phrase.', why: 'Real support asks for nothing secret.' },
         avatar: { label: 'Brand logo', strength: 'harmless', lens: 'The brand logo.', why: 'Proves nothing alone.' },
@@ -54,9 +54,9 @@ export const TEMPLATES = [
   } },
   { id: 'giveaway', scam: true, make: (r) => {
     const n = pick(r, [50, 100, 250]);
-    return { app: 'chirp', title: 'Double your coins', notify: { app: 'Chirp', from: 'Lantern Giveaway 🚀', text: `Send ${n} NVL, get ${n * 2} back!` },
-      screen: { app: 'chirp', head: { name: [C('name', 'Lantern Giveaway 🚀')], sub: ['@lantern_giveaway_official'], avatar: { glyph: '🚀', clue: 'avatar' } },
-        items: [{ msg: [C('party', '🎉 Giveaway time!'), ' ', C('double', `Send ${n} NVL and we\'ll send ${n * 2} back`), '.'] }, { msg: ['Wallet: ', C('wallet', '0x9Fa…77c'), '. ', C('timer', 'Ends in', { countdown: 300 })] }] },
+    return { app: 'chirp', title: 'Double your coins', notify: { app: 'Chirp', from: 'Kelvaro Giveaway 🚀', text: `Send ${n} ZLV, get ${n * 2} back!` },
+      screen: { app: 'chirp', head: { name: [C('name', 'Kelvaro Giveaway 🚀')], sub: ['@kelvaro_giveaway_official'], avatar: { glyph: '🚀', clue: 'avatar' } },
+        items: [{ msg: [C('party', '🎉 Giveaway time!'), ' ', C('double', `Send ${n} ZLV and we\'ll send ${n * 2} back`), '.'] }, { msg: ['Wallet: ', C('wallet', '0x9Fa…77c'), '. ', C('timer', 'Ends in', { countdown: 300 })] }] },
       clues: {
         double: { label: 'Send 1, get 2', strength: 'strong', lens: 'They want you to send first.', why: 'Giveaways that ask you to send first are always fake.' },
         wallet: { label: 'Send to their wallet', strength: 'strong', lens: 'A wallet address from a stranger.', why: 'Coins sent there are gone for good.' },
@@ -103,9 +103,9 @@ export const TEMPLATES = [
   } },
   { id: 'parcel', scam: true, make: (r) => {
     const fee = pick(r, ['€1.99', '€2.49', '€0.99']);
-    return { app: 'sms', title: 'Parcel on hold', notify: { app: 'Messages', from: 'Parcelway', text: `Your parcel is on hold. Pay ${fee}…` },
-      screen: { app: 'sms', head: { name: [C('sender', 'Parcelway')] },
-        items: [{ msg: [C('hold', 'Your parcel is on hold at our depot.'), ' Pay the ', C('fee', `${fee} redelivery fee`), ' at ', C('link', 'parcelway-redeliver.xyz', { link: true }), ' ', C('timer', 'within', { countdown: 3600 })] }] },
+    return { app: 'sms', title: 'Parcel on hold', notify: { app: 'Messages', from: 'Dovetta', text: `Your parcel is on hold. Pay ${fee}…` },
+      screen: { app: 'sms', head: { name: [C('sender', 'Dovetta')] },
+        items: [{ msg: [C('hold', 'Your parcel is on hold at our depot.'), ' Pay the ', C('fee', `${fee} redelivery fee`), ' at ', C('link', 'dovetta-redeliver.xyz', { link: true }), ' ', C('timer', 'within', { countdown: 3600 })] }] },
       clues: {
         fee: { label: 'Small fee', strength: 'strong', lens: 'A tiny fee to get your card details.', why: 'Small fees are bait to steal card details.' },
         link: { label: 'Odd link', strength: 'strong', lens: 'A .xyz look-alike, not the real courier site.', why: 'Check deliveries in the courier\'s own app or site.' },
@@ -143,7 +143,7 @@ export const TEMPLATES = [
     const fee = pick(r, [5, 10, 20]);
     return { app: 'chirp', title: 'You won!', notify: { app: 'Chirp', from: 'Admin Luna 💜', text: 'You won the community raffle!' },
       screen: { app: 'chirp', head: { name: [C('name', 'Admin Luna 💜')], sub: [C('handle', '@luna_m00nbeam')], avatar: { glyph: '🌙', clue: 'avatar' } },
-        items: [{ msg: [C('won', 'You won the Brightwater raffle! 🎉')] }, { msg: [C('fee', `Send ${fee} NVL to cover the fee`), ' and the prize is yours.'] }] },
+        items: [{ msg: [C('won', 'You won the Fenmira raffle! 🎉')] }, { msg: [C('fee', `Send ${fee} ZLV to cover the fee`), ' and the prize is yours.'] }] },
       clues: {
         fee: { label: 'Pay to claim', strength: 'strong', lens: 'You pay to get a prize.', why: 'Real prizes never cost money to claim.' },
         handle: { label: '0 instead of o', strength: 'strong', lens: '@luna_m-0-0-nbeam with zeros.', why: 'Look-alike handles swap 0 for o.' },
@@ -182,7 +182,7 @@ export const TEMPLATES = [
     const pct = pick(r, ['2%', '3%', '5%']); const who = pick(r, ['Sophie 🌸', 'Lukas 📈', 'Clara ✨']);
     return { app: 'chirp', title: 'Guaranteed profits', notify: { app: 'Chirp', from: who, text: `This app pays ${pct} a day, guaranteed!` },
       screen: { app: 'chirp', head: { name: [C('name', who)], sub: ['met online last month'], avatar: { glyph: '🙂', clue: 'avatar' } },
-        items: [{ msg: [C('hi', 'Hey friend! 😊')] }, { msg: ['I use ', C('site', 'oakfieldyield.app', { link: true }), '. ', C('guar', `It pays ${pct} a day, guaranteed!`)] }, { msg: [C('secret', 'Don\'t tell anyone, it\'s a private group.')] }] },
+        items: [{ msg: [C('hi', 'Hey friend! 😊')] }, { msg: ['I use ', C('site', 'nistorayield.app', { link: true }), '. ', C('guar', `It pays ${pct} a day, guaranteed!`)] }, { msg: [C('secret', 'Don\'t tell anyone, it\'s a private group.')] }] },
       clues: {
         guar: { label: 'Guaranteed returns', strength: 'strong', lens: `${pct} a day, guaranteed.`, why: 'Only scammers guarantee profits.' },
         site: { label: 'Unknown platform', strength: 'strong', lens: 'A site chosen by someone you met online.', why: 'Fake platforms show fake gains.' },
@@ -194,8 +194,8 @@ export const TEMPLATES = [
   } },
   { id: 'recovery', scam: true, make: (r) => {
     const fee = pick(r, ['€300', '€500', '€750']);
-    return { app: 'mail', title: 'Get your money back', notify: { app: 'Mail', from: 'ReturnDesk Europe', text: 'We can recover your lost funds…' },
-      screen: { app: 'mail', head: { from: ['ReturnDesk Europe'], addr: [C('addr', 'help@returndesk-eu.co')], subject: [C('subject', 'We found your lost crypto')], time: ['10:20 AM'] },
+    return { app: 'mail', title: 'Get your money back', notify: { app: 'Mail', from: 'Regaina Europe', text: 'We can recover your lost funds…' },
+      screen: { app: 'mail', head: { from: ['Regaina Europe'], addr: [C('addr', 'help@regaina-eu.co')], subject: [C('subject', 'We found your lost crypto')], time: ['10:20 AM'] },
         context: 'Last month you reported a scam on social media.',
         items: [{ p: [C('dear', 'Dear victim,')] }, { p: ['Our legal team traced your funds. ', C('promise', 'We guarantee 100% recovery'), '.'] }, { p: [C('fee', `Pay a ${fee} processing fee in crypto`), ' to start.'] }] },
       clues: {
@@ -237,7 +237,7 @@ export const TEMPLATES = [
     const f = pick(r, FRIENDS);
     return { app: 'chirp', title: `${f} needs help`, notify: { app: 'Chirp', from: f, text: 'Can you send me some crypto? Urgent!' },
       screen: { app: 'chirp', head: { name: [C('name', f)], sub: ['your friend'], avatar: { glyph: '🙂', clue: 'avatar' } },
-        items: [{ msg: [C('urgent', 'Urgent!! Can you send 150 NVUSD to this new wallet?')] }, { msg: [C('nocall', 'Can\'t call, I\'m in a meeting')] }] },
+        items: [{ msg: [C('urgent', 'Urgent!! Can you send 150 ZLUSD to this new wallet?')] }, { msg: [C('nocall', 'Can\'t call, I\'m in a meeting')] }] },
       clues: {
         urgent: { label: 'Crypto to a new wallet', strength: 'strong', lens: 'Money to an unknown address.', why: 'A classic hacked-account request.' },
         nocall: { label: 'Can\'t call', strength: 'strong', lens: 'Avoids a call.', why: 'A call would expose the hacker.' },
@@ -246,7 +246,7 @@ export const TEMPLATES = [
       }, golden_rule: 'Friend asking for money by message? Call them on a number you already have first.' };
   } },
   { id: 'pump', scam: true, make: (r) => {
-    const coin = pick(r, ['$ROCKETPAW', '$SPACEKOI', '$LAMBOBEAN']);
+    const coin = pick(r, ['$ROCKETPAW', '$COSMOKOI', '$ZOOMBEAN']);
     return { app: 'chirp', title: 'Pump tonight', notify: { app: 'Chirp', from: 'Signals VIP 🚀', text: `Everyone buy ${coin} at 20:00!` },
       screen: { app: 'chirp', head: { name: [C('name', 'Signals VIP 🚀')], sub: [C('members', '30,000 members')], avatar: { glyph: '🚀', clue: 'avatar' } },
         items: [{ msg: [C('pump', `At 20:00 we all buy ${coin}!`)] }, { msg: [C('x', '50x guaranteed'), ', ', C('hold', 'don\'t sell early!')] }] },
@@ -260,8 +260,8 @@ export const TEMPLATES = [
       }, golden_rule: 'If a group tells you when to buy and promises 50x, you are the one being sold to.' };
   } },
   { id: 'surprise-nft', scam: true, make: (r) => {
-    const n = pick(r, ['Golden Lantern Pass', 'Paw VIP Ticket', 'Lucky Bean Badge']);
-    return { app: 'chirp', title: 'Surprise NFT', notify: { app: 'Larkspur', from: 'New NFT', text: `"${n}" arrived in your wallet` },
+    const n = pick(r, ['Kelvaro Pass', 'Paw VIP Ticket', 'Lucky Bean Badge']);
+    return { app: 'chirp', title: 'Surprise NFT', notify: { app: 'Hedrio', from: 'New NFT', text: `"${n}" arrived in your wallet` },
       screen: { app: 'chirp', head: { name: [C('name', n)], sub: [C('unver', 'unverified collection')], avatar: { glyph: '🎁', clue: 'avatar' } },
         items: [{ msg: [C('surprise', 'You received a free NFT!')] }, { msg: ['Claim your bonus at ', C('site', 'claim-pass.app', { link: true }), ' ', C('approve', 'by approving all NFTs')] }] },
       clues: {
@@ -301,9 +301,9 @@ export const TEMPLATES = [
   } },
   { id: 'real-reward', scam: false, make: (r) => {
     const pts = pick(r, ['25', '40', '60']);
-    return { app: 'mail', title: 'Monthly rewards', notify: { app: 'Tolbridge', from: 'Tolbridge (in-app)', text: `You earned ${pts} points` },
-      screen: { app: 'mail', head: { from: ['Tolbridge'], addr: [C('inapp', 'in-app message')], subject: [C('subject', 'Your rewards are ready')], time: ['9:00 AM'] },
-        context: 'You opened the Tolbridge app you already use.',
+    return { app: 'mail', title: 'Monthly rewards', notify: { app: 'Ostrel', from: 'Ostrel (in-app)', text: `You earned ${pts} points` },
+      screen: { app: 'mail', head: { from: ['Ostrel'], addr: [C('inapp', 'in-app message')], subject: [C('subject', 'Your rewards are ready')], time: ['9:00 AM'] },
+        context: 'You opened the Ostrel app you already use.',
         items: [{ p: [C('pts', `You earned ${pts} points for your trades this month.`)] }, { p: [C('tab', 'See them in the Rewards tab. Nothing to do.')] }] },
       clues: {
         inapp: { label: 'Inside the app', strength: 'harmless', lens: 'In the app\'s own inbox.', why: 'Hard to fake.' },

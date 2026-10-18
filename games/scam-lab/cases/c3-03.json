@@ -12,7 +12,7 @@
   ],
   "notify": {
     "app": "Chirp",
-    "from": "MaxLive Mod",
+    "from": "Droveo Live Mod",
     "text": "🔴 You're selected for the 2x event!"
   },
   "screen": {
@@ -20,14 +20,14 @@
     "head": {
       "name": [
         {
-          "text": "MaxLive Mod",
+          "text": "Droveo Live Mod",
           "id": "duel-name"
         }
       ],
       "sub": [
         {
           "clue": "handle",
-          "text": "@maxlive_mod"
+          "text": "@droveolive_mod"
         }
       ],
       "avatar": {
@@ -77,7 +77,7 @@
             "next": "n2"
           },
           {
-            "text": "Sending 100 NVL now",
+            "text": "Sending 100 ZLV now",
             "end": "go_ahead"
           },
           {
@@ -262,7 +262,7 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check the account",
-      "title": "MaxLive Mod",
+      "title": "Droveo Live Mod",
       "rows": [
         {
           "k": "Account",

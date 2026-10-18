@@ -11,15 +11,15 @@
     "Sniff carefully before you report anything."
   ],
   "notify": {
-    "app": "Tolbridge",
-    "from": "Tolbridge (in-app)",
+    "app": "Ostrel",
+    "from": "Ostrel (in-app)",
     "text": "Your monthly rewards are ready"
   },
   "screen": {
     "app": "mail",
     "head": {
       "from": [
-        "Tolbridge"
+        "Ostrel"
       ],
       "addr": [
         {
@@ -37,7 +37,7 @@
         "9:00 AM"
       ]
     },
-    "context": "You opened the Tolbridge app you already use. This is in its message inbox.",
+    "context": "You opened the Ostrel app you already use. This is in its message inbox.",
     "items": [
       {
         "p": [
@@ -64,7 +64,7 @@
         "p": [
           {
             "clue": "warn",
-            "text": "Reminder: Tolbridge will never ask you to connect your wallet to claim rewards."
+            "text": "Reminder: Ostrel will never ask you to connect your wallet to claim rewards."
           }
         ]
       },
@@ -72,7 +72,7 @@
         "foot": [
           {
             "clue": "foot",
-            "text": "Tolbridge · Rewards"
+            "text": "Ostrel · Rewards"
           }
         ]
       }
@@ -152,7 +152,7 @@
       "scene": "wolf",
       "mirage": "smug",
       "stamp": "FALSE ALARM",
-      "line": "That was Tolbridge's real in-app message. False alarms make real warnings easier to ignore.",
+      "line": "That was Ostrel's real in-app message. False alarms make real warnings easier to ignore.",
       "mirageSays": "Trust nothing? Perfect."
     },
     "ignore": {

@@ -73,7 +73,7 @@
         "msg": [
           {
             "clue": "move",
-            "text": "Texts are expensive, can we chat on Wrenly instead?"
+            "text": "Texts are expensive, can we chat on Plenvo instead?"
           },
           " ",
           {
@@ -137,7 +137,7 @@
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Keep chatting and add her on Wrenly"
+      "label": "Keep chatting and add her on Plenvo"
     },
     {
       "id": "ignore",

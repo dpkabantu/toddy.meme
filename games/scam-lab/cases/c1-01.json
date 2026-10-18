@@ -12,7 +12,7 @@
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Northvale Support ✔",
+    "from": "Zelvora Support ✔",
     "text": "Hi there! 👋 We saw your post. Your wallet is out of sync…"
   },
   "screen": {
@@ -21,13 +21,13 @@
       "name": [
         {
           "clue": "tick",
-          "text": "Northvale Support ✔"
+          "text": "Zelvora Support ✔"
         }
       ],
       "sub": [
         {
           "clue": "handle",
-          "text": "@northvale_helpdesk_24"
+          "text": "@zelvora_helpdesk_24"
         }
       ],
       "avatar": {
@@ -41,7 +41,7 @@
         "text": "New message request · you don't follow this account"
       }
     ],
-    "context": "Earlier you posted in the Northvale community chat: \"My swap is stuck 😩 anyone know why?\"",
+    "context": "Earlier you posted in the Zelvora community chat: \"My swap is stuck 😩 anyone know why?\"",
     "items": [
       {
         "time": [
@@ -65,7 +65,7 @@
           "To unlock it, re-sync here: ",
           {
             "clue": "link",
-            "text": "northvale-sync.help/verify",
+            "text": "zelvora-sync.help/verify",
             "link": true
           }
         ]
@@ -102,19 +102,19 @@
     "tick": {
       "label": "Fake tick",
       "strength": "strong",
-      "lens": "The ✔ is just an emoji typed into the name. Wrenly's real verified badge sits after the handle, and there isn't one.",
+      "lens": "The ✔ is just an emoji typed into the name. Plenvo's real verified badge sits after the handle, and there isn't one.",
       "why": "Anyone can type a tick into a display name."
     },
     "handle": {
       "label": "2-day-old account",
       "strength": "strong",
-      "lens": "Joined 2 days ago · 3 followers. The official account is @northvale.",
+      "lens": "Joined 2 days ago · 3 followers. The official account is @zelvora.",
       "why": "Brand-new look-alike accounts are a classic impersonation sign."
     },
     "link": {
       "label": "Look-alike link",
       "strength": "strong",
-      "lens": "This link really goes to northvale-sync.help, not the official northvale.app.",
+      "lens": "This link really goes to zelvora-sync.help, not the official zelvora.app.",
       "why": "Always check where a link really goes. Look-alike sites steal your details."
     },
     "phrase": {
@@ -132,7 +132,7 @@
     "avatar": {
       "label": "Moon logo",
       "strength": "harmless",
-      "lens": "It's the Northvale moon logo.",
+      "lens": "It's the Zelvora moon logo.",
       "why": "A logo is easy to copy, so it proves nothing either way on its own."
     },
     "time": {
@@ -160,7 +160,7 @@
     },
     {
       "id": "verify",
-      "label": "Check Northvale's official help page"
+      "label": "Check Zelvora's official help page"
     },
     {
       "id": "block_report",
@@ -173,8 +173,8 @@
     "ignore"
   ],
   "trap": {
-    "title": "Northvale Wallet Sync",
-    "url": "northvale-sync.help/verify",
+    "title": "Zelvora Wallet Sync",
+    "url": "zelvora-sync.help/verify",
     "ask": "Enter your 12-word recovery phrase to re-sync your wallet.",
     "go": "Re-sync now",
     "back": "Close this page"
@@ -184,14 +184,14 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "Blocked and reported. Wrenly removed the fake account, so it can't fool the next person.",
+      "line": "Blocked and reported. Plenvo removed the fake account, so it can't fool the next person.",
       "mirageSays": "Curses! Blocked again!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Northvale's help page says: \"We never message you first and never ask for your recovery phrase.\" Case cracked.",
+      "line": "Zelvora's help page says: \"We never message you first and never ask for your recovery phrase.\" Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "ignore": {
@@ -260,7 +260,7 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check profile",
-      "title": "Profile check · @northvale_helpdesk_24",
+      "title": "Profile check · @zelvora_helpdesk_24",
       "rows": [
         {
           "k": "Account created",
@@ -278,7 +278,7 @@
         },
         {
           "k": "Official account",
-          "v": "@northvale, 4 years old"
+          "v": "@zelvora, 4 years old"
         }
       ]
     },
@@ -294,12 +294,12 @@
         },
         {
           "k": "It really opens",
-          "v": "northvale-sync.help",
+          "v": "zelvora-sync.help",
           "clue": "link"
         },
         {
-          "k": "Real Northvale site",
-          "v": "northvale.app"
+          "k": "Real Zelvora site",
+          "v": "zelvora.app"
         }
       ]
     },
@@ -307,7 +307,7 @@
       "id": "source",
       "icon": "📖",
       "label": "Official page",
-      "title": "Northvale's real help page says",
+      "title": "Zelvora's real help page says",
       "rows": [
         {
           "k": "Does support message you first?",

@@ -7,12 +7,12 @@
   "disguise": "support",
   "intro": [
     "Toddy got a new phone and is reinstalling the wallet app.",
-    "The app store shows two \"Larkspur\" apps.",
+    "The app store shows two \"Hedrio\" apps.",
     "Compare them before you install."
   ],
   "notify": {
     "app": "App store",
-    "from": "Search: Larkspur",
+    "from": "Search: Hedrio",
     "text": "2 results"
   },
   "decide_q": "Which app is real, and what will you do?",
@@ -21,7 +21,7 @@
     "context": "Two app-store listings, side by side.",
     "panels": [
       {
-        "label": "Larkspur",
+        "label": "Hedrio",
         "avatar": {
           "glyph": "🐾",
           "clue": "icon_a"
@@ -32,7 +32,7 @@
             "v": [
               {
                 "clue": "pub_a",
-                "text": "Larkspur Ltd (link on larkspur.app)"
+                "text": "Hedrio Ltd (link on hedrio.app)"
               }
             ]
           },
@@ -66,7 +66,7 @@
         ]
       },
       {
-        "label": "Larkspur - Crypto Wallet",
+        "label": "Hedrio - Crypto Wallet",
         "avatar": {
           "glyph": "🐾",
           "clue": "icon_b"
@@ -77,7 +77,7 @@
             "v": [
               {
                 "clue": "pub_b",
-                "text": "Larkspur Apps Inc"
+                "text": "Hedrio Apps Inc"
               }
             ]
           },
@@ -177,12 +177,12 @@
   "actions": [
     {
       "id": "pick_b",
-      "label": "Install \"Larkspur - Crypto Wallet\"",
+      "label": "Install \"Hedrio - Crypto Wallet\"",
       "trap": true
     },
     {
       "id": "verify",
-      "label": "Open larkspur.app and use its app-store link"
+      "label": "Open hedrio.app and use its app-store link"
     },
     {
       "id": "block_report",
@@ -194,8 +194,8 @@
     "verify"
   ],
   "trap": {
-    "title": "Larkspur - Crypto Wallet",
-    "url": "app: Larkspur Apps Inc",
+    "title": "Hedrio - Crypto Wallet",
+    "url": "app: Hedrio Apps Inc",
     "ask": "Enter your 12-word recovery phrase to sync your wallet.",
     "go": "Sync wallet",
     "back": "Close the app"
@@ -224,7 +224,7 @@
     }
   },
   "what_if": {
-    "pick_b": "The real app was linked from larkspur.app. A week-old app asking for your phrase was the fake."
+    "pick_b": "The real app was linked from hedrio.app. A week-old app asking for your phrase was the fake."
   },
   "golden_rule": "Install wallet apps only from the link on the official website.",
   "quick_check": {

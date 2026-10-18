@@ -22,14 +22,14 @@
       "name": [
         {
           "clue": "popup",
-          "text": "⚠️ Larkspur Security Alert",
+          "text": "⚠️ Hedrio Security Alert",
           "id": "duel-name"
         }
       ],
       "sub": [
         {
           "clue": "site",
-          "text": "larkspur-alert.support"
+          "text": "hedrio-alert.support"
         }
       ],
       "avatar": {
@@ -66,7 +66,7 @@
     "start": "d1",
     "nodes": {
       "d1": {
-        "rename": "Agent Tom · Larkspur Security",
+        "rename": "Agent Tom · Hedrio Security",
         "say": [
           {
             "sys": [
@@ -78,7 +78,7 @@
               "I can save your funds. ",
               {
                 "clue": "remote",
-                "text": "Install RemoteHelp so I can fix your device."
+                "text": "Install Vewro so I can fix your device."
               }
             ]
           }
@@ -115,7 +115,7 @@
             "end": "block_report"
           },
           {
-            "text": "I'll check Larkspur's official support myself",
+            "text": "I'll check Hedrio's official support myself",
             "end": "verify"
           },
           {
@@ -173,7 +173,7 @@
     "site": {
       "label": "Odd website",
       "strength": "strong",
-      "lens": "larkspur-alert.support isn't the real site.",
+      "lens": "hedrio-alert.support isn't the real site.",
       "why": "Fake alerts live on look-alike sites."
     },
     "noclose": {
@@ -233,7 +233,7 @@
     },
     {
       "id": "verify",
-      "label": "Close the page and contact Larkspur through its app"
+      "label": "Close the page and contact Hedrio through its app"
     },
     {
       "id": "block_report",
@@ -261,7 +261,7 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Larkspur support: \"That pop-up wasn't us. Your wallet is fine.\"",
+      "line": "Hedrio support: \"That pop-up wasn't us. Your wallet is fine.\"",
       "mirageSays": "They asked the real company!"
     },
     "go_ahead": {
@@ -362,7 +362,7 @@
       "rows": [
         {
           "k": "Address",
-          "v": "larkspur-alert.support",
+          "v": "hedrio-alert.support",
           "clue": "site"
         },
         {

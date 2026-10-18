@@ -13,8 +13,8 @@
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Maple Drop Official 🎁",
-    "text": "You won 1,000 NVL in our community giveaway!"
+    "from": "Tindro Drop Official 🎁",
+    "text": "You won 1,000 ZLV in our community giveaway!"
   },
   "screen": {
     "app": "chirp",
@@ -22,14 +22,14 @@
       "name": [
         {
           "clue": "name",
-          "text": "Maple Drop Official 🎁",
+          "text": "Tindro Drop Official 🎁",
           "id": "duel-name"
         }
       ],
       "sub": [
         {
           "clue": "handle",
-          "text": "@mapledrop_0fficial"
+          "text": "@tindrodrop_0fficial"
         }
       ],
       "avatar": {
@@ -49,7 +49,7 @@
           "Congrats! ",
           {
             "clue": "won",
-            "text": "You won 1,000 NVL 🎉"
+            "text": "You won 1,000 ZLV 🎉"
           }
         ]
       },
@@ -58,7 +58,7 @@
           "Our support team will help you claim: ",
           {
             "clue": "chat",
-            "text": "wrenly.me/mapledrop-claim",
+            "text": "plenvo.me/tindrodrop-claim",
             "link": true
           }
         ]
@@ -69,12 +69,12 @@
     "start": "d1",
     "nodes": {
       "d1": {
-        "rename": "Claim Support · Maple Drop",
+        "rename": "Claim Support · Tindro Drop",
         "disguise": "support",
         "say": [
           {
             "sys": [
-              "You joined \"Claim Support · Maple Drop\""
+              "You joined \"Claim Support · Tindro Drop\""
             ]
           },
           {
@@ -82,7 +82,7 @@
               "To release your prize, ",
               {
                 "clue": "gas",
-                "text": "pay a 20 NVL gas fee first"
+                "text": "pay a 20 ZLV gas fee first"
               }
             ]
           }
@@ -93,7 +93,7 @@
             "next": "d2"
           },
           {
-            "text": "Paying 20 NVL",
+            "text": "Paying 20 ZLV",
             "next": "d3"
           },
           {
@@ -124,7 +124,7 @@
             "end": "block_report"
           },
           {
-            "text": "I'll check Maple Drop's official site first",
+            "text": "I'll check Tindro Drop's official site first",
             "end": "verify"
           },
           {
@@ -140,7 +140,7 @@
               "Fee received ✅ Last step: ",
               {
                 "clue": "verify_site",
-                "text": "verify your wallet at mapledrop-verify.app"
+                "text": "verify your wallet at tindrodrop-verify.app"
               }
             ]
           }
@@ -172,7 +172,7 @@
     "handle": {
       "label": "Zero instead of o",
       "strength": "strong",
-      "lens": "@mapledrop_0-fficial uses a zero.",
+      "lens": "@tindrodrop_0-fficial uses a zero.",
       "why": "Look-alike handles swap 0 for o."
     },
     "chat": {
@@ -208,7 +208,7 @@
     "won": {
       "label": "Prize amount",
       "strength": "harmless",
-      "lens": "1,000 NVL.",
+      "lens": "1,000 ZLV.",
       "why": "The amount itself proves nothing."
     },
     "name": {
@@ -232,7 +232,7 @@
     },
     {
       "id": "verify",
-      "label": "Check Maple Drop's official site"
+      "label": "Check Tindro Drop's official site"
     },
     {
       "id": "block_report",
@@ -253,7 +253,7 @@
       "scene": "safe",
       "mirage": "caught",
       "stamp": "CASE CLOSED",
-      "line": "Reported. Every fake Maple Drop account traced back to one con artist.",
+      "line": "Reported. Every fake Tindro Drop account traced back to one con artist.",
       "mirageSays": "My whole empire!"
     },
     "verify": {
@@ -333,7 +333,7 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check account",
-      "title": "@mapledrop_0fficial",
+      "title": "@tindrodrop_0fficial",
       "rows": [
         {
           "k": "Handle",

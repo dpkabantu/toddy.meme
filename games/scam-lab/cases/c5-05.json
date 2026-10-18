@@ -11,27 +11,27 @@
     "Sniff it. Is it safe to approve?"
   ],
   "notify": {
-    "app": "Larkspur",
+    "app": "Hedrio",
     "from": "Confirm swap",
-    "text": "northvale.app: swap 50 NVL → 0.02 STAR"
+    "text": "zelvora.app: swap 50 ZLV → 0.02 STAR"
   },
   "screen": {
     "app": "wallet",
     "site": [
       {
         "clue": "site",
-        "text": "northvale.app"
+        "text": "zelvora.app"
       }
     ],
     "title": "Confirm swap",
-    "context": "You opened northvale.app from your bookmark and chose a swap yourself.",
+    "context": "You opened zelvora.app from your bookmark and chose a swap yourself.",
     "rows": [
       {
         "k": "You pay",
         "v": [
           {
             "clue": "pay",
-            "text": "50 NVL (exact)"
+            "text": "50 ZLV (exact)"
           }
         ]
       },
@@ -49,7 +49,7 @@
         "v": [
           {
             "clue": "fee",
-            "text": "0.0003 NVL"
+            "text": "0.0003 ZLV"
           }
         ]
       },
@@ -78,13 +78,13 @@
     "site": {
       "label": "Real site, from your bookmark",
       "strength": "harmless",
-      "lens": "northvale.app, opened from your bookmark.",
+      "lens": "zelvora.app, opened from your bookmark.",
       "why": "The real address, reached the safe way."
     },
     "pay": {
       "label": "Exact amount",
       "strength": "harmless",
-      "lens": "Exactly 50 NVL.",
+      "lens": "Exactly 50 ZLV.",
       "why": "An exact amount, not \"unlimited\"."
     },
     "get": {
@@ -123,7 +123,7 @@
     },
     {
       "id": "block_report",
-      "label": "Report Northvale as a scam"
+      "label": "Report Zelvora as a scam"
     }
   ],
   "best_action": "go_ahead",
@@ -142,7 +142,7 @@
       "scene": "wolf",
       "mirage": "smug",
       "stamp": "FALSE ALARM",
-      "line": "Northvale was real. Reporting real sites wastes everyone's time and hides real warnings.",
+      "line": "Zelvora was real. Reporting real sites wastes everyone's time and hides real warnings.",
       "mirageSays": "Fear everything? Lovely."
     },
     "ignore": {
@@ -191,7 +191,7 @@
       "rows": [
         {
           "k": "Address",
-          "v": "northvale.app, from your bookmark",
+          "v": "zelvora.app, from your bookmark",
           "clue": "site"
         },
         {
@@ -209,7 +209,7 @@
       "rows": [
         {
           "k": "You pay",
-          "v": "Exactly 50 NVL",
+          "v": "Exactly 50 ZLV",
           "clue": "pay"
         },
         {

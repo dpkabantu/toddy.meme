@@ -56,7 +56,7 @@
         "msg": [
           {
             "clue": "usdt",
-            "text": "Can you send 200 NVUSD (a stablecoin) to this new wallet?"
+            "text": "Can you send 200 ZLUSD (a stablecoin) to this new wallet?"
           },
           " ",
           {
@@ -128,7 +128,7 @@
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Send the 200 NVUSD"
+      "label": "Send the 200 ZLUSD"
     },
     {
       "id": "verify",
@@ -148,7 +148,7 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "Reported. Wrenly locked the account and Kiko got it back the next day.",
+      "line": "Reported. Plenvo locked the account and Kiko got it back the next day.",
       "mirageSays": "Locked out!"
     },
     "go_ahead": {

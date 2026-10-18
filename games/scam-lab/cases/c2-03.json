@@ -20,7 +20,7 @@
     "context": "Two trading apps, side by side.",
     "panels": [
       {
-        "label": "Tolbridge",
+        "label": "Ostrel",
         "avatar": {
           "glyph": "★",
           "clue": "logo_a"
@@ -71,7 +71,7 @@
         ]
       },
       {
-        "label": "Redmere Trade Pro",
+        "label": "Brenvoy Trade Pro",
         "avatar": {
           "glyph": "🚀",
           "clue": "logo_b"
@@ -109,7 +109,7 @@
             "v": [
               {
                 "clue": "support_b",
-                "text": "Only via Wrenly DM"
+                "text": "Only via Plenvo DM"
               }
             ]
           },
@@ -209,7 +209,7 @@
   "actions": [
     {
       "id": "pick_b",
-      "label": "Sign up for Redmere Trade Pro, the returns are better",
+      "label": "Sign up for Brenvoy Trade Pro, the returns are better",
       "trap": true
     },
     {
@@ -218,7 +218,7 @@
     },
     {
       "id": "block_report",
-      "label": "Report Redmere Trade Pro, then check Tolbridge's number on the regulator's site"
+      "label": "Report Brenvoy Trade Pro, then check Ostrel's number on the regulator's site"
     }
   ],
   "best_action": "block_report",
@@ -226,8 +226,8 @@
     "verify"
   ],
   "trap": {
-    "title": "Redmere Trade Pro · Sign up",
-    "url": "redmere-trade-pro.app/join",
+    "title": "Brenvoy Trade Pro · Sign up",
+    "url": "brenvoy-trade-pro.app/join",
     "ask": "Deposit today and get a 50% bonus. Guaranteed 2% daily!",
     "go": "Deposit now",
     "back": "Close this page"
@@ -244,7 +244,7 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Tolbridge's number matched the register. Redmere Trade Pro wasn't there at all.",
+      "line": "Ostrel's number matched the register. Brenvoy Trade Pro wasn't there at all.",
       "mirageSays": "Registers ruin everything."
     },
     "pick_b": {
