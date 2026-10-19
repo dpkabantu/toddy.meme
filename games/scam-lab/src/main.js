@@ -57,12 +57,18 @@ function title() {
         ? h('button', { class: 'btn', id: 'btn-challenge', type: 'button', onclick: () => { sfx.tap(); store.howto = true; caseIntro(challenge.id); } }, 'Take the challenge')
         : null,
       h('button', { class: challenge ? 'btn ghost' : 'btn', id: 'btn-start', type: 'button', onclick: () => { sfx.tap(); if (!store.howto) { store.howto = true; firstPlay = true; startCase(ALL()[0]); } else hub(); } }, challenge ? 'Open Scam Lab' : 'Play'),
+      h('nav', { class: 'title-nav', 'aria-label': 'More' },
+        h('button', { class: 'chip', id: 't-rules', type: 'button', onclick: () => { sfx.tap(); notebook(title); } }, 'Golden Rules'),
+        h('button', { class: 'chip', id: 't-howto', type: 'button', onclick: () => { sfx.tap(); howTo(title); } }, 'How to play'),
+        h('button', { class: 'chip', id: 't-help', type: 'button', onclick: () => { sfx.tap(); help(title); } }, 'Real help'),
+        h('button', { class: 'chip', id: 't-about', type: 'button', onclick: () => { sfx.tap(); about(title); } }, 'About')),
       h('p', { class: 'legal', text: 'A safety game. Every brand, account and link is made up, nothing you do leaves this device, and the game never asks for real details. Education only, not financial advice.' })));
 }
 
 // ---------- how to play ----------
-function howTo() {
-  setBg('lab_bg', true); setUp(home);
+function howTo(from = home) {
+  setBg('lab_bg', true); setUp(from);
+  const first = !store.howto && from === home;
   const step = (img, t, d) => h('div', { class: 'how' }, h('img', { src: A(img), alt: '' }), h('div', {}, h('b', { text: t }), h('p', { text: d })));
   page(h('div', { class: 'pagecard' },
     h('h2', { text: 'How to play' }),
@@ -70,7 +76,7 @@ function howTo() {
     step('pin_red', 'Pin or clear', 'Pin real warning signs as red flags. Clear details that are harmless. Some messages are honest!'),
     step('stamp', 'Decide', 'Block, report, check, ignore or go ahead. Not sure? Choose "investigate more". Then see what happens, and Milo explains.'),
     h('p', { class: 'small', text: 'Stuck? Toddy gives a nudge after a while, or tap Hint (costs 50 points).' }),
-    h('div', { class: 'row' }, h('button', { class: 'btn', id: 'btn-howto-ok', type: 'button', onclick: () => { sfx.tap(); const first = !store.howto; store.howto = true; first ? caseIntro(ALL()[0]) : hub(); } }, store.howto ? 'Back' : 'Start Case 1'))));
+    h('div', { class: 'row' }, h('button', { class: 'btn', id: 'btn-howto-ok', type: 'button', onclick: () => { sfx.tap(); if (first) { store.howto = true; caseIntro(ALL()[0]); } else from(); } }, first ? 'Start Case 1' : 'Back'))));
 }
 
 // ---------- hub ----------
@@ -318,11 +324,11 @@ async function challenge(c) {
 }
 
 // ---------- notebook ----------
-function notebook() {
-  setBg('lab_bg', true); setUp(home);
+function notebook(from = home) {
+  setBg('lab_bg', true); setUp(from);
   const rules = store.rules();
   page(h('div', { class: 'pagecard' },
-    back(hub, 'Scam Lab'),
+    back(from, from === home ? 'Scam Lab' : 'Back'),
     h('h2', { text: 'Golden Rules' }),
     h('p', { class: 'small', text: rules.length ? `${rules.length} rule${rules.length > 1 ? 's' : ''} collected. Your pocket safety guide.` : 'Finish a case to collect your first Golden Rule.' }),
     // grouped by chapter, in chapter order, then Daily Quickie rules
@@ -380,11 +386,11 @@ function settings() {
 }
 
 // ---------- about + real help ----------
-function about() {
-  setBg('lab_bg', true); setUp(home);
+function about(from = home) {
+  setBg('lab_bg', true); setUp(from);
   const src = [...new Map(Object.values(SOURCES).filter((s) => s.checked_on).map((s) => [s.url, s])).values()];
   page(h('div', { class: 'pagecard' },
-    back(hub, 'Scam Lab'),
+    back(from, from === home ? 'Scam Lab' : 'Back'),
     h('h2', { text: 'About Scam Lab' }),
     h('p', { text: 'A cosy detective game from the TODDY café. Every case, brand and name is made up. Any match with a real company is by chance. The game never asks for, saves or sends any real details.' }),
     h('h3', { text: 'Privacy' }),
@@ -400,10 +406,10 @@ function about() {
     h('p', { class: 'small', text: `Version ${VERSION}` })));
 }
 
-function help() {
-  setBg('lab_bg', true); setUp(home);
+function help(from = home) {
+  setBg('lab_bg', true); setUp(from);
   page(h('div', { class: 'pagecard' },
-    back(hub, 'Scam Lab'),
+    back(from, from === home ? 'Scam Lab' : 'Back'),
     h('h2', { text: 'If it happened to you for real' }),
     h('p', { text: 'Scammers fool smart people every day. It isn\'t your fault, and acting quickly helps.' }),
     h('ol', { class: 'steps' },
