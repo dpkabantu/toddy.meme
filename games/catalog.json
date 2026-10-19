@@ -25,22 +25,6 @@
       "updated": "2026-10-18"
     },
     {
-      "id": "night-shift",
-      "title": "The Night Shift",
-      "path": "/games/night-shift/",
-      "status": "beta",
-      "category": "story",
-      "daily": false,
-      "minutes": 10,
-      "orientation": "sideways",
-      "meta": "Cozy mystery story · 10 min · phone sideways",
-      "text": "A mysterious cup appears after closing time. Explore the café and find out who left it.",
-      "card": "/assets/games/night-shift-card.webp",
-      "cardAlt": "Toddy in the moonlit café beside a steaming paw-print cup",
-      "added": "2026-10-12",
-      "updated": "2026-10-13"
-    },
-    {
       "id": "scam-lab",
       "title": "Scam Lab",
       "path": "/games/scam-lab/",
@@ -55,6 +39,22 @@
       "card": "/assets/games/scam-lab-card.webp",
       "cardAlt": "Toddy with a magnifying glass beside the Scam Lab corkboard",
       "added": "2026-10-18"
+    },
+    {
+      "id": "full-moon",
+      "title": "Full Moon",
+      "path": "/games/full-moon/",
+      "status": "beta",
+      "category": "puzzle",
+      "daily": true,
+      "minutes": 3,
+      "orientation": "upright",
+      "meta": "Merge puzzle · Daily night · 3 min",
+      "text": "Drop and merge pieces to reach Toddy's Full Moon. A new night every day, the same drops for everyone.",
+      "hubText": "Merge 11 pieces to reach Toddy's Full Moon. A new Daily Night every day, plus weekly twists. Free, no account, no wallet.",
+      "card": "/assets/games/full-moon-card.webp",
+      "cardAlt": "Toddy beside the glowing Full Moon piece in the night café",
+      "added": "2026-10-19"
     }
   ]
 }

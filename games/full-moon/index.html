@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TODDY: Full Moon</title>
+<meta name="description" content="A calm one-finger puzzle from the TODDY games. Two the same make the next one. Reach Toddy's Full Moon. Free, no account, no wallet.">
+<meta name="theme-color" content="#14102e">
+<link rel="canonical" href="https://toddy.meme/games/full-moon/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="TODDY">
+<meta property="og:url" content="https://toddy.meme/games/full-moon/">
+<meta property="og:title" content="TODDY: Full Moon (beta)">
+<meta property="og:description" content="Two the same make the next one. Reach Toddy's Full Moon. Free, no account, no wallet.">
+<meta property="og:image" content="https://toddy.meme/games/full-moon/assets/share_fullmoon_v01.jpg">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="Toddy beside the glowing Full Moon piece in the night café">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:site" content="@ToddyCoin">
+<meta name="twitter:title" content="TODDY: Full Moon (beta)">
+<meta name="twitter:description" content="Merge your way to Toddy's Full Moon.">
+<meta name="twitter:image" content="https://toddy.meme/games/full-moon/assets/share_fullmoon_v01.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Playfair+Display:ital,wght@0,700;1,500;1,600&display=swap">
+<link rel="stylesheet" href="src/style.css">
+<script src="src/game.js" defer></script>
+</head>
+<body>
+<div id="app">
+  <canvas id="c" aria-label="Full Moon play area"></canvas>
+  <div id="hud">
+    <div class="row1">
+      <div class="scorebox"><div id="score">0</div><div id="best">Best 0</div></div>
+      <div class="hud-right">
+        <span class="label">Next</span><div class="ring"><img id="nextImg" alt="Next piece"></div>
+        <button id="btnSound" class="ibtn" aria-label="Sound on" aria-pressed="false">♪</button>
+        <button id="btnPause" class="ibtn" aria-label="Pause">II</button>
+      </div>
+    </div>
+    <div class="row2"><div id="prog" aria-label="Pieces made so far. The dashed one is your next goal."></div><div id="goal"></div></div>
+    <div id="ticket" hidden></div>
+    <span class="sr" id="modeLabel">Full Moon</span>
+  </div>
+  <div id="banner" role="status" aria-live="polite"></div>
+  <div id="overlay" hidden></div>
+  <div id="loading">Warming up the café…</div>
+</div>
+</body>
+</html>
