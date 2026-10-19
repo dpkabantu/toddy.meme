@@ -924,6 +924,9 @@ function showOver() {
 const docEl = document.documentElement;
 const canFS = !!(docEl.requestFullscreen || docEl.webkitRequestFullscreen) && document.fullscreenEnabled !== false;
 const isFS = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+const isIOS = /iPhone|iPad|iPod/.test(navigator.userAgent) || (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+const isStandalone = !!navigator.standalone || (window.matchMedia && window.matchMedia('(display-mode: standalone)').matches);
+const iosHint = isIOS && !canFS && !isStandalone;   // iPhone Safari cannot go full screen; installing to the Home Screen can
 let wantFull = canFS;
 try { if (localStorage.getItem('mmFull') === '0') wantFull = false; } catch (e) { /* none */ }
 function enterFS() {
@@ -940,9 +943,9 @@ const FS_ICON_IN = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" 
 const FS_ICON_OUT = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3v6H3M21 9h-6V3M15 21v-6h6M3 15h6v6"/></svg>';
 const btnFull = $('btnFull');
 function paintFull() {
-  btnFull.hidden = !canFS;
+  btnFull.hidden = !canFS && !iosHint;
   btnFull.innerHTML = isFS() ? FS_ICON_OUT : FS_ICON_IN;
-  btnFull.setAttribute('aria-label', isFS() ? 'Exit full screen' : 'Full screen');
+  btnFull.setAttribute('aria-label', iosHint ? 'Full screen on iPhone: how' : (isFS() ? 'Exit full screen' : 'Full screen'));
   document.querySelectorAll('[data-act=full]').forEach((el) => { el.textContent = isFS() ? 'Exit full screen' : 'Full screen'; });
 }
 function onFSChange() {
@@ -952,10 +955,14 @@ function onFSChange() {
 }
 document.addEventListener('fullscreenchange', onFSChange);
 document.addEventListener('webkitfullscreenchange', onFSChange);
-btnFull.addEventListener('click', toggleFS);
+function showIosFull(fromPlay) {
+  mode = 'menu'; overlay.hidden = false;
+  overlay.innerHTML = '<div class="card"><h2>Full screen on iPhone</h2><p class="sub">Safari does not allow full screen for web pages, but this works:</p><ol class="steps"><li>Tap the <b>Share</b> button in Safari (the square with an arrow, at the bottom or top).</li><li>Scroll down and tap <b>Add to Home Screen</b>.</li><li>Tap <b>Add</b>.</li><li>Open <b>Full Moon</b> from your Home Screen. It opens with no address bar.</li></ol><p class="help">Your scores stay in this browser only, so the Home Screen version starts with fresh scores.</p><button class="btn" data-act="' + (fromPlay ? 'pause' : 'menu') + '">Back</button></div>';
+}
+btnFull.addEventListener('click', () => { if (iosHint) { if (mode === 'play') { mode = 'paused'; showIosFull(true); } else showIosFull(false); } else toggleFS(); });
 function settingsRow() {
   return '<div class="links"><button class="chip" data-act="snd">Sound: ' + (muted ? 'Off' : 'On') + '</button><button class="chip" data-act="mus">Music: ' + (musicOn ? 'On' : 'Off') + '</button>' +
-    (canFS ? '<button class="chip" data-act="full">' + (isFS() ? 'Exit full screen' : 'Full screen') + '</button>' : '') + '</div>';
+    (canFS ? '<button class="chip" data-act="full">' + (isFS() ? 'Exit full screen' : 'Full screen') + '</button>' : '') + (iosHint ? '<button class="chip" data-act="iosfull">Full screen</button>' : '') + '</div>';
 }
 function toggleSound() { muted = !muted; try { localStorage.setItem('mmMute', muted ? '1' : '0'); } catch (e) { /* none */ } paintSound(); ensureAudio(); syncMusic(); if (!muted) sfx.ticket(); }
 
@@ -966,6 +973,8 @@ overlay.addEventListener('click', (e) => {
   if (a === 'snd') { toggleSound(); b.textContent = 'Sound: ' + (muted ? 'Off' : 'On'); }
   else if (a === 'mus') { musicOn = !musicOn; try { localStorage.setItem('mmMusic', musicOn ? '1' : '0'); } catch (err) { /* none */ } ensureAudio(); syncMusic(); b.textContent = 'Music: ' + (musicOn ? 'On' : 'Off'); }
   else if (a === 'full') { toggleFS(); }
+  else if (a === 'iosfull') showIosFull(false);
+  else if (a === 'pause') { mode = 'play'; showPause(); }
   else if (a === 'daily') startRun('daily');
   else if (a === 'free') startRun('free');
   else if (a === 'weeks') showWeeks();
