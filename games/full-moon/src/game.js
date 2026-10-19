@@ -759,7 +759,7 @@ function showMenu() {
     '<button class="btn" data-act="daily">Tonight’s night<small>' + dateLabel() + ' · ' + C.TWISTS[todayTwist()].name + ' · same drops for everyone' + (streakNow() > 0 ? ' · ' + streakNow() + '-night streak' : '') + '</small></button>' +
     '<button class="btn alt" data-act="free">Free play</button>' +
     settingsRow() +
-    '<div class="links"><button class="chip" data-act="how">How to play</button><button class="chip" data-act="weeks">Weekly twists</button><button class="chip" data-act="pieces">Pieces</button><button class="chip" data-act="about">About</button></div>' +
+    '<div class="links"><button class="chip" data-act="how">How to play</button><button class="chip" data-act="weeks">Weekly twists</button><button class="chip" data-act="pieces">Pieces</button><button class="chip" data-act="about">About</button><button class="chip" data-act="sharegame">Share game</button></div>' +
     '<p class="help">A calm puzzle. Every piece is made up, nothing leaves this device, and the game never asks for real details.</p></div>';
 }
 function showWeeks() {
@@ -866,11 +866,48 @@ async function showPicture() {
     await Promise.race([Promise.all(['700 100px "Playfair Display"', 'italic 500 40px "Playfair Display"', '600 30px Fredoka'].map((f) => document.fonts.load(f))), new Promise((r) => setTimeout(r, 1800))]);
   } catch (e) { /* fallback fonts are fine */ }
   let url = '';
-  try { url = makeShareCard().toDataURL('image/png'); } catch (e) { url = ''; }
+  shareBlob = null;
+  try {
+    const cv2 = makeShareCard();
+    url = cv2.toDataURL('image/png');
+    cv2.toBlob((b) => { shareBlob = b; }, 'image/png');
+  } catch (e) { url = ''; }
   overlay.innerHTML = '<div class="card">' + (url
-    ? '<h2>Your night</h2><img class="sharepic" alt="TODDY Full Moon result card: ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal, ' + S.score.toLocaleString('en-US') + ' points" src="' + url + '"><p class="help">Press and hold the picture to save or share it.</p>'
-    : '<h2>Picture not available</h2><p class="sub">Your browser would not make the picture. Use Copy result instead.</p>') +
-    '<button class="btn" data-act="back">Back</button></div>';
+    ? '<h2>Your night</h2><img class="sharepic" alt="TODDY Full Moon result card: ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal, ' + S.score.toLocaleString('en-US') + ' points" src="' + url + '">' +
+      '<button class="btn" data-act="share">Share</button><div class="links"><button class="chip" data-act="save">Save picture</button><button class="chip" data-act="copy" id="copyBtn2">Copy result</button></div>'
+    : '<h2>Picture not available</h2><p class="sub">Your browser would not make the picture. Use Copy result instead.</p><button class="btn alt" data-act="copy" id="copyBtn2">Copy result</button>') +
+    '<button class="btn alt" data-act="back">Back</button></div>';
+  shareUrl = url;
+}
+let shareBlob = null, shareUrl = '';
+const gameLink = () => location.origin + location.pathname;
+function resultText() {
+  return 'TODDY Full Moon · ' + (kind === 'daily' ? 'Tonight ' + dateLabel() : 'Free play') + ' · ' + C.TWISTS[twist].name + ' · ' + S.score.toLocaleString('en-US') + ' · ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal · ' + lasted() + (moonrises ? ' · Moonrise ×' + moonrises : '') + ' — can you beat it? ' + gameLink();
+}
+function flash(btn, msg) { const t = btn.textContent; btn.textContent = msg; setTimeout(() => { btn.textContent = t; }, 1800); }
+async function doShare(btn) {
+  const text = resultText();
+  try {
+    if (navigator.share) {
+      const data = { title: 'TODDY Full Moon', text, url: gameLink() };
+      if (shareBlob && navigator.canShare) {
+        const f = new File([shareBlob], 'toddy-full-moon.png', { type: 'image/png' });
+        if (navigator.canShare({ files: [f] })) { data.files = [f]; }
+      }
+      await navigator.share(data);
+      return;
+    }
+  } catch (e) { if (e && e.name === 'AbortError') return; }
+  try { await navigator.clipboard.writeText(text); flash(btn, 'Result copied — paste it anywhere'); } catch (e) { flash(btn, 'Press and hold the picture to share'); }
+}
+function doSave(btn) {
+  try {
+    const a = document.createElement('a');
+    a.href = shareBlob ? URL.createObjectURL(shareBlob) : shareUrl;
+    a.download = 'toddy-full-moon.png';
+    document.body.appendChild(a); a.click(); a.remove();
+    flash(btn, 'Saved');
+  } catch (e) { flash(btn, 'Press and hold the picture'); }
 }
 function showOver() {
   const band = C.bandFor(S.score, twist), nm = C.BAND_NAMES[band];
@@ -880,7 +917,7 @@ function showOver() {
     '<div class="card"><h2>Night over</h2><img class="medal" alt="" src="' + ASSET['medal_' + (band + 1)] + '">' +
     '<div class="band">' + nm + '</div><div class="final">' + S.score.toLocaleString('en-US') + '</div>' +
     '<p class="sub">Lasted <b>' + lasted() + '</b> · ' + S.drops + ' drops</p><p class="sub">' + (kind === 'daily' ? "Tonight's best " : 'Best ') + bestVal.toLocaleString('en-US') + ' · highest piece ' + S.maxLevel + ' of 11' + (S.served ? ' · ' + S.served + ' visitor' + (S.served > 1 ? 's' : '') + ' served' : '') + (moonrises ? ' · Moonrise ×' + moonrises : '') + (next ? ' · next medal at ' + next.toLocaleString('en-US') : '') + '</p>' +
-    '<button class="btn" data-act="again">Play again</button><button class="btn alt" data-act="pic">Make picture</button><button class="btn alt" data-act="copy" id="copyBtn">Copy result</button><button class="btn alt" data-act="menu">Menu</button></div>';
+    '<button class="btn" data-act="again">Play again</button><button class="btn share" data-act="pic">Share your night</button><button class="btn alt" data-act="menu">Menu</button></div>';
 }
 
 // ---------- full screen (Android and desktop browsers; iPhone Safari has no full screen for web pages) ----------
@@ -940,9 +977,15 @@ overlay.addEventListener('click', (e) => {
   else if (a === 'back') showOver();
   else if (a === 'how' || a === 'pieces' || a === 'about') showInfo(a);
   else if (a === 'copy') {
-    const txt = 'TODDY Full Moon · ' + (kind === 'daily' ? 'Tonight ' + dateLabel() : 'Free play') + ' · ' + C.TWISTS[twist].name + ' · ' + S.score.toLocaleString('en-US') + ' · ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal · ' + lasted() + (moonrises ? ' · Moonrise ×' + moonrises : '');
-    const done = () => { b.textContent = 'Copied'; };
-    try { navigator.clipboard.writeText(txt).then(done, () => { b.textContent = txt; }); } catch (err) { b.textContent = txt; }
+    const txt = resultText();
+    try { navigator.clipboard.writeText(txt).then(() => flash(b, 'Copied'), () => { b.textContent = txt; }); } catch (err) { b.textContent = txt; }
+  }
+  else if (a === 'share') doShare(b);
+  else if (a === 'save') doSave(b);
+  else if (a === 'sharegame') {
+    const text = 'TODDY Full Moon — a calm merge puzzle. Same drops for everyone each night. ' + gameLink();
+    if (navigator.share) navigator.share({ title: 'TODDY Full Moon', text, url: gameLink() }).catch(() => {});
+    else { try { navigator.clipboard.writeText(text).then(() => flash(b, 'Link copied'), () => flash(b, gameLink())); } catch (err) { flash(b, gameLink()); } }
   }
 });
 $('btnPause').addEventListener('click', showPause);
