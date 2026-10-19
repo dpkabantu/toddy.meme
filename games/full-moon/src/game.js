@@ -475,7 +475,7 @@ function layout() {
   // The play area is the widest it can be: the wooden frame may run a little off the screen sides and the
   // bottom frame is cut after its top part, so the field itself (art width 795) fills almost the whole screen.
   const toddyH0 = Math.max(100, Math.min(135, W * 0.34));
-  const toddyRoom = toddyH0 * 0.62;                       // Toddy's head rises a little above the crate
+  const toddyRoom = toddyH0 * 0.4;                       // Toddy's head rises a little above the crate
   const kW = (W - 28) / (C.FIELD.R - C.FIELD.L);          // field fills the width, 14 px of frame stays visible each side
   const kH = (H - hudH - toddyRoom - 4) / SHOW_H;         // or the height, whichever is smaller
   k = Math.max(0.2, Math.min(kW, kH));
