@@ -25,22 +25,6 @@
       "updated": "2026-10-18"
     },
     {
-      "id": "night-shift",
-      "title": "The Night Shift",
-      "path": "/games/night-shift/",
-      "status": "beta",
-      "category": "story",
-      "daily": false,
-      "minutes": 10,
-      "orientation": "sideways",
-      "meta": "Cozy mystery story · 10 min · phone sideways",
-      "text": "A mysterious cup appears after closing time. Explore the café and find out who left it.",
-      "card": "/assets/games/night-shift-card.webp",
-      "cardAlt": "Toddy in the moonlit café beside a steaming paw-print cup",
-      "added": "2026-10-12",
-      "updated": "2026-10-13"
-    },
-    {
       "id": "scam-lab",
       "title": "Scam Lab",
       "path": "/games/scam-lab/",

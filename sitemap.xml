@@ -49,11 +49,5 @@
     <changefreq>weekly</changefreq>
     <priority>0.7</priority>
   </url>
-  <url>
-    <loc>https://toddy.meme/games/night-shift/</loc>
-    <lastmod>2026-10-13</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
-  </url>
   <!-- GAMES:SITEMAP:END -->
 </urlset>
