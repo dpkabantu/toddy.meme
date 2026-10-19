@@ -55,6 +55,22 @@
       "card": "/assets/games/scam-lab-card.webp",
       "cardAlt": "Toddy with a magnifying glass beside the Scam Lab corkboard",
       "added": "2026-10-18"
+    },
+    {
+      "id": "full-moon",
+      "title": "Full Moon",
+      "path": "/games/full-moon/",
+      "status": "beta",
+      "category": "puzzle",
+      "daily": true,
+      "minutes": 3,
+      "orientation": "upright",
+      "meta": "Merge puzzle · Daily night · 3 min",
+      "text": "Drop and merge pieces to reach Toddy's Full Moon. A new night every day, the same drops for everyone.",
+      "hubText": "Merge 11 pieces to reach Toddy's Full Moon. A new Daily Night every day, plus weekly twists. Free, no account, no wallet.",
+      "card": "/assets/games/full-moon-card.webp",
+      "cardAlt": "Toddy beside the glowing Full Moon piece in the night café",
+      "added": "2026-10-19"
     }
   ]
 }
