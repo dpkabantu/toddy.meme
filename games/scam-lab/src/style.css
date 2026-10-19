@@ -300,6 +300,8 @@ button:focus-visible, a:focus-visible, [tabindex]:focus-visible { outline: 0.6cq
 .casecard { padding: 2.4cqw 5cqw; border: 0.3cqw solid rgba(253,175,30,.6); background: rgba(18,12,9,.78); border-radius: 2cqw; font-size: 3.2cqw; color: var(--ink-dim); }
 .casecard b { color: var(--ink); font-family: var(--display); font-size: 4.4cqw; display: block; }
 .title-wrap .btn { min-width: 46cqw; }
+.title-nav { display: flex; flex-wrap: nowrap; gap: 1.6cqw; justify-content: center; margin-top: 1cqw; }
+.title-nav .chip { font-size: 2.9cqw; padding: 1.3cqw 2.4cqw; white-space: nowrap; }
 .legal { font-size: 2.5cqw; color: var(--ink-dim); line-height: 1.4; background: rgba(18,12,9,.6); border-radius: 1.6cqw; padding: 1.4cqw 2.4cqw; margin: 1cqw 0 0; }
 #build { position: absolute; right: 2cqw; bottom: 0.6cqw; font-size: 2cqw; color: rgba(246,234,216,.35); z-index: 30; pointer-events: none; }
 
