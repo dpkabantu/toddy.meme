@@ -330,8 +330,8 @@ const REDUCE = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-
 let bestVal = 0;
 let bannerUntil = 0, shake = 0, lastMax = 0, moonrises = 0;
 // ---- sound: tiny synth, starts after the first touch, can be muted ----
-let AC = null, muted = true;   // sound is off until the player turns it on
-try { muted = localStorage.getItem('mmMute') !== '0'; } catch (e) { /* none */ }
+let AC = null, muted = false;
+try { muted = localStorage.getItem('mmMute') === '1'; } catch (e) { /* none */ }   // sound is on unless the player turned it off
 let master = null, noiseBuf = null;
 function buildMaster(ctx) {          // one warm output chain: soft low-pass, gentle limiter, low level
   const g = ctx.createGain(); g.gain.value = 2.2;
@@ -345,14 +345,15 @@ function ensureAudio() {
     try { AC = new (window.AudioContext || window.webkitAudioContext)(); master = buildMaster(AC); } catch (e) { AC = null; master = null; }
   }
   if (AC && AC.state === 'suspended') { try { AC.resume(); } catch (e) { /* none */ } }
+  syncMusic();
 }
 // soft sine voice with a quick attack and a long, natural fade
-function voice(freq, dur, vol, delay, slideTo) {
+function voice(freq, dur, vol, delay, slideTo, dest) {
   const t = AC.currentTime + (delay || 0), o = AC.createOscillator(), g = AC.createGain();
   o.type = 'sine'; o.frequency.setValueAtTime(freq, t);
   if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
   g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.008); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-  o.connect(g); g.connect(master); o.start(t); o.stop(t + dur + 0.05);
+  o.connect(g); g.connect(dest || master); o.start(t); o.stop(t + dur + 0.05);
 }
 // ceramic clink: a few inharmonic partials that die away at different speeds
 function clink(freq, dur, vol, delay) {
@@ -360,7 +361,7 @@ function clink(freq, dur, vol, delay) {
   for (const [r, a, d] of parts) voice(freq * r, dur * d, vol * a, delay);
 }
 // music-box / marimba note: soft sine plus a faint octave-and-a-bit overtone
-function mallet(freq, dur, vol, delay) { voice(freq, dur, vol, delay); voice(freq * 3, dur * 0.25, vol * 0.18, delay); }
+function mallet(freq, dur, vol, delay, dest) { voice(freq, dur, vol, delay, undefined, dest); voice(freq * 3, dur * 0.25, vol * 0.18, delay, undefined, dest); }
 // bean on wood: a short filtered knock plus a low thump
 function knock(vol) {
   const t = AC.currentTime;
@@ -384,6 +385,54 @@ const sfx = {
   over: guard(() => { mallet(659, 1.0, 0.08); mallet(523, 1.0, 0.08, 0.28); mallet(392, 1.2, 0.08, 0.56); mallet(294, 1.6, 0.08, 0.9); voice(110, 2.0, 0.05, 0.9, 98); }),
   full: guard(() => { [880, 1109, 1319, 1760].forEach((f, i) => clink(f, 1.1, 0.08, i * 0.1)); [220, 262, 330, 440].forEach((f) => voice(f, 1.8, 0.04, 0.05)); }),
 };
+// ---- background music: a slow music-box loop in A minor, kept well under the sound effects ----
+let musicOn = true;
+try { musicOn = localStorage.getItem('mmMusic') !== '0'; } catch (e) { /* none */ }
+let musicBus = null, musicTimer = 0, musicNext = 0, musicBar = 0;
+const MUSIC_VOL = 0.15;     // music level: about 1/6 of the drop knock at its peak, so effects always stay clear
+const EIGHTH = 0.5;         // seconds per eighth note: one bar lasts 4 s, the 4-bar loop 16 s
+const BARS = [
+  { chord: [110, 165, 220], mel: [659, 0, 523, 0, 440, 523, 659, 0] },
+  { chord: [87.3, 131, 175], mel: [523, 0, 440, 0, 523, 440, 392, 0] },
+  { chord: [131, 196, 262], mel: [784, 0, 659, 0, 523, 659, 784, 0] },
+  { chord: [98, 147, 196], mel: [587, 0, 659, 587, 523, 0, 392, 0] },
+];
+function padNote(freq, t, dur, vol) {      // soft sine pad with a slow fade in and out
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.type = 'sine'; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 1.2); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(musicBus); o.start(t); o.stop(t + dur + 0.05);
+}
+function scheduleBar(t0, i) {
+  const b = BARS[i % BARS.length], d0 = t0 - AC.currentTime;
+  for (const f of b.chord) padNote(f, t0, 4.8, 0.03);
+  b.mel.forEach((f, k) => { if (f) mallet(f, 1.6, 0.06, d0 + k * EIGHTH, musicBus); });
+}
+function musicTick() {
+  if (!AC || !musicBus) return;
+  while (musicNext < AC.currentTime + 1.5) { scheduleBar(musicNext, musicBar++); musicNext += 8 * EIGHTH; }
+}
+function startMusic() {
+  if (!AC || !master || muted || !musicOn || musicTimer) return;
+  if (!musicBus) { musicBus = AC.createGain(); musicBus.gain.value = 0; musicBus.connect(master); }
+  musicBus.gain.cancelScheduledValues(AC.currentTime); musicBus.gain.setTargetAtTime(MUSIC_VOL, AC.currentTime, 0.7);
+  musicNext = AC.currentTime + 0.2; musicTimer = setInterval(musicTick, 400); musicTick();
+}
+function stopMusic() {
+  if (musicTimer) { clearInterval(musicTimer); musicTimer = 0; }
+  if (musicBus && AC) { musicBus.gain.cancelScheduledValues(AC.currentTime); musicBus.gain.setTargetAtTime(0, AC.currentTime, 0.2); }
+}
+function syncMusic() { if (!muted && musicOn && !document.hidden) startMusic(); else stopMusic(); }
+async function renderMusic(secs) {      // test hook: render the music offline and measure it
+  const keep = [AC, master, muted, musicBus], off = new OfflineAudioContext(1, 44100 * secs, 44100);
+  AC = off; master = buildMaster(off); muted = false; musicBus = off.createGain(); musicBus.gain.value = MUSIC_VOL; musicBus.connect(master);
+  try {
+    for (let i = 0; i * 4 < secs; i++) scheduleBar(i * 4 + 0.05, i);
+    const buf = await off.startRendering(), d = buf.getChannelData(0); let peak = 0, sum = 0, bad = 0;
+    for (let i = 0; i < d.length; i++) { const v = d[i]; if (v !== v) bad++; const a = Math.abs(v); if (a > peak) peak = a; sum += v * v; }
+    return { peak: +peak.toFixed(3), rms: +Math.sqrt(sum / d.length).toFixed(4), nan: bad };
+  } finally { AC = keep[0]; master = keep[1]; muted = keep[2]; musicBus = keep[3]; }
+}
 // test hook: render one sound offline and measure it (used by the automated checks only)
 async function renderSfx(name, args) {
   const keepAC = AC, keepMaster = master, keepMuted = muted;
@@ -704,6 +753,7 @@ function showMenu() {
     '<div class="card"><div class="label">TODDY</div><h1>Full Moon</h1><p class="sub">Two the same make the next one. Reach Toddy’s Full Moon.</p>' + strip() +
     '<button class="btn" data-act="daily">Tonight’s night<small>' + dateLabel() + ' · ' + C.TWISTS[todayTwist()].name + ' · same drops for everyone' + (streakNow() > 0 ? ' · ' + streakNow() + '-night streak' : '') + '</small></button>' +
     '<button class="btn alt" data-act="free">Free play</button>' +
+    settingsRow() +
     '<div class="links"><button class="chip" data-act="how">How to play</button><button class="chip" data-act="weeks">Weekly twists</button><button class="chip" data-act="pieces">Pieces</button><button class="chip" data-act="about">About</button></div>' +
     '<p class="help">A calm puzzle. Every piece is made up, nothing leaves this device, and the game never asks for real details.</p></div>';
 }
@@ -726,7 +776,7 @@ function showInfo(kindName) {
 function showPause() {
   if (mode !== 'play') return;
   mode = 'paused'; overlay.hidden = false;
-  overlay.innerHTML = '<div class="card"><h2>Paused</h2><button class="btn" data-act="resume">Resume</button><button class="btn alt" data-act="restart">Restart</button><button class="btn alt" data-act="menu">Menu</button></div>';
+  overlay.innerHTML = '<div class="card"><h2>Paused</h2><button class="btn" data-act="resume">Resume</button><button class="btn alt" data-act="restart">Restart</button><button class="btn alt" data-act="menu">Menu</button>' + settingsRow() + '</div>';
 }
 function lasted() { const sec = Math.round(S.tick / 60); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
 
@@ -827,10 +877,53 @@ function showOver() {
     '<button class="btn" data-act="again">Play again</button><button class="btn alt" data-act="pic">Make picture</button><button class="btn alt" data-act="copy" id="copyBtn">Copy result</button><button class="btn alt" data-act="menu">Menu</button></div>';
 }
 
+// ---------- full screen (Android and desktop browsers; iPhone Safari has no full screen for web pages) ----------
+const docEl = document.documentElement;
+const canFS = !!(docEl.requestFullscreen || docEl.webkitRequestFullscreen) && document.fullscreenEnabled !== false;
+const isFS = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+let wantFull = canFS;
+try { if (localStorage.getItem('mmFull') === '0') wantFull = false; } catch (e) { /* none */ }
+function enterFS() {
+  if (!canFS || isFS()) return;
+  try {
+    const p = (docEl.requestFullscreen || docEl.webkitRequestFullscreen).call(docEl, { navigationUI: 'hide' });
+    const lock = () => { try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('portrait').catch(() => {}); } catch (e) { /* optional */ } };
+    if (p && p.then) p.then(lock, () => {}); else lock();
+  } catch (e) { /* the browser said no */ }
+}
+function exitFS() { try { (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch (e) { /* none */ } }
+function toggleFS() { if (isFS()) exitFS(); else enterFS(); }
+const FS_ICON_IN = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9V3h6M15 3h6v6M21 15v6h-6M9 21H3v-6"/></svg>';
+const FS_ICON_OUT = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3v6H3M21 9h-6V3M15 21v-6h6M3 15h6v6"/></svg>';
+const btnFull = $('btnFull');
+function paintFull() {
+  btnFull.hidden = !canFS;
+  btnFull.innerHTML = isFS() ? FS_ICON_OUT : FS_ICON_IN;
+  btnFull.setAttribute('aria-label', isFS() ? 'Exit full screen' : 'Full screen');
+  document.querySelectorAll('[data-act=full]').forEach((el) => { el.textContent = isFS() ? 'Exit full screen' : 'Full screen'; });
+}
+function onFSChange() {
+  wantFull = isFS();      // leaving full screen by any route (button, swipe, back) means: stay out next time
+  try { localStorage.setItem('mmFull', wantFull ? '1' : '0'); } catch (e) { /* none */ }
+  paintFull();
+}
+document.addEventListener('fullscreenchange', onFSChange);
+document.addEventListener('webkitfullscreenchange', onFSChange);
+btnFull.addEventListener('click', toggleFS);
+function settingsRow() {
+  return '<div class="links"><button class="chip" data-act="snd">Sound: ' + (muted ? 'Off' : 'On') + '</button><button class="chip" data-act="mus">Music: ' + (musicOn ? 'On' : 'Off') + '</button>' +
+    (canFS ? '<button class="chip" data-act="full">' + (isFS() ? 'Exit full screen' : 'Full screen') + '</button>' : '') + '</div>';
+}
+function toggleSound() { muted = !muted; try { localStorage.setItem('mmMute', muted ? '1' : '0'); } catch (e) { /* none */ } paintSound(); ensureAudio(); syncMusic(); if (!muted) sfx.ticket(); }
+
 overlay.addEventListener('click', (e) => {
   const b = e.target.closest('button'); if (!b) return;
   const a = b.dataset.act;
-  if (a === 'daily') startRun('daily');
+  if (wantFull && (a === 'daily' || a === 'free' || a === 'tw' || a === 'again' || a === 'restart' || a === 'resume')) enterFS();
+  if (a === 'snd') { toggleSound(); b.textContent = 'Sound: ' + (muted ? 'Off' : 'On'); }
+  else if (a === 'mus') { musicOn = !musicOn; try { localStorage.setItem('mmMusic', musicOn ? '1' : '0'); } catch (err) { /* none */ } ensureAudio(); syncMusic(); b.textContent = 'Music: ' + (musicOn ? 'On' : 'Off'); }
+  else if (a === 'full') { toggleFS(); }
+  else if (a === 'daily') startRun('daily');
   else if (a === 'free') startRun('free');
   else if (a === 'weeks') showWeeks();
   else if (a === 'tw') startRun('free', undefined, parseInt(b.dataset.w, 10));
@@ -849,8 +942,9 @@ overlay.addEventListener('click', (e) => {
 $('btnPause').addEventListener('click', showPause);
 const btnSound = $('btnSound');
 function paintSound() { btnSound.textContent = muted ? '♪̸' : '♪'; btnSound.setAttribute('aria-pressed', muted ? 'true' : 'false'); btnSound.setAttribute('aria-label', muted ? 'Sound off' : 'Sound on'); btnSound.classList.toggle('off', muted); }
-btnSound.addEventListener('click', () => { muted = !muted; try { localStorage.setItem('mmMute', muted ? '1' : '0'); } catch (e) { /* none */ } paintSound(); ensureAudio(); if (!muted) sfx.ticket(); });
+btnSound.addEventListener('click', toggleSound);
 paintSound();
+paintFull();
 
 // ---------- input ----------
 function artX(ev) { const r = app.getBoundingClientRect(); return (ev.clientX - r.left - crateX) / k; }
@@ -876,7 +970,7 @@ window.addEventListener('keyup', (e) => {
   if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = false;
   else if (e.key === 'ArrowRight' || e.key === 'd') keys.right = false;
 });
-document.addEventListener('visibilitychange', () => { if (document.hidden && mode === 'play') showPause(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden && mode === 'play') showPause(); syncMusic(); });
 new ResizeObserver(() => { if (IMG.crate) layout(); }).observe(app);
 
 // ---------- boot ----------
@@ -891,7 +985,7 @@ async function boot() {
   requestAnimationFrame(frame);
   $('loading').hidden = true;
 }
-window.__mm = { renderSfx, get twist() { return twist; },
+window.__mm = { renderSfx, renderMusic, get musicOn() { return musicOn; }, get twist() { return twist; },
   C, dropAt, startRun, showMenu, get S() { return S; }, get log() { return log; }, get lastRun() { return lastRun; },
   get mode() { return mode; }, get fx() { return fx; }, get pops() { return pops; }, setAim(x) { aimX = x; }, layoutInfo: () => ({ W, H, k, cw, ch, crateX, crateY, dpr, toddyH }),
 };

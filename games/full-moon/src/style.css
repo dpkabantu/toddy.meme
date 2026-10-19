@@ -23,12 +23,13 @@ body { overflow: hidden; font-family: var(--body); -webkit-user-select: none; us
 .label { font: 600 10px var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--cream); opacity: .9; }
 #score { font: 700 34px/1 var(--display); color: #fff4d6; text-shadow: 0 2px 0 var(--ink), 0 0 12px rgba(253,175,30,.35); font-variant-numeric: tabular-nums; }
 #best { font: 500 12px/1.2 var(--display); color: var(--cream); opacity: .9; }
-.hud-right { display: flex; align-items: center; gap: 6px; flex: none; }
-.ring { width: 44px; height: 44px; border-radius: 50%; border: 2.5px solid var(--brass); background: radial-gradient(circle at 50% 40%, var(--night-2), var(--night)); display: grid; place-items: center; box-shadow: 0 2px 0 var(--ink); overflow: hidden; }
+.hud-right { display: flex; align-items: center; gap: 5px; flex: none; }
+.ring { width: 42px; height: 42px; border-radius: 50%; border: 2.5px solid var(--brass); background: radial-gradient(circle at 50% 40%, var(--night-2), var(--night)); display: grid; place-items: center; box-shadow: 0 2px 0 var(--ink); overflow: hidden; }
 .ring img { max-width: 78%; max-height: 78%; }
-#btnSound, #btnPause { pointer-events: auto; width: 38px; height: 38px; border-radius: 11px; border: 2px solid var(--brass); background: rgba(20,16,46,.82); color: var(--cream); font: 700 17px var(--display); cursor: pointer; padding: 0; }
+#btnFull { display: grid; place-items: center; }
+#btnFull, #btnSound, #btnPause { pointer-events: auto; width: 36px; height: 36px; border-radius: 11px; border: 2px solid var(--brass); background: rgba(20,16,46,.82); color: var(--cream); font: 700 17px var(--display); cursor: pointer; padding: 0; }
 #btnSound.off { opacity: .55; }
-#btnSound:focus-visible, #btnPause:focus-visible, .btn:focus-visible { outline: 3px solid #fff4d6; outline-offset: 2px; }
+#btnFull:focus-visible, #btnSound:focus-visible, #btnPause:focus-visible, .btn:focus-visible { outline: 3px solid #fff4d6; outline-offset: 2px; }
 .row2 { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; height: 28px; }
 #prog { display: flex; align-items: flex-end; gap: 2px; min-width: 0; flex: 1 1 auto; }
 #prog img { object-fit: contain; opacity: .4; filter: grayscale(1) brightness(.9); flex: 0 1 auto; min-width: 0; }
