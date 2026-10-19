@@ -389,7 +389,7 @@ const sfx = {
 let musicOn = true;
 try { musicOn = localStorage.getItem('mmMusic') !== '0'; } catch (e) { /* none */ }
 let musicBus = null, musicTimer = 0, musicNext = 0, musicBar = 0;
-const MUSIC_VOL = 0.32;     // music level: about 1/3 of the drop knock at its peak, clearly audible and effects still stand out
+const MUSIC_VOL = 0.5;     // music level: rms about the same as the loudest effects; pad is an octave up for phone speakers
 const EIGHTH = 0.5;         // seconds per eighth note: one bar lasts 4 s, the 4-bar loop 16 s
 const BARS = [
   { chord: [110, 165, 220], mel: [659, 0, 523, 0, 440, 523, 659, 0] },
@@ -405,8 +405,8 @@ function padNote(freq, t, dur, vol) {      // soft sine pad with a slow fade in 
 }
 function scheduleBar(t0, i) {
   const b = BARS[i % BARS.length], d0 = t0 - AC.currentTime;
-  for (const f of b.chord) padNote(f, t0, 4.8, 0.03);
-  b.mel.forEach((f, k) => { if (f) mallet(f, 1.6, 0.06, d0 + k * EIGHTH, musicBus); });
+  for (const f of b.chord) { padNote(f * 2, t0, 4.8, 0.045); padNote(f, t0, 4.8, 0.02); }   // pad sits an octave up: phone speakers cannot play deep notes
+  b.mel.forEach((f, k) => { if (f) mallet(f, 1.6, 0.11, d0 + k * EIGHTH, musicBus); });
 }
 function musicTick() {
   if (!AC || !musicBus) return;
