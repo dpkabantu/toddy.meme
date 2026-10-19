@@ -330,8 +330,8 @@ const REDUCE = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-
 let bestVal = 0;
 let bannerUntil = 0, shake = 0, lastMax = 0, moonrises = 0;
 // ---- sound: tiny synth, starts after the first touch, can be muted ----
-let AC = null, muted = true;   // sound is off until the player turns it on
-try { muted = localStorage.getItem('mmMute') !== '0'; } catch (e) { /* none */ }
+let AC = null, muted = false;
+try { muted = localStorage.getItem('mmMute') === '1'; } catch (e) { /* none */ }   // sound is on unless the player turned it off
 let master = null, noiseBuf = null;
 function buildMaster(ctx) {          // one warm output chain: soft low-pass, gentle limiter, low level
   const g = ctx.createGain(); g.gain.value = 2.2;
@@ -345,14 +345,15 @@ function ensureAudio() {
     try { AC = new (window.AudioContext || window.webkitAudioContext)(); master = buildMaster(AC); } catch (e) { AC = null; master = null; }
   }
   if (AC && AC.state === 'suspended') { try { AC.resume(); } catch (e) { /* none */ } }
+  syncMusic();
 }
 // soft sine voice with a quick attack and a long, natural fade
-function voice(freq, dur, vol, delay, slideTo) {
+function voice(freq, dur, vol, delay, slideTo, dest) {
   const t = AC.currentTime + (delay || 0), o = AC.createOscillator(), g = AC.createGain();
   o.type = 'sine'; o.frequency.setValueAtTime(freq, t);
   if (slideTo) o.frequency.exponentialRampToValueAtTime(slideTo, t + dur);
   g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 0.008); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
-  o.connect(g); g.connect(master); o.start(t); o.stop(t + dur + 0.05);
+  o.connect(g); g.connect(dest || master); o.start(t); o.stop(t + dur + 0.05);
 }
 // ceramic clink: a few inharmonic partials that die away at different speeds
 function clink(freq, dur, vol, delay) {
@@ -360,7 +361,7 @@ function clink(freq, dur, vol, delay) {
   for (const [r, a, d] of parts) voice(freq * r, dur * d, vol * a, delay);
 }
 // music-box / marimba note: soft sine plus a faint octave-and-a-bit overtone
-function mallet(freq, dur, vol, delay) { voice(freq, dur, vol, delay); voice(freq * 3, dur * 0.25, vol * 0.18, delay); }
+function mallet(freq, dur, vol, delay, dest) { voice(freq, dur, vol, delay, undefined, dest); voice(freq * 3, dur * 0.25, vol * 0.18, delay, undefined, dest); }
 // bean on wood: a short filtered knock plus a low thump
 function knock(vol) {
   const t = AC.currentTime;
@@ -384,6 +385,54 @@ const sfx = {
   over: guard(() => { mallet(659, 1.0, 0.08); mallet(523, 1.0, 0.08, 0.28); mallet(392, 1.2, 0.08, 0.56); mallet(294, 1.6, 0.08, 0.9); voice(110, 2.0, 0.05, 0.9, 98); }),
   full: guard(() => { [880, 1109, 1319, 1760].forEach((f, i) => clink(f, 1.1, 0.08, i * 0.1)); [220, 262, 330, 440].forEach((f) => voice(f, 1.8, 0.04, 0.05)); }),
 };
+// ---- background music: a slow music-box loop in A minor, kept well under the sound effects ----
+let musicOn = true;
+try { musicOn = localStorage.getItem('mmMusic') !== '0'; } catch (e) { /* none */ }
+let musicBus = null, musicTimer = 0, musicNext = 0, musicBar = 0;
+const MUSIC_VOL = 0.5;     // music level: rms about the same as the loudest effects; pad is an octave up for phone speakers
+const EIGHTH = 0.5;         // seconds per eighth note: one bar lasts 4 s, the 4-bar loop 16 s
+const BARS = [
+  { chord: [110, 165, 220], mel: [659, 0, 523, 0, 440, 523, 659, 0] },
+  { chord: [87.3, 131, 175], mel: [523, 0, 440, 0, 523, 440, 392, 0] },
+  { chord: [131, 196, 262], mel: [784, 0, 659, 0, 523, 659, 784, 0] },
+  { chord: [98, 147, 196], mel: [587, 0, 659, 587, 523, 0, 392, 0] },
+];
+function padNote(freq, t, dur, vol) {      // soft sine pad with a slow fade in and out
+  const o = AC.createOscillator(), g = AC.createGain();
+  o.type = 'sine'; o.frequency.value = freq;
+  g.gain.setValueAtTime(0.0001, t); g.gain.exponentialRampToValueAtTime(vol, t + 1.2); g.gain.exponentialRampToValueAtTime(0.0001, t + dur);
+  o.connect(g); g.connect(musicBus); o.start(t); o.stop(t + dur + 0.05);
+}
+function scheduleBar(t0, i) {
+  const b = BARS[i % BARS.length], d0 = t0 - AC.currentTime;
+  for (const f of b.chord) { padNote(f * 2, t0, 4.8, 0.045); padNote(f, t0, 4.8, 0.02); }   // pad sits an octave up: phone speakers cannot play deep notes
+  b.mel.forEach((f, k) => { if (f) mallet(f, 1.6, 0.11, d0 + k * EIGHTH, musicBus); });
+}
+function musicTick() {
+  if (!AC || !musicBus) return;
+  while (musicNext < AC.currentTime + 1.5) { scheduleBar(musicNext, musicBar++); musicNext += 8 * EIGHTH; }
+}
+function startMusic() {
+  if (!AC || !master || muted || !musicOn || musicTimer) return;
+  if (!musicBus) { musicBus = AC.createGain(); musicBus.gain.value = 0; musicBus.connect(master); }
+  musicBus.gain.cancelScheduledValues(AC.currentTime); musicBus.gain.setTargetAtTime(MUSIC_VOL, AC.currentTime, 0.7);
+  musicNext = AC.currentTime + 0.2; musicTimer = setInterval(musicTick, 400); musicTick();
+}
+function stopMusic() {
+  if (musicTimer) { clearInterval(musicTimer); musicTimer = 0; }
+  if (musicBus && AC) { musicBus.gain.cancelScheduledValues(AC.currentTime); musicBus.gain.setTargetAtTime(0, AC.currentTime, 0.2); }
+}
+function syncMusic() { if (!muted && musicOn && !document.hidden) startMusic(); else stopMusic(); }
+async function renderMusic(secs) {      // test hook: render the music offline and measure it
+  const keep = [AC, master, muted, musicBus], off = new OfflineAudioContext(1, 44100 * secs, 44100);
+  AC = off; master = buildMaster(off); muted = false; musicBus = off.createGain(); musicBus.gain.value = MUSIC_VOL; musicBus.connect(master);
+  try {
+    for (let i = 0; i * 4 < secs; i++) scheduleBar(i * 4 + 0.05, i);
+    const buf = await off.startRendering(), d = buf.getChannelData(0); let peak = 0, sum = 0, bad = 0;
+    for (let i = 0; i < d.length; i++) { const v = d[i]; if (v !== v) bad++; const a = Math.abs(v); if (a > peak) peak = a; sum += v * v; }
+    return { peak: +peak.toFixed(3), rms: +Math.sqrt(sum / d.length).toFixed(4), nan: bad };
+  } finally { AC = keep[0]; master = keep[1]; muted = keep[2]; musicBus = keep[3]; }
+}
 // test hook: render one sound offline and measure it (used by the automated checks only)
 async function renderSfx(name, args) {
   const keepAC = AC, keepMaster = master, keepMuted = muted;
@@ -416,18 +465,23 @@ const bestKey = () => (kind === 'daily' ? 'mm.best.daily.' + S.seed : 'mm.best.f
 
 // ---------- layout ----------
 function placeTicket() { /* the bonus row now lives inside the HUD, nothing to place */ }
+const SHOW_H = 1390;   // art units shown from the top of the crate: the field (to 1200) plus the top of the bottom frame
 function layout() {
   const r = app.getBoundingClientRect();
   W = Math.max(280, r.width); H = Math.max(420, r.height);
   dpr = Math.min(window.devicePixelRatio || 1, 2);
   cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
   const hudH = $('hud').getBoundingClientRect().height || 110;
-  const toddyRoom = Math.min(170, (W - 16) * 0.46) * 0.72;   // Toddy's head rises a little above the crate
-  let h = Math.min((W - 8) * 1448 / 1086, H - hudH - toddyRoom - 8);
-  h = Math.max(h, 300);
-  ch = h; cw = ch * 1086 / 1448; k = cw / 1086;
-  crateX = (W - cw) / 2; crateY = H - ch - 6;
-  toddyH = Math.max(100, Math.min(170, cw * 0.46));
+  // The play area is the widest it can be: the wooden frame may run a little off the screen sides and the
+  // bottom frame is cut after its top part, so the field itself (art width 795) fills almost the whole screen.
+  const toddyH0 = Math.max(100, Math.min(135, W * 0.34));
+  const toddyRoom = toddyH0 * 0.4;                       // Toddy's head rises a little above the crate
+  const kW = (W - 28) / (C.FIELD.R - C.FIELD.L);          // field fills the width, 14 px of frame stays visible each side
+  const kH = (H - hudH - toddyRoom - 4) / SHOW_H;         // or the height, whichever is smaller
+  k = Math.max(0.2, Math.min(kW, kH));
+  cw = 1086 * k; ch = 1448 * k;
+  crateX = (W - cw) / 2; crateY = H - 4 - SHOW_H * k;
+  toddyH = Math.max(100, Math.min(135, cw * 0.32));
   // in-game banner stays inside the crate's inner area, never on the wooden frame
   const innerL = crateX + C.FIELD.L * k, innerW = (C.FIELD.R - C.FIELD.L) * k;
   elBanner.style.left = (innerL + 6).toFixed(1) + 'px'; elBanner.style.right = 'auto'; elBanner.style.width = (innerW - 12).toFixed(1) + 'px';
@@ -704,7 +758,8 @@ function showMenu() {
     '<div class="card"><div class="label">TODDY</div><h1>Full Moon</h1><p class="sub">Two the same make the next one. Reach Toddy’s Full Moon.</p>' + strip() +
     '<button class="btn" data-act="daily">Tonight’s night<small>' + dateLabel() + ' · ' + C.TWISTS[todayTwist()].name + ' · same drops for everyone' + (streakNow() > 0 ? ' · ' + streakNow() + '-night streak' : '') + '</small></button>' +
     '<button class="btn alt" data-act="free">Free play</button>' +
-    '<div class="links"><button class="chip" data-act="how">How to play</button><button class="chip" data-act="weeks">Weekly twists</button><button class="chip" data-act="pieces">Pieces</button><button class="chip" data-act="about">About</button></div>' +
+    settingsRow() +
+    '<div class="links"><button class="chip" data-act="how">How to play</button><button class="chip" data-act="weeks">Weekly twists</button><button class="chip" data-act="pieces">Pieces</button><button class="chip" data-act="about">About</button><button class="chip" data-act="sharegame">Share game</button></div>' +
     '<p class="help">A calm puzzle. Every piece is made up, nothing leaves this device, and the game never asks for real details.</p></div>';
 }
 function showWeeks() {
@@ -726,7 +781,7 @@ function showInfo(kindName) {
 function showPause() {
   if (mode !== 'play') return;
   mode = 'paused'; overlay.hidden = false;
-  overlay.innerHTML = '<div class="card"><h2>Paused</h2><button class="btn" data-act="resume">Resume</button><button class="btn alt" data-act="restart">Restart</button><button class="btn alt" data-act="menu">Menu</button></div>';
+  overlay.innerHTML = '<div class="card"><h2>Paused</h2><button class="btn" data-act="resume">Resume</button><button class="btn alt" data-act="restart">Restart</button><button class="btn alt" data-act="menu">Menu</button>' + settingsRow() + '</div>';
 }
 function lasted() { const sec = Math.round(S.tick / 60); return Math.floor(sec / 60) + ':' + String(sec % 60).padStart(2, '0'); }
 
@@ -793,10 +848,11 @@ function makeShareCard() {
   const statLine = 'Lasted ' + lasted() + '  ◆  Piece ' + S.maxLevel + ' of 11' + (S.served ? '  ◆  ' + S.served + ' visitor' + (S.served > 1 ? 's' : '') + ' served' : '') + (moonrises ? '  ◆  Moonrise ×' + moonrises : '');
   g.fillStyle = '#fde3bd'; g.font = '500 ' + fitText(g, statLine, 940, '500 {s}px' + SANS, 31) + 'px' + SANS; g.fillText(statLine, mid, 1030);
   // the finished crate, cut out of the live game picture (Toddy included)
-  const sy0 = Math.max(0, crateY - toddyH * 0.85), sh = crateY + ch - sy0;
-  const areaTop = 1060, areaH = 410, sc = Math.min(areaH / sh, 980 / cw), dw = cw * sc, dh = sh * sc, dx = (CWD - dw) / 2, dy = areaTop + (areaH - dh) / 2;
+  const vx0 = Math.max(0, crateX), vw = Math.min(W, crateX + cw) - vx0;
+  const sy0 = Math.max(0, crateY - toddyH * 0.85), sh = H - sy0;
+  const areaTop = 1060, areaH = 410, sc = Math.min(areaH / sh, 980 / vw), dw = vw * sc, dh = sh * sc, dx = (CWD - dw) / 2, dy = areaTop + (areaH - dh) / 2;
   g.save(); g.shadowColor = 'rgba(0,0,0,.5)'; g.shadowBlur = 24; g.fillStyle = '#000'; g.fillRect(dx, dy, dw, dh); g.restore();
-  g.drawImage(cv, crateX * dpr, sy0 * dpr, cw * dpr, sh * dpr, dx, dy, dw, dh);
+  g.drawImage(cv, vx0 * dpr, sy0 * dpr, vw * dpr, sh * dpr, dx, dy, dw, dh);
   g.strokeStyle = 'rgba(201,154,59,.7)'; g.lineWidth = 3; g.strokeRect(dx, dy, dw, dh);
   // sign-off
   g.fillStyle = '#fdaf1e'; g.font = 'italic 600 40px' + SERIF; g.fillText('Can you beat this night?', mid, 1512);
@@ -810,11 +866,48 @@ async function showPicture() {
     await Promise.race([Promise.all(['700 100px "Playfair Display"', 'italic 500 40px "Playfair Display"', '600 30px Fredoka'].map((f) => document.fonts.load(f))), new Promise((r) => setTimeout(r, 1800))]);
   } catch (e) { /* fallback fonts are fine */ }
   let url = '';
-  try { url = makeShareCard().toDataURL('image/png'); } catch (e) { url = ''; }
+  shareBlob = null;
+  try {
+    const cv2 = makeShareCard();
+    url = cv2.toDataURL('image/png');
+    cv2.toBlob((b) => { shareBlob = b; }, 'image/png');
+  } catch (e) { url = ''; }
   overlay.innerHTML = '<div class="card">' + (url
-    ? '<h2>Your night</h2><img class="sharepic" alt="TODDY Full Moon result card: ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal, ' + S.score.toLocaleString('en-US') + ' points" src="' + url + '"><p class="help">Press and hold the picture to save or share it.</p>'
-    : '<h2>Picture not available</h2><p class="sub">Your browser would not make the picture. Use Copy result instead.</p>') +
-    '<button class="btn" data-act="back">Back</button></div>';
+    ? '<h2>Your night</h2><img class="sharepic" alt="TODDY Full Moon result card: ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal, ' + S.score.toLocaleString('en-US') + ' points" src="' + url + '">' +
+      '<button class="btn" data-act="share">Share</button><div class="links"><button class="chip" data-act="save">Save picture</button><button class="chip" data-act="copy" id="copyBtn2">Copy result</button></div>'
+    : '<h2>Picture not available</h2><p class="sub">Your browser would not make the picture. Use Copy result instead.</p><button class="btn alt" data-act="copy" id="copyBtn2">Copy result</button>') +
+    '<button class="btn alt" data-act="back">Back</button></div>';
+  shareUrl = url;
+}
+let shareBlob = null, shareUrl = '';
+const gameLink = () => location.origin + location.pathname;
+function resultText() {
+  return 'TODDY Full Moon · ' + (kind === 'daily' ? 'Tonight ' + dateLabel() : 'Free play') + ' · ' + C.TWISTS[twist].name + ' · ' + S.score.toLocaleString('en-US') + ' · ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal · ' + lasted() + (moonrises ? ' · Moonrise ×' + moonrises : '') + ' — can you beat it? ' + gameLink();
+}
+function flash(btn, msg) { const t = btn.textContent; btn.textContent = msg; setTimeout(() => { btn.textContent = t; }, 1800); }
+async function doShare(btn) {
+  const text = resultText();
+  try {
+    if (navigator.share) {
+      const data = { title: 'TODDY Full Moon', text, url: gameLink() };
+      if (shareBlob && navigator.canShare) {
+        const f = new File([shareBlob], 'toddy-full-moon.png', { type: 'image/png' });
+        if (navigator.canShare({ files: [f] })) { data.files = [f]; }
+      }
+      await navigator.share(data);
+      return;
+    }
+  } catch (e) { if (e && e.name === 'AbortError') return; }
+  try { await navigator.clipboard.writeText(text); flash(btn, 'Result copied — paste it anywhere'); } catch (e) { flash(btn, 'Press and hold the picture to share'); }
+}
+function doSave(btn) {
+  try {
+    const a = document.createElement('a');
+    a.href = shareBlob ? URL.createObjectURL(shareBlob) : shareUrl;
+    a.download = 'toddy-full-moon.png';
+    document.body.appendChild(a); a.click(); a.remove();
+    flash(btn, 'Saved');
+  } catch (e) { flash(btn, 'Press and hold the picture'); }
 }
 function showOver() {
   const band = C.bandFor(S.score, twist), nm = C.BAND_NAMES[band];
@@ -824,13 +917,56 @@ function showOver() {
     '<div class="card"><h2>Night over</h2><img class="medal" alt="" src="' + ASSET['medal_' + (band + 1)] + '">' +
     '<div class="band">' + nm + '</div><div class="final">' + S.score.toLocaleString('en-US') + '</div>' +
     '<p class="sub">Lasted <b>' + lasted() + '</b> · ' + S.drops + ' drops</p><p class="sub">' + (kind === 'daily' ? "Tonight's best " : 'Best ') + bestVal.toLocaleString('en-US') + ' · highest piece ' + S.maxLevel + ' of 11' + (S.served ? ' · ' + S.served + ' visitor' + (S.served > 1 ? 's' : '') + ' served' : '') + (moonrises ? ' · Moonrise ×' + moonrises : '') + (next ? ' · next medal at ' + next.toLocaleString('en-US') : '') + '</p>' +
-    '<button class="btn" data-act="again">Play again</button><button class="btn alt" data-act="pic">Make picture</button><button class="btn alt" data-act="copy" id="copyBtn">Copy result</button><button class="btn alt" data-act="menu">Menu</button></div>';
+    '<button class="btn" data-act="again">Play again</button><button class="btn share" data-act="pic">Share your night</button><button class="btn alt" data-act="menu">Menu</button></div>';
 }
+
+// ---------- full screen (Android and desktop browsers; iPhone Safari has no full screen for web pages) ----------
+const docEl = document.documentElement;
+const canFS = !!(docEl.requestFullscreen || docEl.webkitRequestFullscreen) && document.fullscreenEnabled !== false;
+const isFS = () => !!(document.fullscreenElement || document.webkitFullscreenElement);
+let wantFull = canFS;
+try { if (localStorage.getItem('mmFull') === '0') wantFull = false; } catch (e) { /* none */ }
+function enterFS() {
+  if (!canFS || isFS()) return;
+  try {
+    const p = (docEl.requestFullscreen || docEl.webkitRequestFullscreen).call(docEl, { navigationUI: 'hide' });
+    const lock = () => { try { if (screen.orientation && screen.orientation.lock) screen.orientation.lock('portrait').catch(() => {}); } catch (e) { /* optional */ } };
+    if (p && p.then) p.then(lock, () => {}); else lock();
+  } catch (e) { /* the browser said no */ }
+}
+function exitFS() { try { (document.exitFullscreen || document.webkitExitFullscreen).call(document); } catch (e) { /* none */ } }
+function toggleFS() { if (isFS()) exitFS(); else enterFS(); }
+const FS_ICON_IN = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M3 9V3h6M15 3h6v6M21 15v6h-6M9 21H3v-6"/></svg>';
+const FS_ICON_OUT = '<svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 3v6H3M21 9h-6V3M15 21v-6h6M3 15h6v6"/></svg>';
+const btnFull = $('btnFull');
+function paintFull() {
+  btnFull.hidden = !canFS;
+  btnFull.innerHTML = isFS() ? FS_ICON_OUT : FS_ICON_IN;
+  btnFull.setAttribute('aria-label', isFS() ? 'Exit full screen' : 'Full screen');
+  document.querySelectorAll('[data-act=full]').forEach((el) => { el.textContent = isFS() ? 'Exit full screen' : 'Full screen'; });
+}
+function onFSChange() {
+  wantFull = isFS();      // leaving full screen by any route (button, swipe, back) means: stay out next time
+  try { localStorage.setItem('mmFull', wantFull ? '1' : '0'); } catch (e) { /* none */ }
+  paintFull();
+}
+document.addEventListener('fullscreenchange', onFSChange);
+document.addEventListener('webkitfullscreenchange', onFSChange);
+btnFull.addEventListener('click', toggleFS);
+function settingsRow() {
+  return '<div class="links"><button class="chip" data-act="snd">Sound: ' + (muted ? 'Off' : 'On') + '</button><button class="chip" data-act="mus">Music: ' + (musicOn ? 'On' : 'Off') + '</button>' +
+    (canFS ? '<button class="chip" data-act="full">' + (isFS() ? 'Exit full screen' : 'Full screen') + '</button>' : '') + '</div>';
+}
+function toggleSound() { muted = !muted; try { localStorage.setItem('mmMute', muted ? '1' : '0'); } catch (e) { /* none */ } paintSound(); ensureAudio(); syncMusic(); if (!muted) sfx.ticket(); }
 
 overlay.addEventListener('click', (e) => {
   const b = e.target.closest('button'); if (!b) return;
   const a = b.dataset.act;
-  if (a === 'daily') startRun('daily');
+  if (wantFull && (a === 'daily' || a === 'free' || a === 'tw' || a === 'again' || a === 'restart' || a === 'resume')) enterFS();
+  if (a === 'snd') { toggleSound(); b.textContent = 'Sound: ' + (muted ? 'Off' : 'On'); }
+  else if (a === 'mus') { musicOn = !musicOn; try { localStorage.setItem('mmMusic', musicOn ? '1' : '0'); } catch (err) { /* none */ } ensureAudio(); syncMusic(); b.textContent = 'Music: ' + (musicOn ? 'On' : 'Off'); }
+  else if (a === 'full') { toggleFS(); }
+  else if (a === 'daily') startRun('daily');
   else if (a === 'free') startRun('free');
   else if (a === 'weeks') showWeeks();
   else if (a === 'tw') startRun('free', undefined, parseInt(b.dataset.w, 10));
@@ -841,16 +977,23 @@ overlay.addEventListener('click', (e) => {
   else if (a === 'back') showOver();
   else if (a === 'how' || a === 'pieces' || a === 'about') showInfo(a);
   else if (a === 'copy') {
-    const txt = 'TODDY Full Moon · ' + (kind === 'daily' ? 'Tonight ' + dateLabel() : 'Free play') + ' · ' + C.TWISTS[twist].name + ' · ' + S.score.toLocaleString('en-US') + ' · ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal · ' + lasted() + (moonrises ? ' · Moonrise ×' + moonrises : '');
-    const done = () => { b.textContent = 'Copied'; };
-    try { navigator.clipboard.writeText(txt).then(done, () => { b.textContent = txt; }); } catch (err) { b.textContent = txt; }
+    const txt = resultText();
+    try { navigator.clipboard.writeText(txt).then(() => flash(b, 'Copied'), () => { b.textContent = txt; }); } catch (err) { b.textContent = txt; }
+  }
+  else if (a === 'share') doShare(b);
+  else if (a === 'save') doSave(b);
+  else if (a === 'sharegame') {
+    const text = 'TODDY Full Moon — a calm merge puzzle. Same drops for everyone each night. ' + gameLink();
+    if (navigator.share) navigator.share({ title: 'TODDY Full Moon', text, url: gameLink() }).catch(() => {});
+    else { try { navigator.clipboard.writeText(text).then(() => flash(b, 'Link copied'), () => flash(b, gameLink())); } catch (err) { flash(b, gameLink()); } }
   }
 });
 $('btnPause').addEventListener('click', showPause);
 const btnSound = $('btnSound');
 function paintSound() { btnSound.textContent = muted ? '♪̸' : '♪'; btnSound.setAttribute('aria-pressed', muted ? 'true' : 'false'); btnSound.setAttribute('aria-label', muted ? 'Sound off' : 'Sound on'); btnSound.classList.toggle('off', muted); }
-btnSound.addEventListener('click', () => { muted = !muted; try { localStorage.setItem('mmMute', muted ? '1' : '0'); } catch (e) { /* none */ } paintSound(); ensureAudio(); if (!muted) sfx.ticket(); });
+btnSound.addEventListener('click', toggleSound);
 paintSound();
+paintFull();
 
 // ---------- input ----------
 function artX(ev) { const r = app.getBoundingClientRect(); return (ev.clientX - r.left - crateX) / k; }
@@ -876,7 +1019,7 @@ window.addEventListener('keyup', (e) => {
   if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = false;
   else if (e.key === 'ArrowRight' || e.key === 'd') keys.right = false;
 });
-document.addEventListener('visibilitychange', () => { if (document.hidden && mode === 'play') showPause(); });
+document.addEventListener('visibilitychange', () => { if (document.hidden && mode === 'play') showPause(); syncMusic(); });
 new ResizeObserver(() => { if (IMG.crate) layout(); }).observe(app);
 
 // ---------- boot ----------
@@ -891,7 +1034,7 @@ async function boot() {
   requestAnimationFrame(frame);
   $('loading').hidden = true;
 }
-window.__mm = { renderSfx, get twist() { return twist; },
+window.__mm = { renderSfx, renderMusic, get musicOn() { return musicOn; }, get twist() { return twist; },
   C, dropAt, startRun, showMenu, get S() { return S; }, get log() { return log; }, get lastRun() { return lastRun; },
   get mode() { return mode; }, get fx() { return fx; }, get pops() { return pops; }, setAim(x) { aimX = x; }, layoutInfo: () => ({ W, H, k, cw, ch, crateX, crateY, dpr, toddyH }),
 };
