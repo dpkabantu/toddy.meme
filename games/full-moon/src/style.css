@@ -17,7 +17,7 @@ html, body { height: 100%; margin: 0; background: var(--night); color: var(--cre
 body { overflow: hidden; font-family: var(--body); -webkit-user-select: none; user-select: none; -webkit-tap-highlight-color: transparent; touch-action: none; overscroll-behavior: none; }
 #app { position: relative; height: 100%; max-width: 520px; margin: 0 auto; overflow: hidden; background: var(--night); }
 #c { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-#hud { position: absolute; top: 0; left: 0; right: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 5px; padding-block: max(6px, env(safe-area-inset-top, 0px)) 7px; padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px)); pointer-events: none; background: linear-gradient(to bottom, rgba(14,10,36,.9), rgba(14,10,36,.72)); border-bottom: 1.5px solid rgba(201,154,59,.55); box-shadow: 0 3px 12px rgba(0,0,0,.35); z-index: 2; }
+#hud { position: absolute; top: 0; left: 0; right: 0; box-sizing: border-box; display: flex; flex-direction: column; gap: 4px; padding-block: max(5px, env(safe-area-inset-top, 0px)) 5px; padding-left: max(12px, env(safe-area-inset-left, 0px)); padding-right: max(12px, env(safe-area-inset-right, 0px)); pointer-events: none; background: linear-gradient(to bottom, rgba(14,10,36,.9), rgba(14,10,36,.72)); border-bottom: 1.5px solid rgba(201,154,59,.55); box-shadow: 0 3px 12px rgba(0,0,0,.35); z-index: 2; }
 .row1 { display: flex; align-items: center; justify-content: space-between; gap: 8px; min-width: 0; }
 .scorebox { min-width: 0; display: flex; flex-direction: column; }
 .label { font: 600 10px var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--cream); opacity: .9; }
@@ -36,7 +36,7 @@ body { overflow: hidden; font-family: var(--body); -webkit-user-select: none; us
 #prog img.lit { opacity: 1; filter: none; }
 #prog img.goalp { opacity: .85; filter: none; outline: 1.5px dashed var(--gold); outline-offset: 2px; border-radius: 4px; }
 #goal { flex: none; font: 600 11.5px var(--body); color: var(--gold); white-space: nowrap; }
-#ticket { box-sizing: border-box; height: 32px; max-width: 100%; display: flex; align-items: center; gap: 6px; padding: 0 10px 0 6px; border: 1.5px solid var(--gold); border-radius: 12px; background: rgba(40,28,70,.9); font: 600 12.5px/1.1 var(--body); color: var(--cream); overflow: hidden; }
+#ticket { box-sizing: border-box; height: 30px; max-width: 100%; display: flex; align-items: center; gap: 6px; padding: 0 10px 0 6px; border: 1.5px solid var(--gold); border-radius: 12px; background: rgba(40,28,70,.9); font: 600 12.5px/1.1 var(--body); color: var(--cream); overflow: hidden; }
 #ticket[hidden] { display: flex !important; visibility: hidden; }
 #ticket span { min-width: 0; white-space: nowrap; }
 #ticket img { height: 22px; width: auto; flex: none; }

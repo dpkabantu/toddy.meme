@@ -389,7 +389,7 @@ const sfx = {
 let musicOn = true;
 try { musicOn = localStorage.getItem('mmMusic') !== '0'; } catch (e) { /* none */ }
 let musicBus = null, musicTimer = 0, musicNext = 0, musicBar = 0;
-const MUSIC_VOL = 0.15;     // music level: about 1/6 of the drop knock at its peak, so effects always stay clear
+const MUSIC_VOL = 0.32;     // music level: about 1/3 of the drop knock at its peak, clearly audible and effects still stand out
 const EIGHTH = 0.5;         // seconds per eighth note: one bar lasts 4 s, the 4-bar loop 16 s
 const BARS = [
   { chord: [110, 165, 220], mel: [659, 0, 523, 0, 440, 523, 659, 0] },
@@ -465,18 +465,23 @@ const bestKey = () => (kind === 'daily' ? 'mm.best.daily.' + S.seed : 'mm.best.f
 
 // ---------- layout ----------
 function placeTicket() { /* the bonus row now lives inside the HUD, nothing to place */ }
+const SHOW_H = 1390;   // art units shown from the top of the crate: the field (to 1200) plus the top of the bottom frame
 function layout() {
   const r = app.getBoundingClientRect();
   W = Math.max(280, r.width); H = Math.max(420, r.height);
   dpr = Math.min(window.devicePixelRatio || 1, 2);
   cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
   const hudH = $('hud').getBoundingClientRect().height || 110;
-  const toddyRoom = Math.min(170, (W - 16) * 0.46) * 0.72;   // Toddy's head rises a little above the crate
-  let h = Math.min((W - 8) * 1448 / 1086, H - hudH - toddyRoom - 8);
-  h = Math.max(h, 300);
-  ch = h; cw = ch * 1086 / 1448; k = cw / 1086;
-  crateX = (W - cw) / 2; crateY = H - ch - 6;
-  toddyH = Math.max(100, Math.min(170, cw * 0.46));
+  // The play area is the widest it can be: the wooden frame may run a little off the screen sides and the
+  // bottom frame is cut after its top part, so the field itself (art width 795) fills almost the whole screen.
+  const toddyH0 = Math.max(100, Math.min(135, W * 0.34));
+  const toddyRoom = toddyH0 * 0.62;                       // Toddy's head rises a little above the crate
+  const kW = (W - 28) / (C.FIELD.R - C.FIELD.L);          // field fills the width, 14 px of frame stays visible each side
+  const kH = (H - hudH - toddyRoom - 4) / SHOW_H;         // or the height, whichever is smaller
+  k = Math.max(0.2, Math.min(kW, kH));
+  cw = 1086 * k; ch = 1448 * k;
+  crateX = (W - cw) / 2; crateY = H - 4 - SHOW_H * k;
+  toddyH = Math.max(100, Math.min(135, cw * 0.32));
   // in-game banner stays inside the crate's inner area, never on the wooden frame
   const innerL = crateX + C.FIELD.L * k, innerW = (C.FIELD.R - C.FIELD.L) * k;
   elBanner.style.left = (innerL + 6).toFixed(1) + 'px'; elBanner.style.right = 'auto'; elBanner.style.width = (innerW - 12).toFixed(1) + 'px';
@@ -843,10 +848,11 @@ function makeShareCard() {
   const statLine = 'Lasted ' + lasted() + '  ◆  Piece ' + S.maxLevel + ' of 11' + (S.served ? '  ◆  ' + S.served + ' visitor' + (S.served > 1 ? 's' : '') + ' served' : '') + (moonrises ? '  ◆  Moonrise ×' + moonrises : '');
   g.fillStyle = '#fde3bd'; g.font = '500 ' + fitText(g, statLine, 940, '500 {s}px' + SANS, 31) + 'px' + SANS; g.fillText(statLine, mid, 1030);
   // the finished crate, cut out of the live game picture (Toddy included)
-  const sy0 = Math.max(0, crateY - toddyH * 0.85), sh = crateY + ch - sy0;
-  const areaTop = 1060, areaH = 410, sc = Math.min(areaH / sh, 980 / cw), dw = cw * sc, dh = sh * sc, dx = (CWD - dw) / 2, dy = areaTop + (areaH - dh) / 2;
+  const vx0 = Math.max(0, crateX), vw = Math.min(W, crateX + cw) - vx0;
+  const sy0 = Math.max(0, crateY - toddyH * 0.85), sh = H - sy0;
+  const areaTop = 1060, areaH = 410, sc = Math.min(areaH / sh, 980 / vw), dw = vw * sc, dh = sh * sc, dx = (CWD - dw) / 2, dy = areaTop + (areaH - dh) / 2;
   g.save(); g.shadowColor = 'rgba(0,0,0,.5)'; g.shadowBlur = 24; g.fillStyle = '#000'; g.fillRect(dx, dy, dw, dh); g.restore();
-  g.drawImage(cv, crateX * dpr, sy0 * dpr, cw * dpr, sh * dpr, dx, dy, dw, dh);
+  g.drawImage(cv, vx0 * dpr, sy0 * dpr, vw * dpr, sh * dpr, dx, dy, dw, dh);
   g.strokeStyle = 'rgba(201,154,59,.7)'; g.lineWidth = 3; g.strokeRect(dx, dy, dw, dh);
   // sign-off
   g.fillStyle = '#fdaf1e'; g.font = 'italic 600 40px' + SERIF; g.fillText('Can you beat this night?', mid, 1512);
