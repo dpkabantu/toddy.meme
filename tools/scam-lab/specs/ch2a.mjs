@@ -1,4 +1,4 @@
-// Chapter 2: Too Good To Be True, new cases (part A). Invented brands only: Lakshmi Lucky Draw, Strideway, Tradely, Payzo, Orrin Bank, Meridu Store, Chirp.
+// Chapter 2: Too Good To Be True, new cases (part A). Invented brands only: Luckyvale Draw, Strideway, Tradely, Payzo, Orrin Bank, Meridu Store, Chirp.
 import { chat, mail, compare } from '../author.mjs';
 
 export default {
@@ -6,27 +6,27 @@ export default {
   'lottery-text': {
     type: 'hunt', diff: 1, disguise: 'influencer', title: 'You Have Won!',
     intro: 'A text just arrived. You have won a big prize, it says. You never entered anything.',
-    notify: ['Messages', 'Lakshmi Lucky Draw', 'Congratulations! You won ₹25,00,000…'],
+    notify: ['Messages', 'Luckyvale Draw', 'Congratulations! You won $50,000…'],
     screen: chat({
-      app: 'sms', name: '{sender|Lakshmi Lucky Draw}', context: 'You have not entered any contest.',
+      app: 'sms', name: '{sender|Luckyvale Draw}', context: 'You have not entered any contest.',
       items: [
         't: {time|Today 11:05 AM}',
-        'm: Congratulations! Your number won {prize|₹25,00,000} in the Lakshmi Lucky Draw.',
-        'm: To receive it, first pay a {tax|processing tax of ₹4,999}: {link|lakshmi-prizeclaim.in/pay|link}',
+        'm: Congratulations! Your number won {prize|$50,000} in the Luckyvale Draw.',
+        'm: To receive it, first pay a {tax|processing tax of $100}: {link|luckyvale-prizeclaim.example/pay|link}',
         'm: {timer|Claim within|count:1800}',
         'm: {noentry|You were picked from all mobile numbers.}',
       ],
     }),
     clues: {
       noentry: ['No contest entered', 's', 'You never entered a draw. You were "picked from all numbers".', 'Winning something you never entered is a warning sign.'],
-      prize: ['A huge prize', 's', '₹25,00,000 for doing nothing.', 'A big prize out of nowhere is the bait.'],
-      tax: ['Pay to collect', 's', 'You must pay ₹4,999 "tax" before the prize arrives.', 'Real prizes are free to collect. A fee is the scam.'],
-      link: ['Look-alike link', 's', 'The link goes to lakshmi-prizeclaim.in, a page made only to take your card details.', 'Never pay through a link in a text. Search the name yourself instead.'],
+      prize: ['A huge prize', 's', '$50,000 for doing nothing.', 'A big prize out of nowhere is the bait.'],
+      tax: ['Pay to collect', 's', 'You must pay $100 "tax" before the prize arrives.', 'Real prizes are free to collect. A fee is the scam.'],
+      link: ['Look-alike link', 's', 'The link goes to luckyvale-prizeclaim.example, a page made only to take your card details.', 'Never pay through a link in a text. Search the name yourself instead.'],
       timer: ['Countdown pressure', 's', 'You must claim within 30 minutes.', 'Rushing you is a pressure trick. A real prize does not expire in minutes.'],
-      sender: ['A friendly name', 'h', 'The sender is called Lakshmi Lucky Draw.', 'Anyone can type a name into a text. It proves nothing.'],
+      sender: ['A friendly name', 'h', 'The sender is called Luckyvale Draw.', 'Anyone can type a name into a text. It proves nothing.'],
       time: ['Sent at 11:05 AM', 'h', 'Sent mid-morning.', 'Scam texts come at any hour. The time proves nothing.'],
     },
-    go: 'Open the link and pay the tax', trap: ['Lakshmi Lucky Draw · Claim', 'lakshmi-prizeclaim.in/pay', 'Pay ₹4,999 to release your prize. Enter your card number.', 'Pay ₹4,999', 'Close this page'],
+    go: 'Open the link and pay the tax', trap: ['Luckyvale Draw · Claim', 'luckyvale-prizeclaim.example/pay', 'Pay $100 to release your prize. Enter your card number.', 'Pay $100', 'Close this page'],
     verify: 'Search the draw\'s name for warnings',
     win: 'Reported and deleted. Your phone company can now block more of these texts.',
     checked: 'No draw, no prize, and the name only appeared on scam warnings. Case cracked.',
@@ -35,10 +35,10 @@ export default {
     rule: 'If you must pay to collect a prize, it is not a prize. Delete it.',
     quick: ['A text says you won a big prize but must pay a "tax" first. You never entered. What do you do?', ['Pay the tax, the prize is much bigger', 'Reply to ask for details', 'Do not pay. Delete it and report the text', 'Send half now and half later'], 'c', 'Real prizes are free. A fee to claim is the scam.'],
     nudge: 'Did you ever enter this draw?',
-    sources: ['ftc-prize', 'in-rbi-beaware'],
+    sources: ['ftc-prize'],
     kit: {
       who: ['Check sender', 'Who sent this text', [['Number', 'A mobile number you do not know'], ['Draws you entered', 'None', 'noentry']]],
-      link: ['Check link', 'Where the link goes', [['Message says', 'pay a tax to claim'], ['It really opens', 'lakshmi-prizeclaim.in', 'link'], ['It asks for', 'A "tax" payment first', 'tax']]],
+      link: ['Check link', 'Where the link goes', [['Message says', 'pay a tax to claim'], ['It really opens', 'luckyvale-prizeclaim.example', 'link'], ['It asks for', 'A "tax" payment first', 'tax']]],
       adv: ['What advice says', [['Do real prizes cost money?', 'No. A fee to collect a prize is a scam', 'tax'], ['A prize for a contest you never entered', 'A warning sign', 'noentry']]],
     },
   },
@@ -132,38 +132,38 @@ export default {
   // 7 ---------------------------------------------------------------
   'rental-deposit': {
     type: 'hunt', diff: 2, disguise: 'influencer', title: 'The Cheap Flat',
-    intro: 'You are looking for a flat in Pune. One listing is far cheaper than the rest.',
+    intro: 'You are looking for a flat in a big city. One listing is far cheaper than the rest.',
     notify: ['Messages', 'Rohit (owner)', 'Flat is yours if you send the deposit today…'],
     screen: chat({
       app: 'sms', name: '{sender|Rohit (owner)}', context: 'You found his listing on a rental site. You have not seen the flat.',
       items: [
         't: Today 6:12 PM',
-        'm: Hello! The 2 BHK is available at {rent|₹9,000 a month}. Similar flats nearby cost ₹24,000.',
+        'm: Hello! The 2 BHK is available at {rent|$180 a month}. Similar flats nearby cost $480.',
         'm: I am {abroad|posted abroad for work}, so I cannot show it myself.',
-        'm: Send a {deposit|₹20,000 deposit} now by phone transfer and I will courier you the keys.',
+        'm: Send a {deposit|$400 deposit} now by phone transfer and I will courier you the keys.',
         'm: {rush|Three other families are asking. Pay in one hour or I give it away.}',
         'm: {photos|Photos attached: bright rooms, new kitchen.}',
       ],
     }),
     clues: {
-      rent: ['Rent far below the area', 's', '₹9,000 where similar flats cost ₹24,000.', 'A rent far below nearby flats is the bait.'],
+      rent: ['Rent far below the area', 's', '$180 where similar flats cost $480.', 'A rent far below nearby flats is the bait.'],
       abroad: ['Owner is "abroad"', 's', 'He cannot meet you or show the flat.', 'Scammers are always somewhere else. Never pay for a place you have not seen.'],
-      deposit: ['Deposit before viewing', 's', 'He wants ₹20,000 before you see the flat or sign anything.', 'Pay only after seeing the place and signing a proper agreement.'],
+      deposit: ['Deposit before viewing', 's', 'He wants $400 before you see the flat or sign anything.', 'Pay only after seeing the place and signing a proper agreement.'],
       rush: ['Hurry or lose it', 's', 'Pay in one hour or it goes to someone else.', 'A rush is a pressure trick to stop you checking.'],
       photos: ['Nice photos', 'h', 'Bright rooms and a new kitchen.', 'Photos are copied from other listings. They prove nothing.'],
       sender: ['A normal name', 'h', 'The sender calls himself Rohit.', 'A name proves nothing.'],
     },
-    go: 'Send the ₹20,000 deposit', verify: 'Ask to see the flat in person, or search the address',
+    go: 'Send the $400 deposit', verify: 'Ask to see the flat in person, or search the address',
     win: 'Reported the listing. The rental site removed it before it fooled anyone else.',
     checked: 'A search of the address showed the same photos in three other ads under different names. Case cracked.',
-    lose: 'The ₹20,000 went to a stranger. No keys came, the number went dead, and the flat belonged to someone else.',
+    lose: 'The $400 went to a stranger. No keys came, the number went dead, and the flat belonged to someone else.',
     avoid: 'Insisting on seeing the flat first would have ended it. A real owner understands.',
     rule: 'Never pay a deposit for a place you have not seen. A very cheap rent plus "I am abroad" is the pattern.',
     quick: ['A very cheap flat. The owner is abroad and wants a deposit today before you can visit. What is the best move?', ['Pay quickly before it is gone', 'Pay half now', 'Only go ahead after seeing it in person and signing an agreement', 'Ask him to send more photos'], 'c', 'Never pay for what you have not seen. That alone settles it.'],
     nudge: 'Where is the owner, and what does he want before you see the flat?',
-    sources: ['ftc-rental', 'in-rbi-beaware'],
+    sources: ['ftc-rental'],
     kit: {
-      who: ['Check the listing', 'Listing check', [['Rent', '₹9,000 (area average ₹24,000)', 'rent'], ['Owner', 'Posted abroad', 'abroad'], ['Same photos elsewhere', 'Yes, in three other ads']]],
+      who: ['Check the listing', 'Listing check', [['Rent', '$180 (area average $480)', 'rent'], ['Owner', 'Posted abroad', 'abroad'], ['Same photos elsewhere', 'Yes, in three other ads']]],
       adv: ['What advice says', [['A deposit before you see the place', 'A major warning sign', 'deposit'], ['How to check', 'Search the address and the owner\'s name, and visit in person']]],
     },
   },
@@ -206,21 +206,21 @@ export default {
   // 10 --------------------------------------------------------------
   'buyer-screenshot': {
     type: 'duel', diff: 3, disguise: 'influencer', title: 'The Payment Screenshot',
-    intro: 'You are selling your old bicycle for ₹6,500 on Tradely. A buyer says he has paid.',
-    notify: ['Tradely', 'Buyer: Arjun', 'I have paid! Please check the screenshot…'],
+    intro: 'You are selling your old bicycle for $130 on Tradely. A buyer says he has paid.',
+    notify: ['Tradely', 'Buyer: Marco', 'I have paid! Please check the screenshot…'],
     screen: chat({
-      app: 'sms', name: [{ text: 'Arjun (Tradely buyer)', id: 'duel-name' }], sub: 'Interested in: bicycle ₹6,500', av: ['🚲', 'logo'], banner: 'Chat opened on Tradely, moved to texts at his request',
+      app: 'sms', name: [{ text: 'Marco (Tradely buyer)', id: 'duel-name' }], sub: 'Interested in: bicycle $130', av: ['🚲', 'logo'], banner: 'Chat opened on Tradely, moved to texts at his request',
     }),
     duel: {
       start: 'n1',
       nodes: {
         n1: {
-          say: ['m: Hi, I want the bicycle. {offsite|Let us skip the app and do this by text.}', 'm: I have {paid|paid ₹6,500}. Look: {shot|[payment screenshot: "Sent ₹6,500 · Success"]}', 'm: Send the bicycle with my courier now.'],
+          say: ['m: Hi, I want the bicycle. {offsite|Let us skip the app and do this by text.}', 'm: I have {paid|paid $130}. Look: {shot|[payment screenshot: "Sent $130 · Success"]}', 'm: Send the bicycle with my courier now.'],
           replies: [['Let me check my bank first', 'n2'], ['Sending it now', '!go_ahead'], ['Stop. Report the buyer.', '!block_report']],
         },
         n2: {
-          say: ['m: The bank is slow on Sundays. {screenshot|The screenshot is proof enough.}', 'm: I sent ₹16,500 by mistake. {over|Return the extra ₹10,000 to me and send the bicycle.}'],
-          replies: [['OK, returning ₹10,000', '!go_ahead'], ['A screenshot proves nothing. I only trust my own bank balance.', 'n3'], ['Report and block', '!block_report']],
+          say: ['m: The bank is slow on Sundays. {screenshot|The screenshot is proof enough.}', 'm: I sent $330 by mistake. {over|Return the extra $200 to me and send the bicycle.}'],
+          replies: [['OK, returning $200', '!go_ahead'], ['A screenshot proves nothing. I only trust my own bank balance.', 'n3'], ['Report and block', '!block_report']],
         },
         n3: {
           say: ['m: {angry|You are wasting my time. Do it or I will write a bad review!}'],
@@ -242,7 +242,7 @@ export default {
     out: {
       block_report: ['win', 'BLOCKED', 'Blocked and reported. Tradely removed the fake buyer before he reached another seller.', 'Curses! Blocked again!'],
       verify: ['win', 'CHECKED', 'Your own account showed no payment at all. No money, no bicycle. Case cracked.', 'Hmph. They checked.'],
-      go_ahead: ['bad', 'SCAMMED', 'The payment never existed. You lost the bicycle, or ₹10,000, or both.', 'Thanks for the bicycle!'],
+      go_ahead: ['bad', 'SCAMMED', 'The payment never existed. You lost the bicycle, or $200, or both.', 'Thanks for the bicycle!'],
     },
     whatif: { go_ahead: 'Looking at your own account balance would have ended it in one tap. Nothing arrived.', verify: 'Waiting for the money to appear in your own account is the right habit. Reporting the buyer as well protects others.' },
     rule: 'A screenshot is not a payment. Only your own account balance is proof. Never send "extra" money back.',
@@ -250,7 +250,7 @@ export default {
     hints: ['Where would you see a real payment?', ['shot', 'paid', 'over', 'offsite', 'screenshot', 'angry']],
     sources: ['ftc-marketplace', 'ftc-job-scams'],
     kit: {
-      who: ['Check the buyer', 'Arjun', [['Account age', '2 days'], ['Left the marketplace?', 'Yes, asked for texts', 'offsite'], ['Money in your account', '₹0', 'paid']]],
+      who: ['Check the buyer', 'Marco', [['Account age', '2 days'], ['Left the marketplace?', 'Yes, asked for texts', 'offsite'], ['Money in your account', '$0', 'paid']]],
       adv: ['What advice says', [['Pay and sell inside the marketplace', 'Keeps the site\'s protections', 'offsite'], ['A check or payment with "send back the extra"', 'A scam, the first payment is fake', 'over']]],
     },
   },

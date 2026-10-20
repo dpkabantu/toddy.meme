@@ -65,7 +65,7 @@
           ": ",
           {
             "clue": "acct",
-            "text": "₹18,500 to the account below"
+            "text": "$370 to the account below"
           },
           "."
         ]
@@ -173,7 +173,7 @@
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The ₹18,500 went to a stranger. Your child had lost nothing.",
+      "line": "The $370 went to a stranger. Your child had lost nothing.",
       "mirageSays": "Thanks for the details!"
     }
   },
@@ -235,7 +235,7 @@
         },
         {
           "k": "Asks for",
-          "v": "₹18,500",
+          "v": "$370",
           "clue": "acct"
         },
         {

@@ -79,7 +79,7 @@
       "id": "r9",
       "app": "SMS",
       "from": "Unknown number",
-      "text": "I have your photos. Pay ₹15,000 in the next hour or I send them to everyone.",
+      "text": "I have your photos. Pay $300 in the next hour or I send them to everyone.",
       "scam": true,
       "why": "A threat with no proof and a short deadline."
     },
@@ -118,8 +118,7 @@
   },
   "sources": [
     "ftc-utility",
-    "ftc-government",
-    "in-pib-alert"
+    "ftc-government"
   ],
   "checked_on": "2026-10-21"
 }

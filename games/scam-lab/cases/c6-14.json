@@ -38,7 +38,7 @@
     {
       "id": "r4",
       "app": "SMS",
-      "from": "Mr. Sharma (CEO)",
+      "from": "Mr. Bennett (CEO)",
       "text": "Are you at your desk? I need 5 gift vouchers urgently. Send the codes.",
       "scam": true,
       "why": "A \"boss\" on a new number asking for gift card codes."
@@ -55,7 +55,7 @@
       "id": "r6",
       "app": "Chirp",
       "from": "Arvind, ship engineer",
-      "text": "My leave papers need ₹60,000. Please send it now, my love.",
+      "text": "My leave papers need $1,200. Please send it now, my love.",
       "scam": true,
       "why": "Someone far away who needs money for papers."
     },
@@ -87,7 +87,7 @@
       "id": "r10",
       "app": "Chirp",
       "from": "Leo",
-      "text": "I earn ₹80,000 a week trading. Let me show you how.",
+      "text": "I earn $1,600 a week trading. Let me show you how.",
       "scam": true,
       "why": "A friend you never met, offering secret earnings."
     }

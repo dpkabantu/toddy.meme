@@ -46,7 +46,7 @@
         "msg": [
           {
             "clue": "pay",
-            "text": "Pay ₹15,000 in the next hour"
+            "text": "Pay $300 in the next hour"
           },
           " and I will delete them."
         ]
@@ -104,7 +104,7 @@
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Pay the ₹15,000"
+      "label": "Pay the $300"
     },
     {
       "id": "verify",
@@ -112,7 +112,7 @@
     },
     {
       "id": "block_report",
-      "label": "Do not pay. Block the number and report it on 1930"
+      "label": "Do not pay. Block the number and report it to your local fraud-reporting service"
     }
   ],
   "best_action": "block_report",
@@ -180,8 +180,6 @@
     ]
   },
   "sources": [
-    "in-pib-alert",
-    "in-1930",
     "ftc-government"
   ],
   "checked_on": "2026-10-21",
@@ -199,7 +197,7 @@
         },
         {
           "k": "Asked for money",
-          "v": "₹15,000 in an hour",
+          "v": "$300 in an hour",
           "clue": "pay"
         },
         {
@@ -222,7 +220,7 @@
         },
         {
           "k": "Where to report",
-          "v": "The cyber helpline 1930, or cybercrime.gov.in"
+          "v": "The fraud-reporting service in your country, or the police"
         }
       ]
     }

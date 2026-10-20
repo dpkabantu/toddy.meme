@@ -33,7 +33,7 @@
       "subject": [
         {
           "clue": "subject",
-          "text": "Offer letter: Software Trainee, ₹6 LPA"
+          "text": "Offer letter: Software Trainee, $70,000 a year"
         }
       ],
       "time": [
@@ -59,7 +59,7 @@
           " at Lumenara Tech with ",
           {
             "clue": "pay",
-            "text": "₹6 LPA"
+            "text": "$70,000 a year"
           },
           "."
         ]
@@ -79,7 +79,7 @@
           "To receive your laptop and joining kit, pay a ",
           {
             "clue": "fee",
-            "text": "refundable fee of ₹9,500"
+            "text": "refundable fee of $190"
           },
           " within 24 hours."
         ]
@@ -117,7 +117,7 @@
     "fee": {
       "label": "A \"refundable\" fee for a kit",
       "strength": "strong",
-      "lens": "You must pay ₹9,500 to receive a laptop.",
+      "lens": "You must pay $190 to receive a laptop.",
       "why": "Honest employers never ask you to pay to get a job or a kit."
     },
     "link": {
@@ -129,7 +129,7 @@
     "pay": {
       "label": "A good salary",
       "strength": "harmless",
-      "lens": "₹6 LPA, a believable offer.",
+      "lens": "$70,000 a year, a believable offer.",
       "why": "The salary alone proves nothing."
     },
     "greet": {
@@ -154,7 +154,7 @@
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Click the link and pay ₹9,500",
+      "label": "Click the link and pay $190",
       "trap": true
     },
     {
@@ -177,9 +177,9 @@
   ],
   "trap": {
     "title": "Lumenara Tech · Joining",
-    "url": "lumenara-joining.in/pay",
-    "ask": "Pay ₹9,500 by card to confirm your joining and receive your kit.",
-    "go": "Pay ₹9,500",
+    "url": "lumenara-joining.example/pay",
+    "ask": "Pay $190 by card to confirm your joining and receive your kit.",
+    "go": "Pay $190",
     "back": "Close this page"
   },
   "outcomes": {
@@ -208,7 +208,7 @@
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The ₹9,500 went to a stranger. No laptop and no job ever came.",
+      "line": "The $190 went to a stranger. No laptop and no job ever came.",
       "mirageSays": "Thanks for the details!"
     }
   },
@@ -219,7 +219,7 @@
   },
   "golden_rule": "No real employer asks you to pay for a job, a laptop or a kit. Check on the company's own site.",
   "quick_check": {
-    "q": "A famous company's offer letter, from a free-mail address, asks you to pay ₹9,500 for a laptop kit. What do you do?",
+    "q": "A famous company's offer letter, from a free-mail address, asks you to pay $190 for a laptop kit. What do you do?",
     "options": [
       {
         "id": "a",
@@ -253,8 +253,7 @@
   },
   "sources": [
     "ftc-job-scams",
-    "ftc-jobs",
-    "in-rbi-beaware"
+    "ftc-jobs"
   ],
   "checked_on": "2026-10-21",
   "kit": [

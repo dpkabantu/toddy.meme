@@ -50,7 +50,7 @@
           "Hey! Thanks for last night 😄 Your ",
           {
             "clue": "share",
-            "text": "share of the dinner is ₹850"
+            "text": "share of the dinner is $17"
           },
           "."
         ]
@@ -77,7 +77,7 @@
         "msg": [
           {
             "clue": "check",
-            "text": "Ask Anil, he is paying me his share too."
+            "text": "Ask Tom, he is paying me his share too."
           }
         ]
       }
@@ -105,7 +105,7 @@
     "share": {
       "label": "A small, specific amount",
       "strength": "harmless",
-      "lens": "₹850, a normal share of a dinner you really had.",
+      "lens": "$17, a normal share of a dinner you really had.",
       "why": "It matches something you did together."
     },
     "how": {
@@ -123,14 +123,14 @@
     "check": {
       "label": "You can confirm with others",
       "strength": "harmless",
-      "lens": "She suggests asking Anil.",
+      "lens": "She suggests asking Tom.",
       "why": "Honest people welcome checks."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Confirm with Maya in person or by a call, then pay her ₹850 in our usual app"
+      "label": "Confirm with Maya in person or by a call, then pay her $17 in our usual app"
     },
     {
       "id": "ignore",
@@ -150,7 +150,7 @@
       "scene": "safe",
       "mirage": null,
       "stamp": "GENUINE",
-      "line": "You called Maya, who confirmed. You paid ₹850 in the usual app, and she thanked you.",
+      "line": "You called Maya, who confirmed. You paid $17 in the usual app, and she thanked you.",
       "toddy": "happy"
     },
     "ignore": {

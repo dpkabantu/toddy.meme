@@ -52,7 +52,7 @@
           "Install the KYC app and update: ",
           {
             "clue": "link",
-            "text": "orrin-kyc-update.in/OrrinKYC.apk",
+            "text": "orrin-kyc-update.example/OrrinKYC.apk",
             "link": true
           }
         ]
@@ -215,9 +215,7 @@
     ]
   },
   "sources": [
-    "in-rbi-beaware",
-    "in-certin-booklet",
-    "in-1930"
+    "ftc-bank-call"
   ],
   "checked_on": "2026-10-21",
   "kit": [

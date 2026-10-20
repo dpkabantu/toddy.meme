@@ -13,7 +13,7 @@
   "notify": {
     "app": "Mail",
     "from": "Civic Revenue Portal",
-    "text": "You are eligible for a refund of ₹4,128"
+    "text": "You are eligible for a refund of $83"
   },
   "screen": {
     "app": "mail",
@@ -33,7 +33,7 @@
       "subject": [
         {
           "clue": "subject",
-          "text": "You are eligible for a refund of ₹4,128"
+          "text": "You are eligible for a refund of $83"
         }
       ],
       "time": [
@@ -54,7 +54,7 @@
           "After a review, you are ",
           {
             "clue": "owed",
-            "text": "owed a refund of ₹4,128"
+            "text": "owed a refund of $83"
           },
           "."
         ]
@@ -145,7 +145,7 @@
     "subject": {
       "label": "A precise amount",
       "strength": "harmless",
-      "lens": "₹4,128, not a round number.",
+      "lens": "$83, not a round number.",
       "why": "A precise number looks real, but scammers choose precise numbers on purpose."
     }
   },
@@ -176,7 +176,7 @@
   "trap": {
     "title": "Civic Revenue Portal · Claim",
     "url": "civic-revenue-portal.info/claim",
-    "ask": "Enter your bank account number and the code on the back of your card to receive ₹4,128.",
+    "ask": "Enter your bank account number and the code on the back of your card to receive $83.",
     "go": "Claim refund",
     "back": "Close this page"
   },

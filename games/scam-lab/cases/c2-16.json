@@ -38,8 +38,8 @@
     {
       "id": "r4",
       "app": "SMS",
-      "from": "Lakshmi Lucky Draw",
-      "text": "You won ₹25,00,000! Pay ₹4,999 tax to claim: lakshmi-prizeclaim.in",
+      "from": "Luckyvale Draw",
+      "text": "You won $50,000! Pay $100 tax to claim: luckyvale-prizeclaim.example",
       "scam": true,
       "why": "A prize you never entered, and a fee to collect it."
     },
@@ -63,7 +63,7 @@
       "id": "r7",
       "app": "Chirp",
       "from": "Kiko Official ✔",
-      "text": "You won a free phone! Pay ₹499 delivery: kiko-phones-claim.live",
+      "text": "You won a free phone! Pay $10 delivery: kiko-phones-claim.live",
       "scam": true,
       "why": "A free prize that costs money, from a copy account."
     },

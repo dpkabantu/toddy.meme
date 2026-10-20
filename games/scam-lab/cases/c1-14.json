@@ -15,7 +15,7 @@
       "id": "r1",
       "app": "SMS",
       "from": "Civic Revenue Portal",
-      "text": "You are eligible for a tax refund of ₹4,128. Claim it now: civic-refund.claims/start",
+      "text": "You are eligible for a tax refund of $83. Claim it now: civic-refund.claims/start",
       "scam": true,
       "why": "Tax offices do not text or email to ask you to claim a refund through a link."
     },
@@ -31,7 +31,7 @@
       "id": "r3",
       "app": "SMS",
       "from": "Brightgrid Energy",
-      "text": "You overpaid your bill by ₹960. Enter your bank details to receive it: brightgrid-refund.net",
+      "text": "You overpaid your bill by $19. Enter your bank details to receive it: brightgrid-refund.net",
       "scam": true,
       "why": "A real energy company does not ask you for bank details by text to refund an overpayment."
     },
@@ -55,7 +55,7 @@
       "id": "r6",
       "app": "Mail",
       "from": "Streamly Support",
-      "text": "Your subscription renews for ₹349. Not you? Call 0800 555 0188 now for a refund.",
+      "text": "Your subscription renews for $7. Not you? Call 0800 555 0188 now for a refund.",
       "scam": true,
       "why": "A big surprise charge and a phone number to call is how support scams begin. Check the number on your own account."
     },

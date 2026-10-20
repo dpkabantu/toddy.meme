@@ -27,7 +27,7 @@
       "sub": [
         {
           "clue": "bal",
-          "text": "Your balance: ₹8,20,000"
+          "text": "Your balance: $16,400"
         }
       ],
       "avatar": {
@@ -50,7 +50,7 @@
               "Your profit is ready. ",
               {
                 "clue": "tax",
-                "text": "Pay a 15% withdrawal tax of ₹1,23,000"
+                "text": "Pay a 15% withdrawal tax of $2,460"
               },
               " first."
             ]
@@ -123,7 +123,7 @@
               "Tax received. Now an ",
               {
                 "clue": "anti",
-                "text": "anti-money-laundering deposit of ₹2,00,000"
+                "text": "anti-money-laundering deposit of $4,000"
               },
               " is needed."
             ]
@@ -139,7 +139,7 @@
         ],
         "replies": [
           {
-            "text": "Paying ₹2,00,000 more",
+            "text": "Paying $4,000 more",
             "end": "go_ahead"
           },
           {
@@ -164,7 +164,7 @@
     "tax": {
       "label": "A \"tax\" to withdraw",
       "strength": "strong",
-      "lens": "You must pay ₹1,23,000 first.",
+      "lens": "You must pay $2,460 first.",
       "why": "Paying to withdraw is the scam."
     },
     "rule": {
@@ -207,7 +207,7 @@
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Pay the ₹2,00,000"
+      "label": "Pay the $4,000"
     },
     {
       "id": "verify",
@@ -215,7 +215,7 @@
     },
     {
       "id": "block_report",
-      "label": "Stop, and report it on 1930"
+      "label": "Stop, and report it to your local fraud-reporting service"
     }
   ],
   "best_action": "block_report",
@@ -287,8 +287,7 @@
   },
   "sources": [
     "ftc-crypto",
-    "ftc-invest-social",
-    "in-1930"
+    "ftc-invest-social"
   ],
   "checked_on": "2026-10-21",
   "kit": [

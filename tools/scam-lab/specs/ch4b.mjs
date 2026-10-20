@@ -53,7 +53,7 @@ export default {
       items: [
         't: Today 11:58 PM',
         'm: I have {photos|your private photos}. I will send them to everyone you know.',
-        'm: {pay|Pay ₹15,000 in the next hour} and I will delete them.',
+        'm: {pay|Pay $300 in the next hour} and I will delete them.',
         'm: {nopic|I will not show them to you yet.}',
         'm: {secret|Tell no one.}',
       ],
@@ -65,8 +65,8 @@ export default {
       secret: ['"Tell no one"', 's', 'Secrecy keeps you alone with the fear.', 'Telling someone you trust, and reporting, is the way out.'],
       num: ['An unknown number', 'h', 'A stranger at midnight.', 'The number alone proves little.'],
     },
-    go: 'Pay the ₹15,000', verify: 'Do not pay. Tell someone I trust',
-    report: 'Do not pay. Block the number and report it on 1930',
+    go: 'Pay the $300', verify: 'Do not pay. Tell someone I trust',
+    report: 'Do not pay. Block the number and report it to your local fraud-reporting service',
     noIgnore: true,
     win: 'You blocked the number and reported it. Nothing was sent anywhere, and the threats stopped.',
     checked: 'You told a friend. They said it was a mass threat message and helped you report it. Nothing followed. Case cracked.',
@@ -75,10 +75,10 @@ export default {
     rule: 'Never pay a person who threatens you. Block, tell someone you trust, and report it. You are not alone.',
     quick: ['A stranger says they have private photos of you and demands money. They show nothing. What is the best move?', ['Pay quickly so it ends', 'Pay half', 'Do not pay. Block, tell someone you trust and report it', 'Reply to bargain'], 'c', 'Paying does not end it. Telling someone and reporting does.'],
     nudge: 'What proof did they actually show?',
-    sources: ['in-pib-alert', 'in-1930', 'ftc-government'],
+    sources: ['ftc-government'],
     kit: {
-      who: ['Check the message', 'What was sent', [['Any picture shown?', 'None', 'nopic'], ['Asked for money', '₹15,000 in an hour', 'pay'], ['Asked you to tell no one', 'Yes', 'secret']]],
-      adv: ['What advice says', [['Blackmail messages', 'The government warns about them and asks you to report', 'photos'], ['Where to report', 'The cyber helpline 1930, or cybercrime.gov.in']]],
+      who: ['Check the message', 'What was sent', [['Any picture shown?', 'None', 'nopic'], ['Asked for money', '$300 in an hour', 'pay'], ['Asked you to tell no one', 'Yes', 'secret']]],
+      adv: ['What advice says', [['Blackmail messages', 'The government warns about them and asks you to report', 'photos'], ['Where to report', 'The fraud-reporting service in your country, or the police']]],
     },
   },
 
@@ -110,7 +110,7 @@ export default {
     calm: 'It had no link, a 30-day deadline, a visit to the branch and a reminder that the bank never asks for OTP or PIN. That calm is what real notices look like.',
     rule: 'A real KYC request uses a branch visit or the official app, gives you time and asks for no OTP or PIN. Check, then visit.',
     quick: ['What made this KYC message honest?', ['It named the bank', 'It had no link, gave 30 days, asked you to visit the branch and never asked for an OTP or PIN', 'It arrived in the morning', 'It was short'], 'b', 'No link, no rush, and no OTP asked: those are the real signs.'],
-    sources: ['in-rbi-beaware'],
+    sources: ['ftc-bank-call'],
     kit: {
       who: ['Check sender', 'Who sent this text', [['Same thread as your bank texts', 'Yes', 'sender'], ['Link in it?', 'None', 'nolink'], ['Deadline', '30 days', 'visit']]],
       adv: ['What advice says', [['KYC update links and calls', 'A common trick: use the official site or branch', 'update'], ['How to check', 'Call the number on the back of your card', 'check']]],
@@ -129,7 +129,7 @@ export default {
       start: 'n1',
       nodes: {
         n1: {
-          say: ['m: I am a police officer. Your cousin Dev has been {arrested|arrested after an accident}.', 'm: {hurt|The other person is badly hurt.} {money|We need ₹50,000 now to settle it and avoid a case.}'],
+          say: ['m: I am a police officer. Your cousin Dev has been {arrested|arrested after an accident}.', 'm: {hurt|The other person is badly hurt.} {money|We need $1,000 now to settle it and avoid a case.}'],
           replies: [['Let me speak to Dev', 'n2'], ['Sending the money now', '!go_ahead'], ['I will hang up and call Dev myself', '!verify']],
         },
         n2: {
@@ -148,7 +148,7 @@ export default {
       secret: ['"Do not tell his parents"', 's', 'Secrecy blocks your check.', 'Always tell the family. It breaks the scam.'],
       pic: ['A police car', 'h', 'A little car icon.', 'Icons prove nothing.'],
     },
-    actions: [['go_ahead', 'Send the ₹50,000'], ['verify', 'Call Dev and his parents myself, on numbers I know'], ['block_report', 'Hang up and report the call']],
+    actions: [['go_ahead', 'Send the $1,000'], ['verify', 'Call Dev and his parents myself, on numbers I know'], ['block_report', 'Hang up and report the call']],
     best: 'block_report', ok: ['verify'],
     out: {
       block_report: ['win', 'BLOCKED', 'You hung up and reported the call. The number was blocked.', 'Curses! Hung up on again!'],
@@ -159,7 +159,7 @@ export default {
     rule: 'If a stranger says a relative is in trouble and wants money, hang up and call the relative on a number you know. It takes a minute.',
     quick: ['A stranger calls to say your cousin was arrested and you must send money in 10 minutes. What do you do?', ['Send the money fast', 'Send half and ask for details', 'Hang up and call your cousin and his family on numbers you know', 'Ask the caller for his badge number'], 'c', 'Check on a number you know. A real relative answers.'],
     hints: ['How can you check without trusting the caller?', ['money', 'crying', 'rush', 'secret', 'arrested', 'hurt', 'num']],
-    sources: ['ftc-family', 'in-pib-alert'],
+    sources: ['ftc-family'],
     kit: {
       who: ['Check the call', 'Unknown caller', [['A number you know?', 'No', 'num'], ['Could Dev come to the phone?', 'No, "too upset"', 'crying']]],
       adv: ['What advice says', [['A relative in trouble?', 'Check on a number you already know', 'money'], ['Money fast, secret?', 'A scam sign', 'secret']]],
@@ -179,12 +179,12 @@ export default {
       ['r6', 'SMS', 'Orrin Bank', 'Payment of £212.00 at Gadgetz Direct was paused. If this was not you, open the Orrin app.', false, 'It names the payment and sends you to your own app.'],
       ['r7', 'Mail', 'Civic Revenue Portal', 'FINAL NOTICE: pay now or face arrest.', true, 'A threat of arrest by email.'],
       ['r8', 'SMS', 'Mum', 'Dinner at 7, bring bread please 🍞', false, 'Your mum, asking for bread.'],
-      ['r9', 'SMS', 'Unknown number', 'I have your photos. Pay ₹15,000 in the next hour or I send them to everyone.', true, 'A threat with no proof and a short deadline.'],
+      ['r9', 'SMS', 'Unknown number', 'I have your photos. Pay $300 in the next hour or I send them to everyone.', true, 'A threat with no proof and a short deadline.'],
       ['r10', 'SMS', 'Brightgrid Energy', 'Reminder: your bill of £62.40 is due on the 28th. Pay in your app or online as usual.', false, 'A calm reminder with a date, sent to your own account channels.'],
     ],
     rule: 'A message that scares you and hurries you is the one to check, slowly, on a number or site you already know.',
     quick: ['A message says your power will be cut tonight unless you pay by a link. What do you do?', ['Pay fast, it is dark soon', 'Reply STOP', 'Check your own bill or app, and report the message', 'Call the number in the message'], 'c', 'Fear and a deadline are the trap. Your own bill shows the truth.'],
-    sources: ['ftc-utility', 'ftc-government', 'in-pib-alert'],
+    sources: ['ftc-utility', 'ftc-government'],
   },
 
   // 17 --------------------------------------------------------------
@@ -302,7 +302,7 @@ export default {
     rule: 'A bank never asks you to move money to keep it safe. Hang up and call the number on your card.',
     quick: ['A caller says criminals are in your account and tells you to move your money to a "safe account". What do you do?', ['Move it fast', 'Move half', 'Hang up. Call the number on the back of your card', 'Share the code to prove it is you'], 'c', 'A bank never asks you to move money to protect it.'],
     nudge: 'What does the caller want you to do with your money?',
-    sources: ['ftc-bank-call', 'in-rbi-beaware', 'ftc-codes'],
+    sources: ['ftc-bank-call', 'ftc-codes'],
     kit: {
       who: ['Check the call', 'Orrin Bank Fraud Team', [['Called you first?', 'Yes', 'calledyou'], ['Asked to move money', 'Yes, to a "safe account"', 'move'], ['Told you not to call the bank', 'Yes', 'hang']]],
       adv: ['What advice says', [['Move money to "protect" it?', 'Never. It is the scam', 'move'], ['How to check', 'Call the number on your card']]],

@@ -159,7 +159,7 @@
     },
     {
       "id": "block_report",
-      "label": "End the call and report it on 1930"
+      "label": "End the call and report it to your local fraud-reporting service"
     }
   ],
   "best_action": "block_report",
@@ -193,7 +193,7 @@
     "go_ahead": "Ending the call and telling someone was always allowed. A real case is never closed by moving money.",
     "verify": "Checking was smart. Reporting it as well helps protect other people."
   },
-  "golden_rule": "No one can arrest you through a screen. End the call, tell someone you trust, and report on the cyber helpline (1930 in India).",
+  "golden_rule": "No one can arrest you through a screen. End the call, tell someone you trust, and report it to the fraud-reporting service in your country.",
   "quick_check": {
     "q": "A video call says you are under \"digital arrest\" and must stay on camera, tell no one and move your savings. What do you do?",
     "options": [
@@ -229,8 +229,6 @@
     ]
   },
   "sources": [
-    "in-pib-alert",
-    "in-1930",
     "ftc-government"
   ],
   "checked_on": "2026-10-21",
@@ -271,7 +269,7 @@
         },
         {
           "k": "Where to report",
-          "v": "The cyber helpline 1930, or cybercrime.gov.in"
+          "v": "The fraud-reporting service in your country, or the police"
         }
       ]
     }

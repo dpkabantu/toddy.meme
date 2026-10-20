@@ -64,7 +64,7 @@
               " ",
               {
                 "clue": "money",
-                "text": "We need ₹50,000 now to settle it and avoid a case."
+                "text": "We need $1,000 now to settle it and avoid a case."
               }
             ]
           }
@@ -183,7 +183,7 @@
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Send the ₹50,000"
+      "label": "Send the $1,000"
     },
     {
       "id": "verify",
@@ -262,8 +262,7 @@
     ]
   },
   "sources": [
-    "ftc-family",
-    "in-pib-alert"
+    "ftc-family"
   ],
   "checked_on": "2026-10-21",
   "kit": [

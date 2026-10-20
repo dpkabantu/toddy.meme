@@ -12,8 +12,8 @@
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Anya (Recruiter)",
-    "text": "Earn ₹3,000 daily from home, no experience…"
+    "from": "Hannah (Recruiter)",
+    "text": "Earn $60 daily from home, no experience…"
   },
   "screen": {
     "app": "chirp",
@@ -21,13 +21,13 @@
       "name": [
         {
           "clue": "name",
-          "text": "Anya · Recruiter"
+          "text": "Hannah · Recruiter"
         }
       ],
       "sub": [
         {
           "clue": "handle",
-          "text": "@anya_jobs_2026"
+          "text": "@hannah_jobs_2026"
         }
       ],
       "avatar": {
@@ -58,7 +58,7 @@
           ". You can earn ",
           {
             "clue": "pay",
-            "text": "₹3,000 every day"
+            "text": "$60 every day"
           },
           "."
         ]
@@ -99,7 +99,7 @@
     "pay": {
       "label": "Big pay for little work",
       "strength": "strong",
-      "lens": "₹3,000 a day for one hour a day.",
+      "lens": "$60 a day for one hour a day.",
       "why": "Big pay for little work is almost always a scam."
     },
     "noexp": {
@@ -123,13 +123,13 @@
     "handle": {
       "label": "A generic handle",
       "strength": "harmless",
-      "lens": "@anya_jobs_2026.",
+      "lens": "@hannah_jobs_2026.",
       "why": "A handle proves nothing alone."
     },
     "name": {
       "label": "A friendly recruiter name",
       "strength": "harmless",
-      "lens": "Anya, a recruiter.",
+      "lens": "Hannah, a recruiter.",
       "why": "Names are easy to invent."
     },
     "parttime": {
@@ -148,7 +148,7 @@
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Message Anya on the messaging app"
+      "label": "Message Hannah on the messaging app"
     },
     {
       "id": "ignore",
@@ -194,7 +194,7 @@
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "Anya sent you to a \"task\" job. It started well, then asked for money to continue.",
+      "line": "Hannah sent you to a \"task\" job. It started well, then asked for money to continue.",
       "mirageSays": "Thanks for the details!"
     }
   },
@@ -205,7 +205,7 @@
   },
   "golden_rule": "Big pay for little work, from a stranger, with no interview, is a scam. Look for the company's own careers page.",
   "quick_check": {
-    "q": "A stranger DMs you about a work-from-home job paying ₹3,000 a day, no interview. What do you do?",
+    "q": "A stranger DMs you about a work-from-home job paying $60 a day, no interview. What do you do?",
     "options": [
       {
         "id": "a",
@@ -247,7 +247,7 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check the account",
-      "title": "@anya_jobs_2026",
+      "title": "@hannah_jobs_2026",
       "rows": [
         {
           "k": "Account age",

@@ -21,7 +21,7 @@
       "name": [
         {
           "clue": "sender",
-          "text": "+91 98•••• 1204"
+          "text": "+44 77•• ••1204"
         }
       ],
       "sub": [
@@ -105,7 +105,7 @@
       "why": "Scam apps spread by making you send them on."
     },
     "sender": {
-      "label": "An Indian mobile number",
+      "label": "A foreign-looking mobile number",
       "strength": "harmless",
       "lens": "A normal-looking number.",
       "why": "A number proves nothing either way."
@@ -223,8 +223,7 @@
     ]
   },
   "sources": [
-    "in-certin-booklet",
-    "in-1930"
+    "ftc-phishing"
   ],
   "checked_on": "2026-10-21",
   "kit": [

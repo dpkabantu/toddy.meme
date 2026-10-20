@@ -8,7 +8,7 @@ export default {
     intro: 'A wedding invitation arrives in a chat from a number you do not know. It is a file, not a picture.',
     notify: ['Chirp', 'Unknown number', 'You are invited to our wedding 💍 Download the card…'],
     screen: chat({
-      app: 'chirp', name: '{sender|+91 98•••• 1204}', sub: '{unknown|Not in your contacts}', av: ['💍', 'pic'],
+      app: 'chirp', name: '{sender|+44 77•• ••1204}', sub: '{unknown|Not in your contacts}', av: ['💍', 'pic'],
       items: [
         't: 7:52 PM',
         'm: Namaste! 🙏 You are warmly invited to our {wedding|daughter\'s wedding}.',
@@ -22,7 +22,7 @@ export default {
       unknown: ['A stranger', 's', 'The number is not in your contacts.', 'Be careful with files from numbers you do not know.'],
       open: ['"Tap Install"', 's', 'To "view" the card you must install something on your phone.', 'Viewing a card never needs installing. The install is the attack.'],
       tell: ['"Forward to everyone"', 's', 'It asks you to forward the file to your contacts.', 'Scam apps spread by making you send them on.'],
-      sender: ['An Indian mobile number', 'h', 'A normal-looking number.', 'A number proves nothing either way.'],
+      sender: ['A foreign-looking mobile number', 'h', 'A normal-looking number.', 'A number proves nothing either way.'],
       wedding: ['A wedding invitation', 'h', 'A friendly, ordinary reason to write.', 'The story is believable. That is why it works.'],
       pic: ['Ring picture', 'h', 'A little ring.', 'Pictures prove nothing.'],
     },
@@ -35,7 +35,7 @@ export default {
     rule: 'Never install an app from a file in a chat. A real card is a picture or a PDF.',
     quick: ['A chat from an unknown number sends "WeddingInvite.apk" and asks you to install it. What do you do?', ['Install it, it is only a card', 'Install it but do not give permissions', 'Do not open it. Delete it and report the message', 'Forward it to family so they can see it'], 'c', 'An app file in a chat is never a card. Real apps come from the official app store.'],
     nudge: 'What kind of file is a "card" that ends in .apk?',
-    sources: ['in-certin-booklet', 'in-1930'],
+    sources: ['ftc-phishing'],
     kit: {
       who: ['Check sender', 'Who sent this', [['Number', 'Not in your contacts', 'unknown'], ['File type', 'App installer (.apk)', 'file'], ['Real cards come as', 'Picture or PDF']]],
       adv: ['What advice says', [['Where to install apps from', 'Only the official app store or a trusted site'], ['Apps from links in chats', 'Never install them', 'open']]],
@@ -51,10 +51,10 @@ export default {
       app: 'sms', name: '{sender|TRF-FINE}', context: 'You have not had any traffic fine recently.',
       items: [
         't: Today 10:18 AM',
-        'm: Traffic Department: you have a {fine|pending fine of ₹500}.',
+        'm: Traffic Department: you have a {fine|pending fine of $10}.',
         'm: {suspend|Pay today or your driving licence will be suspended.}',
-        'm: Install the payment app: {link|trafficfine-pay.in/ChallanPay.apk|link}',
-        'm: {notice|Challan No. 88231/2026}',
+        'm: Install the payment app: {link|trafficfine-pay.example/FinePay.apk|link}',
+        'm: {notice|Fine No. 88231/2026}',
       ],
     }),
     clues: {
@@ -62,9 +62,9 @@ export default {
       suspend: ['Threat to suspend', 's', 'Pay today or lose your licence.', 'A threat with a deadline is a pressure trick.'],
       link: ['An app file and a look-alike site', 's', 'The link ends in ".apk" and is not an official address.', 'Official offices do not ask you to install an app from a link.'],
       sender: ['An official-looking name', 'h', 'The sender is TRF-FINE.', 'Sender names are easy to type.'],
-      notice: ['A challan number', 'h', 'A number that looks official.', 'Numbers are easy to invent. Check on the official portal.'],
+      notice: ['A fine number', 'h', 'A number that looks official.', 'Numbers are easy to invent. Check on the official portal.'],
     },
-    go: 'Install the app and pay', trap: ['Install unknown app?', 'ChallanPay.apk', 'This app wants to read your messages and show over other apps. Install?', 'Install', 'Cancel'],
+    go: 'Install the app and pay', trap: ['Install unknown app?', 'FinePay.apk', 'This app wants to read your messages and show over other apps. Install?', 'Install', 'Cancel'],
     verify: 'Check for fines on the official traffic website I type myself',
     win: 'Reported and deleted. Your phone company can block the next one.',
     checked: 'The official traffic website showed no fine on your vehicle. The text was fake. Case cracked.',
@@ -73,7 +73,7 @@ export default {
     rule: 'A fine is paid on an official website you type yourself. Never install an app from a text.',
     quick: ['A text says you owe a traffic fine and must install an app to pay. What is the best move?', ['Pay quickly to avoid suspension', 'Install the app but do not log in', 'Check on the official website you type yourself, and report the text', 'Reply to ask if it is real'], 'c', 'Fines are not paid through apps from texts. Check on the official site.'],
     nudge: 'What kind of file is that link, and who asks you to install it?',
-    sources: ['in-certin-booklet', 'in-pib-alert', 'ftc-government'],
+    sources: ['ftc-government'],
     kit: {
       who: ['Check sender', 'Who sent this', [['Number', 'A short code, no phone number'], ['Your recent offences', 'None', 'fine']]],
       link: ['Check link', 'Where the link goes', [['Message says', 'install the app to pay'], ['File type', 'App installer (.apk)', 'link'], ['Official offices', 'Do not ask you to install apps']]],
@@ -129,7 +129,7 @@ export default {
     rule: 'Never install a screen-sharing app or read out a code for someone who called you. Call the company on the number on your bill.',
     quick: ['A "support" caller who phoned you asks you to install a screen-sharing app and read out a code. What do you do?', ['Do it, they are fixing the internet', 'Do it but close your bank app', 'Hang up. Call the company yourself, on the number on your bill', 'Ask them to prove who they are'], 'c', 'A caller proves nothing. Calling the company yourself does.'],
     hints: ['What can a screen-sharing app do to your bank?', ['app', 'code', 'bank', 'pin', 'noreq', 'link', 'rush']],
-    sources: ['in-rbi-beaware', 'in-certin-booklet', 'ftc-techsupport'],
+    sources: ['ftc-techsupport'],
     kit: {
       who: ['Check the call', 'Vantel Support', [['Who called first?', 'They did', 'noreq'], ['Real Vantel helpline', 'On your bill'], ['Asked you to install', 'ShareView', 'app']]],
       adv: ['What advice says', [['Screen-sharing apps', 'Install only if the official number from the company\'s website says so', 'app'], ['Does support need your PIN or bank app?', 'Never', 'pin']]],
@@ -145,7 +145,7 @@ export default {
       app: 'sms', name: '{site|parkly-pay-now.top}', context: 'You scanned a sticker stuck on the parking machine. It looks stuck on top of the machine\'s own printed code.',
       items: [
         't: Opened from a scanned QR code',
-        'm: Welcome to Parkly Pay. {fee|Pay ₹50 for 2 hours.}',
+        'm: Welcome to Parkly Pay. {fee|Pay $1 for 2 hours.}',
         'm: {card|Enter your card number and PIN to pay.}',
         'm: {sticker|The code was a sticker placed over the machine\'s own code.}',
         'm: {outoforder|The machine is out of order. Only pay here.}',
@@ -157,10 +157,10 @@ export default {
       card: ['Asks for your card PIN', 's', 'Paying never needs your card PIN.', 'Anyone who asks for your PIN is a thief.'],
       sticker: ['A sticker over the real code', 's', 'Someone stuck a new code on top of the machine\'s own.', 'A code stuck on top of another is a warning sign. Run your finger over it.'],
       outoforder: ['"Out of order, only pay here"', 's', 'It tells you to use only the sticker.', 'A real machine does not send you to a sticker.'],
-      fee: ['A normal fee', 'h', '₹50 for 2 hours.', 'The price is normal. It proves nothing.'],
+      fee: ['A normal fee', 'h', '$1 for 2 hours.', 'The price is normal. It proves nothing.'],
       logo: ['A parking logo', 'h', 'A parking sign.', 'Logos are easy to copy.'],
     },
-    go: 'Enter my card number and PIN', trap: ['Parkly Pay', 'parkly-pay-now.top', 'Enter your card number and PIN to pay ₹50.', 'Pay ₹50', 'Close this page'],
+    go: 'Enter my card number and PIN', trap: ['Parkly Pay', 'parkly-pay-now.top', 'Enter your card number and PIN to pay $1.', 'Pay $1', 'Close this page'],
     verify: 'Pay in the parking company\'s own app, or at another machine',
     win: 'You reported the sticker to the parking company. They scraped it off and warned other drivers.',
     checked: 'The parking company\'s own app showed the bay and took your card safely. The sticker was fake. Case cracked.',
@@ -169,7 +169,7 @@ export default {
     rule: 'Check a QR code before you scan or pay: is it a sticker over another code? Pay in the real company\'s own app.',
     quick: ['A parking machine says it is out of order and shows a QR sticker that looks stuck on top. What do you do?', ['Scan it and pay', 'Scan it but skip the PIN', 'Pay in the company\'s own app or at another machine, and report the sticker', 'Ask a passer-by'], 'c', 'A sticker over a real code is the trick. Use the real company\'s own app.'],
     nudge: 'Look at how the code is stuck on.',
-    sources: ['ftc-phishing', 'in-rbi-beaware'],
+    sources: ['ftc-phishing'],
     kit: {
       link: ['Check the page', 'Where the code went', [['Address it opened', 'parkly-pay-now.top', 'site'], ['The company\'s real site', 'On the machine\'s printed code'], ['Code on the machine', 'Stuck over the old one', 'sticker']]],
       adv: ['What advice says', [['Does paying need your PIN?', 'Never', 'card'], ['How to pay safely', 'In the company\'s own app, or another machine']]],
@@ -186,7 +186,7 @@ export default {
       items: [
         't: Today 9:05 AM',
         'm: Orrin Bank: your {kyc|KYC has expired}. Your account will be {block|blocked today}.',
-        'm: Install the KYC app and update: {link|orrin-kyc-update.in/OrrinKYC.apk|link}',
+        'm: Install the KYC app and update: {link|orrin-kyc-update.example/OrrinKYC.apk|link}',
         'm: Keep your {otp|card details and OTP} ready.',
         'm: {sig|Orrin Bank Customer Care}',
       ],
@@ -208,7 +208,7 @@ export default {
     rule: 'Banks do not update KYC through an app from a text. Use the official app or visit the branch.',
     quick: ['A text says your KYC has expired and you must install an app from a link or your account is blocked. What do you do?', ['Install it quickly', 'Reply to say you already did it', 'Do not install it. Check in the real app or at the branch, and report the text', 'Share the OTP when asked'], 'c', 'KYC updates happen in the official app or at a branch, never through a text link.'],
     nudge: 'Where does a bank really update your KYC?',
-    sources: ['in-rbi-beaware', 'in-certin-booklet', 'in-1930'],
+    sources: ['ftc-bank-call'],
     kit: {
       who: ['Check sender', 'Who sent this', [['Sender', 'VM-ORRIN', 'sender'], ['Your KYC status', 'Complete, from last year', 'kyc']]],
       link: ['Check link', 'Where it goes', [['Message says', 'install the KYC app'], ['File type', 'App installer (.apk)', 'link'], ['Real bank app comes from', 'The official app store']]],
@@ -241,7 +241,7 @@ export default {
     calm: 'It had no link, told you to use the official store and warned you about scams. That calm is what real messages look like.',
     rule: 'Update apps in your phone\'s official app store. A real message never sends you a file or a link to install.',
     quick: ['What made this app update message honest?', ['It mentioned the bank', 'It had no link and told you to update in the official app store', 'It came in the morning', 'It was short'], 'b', 'No link and the official store are the real signs.'],
-    sources: ['in-certin-booklet', 'in-rbi-beaware'],
+    sources: ['ftc-phishing'],
     kit: {
       who: ['Check sender', 'Who sent this text', [['Same thread as your bank texts', 'Yes', 'sender'], ['Link in the message', 'None', 'nolink']]],
       adv: ['What advice says', [['Where to install apps from', 'The official app store', 'store'], ['Apps from links in messages', 'Never']]],
@@ -266,7 +266,7 @@ export default {
     ],
     rule: 'A code is a key to your account. Never read it out or send it to anyone who asks.',
     quick: ['Someone says they sent a code to your phone by mistake and asks you to read it out. What do you do?', ['Read it, it is not yours', 'Read it but change your password later', 'Do not share it. Delete the message', 'Ask them why'], 'c', 'A code sent "by mistake" is the trick. Never share a code.'],
-    sources: ['ftc-codes', 'in-certin-booklet', 'in-rbi-beaware'],
+    sources: ['ftc-codes'],
   },
 
   // 18 --------------------------------------------------------------

@@ -22,8 +22,8 @@
     {
       "id": "r2",
       "app": "Chirp",
-      "from": "Anya · Recruiter",
-      "text": "Earn ₹3,000 daily from home, no experience. Message me now!",
+      "from": "Hannah · Recruiter",
+      "text": "Earn $60 daily from home, no experience. Message me now!",
       "scam": true,
       "why": "A cold DM with big pay and no experience needed."
     },
@@ -31,7 +31,7 @@
       "id": "r3",
       "app": "SMS",
       "from": "TaskFlow Team",
-      "text": "Like 3 videos, get ₹450 at once. Join our group: taskflow-earn.in/join",
+      "text": "Like 3 videos, get $9 at once. Join our group: taskflow-earn.example/join",
       "scam": true,
       "why": "Pay for liking videos, with a small payout first."
     },
@@ -39,7 +39,7 @@
       "id": "r4",
       "app": "Mail",
       "from": "Lumenara Tech HR",
-      "text": "Offer letter: pay ₹9,500 for your laptop kit within 24 hours.",
+      "text": "Offer letter: pay $190 for your laptop kit within 24 hours.",
       "scam": true,
       "why": "No real employer charges you for a kit."
     },
@@ -55,7 +55,7 @@
       "id": "r6",
       "app": "SMS",
       "from": "SkyBridge Placements",
-      "text": "Job abroad, ₹2,00,000 a month. Pay ₹80,000 agent fee to start.",
+      "text": "Job abroad, $4,000 a month. Pay $1,600 agent fee to start.",
       "scam": true,
       "why": "A huge salary and a big agent fee up front."
     },
@@ -63,7 +63,7 @@
       "id": "r7",
       "app": "Mail",
       "from": "Harlow Recruiting",
-      "text": "We are hiring a data entry clerk. Register with ₹1,200 to get your login.",
+      "text": "We are hiring a data entry clerk. Register with $24 to get your login.",
       "scam": true,
       "why": "A registration fee for a job is a scam."
     },
@@ -71,7 +71,7 @@
       "id": "r8",
       "app": "Chirp",
       "from": "Mira (HR)",
-      "text": "Your first 3 tasks are done. Top up ₹6,000 in crypto for the next set.",
+      "text": "Your first 3 tasks are done. Top up $120 in crypto for the next set.",
       "scam": true,
       "why": "A crypto top-up to keep working."
     },
@@ -87,9 +87,9 @@
       "id": "r10",
       "app": "SMS",
       "from": "Unknown number",
-      "text": "Student part-time job: ₹800 per hour. Send ₹500 to unlock the link.",
+      "text": "Student part-time job: $16 per hour. Send $10 to unlock the link.",
       "scam": true,
-      "why": "You pay ₹500 to be paid ₹800. It is a trap."
+      "why": "You pay $10 to be paid $16. It is a trap."
     }
   ],
   "golden_rule": "A real job never asks you to pay, and a real recruiter replies to something you did. Check the company's own page.",

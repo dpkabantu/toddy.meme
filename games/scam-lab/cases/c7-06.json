@@ -12,7 +12,7 @@
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Neha (Investment Manager)",
+    "from": "Nora (Investment Manager)",
     "text": "Special IPO access for selected investors"
   },
   "screen": {
@@ -21,13 +21,13 @@
       "name": [
         {
           "clue": "name",
-          "text": "Neha · Investment Manager"
+          "text": "Nora · Investment Manager"
         }
       ],
       "sub": [
         {
           "clue": "handle",
-          "text": "@neha_ipo_vip"
+          "text": "@nora_ipo_vip"
         }
       ],
       "avatar": {
@@ -84,7 +84,7 @@
           ". Deposit ",
           {
             "clue": "dep",
-            "text": "₹50,000"
+            "text": "$1,000"
           },
           " to start."
         ]
@@ -138,7 +138,7 @@
     "dep": {
       "label": "A deposit to start",
       "strength": "strong",
-      "lens": "₹50,000 into a stranger's app.",
+      "lens": "$1,000 into a stranger's app.",
       "why": "Your money goes to the scammer."
     },
     "rush": {
@@ -156,13 +156,13 @@
     "handle": {
       "label": "A job-like handle",
       "strength": "harmless",
-      "lens": "@neha_ipo_vip.",
+      "lens": "@nora_ipo_vip.",
       "why": "Handles prove nothing alone."
     },
     "name": {
       "label": "A manager title",
       "strength": "harmless",
-      "lens": "Neha, Investment Manager.",
+      "lens": "Nora, Investment Manager.",
       "why": "Titles are easy to claim."
     },
     "pic": {
@@ -175,7 +175,7 @@
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Install the app and deposit ₹50,000"
+      "label": "Install the app and deposit $1,000"
     },
     {
       "id": "ignore",
@@ -221,7 +221,7 @@
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The ₹50,000 went into a fake app. The \"gain\" showed on screen, but withdrawals never worked.",
+      "line": "The $1,000 went into a fake app. The \"gain\" showed on screen, but withdrawals never worked.",
       "mirageSays": "Thanks for the details!"
     }
   },
@@ -268,9 +268,7 @@
     ]
   },
   "sources": [
-    "in-sebi-dos",
-    "ftc-invest-social",
-    "in-certin-booklet"
+    "ftc-invest-social"
   ],
   "checked_on": "2026-10-21",
   "kit": [
@@ -278,7 +276,7 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check the account",
-      "title": "@neha_ipo_vip",
+      "title": "@nora_ipo_vip",
       "rows": [
         {
           "k": "You applied?",

@@ -14,7 +14,7 @@
   "notify": {
     "app": "Chirp",
     "from": "TaskFlow Careers ✔",
-    "text": "Saw your story! Earn ₹3,000 a day…"
+    "text": "Saw your story! Earn $60 a day…"
   },
   "screen": {
     "app": "chirp",
@@ -50,7 +50,7 @@
           "Hi! Saw your story. Our ",
           {
             "clue": "earn",
-            "text": "students earn ₹3,000 a day"
+            "text": "students earn $60 a day"
           },
           " doing simple tasks. 😊"
         ]
@@ -71,11 +71,11 @@
     "start": "d1",
     "nodes": {
       "d1": {
-        "rename": "Anya · TaskFlow HR",
+        "rename": "Hannah · TaskFlow HR",
         "say": [
           {
             "sys": [
-              "You joined a private chat with \"Anya · TaskFlow HR\""
+              "You joined a private chat with \"Hannah · TaskFlow HR\""
             ]
           },
           {
@@ -83,7 +83,7 @@
               "Welcome! Do 3 free tasks: like and rate 3 videos. ",
               {
                 "clue": "firstpay",
-                "text": "You will get ₹450 at once."
+                "text": "You will get $9 at once."
               }
             ]
           }
@@ -104,23 +104,23 @@
         ]
       },
       "d2": {
-        "rename": "Rohan (Task Manager)",
+        "rename": "Ryan (Task Manager)",
         "disguise": "admin",
         "say": [
           {
             "sys": [
               {
                 "clue": "swap",
-                "text": "Anya left. \"Rohan (Task Manager)\" joined the chat."
+                "text": "Hannah left. \"Ryan (Task Manager)\" joined the chat."
               }
             ]
           },
           {
             "msg": [
-              "Paid! ₹450 sent. For Level 2 tasks you must ",
+              "Paid! $9 sent. For Level 2 tasks you must ",
               {
                 "clue": "dep",
-                "text": "deposit ₹5,000"
+                "text": "deposit $100"
               },
               ". It comes back with a bonus."
             ]
@@ -152,7 +152,7 @@
               " ",
               {
                 "clue": "proof",
-                "text": "Others withdrew ₹40,000 this week."
+                "text": "Others withdrew $800 this week."
               }
             ]
           },
@@ -202,7 +202,7 @@
       "why": "Real recruiters rarely start with a DM that promises easy money."
     },
     "earn": {
-      "label": "₹3,000 a day for simple tasks",
+      "label": "$60 a day for simple tasks",
       "strength": "strong",
       "lens": "Big pay for little work.",
       "why": "Big pay for little work is the bait."
@@ -216,19 +216,19 @@
     "firstpay": {
       "label": "A small payout first",
       "strength": "strong",
-      "lens": "₹450 to win your trust.",
+      "lens": "$9 to win your trust.",
       "why": "The small payout is the hook."
     },
     "swap": {
       "label": "A costume change",
       "strength": "strong",
-      "lens": "Anya left and a \"manager\" joined.",
+      "lens": "Hannah left and a \"manager\" joined.",
       "why": "One con artist, many masks."
     },
     "dep": {
       "label": "A deposit to level up",
       "strength": "strong",
-      "lens": "You must pay ₹5,000.",
+      "lens": "You must pay $100.",
       "why": "Honest employers never charge."
     },
     "rush": {
@@ -238,7 +238,7 @@
       "why": "Pressure is a trick."
     },
     "proof": {
-      "label": "\"Others withdrew ₹40,000\"",
+      "label": "\"Others withdrew $800\"",
       "strength": "strong",
       "lens": "A crowd you cannot see.",
       "why": "A crowd proves nothing."

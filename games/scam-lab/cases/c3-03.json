@@ -37,7 +37,7 @@
           "Traffic Department: you have a ",
           {
             "clue": "fine",
-            "text": "pending fine of ₹500"
+            "text": "pending fine of $10"
           },
           "."
         ]
@@ -55,7 +55,7 @@
           "Install the payment app: ",
           {
             "clue": "link",
-            "text": "trafficfine-pay.in/ChallanPay.apk",
+            "text": "trafficfine-pay.example/FinePay.apk",
             "link": true
           }
         ]
@@ -64,7 +64,7 @@
         "msg": [
           {
             "clue": "notice",
-            "text": "Challan No. 88231/2026"
+            "text": "Fine No. 88231/2026"
           }
         ]
       }
@@ -96,7 +96,7 @@
       "why": "Sender names are easy to type."
     },
     "notice": {
-      "label": "A challan number",
+      "label": "A fine number",
       "strength": "harmless",
       "lens": "A number that looks official.",
       "why": "Numbers are easy to invent. Check on the official portal."
@@ -128,7 +128,7 @@
   ],
   "trap": {
     "title": "Install unknown app?",
-    "url": "ChallanPay.apk",
+    "url": "FinePay.apk",
     "ask": "This app wants to read your messages and show over other apps. Install?",
     "go": "Install",
     "back": "Cancel"
@@ -201,8 +201,6 @@
     ]
   },
   "sources": [
-    "in-certin-booklet",
-    "in-pib-alert",
     "ftc-government"
   ],
   "checked_on": "2026-10-21",

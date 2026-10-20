@@ -232,7 +232,7 @@
   "actions": [
     {
       "id": "pick_b",
-      "label": "B is the broker. Deposit ₹50,000",
+      "label": "B is the broker. Deposit $1,000",
       "trap": true
     },
     {
@@ -251,8 +251,8 @@
   "trap": {
     "title": "Solis Shares App · Deposit",
     "url": "solis-shares-app.live",
-    "ask": "Deposit ₹50,000 to the account of our manager.",
-    "go": "Deposit ₹50,000",
+    "ask": "Deposit $1,000 to the account of our manager.",
+    "go": "Deposit $1,000",
     "back": "Close this page"
   },
   "outcomes": {
@@ -274,7 +274,7 @@
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The ₹50,000 went to a stranger. The app showed a fake profit, then locked you out.",
+      "line": "The $1,000 went to a stranger. The app showed a fake profit, then locked you out.",
       "mirageSays": "Thanks for the deposit!"
     }
   },
@@ -318,7 +318,6 @@
     ]
   },
   "sources": [
-    "in-sebi-dos",
     "ftc-invest-social"
   ],
   "checked_on": "2026-10-21"

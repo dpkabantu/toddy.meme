@@ -54,7 +54,7 @@
           "We know you ",
           {
             "clue": "knowloss",
-            "text": "lost ₹1,20,000 to an online scam last month"
+            "text": "lost $2,400 to an online scam last month"
           },
           "."
         ]
@@ -74,7 +74,7 @@
           "First pay a ",
           {
             "clue": "fee",
-            "text": "processing fee of ₹15,000"
+            "text": "processing fee of $300"
           },
           ", to open your case."
         ]
@@ -119,7 +119,7 @@
     "fee": {
       "label": "A fee up front",
       "strength": "strong",
-      "lens": "You must pay ₹15,000 first.",
+      "lens": "You must pay $300 first.",
       "why": "A second scam asks for a fee to recover the first loss."
     },
     "nopolice": {
@@ -156,7 +156,7 @@
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Pay the ₹15,000 processing fee",
+      "label": "Pay the $300 processing fee",
       "trap": true
     },
     {
@@ -180,8 +180,8 @@
   "trap": {
     "title": "Fund Recovery Desk · Open case",
     "url": "fundrecovery-desk.live/pay",
-    "ask": "Pay ₹15,000 to open your recovery case.",
-    "go": "Pay ₹15,000",
+    "ask": "Pay $300 to open your recovery case.",
+    "go": "Pay $300",
     "back": "Close this page"
   },
   "outcomes": {
@@ -221,7 +221,7 @@
   },
   "golden_rule": "A recovery agent who guarantees your money back, for a fee, is a second scam. Report your first loss on the official helpline.",
   "quick_check": {
-    "q": "After a scam loss, an agent guarantees to recover your money for a ₹15,000 fee and says not to call the police. What do you do?",
+    "q": "After a scam loss, an agent guarantees to recover your money for a $300 fee and says not to call the police. What do you do?",
     "options": [
       {
         "id": "a",
@@ -255,9 +255,7 @@
     ]
   },
   "sources": [
-    "in-1930",
-    "ftc-job-scams",
-    "in-rbi-beaware"
+    "ftc-job-scams"
   ],
   "checked_on": "2026-10-21",
   "kit": [
@@ -279,7 +277,7 @@
         },
         {
           "k": "Fee",
-          "v": "₹15,000 first",
+          "v": "$300 first",
           "clue": "fee"
         }
       ]
@@ -292,7 +290,7 @@
       "rows": [
         {
           "k": "Where to report a loss",
-          "v": "The cyber helpline 1930, or cybercrime.gov.in"
+          "v": "The fraud-reporting service in your country, or the police"
         },
         {
           "k": "Do not contact the police?",

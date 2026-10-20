@@ -12,7 +12,7 @@
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Mr. Sharma (CEO)",
+    "from": "Mr. Bennett (CEO)",
     "text": "Urgent favour, are you at your desk?"
   },
   "screen": {
@@ -21,7 +21,7 @@
       "name": [
         {
           "clue": "name",
-          "text": "Mr. Sharma (CEO)"
+          "text": "Mr. Bennett (CEO)"
         }
       ],
       "sub": [
@@ -63,7 +63,7 @@
           "I need ",
           {
             "clue": "vouchers",
-            "text": "5 gift vouchers of ₹5,000"
+            "text": "5 gift vouchers of $100"
           },
           " for clients, right now."
         ]
@@ -144,7 +144,7 @@
     "name": {
       "label": "The boss's name",
       "strength": "harmless",
-      "lens": "Mr. Sharma, CEO.",
+      "lens": "Mr. Bennett, CEO.",
       "why": "A name is easy to copy."
     },
     "pic": {
@@ -209,7 +209,7 @@
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The ₹25,000 in vouchers were gone as soon as you sent the codes. No boss ever repaid you.",
+      "line": "The $500 in vouchers were gone as soon as you sent the codes. No boss ever repaid you.",
       "mirageSays": "Thanks for the details!"
     }
   },
@@ -264,7 +264,7 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check the sender",
-      "title": "Mr. Sharma",
+      "title": "Mr. Bennett",
       "rows": [
         {
           "k": "The number",

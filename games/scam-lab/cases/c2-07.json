@@ -6,7 +6,7 @@
   "title": "The Cheap Flat",
   "disguise": "influencer",
   "intro": [
-    "You are looking for a flat in Pune. One listing is far cheaper than the rest.",
+    "You are looking for a flat in a big city. One listing is far cheaper than the rest.",
     "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
     "When you are sure, decide what to do."
   ],
@@ -37,9 +37,9 @@
           "Hello! The 2 BHK is available at ",
           {
             "clue": "rent",
-            "text": "₹9,000 a month"
+            "text": "$180 a month"
           },
-          ". Similar flats nearby cost ₹24,000."
+          ". Similar flats nearby cost $480."
         ]
       },
       {
@@ -57,7 +57,7 @@
           "Send a ",
           {
             "clue": "deposit",
-            "text": "₹20,000 deposit"
+            "text": "$400 deposit"
           },
           " now by phone transfer and I will courier you the keys."
         ]
@@ -84,7 +84,7 @@
     "rent": {
       "label": "Rent far below the area",
       "strength": "strong",
-      "lens": "₹9,000 where similar flats cost ₹24,000.",
+      "lens": "$180 where similar flats cost $480.",
       "why": "A rent far below nearby flats is the bait."
     },
     "abroad": {
@@ -96,7 +96,7 @@
     "deposit": {
       "label": "Deposit before viewing",
       "strength": "strong",
-      "lens": "He wants ₹20,000 before you see the flat or sign anything.",
+      "lens": "He wants $400 before you see the flat or sign anything.",
       "why": "Pay only after seeing the place and signing a proper agreement."
     },
     "rush": {
@@ -121,7 +121,7 @@
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Send the ₹20,000 deposit"
+      "label": "Send the $400 deposit"
     },
     {
       "id": "ignore",
@@ -167,7 +167,7 @@
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The ₹20,000 went to a stranger. No keys came, the number went dead, and the flat belonged to someone else.",
+      "line": "The $400 went to a stranger. No keys came, the number went dead, and the flat belonged to someone else.",
       "mirageSays": "Thanks for the details!"
     }
   },
@@ -210,8 +210,7 @@
     ]
   },
   "sources": [
-    "ftc-rental",
-    "in-rbi-beaware"
+    "ftc-rental"
   ],
   "checked_on": "2026-10-21",
   "kit": [
@@ -223,7 +222,7 @@
       "rows": [
         {
           "k": "Rent",
-          "v": "₹9,000 (area average ₹24,000)",
+          "v": "$180 (area average $480)",
           "clue": "rent"
         },
         {

@@ -6,14 +6,14 @@
   "title": "The Student Job Story",
   "disguise": "influencer",
   "intro": [
-    "A story on your feed offers students ₹800 an hour. The job is only a message away.",
+    "A story on your feed offers students $16 an hour. The job is only a message away.",
     "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
     "When you are sure, decide what to do."
   ],
   "notify": {
     "app": "Chirp",
     "from": "Campus Earn",
-    "text": "Students: earn ₹800 an hour, part-time"
+    "text": "Students: earn $16 an hour, part-time"
   },
   "screen": {
     "app": "chirp",
@@ -48,7 +48,7 @@
           "🎓 Students! Earn ",
           {
             "clue": "pay",
-            "text": "₹800 an hour"
+            "text": "$16 an hour"
           },
           ", ",
           {
@@ -67,7 +67,7 @@
           " ",
           {
             "clue": "fee",
-            "text": "Pay ₹500 to unlock the job link."
+            "text": "Pay $10 to unlock the job link."
           }
         ]
       },
@@ -83,7 +83,7 @@
         "msg": [
           {
             "clue": "proof",
-            "text": "\"I earned ₹30,000 last week!\" - Riya"
+            "text": "\"I earned $600 last week!\" - Mia"
           }
         ]
       }
@@ -97,7 +97,7 @@
       "why": "Check who is behind a page before you trust it."
     },
     "pay": {
-      "label": "₹800 an hour",
+      "label": "$16 an hour",
       "strength": "strong",
       "lens": "Pay far above student work.",
       "why": "Big pay for little work is the bait."
@@ -109,7 +109,7 @@
       "why": "Real jobs check who you are."
     },
     "fee": {
-      "label": "Pay ₹500 to unlock the link",
+      "label": "Pay $10 to unlock the link",
       "strength": "strong",
       "lens": "You pay to be paid.",
       "why": "Honest employers never charge."
@@ -154,7 +154,7 @@
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Pay ₹500 and unlock the job",
+      "label": "Pay $10 and unlock the job",
       "trap": true
     },
     {
@@ -177,9 +177,9 @@
   ],
   "trap": {
     "title": "Campus Earn · Unlock",
-    "url": "campus-earn-unlock.in",
-    "ask": "Pay ₹500 to unlock your job link.",
-    "go": "Pay ₹500",
+    "url": "campus-earn-unlock.example",
+    "ask": "Pay $10 to unlock your job link.",
+    "go": "Pay $10",
     "back": "Close this page"
   },
   "outcomes": {
@@ -208,7 +208,7 @@
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The ₹500 went to a stranger. Then the \"job link\" needed another, bigger fee.",
+      "line": "The $10 went to a stranger. Then the \"job link\" needed another, bigger fee.",
       "mirageSays": "Thanks for the details!"
     }
   },
@@ -219,7 +219,7 @@
   },
   "golden_rule": "A student job that charges to unlock is a scam. Ask your college and check the company yourself.",
   "quick_check": {
-    "q": "A story offers students ₹800 an hour but you must pay ₹500 first. What do you do?",
+    "q": "A story offers students $16 an hour but you must pay $10 first. What do you do?",
     "options": [
       {
         "id": "a",
@@ -270,12 +270,12 @@
         },
         {
           "k": "Asks you to pay",
-          "v": "₹500",
+          "v": "$10",
           "clue": "fee"
         },
         {
           "k": "Pay promised",
-          "v": "₹800 an hour",
+          "v": "$16 an hour",
           "clue": "pay"
         }
       ]

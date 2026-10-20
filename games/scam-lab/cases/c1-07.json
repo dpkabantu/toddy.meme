@@ -15,7 +15,7 @@
       "id": "r1",
       "app": "SMS",
       "from": "Tarvo Toll",
-      "text": "Final notice: you owe ₹150 in unpaid tolls. Pay now to avoid a ₹500 fine: tarvo-tollpay.live/pay",
+      "text": "Final notice: you owe $3 in unpaid tolls. Pay now to avoid a $10 fine: tarvo-tollpay.live/pay",
       "scam": true,
       "why": "You get a text out of the blue demanding payment through a link. Toll agencies do not collect this way."
     },
@@ -31,7 +31,7 @@
       "id": "r3",
       "app": "SMS",
       "from": "Parcelo",
-      "text": "Your parcel is held. Pay ₹49 redelivery: parcelo-pay.help",
+      "text": "Your parcel is held. Pay $1 redelivery: parcelo-pay.help",
       "scam": true,
       "why": "An unexpected parcel text with a fee and a link: classic."
     },
@@ -79,7 +79,7 @@
       "id": "r9",
       "app": "SMS",
       "from": "Road Fines Office",
-      "text": "You have an unpaid road fine of ₹1,000. Pay within 24h or your licence will be suspended: roadfines-pay.site",
+      "text": "You have an unpaid road fine of $20. Pay within 24h or your licence will be suspended: roadfines-pay.site",
       "scam": true,
       "why": "A threat and a link, with a payment page that is not an official address."
     },
@@ -94,11 +94,11 @@
   ],
   "golden_rule": "A text that demands payment through a link is a trap. Check on the official app or website you already know.",
   "quick_check": {
-    "q": "A text says you owe ₹150 in tolls and must pay through a link. You do not use toll roads. What do you do?",
+    "q": "A text says you owe $3 in tolls and must pay through a link. You do not use toll roads. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Pay it, it is only ₹150"
+        "text": "Pay it, it is only $3"
       },
       {
         "id": "b",

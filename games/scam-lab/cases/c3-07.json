@@ -37,7 +37,7 @@
           "Welcome to Parkly Pay. ",
           {
             "clue": "fee",
-            "text": "Pay ₹50 for 2 hours."
+            "text": "Pay $1 for 2 hours."
           }
         ]
       },
@@ -103,7 +103,7 @@
     "fee": {
       "label": "A normal fee",
       "strength": "harmless",
-      "lens": "₹50 for 2 hours.",
+      "lens": "$1 for 2 hours.",
       "why": "The price is normal. It proves nothing."
     },
     "logo": {
@@ -140,8 +140,8 @@
   "trap": {
     "title": "Parkly Pay",
     "url": "parkly-pay-now.top",
-    "ask": "Enter your card number and PIN to pay ₹50.",
-    "go": "Pay ₹50",
+    "ask": "Enter your card number and PIN to pay $1.",
+    "go": "Pay $1",
     "back": "Close this page"
   },
   "outcomes": {
@@ -213,8 +213,7 @@
     ]
   },
   "sources": [
-    "ftc-phishing",
-    "in-rbi-beaware"
+    "ftc-phishing"
   ],
   "checked_on": "2026-10-21",
   "kit": [

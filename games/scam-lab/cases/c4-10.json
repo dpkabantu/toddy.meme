@@ -93,7 +93,7 @@
               "We can stop the block. ",
               {
                 "clue": "pay",
-                "text": "Pay a ₹2,500 verification fee"
+                "text": "Pay a $50 verification fee"
               },
               " and give the ",
               {
@@ -190,7 +190,7 @@
     "pay": {
       "label": "A fee to avoid blocking",
       "strength": "strong",
-      "lens": "You must pay ₹2,500.",
+      "lens": "You must pay $50.",
       "why": "No honest office charges to keep a SIM active by phone."
     },
     "otp": {
@@ -235,7 +235,7 @@
     },
     {
       "id": "block_report",
-      "label": "Block the number and report it on 1930"
+      "label": "Block the number and report it to your local fraud-reporting service"
     }
   ],
   "best_action": "block_report",
@@ -307,9 +307,7 @@
     ]
   },
   "sources": [
-    "in-pib-alert",
-    "in-rbi-beaware",
-    "in-1930"
+    "ftc-government"
   ],
   "checked_on": "2026-10-21",
   "kit": [
@@ -326,7 +324,7 @@
         },
         {
           "k": "Asked for money",
-          "v": "₹2,500",
+          "v": "$50",
           "clue": "pay"
         },
         {
@@ -349,7 +347,7 @@
         },
         {
           "k": "Where to report",
-          "v": "The cyber helpline 1930"
+          "v": "The fraud-reporting service in your country"
         }
       ]
     }

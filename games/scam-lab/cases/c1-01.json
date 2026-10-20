@@ -45,7 +45,7 @@
           ". A ",
           {
             "clue": "fee",
-            "text": "redelivery fee of ₹49"
+            "text": "redelivery fee of $1"
           },
           " is due."
         ]
@@ -81,7 +81,7 @@
     "fee": {
       "label": "A tiny fee",
       "strength": "strong",
-      "lens": "A fee of ₹49 sounds harmless. The page it leads to asks for your full card details.",
+      "lens": "A fee of $1 sounds harmless. The page it leads to asks for your full card details.",
       "why": "Small fees are bait: the real target is your card number and security code."
     },
     "link": {
@@ -136,8 +136,8 @@
   "trap": {
     "title": "Parcelo Redelivery",
     "url": "parcelo-redeliver.help/track",
-    "ask": "Enter your card number to pay ₹49 and rebook.",
-    "go": "Pay ₹49",
+    "ask": "Enter your card number to pay $1 and rebook.",
+    "go": "Pay $1",
     "back": "Close this page"
   },
   "outcomes": {
@@ -166,7 +166,7 @@
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The \"₹49\" page copied your card details. Within an hour, bigger payments started to appear.",
+      "line": "The \"$1\" page copied your card details. Within an hour, bigger payments started to appear.",
       "mirageSays": "Thanks for the card!"
     }
   },
@@ -181,7 +181,7 @@
     "options": [
       {
         "id": "a",
-        "text": "Pay the small fee, it is only ₹49"
+        "text": "Pay the small fee, it is only $1"
       },
       {
         "id": "b",

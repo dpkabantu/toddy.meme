@@ -12,7 +12,7 @@
   ],
   "notify": {
     "app": "Messages",
-    "from": "EasyWork India",
+    "from": "EasyWork Online",
     "text": "Data entry job: register today"
   },
   "screen": {
@@ -21,7 +21,7 @@
       "name": [
         {
           "clue": "name",
-          "text": "EasyWork India"
+          "text": "EasyWork Online"
         }
       ],
       "sub": [
@@ -47,7 +47,7 @@
           ": type 50 pages and earn ",
           {
             "clue": "pay",
-            "text": "₹25,000 a month"
+            "text": "$500 a month"
           },
           "."
         ]
@@ -61,7 +61,7 @@
           " Pay a ",
           {
             "clue": "fee",
-            "text": "registration fee of ₹1,200"
+            "text": "registration fee of $24"
           },
           " to get your login."
         ]
@@ -71,7 +71,7 @@
           "Pay here: ",
           {
             "clue": "link",
-            "text": "easywork-register.in/pay",
+            "text": "easywork-register.example/pay",
             "link": true
           }
         ]
@@ -90,7 +90,7 @@
     "pay": {
       "label": "Big pay for typing",
       "strength": "strong",
-      "lens": "₹25,000 a month for simple typing.",
+      "lens": "$500 a month for simple typing.",
       "why": "Pay far above the work is the bait."
     },
     "noexp": {
@@ -102,7 +102,7 @@
     "fee": {
       "label": "A registration fee",
       "strength": "strong",
-      "lens": "You must pay ₹1,200 to get a login.",
+      "lens": "You must pay $24 to get a login.",
       "why": "Honest employers never charge to register."
     },
     "link": {
@@ -126,7 +126,7 @@
     "name": {
       "label": "A firm name",
       "strength": "harmless",
-      "lens": "EasyWork India.",
+      "lens": "EasyWork Online.",
       "why": "Names are easy to invent."
     },
     "num": {
@@ -139,7 +139,7 @@
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Pay the ₹1,200 and register",
+      "label": "Pay the $24 and register",
       "trap": true
     },
     {
@@ -162,9 +162,9 @@
   ],
   "trap": {
     "title": "EasyWork · Register",
-    "url": "easywork-register.in/pay",
-    "ask": "Pay ₹1,200 by card to get your login.",
-    "go": "Pay ₹1,200",
+    "url": "easywork-register.example/pay",
+    "ask": "Pay $24 by card to get your login.",
+    "go": "Pay $24",
     "back": "Close this page"
   },
   "outcomes": {
@@ -193,7 +193,7 @@
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The ₹1,200 went to a stranger. No login came, and more \"fees\" followed.",
+      "line": "The $24 went to a stranger. No login came, and more \"fees\" followed.",
       "mirageSays": "Thanks for the details!"
     }
   },
@@ -204,7 +204,7 @@
   },
   "golden_rule": "A job that charges you to register is a scam. Real employers pay you, not the other way round.",
   "quick_check": {
-    "q": "A data-entry job asks for a ₹1,200 registration fee, refundable after a month. What do you do?",
+    "q": "A data-entry job asks for a $24 registration fee, refundable after a month. What do you do?",
     "options": [
       {
         "id": "a",
@@ -238,8 +238,7 @@
   },
   "sources": [
     "ftc-job-scams",
-    "ftc-jobs",
-    "in-rbi-beaware"
+    "ftc-jobs"
   ],
   "checked_on": "2026-10-21",
   "kit": [
@@ -247,7 +246,7 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check the offer",
-      "title": "EasyWork India",
+      "title": "EasyWork Online",
       "rows": [
         {
           "k": "Real company page?",
@@ -255,12 +254,12 @@
         },
         {
           "k": "Asks you to pay",
-          "v": "₹1,200",
+          "v": "$24",
           "clue": "fee"
         },
         {
           "k": "Pay for typing",
-          "v": "₹25,000 a month",
+          "v": "$500 a month",
           "clue": "pay"
         }
       ]

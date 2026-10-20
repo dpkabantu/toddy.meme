@@ -63,7 +63,7 @@
           "To avoid arrest, ",
           {
             "clue": "pay",
-            "text": "pay a clearance fee of ₹38,000"
+            "text": "pay a clearance fee of $760"
           },
           " today."
         ]
@@ -100,7 +100,7 @@
     "pay": {
       "label": "A fee to avoid arrest",
       "strength": "strong",
-      "lens": "You must pay ₹38,000 today.",
+      "lens": "You must pay $760 today.",
       "why": "No honest office takes money to \"avoid arrest\" on a phone call."
     },
     "officer": {
@@ -145,7 +145,7 @@
     },
     {
       "id": "block_report",
-      "label": "Hang up and report it on 1930"
+      "label": "Hang up and report it to your local fraud-reporting service"
     }
   ],
   "best_action": "block_report",
@@ -171,7 +171,7 @@
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The ₹38,000 went to a stranger. Then came a second \"fee\", and a third.",
+      "line": "The $760 went to a stranger. Then came a second \"fee\", and a third.",
       "mirageSays": "Thanks for the details!"
     }
   },
@@ -214,8 +214,6 @@
     ]
   },
   "sources": [
-    "in-pib-alert",
-    "in-1930",
     "ftc-government"
   ],
   "checked_on": "2026-10-21",
@@ -251,7 +249,7 @@
         },
         {
           "k": "Where to report",
-          "v": "The cyber helpline 1930, or cybercrime.gov.in"
+          "v": "The fraud-reporting service in your country, or the police"
         }
       ]
     }

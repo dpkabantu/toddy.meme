@@ -43,7 +43,7 @@
           "Urgent hiring! ",
           {
             "clue": "job",
-            "text": "Warehouse worker abroad, ₹2,00,000 a month"
+            "text": "Warehouse worker abroad, $4,000 a month"
           },
           ". ",
           {
@@ -57,7 +57,7 @@
           "Pay only a small ",
           {
             "clue": "fee",
-            "text": "registration and agent fee of ₹80,000"
+            "text": "registration and agent fee of $1,600"
           },
           "."
         ]
@@ -91,7 +91,7 @@
     "job": {
       "label": "A huge salary for easy work",
       "strength": "strong",
-      "lens": "₹2,00,000 a month for warehouse work.",
+      "lens": "$4,000 a month for warehouse work.",
       "why": "Big pay for little skill is the bait."
     },
     "visa": {
@@ -103,7 +103,7 @@
     "fee": {
       "label": "A big agent fee up front",
       "strength": "strong",
-      "lens": "You must pay ₹80,000 first.",
+      "lens": "You must pay $1,600 first.",
       "why": "Honest placement firms are paid by the employer, not you."
     },
     "third": {
@@ -140,7 +140,7 @@
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Pay the ₹80,000 fee"
+      "label": "Pay the $1,600 fee"
     },
     {
       "id": "ignore",
@@ -186,7 +186,7 @@
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The ₹80,000 was lost. The \"visa\" never came, and the agent's number went dead.",
+      "line": "The $1,600 was lost. The \"visa\" never came, and the agent's number went dead.",
       "mirageSays": "Thanks for the details!"
     }
   },
@@ -197,7 +197,7 @@
   },
   "golden_rule": "A job abroad with a huge salary and a big agent fee is a scam. Check the agent on the official list first.",
   "quick_check": {
-    "q": "An agent offers a job abroad at ₹2,00,000 a month, asks ₹80,000 first and says you will fly to a third country. What do you do?",
+    "q": "An agent offers a job abroad at $4,000 a month, asks $1,600 first and says you will fly to a third country. What do you do?",
     "options": [
       {
         "id": "a",
@@ -232,7 +232,6 @@
   },
   "sources": [
     "ftc-job-scams",
-    "in-rbi-beaware",
     "ftc-jobs"
   ],
   "checked_on": "2026-10-21",
@@ -250,7 +249,7 @@
         },
         {
           "k": "Asked to pay",
-          "v": "₹80,000",
+          "v": "$1,600",
           "clue": "fee"
         },
         {

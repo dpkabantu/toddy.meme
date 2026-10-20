@@ -237,7 +237,7 @@
     },
     {
       "id": "block_report",
-      "label": "End the call and report it on 1930"
+      "label": "End the call and report it to your local fraud-reporting service"
     }
   ],
   "best_action": "block_report",
@@ -285,7 +285,7 @@
       },
       {
         "id": "c",
-        "text": "End the call, tell someone you trust and report it on 1930"
+        "text": "End the call, tell someone you trust and to your local fraud-reporting service"
       },
       {
         "id": "d",
@@ -309,8 +309,6 @@
     ]
   },
   "sources": [
-    "in-pib-alert",
-    "in-1930",
     "ftc-government"
   ],
   "checked_on": "2026-10-21",
@@ -351,7 +349,7 @@
         },
         {
           "k": "Where to report",
-          "v": "The cyber helpline 1930"
+          "v": "The fraud-reporting service in your country"
         }
       ]
     }

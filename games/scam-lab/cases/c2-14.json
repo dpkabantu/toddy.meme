@@ -25,7 +25,7 @@
         }
       ]
     },
-    "context": "Listing: Zephyr X5, \"like new\". Usual price about ₹28,000.",
+    "context": "Listing: Zephyr X5, \"like new\". Usual price about $560.",
     "items": [
       {
         "time": [
@@ -37,7 +37,7 @@
           "Hi! The Zephyr X5 is yours for ",
           {
             "clue": "price",
-            "text": "₹8,000"
+            "text": "$160"
           },
           ". I need cash urgently."
         ]
@@ -47,7 +47,7 @@
           "I am in another city, so I will ship it. ",
           {
             "clue": "advance",
-            "text": "Send ₹3,000 advance for courier first."
+            "text": "Send $60 advance for courier first."
           }
         ]
       },
@@ -83,13 +83,13 @@
     "price": {
       "label": "Price far below normal",
       "strength": "strong",
-      "lens": "₹8,000 for a phone that costs about ₹28,000.",
+      "lens": "$160 for a phone that costs about $560.",
       "why": "A price far below normal is the bait."
     },
     "advance": {
       "label": "Advance before shipping",
       "strength": "strong",
-      "lens": "He wants ₹3,000 before sending anything.",
+      "lens": "He wants $60 before sending anything.",
       "why": "Pay only when you hold the phone, or through a protected way."
     },
     "phone": {
@@ -120,7 +120,7 @@
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Send the ₹3,000 advance"
+      "label": "Send the $60 advance"
     },
     {
       "id": "ignore",
@@ -166,7 +166,7 @@
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The ₹3,000 went to a stranger. No phone came, and the number went dead.",
+      "line": "The $60 went to a stranger. No phone came, and the number went dead.",
       "mirageSays": "Thanks for the details!"
     }
   },
@@ -209,8 +209,7 @@
     ]
   },
   "sources": [
-    "ftc-marketplace",
-    "in-rbi-beaware"
+    "ftc-marketplace"
   ],
   "checked_on": "2026-10-21",
   "kit": [
@@ -222,7 +221,7 @@
       "rows": [
         {
           "k": "Price",
-          "v": "₹8,000 (usual ₹28,000)",
+          "v": "$160 (usual $560)",
           "clue": "price"
         },
         {

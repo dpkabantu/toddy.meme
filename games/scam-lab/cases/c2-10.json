@@ -6,13 +6,13 @@
   "title": "The Payment Screenshot",
   "disguise": "influencer",
   "intro": [
-    "You are selling your old bicycle for ₹6,500 on Tradely. A buyer says he has paid.",
+    "You are selling your old bicycle for $130 on Tradely. A buyer says he has paid.",
     "This time you can talk back. Pick your replies and sniff each message as it arrives.",
     "Every chat ends with your choice. Choose wisely."
   ],
   "notify": {
     "app": "Tradely",
-    "from": "Buyer: Arjun",
+    "from": "Buyer: Marco",
     "text": "I have paid! Please check the screenshot…"
   },
   "screen": {
@@ -20,12 +20,12 @@
     "head": {
       "name": [
         {
-          "text": "Arjun (Tradely buyer)",
+          "text": "Marco (Tradely buyer)",
           "id": "duel-name"
         }
       ],
       "sub": [
-        "Interested in: bicycle ₹6,500"
+        "Interested in: bicycle $130"
       ],
       "avatar": {
         "glyph": "🚲",
@@ -56,12 +56,12 @@
               "I have ",
               {
                 "clue": "paid",
-                "text": "paid ₹6,500"
+                "text": "paid $130"
               },
               ". Look: ",
               {
                 "clue": "shot",
-                "text": "[payment screenshot: \"Sent ₹6,500 · Success\"]"
+                "text": "[payment screenshot: \"Sent $130 · Success\"]"
               }
             ]
           },
@@ -99,17 +99,17 @@
           },
           {
             "msg": [
-              "I sent ₹16,500 by mistake. ",
+              "I sent $330 by mistake. ",
               {
                 "clue": "over",
-                "text": "Return the extra ₹10,000 to me and send the bicycle."
+                "text": "Return the extra $200 to me and send the bicycle."
               }
             ]
           }
         ],
         "replies": [
           {
-            "text": "OK, returning ₹10,000",
+            "text": "OK, returning $200",
             "end": "go_ahead"
           },
           {
@@ -231,7 +231,7 @@
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The payment never existed. You lost the bicycle, or ₹10,000, or both.",
+      "line": "The payment never existed. You lost the bicycle, or $200, or both.",
       "mirageSays": "Thanks for the bicycle!"
     }
   },
@@ -284,7 +284,7 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check the buyer",
-      "title": "Arjun",
+      "title": "Marco",
       "rows": [
         {
           "k": "Account age",
@@ -297,7 +297,7 @@
         },
         {
           "k": "Money in your account",
-          "v": "₹0",
+          "v": "$0",
           "clue": "paid"
         }
       ]

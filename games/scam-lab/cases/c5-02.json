@@ -73,7 +73,7 @@
           " for bigger tasks: ",
           {
             "clue": "link",
-            "text": "taskflow-earn.in/join",
+            "text": "taskflow-earn.example/join",
             "link": true
           }
         ]

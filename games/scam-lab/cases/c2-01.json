@@ -12,8 +12,8 @@
   ],
   "notify": {
     "app": "Messages",
-    "from": "Lakshmi Lucky Draw",
-    "text": "Congratulations! You won ₹25,00,000…"
+    "from": "Luckyvale Draw",
+    "text": "Congratulations! You won $50,000…"
   },
   "screen": {
     "app": "sms",
@@ -21,7 +21,7 @@
       "name": [
         {
           "clue": "sender",
-          "text": "Lakshmi Lucky Draw"
+          "text": "Luckyvale Draw"
         }
       ]
     },
@@ -40,9 +40,9 @@
           "Congratulations! Your number won ",
           {
             "clue": "prize",
-            "text": "₹25,00,000"
+            "text": "$50,000"
           },
-          " in the Lakshmi Lucky Draw."
+          " in the Luckyvale Draw."
         ]
       },
       {
@@ -50,12 +50,12 @@
           "To receive it, first pay a ",
           {
             "clue": "tax",
-            "text": "processing tax of ₹4,999"
+            "text": "processing tax of $100"
           },
           ": ",
           {
             "clue": "link",
-            "text": "lakshmi-prizeclaim.in/pay",
+            "text": "luckyvale-prizeclaim.example/pay",
             "link": true
           }
         ]
@@ -89,19 +89,19 @@
     "prize": {
       "label": "A huge prize",
       "strength": "strong",
-      "lens": "₹25,00,000 for doing nothing.",
+      "lens": "$50,000 for doing nothing.",
       "why": "A big prize out of nowhere is the bait."
     },
     "tax": {
       "label": "Pay to collect",
       "strength": "strong",
-      "lens": "You must pay ₹4,999 \"tax\" before the prize arrives.",
+      "lens": "You must pay $100 \"tax\" before the prize arrives.",
       "why": "Real prizes are free to collect. A fee is the scam."
     },
     "link": {
       "label": "Look-alike link",
       "strength": "strong",
-      "lens": "The link goes to lakshmi-prizeclaim.in, a page made only to take your card details.",
+      "lens": "The link goes to luckyvale-prizeclaim.example, a page made only to take your card details.",
       "why": "Never pay through a link in a text. Search the name yourself instead."
     },
     "timer": {
@@ -113,7 +113,7 @@
     "sender": {
       "label": "A friendly name",
       "strength": "harmless",
-      "lens": "The sender is called Lakshmi Lucky Draw.",
+      "lens": "The sender is called Luckyvale Draw.",
       "why": "Anyone can type a name into a text. It proves nothing."
     },
     "time": {
@@ -148,10 +148,10 @@
     "ignore"
   ],
   "trap": {
-    "title": "Lakshmi Lucky Draw · Claim",
-    "url": "lakshmi-prizeclaim.in/pay",
-    "ask": "Pay ₹4,999 to release your prize. Enter your card number.",
-    "go": "Pay ₹4,999",
+    "title": "Luckyvale Draw · Claim",
+    "url": "luckyvale-prizeclaim.example/pay",
+    "ask": "Pay $100 to release your prize. Enter your card number.",
+    "go": "Pay $100",
     "back": "Close this page"
   },
   "outcomes": {
@@ -224,8 +224,7 @@
     ]
   },
   "sources": [
-    "ftc-prize",
-    "in-rbi-beaware"
+    "ftc-prize"
   ],
   "checked_on": "2026-10-21",
   "kit": [
@@ -258,7 +257,7 @@
         },
         {
           "k": "It really opens",
-          "v": "lakshmi-prizeclaim.in",
+          "v": "luckyvale-prizeclaim.example",
           "clue": "link"
         },
         {

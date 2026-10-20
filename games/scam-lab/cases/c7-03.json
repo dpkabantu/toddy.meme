@@ -43,7 +43,7 @@
             "clue": "star",
             "text": "\"A famous host reveals his secret\""
           },
-          ": turn ₹25,000 into ₹5,00,000 in a month!"
+          ": turn $500 into $10,000 in a month!"
         ]
       },
       {
@@ -89,7 +89,7 @@
       "why": "A famous name is not an endorsement. Check the real person's own official channels."
     },
     "fast": {
-      "label": "\"Turn ₹25,000 into ₹5,00,000\"",
+      "label": "\"Turn $500 into $10,000\"",
       "strength": "strong",
       "lens": "A huge fast return.",
       "why": "Huge fast returns are the bait."
@@ -128,7 +128,7 @@
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Sign up and invest ₹25,000",
+      "label": "Sign up and invest $500",
       "trap": true
     },
     {
@@ -152,8 +152,8 @@
   "trap": {
     "title": "Vantage Trade · Sign up",
     "url": "vantage-trade-star.live",
-    "ask": "Deposit ₹25,000 by transfer to start trading.",
-    "go": "Deposit ₹25,000",
+    "ask": "Deposit $500 by transfer to start trading.",
+    "go": "Deposit $500",
     "back": "Close this page"
   },
   "outcomes": {
@@ -182,7 +182,7 @@
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The ₹25,000 went to a stranger. The site showed a fake profit, then locked you out.",
+      "line": "The $500 went to a stranger. The site showed a fake profit, then locked you out.",
       "mirageSays": "Thanks for the details!"
     }
   },
@@ -193,7 +193,7 @@
   },
   "golden_rule": "An ad using a famous face and promising no risk is a scam. Check the firm is registered, and check the person's own channels.",
   "quick_check": {
-    "q": "An ad with a famous face says you can turn ₹25,000 into ₹5,00,000 with no risk. What do you do?",
+    "q": "An ad with a famous face says you can turn $500 into $10,000 with no risk. What do you do?",
     "options": [
       {
         "id": "a",
@@ -226,7 +226,6 @@
     ]
   },
   "sources": [
-    "in-sebi-dos",
     "ftc-invest-social",
     "ftc-crypto"
   ],

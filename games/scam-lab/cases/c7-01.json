@@ -12,7 +12,7 @@
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Stock Gurus India",
+    "from": "Stock Gurus Club",
     "text": "Welcome! Free tips, 90% accuracy"
   },
   "screen": {
@@ -21,7 +21,7 @@
       "name": [
         {
           "clue": "name",
-          "text": "Stock Gurus India"
+          "text": "Stock Gurus Club"
         }
       ],
       "sub": [
@@ -61,7 +61,7 @@
         "msg": [
           {
             "clue": "proof",
-            "text": "Members made ₹5 lakh yesterday!"
+            "text": "Members made $10,000 yesterday!"
           },
           " [screenshot]"
         ]
@@ -71,7 +71,7 @@
           "For the next VIP tip, ",
           {
             "clue": "vip",
-            "text": "pay ₹10,000 to join our VIP room"
+            "text": "pay $200 to join our VIP room"
           },
           "."
         ]
@@ -140,7 +140,7 @@
     "name": {
       "label": "A confident name",
       "strength": "harmless",
-      "lens": "Stock Gurus India.",
+      "lens": "Stock Gurus Club.",
       "why": "Names are easy to invent."
     },
     "pic": {
@@ -153,7 +153,7 @@
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Pay ₹10,000 for the VIP room"
+      "label": "Pay $200 for the VIP room"
     },
     {
       "id": "ignore",
@@ -210,7 +210,7 @@
   },
   "golden_rule": "No one can guarantee profit. Take investment advice only from a registered adviser, and never from tips in a group.",
   "quick_check": {
-    "q": "A group promises 90% accuracy and guaranteed profit if you pay ₹10,000 for VIP tips. What do you do?",
+    "q": "A group promises 90% accuracy and guaranteed profit if you pay $200 for VIP tips. What do you do?",
     "options": [
       {
         "id": "a",
@@ -244,7 +244,6 @@
     ]
   },
   "sources": [
-    "in-sebi-dos",
     "ftc-invest-social"
   ],
   "checked_on": "2026-10-21",
@@ -253,7 +252,7 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check the group",
-      "title": "Stock Gurus India",
+      "title": "Stock Gurus Club",
       "rows": [
         {
           "k": "Added by",
