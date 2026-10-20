@@ -3,7 +3,7 @@ import { json, nowMs, randomToken, sameOriginPost, readJson, limited, callerKey,
 import { sessionPlayer } from './auth.js';
 import { nightKey, nightEndMs, weekOfNight, shiftNight, lastNights } from './clock.js';
 import { RULES } from './rules.js';
-import { planAwards, ruleVersionId, weekFacts, streakFrom } from './points.js';
+import { planAwards, planUpgrade, ruleVersionId, weekFacts, streakFrom } from './points.js';
 import * as moonBrew from './games/moon-brew.js';
 import * as fullMoon from './games/full-moon.js';
 
@@ -30,8 +30,8 @@ export async function runStart(request, env) {
   const now = nowMs(env), night = nightKey(now);
   if (body.night !== night) return json(409, { ok: false, error: 'clock_off', night });
   if (!(await seasonOpen(env))) return json(409, { ok: false, error: 'season_closed' });
-  const done = await env.DB.prepare('SELECT 1 x FROM run_meta WHERE player_id = ?1 AND game_id = ?2 AND night_key = ?3 AND counted = 1').bind(p.id, body.game, night).first();
-  if (done) return json(200, { ok: true, runId: null, night, alreadyCounted: true });
+  const done = await env.DB.prepare('SELECT MAX(band) band FROM run_meta WHERE player_id = ?1 AND game_id = ?2 AND night_key = ?3 AND counted = 1 OR (player_id = ?1 AND game_id = ?2 AND night_key = ?3 AND points > 0)').bind(p.id, body.game, night).first();
+  if (done && done.band !== null && done.band >= 3) return json(200, { ok: true, runId: null, night, alreadyCounted: true });   // top band already reached tonight
   const id = 'run_' + randomToken(12), week = weekOfNight(night);
   await env.DB.batch([
     env.DB.prepare("INSERT INTO game_runs (id, player_id, season_id, game_id, mode, seed, rules_version, status, submitted_at) VALUES (?1, ?2, ?3, ?4, 'daily', ?5, ?6, 'pending', ?7)").bind(id, p.id, RULES.seasonId, body.game, night, RULES.version, isoTime(now)),
@@ -70,9 +70,25 @@ export async function runFinish(request, env) {
   ];
   const plain = [...finishRun, env.DB.prepare('UPDATE run_meta SET finished_ms = ?2, band = ?3, replay_ms = ?4 WHERE run_id = ?1').bind(run.run_id, now, v.band, replayMs)];
   const counting = await pointsOn(env);
-  const done = await env.DB.prepare('SELECT 1 x FROM run_meta WHERE player_id = ?1 AND game_id = ?2 AND night_key = ?3 AND counted = 1').bind(p.id, run.game_id, run.night_key).first();
+  const bestRow = await env.DB.prepare('SELECT MAX(band) band, SUM(counted) c FROM run_meta WHERE player_id = ?1 AND game_id = ?2 AND night_key = ?3').bind(p.id, run.game_id, run.night_key).first();
+  const best = bestRow && bestRow.c > 0 ? bestRow : null;
   const answer = (extra) => json(200, { ok: true, score: v.score, band: v.band, bandName: RULES.bandNames[v.band], ...extra });
-  if (done || !counting) { await env.DB.batch(plain); return answer({ counted: false, reason: done ? 'already_counted' : 'points_paused', points: { total: 0, items: [] } }); }
+  if (!counting) { await env.DB.batch(plain); return answer({ counted: false, reason: 'points_paused', points: { total: 0, items: [] } }); }
+  if (best) {
+    // Already counted tonight for this game. Only a better band pays, and only the difference.
+    const f = await weekFacts(env, p.id, run.game_id, run.week, run.night_key);
+    const night = await env.DB.prepare('SELECT COALESCE(SUM(points),0) a FROM run_meta WHERE player_id = ?1 AND game_id = ?2 AND night_key = ?3').bind(p.id, run.game_id, run.night_key).first();
+    const up = v.band > best.band ? planUpgrade(RULES, { game: run.game_id, band: v.band, awardedNight: night.a, gamePointsWeek: f.gamePointsWeek, seasonTotal: f.seasonTotal }) : null;
+    if (!up) { await env.DB.batch(plain); return answer({ counted: false, reason: 'not_better', points: { total: 0, items: [] } }); }
+    const st = p.status === 'held' ? 'pending' : 'settled', rv = await ruleVersionId(env);
+    await env.DB.batch([
+      ...finishRun,
+      env.DB.prepare('UPDATE run_meta SET finished_ms = ?2, band = ?3, points = ?4, replay_ms = ?5 WHERE run_id = ?1').bind(run.run_id, now, v.band, up.amount, replayMs),
+      env.DB.prepare('INSERT INTO points_ledger (player_id, season_id, category, amount, reason, rule_version_id, source_type, source_id, status, settled_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)').bind(p.id, RULES.seasonId, up.category, up.amount, up.reason, rv, 'run_upgrade', run.run_id, st, st === 'settled' ? isoTime(now) : null),
+      env.DB.prepare('UPDATE daily_activity SET points = points + ?4 WHERE player_id = ?1 AND season_id = ?2 AND day = ?3').bind(p.id, RULES.seasonId, run.night_key, up.amount),
+    ]);
+    return answer({ counted: true, upgraded: true, held: st === 'pending', points: { total: up.amount, items: [{ label: up.reason, amount: up.amount }] } });
+  }
 
   const facts = await weekFacts(env, p.id, run.game_id, run.week, run.night_key);
   const plan = planAwards(RULES, { ...facts, game: run.game_id, band: v.band });
@@ -107,8 +123,8 @@ export async function myPoints(request, env) {
   const dow = new Date(night + 'T00:00:00Z').getUTCDay(), weekKeys = lastNights(shiftNight(night, 6 - ((dow + 6) % 7)), 7);   // Monday to Sunday of this week's nights
   const [tot, wk, perGame, tonight, nights, recent, have] = await env.DB.batch([
     env.DB.prepare("SELECT COALESCE(SUM(CASE WHEN status='settled' THEN amount ELSE 0 END),0) settled, COALESCE(SUM(CASE WHEN status='pending' THEN amount ELSE 0 END),0) pending FROM points_ledger WHERE player_id = ?1 AND season_id = ?2").bind(p.id, RULES.seasonId),
-    env.DB.prepare("SELECT COALESCE(SUM(amount),0) s FROM points_ledger WHERE player_id = ?1 AND season_id = ?2 AND status IN ('settled','pending') AND ((source_type = 'run' AND source_id IN (SELECT run_id FROM run_meta WHERE player_id = ?1 AND week = ?3)) OR (source_type = 'active_night' AND source_id IN (?4,?5,?6,?7,?8,?9,?10)) OR (source_id = ?11 AND source_type IN ('consistency5','consistency7','allrounder')))").bind(p.id, RULES.seasonId, week, ...weekKeys.map((k) => p.id + ':' + k), p.id + ':' + week),
-    env.DB.prepare('SELECT game_id, COUNT(DISTINCT night_key) nights, COALESCE(SUM(points),0) pts FROM run_meta WHERE player_id = ?1 AND week = ?2 AND counted = 1 GROUP BY game_id').bind(p.id, week),
+    env.DB.prepare("SELECT COALESCE(SUM(amount),0) s FROM points_ledger WHERE player_id = ?1 AND season_id = ?2 AND status IN ('settled','pending') AND ((source_type IN ('run','run_upgrade') AND source_id IN (SELECT run_id FROM run_meta WHERE player_id = ?1 AND week = ?3)) OR (source_type = 'active_night' AND source_id IN (?4,?5,?6,?7,?8,?9,?10)) OR (source_id = ?11 AND source_type IN ('consistency5','consistency7','allrounder')))").bind(p.id, RULES.seasonId, week, ...weekKeys.map((k) => p.id + ':' + k), p.id + ':' + week),
+    env.DB.prepare('SELECT game_id, COUNT(DISTINCT CASE WHEN counted = 1 THEN night_key END) nights, COALESCE(SUM(points),0) pts FROM run_meta WHERE player_id = ?1 AND week = ?2 GROUP BY game_id').bind(p.id, week),
     env.DB.prepare('SELECT game_id, band FROM run_meta WHERE player_id = ?1 AND night_key = ?2 AND counted = 1').bind(p.id, night),
     env.DB.prepare('SELECT DISTINCT night_key FROM run_meta WHERE player_id = ?1 AND counted = 1 AND night_key >= ?2').bind(p.id, lastNights(night, 60)[0]),
     env.DB.prepare('SELECT created_at, reason, amount, status, category FROM points_ledger WHERE player_id = ?1 AND season_id = ?2 ORDER BY id DESC LIMIT 15').bind(p.id, RULES.seasonId),

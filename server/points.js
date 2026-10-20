@@ -19,6 +19,14 @@ export function planAwards(rules, s) {
   return items;
 }
 
+// A later run on the same night that is better than the one already counted pays only the difference.
+export function planUpgrade(rules, s) {
+  const gameRoom = Math.max(0, rules.weeklyCapPerGame - (s.gamePointsWeek || 0)), seasonRoom = Math.max(0, rules.seasonMax - (s.seasonTotal || 0));
+  const delta = Math.min(bandPoints(s.band) - (s.awardedNight || 0), gameRoom, seasonRoom);
+  if (delta <= 0) return null;
+  return { key: 'run_upgrade', category: 'gameplay', amount: delta, reason: (rules.names[s.game] || s.game) + ' night: improved to ' + rules.bandNames[Math.max(0, Math.min(3, s.band | 0))] };
+}
+
 export async function ruleVersionId(env) {
   await env.DB.prepare('INSERT OR IGNORE INTO rule_versions (season_id, version, rules_json, notes) VALUES (?1, ?2, ?3, ?4)').bind(RULES.seasonId, RULES.versionNumber, JSON.stringify(RULES), RULES.version).run();
   const r = await env.DB.prepare('SELECT id FROM rule_versions WHERE season_id = ?1 AND version = ?2').bind(RULES.seasonId, RULES.versionNumber).first();
@@ -30,7 +38,7 @@ export async function weekFacts(env, playerId, game, week, night) {
   const [g, n, pts, have, tot, tonight] = await env.DB.batch([
     env.DB.prepare('SELECT game_id, COUNT(DISTINCT night_key) c FROM run_meta WHERE player_id = ?1 AND week = ?2 AND counted = 1 GROUP BY game_id').bind(playerId, week),
     env.DB.prepare('SELECT COUNT(DISTINCT night_key) c FROM run_meta WHERE player_id = ?1 AND week = ?2 AND counted = 1').bind(playerId, week),
-    env.DB.prepare('SELECT COALESCE(SUM(points),0) p FROM run_meta WHERE player_id = ?1 AND week = ?2 AND game_id = ?3 AND counted = 1').bind(playerId, week, game),
+    env.DB.prepare('SELECT COALESCE(SUM(points),0) p FROM run_meta WHERE player_id = ?1 AND week = ?2 AND game_id = ?3').bind(playerId, week, game),
     env.DB.prepare("SELECT source_type FROM points_ledger WHERE player_id = ?1 AND source_id = ?2 AND source_type IN ('consistency5','consistency7','allrounder') AND reverses_id IS NULL").bind(playerId, playerId + ':' + week),
     env.DB.prepare("SELECT COALESCE(SUM(amount),0) t FROM points_ledger WHERE player_id = ?1 AND season_id = ?2 AND status IN ('settled','pending')").bind(playerId, RULES.seasonId),
     env.DB.prepare('SELECT COUNT(*) c FROM run_meta WHERE player_id = ?1 AND night_key = ?2 AND counted = 1').bind(playerId, night),

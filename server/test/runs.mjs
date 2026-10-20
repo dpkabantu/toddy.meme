@@ -8,9 +8,9 @@ import { handle } from '../index.js';
 import { fakeD1 } from './fake-d1.mjs';
 import { sha256Hex } from '../lib/util.js';
 import * as FM from '../games/full-moon-core.js';
-import { generate, newGame, tap, hint } from '../../games/moon-brew/src/core.js';
+import { generate, newGame, tap, hint, canRoll, frozen } from '../../games/moon-brew/src/core.js';
 import { dailyConfig } from '../../games/moon-brew/src/levels.js';
-import { planAwards } from '../points.js';
+import { planAwards, planUpgrade } from '../points.js';
 import { RULES } from '../rules.js';
 import { nightKey, nightEndMs } from '../clock.js';
 
@@ -39,6 +39,9 @@ function fullMoonRun(night) {
   while (!s.over && s.tick < 40000) { if (FM.canDrop(s) && rnd() < 0.5) { const x = Math.floor(FM.FIELD.L + rnd() * (FM.FIELD.R - FM.FIELD.L)); if (FM.drop(s, x)) drops.push([s.tick, x]); } FM.step(s); s.events.length = 0; }
   return { drops, endTick: s.tick, score: s.score, seconds: s.tick / 60 };
 }
+function brewBurnRun(night) { const g = newGame(generate(dailyConfig(new Date(night + 'T12:00:00Z')))); let t = 1000, guard = 0;
+  while (g.status === 'playing' && guard++ < 300) { let b = g.beans.find((x) => !x.gone && x.awake && !frozen(g, x) && !canRoll(g, x)); if (!b) b = hint(g); if (!b) break; tap(g, b, t); t += 900; }
+  return { log: g.log, seconds: t / 1000, status: g.status }; }
 function brewRun(night) { const g = newGame(generate(dailyConfig(new Date(night + 'T12:00:00Z')))); let t = 1000; while (g.status === 'playing') { const b = hint(g); if (!b) break; tap(g, b, t); t += 900; } return { log: g.log, seconds: t / 1000 }; }
 const ledgerSum = (id) => db.prepare("SELECT COALESCE(SUM(amount),0) s FROM points_ledger WHERE player_id = ?1 AND status IN ('settled','pending')").get(id).s;
 
@@ -56,6 +59,11 @@ const ledgerSum = (id) => db.prepare("SELECT COALESCE(SUM(amount),0) s FROM poin
   p = planAwards(RULES, { ...base, seasonTotal: 9995 }); check(p.reduce((a, x) => a + x.amount, 0) === 5, 'plan: nobody can pass the season maximum (10,000)');
 }
 
+{
+  const u = planUpgrade(RULES, { game: 'moon-brew', band: 3, awardedNight: 8, gamePointsWeek: 8, seasonTotal: 20 }); check(u && u.amount === 12, 'upgrade plan: Played (8) to Gold (20) pays only the 12 difference');
+  check(planUpgrade(RULES, { game: 'moon-brew', band: 3, awardedNight: 20, gamePointsWeek: 20, seasonTotal: 20 }) === null, 'upgrade plan: nothing more to pay at the top band');
+  check(planUpgrade(RULES, { game: 'moon-brew', band: 3, awardedNight: 8, gamePointsWeek: 138, seasonTotal: 20 }).amount === 2, 'upgrade plan: still respects the weekly limit of the game');
+}
 // ---- the routes ----
 const mira = await mkPlayer('TDY-AAAA0001', 'Mira');
 let r = await post('/api/run/start', { game: 'full-moon', night: '2026-12-08' }, null); check(r.status === 401, 'start without signing in: 401');
@@ -80,7 +88,7 @@ check(first.points.total === expectFirst && ledgerSum('TDY-AAAA0001') === expect
 check(db.prepare('SELECT rule_version_id FROM points_ledger LIMIT 1').get().rule_version_id > 0, 'every point row names its rules version');
 res = await post('/api/run/finish', { runId: id3, drops: fm1.drops, endTick: fm1.endTick }, mira); check(res.status === 404, 'sending the same run twice: second one refused');
 // a second Full Moon run the same night: no points
-r = await post('/api/run/start', { game: 'full-moon', night: '2026-12-08' }, mira); check(r.body.alreadyCounted === true && r.body.runId === null, 'Full Moon: second start the same night says points already earned');
+r = await post('/api/run/start', { game: 'full-moon', night: '2026-12-08' }, mira); check(r.status === 200 && (typeof r.body.runId === "string" || r.body.alreadyCounted === true), 'Full Moon: a second run the same night is allowed unless the top band is already reached');
 // another player cannot use mira's open run
 const noor = await mkPlayer('TDY-AAAA0002', 'Noor');
 const stolen = (await post('/api/run/start', { game: 'moon-brew', night: '2026-12-08' }, mira)).body.runId;
@@ -93,7 +101,18 @@ const t1 = ledgerSum('TDY-AAAA0001');
 const stolen2 = (await post('/api/run/start', { game: 'moon-brew', night: '2026-12-08' }, noor)).body.runId; NOW += brew.seconds * 1000 + 1000;
 res = await post('/api/run/finish', { runId: stolen2, log: brew.log.map((e, i) => (i === 1 ? [e[0], e[1], e[2] - 5] : e)).slice(0, -1) }, noor); check(res.status === 422, 'Moon Brew: an edited log is refused (' + res.body.error + ')');
 check(ledgerSum('TDY-AAAA0002') === 0, 'refused runs earn nothing');
+// A lost Moon Brew try counts as played (band 0); a later win pays only the difference
+NOW = Date.parse('2026-12-10T14:00:00Z'); const up = await mkPlayer('TDY-AAAA0006', 'Upg');
+const burnt = brewBurnRun('2026-12-10'); check(burnt.status === 'burnt', 'test helper: the lost try really burns the tray');
+let us = (await post('/api/run/start', { game: 'moon-brew', night: '2026-12-10' }, up)).body.runId; NOW += burnt.seconds * 1000 + 1000;
+res = await post('/api/run/finish', { runId: us, log: burnt.log }, up); check(res.status === 200 && res.body.counted && res.body.band === 0 && res.body.points.total === 20, 'lost Moon Brew try: counted as played, 8 + 12 active night = 20');
+us = (await post('/api/run/start', { game: 'moon-brew', night: '2026-12-10' }, up)).body.runId; check(typeof us === 'string', 'after a lost try the player can start again');
+const win = brewRun('2026-12-10'); NOW += win.seconds * 1000 + 1000; res = await post('/api/run/finish', { runId: us, log: win.log }, up);
+check(res.status === 200 && res.body.counted && res.body.upgraded && res.body.points.total === 12 && ledgerSum('TDY-AAAA0006') === 32, 'win after a lost try: pays the 12 difference only (night total 32, never double)');
+r = await post('/api/run/start', { game: 'moon-brew', night: '2026-12-10' }, up); check(r.body.alreadyCounted === true, 'top band reached: no more points tonight for this game');
+db.prepare("UPDATE run_meta SET flags=flags WHERE 1=0").run();
 // Dashboard
+NOW = Date.parse('2026-12-08T14:30:00Z') + 20 * 60000 * 0 + 3600000 * 0;
 let dash = await get('/api/me/points', mira);
 check(dash.status === 200 && dash.body.points.season === t1 && dash.body.points.week === t1 && dash.body.streak.current === 1 && dash.body.games.length === 3, 'dashboard: totals match the ledger (' + t1 + '), streak 1');
 check(dash.body.games.find((g) => g.id === 'full-moon').playedTonight && dash.body.games.find((g) => g.id === 'moon-brew').playedTonight && !dash.body.games.find((g) => g.id === 'scam-lab').playedTonight, 'dashboard: tonight shows which games are done');
