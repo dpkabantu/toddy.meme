@@ -1,7 +1,7 @@
 // TODDY: Moon Brew — screens, drawing, sound and saving.
 import { DX, DY, MAX_BUMPS, generate, newGame, beanAt, frozen, unitOf, traceBean, canRoll, tap, stars, hint, useHint, dailyScore, streaks, fromFrozen, difficulty } from './core.js';
 import { TRAYS } from './trays.js';
-import { INTROS, TRAYS_PER_NIGHT, trayLevelConfig, brewSetConfig, dailyConfig, dailyNumber, nightDate, endlessConfig, ENDLESS_LINES, nightInfo, VISITORS, VISITOR_ORDER, TIER_NAMES, trayTier, tierOf } from './levels.js';
+import { INTROS, TRAYS_PER_NIGHT, trayLevelConfig, seasonTrayConfig, dailyConfig, dailyNumber, nightDate, endlessConfig, ENDLESS_LINES, nightInfo, VISITORS, VISITOR_ORDER, TIER_NAMES, trayTier, tierOf } from './levels.js';
 import { buildPostcard } from './postcard.js';
 
 const BUILD = '1.0.0-rc12';
@@ -488,11 +488,12 @@ let finishTimer = 0;
 
 function startTray(n, t) { mode = { kind: 'story', n, t }; const f = TRAYS[trayKey(n, t)]; load(f ? null : trayLevelConfig(n, t), f ? fromFrozen(f) : null); }
 function startDaily() { const cfg = dailyConfig(); mode = { kind: 'daily', num: cfg.daily, visitor: cfg.visitor }; if (window.ToddySeason) window.ToddySeason.start('moon-brew'); load(cfg); }
-// Season Brew Set: 5 fixed trays each Season week, apart from the Story. A signed-in player's cleared trays are checked by the server.
-function startBrewSet(week, t) {
-  mode = { kind: 'brewset', week, t };
-  if (window.ToddySeason) window.ToddySeason.start('moon-brew', { mode: 'weekly', mission: 'moon-brew-w' + week, case: 't' + t });
-  load(brewSetConfig(week, t));
+// Season Nights (Moon Brew's Season launch mission): 7 nights x 20 trays, the same for everyone, apart from the Story.
+// A signed-in player's cleared trays are checked by the server.
+function startBrewSet(night, t) {
+  mode = { kind: 'brewset', night, t };
+  if (window.ToddySeason) window.ToddySeason.start('moon-brew', { mode: 'weekly', mission: 'moon-brew-season', case: 'n' + night + 't' + t });
+  load(seasonTrayConfig(night, t));
 }
 function startEndless(cont) {
   // pieces the player has already met in the story may show up here too (nothing unexplained)
@@ -526,8 +527,8 @@ function load(cfg, ready) {
     line = save.daily[mode.num] ? `Practice run. Today\u2019s score: ${save.daily[mode.num].score}.` : 'Today\u2019s puzzle. Same for everyone.';
     setWhere('Daily Brew', tierOf(difficulty(level)));
   } else if (mode.kind === 'brewset') {
-    vis = VISITOR_ORDER[(mode.week + mode.t) % VISITOR_ORDER.length]; line = 'Brew Set ' + mode.week + '. Same five trays for everyone this week.';
-    setWhere(`Brew Set ${mode.week} \u00B7 Tray ${mode.t}/5`, tierOf(difficulty(level)));
+    vis = VISITOR_ORDER[(mode.night + mode.t) % VISITOR_ORDER.length]; line = mode.t === 1 ? `Season Night ${mode.night}. Twenty trays, each a little harder.` : `Season Night ${mode.night}, tray ${mode.t}.`;
+    setWhere(`Season Night ${mode.night} \u00B7 Tray ${mode.t}/20`, tierOf(difficulty(level)));
   } else {
     vis = VISITOR_ORDER[mode.k % VISITOR_ORDER.length]; line = ENDLESS_LINES[mode.k % ENDLESS_LINES.length];
     setWhere(`Endless \u00B7 Tray ${mode.k + 1} \u00B7 ${mode.score} pts`, tierOf(difficulty(level)));
@@ -1050,7 +1051,7 @@ function serveVisitor() { // the visitor up top reacts too
 // Saves the result the moment a tray ends, so leaving early never loses progress.
 let result = null;
 function modeInfo() {
-  return mode.kind === 'story' ? { mode: 'story', night: mode.n + 1, tray: mode.t } : mode.kind === 'daily' ? { mode: 'daily', day: mode.num } : mode.kind === 'brewset' ? { mode: 'brewset', week: mode.week, tray: mode.t } : { mode: 'endless', tray: mode.k + 1 };
+  return mode.kind === 'story' ? { mode: 'story', night: mode.n + 1, tray: mode.t } : mode.kind === 'daily' ? { mode: 'daily', day: mode.num } : mode.kind === 'brewset' ? { mode: 'season', night: mode.night, tray: mode.t } : { mode: 'endless', tray: mode.k + 1 };
 }
 // Season: a signed-in player's daily run is sent to the server, which replays it and decides the points. Guests send nothing.
 let seasonRes = null;
@@ -1078,7 +1079,7 @@ function record() {
     return;
   }
   if (g.status !== 'won') return;
-  if (mode.kind === 'brewset') return;
+  if (mode.kind === 'brewset') { const id = 'n' + mode.night + 't' + mode.t; save.season = save.season || []; if (!save.season.includes(id)) { save.season.push(id); writeSave(); } return; }
   if (mode.kind === 'daily') {
     const sc = dailyScore(g);
     result.score = sc;
@@ -1115,10 +1116,10 @@ function finish(again) {
   }
 
   if (mode.kind === 'brewset' && g.status === 'burnt') {
-    card(`<h3>Burnt brew</h3><p>Three bumps. Only cleared trays count for the Brew Set. Try again.</p>
-      <div class="btns"><button class="btn ghost" id="o-back" type="button">Brew Set</button><button class="btn primary" id="o-retry" type="button">Try again</button></div>
+    card(`<h3>Burnt brew</h3><p>Three bumps. Only cleared trays count. Try again.</p>
+      <div class="btns"><button class="btn ghost" id="o-back" type="button">Season Nights</button><button class="btn primary" id="o-retry" type="button">Try again</button></div>
       <div class="btns"><a class="btn ghost" href="/">\u2190 TODDY home</a><a class="btn ghost" href="/season/">My Season</a></div>`);
-    bind('o-retry', () => startBrewSet(mode.week, mode.t)); bind('o-back', () => showBrewSet(mode.week));
+    bind('o-retry', () => startBrewSet(mode.night, mode.t)); bind('o-back', () => showBrewSet());
     return;
   }
   if (g.status === 'burnt') {
@@ -1131,14 +1132,14 @@ function finish(again) {
   }
 
   if (mode.kind === 'brewset') {
-    const nextT = mode.t < 5 ? mode.t + 1 : 0;
-    card(`${serveHtml(true)}<h3>Tray ${mode.t} served</h3>
-      <p class="stat">Brew Set ${mode.week} \u00B7 tray ${mode.t} of 5</p>
+    const nextT = mode.t < 20 ? mode.t + 1 : 0, check = mode.t % 5 === 0;
+    card(`${serveHtml(true)}<h3>${mode.t === 20 ? `Season Night ${mode.night} complete!` : `Tray ${mode.t} served`}</h3>
+      <p class="stat">Season Night ${mode.night} \u00B7 tray ${mode.t} of 20${check ? '' : ` \u00B7 next points at tray ${Math.ceil(mode.t / 5) * 5}`}</p>
       <p class="stat" id="seasonline" hidden></p>
-      <div class="btns"><button class="btn ghost" id="o-set" type="button">Brew Set</button>${nextT ? `<button class="btn primary" id="o-next" type="button">Next tray</button>` : '<button class="btn primary" id="o-again" type="button">Play again</button>'}</div>
+      <div class="btns"><button class="btn ghost" id="o-set" type="button">Season Nights</button>${nextT ? '<button class="btn primary" id="o-next" type="button">Next tray</button>' : ''}</div>
       <div class="btns"><a class="btn ghost" id="o-site" href="/">\u2190 TODDY home</a><a class="btn ghost" id="o-season" href="/season/">My Season</a></div>`);
-    bind('o-set', () => showBrewSet(mode.week));
-    bind('o-next', () => startBrewSet(mode.week, nextT)); bind('o-again', () => startBrewSet(mode.week, mode.t));
+    bind('o-set', () => showBrewSet());
+    bind('o-next', () => startBrewSet(mode.night, nextT));
     seasonShow();
     return;
   }
@@ -1344,36 +1345,43 @@ bind('btn-play', () => {
   mapNight = (nextTray() || [lastOpenNight()])[0]; show('map');
 });
 bind('btn-daily', () => { sfx.tick(); startDaily(); });
-// Brew Set: this week's five trays (older weeks that are still open give half points)
-let brewSets = [], brewWeek = 0;
-function showBrewSet(week) {
-  const set = brewSets.find((m) => m.week === week); if (!set) return;
-  const late = set.state === 'late';
+// Season Nights: Moon Brew's Season launch mission. One night opens per day; trays go in order inside a night; 15 points every 5 trays.
+let seasonM = null;
+function seasonDone() { return new Set(save.season || []); }
+function showBrewSet() {
+  const m = seasonM; if (!m) return;
   show('brewset'); $('overlay').hidden = true;
-  $('brewset-title').textContent = 'Brew Set ' + set.week;
-  const body = $('brewset-body');
-  body.innerHTML = `<div class="rule one"><div><b>Five fixed trays</b><p>The same trays for everyone this week, apart from the Story: no earlier progress needed. Clear 3 trays for 25 Season points and all 5 for 25 more${late ? '. This week is over, so you get half points' : '. Finish after this week and you get half points'}.</p></div></div>
-    <p class="stat center" id="set-prog">Counting only when you are signed in.</p>
-    <div class="about-btns" id="set-trays">${[1, 2, 3, 4, 5].map((t) => `<button class="btn" data-t="${t}" type="button">Tray ${t}</button>`).join('')}</div>
-    ${brewSets.length > 1 ? `<p class="stat center">Other weeks</p><div class="about-btns">${brewSets.filter((m) => m.week !== week).map((m) => `<button class="btn ghost" data-w="${m.week}" type="button">Week ${m.week}</button>`).join('')}</div>` : ''}`;
-  body.querySelectorAll('#set-trays button').forEach((b) => b.addEventListener('click', () => { sfx.tick(); startBrewSet(week, Number(b.dataset.t)); }));
-  body.querySelectorAll('[data-w]').forEach((b) => b.addEventListener('click', () => showBrewSet(Number(b.dataset.w))));
-  const T = window.ToddySeason;
-  if (T) T.missions().then((ms) => {
-    const mine = ms && ms.find((m) => m.id === 'moon-brew-w' + week), el = document.getElementById('set-prog'); if (!mine || !el) return;
-    const done = mine.casesDone || [];
-    el.textContent = `Your trays: ${done.length} of 5 cleared.`;
-    body.querySelectorAll('#set-trays button').forEach((b) => { if (done.includes('t' + b.dataset.t)) b.textContent = 'Tray ' + b.dataset.t + ' \u2713'; });
-  });
+  const late = m.state === 'late', body = $('brewset-body'), T = window.ToddySeason;
+  const render = (done) => {
+    body.innerHTML = `<div class="rule one"><div><b>Seven nights, 20 trays each</b><p>The same trays for everyone, apart from the Story. Each tray is a little harder, and each night harder than the one before. A new night opens every day. Every 5 trays you clear gives 15 Season points, up to 420${late ? '. This week is over, so points are half' : '. Finish after this week and points are half'}.</p></div></div>
+      <p class="stat center" id="set-prog"></p>
+      <div class="nights" id="set-nights"></div>`;
+    const box = $('set-nights'); let all = 0;
+    m.nights.forEach((nt) => {
+      let c = 0, next = 0; for (let t = 1; t <= 20; t++) { if (done.has('n' + nt.night + 't' + t)) c++; else if (!next) next = t; }
+      all += c;
+      const row = document.createElement('div'); row.className = 'rule one night-row';
+      const info = document.createElement('div');
+      const bt = document.createElement('b'); bt.textContent = 'Night ' + nt.night; info.appendChild(bt);
+      const p = document.createElement('p'); p.textContent = !nt.open ? 'Opens ' + (T ? T.istDate(nt.opensAt) : 'soon') : !next ? 'Done ✓ 20 of 20 trays' : c + ' of 20 trays · next points at tray ' + Math.ceil(next / 5) * 5; info.appendChild(p);
+      row.appendChild(info);
+      if (nt.open) { const b = document.createElement('button'); b.className = 'btn' + (next ? ' primary' : ' ghost'); b.type = 'button'; b.dataset.night = nt.night; b.textContent = !next ? 'Play again' : next > 1 ? 'Continue: tray ' + next : 'Start'; b.addEventListener('click', () => { sfx.tick(); startBrewSet(nt.night, next || 20); }); row.appendChild(b); }
+      box.appendChild(row);
+    });
+    $('set-prog').textContent = all + ' of 140 trays cleared';
+  };
+  render(seasonDone());
+  if (T) T.missions().then((ms) => { const mine = ms && ms.find((x) => x.id === 'moon-brew-season'); if (!mine) return; const d = seasonDone(); (mine.casesDone || []).forEach((id) => d.add(id)); save.season = [...d]; writeSave(); if (current === 'brewset') render(d); });
 }
 bind('brewset-back', () => show('title'));
-bind('btn-brewset', () => { sfx.tick(); const cur = brewSets.find((m) => m.week === brewWeek) || brewSets[brewSets.length - 1]; if (cur) showBrewSet(cur.week); });
+bind('btn-brewset', () => { sfx.tick(); showBrewSet(); });
 fetch('/api/season', { credentials: 'same-origin' }).then((r) => r.json()).then((j) => {
   if (!j || !j.ok) return;
-  brewSets = (j.missions || []).filter((m) => m.kind === 'brewset' && m.state !== 'locked'); brewWeek = j.seasonWeek || 0;
-  const cur = brewSets.find((m) => m.week === brewWeek) || brewSets[brewSets.length - 1];
-  if (cur) { $('btn-brewset').hidden = false; $('brewset-status').textContent = `Week ${cur.week} \u00B7 5 trays \u00B7 counts for Season`; }
-  if (/[?&]play=brewset(&|$)/.test(location.search) && cur) { const q = new URLSearchParams(location.search); const w = Number(q.get('week')) || cur.week, t = Number(q.get('tray')); try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } if (brewSets.find((m) => m.week === w)) { if (t >= 1 && t <= 5) startBrewSet(w, t); else showBrewSet(w); } }
+  const m = (j.missions || []).find((x) => x.id === 'moon-brew-season' && x.state !== 'locked');
+  if (!m || !Array.isArray(m.nights)) return;
+  seasonM = m; $('btn-brewset').hidden = false;
+  $('brewset-status').textContent = `7 nights · 20 trays each · counts for Season${m.state === 'late' ? ' (half points)' : ''}`;
+  if (/[?&]play=season(&|$)/.test(location.search)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } showBrewSet(); }
 }).catch(() => { /* no Season server: the button stays hidden */ });
 bind('btn-endless', () => {
   if (endlessOpen()) { startEndless(false); return; }
@@ -1403,7 +1411,7 @@ bind('map-back', () => show('title'));
 bind('album-back', () => show('title'));
 bind('howto-back', () => show('title'));
 bind('play-back', () => { clearTimeout(finishTimer); show(mode && mode.kind === 'story' ? 'map' : 'title'); });
-bind('btn-restart', () => { if (mode.kind === 'endless') { if (g.status === 'playing') load(endlessConfig(mode.seed, mode.k, mode.pieces)); } else if (mode.kind === 'daily') startDaily(); else if (mode.kind === 'brewset') startBrewSet(mode.week, mode.t); else startTray(mode.n, mode.t); });
+bind('btn-restart', () => { if (mode.kind === 'endless') { if (g.status === 'playing') load(endlessConfig(mode.seed, mode.k, mode.pieces)); } else if (mode.kind === 'daily') startDaily(); else if (mode.kind === 'brewset') startBrewSet(mode.night, mode.t); else startTray(mode.n, mode.t); });
 bind('btn-hint', () => {
   if (!g || g.status !== 'playing') return;
   hintBean = useHint(g, performance.now() - startedAt);

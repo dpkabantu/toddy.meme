@@ -26,6 +26,13 @@
       if (g.ready) nm.appendChild(el('span', 'tag', 'Season'));
       top.appendChild(nm);
       var m = mine[g.id], done = m && m.playedTonight;
+      var live = S.season && S.season.status === 'live', wk = S.seasonWeek || 0;
+      if (live && g.ready && wk < g.dailyFromWeek) {   // owner FINAL: a game's daily counts from the week after its launch week
+        top.appendChild(el('span', 'state', wk === g.launchWeek ? 'This week: its launch mission. Daily challenge from week ' + g.dailyFromWeek : 'Joins Season 1 in week ' + g.launchWeek));
+        card.appendChild(top);
+        var b = el('a', 'btn' + (wk === g.launchWeek ? '' : ' alt')); b.href = '/games/' + g.id + '/' + (wk === g.launchWeek && g.id === 'moon-brew' ? '?play=season' : ''); b.textContent = wk === g.launchWeek ? 'Open the launch mission' : 'Play ' + g.title + ' (practice only)';
+        card.appendChild(b); box.appendChild(card); return;
+      }
       var state = !g.ready ? 'Joins the Season soon' : done ? 'Done tonight: ' + m.tonightBand + ' medal' : P ? 'Not played tonight' : 'Same challenge for everyone';
       top.appendChild(el('span', 'state' + (done ? ' done' : ''), state));
       card.appendChild(top);
@@ -49,10 +56,15 @@
     info.appendChild(el('span', 'msub' + (done ? ' done' : ''), done ? 'Done' : sub));
     if (cased && m.state !== 'locked') info.appendChild(bar(casesDone, m.cases.length));
     var ul = el('ul', 'stages');
-    m.stages.forEach(function (st, i) { var got = my && my.stages[i] && my.stages[i].done; ul.appendChild(el('li', got ? 'got' : '', (got ? '✓ ' : '') + st.label + ' +' + st.points)); });
+    if (m.kind === 'brewset') {
+      var got = my ? my.stages.filter(function (x) { return x.done; }).length : 0, per = m.stages[0].points, max = m.stages.length * per;
+      ul.appendChild(el('li', got ? 'got' : '', (got ? '\u2713 ' + got * per + ' of ' : 'Up to ') + max + ' points'));
+      ul.appendChild(el('li', '', per + ' points every 5 trays'));
+      ul.appendChild(el('li', '', m.nights.length + ' nights, one opens per day'));
+    } else m.stages.forEach(function (st, i) { var got = my && my.stages[i] && my.stages[i].done; ul.appendChild(el('li', got ? 'got' : '', (got ? '✓ ' : '') + st.label + ' +' + st.points)); });
     info.appendChild(ul); row.appendChild(info);
     if (m.state !== 'locked') {
-      var a = el('a', 'btn sm' + (done ? ' alt' : '')); a.href = '/games/' + m.game + '/' + (m.kind === 'chapter' ? '?mission=' + m.id : m.kind === 'brewset' ? '?play=brewset&week=' + m.week : '?play=weekly&mission=' + m.id);
+      var a = el('a', 'btn sm' + (done ? ' alt' : '')); a.href = '/games/' + m.game + '/' + (m.kind === 'chapter' ? '?mission=' + m.id : m.kind === 'brewset' ? '?play=season' : '?play=weekly&mission=' + m.id);
       a.textContent = done ? 'Play again' : cased ? 'Open' : 'Play'; a.setAttribute('aria-label', (done ? 'Play again: ' : cased ? 'Open ' : 'Play ') + (name || m.game) + ' ' + m.title);
       row.appendChild(a);
     }

@@ -162,7 +162,7 @@ check(/Night_Owl . Season 1/.test(await page.locator('#nav-season').innerText())
 await page.screenshot({ path: shots + '/home_menu.png', clip: { x: 0, y: 0, width: 1280, height: 120 } });
 
 // ---- Scam Lab chapter mission: a chapter case played for the mission, from the Season page link ----
-await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])');
+await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])'); await page.evaluate(() => document.querySelectorAll('#mg details').forEach((d) => { d.open = true; }));
 const chCard = page.locator('#mg .mrow', { hasText: 'Chapter 1' });
 check(/0 of 6 cases/.test(await chCard.innerText()) && (await chCard.locator('a').getAttribute('href')) === '/games/scam-lab/?mission=scam-lab-ch1', 'Season page: Scam Lab chapter 1 mission card shows 0 of 6 cases and opens the chapter');
 check(/Opening soon/.test(await page.locator('#mg').innerText()) === false, 'Season page: nothing is locked while the Season is in test mode');
@@ -193,12 +193,12 @@ check(/Case counted for the chapter mission: 1 of 6 cases done/.test(chLine), 'S
 const chRow = db.prepare("SELECT r.score, r.seed FROM game_runs r WHERE r.mode = 'weekly' AND r.game_id = 'scam-lab' AND r.status = 'accepted'").get();
 const chScore = await page.evaluate(() => Number(document.getElementById('total').firstChild.textContent));
 check(chRow && chRow.seed === 'scam-lab-ch1:c1-03' && chRow.score === chScore, 'Scam Lab chapter case: the server scored it again and got the same score (' + chScore + ')');
-await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])');
+await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])'); await page.evaluate(() => document.querySelectorAll('#mg details').forEach((d) => { d.open = true; }));
 check(/1 of 6 cases/.test(await page.locator('#mg .mrow', { hasText: 'Chapter 1' }).innerText()), 'Season page: the chapter card now shows 1 of 6 cases');
 
 // ---- Weekly Challenge (Full Moon), reached from the Season page ----
 RULES.fullMoonWeekly.silverBand = 0;   // test only: any finished try reaches stage one (a real Silver needs a skilled player)
-await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])');
+await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])'); await page.evaluate(() => document.querySelectorAll('#mg details').forEach((d) => { d.open = true; }));
 const mtxt = await page.locator('#mg').innerText();
 check(/Full Moon/.test(mtxt) && /Weekly Challenge/.test(mtxt) && /Silver \+40/.test(mtxt) && /Gold \+10/.test(mtxt) && /open until/.test(mtxt), 'Season page: the Weekly Challenge card shows its stages and when it closes');
 await page.screenshot({ path: shots + '/season_mission.png', fullPage: true });
@@ -212,22 +212,24 @@ await page.waitForFunction(() => { const e = document.getElementById('seasonline
 const wLine = await page.locator('#seasonline').innerText(); const wScore = await page.evaluate(() => window.__mm.lastRun.score);
 check(/^Weekly Challenge points: \+40/.test(wLine) && !/Active night/.test(wLine), 'Weekly Challenge result says: "' + wLine.slice(0, 80) + '..."');
 const wRow = db.prepare("SELECT r.score, r.seed FROM game_runs r WHERE r.mode = 'weekly' AND r.game_id = 'full-moon' AND r.status = 'accepted'").get();
-check(wRow && wRow.score === wScore && wRow.seed === 'full-moon-w1', 'Weekly Challenge: the server replayed the fixed puzzle and stored the same score (' + wScore + ')');
+check(wRow && wRow.score === wScore && wRow.seed === 'full-moon-w3', 'Weekly Challenge: the server replayed the fixed puzzle and stored the same score (' + wScore + ')');
 check(db.prepare("SELECT COUNT(*) c FROM points_ledger WHERE source_type = 'mission' AND amount = 40").get().c === 1, 'Weekly Challenge: exactly one 40-point ledger row');
-await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])');
+await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])'); await page.evaluate(() => document.querySelectorAll('#mg details').forEach((d) => { d.open = true; }));
 check(/\u2713 Silver \+40/.test(await page.locator('#mg').innerText()), 'Season page: the finished stage shows a tick');
 RULES.fullMoonWeekly.silverBand = 2;
 
-// ---- Brew Set (Moon Brew), reached from the Season page ----
+// ---- Season Nights (Moon Brew launch mission), reached from the Season page ----
 await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])');
 const wtxt = await page.locator('#mg').innerText();
-check(/Week 1/.test(wtxt) && /Moon Brew . Brew Set 1/.test(wtxt) && /Full Moon . Weekly Challenge 1/.test(wtxt) && /Scam Lab . Chapter 1/.test(wtxt), 'Season page: "This week" lists one mission for each of the three games');
-check(await page.locator('#mg details.rest summary').first().isVisible(), 'Season page: other weeks are folded away');
+check(/Week 1/.test(wtxt) && /Moon Brew . Season Nights/.test(wtxt) && /Up to 420 points/.test(wtxt) && /15 points every 5 trays/.test(wtxt), 'Season page: week 1 shows Moon Brew Season Nights (up to 420, 15 every 5 trays)');
+check(await page.locator('#mg details.rest summary').first().isVisible() && !(await page.locator('#mg .mrow', { hasText: 'Weekly Challenge' }).isVisible()), 'Season page: Scam Lab (week 2) and Full Moon (week 3) are folded under coming weeks');
 await page.screenshot({ path: shots + '/season_byweek.png', fullPage: true });
-await Promise.all([page.waitForURL(/moon-brew/), page.click('#mg .mrow:has-text("Brew Set") a')]);
-await page.waitForSelector('#set-trays button[data-t="1"]', { state: 'visible', timeout: 30000 });
-check(/5 trays|Five fixed trays/.test(await page.locator('#brewset-body').innerText()), 'Brew Set: the Moon Brew page opens the five-tray list');
-await page.click('#set-trays button[data-t="1"]');
+await Promise.all([page.waitForURL(/moon-brew/), page.click('#mg .mrow:has-text("Season Nights") a')]);
+await page.waitForSelector('#set-nights button[data-night="1"]', { state: 'visible', timeout: 30000 });
+const sn = await page.locator('#brewset-body').innerText();
+check(/Seven nights, 20 trays each/.test(sn) && (await page.locator('#set-nights .night-row').count()) === 7, 'Season Nights: the Moon Brew page lists 7 nights');
+await page.screenshot({ path: shots + '/season_nights.png', fullPage: true });
+await page.click('#set-nights button[data-night="1"]');
 await page.waitForFunction(() => window.__moonbrew && window.__moonbrew.g && window.__moonbrew.g.status === 'playing' && window.__moonbrew.mode.kind === 'brewset', null, { timeout: 30000 });
 await page.waitForTimeout(800);
 for (let i = 0; i < 200; i++) {
@@ -236,10 +238,12 @@ for (let i = 0; i < 200; i++) {
 }
 await page.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 20000 });
 const bsLine = await page.locator('#seasonline').innerText();
-check(/Tray counted for the Brew Set: 1 of 5 trays/.test(bsLine), 'Brew Set result says "' + bsLine.slice(0, 80) + '"');
+check(/Tray counted. Night 1: 1 of 20 trays/.test(bsLine), 'Season Nights result says "' + bsLine.slice(0, 80) + '"');
 const bsRow = db.prepare("SELECT seed, score FROM game_runs WHERE mode = 'weekly' AND game_id = 'moon-brew' AND status = 'accepted'").get();
-check(bsRow && bsRow.seed === 'moon-brew-w1:t1' && bsRow.score > 0, 'Brew Set: the server replayed tray 1 and accepted it (seed ' + (bsRow && bsRow.seed) + ')');
-check(await page.locator('#o-site').isVisible() && await page.locator('#o-season').isVisible(), 'Brew Set result: buttons back to TODDY home and My Season');
+check(bsRow && bsRow.seed === 'moon-brew-season:n1t1' && bsRow.score > 0, 'Season Nights: the server replayed night 1 tray 1 and accepted it (seed ' + (bsRow && bsRow.seed) + ')');
+check(await page.locator('#o-site').isVisible() && await page.locator('#o-season').isVisible() && await page.locator('#o-next').isVisible(), 'Season Nights result: Next tray, TODDY home and My Season buttons');
+await page.click('#o-set'); await page.waitForSelector('#set-nights button[data-night="1"]', { state: 'visible' });
+check(/Continue: tray 2/.test(await page.locator('#set-nights button[data-night="1"]').innerText()), 'Season Nights list: night 1 now says "Continue: tray 2"');
 
 // ---- a guest plays Moon Brew from the Season page: nothing is sent ----
 const gctx = await browser.newContext({ viewport: { width: 420, height: 860 } }); await gctx.route('https://fonts.g*apis.com/**', (r) => r.abort()); await gctx.route('https://fonts.gstatic.com/**', (r) => r.abort());
@@ -256,7 +260,7 @@ for (let i = 0; i < 200; i++) {
 await g.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 20000 });
 check(/Playing as a guest/.test(await g.locator('#seasonline').innerText()) && (await g.locator('#seasonline a').getAttribute('href')) === '/season/', 'guest: result says "Playing as a guest" with a link to the Season page');
 check(!apiCalls.some((c) => /run\//.test(c)), 'guest: no run was sent to the server (' + apiCalls.join(', ') + ')');
-check(db.prepare("SELECT COUNT(*) c FROM game_runs").get().c === 6, 'guest play left no rows in the database (3 daily runs, 1 Weekly Challenge, 1 chapter case and 1 Brew Set tray from the signed-in player)');
+check(db.prepare("SELECT COUNT(*) c FROM game_runs").get().c === 6, 'guest play left no rows in the database (3 daily runs, 1 Weekly Challenge, 1 chapter case and 1 Season Nights tray from the signed-in player)');
 
 check(viol.length === 0, 'no Content-Security-Policy violations in any page (' + viol.length + ') ' + viol.slice(0, 2).join(' | ')); check(errs.length === 0, 'no page errors ' + errs.slice(0, 3).join('|'));
 await browser.close(); server.close();

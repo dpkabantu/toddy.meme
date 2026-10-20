@@ -46,18 +46,22 @@
     season_closed: 'The Season is not open right now.',
     too_fast: 'This run could not be confirmed, so it earned no Season points.',
     night_over: 'The night ended before this run finished, so it earned no Season points.',
-    run_not_found: 'This run was already sent.'
+    run_not_found: 'This run was already sent.',
+    tray_order: 'Trays go in order: clear the tray before this one first.'
   };
   // Text for the result screen. Returns { text, link } or null when nothing should be shown.
   function describe(res) {
     if (!res) return null;
     if (res.ok === false && res.error === 'mission_locked') return { text: 'This mission opens for Season points on ' + istDate(res.opensAt) + '. Until then, playing it is practice.', link: true };
+    if (res.ok === false && res.error === 'daily_not_open') return { text: 'This game\u2019s daily challenge counts for Season points from week ' + res.fromWeek + '. This week it has its launch mission instead. This run is practice.', link: true };
     if (res.ok === false) { if (res.error === 'offline' || res.error === 'not_configured' || res.error === 'sign_in_first' || res.error === 'mission_not_found' || res.error === 'case_not_in_mission') return null; return { text: MSG[res.error] || 'This run could not be confirmed, so it earned no Season points.' }; }
     if (res.mission) {
       var brew = String(res.mission).indexOf('moon-brew') === 0, unit = brew ? 'trays' : 'cases';
-      var label = res.progress ? (brew ? 'Brew Set' : 'Chapter mission') : 'Weekly Challenge', prog = res.progress ? ' \u00b7 ' + res.progress.cases + ' of ' + res.progress.of + ' ' + unit : '';
+      var nightP = res.progress && res.progress.night ? ' \u00b7 Night ' + res.progress.night + ': ' + res.progress.nightDone + ' of ' + res.progress.nightOf + ' trays' : '';
+      var label = res.progress ? (brew ? 'Season Nights' : 'Chapter mission') : 'Weekly Challenge', prog = nightP || (res.progress ? ' \u00b7 ' + res.progress.cases + ' of ' + res.progress.of + ' ' + unit : '');
       if (res.counted) { var mi = res.points.items || []; return { text: label + ' points: +' + res.points.total + (res.held ? ' (waiting for review)' : '') + ' \u00b7 ' + mi.map(function (x) { return x.label + ' +' + x.amount; }).join(' \u00b7 ') + prog + '.', link: true }; }
-      if (res.progress && res.reason !== 'points_paused') return { text: (brew ? 'Tray counted for the Brew Set' : 'Case counted for the chapter mission') + ': ' + res.progress.cases + ' of ' + res.progress.of + ' ' + unit + ' done.', link: true };
+      if (res.progress && res.progress.night && res.reason !== 'points_paused') return { text: 'Tray counted. Night ' + res.progress.night + ': ' + res.progress.nightDone + ' of ' + res.progress.nightOf + ' trays. Points come every 5 trays.', link: true };
+      if (res.progress && res.reason !== 'points_paused') return { text: 'Case counted for the chapter mission: ' + res.progress.cases + ' of ' + res.progress.of + ' ' + unit + ' done.', link: true };
       if (res.reason === 'below_stage' || res.reason === 'not_better' || res.reason === 'already_counted') return { text: 'This try did not reach a new stage, so the mission points stay as they are.', link: true };
       if (res.reason === 'points_paused') return { text: 'Season points are paused right now. Your run was kept.' };
       return null;

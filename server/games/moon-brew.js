@@ -1,16 +1,17 @@
 // Server check for a Moon Brew Daily Brew: rebuild the night's tray, replay every tap, and work out the score.
 import { generate, newGame, tap, useHint, dailyScore } from '../../games/moon-brew/src/core.js';
-import { dailyConfig, brewSetConfig } from '../../games/moon-brew/src/levels.js';
+import { dailyConfig, seasonTrayConfig } from '../../games/moon-brew/src/levels.js';
 
 export const MAX_LOG = 600;
 
 export function verify(night, payload) { return replay(generate(dailyConfig(new Date(night + 'T12:00:00Z'))), payload); }
 
-// Season Brew Set tray 't1'..'t5' of a Season week. The tray has to be cleared to count.
-export function verifyTray(week, caseId, payload) {
-  const m = /^t([1-5])$/.exec(String(caseId));
-  if (!m || !Number.isInteger(week) || week < 1 || week > 8) return { ok: false, error: 'bad_log' };
-  const r = replay(generate(brewSetConfig(week, Number(m[1]))), payload);
+// Season launch mission tray 'n<night>t<tray>' (night 1-7, tray 1-20). The tray has to be cleared to count.
+export function verifySeasonTray(caseId, payload) {
+  const m = /^n([1-7])t([1-9]|1[0-9]|20)$/.exec(String(caseId));
+  const cfg = m && seasonTrayConfig(Number(m[1]), Number(m[2]));
+  if (!cfg) return { ok: false, error: 'bad_log' };
+  const r = replay(generate(cfg), payload);
   if (r.ok && !r.detail.won) return { ok: false, error: 'not_won' };
   return r;
 }

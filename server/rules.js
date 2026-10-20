@@ -13,12 +13,16 @@ export const RULES = {
   startNight: '2027-01-05',           // PLACEHOLDER: first night of Season week 1 (owner has not chosen the Season dates)
   // Weekly missions: open for one Season week (from 18:30 India time), finished in time = full points, finished later = half (rounded down).
   // Each stage pays once. Points are placeholders.
-  // Full Moon: Weekly Challenge n = twist n-1 (week 1 Opening Night ... week 8 Grand Finale), one fixed puzzle per week. Moon Brew: Brew Set, 5 fixed trays per week.
-  fullMoonWeekly: { weeks: 8, silverBand: 2, silverPoints: 40, goldPoints: 10 },
-  brewSet: { weeks: 8, trays: 5, halfTrays: 3, halfPoints: 25, donePoints: 25 },
+  // One new game joins each Season week. In its launch week it has only its launch mission (up to 420);
+  // its daily challenge counts from the NEXT week until the Season ends (owner FINAL 2026-10-20).
+  launchWeek: { 'moon-brew': 1, 'scam-lab': 2, 'full-moon': 3 },
+  // Moon Brew launch mission: 7 Season nights x 20 trays, one night opens per day, trays in order, 15 points every 5 trays (owner FINAL).
+  seasonNights: { nights: 7, trays: 20, every: 5, points: 15 },
+  // Full Moon (week 3) and Scam Lab (week 2) launch missions are PLACEHOLDERS until the owner finalizes them.
+  fullMoonWeekly: { week: 3, silverBand: 2, silverPoints: 40, goldPoints: 10 },
   missions: [],
-  // Scam Lab: one mission per chapter, made from games/scam-lab/cases/chapters.json. Chapter n opens in Season week firstWeek + n - 1 (PLACEHOLDER schedule).
-  chapterMissions: { firstWeek: 1, halfPoints: 25, donePoints: 25, halfCases: 3 },
+  // Scam Lab launch mission (PLACEHOLDER): chapter 1 in week 2, made from games/scam-lab/cases/chapters.json.
+  chapterMissions: { week: 2, chapter: 1, halfPoints: 25, donePoints: 25, halfCases: 3 },
   games: ['moon-brew', 'full-moon', 'scam-lab'],
   seasonId: 'season-1',
   seasonMax: 10000,                   // most one person can hold in a season (all sources)

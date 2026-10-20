@@ -9,7 +9,7 @@ import { fakeD1 } from './fake-d1.mjs';
 import { sha256Hex } from '../lib/util.js';
 import * as FM from '../games/full-moon-core.js';
 import { generate, newGame, tap, hint, canRoll, frozen } from '../../games/moon-brew/src/core.js';
-import { dailyConfig, brewSetConfig } from '../../games/moon-brew/src/levels.js';
+import { dailyConfig, seasonTrayConfig } from '../../games/moon-brew/src/levels.js';
 import { dailyCase } from '../../games/scam-lab/src/daily.js';
 import { scoreDaily, strongClues, scoreCase, scoreRush } from '../../games/scam-lab/src/engine.js';
 import { CASES as LAB } from '../games/scam-lab-cases.js';
@@ -251,7 +251,7 @@ check(db.prepare("SELECT COUNT(*) c FROM game_runs WHERE log_json IS NOT NULL AN
 
 // ---- Scam Lab chapter missions: finish cases of a chapter; payouts at 3 cases and at the whole chapter ----
 {
-  RULES.startNight = '2027-03-01';   // chapter 1 = week 1: 1 Mar 13:00 UTC to 8 Mar 13:00 UTC; chapter 2 opens after that
+  RULES.startNight = '2027-02-22';   // Scam Lab joins in week 2: chapter 1 open 1 Mar 13:00 UTC to 8 Mar 13:00 UTC
   const labLog = (id, over = {}) => {   // what a careful player's game would send for this case
     const c = LAB[id];
     if (c.cards) { const answers = {}; c.cards.forEach((k) => { answers[k.id] = k.scam ? 'scam' : 'safe'; }); const left = Math.floor(c.seconds / 2);
@@ -273,9 +273,9 @@ check(db.prepare("SELECT COUNT(*) c FROM game_runs WHERE log_json IS NOT NULL AN
 
   NOW = Date.parse('2027-03-02T14:00:00Z'); const a = await mkPlayer('TDY-AAAA0020', 'ChapA');
   const pub = await get('/api/season'); const chm = pub.body.missions.filter((m) => m.game === 'scam-lab');
-  check(chm.length === 8 && chm[0].week === 1 && chm[7].week === 8 && chm.every((m) => m.cases.length === 6), 'public Season info lists 8 Scam Lab chapter missions, one per week, six cases each');
-  check(chm[0].state === 'open' && chm[1].state === 'locked', 'chapter 1 is open in its week and chapter 2 is still locked');
-  let x = await playCase(a, 'scam-lab-ch2', 'c2-01'); check(x.st.status === 409 && x.st.body.error === 'mission_locked', 'a chapter that has not opened cannot be played for points');
+  check(chm.length === 1 && chm[0].week === 2 && chm[0].cases.length === 6, 'public Season info lists one Scam Lab launch mission (chapter 1, six cases) in week 2');
+  check(chm[0].state === 'open', 'chapter 1 is open in Scam Lab\'s launch week');
+  let x = await playCase(a, 'scam-lab-ch2', 'c2-01'); check(x.st.status === 400 && x.st.body.error === 'mission_not_found', 'other chapters are not Season missions');
   x = await post('/api/run/start', { game: 'scam-lab', mode: 'weekly', mission: 'scam-lab-ch1', case: 'c2-01', night: nightKey(NOW) }, a); check(x.status === 400 && x.body.error === 'case_not_in_mission', 'a case from another chapter is refused for this mission');
   x = await playCase(a, 'scam-lab-ch1', ch1[0]); check(x.fin.body.counted === false && x.fin.body.progress.cases === 1, 'case 1: counted for the chapter, nothing paid yet (1 of 6)');
   x = await playCase(a, 'scam-lab-ch1', ch1[1]); check(x.fin.body.progress.cases === 2 && !x.fin.body.counted, 'case 2 (an Inbox Rush): 2 of 6');
@@ -314,47 +314,46 @@ check(db.prepare("SELECT COUNT(*) c FROM game_runs WHERE log_json IS NOT NULL AN
   db.prepare("UPDATE seasons SET status='draft' WHERE id='season-1'").run();
 }
 
-// ---- Season Brew Set (Moon Brew): 5 fixed trays per Season week; 25 at 3 trays, 25 at 5; late = half ----
+// ---- Moon Brew launch mission: Season Nights (7 nights x 20 trays, one night per day, trays in order, 15 every 5 trays) ----
 {
-  RULES.startNight = '2027-03-01';
+  RULES.startNight = '2027-03-01';   // week 1: night 1 opens 1 Mar 13:00 UTC, night n opens n-1 days later; week ends 8 Mar 13:00 UTC
   db.prepare("UPDATE seasons SET status='live' WHERE id='season-1'").run();
-  const setRun = (week, t, wrongTray) => { const g = newGame(generate(brewSetConfig(wrongTray ? 3 : week, t))); let at = 1000; while (g.status === 'playing') { const b = hint(g); if (!b) break; tap(g, b, at); at += 900; } return { log: g.log, seconds: at / 1000, status: g.status }; };
-  const playTray = async (cookie, week, t, wrongTray) => {
-    const st = await post('/api/run/start', { game: 'moon-brew', mode: 'weekly', mission: 'moon-brew-w' + week, case: 't' + t, night: nightKey(NOW) }, cookie);
+  const solve = (n, t, other) => { const g = newGame(generate(seasonTrayConfig(other ? 7 : n, other ? 20 : t))); let at = 1000; while (g.status === 'playing') { const b = hint(g); if (!b) break; tap(g, b, at); at += 900; } return { log: g.log, seconds: at / 1000, status: g.status }; };
+  const playTray = async (cookie, n, t, other) => {
+    const st = await post('/api/run/start', { game: 'moon-brew', mode: 'weekly', mission: 'moon-brew-season', case: 'n' + n + 't' + t, night: nightKey(NOW) }, cookie);
     if (!st.body.runId) return { st };
-    const r = setRun(week, t, wrongTray); NOW += r.seconds * 1000 + 1000;
+    const r = solve(n, t, other); NOW += r.seconds * 1000 + 1000;
     return { st, fin: await post('/api/run/finish', { runId: st.body.runId, log: r.log }, cookie) };
   };
   const rows = (id) => db.prepare("SELECT amount FROM points_ledger WHERE player_id = ?1 AND source_type = 'mission' ORDER BY id").all(id).map((x) => x.amount);
-  NOW = Date.parse('2027-03-02T14:00:00Z'); const a = await mkPlayer('TDY-AAAA0030', 'BrewA');
-  const pub = await get('/api/season'); const bm = pub.body.missions.filter((m) => m.game === 'moon-brew' && m.kind === 'brewset');
-  check(bm.length === 8 && bm.every((m, i) => m.week === i + 1 && m.cases.length === 5), 'Season info lists 8 Brew Sets, one per week, 5 trays each');
-  check(pub.body.seasonWeek === 1, 'Season info says it is Season week 1');
-  const fm = pub.body.missions.filter((m) => m.game === 'full-moon');
-  check(fm.length === 8 && fm.every((m, i) => m.week === i + 1 && m.twist === i && m.seed === 900000 + (i + 1) * 100), 'Season info lists 8 Full Moon Weekly Challenges, week n = twist n-1');
-  check(bm[1].state === 'locked' && fm[1].state === 'locked', 'week 2 missions are locked in week 1');
-  let x = await playTray(a, 2, 1); check(x.st.status === 409 && x.st.body.error === 'mission_locked', 'a Brew Set that has not opened cannot be played for points');
-  x = await playTray(a, 1, 1, true); check(x.fin.status === 422, 'a log from a different tray is refused');
-  check(ledgerSum('TDY-AAAA0030') === 0, 'refused log paid nothing');
-  for (let t = 1; t <= 2; t++) { x = await playTray(a, 1, t); check(x.fin.body.ok && x.fin.body.counted === false && x.fin.body.progress.cases === t, 'tray ' + t + ': counted for the set, nothing paid yet'); }
-  x = await playTray(a, 1, 2); check(x.fin.body.progress.cases === 2, 'the same tray again does not count twice');
-  x = await playTray(a, 1, 3); check(x.fin.body.counted && x.fin.body.points.total === 25, 'tray 3 pays the first stage (25)');
-  x = await playTray(a, 1, 4); x = await playTray(a, 1, 5); check(x.fin.body.counted && x.fin.body.points.total === 25, 'tray 5 pays the second stage (25)');
-  check(rows('TDY-AAAA0030').join() === '25,25', 'Brew Set total 50 in two ledger rows');
-  x = await playTray(a, 1, 1); check(x.st.body.runId === null && x.st.body.alreadyCounted, 'set done: a new try sends nothing');
-  check(db.prepare("SELECT COUNT(*) c FROM run_meta WHERE player_id='TDY-AAAA0030' AND counted = 1").get().c === 0, 'Brew Set trays are not nightly runs');
-  // late: week 1 is over
+  NOW = Date.parse('2027-03-01T14:00:00Z'); const a = await mkPlayer('TDY-AAAA0030', 'BrewA');
+  const pub = await get('/api/season'); const sm = pub.body.missions.filter((m) => m.game === 'moon-brew');
+  check(sm.length === 1 && sm[0].id === 'moon-brew-season' && sm[0].cases.length === 140 && sm[0].stages.length === 28 && sm[0].stages.reduce((x, y) => x + y.points, 0) === 420, 'Moon Brew has one launch mission: 7 nights x 20 trays, 28 checkpoints, 420 points');
+  check(sm[0].nights.length === 7 && sm[0].nights[0].open && !sm[0].nights[1].open, 'on day 1 only Season night 1 is open');
+  check(pub.body.missions.filter((m) => m.game === 'full-moon').length === 1 && pub.body.missions.find((m) => m.game === 'full-moon').week === 3, 'Full Moon has one launch mission, in week 3');
+  check(pub.body.games.find((g) => g.id === 'moon-brew').dailyFromWeek === 2 && pub.body.games.find((g) => g.id === 'full-moon').dailyFromWeek === 4, 'each game\'s daily counts from the week after its launch week');
+  let x = await post('/api/run/start', { game: 'moon-brew', night: nightKey(NOW) }, a); check(x.status === 409 && x.body.error === 'daily_not_open' && x.body.fromWeek === 2, 'no Daily Brew points in Moon Brew\'s launch week');
+  x = await playTray(a, 2, 1); check(x.st.status === 409 && x.st.body.error === 'mission_locked', 'Season night 2 is locked on day 1');
+  x = await playTray(a, 1, 2); check(x.st.status === 409 && x.st.body.error === 'tray_order', 'tray 2 needs tray 1 first');
+  x = await playTray(a, 1, 1, true); check(x.fin.status === 422, 'a log from another tray (night 7, tray 20) is refused');
+  for (let t = 1; t <= 4; t++) { x = await playTray(a, 1, t); }
+  check(x.fin.body.counted === false && x.fin.body.progress.nightDone === 4 && ledgerSum('TDY-AAAA0030') === 0, '4 trays: counted, nothing paid yet');
+  x = await playTray(a, 1, 5); check(x.fin.body.counted && x.fin.body.points.total === 15, 'tray 5 pays the first checkpoint (15)');
+  for (let t = 6; t <= 20; t++) x = await playTray(a, 1, t);
+  check(rows('TDY-AAAA0030').join() === '15,15,15,15', 'night 1 done: 4 checkpoints, 60 points');
+  NOW = Date.parse('2027-03-02T14:00:00Z');
+  x = await playTray(a, 2, 1); check(x.fin && x.fin.body.ok, 'day 2: Season night 2 opens');
+  x = await playTray(a, 3, 1); check(x.st.status === 409 && x.st.body.error === 'mission_locked', 'day 2: night 3 still locked');
+  check(db.prepare("SELECT COUNT(*) c FROM run_meta WHERE player_id='TDY-AAAA0030' AND counted = 1").get().c === 0, 'Season trays are not nightly runs');
+  // late: after week 1 every night is open, checkpoints pay half (15 -> 7), and the Daily Brew counts
   NOW = Date.parse('2027-03-09T14:00:00Z'); const b = await mkPlayer('TDY-AAAA0031', 'BrewLate');
-  for (let t = 1; t <= 5; t++) x = await playTray(b, 1, t);
-  check(rows('TDY-AAAA0031').join() === '12,12', 'late Brew Set pays half, rounded down (12 + 12)');
-  const pub2 = await get('/api/season'); check(pub2.body.seasonWeek === 2, 'on 9 March Season info says week 2');
-  // a lost tray is not counted
-  const burn = (() => { const g = newGame(generate(brewSetConfig(2, 1))); let at = 1000, guard = 0; while (g.status === 'playing' && guard++ < 300) { let bb = g.beans.find((y) => !y.gone && y.awake && !frozen(g, y) && !canRoll(g, y)); if (!bb) bb = hint(g); if (!bb) break; tap(g, bb, at); at += 900; } return { log: g.log, seconds: at / 1000, status: g.status }; })();
-  if (burn.status === 'burnt') { const c = await mkPlayer('TDY-AAAA0032', 'BrewBurnt'); const st = await post('/api/run/start', { game: 'moon-brew', mode: 'weekly', mission: 'moon-brew-w2', case: 't1', night: nightKey(NOW) }, c); NOW += burn.seconds * 1000 + 1000; const f = await post('/api/run/finish', { runId: st.body.runId, log: burn.log }, c); check(f.status === 422 && f.body.error === 'not_won', 'a burnt tray is not counted'); }
-  else check(true, '(burnt-tray bot did not burn this tray; skipped)');
-  // every Season tray can be built and won
-  let all = true; for (let w = 1; w <= 8; w++) for (let t = 1; t <= 5; t++) { const r = setRun(w, t); if (r.status !== 'won') all = false; }
-  check(all, 'all 40 Brew Set trays can be built and cleared');
+  for (let t = 1; t <= 10; t++) x = await playTray(b, 7, t);
+  check(rows('TDY-AAAA0031').join() === '7,7', 'late: night 7 opens, checkpoints pay half (7 + 7)');
+  x = await post('/api/run/start', { game: 'moon-brew', night: nightKey(NOW) }, b); check(x.status === 200 && x.body.runId, 'week 2: the Daily Brew counts');
+  x = await post('/api/run/start', { game: 'full-moon', night: nightKey(NOW) }, b); check(x.status === 409 && x.body.error === 'daily_not_open', 'week 2: Full Moon daily not yet (it joins in week 3, daily from week 4)');
+  // every Season tray can be built and cleared; difficulty rises every tray and every night
+  let all = true; for (let n = 1; n <= 7; n++) for (let t = 1; t <= 20; t++) if (solve(n, t).status !== 'won') all = false;
+  check(all, 'all 140 Season trays can be cleared');
   db.prepare("UPDATE seasons SET status='draft' WHERE id='season-1'").run();
 }
 

@@ -358,3 +358,6 @@ button.where .tier { font-size: 10px; letter-spacing: .1em; color: var(--gold); 
 .tag { display: inline-block; font-size: 10px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase; color: #1b1236; background: var(--gold); border-radius: 7px; padding: 1px 6px; margin-left: 4px; vertical-align: middle; }
 
 a.btn { text-decoration: none; }
+.nights { display: grid; gap: 8px; }
+.rule.one.night-row { grid-template-columns: 1fr auto; }
+.night-row .btn { white-space: nowrap; }

@@ -1,6 +1,7 @@
 // TODDY: Moon Brew — Nights, trays, visitors and story lines.
 import { rng, makeMask } from './core.js';
 import { PACE, TIER } from './pace.js';
+import { SEASON_TRAYS } from './season-trays.js';
 
 export const TRAYS_PER_NIGHT = 20;
 
@@ -436,10 +437,12 @@ export function dailyConfig(d = nightDate()) {
     visitor: VISITOR_ORDER[n % VISITOR_ORDER.length] };
 }
 
-// Season Brew Set: 5 fixed trays for each Season week (t = 1..5). Same trays for everyone, separate from the Story, a little harder in later weeks.
-export function brewSetConfig(week, t) {
-  const c = endlessConfig(880000 + week * 1000, t + Math.floor((week - 1) / 2));
-  return { ...c, seed: (880000 + week * 1000 + t * 17) >>> 0, band: 'brewset' };
+// Season launch mission: 7 Season nights x 20 trays, the same for everyone, apart from the Story.
+// Picked by tools/build-season-trays.mjs so difficulty rises every tray and every night. No special Story pieces.
+export function seasonTrayConfig(night, t) {
+  const row = SEASON_TRAYS[night - 1], e = row && row[t - 1];
+  if (!e) return null;
+  return { ...endlessConfig(e[1], e[0]), seed: e[1], band: 'season' };
 }
 
 // Endless Brew: tray k of a run gets steadily harder.
