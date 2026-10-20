@@ -45,10 +45,12 @@
   // Text for the result screen. Returns { text, link } or null when nothing should be shown.
   function describe(res) {
     if (!res) return null;
-    if (res.ok === false) { if (res.error === 'offline' || res.error === 'not_configured' || res.error === 'sign_in_first') return null; return { text: MSG[res.error] || 'This run could not be confirmed, so it earned no Season points.' }; }
+    if (res.ok === false) { if (res.error === 'offline' || res.error === 'not_configured' || res.error === 'sign_in_first' || res.error === 'mission_locked' || res.error === 'mission_not_found' || res.error === 'case_not_in_mission') return null; return { text: MSG[res.error] || 'This run could not be confirmed, so it earned no Season points.' }; }
     if (res.mission) {
-      if (res.counted) { var mi = res.points.items || []; return { text: 'Weekly Challenge points: +' + res.points.total + (res.held ? ' (waiting for review)' : '') + ' \u00b7 ' + mi.map(function (x) { return x.label + ' +' + x.amount; }).join(' \u00b7 ') + '.', link: true }; }
-      if (res.reason === 'below_stage' || res.reason === 'not_better' || res.reason === 'already_counted') return { text: 'This try did not reach a new stage, so the Weekly Challenge points stay as they are.', link: true };
+      var label = res.progress ? 'Chapter mission' : 'Weekly Challenge', prog = res.progress ? ' \u00b7 ' + res.progress.cases + ' of ' + res.progress.of + ' cases' : '';
+      if (res.counted) { var mi = res.points.items || []; return { text: label + ' points: +' + res.points.total + (res.held ? ' (waiting for review)' : '') + ' \u00b7 ' + mi.map(function (x) { return x.label + ' +' + x.amount; }).join(' \u00b7 ') + prog + '.', link: true }; }
+      if (res.progress && res.reason !== 'points_paused') return { text: 'Case counted for the chapter mission: ' + res.progress.cases + ' of ' + res.progress.of + ' cases done.', link: true };
+      if (res.reason === 'below_stage' || res.reason === 'not_better' || res.reason === 'already_counted') return { text: 'This try did not reach a new stage, so the mission points stay as they are.', link: true };
       if (res.reason === 'points_paused') return { text: 'Season points are paused right now. Your run was kept.' };
       return null;
     }

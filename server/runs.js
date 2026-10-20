@@ -7,9 +7,10 @@ import { planAwards, planUpgrade, ruleVersionId, weekFacts, streakFrom } from '.
 import * as moonBrew from './games/moon-brew.js';
 import * as fullMoon from './games/full-moon.js';
 import * as scamLab from './games/scam-lab.js';
-import { findMission, missionState, planMission, claimedStages, missionPublic } from './missions.js';
+import { allMissions, findMission, missionState, planMission, claimedStages, finishedCases, missionPublic } from './missions.js';
 
 const ADAPTERS = { 'moon-brew': moonBrew, 'full-moon': fullMoon, 'scam-lab': scamLab };
+export const MIN_CASE_MS = 20000;          // a Scam Lab case cannot be finished in less than this (wall clock)
 export const MIN_SECONDS_PER_TAP = 0.35;   // Moon Brew: faster than this on average is not a person
 const SLACK_MS = 5000;                     // the run's own clock may be 20% / 5 s faster than the wall clock, no more
 
@@ -51,11 +52,12 @@ async function weeklyStart(env, p, body, now, night, sstatus) {
   if (!m) return json(400, { ok: false, error: 'mission_not_found' });
   const state = missionState(sstatus, m, now);
   if (state === 'locked') return json(409, { ok: false, error: 'mission_locked' });
+  if (m.kind === 'chapter' && !m.cases.includes(body.case)) return json(400, { ok: false, error: 'case_not_in_mission' });
   const claimed = await claimedStages(env, p.id, m), info = missionPublic(sstatus, m, now);
   if (m.stages.every((st) => claimed.has(st.id))) return json(200, { ok: true, runId: null, night, alreadyCounted: true, mission: info });
   const id = 'run_' + randomToken(12), week = weekOfNight(night);
   await env.DB.batch([
-    env.DB.prepare("INSERT INTO game_runs (id, player_id, season_id, game_id, mode, seed, rules_version, status, submitted_at) VALUES (?1, ?2, ?3, ?4, 'weekly', ?5, ?6, 'pending', ?7)").bind(id, p.id, RULES.seasonId, m.game, m.id, RULES.version, isoTime(now)),
+    env.DB.prepare("INSERT INTO game_runs (id, player_id, season_id, game_id, mode, seed, rules_version, status, submitted_at) VALUES (?1, ?2, ?3, ?4, 'weekly', ?5, ?6, 'pending', ?7)").bind(id, p.id, RULES.seasonId, m.game, m.kind === 'chapter' ? m.id + ':' + body.case : m.id, RULES.version, isoTime(now)),
     env.DB.prepare('INSERT INTO run_meta (run_id, player_id, game_id, night_key, week, started_ms) VALUES (?1, ?2, ?3, ?4, ?5, ?6)').bind(id, p.id, m.game, night, week, now),
   ]);
   return json(200, { ok: true, runId: id, night, week, counting: await pointsOn(env), mission: info });
@@ -78,13 +80,15 @@ export async function runFinish(request, env) {
   const now = nowMs(env);
   if (now > nightEndMs(run.night_key) + RULES.graceMs) { await reject(env, run, now, 'night_over'); return json(422, { ok: false, error: 'night_over' }); }
   const t0 = performance.now();
-  const mission = run.gmode === 'weekly' ? findMission(run.gseed, run.game_id) : null;
+  const [missionId, caseId] = run.gmode === 'weekly' ? String(run.gseed).split(':') : [];
+  const mission = run.gmode === 'weekly' ? findMission(missionId, run.game_id) : null;
   if (run.gmode === 'weekly' && !mission) { await reject(env, run, now, 'bad_mission'); return json(422, { ok: false, error: 'bad_log' }); }
-  const v = ADAPTERS[run.game_id].verify(run.night_key, body, mission ? { seed: mission.seed, twist: mission.twist } : {});
+  const v = mission && mission.kind === 'chapter' ? ADAPTERS[run.game_id].verifyCase(caseId, body) : ADAPTERS[run.game_id].verify(run.night_key, body, mission ? { seed: mission.seed, twist: mission.twist } : {});
   const replayMs = Math.round(performance.now() - t0);
   if (!v.ok) { await reject(env, run, now, v.error); return json(422, { ok: false, error: v.error }); }
   const elapsed = now - run.started_ms;
   if (elapsed < v.seconds * 800 - SLACK_MS) { await reject(env, run, now, 'too_fast'); return json(422, { ok: false, error: 'too_fast' }); }
+  if (mission && mission.kind === 'chapter' && elapsed < MIN_CASE_MS) { await reject(env, run, now, 'too_fast'); return json(422, { ok: false, error: 'too_fast' }); }
   if (run.game_id === 'moon-brew' && v.seconds < body.log.length * MIN_SECONDS_PER_TAP) { await reject(env, run, now, 'too_fast'); return json(422, { ok: false, error: 'too_fast' }); }
 
   const logJson = JSON.stringify(v.stored || (run.game_id === 'moon-brew' ? body.log : { drops: body.drops, endTick: body.endTick }));
@@ -93,7 +97,7 @@ export async function runFinish(request, env) {
   ];
   const plain = [...finishRun, env.DB.prepare('UPDATE run_meta SET finished_ms = ?2, band = ?3, replay_ms = ?4 WHERE run_id = ?1').bind(run.run_id, now, v.band, replayMs)];
   const counting = await pointsOn(env);
-  if (mission) return weeklyFinish(env, p, run, mission, v, now, replayMs, plain, counting);
+  if (mission) return weeklyFinish(env, p, run, mission, v, now, replayMs, plain, counting, caseId);
   const bestRow = await env.DB.prepare('SELECT MAX(band) band, SUM(counted) c FROM run_meta WHERE player_id = ?1 AND game_id = ?2 AND night_key = ?3').bind(p.id, run.game_id, run.night_key).first();
   const best = bestRow && bestRow.c > 0 ? bestRow : null;
   const answer = (extra) => json(200, { ok: true, score: v.score, band: v.band, bandName: RULES.bandNames[v.band], ...extra });
@@ -139,14 +143,17 @@ export async function runFinish(request, env) {
 }
 
 // A weekly run finished and verified: pay the stages it reaches, by the server clock (full in the mission's week, half after).
-async function weeklyFinish(env, p, run, m, v, now, replayMs, plain, counting) {
-  const answer = (extra) => json(200, { ok: true, score: v.score, band: v.band, bandName: RULES.bandNames[v.band], mission: m.id, ...extra });
+async function weeklyFinish(env, p, run, m, v, now, replayMs, plain, counting, caseId) {
+  let cases = 0;
+  if (m.kind === 'chapter') { const f = await finishedCases(env, p.id, m); f.add(caseId); cases = f.size; }
+  const progress = m.kind === 'chapter' ? { cases, of: m.cases.length } : undefined;
+  const answer = (extra) => json(200, { ok: true, score: v.score, band: v.band, bandName: RULES.bandNames[v.band], mission: m.id, progress, ...extra });
   if (!counting) { await env.DB.batch(plain); return answer({ counted: false, reason: 'points_paused', points: { total: 0, items: [] } }); }
   const sstatus = await seasonStatus(env), state = missionState(sstatus, m, now);
   if (state === 'locked') { await env.DB.batch(plain); return answer({ counted: false, reason: 'mission_locked', points: { total: 0, items: [] } }); }
   const claimed = await claimedStages(env, p.id, m);
   const tot = await env.DB.prepare("SELECT COALESCE(SUM(amount),0) t FROM points_ledger WHERE player_id = ?1 AND season_id = ?2 AND status IN ('settled','pending')").bind(p.id, RULES.seasonId).first();
-  const plan = planMission(m, claimed, v.band, state, RULES.seasonMax - tot.t);
+  const plan = planMission(m, claimed, { band: v.band, cases }, state, RULES.seasonMax - tot.t);
   if (!plan.length) { await env.DB.batch(plain); return answer({ counted: false, reason: claimed.size ? 'not_better' : 'below_stage', points: { total: 0, items: [] } }); }
   const st = p.status === 'held' ? 'pending' : 'settled', rv = await ruleVersionId(env), total = plan.reduce((a, x) => a + x.amount, 0);
   try {
@@ -172,7 +179,7 @@ export async function seasonInfo(request, env) {
   const s = await env.DB.prepare('SELECT id, name, status, starts_at, ends_at FROM seasons WHERE id = ?1').bind(RULES.seasonId).first();
   return json(200, { ok: true, season: s ? { id: s.id, name: s.name, status: s.status, startsAt: s.starts_at, endsAt: s.ends_at } : null,
     night: { key: night, endsAt: isoTime(nightEndMs(night)), week: weekOfNight(night) },
-    games: RULES.games.map((id) => ({ id, title: RULES.names[id], ready: id in ADAPTERS })), missions: RULES.missions.map((m) => missionPublic(s ? s.status : null, m, now)), rules: rulesSummary(), rulesVersion: RULES.version });
+    games: RULES.games.map((id) => ({ id, title: RULES.names[id], ready: id in ADAPTERS })), missions: allMissions().map((m) => missionPublic(s ? s.status : null, m, now)), rules: rulesSummary(), rulesVersion: RULES.version });
 }
 
 // ---- GET /api/me/points: everything the Passport dashboard shows ----
@@ -199,9 +206,10 @@ export async function myPoints(request, env) {
   const games = RULES.games.map((id) => ({ id, title: RULES.names[id], weekPoints: (gm[id] || {}).pts || 0, weekCap: RULES.weeklyCapPerGame, nightsThisWeek: (gm[id] || {}).nights || 0, playedTonight: id in tmap, tonightBand: id in tmap ? RULES.bandNames[tmap[id]] : null, ready: id in ADAPTERS }));
   const sst = await seasonStatus(env);
   const missions = [];
-  for (const m of RULES.missions) {
+  for (const m of allMissions()) {
     const info = missionPublic(sst, m, now), claimed = await claimedStages(env, p.id, m);
-    missions.push({ ...info, stages: info.stages.map((st) => ({ ...st, done: claimed.has(st.id) })), done: m.stages.every((st) => claimed.has(st.id)) });
+    const casesDone = m.kind === 'chapter' ? [...(await finishedCases(env, p.id, m))] : undefined;
+    missions.push({ ...info, stages: info.stages.map((st) => ({ ...st, done: claimed.has(st.id) })), done: m.stages.every((st) => claimed.has(st.id)), casesDone });
   }
   const allRounderDone = RULES.games.filter((id) => ((gm[id] || {}).nights || 0) >= RULES.allRounderNights).length;
   return json(200, {

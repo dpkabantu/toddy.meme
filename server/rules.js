@@ -1,8 +1,8 @@
 // Season 1 points rules. ONE versioned place; every point stored in the ledger carries RULES.version.
 // All numbers are PLACEHOLDERS until the owner signs off the Season rules (Stage 8). Changing a number means a NEW version string.
 export const RULES = {
-  version: 's1-draft-3',
-  versionNumber: 3,                   // the number stored in rule_versions
+  version: 's1-draft-4',
+  versionNumber: 4,                   // the number stored in rule_versions
   nightMax: 20,                       // most one game can give for one night
   bandShare: [0.4, 0.6, 0.8, 1],      // share of nightMax for performance band 0..3
   weeklyCapPerGame: 140,              // most gameplay points one game can give per week (7 x 20)
@@ -17,6 +17,8 @@ export const RULES = {
     { id: 'full-moon-w3', game: 'full-moon', week: 3, kind: 'weekly-puzzle', title: 'Weekly Challenge', seed: 900300, twist: 2,
       stages: [{ id: 'silver', minBand: 2, points: 40, label: 'Silver' }, { id: 'gold', minBand: 3, points: 10, label: 'Gold' }] },
   ],
+  // Scam Lab: one mission per chapter, made from games/scam-lab/cases/chapters.json. Chapter n opens in Season week firstWeek + n - 1 (PLACEHOLDER schedule).
+  chapterMissions: { firstWeek: 1, halfPoints: 25, donePoints: 25, halfCases: 3 },
   games: ['moon-brew', 'full-moon', 'scam-lab'],
   seasonId: 'season-1',
   seasonMax: 10000,                   // most one person can hold in a season (all sources)

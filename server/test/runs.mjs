@@ -11,7 +11,8 @@ import * as FM from '../games/full-moon-core.js';
 import { generate, newGame, tap, hint, canRoll, frozen } from '../../games/moon-brew/src/core.js';
 import { dailyConfig } from '../../games/moon-brew/src/levels.js';
 import { dailyCase } from '../../games/scam-lab/src/daily.js';
-import { scoreDaily, strongClues } from '../../games/scam-lab/src/engine.js';
+import { scoreDaily, strongClues, scoreCase, scoreRush } from '../../games/scam-lab/src/engine.js';
+import { CASES as LAB } from '../games/scam-lab-cases.js';
 import { planAwards, planUpgrade } from '../points.js';
 import { RULES } from '../rules.js';
 import { nightKey, nightEndMs } from '../clock.js';
@@ -246,6 +247,71 @@ check(db.prepare("SELECT COUNT(*) c FROM game_runs WHERE log_json IS NOT NULL AN
   db.prepare("UPDATE settings SET value='1' WHERE key='points_enabled'").run();
   db.prepare("UPDATE seasons SET status='draft' WHERE id='season-1'").run();
   RULES.missions.pop();
+}
+
+// ---- Scam Lab chapter missions: finish cases of a chapter; payouts at 3 cases and at the whole chapter ----
+{
+  RULES.startNight = '2027-03-01';   // chapter 1 = week 1: 1 Mar 13:00 UTC to 8 Mar 13:00 UTC; chapter 2 opens after that
+  const labLog = (id, over = {}) => {   // what a careful player's game would send for this case
+    const c = LAB[id];
+    if (c.cards) { const answers = {}; c.cards.forEach((k) => { answers[k.id] = k.scam ? 'scam' : 'safe'; }); const left = Math.floor(c.seconds / 2);
+      return { answers, secondsLeft: left, quickAnswer: c.quick_check.answer, seconds: c.seconds - left, score: scoreRush(c, answers, left, c.quick_check.answer).total, ...over }; }
+    const marks = {}; strongClues(c).forEach((k) => { marks[k] = 'flag'; });
+    const board = c.board ? { verdict: c.board.answer, picks: strongClues(c).slice(0, c.board.pick) } : null;
+    const log = { marks, decision: c.best_action, quickAnswer: c.quick_check.answer, seconds: 40, hints: 0, seen: c.duel ? Object.keys(c.clues) : null, board };
+    return { ...log, score: scoreCase(c, log).total, ...over };
+  };
+  const ch1 = ['c1-01', 'c1-02', 'c1-03', 'c1-04', 'c1-05', 'c1-06'];
+  const playCase = async (cookie, mission, id, over = {}, wait = 41) => {
+    const st = await post('/api/run/start', { game: 'scam-lab', mode: 'weekly', mission, case: id, night: nightKey(NOW) }, cookie);
+    if (!st.body.runId) return { st };
+    NOW += wait * 1000;
+    return { st, fin: await post('/api/run/finish', { runId: st.body.runId, ...labLog(id, over) }, cookie) };
+  };
+  const rows = (id) => db.prepare("SELECT amount FROM points_ledger WHERE player_id = ?1 AND source_type = 'mission' ORDER BY id").all(id).map((x) => x.amount);
+  db.prepare("UPDATE seasons SET status='live' WHERE id='season-1'").run();
+
+  NOW = Date.parse('2027-03-02T14:00:00Z'); const a = await mkPlayer('TDY-AAAA0020', 'ChapA');
+  const pub = await get('/api/season'); const chm = pub.body.missions.filter((m) => m.game === 'scam-lab');
+  check(chm.length === 8 && chm[0].week === 1 && chm[7].week === 8 && chm.every((m) => m.cases.length === 6), 'public Season info lists 8 Scam Lab chapter missions, one per week, six cases each');
+  check(chm[0].state === 'open' && chm[1].state === 'locked', 'chapter 1 is open in its week and chapter 2 is still locked');
+  let x = await playCase(a, 'scam-lab-ch2', 'c2-01'); check(x.st.status === 409 && x.st.body.error === 'mission_locked', 'a chapter that has not opened cannot be played for points');
+  x = await post('/api/run/start', { game: 'scam-lab', mode: 'weekly', mission: 'scam-lab-ch1', case: 'c2-01', night: nightKey(NOW) }, a); check(x.status === 400 && x.body.error === 'case_not_in_mission', 'a case from another chapter is refused for this mission');
+  x = await playCase(a, 'scam-lab-ch1', ch1[0]); check(x.fin.body.counted === false && x.fin.body.progress.cases === 1, 'case 1: counted for the chapter, nothing paid yet (1 of 6)');
+  x = await playCase(a, 'scam-lab-ch1', ch1[1]); check(x.fin.body.progress.cases === 2 && !x.fin.body.counted, 'case 2 (an Inbox Rush): 2 of 6');
+  x = await playCase(a, 'scam-lab-ch1', ch1[0]); check(x.fin.body.progress.cases === 2, 'replaying a finished case does not add progress');
+  x = await playCase(a, 'scam-lab-ch1', ch1[2]); check(x.fin.body.counted && x.fin.body.points.total === 25 && x.fin.body.progress.cases === 3, 'the third different case pays the first stage (25)');
+  for (const id of ch1.slice(3, 5)) x = await playCase(a, 'scam-lab-ch1', id);
+  check(x.fin.body.counted === false && x.fin.body.progress.cases === 5, 'cases 4 and 5 pay nothing extra');
+  x = await playCase(a, 'scam-lab-ch1', ch1[5]); check(x.fin.body.counted && x.fin.body.points.total === 25 && x.fin.body.progress.cases === 6, 'the boss (case 6) finishes the chapter and pays the second stage (25)');
+  check(rows('TDY-AAAA0020').join() === '25,25' && ledgerSum('TDY-AAAA0020') === 50, 'chapter total is 50 in two ledger rows');
+  x = await playCase(a, 'scam-lab-ch1', ch1[0]); check(x.st.body.runId === null && x.st.body.alreadyCounted, 'chapter done: a new try sends nothing');
+  const dash = await get('/api/me/points', a); const m1 = dash.body.missions.find((m) => m.id === 'scam-lab-ch1');
+  check(m1 && m1.done && m1.casesDone.length === 6 && dash.body.points.season === 50, 'dashboard: chapter 1 done, 6 cases, season total 50');
+  check(db.prepare("SELECT COUNT(*) c FROM run_meta WHERE player_id='TDY-AAAA0020' AND counted = 1").get().c === 0, 'chapter cases are not nightly runs (no night medals)');
+
+  // late: half points rounded down (25 -> 12)
+  NOW = Date.parse('2027-03-09T14:00:00Z'); const b = await mkPlayer('TDY-AAAA0021', 'ChapLate');
+  for (const id of ch1) x = await playCase(b, 'scam-lab-ch1', id);
+  check(rows('TDY-AAAA0021').join() === '12,12', 'late: both stages pay half, rounded down (12 + 12)');
+
+  // split: three cases in the week, the rest after the deadline
+  NOW = Date.parse('2027-03-07T09:00:00Z'); const c = await mkPlayer('TDY-AAAA0022', 'ChapSplit');
+  for (const id of ch1.slice(0, 3)) x = await playCase(c, 'scam-lab-ch1', id);
+  NOW = Date.parse('2027-03-08T14:00:00Z');
+  for (const id of ch1.slice(3)) x = await playCase(c, 'scam-lab-ch1', id);
+  check(rows('TDY-AAAA0022').join() === '25,12', 'split: first stage on time (25), second stage after the deadline (12)');
+
+  // safety
+  NOW = Date.parse('2027-03-03T10:00:00Z'); const d = await mkPlayer('TDY-AAAA0023', 'ChapCheat');
+  x = await playCase(d, 'scam-lab-ch1', ch1[0], { score: 1 }); check(x.fin.status === 422 && x.fin.body.error === 'mismatch', 'a wrong score is refused');
+  x = await playCase(d, 'scam-lab-ch1', ch1[2], { decision: null }); check(x.fin.status === 422 && x.fin.body.error === 'not_finished', 'a case with no decision is not finished');
+  x = await playCase(d, 'scam-lab-ch1', ch1[2], { marks: { nope: 'flag' } }); check(x.fin.status === 422 && x.fin.body.error === 'bad_log', 'a clue that does not exist is refused');
+  x = await playCase(d, 'scam-lab-ch1', ch1[2], {}, 5); check(x.fin.status === 422 && x.fin.body.error === 'too_fast', 'a case finished in 5 seconds of real time is refused');
+  check(ledgerSum('TDY-AAAA0023') === 0, 'none of those paid anything');
+  const e = await mkPlayer('TDY-AAAA0024', 'ChapHeld', 'held'); for (const id of ch1.slice(0, 3)) x = await playCase(e, 'scam-lab-ch1', id);
+  check(x.fin.body.counted && x.fin.body.held && db.prepare("SELECT status FROM points_ledger WHERE player_id='TDY-AAAA0024'").all().every((y) => y.status === 'pending'), 'a player under review: chapter points wait as pending');
+  db.prepare("UPDATE seasons SET status='draft' WHERE id='season-1'").run();
 }
 
 console.log(bad ? 'PROBLEMS: ' + bad : 'runs and points ok'); if (bad) process.exitCode = 1;

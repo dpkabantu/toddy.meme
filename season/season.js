@@ -45,21 +45,27 @@
     var box = $('mg'); box.textContent = '';
     var mine = {}; if (P && P.missions) P.missions.forEach(function (m) { mine[m.id] = m; });
     var name = {}; S.games.forEach(function (g) { name[g.id] = g.title; });
+    var coming = [];
     list.forEach(function (m) {
+      if (m.state === 'locked') { coming.push(m); return; }
       var my = mine[m.id], done = my && my.done, card = el('div', 'tg-card'), top = el('div', 'top'), nm = el('span', 'name', (name[m.game] || m.game) + ' · ' + m.title);
       nm.appendChild(el('span', 'tag', 'Week ' + m.week)); top.appendChild(nm);
-      var state = m.state === 'locked' ? 'Opens ' + istDate(m.opensAt) + ', 6:30 pm India time' : m.state === 'late' ? 'This week is over: half points' : 'Open until ' + istDate(m.closesAt) + ', 6:30 pm India time';
+      var state = m.state === 'late' ? 'This week is over: half points' : 'Open until ' + istDate(m.closesAt) + ', 6:30 pm India time';
       top.appendChild(el('span', 'state' + (done ? ' done' : ''), done ? 'Done' : state)); card.appendChild(top);
+      if (m.kind === 'chapter') card.appendChild(el('p', 'note', (my && my.casesDone ? my.casesDone.length : 0) + ' of ' + m.cases.length + ' cases finished'));
       var ul = el('ul', 'stages');
       m.stages.forEach(function (st, i) { var got = my && my.stages[i] && my.stages[i].done; ul.appendChild(el('li', got ? 'got' : '', (got ? '\u2713 ' : '') + st.label + ' +' + st.points)); });
       card.appendChild(ul);
-      if (m.state !== 'locked') {
-        var a = el('a', 'btn' + (done ? ' alt' : '')); a.href = '/games/' + m.game + '/?play=weekly';
-        a.textContent = done ? 'All stages done. Play again for fun' : m.state === 'late' ? 'Finish it for half points' : 'Play the Weekly Challenge';
-        card.appendChild(a);
-      }
-      box.appendChild(card);
+      var a = el('a', 'btn' + (done ? ' alt' : '')); a.href = '/games/' + m.game + '/' + (m.kind === 'chapter' ? '?mission=' + m.id : '?play=weekly');
+      a.textContent = done ? 'All stages done. Play again for fun' : m.state === 'late' ? 'Finish it for half points' : m.kind === 'chapter' ? 'Open this chapter' : 'Play the Weekly Challenge';
+      card.appendChild(a); box.appendChild(card);
     });
+    if (coming.length) {
+      var more = el('div', 'tg-card'); more.appendChild(el('h3', 'name', 'Opening soon'));
+      var ul2 = el('ul', 'stages soon');
+      coming.forEach(function (m) { ul2.appendChild(el('li', '', (name[m.game] || m.game) + ' · ' + m.title + ' · opens ' + istDate(m.opensAt))); });
+      more.appendChild(ul2); box.appendChild(more);
+    }
     $('missions').hidden = false;
   }
 

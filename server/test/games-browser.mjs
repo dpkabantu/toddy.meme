@@ -158,6 +158,37 @@ await page.goto(base + '/'); await page.waitForSelector('#nav-season:not([hidden
 check(/Night_Owl . Season 1/.test(await page.locator('#nav-season').innerText()) && (await page.locator('#nav-season a').getAttribute('href')) === '/season/', 'main page menu: shows the player\'s name and goes to Season 1');
 await page.screenshot({ path: shots + '/home_menu.png', clip: { x: 0, y: 0, width: 1280, height: 120 } });
 
+// ---- Scam Lab chapter mission: a chapter case played for the mission, from the Season page link ----
+await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])');
+const chCard = page.locator('#mg .tg-card', { hasText: 'Chapter 1' });
+check(/0 of 6 cases finished/.test(await chCard.innerText()) && (await chCard.locator('a').getAttribute('href')) === '/games/scam-lab/?mission=scam-lab-ch1', 'Season page: Scam Lab chapter 1 mission card shows 0 of 6 cases and opens the chapter');
+check(/Opening soon/.test(await page.locator('#mg').innerText()) === false, 'Season page: nothing is locked while the Season is in test mode');
+await page.goto(base + '/games/scam-lab/?mission=scam-lab-ch1&qa');
+await page.waitForFunction(() => window.__lab, null, { timeout: 30000 }); await page.waitForTimeout(800);
+check(!/mission=/.test(page.url()) && /qa/.test(page.url()), 'Scam Lab: the mission link opens the chapter page and tidies the address');
+await page.evaluate(() => window.__lab.caseIntro('c1-03'));
+await page.waitForSelector('#btn-go', { timeout: 30000 }); await page.click('#btn-go');
+for (let i = 0; i < 12 && !(await page.locator('#btn-decide').isVisible()); i++) {   // Milo's intro, the notification and similar steps: press whatever is offered
+  const next = page.locator('#notif:visible, button:visible:text-is("Begin"), button:visible:text-is("Next"), button:visible:text-is("Got it")').first();
+  if (await next.count()) await next.click({ timeout: 2000 }).catch(() => {}); await page.waitForTimeout(600);
+}
+await page.waitForSelector('#btn-decide', { timeout: 30000 }).catch(async (e) => { console.log('DEBUG', (await page.locator('body').innerText()).slice(0, 600).replace(/\n+/g, ' | ')); await page.screenshot({ path: shots + '/debug_chapter.png' }); throw e; });
+const ch3 = await page.evaluate(() => { const S = window.__lab.playState(); const c = S.c; Object.entries(c.clues).forEach(([k, v]) => { if (v.strength === 'strong') S.marks[k] = 'flag'; }); return { best: c.best_action, quick: c.quick_check.answer }; });
+await page.waitForTimeout(21000);   // the server refuses a case finished in under 20 seconds of real time
+await page.click('#btn-decide'); await page.click('.choice[data-action="' + ch3.best + '"]');
+await page.waitForSelector('#btn-continue', { timeout: 15000 }); await page.click('#btn-continue');
+await page.waitForSelector('#btn-quick', { timeout: 15000 }); await page.click('#btn-quick');
+await page.waitForSelector('.choice[data-option="' + ch3.quick + '"]', { timeout: 15000 }); await page.click('.choice[data-option="' + ch3.quick + '"]');
+await page.waitForSelector('#btn-result', { timeout: 15000 }); await page.click('#btn-result');
+await page.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 20000 });
+const chLine = await page.locator('#seasonline').innerText();
+check(/Case counted for the chapter mission: 1 of 6 cases done/.test(chLine), 'Scam Lab chapter case result says: "' + chLine.slice(0, 80) + '"');
+const chRow = db.prepare("SELECT r.score, r.seed FROM game_runs r WHERE r.mode = 'weekly' AND r.game_id = 'scam-lab' AND r.status = 'accepted'").get();
+const chScore = await page.evaluate(() => Number(document.getElementById('total').firstChild.textContent));
+check(chRow && chRow.seed === 'scam-lab-ch1:c1-03' && chRow.score === chScore, 'Scam Lab chapter case: the server scored it again and got the same score (' + chScore + ')');
+await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])');
+check(/1 of 6 cases finished/.test(await page.locator('#mg .tg-card', { hasText: 'Chapter 1' }).innerText()), 'Season page: the chapter card now shows 1 of 6 cases');
+
 // ---- Weekly Challenge (Full Moon), reached from the Season page ----
 RULES.missions[0].stages[0].minBand = 0;   // test only: any finished try reaches stage one (a real Silver needs a skilled player)
 await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])');
@@ -173,7 +204,7 @@ await page.evaluate(() => clearInterval(window.__drop));
 await page.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 15000 });
 const wLine = await page.locator('#seasonline').innerText(); const wScore = await page.evaluate(() => window.__mm.lastRun.score);
 check(/^Weekly Challenge points: \+40/.test(wLine) && !/Active night/.test(wLine), 'Weekly Challenge result says: "' + wLine.slice(0, 80) + '..."');
-const wRow = db.prepare("SELECT r.score, r.seed FROM game_runs r WHERE r.mode = 'weekly' AND r.status = 'accepted'").get();
+const wRow = db.prepare("SELECT r.score, r.seed FROM game_runs r WHERE r.mode = 'weekly' AND r.game_id = 'full-moon' AND r.status = 'accepted'").get();
 check(wRow && wRow.score === wScore && wRow.seed === 'full-moon-w3', 'Weekly Challenge: the server replayed the fixed puzzle and stored the same score (' + wScore + ')');
 check(db.prepare("SELECT COUNT(*) c FROM points_ledger WHERE source_type = 'mission' AND amount = 40").get().c === 1, 'Weekly Challenge: exactly one 40-point ledger row');
 await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])');
@@ -195,7 +226,7 @@ for (let i = 0; i < 200; i++) {
 await g.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 20000 });
 check(/Playing as a guest/.test(await g.locator('#seasonline').innerText()) && (await g.locator('#seasonline a').getAttribute('href')) === '/season/', 'guest: result says "Playing as a guest" with a link to the Season page');
 check(!apiCalls.some((c) => /run\//.test(c)), 'guest: no run was sent to the server (' + apiCalls.join(', ') + ')');
-check(db.prepare("SELECT COUNT(*) c FROM game_runs").get().c === 4, 'guest play left no rows in the database (3 daily runs + 1 weekly run from the signed-in player)');
+check(db.prepare("SELECT COUNT(*) c FROM game_runs").get().c === 5, 'guest play left no rows in the database (3 daily runs, 1 Weekly Challenge and 1 chapter case from the signed-in player)');
 
 check(viol.length === 0, 'no Content-Security-Policy violations in any page (' + viol.length + ') ' + viol.slice(0, 2).join(' | ')); check(errs.length === 0, 'no page errors ' + errs.slice(0, 3).join('|'));
 await browser.close(); server.close();

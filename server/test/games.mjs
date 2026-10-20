@@ -102,4 +102,16 @@ const t1 = performance.now(); moonBrew.verify(night, { log: g.log }); console.lo
   check(JSON.stringify(dailyCase(night)) === JSON.stringify(sc) && (o.template !== sc.template || JSON.stringify(o) !== JSON.stringify(sc)), 'Scam Lab: the same night always gives the same case');
 }
 
+// Scam Lab case list for the server: every case file of the game must be known to the server (so a new case cannot be played unchecked).
+{
+  const { readdirSync } = await import('node:fs');
+  const { CASES, CHAPTERS } = await import('../games/scam-lab-cases.js');
+  const dir = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', '..', 'games', 'scam-lab', 'cases');
+  const files = readdirSync(dir).filter((f) => /^c\d+-\d+\.json$/.test(f)).map((f) => f.replace('.json', '')).sort();
+  check(JSON.stringify(files) === JSON.stringify(Object.keys(CASES).sort()), 'Scam Lab: the server knows every case file (' + files.length + ') - if this fails, add the new case to server/games/scam-lab-cases.js');
+  check(CHAPTERS.flatMap((c) => c.cases).every((id) => CASES[id]), 'Scam Lab: every case named in chapters.json exists on the server');
+  const { verifyCase } = scamLab;
+  check(!verifyCase('c1-01', { marks: {}, decision: 'nope', seconds: 30 }).ok && !verifyCase('zzz', {}).ok && !verifyCase('__proto__', {}).ok && !verifyCase('c1-02', { answers: { x: 'scam' }, secondsLeft: 1, seconds: 30 }).ok, 'Scam Lab: made-up decision, case id, prototype name or card are all refused');
+}
+
 console.log(bad ? 'PROBLEMS: ' + bad : 'game checks ok'); if (bad) process.exitCode = 1;

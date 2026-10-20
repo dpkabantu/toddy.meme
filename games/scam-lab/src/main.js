@@ -234,6 +234,7 @@ function startCase(id) {
   hideAll(); setBg('lab_bg'); gameLayer(true); $('hud').hidden = true; $('phone').hidden = true;
   current = id; setUp(quitCase);
   const c = CASES[id];
+  if (window.ToddySeason && c.chapter) window.ToddySeason.start('scam-lab', { mode: 'weekly', mission: 'scam-lab-ch' + c.chapter, case: id });   // signed-in players only; the server decides if the chapter mission is open
   if (c.type === 'rush') playRush(c, env); else playCase(c, env);
 }
 function startDaily() {
@@ -253,7 +254,14 @@ async function showResult({ case: c, score: r, seconds }) {
   const rankBefore = rankFor(store.totalStars());
   let streakLine = null;
   const ps = playState();
-  const seasonRes = c.daily && window.ToddySeason && ps ? window.ToddySeason.finish('scam-lab', { marks: ps.marks, decision: ps.decision || null, seconds: ps.seconds, score: r.total }) : null;
+  let seasonRes = c.daily && window.ToddySeason && ps ? window.ToddySeason.finish('scam-lab', { marks: ps.marks, decision: ps.decision || null, seconds: ps.seconds, score: r.total }) : null;
+  if (!c.daily && c.chapter && window.ToddySeason) {   // a chapter case: send what the player did; the server scores it again
+    const rs = rushState();
+    const payload = c.type === 'rush'
+      ? (rs && rs.c === c ? { answers: rs.answers, secondsLeft: Math.max(0, rs.left), quickAnswer: rs.quickAnswer || null, seconds, score: r.total } : null)
+      : (ps && ps.c === c ? { marks: ps.marks, decision: ps.decision || null, quickAnswer: ps.quickAnswer || null, seconds: ps.seconds, hints: ps.hints || 0, seen: c.duel ? [...ps.seen] : null, board: ps.board || null, score: r.total } : null);
+    seasonRes = payload ? window.ToddySeason.finish('scam-lab', payload) : null;
+  }
   const w = c.daily ? null : where(c.id);
   const wasOpen = OPEN().filter(chapterOpen).length;
   if (c.daily) {
@@ -296,7 +304,7 @@ async function showResult({ case: c, score: r, seconds }) {
     h('table', { class: 'breakdown' }, h('tbody', {}, rows)),
     rankUp ? h('div', { class: 'rankup' }, h('img', { src: A(`rank_${rank.id}`), alt: '' }), h('div', {}, h('small', { text: 'NEW RANK' }), h('b', { text: rank.name }))) : null,
     h('p', { class: 'small-ink', text: streakLine || `Rank: ${rank.name} · ★ ${total}` }),
-    c.daily ? h('p', { class: 'small-ink', id: 'seasonline', hidden: true }) : null,
+    (c.daily || c.chapter) ? h('p', { class: 'small-ink', id: 'seasonline', hidden: true }) : null,
     primary,
     h('div', { class: 'row center minor' },
       c.daily ? null : h('button', { class: 'linkbtn', id: 'btn-again', type: 'button', onclick: () => { sfx.tap(); startCase(c.id); } }, '↻ Replay'),
@@ -458,6 +466,10 @@ async function boot() {
   if (/[?&]play=daily\b/.test(location.search)) {
     history.replaceState(history.state, '', location.pathname + location.search.replace(/([?&])play=daily&?/, '$1').replace(/[?&]$/, '') + location.hash);
     if (store.played(ALL()[0])) caseIntro('daily'); else home();
+  } else if (/[?&]mission=scam-lab-ch\d\b/.test(location.search)) {   // Season page: a chapter mission opens that chapter's page
+    const n = parseInt(location.search.match(/mission=scam-lab-ch(\d)/)[1], 10), ch = CH.chapters.find((x) => x.n === n);
+    history.replaceState(history.state, '', location.pathname + location.search.replace(/([?&])mission=scam-lab-ch\d&?/, '$1').replace(/[?&]$/, '') + location.hash);
+    if (ch && store.played(ALL()[0]) && chapterOpen(ch)) chapterPage(ch); else home();
   }
   if (/[?&]qa\b/.test(location.search)) window.__lab = { caseIntro, chapterPage: (n) => chapterPage(CH.chapters.find((c) => c.n === n)), CASES, store, playState, rushState, dailyCase, dayKey, setCalm: (v) => { store.set('calm', v); applySettings(); } };
 }
