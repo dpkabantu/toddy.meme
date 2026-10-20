@@ -303,7 +303,9 @@ async function showResult({ case: c, score: r, seconds }) {
       h('button', { class: 'linkbtn', id: 'btn-share', type: 'button', onclick: () => share(c, r, seconds) }, '↗ Share'),
       c.daily ? null : h('button', { class: 'linkbtn', id: 'btn-challenge-friend', type: 'button', onclick: () => challenge(c) }, '⚔ Challenge a friend'),
       c.daily ? null : h('button', { class: 'linkbtn', id: 'btn-files', type: 'button', onclick: () => { sfx.tap(); chapterPage(w.ch); } }, `☰ Chapter ${w.ch.n}`),
-      h('button', { class: 'linkbtn', id: 'btn-home', type: 'button', onclick: () => { sfx.tap(); home(); } }, '⌂ Scam Lab')),
+      h('button', { class: 'linkbtn', id: 'btn-home', type: 'button', onclick: () => { sfx.tap(); home(); } }, '⌂ Scam Lab'),
+      h('a', { class: 'linkbtn', id: 'btn-site', href: '/' }, '← TODDY home'),
+      c.daily ? h('a', { class: 'linkbtn', id: 'btn-season', href: '/season/' }, 'My Season') : null),
   ].filter(Boolean)); // replaceChildren turns a null into the text "null"
   el.hidden = false;
   if (seasonRes) seasonRes.then((res) => { const line = $('seasonline'); if (!line) return; if (res && res.guest) window.ToddySeason.guestHint(line); else window.ToddySeason.show(line, res); });

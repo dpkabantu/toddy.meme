@@ -80,6 +80,7 @@ console.log('     (Full Moon night lasted ' + Math.round((Date.now() - t0) / 100
 await page.evaluate(() => clearInterval(window.__drop));
 await page.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 15000 });
 const fmLine = await page.locator('#seasonline').innerText(); const fmScore = await page.evaluate(() => window.__mm.lastRun.score);
+check(await page.locator('.pair a[href="/"]').isVisible() && await page.locator('.pair a[href="/season/"]').isVisible(), 'Full Moon result: visible buttons back to TODDY home and My Season');
 check(/^Season points: \+\d+/.test(fmLine) && /not your score/.test(fmLine), 'Full Moon: result screen says "' + fmLine.slice(0, 90) + '..."');
 const row1 = db.prepare("SELECT r.score, m.counted FROM game_runs r JOIN run_meta m ON m.run_id = r.id WHERE r.game_id = 'full-moon' AND r.status = 'accepted'").get();
 check(row1 && row1.score === fmScore && row1.counted === 1, 'Full Moon: the server replayed the run and stored the very same score (' + fmScore + ')');
@@ -103,6 +104,7 @@ for (let i = 0; i < 200; i++) {
 }
 await page.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 20000 });
 const mbLine = await page.locator('#seasonline').innerText();
+check(await page.locator('#o-site').isVisible() && (await page.locator('#o-site').getAttribute('href')) === '/' && (await page.locator('#o-season').getAttribute('href')) === '/season/', 'Moon Brew result: visible buttons back to TODDY home and My Season');
 check(/^Season points: \+\d+/.test(mbLine) && /not your score/.test(mbLine), 'Moon Brew: result screen says "' + mbLine.slice(0, 90) + '..."');
 const row2 = db.prepare("SELECT r.score, m.counted FROM game_runs r JOIN run_meta m ON m.run_id = r.id WHERE r.game_id = 'moon-brew' AND r.status = 'accepted'").get();
 const mbScore = await page.evaluate(() => window.__moonbrew.save.daily[Object.keys(window.__moonbrew.save.daily).pop()].score);
@@ -131,6 +133,7 @@ await page.waitForSelector('#btn-continue', { timeout: 15000 }); await page.clic
 await page.waitForSelector('#btn-quick', { timeout: 15000 }); await page.click('#btn-quick');
 await page.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 20000 });
 const slLine = await page.locator('#seasonline').innerText(); const slScore = await page.evaluate(() => Number(document.getElementById('total').firstChild.textContent));
+check(await page.locator('#btn-site').isVisible() && (await page.locator('#btn-season').getAttribute('href')) === '/season/', 'Scam Lab result: links back to TODDY home and My Season');
 check(/^Season points: \+\d+/.test(slLine) && /not your score/.test(slLine), 'Scam Lab: result screen says "' + slLine.slice(0, 90) + '..."');
 const row3 = db.prepare("SELECT r.score, m.counted, m.band FROM game_runs r JOIN run_meta m ON m.run_id = r.id WHERE r.game_id = 'scam-lab' AND r.status = 'accepted'").get();
 check(row3 && row3.counted === 1 && row3.score === slScore && row3.band === 3, 'Scam Lab: server score equals the score the game showed (' + slScore + ', Gold)');

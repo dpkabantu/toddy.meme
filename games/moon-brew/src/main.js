@@ -1106,7 +1106,7 @@ function finish(again) {
 
   if (g.status === 'burnt') {
     card(`<h3>Burnt brew</h3><p>Three bumps. Check each tip before you tap.</p>${mode.kind === 'daily' ? '<p class="stat" id="seasonline" hidden></p>' : ''}
-      <div class="btns"><button class="btn ghost" id="o-back" type="button">${mode.kind === 'daily' ? 'Title' : 'Trays'}</button><button class="btn primary" id="o-retry" type="button">Try again</button></div>`);
+      <div class="btns"><button class="btn ghost" id="o-back" type="button">${mode.kind === 'daily' ? 'Title' : 'Trays'}</button><button class="btn primary" id="o-retry" type="button">Try again</button></div>${mode.kind === 'daily' ? '<div class="btns"><a class="btn ghost" id="o-site" href="/">\u2190 TODDY home</a><a class="btn ghost" id="o-season" href="/season/">My Season</a></div>' : ''}`);
     bind('o-retry', () => (mode.kind === 'daily' ? startDaily() : startTray(mode.n, mode.t)));
     bind('o-back', () => show(mode.kind === 'daily' ? 'title' : 'map'));
     seasonShow();
@@ -1130,7 +1130,8 @@ function finish(again) {
       <p class="stat">${result.official ? 'Today\u2019s score is saved.' : `Practice. Today\u2019s score stays ${best}.`} Streak: ${st.current} day${st.current === 1 ? '' : 's'}</p>
       <p class="stat" id="seasonline" hidden></p>
       <div class="btns"><button class="btn primary" id="o-share" type="button">Share</button></div>
-      <div class="btns"><button class="btn ghost" id="o-retry" type="button">Practice again</button><button class="btn ghost" id="o-home" type="button">Done</button></div>`);
+      <div class="btns"><button class="btn ghost" id="o-retry" type="button">Practice again</button><button class="btn ghost" id="o-home" type="button">Done</button></div>
+      <div class="btns"><a class="btn ghost" id="o-site" href="/">\u2190 TODDY home</a><a class="btn ghost" id="o-season" href="/season/">My Season</a></div>`);
     bind('o-retry', startDaily); bind('o-home', () => show('title'));
     seasonShow();
     const shareData = { kind: 'daily', num: mode.num, score: save.daily[mode.num].score, stars: save.daily[mode.num].stars, secs: save.daily[mode.num].time, bumps: save.daily[mode.num].bumps, streak: st.current, visitor: mode.visitor };
