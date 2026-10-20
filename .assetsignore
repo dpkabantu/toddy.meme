@@ -9,3 +9,4 @@ docs
 .github
 tools
 CLAUDE.md
+server/

@@ -1,18 +1,24 @@
 {
   "name": "toddy-meme",
   "compatibility_date": "2026-10-06",
+  // Server: the Worker answers ONLY /api/*; every other address is the static site, as before.
+  "main": "server/index.js",
   "assets": {
     "directory": ".",
+    "binding": "ASSETS",
+    "run_worker_first": ["/api/*"],
     // Serve /404.html (with a real 404 status) for unknown URLs instead of a blank error.
     "not_found_handling": "404-page"
   },
   // Private preview copies for test branches (e.g. games-beta). Needed by
   // `npx wrangler preview` in Cloudflare's preview builds; the live site is unaffected.
-  "previews": {}
-  // GAMES / BACKEND — reserved for later, intentionally not enabled yet.
-  // When scores, Passport or server-side validation are built, a Worker script
-  // is added alongside these static assets, for example:
-  //   "main": "server/index.js",
-  //   "assets": { "directory": ".", "binding": "ASSETS", "run_worker_first": ["/api/*"] }
+  // Previews do NOT inherit production settings, so the TEST database is bound here.
+  // Every preview shares this one test database. The Database ID is not a secret.
+  // The LIVE site gets its own, separate database (top-level "d1_databases") before the December rehearsal.
+  "previews": {
+    "d1_databases": [
+      { "binding": "DB", "database_name": "toddy-season-dev", "database_id": "83d03f27-0b39-4b0d-866d-4d9d28fd003d" }
+    ]
+  }
   // Secrets (API keys, signing keys) belong in Cloudflare secrets, never in this file.
 }
