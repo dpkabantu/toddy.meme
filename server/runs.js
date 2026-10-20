@@ -3,7 +3,7 @@ import { json, nowMs, randomToken, sameOriginPost, readJson, limited, callerKey,
 import { sessionPlayer } from './auth.js';
 import { nightKey, nightEndMs, weekOfNight, shiftNight, lastNights } from './clock.js';
 import { RULES, bandPoints } from './rules.js';
-import { planAwards, planUpgrade, ruleVersionId, weekFacts, streakFrom } from './points.js';
+import { planAwards, planUpgrade, ruleVersionId, weekFacts, streakFrom, PLAYED } from './points.js';
 import * as moonBrew from './games/moon-brew.js';
 import * as fullMoon from './games/full-moon.js';
 import * as scamLab from './games/scam-lab.js';
@@ -166,11 +166,20 @@ async function weeklyFinish(env, p, run, m, v, now, replayMs, plain, counting, c
   const claimed = await claimedStages(env, p.id, m);
   const tot = await env.DB.prepare("SELECT COALESCE(SUM(amount),0) t FROM points_ledger WHERE player_id = ?1 AND season_id = ?2 AND status IN ('settled','pending')").bind(p.id, RULES.seasonId).first();
   const plan = planMission(m, claimed, { band: v.band, cases, byNight }, state, RULES.seasonMax - tot.t);
-  if (!plan.length) { await env.DB.batch(plain); return answer({ counted: false, reason: claimed.size ? 'not_better' : 'below_stage', points: { total: 0, items: [] } }); }
-  const st = p.status === 'held' ? 'pending' : 'settled', rv = await ruleVersionId(env), total = plan.reduce((a, x) => a + x.amount, 0);
+  // A newly cleared Season Nights tray also counts as playing tonight: the active-night points and the 5/7-night bonuses.
+  let extras = [];
+  if (m.kind === 'brewset' && !(await finishedCases(env, p.id, m)).has(caseId)) {
+    const facts = await weekFacts(env, p.id, m.game, run.week, run.night_key);
+    extras = planAwards(RULES, { ...facts, game: m.game, band: 0, seasonTotal: tot.t + plan.reduce((a, x) => a + x.amount, 0) }).filter((x) => ['active_night', 'consistency5', 'consistency7'].includes(x.key));
+  }
+  if (!plan.length && !extras.length) { await env.DB.batch(plain); return answer({ counted: false, reason: claimed.size ? 'not_better' : 'below_stage', points: { total: 0, items: [] } }); }
+  const st = p.status === 'held' ? 'pending' : 'settled', rv = await ruleVersionId(env), total = plan.reduce((a, x) => a + x.amount, 0) + extras.reduce((a, x) => a + x.amount, 0);
+  const extraSource = (x) => (x.key === 'active_night' ? p.id + ':' + run.night_key : p.id + ':' + run.week);
   try {
     await env.DB.batch([
       ...plain,
+      ...extras.map((x) => env.DB.prepare('INSERT INTO points_ledger (player_id, season_id, category, amount, reason, rule_version_id, source_type, source_id, status, settled_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)')
+        .bind(p.id, RULES.seasonId, x.category, x.amount, x.reason, rv, x.key, extraSource(x), st, st === 'settled' ? isoTime(now) : null)),
       ...plan.map((x) => env.DB.prepare('INSERT INTO points_ledger (player_id, season_id, category, amount, reason, rule_version_id, source_type, source_id, status, settled_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)')
         .bind(p.id, RULES.seasonId, 'quests', x.amount, x.reason, rv, 'mission', p.id + ':' + m.id + ':' + x.stage, st, st === 'settled' ? isoTime(now) : null)),
       env.DB.prepare('UPDATE players SET last_active_at = ?2 WHERE id = ?1').bind(p.id, isoTime(now)),
@@ -179,7 +188,7 @@ async function weeklyFinish(env, p, run, m, v, now, replayMs, plain, counting, c
     if (!/UNIQUE|constraint/i.test(String((e && e.message) || e))) throw e;
     await env.DB.batch(plain); return answer({ counted: false, reason: 'already_counted', points: { total: 0, items: [] } });   // two finishes at once: the database lets one stage pay once
   }
-  return answer({ counted: true, held: st === 'pending', late: state === 'late', points: { total, items: plan.map((x) => ({ label: x.reason, amount: x.amount })) } });
+  return answer({ counted: true, held: st === 'pending', late: state === 'late', points: { total, items: [...plan, ...extras].map((x) => ({ label: x.reason, amount: x.amount })) } });
 }
 
 const rulesSummary = () => ({ bandPoints: [0, 1, 2, 3].map((b) => bandPoints(b)), activeNight: RULES.activeNight, weeklyCap: RULES.weeklyCapPerGame, consistency5Nights: 5, consistency5: RULES.consistency[5], consistency7Extra: RULES.consistency[7] - RULES.consistency[5], allRounder: RULES.allRounderWeek, allRounderNights: RULES.allRounderNights });
@@ -206,7 +215,7 @@ export async function myPoints(request, env) {
     env.DB.prepare("SELECT COALESCE(SUM(amount),0) s FROM points_ledger WHERE player_id = ?1 AND season_id = ?2 AND status IN ('settled','pending') AND ((source_type IN ('run','run_upgrade') AND source_id IN (SELECT run_id FROM run_meta WHERE player_id = ?1 AND week = ?3)) OR (source_type = 'active_night' AND source_id IN (?4,?5,?6,?7,?8,?9,?10)) OR (source_id = ?11 AND source_type IN ('consistency5','consistency7','allrounder')))").bind(p.id, RULES.seasonId, week, ...weekKeys.map((k) => p.id + ':' + k), p.id + ':' + week),
     env.DB.prepare('SELECT game_id, COUNT(DISTINCT CASE WHEN counted = 1 THEN night_key END) nights, COALESCE(SUM(points),0) pts FROM run_meta WHERE player_id = ?1 AND week = ?2 GROUP BY game_id').bind(p.id, week),
     env.DB.prepare('SELECT game_id, MAX(band) band FROM run_meta WHERE player_id = ?1 AND night_key = ?2 AND (counted = 1 OR points > 0) GROUP BY game_id').bind(p.id, night),
-    env.DB.prepare('SELECT DISTINCT night_key FROM run_meta WHERE player_id = ?1 AND counted = 1 AND night_key >= ?2').bind(p.id, lastNights(night, 60)[0]),
+    env.DB.prepare('SELECT DISTINCT night_key FROM run_meta WHERE player_id = ?1 AND ' + PLAYED + ' AND night_key >= ?2').bind(p.id, lastNights(night, 60)[0]),
     env.DB.prepare('SELECT created_at, reason, amount, status, category FROM points_ledger WHERE player_id = ?1 AND season_id = ?2 ORDER BY id DESC LIMIT 15').bind(p.id, RULES.seasonId),
     env.DB.prepare("SELECT source_type FROM points_ledger WHERE player_id = ?1 AND source_id = ?2 AND source_type IN ('consistency5','consistency7','allrounder') AND reverses_id IS NULL").bind(p.id, p.id + ':' + week),
   ]);

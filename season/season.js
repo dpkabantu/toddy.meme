@@ -28,7 +28,7 @@
       var m = mine[g.id], done = m && m.playedTonight;
       var live = S.season && S.season.status === 'live', wk = S.seasonWeek || 0;
       if (live && g.ready && wk < g.dailyFromWeek) {   // owner FINAL: a game's daily counts from the week after its launch week
-        top.appendChild(el('span', 'state', wk === g.launchWeek ? 'This week: its launch mission. Daily challenge from week ' + g.dailyFromWeek : 'Joins Season 1 in week ' + g.launchWeek));
+        top.appendChild(el('span', 'state', wk === g.launchWeek ? 'Launch mission this week · Daily challenge opens in week ' + g.dailyFromWeek : 'Joins Season 1 in week ' + g.launchWeek));
         card.appendChild(top);
         var b = el('a', 'btn' + (wk === g.launchWeek ? '' : ' alt')); b.href = '/games/' + g.id + '/' + (wk === g.launchWeek && g.id === 'moon-brew' ? '?play=season' : ''); b.textContent = wk === g.launchWeek ? 'Open the launch mission' : 'Play ' + g.title + ' (practice only)';
         card.appendChild(b); box.appendChild(card); return;

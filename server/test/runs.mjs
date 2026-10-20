@@ -337,7 +337,7 @@ check(db.prepare("SELECT COUNT(*) c FROM game_runs WHERE log_json IS NOT NULL AN
   x = await playTray(a, 1, 2); check(x.st.status === 409 && x.st.body.error === 'tray_order', 'tray 2 needs tray 1 first');
   x = await playTray(a, 1, 1, true); check(x.fin.status === 422, 'a log from another tray (night 7, tray 20) is refused');
   for (let t = 1; t <= 4; t++) { x = await playTray(a, 1, t); }
-  check(x.fin.body.counted === false && x.fin.body.progress.nightDone === 4 && ledgerSum('TDY-AAAA0030') === 0, '4 trays: counted, nothing paid yet');
+  check(x.fin.body.progress.nightDone === 4 && rows('TDY-AAAA0030').length === 0 && ledgerSum('TDY-AAAA0030') === RULES.activeNight, '4 trays: no checkpoint yet, only the active-night points (paid once)');
   x = await playTray(a, 1, 5); check(x.fin.body.counted && x.fin.body.points.total === 15, 'tray 5 pays the first checkpoint (15)');
   for (let t = 6; t <= 20; t++) x = await playTray(a, 1, t);
   check(rows('TDY-AAAA0030').join() === '15,15,15,15', 'night 1 done: 4 checkpoints, 60 points');
@@ -345,6 +345,12 @@ check(db.prepare("SELECT COUNT(*) c FROM game_runs WHERE log_json IS NOT NULL AN
   x = await playTray(a, 2, 1); check(x.fin && x.fin.body.ok, 'day 2: Season night 2 opens');
   x = await playTray(a, 3, 1); check(x.st.status === 409 && x.st.body.error === 'mission_locked', 'day 2: night 3 still locked');
   check(db.prepare("SELECT COUNT(*) c FROM run_meta WHERE player_id='TDY-AAAA0030' AND counted = 1").get().c === 0, 'Season trays are not nightly runs');
+  // week 1 has no Daily Brew: clearing a Season tray counts as playing that night, so the 5-night bonus can be reached
+  const cc = await mkPlayer('TDY-AAAA0032', 'BrewDays');
+  for (let d = 1; d <= 5; d++) { NOW = Date.parse('2027-03-0' + d + 'T14:00:00Z'); x = await playTray(cc, d, 1); }
+  const types = db.prepare("SELECT source_type FROM points_ledger WHERE player_id='TDY-AAAA0032' ORDER BY id").all().map((r) => r.source_type);
+  check(types.filter((t) => t === 'active_night').length === 5 && types.filter((t) => t === 'consistency5').length === 1 && !types.includes('consistency7'), 'Season trays on 5 different nights: 5 active nights and the 5-night bonus, once');
+  x = await playTray(cc, 1, 2); check(db.prepare("SELECT COUNT(*) c FROM points_ledger WHERE player_id='TDY-AAAA0032' AND source_type='active_night'").get().c === 5, 'a second tray on the same night pays no second active night');
   // late: after week 1 every night is open, checkpoints pay half (15 -> 7), and the Daily Brew counts
   NOW = Date.parse('2027-03-09T14:00:00Z'); const b = await mkPlayer('TDY-AAAA0031', 'BrewLate');
   for (let t = 1; t <= 10; t++) x = await playTray(b, 7, t);

@@ -33,15 +33,18 @@ export async function ruleVersionId(env) {
   return r ? r.id : null;
 }
 
+// A night counts as played when a run was counted, or a Season Nights tray was cleared (week 1 has no Daily Brew).
+export const PLAYED = "(counted = 1 OR run_id IN (SELECT id FROM game_runs WHERE mode = 'weekly' AND status = 'accepted' AND seed LIKE 'moon-brew-season:%'))";
+
 // Facts the plan needs, read from the database (everything before the run being counted).
 export async function weekFacts(env, playerId, game, week, night) {
   const [g, n, pts, have, tot, tonight] = await env.DB.batch([
     env.DB.prepare('SELECT game_id, COUNT(DISTINCT night_key) c FROM run_meta WHERE player_id = ?1 AND week = ?2 AND counted = 1 GROUP BY game_id').bind(playerId, week),
-    env.DB.prepare('SELECT COUNT(DISTINCT night_key) c FROM run_meta WHERE player_id = ?1 AND week = ?2 AND counted = 1').bind(playerId, week),
+    env.DB.prepare('SELECT COUNT(DISTINCT night_key) c FROM run_meta WHERE player_id = ?1 AND week = ?2 AND ' + PLAYED).bind(playerId, week),
     env.DB.prepare('SELECT COALESCE(SUM(points),0) p FROM run_meta WHERE player_id = ?1 AND week = ?2 AND game_id = ?3').bind(playerId, week, game),
     env.DB.prepare("SELECT source_type FROM points_ledger WHERE player_id = ?1 AND source_id = ?2 AND source_type IN ('consistency5','consistency7','allrounder') AND reverses_id IS NULL").bind(playerId, playerId + ':' + week),
     env.DB.prepare("SELECT COALESCE(SUM(amount),0) t FROM points_ledger WHERE player_id = ?1 AND season_id = ?2 AND status IN ('settled','pending')").bind(playerId, RULES.seasonId),
-    env.DB.prepare('SELECT COUNT(*) c FROM run_meta WHERE player_id = ?1 AND night_key = ?2 AND counted = 1').bind(playerId, night),
+    env.DB.prepare('SELECT COUNT(*) c FROM run_meta WHERE player_id = ?1 AND night_key = ?2 AND ' + PLAYED).bind(playerId, night),
   ]);
   const gameNights = {}; for (const r of g.results) gameNights[r.game_id] = r.c;
   return { gameNights, nightsBefore: n.results[0].c, gamePointsWeek: pts.results[0].p, have: new Set(have.results.map((r) => r.source_type)), seasonTotal: tot.results[0].t, isNewNight: tonight.results[0].c === 0 };
