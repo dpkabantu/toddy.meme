@@ -10,6 +10,8 @@ import { sha256Hex } from '../lib/util.js';
 import * as FM from '../games/full-moon-core.js';
 import { generate, newGame, tap, hint, canRoll, frozen } from '../../games/moon-brew/src/core.js';
 import { dailyConfig } from '../../games/moon-brew/src/levels.js';
+import { dailyCase } from '../../games/scam-lab/src/daily.js';
+import { scoreDaily, strongClues } from '../../games/scam-lab/src/engine.js';
 import { planAwards, planUpgrade } from '../points.js';
 import { RULES } from '../rules.js';
 import { nightKey, nightEndMs } from '../clock.js';
@@ -39,6 +41,7 @@ function fullMoonRun(night) {
   while (!s.over && s.tick < 40000) { if (FM.canDrop(s) && rnd() < 0.5) { const x = Math.floor(FM.FIELD.L + rnd() * (FM.FIELD.R - FM.FIELD.L)); if (FM.drop(s, x)) drops.push([s.tick, x]); } FM.step(s); s.events.length = 0; }
   return { drops, endTick: s.tick, score: s.score, seconds: s.tick / 60 };
 }
+function scamRun(night) { const c = dailyCase(night); const marks = {}; strongClues(c).forEach((k) => { marks[k] = 'flag'; }); const seconds = 40; return { marks, decision: c.best_action, seconds, score: scoreDaily(c, { marks, decision: c.best_action, seconds }).total, stars: scoreDaily(c, { marks, decision: c.best_action, seconds }).stars }; }
 function brewBurnRun(night) { const g = newGame(generate(dailyConfig(new Date(night + 'T12:00:00Z')))); let t = 1000, guard = 0;
   while (g.status === 'playing' && guard++ < 300) { let b = g.beans.find((x) => !x.gone && x.awake && !frozen(g, x) && !canRoll(g, x)); if (!b) b = hint(g); if (!b) break; tap(g, b, t); t += 900; }
   return { log: g.log, seconds: t / 1000, status: g.status }; }
@@ -68,7 +71,7 @@ const ledgerSum = (id) => db.prepare("SELECT COALESCE(SUM(amount),0) s FROM poin
 const mira = await mkPlayer('TDY-AAAA0001', 'Mira');
 let r = await post('/api/run/start', { game: 'full-moon', night: '2026-12-08' }, null); check(r.status === 401, 'start without signing in: 401');
 r = await post('/api/run/start', { game: 'full-moon', night: '2026-12-08' }, mira, { Origin: 'https://evil.example' }); check(r.status === 403, 'start from another website: 403');
-r = await post('/api/run/start', { game: 'scam-lab', night: '2026-12-08' }, mira); check(r.status === 400 && r.body.error === 'game_not_supported', 'start for a game not checked yet (Scam Lab): refused cleanly');
+r = await post('/api/run/start', { game: 'coffee-rush', night: '2026-12-08' }, mira); check(r.status === 400 && r.body.error === 'game_not_supported', 'start for a game that is not connected (made-up id): refused cleanly');
 r = await post('/api/run/start', { game: 'full-moon', night: '2026-12-07' }, mira); check(r.status === 409 && r.body.error === 'clock_off' && r.body.night === '2026-12-08', 'start with the wrong night (device clock off): told the real night');
 
 // Full Moon run 1 (counts)
@@ -117,17 +120,17 @@ let dash = await get('/api/me/points', mira);
 check(dash.status === 200 && dash.body.points.season === t1 && dash.body.points.week === t1 && dash.body.streak.current === 1 && dash.body.games.length === 3, 'dashboard: totals match the ledger (' + t1 + '), streak 1');
 check(dash.body.games.find((g) => g.id === 'full-moon').playedTonight && dash.body.games.find((g) => g.id === 'moon-brew').playedTonight && !dash.body.games.find((g) => g.id === 'scam-lab').playedTonight, 'dashboard: tonight shows which games are done');
 check((await get('/api/me/points', null)).status === 401, 'dashboard needs sign-in');
-{ const si = await get('/api/season', null); check(si.status === 200 && si.body.night.key === '2026-12-08' && si.body.games.length === 3 && si.body.games.find((g) => g.id === 'scam-lab').ready === false && si.body.rules.bandPoints.join() === '8,12,16,20' && si.body.season.status === 'draft' && !JSON.stringify(si.body).includes('TDY-'), 'public /api/season: works without sign-in, shows the night, games and rules, nothing personal'); }
+{ const si = await get('/api/season', null); check(si.status === 200 && si.body.night.key === '2026-12-08' && si.body.games.length === 3 && si.body.games.find((g) => g.id === 'scam-lab').ready === true && si.body.rules.bandPoints.join() === '8,12,16,20' && si.body.season.status === 'draft' && !JSON.stringify(si.body).includes('TDY-'), 'public /api/season: works without sign-in, shows the night, games and rules, nothing personal'); }
 check(/cash value/.test(dash.body.note), 'dashboard states points have no cash value');
 
-// A full week: 7 nights, Mira plays both ready games each night (Scam Lab not built yet), Noor never plays. All-Rounder cannot happen without Scam Lab.
+// A full week: 7 nights, Mira plays all three games each night, Noor never plays. All-Rounder is paid once.
 let totalClaimed = t1;
 for (let d = 0; d < 7; d++) {
   NOW = Date.parse('2026-12-14T13:30:00Z') + d * 86400000;; const night = nightKey(NOW);   // Monday night to Sunday night of one full week
-  for (const game of ['full-moon', 'moon-brew']) {
+  for (const game of ['full-moon', 'moon-brew', 'scam-lab']) {
     const sid = (await post('/api/run/start', { game, night }, mira)).body.runId;
-    const run = game === 'full-moon' ? fullMoonRun(night) : brewRun(night); NOW += run.seconds * 1000 + 1000;
-    const out = await post('/api/run/finish', { runId: sid, ...(game === 'full-moon' ? { drops: run.drops, endTick: run.endTick, score: run.score } : { log: run.log }) }, mira);
+    const run = game === 'full-moon' ? fullMoonRun(night) : game === 'scam-lab' ? scamRun(night) : brewRun(night); NOW += run.seconds * 1000 + 1000;
+    const out = await post('/api/run/finish', { runId: sid, ...(game === 'full-moon' ? { drops: run.drops, endTick: run.endTick, score: run.score } : game === 'scam-lab' ? { marks: run.marks, decision: run.decision, seconds: run.seconds, score: run.score } : { log: run.log }) }, mira);
     if (!(out.status === 200 && out.body.counted)) { check(false, 'week: ' + game + ' night ' + night + ' failed: ' + JSON.stringify(out.body)); }
     totalClaimed += out.body.points ? out.body.points.total : 0;
   }
@@ -135,7 +138,7 @@ for (let d = 0; d < 7; d++) {
 const bonuses = db.prepare("SELECT source_type, SUM(amount) a, COUNT(*) c FROM points_ledger WHERE player_id='TDY-AAAA0001' AND source_type IN ('consistency5','consistency7','allrounder','active_night') GROUP BY source_type").all().reduce((o, x) => ({ ...o, [x.source_type]: x }), {});
 check(bonuses.active_night.c === 8 && bonuses.active_night.a === 96, 'week: active night paid once per night (1 earlier + 7 this week = 8)');
 check(bonuses.consistency5.c === 1 && bonuses.consistency5.a === 40 && bonuses.consistency7.c === 1 && bonuses.consistency7.a === 20, 'week: consistency bonuses paid once each (40 + 20 = 60)');
-check(!bonuses.allrounder, 'week: no All-Rounder without Scam Lab (needs all three games)');
+check(bonuses.allrounder && bonuses.allrounder.c === 1 && bonuses.allrounder.a === 15, 'week: All-Rounder +15 paid once when all three games were played');
 check(ledgerSum('TDY-AAAA0001') === totalClaimed, 'week: ledger total equals the sum of what each finish reported (' + totalClaimed + ')');
 const wk = db.prepare("SELECT game_id, week, SUM(points) p FROM run_meta WHERE player_id='TDY-AAAA0001' AND counted=1 GROUP BY game_id, week").all();
 check(wk.every((x) => x.p <= RULES.weeklyCapPerGame), 'week: no game went over its weekly limit (' + wk.map((x) => x.game_id + ' ' + x.week + '=' + x.p).join(', ') + ')');

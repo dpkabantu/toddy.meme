@@ -241,6 +241,7 @@ function startDaily() {
   hideAll(); setBg('lab_bg'); gameLayer(true); $('hud').hidden = true; $('phone').hidden = true;
   current = null; setUp(quitCase);
   const c = dailyCase(dayKey()); c.label = 'Daily Quickie';
+  if (window.ToddySeason) window.ToddySeason.start('scam-lab');   // signed-in players only; guests send nothing
   playCase(c, env);
 }
 function quitCase() { const s = playState(); if (s) s.ended = true; const r = rushState(); if (r) { r.ticking = false; r.ended = true; } leaveCase(); }
@@ -251,6 +252,8 @@ async function showResult({ case: c, score: r, seconds }) {
   hideAll();
   const rankBefore = rankFor(store.totalStars());
   let streakLine = null;
+  const ps = playState();
+  const seasonRes = c.daily && window.ToddySeason && ps ? window.ToddySeason.finish('scam-lab', { marks: ps.marks, decision: ps.decision || null, seconds: ps.seconds, score: r.total }) : null;
   const w = c.daily ? null : where(c.id);
   const wasOpen = OPEN().filter(chapterOpen).length;
   if (c.daily) {
@@ -293,6 +296,7 @@ async function showResult({ case: c, score: r, seconds }) {
     h('table', { class: 'breakdown' }, h('tbody', {}, rows)),
     rankUp ? h('div', { class: 'rankup' }, h('img', { src: A(`rank_${rank.id}`), alt: '' }), h('div', {}, h('small', { text: 'NEW RANK' }), h('b', { text: rank.name }))) : null,
     h('p', { class: 'small-ink', text: streakLine || `Rank: ${rank.name} · ★ ${total}` }),
+    c.daily ? h('p', { class: 'small-ink', id: 'seasonline', hidden: true }) : null,
     primary,
     h('div', { class: 'row center minor' },
       c.daily ? null : h('button', { class: 'linkbtn', id: 'btn-again', type: 'button', onclick: () => { sfx.tap(); startCase(c.id); } }, '↻ Replay'),
@@ -302,6 +306,7 @@ async function showResult({ case: c, score: r, seconds }) {
       h('button', { class: 'linkbtn', id: 'btn-home', type: 'button', onclick: () => { sfx.tap(); home(); } }, '⌂ Scam Lab')),
   ].filter(Boolean)); // replaceChildren turns a null into the text "null"
   el.hidden = false;
+  if (seasonRes) seasonRes.then((res) => { const line = $('seasonline'); if (!line) return; if (res && res.guest) window.ToddySeason.guestHint(line); else window.ToddySeason.show(line, res); });
   if (r.stars >= 1 || rankUp) sfx.good();
 }
 
@@ -447,6 +452,11 @@ async function boot() {
   setInterval(() => { tick(); rushTick(); }, 1000);
   title();
   setTimeout(preloadToddy, 1500); // Toddy's animations load in the background after the title shows
+  // Season page button: /games/scam-lab/?play=daily opens tonight's Daily Quickie (it unlocks after the first case, so new players land on the case files).
+  if (/[?&]play=daily\b/.test(location.search)) {
+    history.replaceState(history.state, '', location.pathname + location.search.replace(/([?&])play=daily&?/, '$1').replace(/[?&]$/, '') + location.hash);
+    if (store.played(ALL()[0])) caseIntro('daily'); else home();
+  }
   if (/[?&]qa\b/.test(location.search)) window.__lab = { caseIntro, chapterPage: (n) => chapterPage(CH.chapters.find((c) => c.n === n)), CASES, store, playState, rushState, dailyCase, dayKey, setCalm: (v) => { store.set('calm', v); applySettings(); } };
 }
 boot();

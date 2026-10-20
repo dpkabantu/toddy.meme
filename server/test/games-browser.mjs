@@ -66,7 +66,7 @@ check((await page.locator('#h-name').innerText()) === 'Night_Owl' && /^TDY-/.tes
 check(!(await page.locator('#signin-card').isVisible()) && await page.locator('#acct').isVisible() && (await page.locator('.topnav a').first().getAttribute('href')) === '/', 'signed in: no sign-in card, "My account" link, and a way back to the TODDY home');
 check(/0/.test(await page.locator('#dash .big b').innerText()) && /Nothing yet/.test(await page.locator('#dash').innerText()), 'Season page, brand new player: 0 points and a friendly empty state');
 const cards = await page.locator('#tg').innerText();
-check((cards.match(/Play tonight/g) || []).length === 2 && /Joins the Season soon/.test(cards) && /practice only/.test(cards), 'tonight cards: two "Play tonight\u2019s challenge" buttons, Scam Lab says it joins soon and is practice only');
+check((cards.match(/Play tonight/g) || []).length === 3 && !/Joins the Season soon/.test(cards) && !/practice only/.test(cards), 'tonight cards: three "Play tonight\u2019s challenge" buttons (Scam Lab is connected now)');
 await page.screenshot({ path: shots + '/season_empty.png', fullPage: true });
 
 // ---- Full Moon: reached through the Season page link ----
@@ -114,6 +114,28 @@ check(await page.locator('a[href="/season/"]').first().isVisible() && await page
 check(/Daily Brew/.test(title) && /counts for Season/.test(title) && /Story/.test(title) && /no Season points/.test(title), 'Moon Brew title: Daily Brew tagged "counts for Season"; Story and Endless say "no Season points"');
 await page.screenshot({ path: shots + '/moonbrew_title.png' });
 
+
+// ---- Scam Lab: Daily Quickie reached through the Season page ----
+await page.goto(base + '/games/scam-lab/'); await page.waitForTimeout(2500);
+await page.evaluate(() => { const k = 'toddy.scamlab.v2'; const d = JSON.parse(localStorage.getItem(k) || '{}'); d.stars = { 'c1-01': 3 }; d.best = { 'c1-01': 900 }; d.howto = true; localStorage.setItem(k, JSON.stringify(d)); });
+await page.goto(base + '/season/'); await page.waitForSelector('#mine:not([hidden])');
+check((await page.locator('#tg .tg-card:nth-child(3) a').getAttribute('href')) === '/games/scam-lab/?play=daily', 'Season page: the Scam Lab button opens tonight\u2019s Daily Quickie');
+await page.goto(base + '/games/scam-lab/?play=daily&qa');   // same address the Season button opens; &qa only adds the test hook
+await page.waitForSelector('#btn-go', { timeout: 30000 });
+check(!/play=daily/.test(page.url()) && /Daily Quickie/.test(await page.locator('h2').first().innerText()), 'Scam Lab: the link opens tonight\u2019s Daily Quickie intro (and tidies the address)');
+await page.click('#btn-go'); await page.click('#notif'); await page.waitForSelector('#btn-decide', { timeout: 30000 });
+const sl = await page.evaluate(() => { const S = window.__lab.playState(); const c = S.c; Object.entries(c.clues).forEach(([k, v]) => { if (v.strength === 'strong') S.marks[k] = 'flag'; }); return { best: c.best_action }; });
+await page.waitForTimeout(1500);
+await page.click('#btn-decide'); await page.click('.choice[data-action="' + sl.best + '"]');
+await page.waitForSelector('#btn-continue', { timeout: 15000 }); await page.click('#btn-continue');
+await page.waitForSelector('#btn-quick', { timeout: 15000 }); await page.click('#btn-quick');
+await page.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 20000 });
+const slLine = await page.locator('#seasonline').innerText(); const slScore = await page.evaluate(() => Number(document.getElementById('total').firstChild.textContent));
+check(/^Season points: \+\d+/.test(slLine) && /not your score/.test(slLine), 'Scam Lab: result screen says "' + slLine.slice(0, 90) + '..."');
+const row3 = db.prepare("SELECT r.score, m.counted, m.band FROM game_runs r JOIN run_meta m ON m.run_id = r.id WHERE r.game_id = 'scam-lab' AND r.status = 'accepted'").get();
+check(row3 && row3.counted === 1 && row3.score === slScore && row3.band === 3, 'Scam Lab: server score equals the score the game showed (' + slScore + ', Gold)');
+await page.screenshot({ path: shots + '/scamlab_result.png' });
+
 // ---- the Season page now shows everything ----
 const total = db.prepare("SELECT COALESCE(SUM(amount),0) s FROM points_ledger WHERE status='settled'").get().s;
 await page.goto(base + '/season/'); await page.waitForSelector('#mine:not([hidden])');
@@ -147,7 +169,7 @@ for (let i = 0; i < 200; i++) {
 await g.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 20000 });
 check(/Playing as a guest/.test(await g.locator('#seasonline').innerText()) && (await g.locator('#seasonline a').getAttribute('href')) === '/season/', 'guest: result says "Playing as a guest" with a link to the Season page');
 check(!apiCalls.some((c) => /run\//.test(c)), 'guest: no run was sent to the server (' + apiCalls.join(', ') + ')');
-check(db.prepare("SELECT COUNT(*) c FROM game_runs").get().c === 2, 'guest play left no rows in the database');
+check(db.prepare("SELECT COUNT(*) c FROM game_runs").get().c === 3, 'guest play left no rows in the database');
 
 check(viol.length === 0, 'no Content-Security-Policy violations in any page (' + viol.length + ') ' + viol.slice(0, 2).join(' | ')); check(errs.length === 0, 'no page errors ' + errs.slice(0, 3).join('|'));
 await browser.close(); server.close();

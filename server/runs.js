@@ -6,8 +6,9 @@ import { RULES, bandPoints } from './rules.js';
 import { planAwards, planUpgrade, ruleVersionId, weekFacts, streakFrom } from './points.js';
 import * as moonBrew from './games/moon-brew.js';
 import * as fullMoon from './games/full-moon.js';
+import * as scamLab from './games/scam-lab.js';
 
-const ADAPTERS = { 'moon-brew': moonBrew, 'full-moon': fullMoon };
+const ADAPTERS = { 'moon-brew': moonBrew, 'full-moon': fullMoon, 'scam-lab': scamLab };
 export const MIN_SECONDS_PER_TAP = 0.35;   // Moon Brew: faster than this on average is not a person
 const SLACK_MS = 5000;                     // the run's own clock may be 20% / 5 s faster than the wall clock, no more
 
@@ -64,7 +65,7 @@ export async function runFinish(request, env) {
   if (elapsed < v.seconds * 800 - SLACK_MS) { await reject(env, run, now, 'too_fast'); return json(422, { ok: false, error: 'too_fast' }); }
   if (run.game_id === 'moon-brew' && v.seconds < body.log.length * MIN_SECONDS_PER_TAP) { await reject(env, run, now, 'too_fast'); return json(422, { ok: false, error: 'too_fast' }); }
 
-  const logJson = JSON.stringify(run.game_id === 'moon-brew' ? body.log : { drops: body.drops, endTick: body.endTick });
+  const logJson = JSON.stringify(v.stored || (run.game_id === 'moon-brew' ? body.log : { drops: body.drops, endTick: body.endTick }));
   const finishRun = [
     env.DB.prepare("UPDATE game_runs SET status = 'accepted', score = ?2, duration_ms = ?3, log_json = ?4, raw_delete_after = ?5 WHERE id = ?1").bind(run.run_id, v.score, Math.round(v.seconds * 1000), logJson, RULES.rawDeleteAfter),
   ];

@@ -5,6 +5,9 @@ import path from 'node:path';
 import * as FM from '../games/full-moon-core.js';
 import * as fullMoon from '../games/full-moon.js';
 import * as moonBrew from '../games/moon-brew.js';
+import * as scamLab from '../games/scam-lab.js';
+import { dailyCase } from '../../games/scam-lab/src/daily.js';
+import { scoreDaily, strongClues } from '../../games/scam-lab/src/engine.js';
 import { generate, newGame, tap, useHint, dailyScore, hint } from '../../games/moon-brew/src/core.js';
 import { dailyConfig } from '../../games/moon-brew/src/levels.js';
 
@@ -79,5 +82,24 @@ check(moonBrew.verify(night, { log: g.log.slice(0, 3) }).error === 'not_finished
 check(moonBrew.verify(night, { log: g.log.map((e, i) => (i === 2 ? [e[0], e[1] === 'r' ? 'b' : 'r', e[2]] : e)) }).error === 'bad_log', 'Moon Brew: a log whose results do not match the replay is rejected');
 check(moonBrew.verify(night, { log: [] }).error === 'bad_log' && moonBrew.verify(night, {}).error === 'bad_log', 'Moon Brew: empty or missing log rejected');
 const t1 = performance.now(); moonBrew.verify(night, { log: g.log }); console.log('     (Moon Brew check took ' + Math.round(performance.now() - t1) + ' ms on this test computer)');
+
+// 3. Scam Lab Daily Quickie
+{
+  const sc = dailyCase(night), marks = {}; strongClues(sc).forEach((k) => { marks[k] = 'flag'; });
+  const expect = scoreDaily(sc, { marks, decision: sc.best_action, seconds: 40 });
+  let v = scamLab.verify(night, { marks, decision: sc.best_action, seconds: 40, score: expect.total });
+  check(v.ok && v.score === expect.total && v.band === expect.stars, 'Scam Lab: best play scores like the game does (' + expect.total + ', ' + expect.stars + ' stars)');
+  check(scamLab.verify(night, { marks, decision: sc.best_action, seconds: 40, score: expect.total + 50 }).error === 'mismatch', 'Scam Lab: a higher claimed score is rejected');
+  check(scamLab.verify(night, { marks: { nonsense: 'flag' }, decision: sc.best_action, seconds: 40 }).error === 'bad_log', 'Scam Lab: a clue that is not in tonight\'s case is rejected');
+  check(scamLab.verify(night, { marks: { [Object.keys(sc.clues)[0]]: 'maybe' }, decision: sc.best_action, seconds: 40 }).error === 'bad_log', 'Scam Lab: a mark that is not flag/ok is rejected');
+  check(scamLab.verify(night, { marks, decision: 'teleport', seconds: 40 }).error === 'bad_log', 'Scam Lab: a decision that does not exist is rejected');
+  check(scamLab.verify(night, { marks, decision: sc.best_action, seconds: 0 }).error === 'bad_log' && scamLab.verify(night, { marks, decision: sc.best_action, seconds: 99999 }).error === 'bad_log', 'Scam Lab: impossible times are rejected');
+  check(scamLab.verify(night, {}).error === 'bad_log' && scamLab.verify(night, null).error === 'bad_log', 'Scam Lab: empty or missing answers rejected');
+  const unsafe = sc.actions.map((a) => a.id).find((id) => id !== sc.best_action && !(sc.acceptable_actions || []).includes(id));
+  if (unsafe) { v = scamLab.verify(night, { marks: {}, decision: unsafe, seconds: 40 }); check(v.ok && v.band === 0, 'Scam Lab: an unsafe decision still counts as played (band 0)'); }
+  v = scamLab.verify(night, { marks: {}, decision: null, seconds: 90 }); check(v.ok && v.band === 0, 'Scam Lab: running out of time (no decision) still counts as played');
+  const other = '2026-12-09'; const o = dailyCase(other);
+  check(JSON.stringify(dailyCase(night)) === JSON.stringify(sc) && (o.template !== sc.template || JSON.stringify(o) !== JSON.stringify(sc)), 'Scam Lab: the same night always gives the same case');
+}
 
 console.log(bad ? 'PROBLEMS: ' + bad : 'game checks ok'); if (bad) process.exitCode = 1;
