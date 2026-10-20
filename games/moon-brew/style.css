@@ -353,3 +353,4 @@ button.where .tier { font-size: 10px; letter-spacing: .1em; color: var(--gold); 
 .coming b { color: var(--cream); }
 
 .stat a { color: inherit; text-decoration: underline; }
+.build a { color: var(--gold); text-decoration: underline; }

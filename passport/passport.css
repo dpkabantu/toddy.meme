@@ -73,3 +73,6 @@ input[type=text]:focus-visible, .btn:focus-visible, .chip:focus-visible, summary
 .recent li span:first-child { min-width: 0; overflow-wrap: anywhere; }
 .recent li b { color: var(--gold); white-space: nowrap; font-variant-numeric: tabular-nums; }
 .recent li.pending b { color: var(--mute); }
+
+.logo { display: block; width: 72px; height: 72px; margin: 6px auto 0; border-radius: 50%; box-shadow: 0 0 30px rgba(253,175,30,.3); }
+.howto { margin: 0; padding-left: 18px; display: grid; gap: 6px; font-size: 14px; color: var(--ink); }

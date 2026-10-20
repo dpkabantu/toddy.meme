@@ -58,6 +58,21 @@
     [[d.points.week, 'this week'], [d.streak.current, d.streak.current === 1 ? 'night in a row' : 'nights in a row'], [d.streak.weekNights, 'nights this week']].forEach(function (x) { var c = el('div', 'kpi'); c.appendChild(el('b', '', String(x[0]))); c.appendChild(el('span', '', x[1])); k.appendChild(c); });
     box.appendChild(k);
     var n = el('p', 'night'); n.appendChild(document.createTextNode('Tonight (')); n.appendChild(el('b', '', dateText(d.night.key + 'T12:00:00Z'))); n.appendChild(document.createTextNode(') \u00b7 ' + leftText(d.night.endsAt) + ' \u00b7 a new night starts at 6:30 pm India time')); box.appendChild(n);
+    if (d.rules) {
+      var r = d.rules, det = el('details', 'more'); det.appendChild(el('summary', '', 'How Season points work'));
+      var ul2 = el('ul', 'howto');
+      [
+        'Each night, each game: your best result that night gives you a medal. Played ' + r.bandPoints[0] + ', Bronze ' + r.bandPoints[1] + ', Silver ' + r.bandPoints[2] + ', Gold ' + r.bandPoints[3] + ' points.',
+        'Playing again the same night only adds points if you earn a better medal, and then only the difference.',
+        'Your game score (like 2,002) is separate. It is for your own records. Your medal decides the Season points.',
+        'Active night: +' + r.activeNight + ' the first time you finish a game each night.',
+        'One game can give at most ' + r.weeklyCap + ' points a week, so every game counts the same.',
+        'Play ' + r.consistency5Nights + ' nights in a week: +' + r.consistency5 + '. All 7 nights: +' + r.consistency7Extra + ' more.',
+        'All-Rounder: ' + r.allRounderNights + ' nights in every game in a week: +' + r.allRounder + '.',
+        'A new night starts every day at 6:30 pm India time.'
+      ].forEach(function (t) { ul2.appendChild(el('li', '', t)); });
+      det.appendChild(ul2); box.appendChild(det);
+    }
     var gs = el('div', 'games'); box.appendChild(el('h3', '', 'Your games this week'));
     d.games.forEach(function (g) {
       var card = el('div', 'game'), top = el('div', 'top');

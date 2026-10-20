@@ -2,7 +2,7 @@
 import { json, nowMs, randomToken, sameOriginPost, readJson, limited, callerKey, isoTime } from './lib/util.js';
 import { sessionPlayer } from './auth.js';
 import { nightKey, nightEndMs, weekOfNight, shiftNight, lastNights } from './clock.js';
-import { RULES } from './rules.js';
+import { RULES, bandPoints } from './rules.js';
 import { planAwards, planUpgrade, ruleVersionId, weekFacts, streakFrom } from './points.js';
 import * as moonBrew from './games/moon-brew.js';
 import * as fullMoon from './games/full-moon.js';
@@ -142,6 +142,7 @@ export async function myPoints(request, env) {
     night: { key: night, endsAt: isoTime(nightEndMs(night)), week },
     points: { season: tot.results[0].settled, pending: tot.results[0].pending, week: wk.results[0].s, seasonMax: RULES.seasonMax },
     streak: { current: streakFrom(played, night), weekNights, last7: lastNights(night, 7).map((k) => ({ night: k, played: played.has(k) })) },
+    rules: { bandPoints: [0, 1, 2, 3].map((b) => bandPoints(b)), activeNight: RULES.activeNight, weeklyCap: RULES.weeklyCapPerGame, consistency5Nights: 5, consistency5: RULES.consistency[5], consistency7Extra: RULES.consistency[7] - RULES.consistency[5], allRounder: RULES.allRounderWeek, allRounderNights: RULES.allRounderNights },
     games,
     goals: [
       { id: 'allrounder', label: 'All-Rounder: ' + RULES.allRounderNights + ' nights in each game this week', progress: allRounderDone, target: RULES.games.length, reward: RULES.allRounderWeek, done: gotBonus.has('allrounder') },

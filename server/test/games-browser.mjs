@@ -78,7 +78,10 @@ const fmLine = await fm.locator('#seasonline').innerText(); const fmScore = awai
 check(/^Season points: \+\d+/.test(fmLine), 'Full Moon: result screen says "' + fmLine.slice(0, 90) + '"');
 const row1 = db.prepare("SELECT r.score, m.band, m.counted, m.points FROM game_runs r JOIN run_meta m ON m.run_id = r.id WHERE r.game_id = 'full-moon' AND r.status = 'accepted'").get();
 check(row1 && row1.score === fmScore && row1.counted === 1, 'Full Moon: the server replayed the run and stored the very same score (' + fmScore + ')');
+check(await fm.locator('.card a[href="/passport/"]').count() === 2, 'Full Moon result screen has All games and My Passport links plus the Season line link');
 await fm.screenshot({ path: shots + '/fullmoon_result.png' });
+await fm.evaluate(() => window.__mm.showMenu());
+check(await fm.locator('.card a[href="/passport/"]').count() === 1 && await fm.locator('.card a[href="/games/"]').count() === 1, 'Full Moon menu has All games and My Passport links');
 
 // ---- Moon Brew, signed in ----
 const mb = await ctx.newPage(); watch(mb);
@@ -93,11 +96,14 @@ for (let i = 0; i < 200; i++) {
 }
 await mb.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 20000 });
 const mbLine = await mb.locator('#seasonline').innerText();
+check(/not your score/.test(mbLine), 'Moon Brew: result line says the medal, not the score, sets the points');
 check(/^Season points: \+\d+/.test(mbLine), 'Moon Brew: result screen says "' + mbLine.slice(0, 90) + '"');
 const row2 = db.prepare("SELECT r.score, m.counted FROM game_runs r JOIN run_meta m ON m.run_id = r.id WHERE r.game_id = 'moon-brew' AND r.status = 'accepted'").get();
 const mbScore = await mb.evaluate(() => window.__moonbrew.save.daily[Object.keys(window.__moonbrew.save.daily).pop()].score);
 check(row2 && row2.counted === 1 && row2.score === mbScore, 'Moon Brew: server score equals the score the game showed (' + mbScore + ')');
 await mb.screenshot({ path: shots + '/moonbrew_result.png' });
+await mb.click('#o-home'); await mb.waitForTimeout(500);
+check(await mb.locator('a[href="/passport/"]').first().isVisible() && await mb.locator('a[href="/games/"]').first().isVisible(), 'Moon Brew title screen has All games and My Passport links');
 
 // ---- the dashboard now shows the points ----
 const total = db.prepare("SELECT COALESCE(SUM(amount),0) s FROM points_ledger WHERE status='settled'").get().s;
@@ -106,6 +112,9 @@ check((await page.locator('#dash .big b').innerText()) === String(total) && tota
 const gamesTxt = await page.locator('#dash .games').innerText();
 check(/Full Moon/.test(gamesTxt) && /Moon Brew/.test(gamesTxt) && /Scam Lab/.test(gamesTxt) && /Joins the Season soon/.test(gamesTxt) && /Tonight: /.test(gamesTxt), 'dashboard: both played games show tonight\'s band, Scam Lab says it joins soon');
 check(await page.locator('#dash .recent li').count() >= 3, 'dashboard: recent points listed');
+check(await page.locator('img.logo').isVisible() && await page.locator('.moon').count() === 0, 'Passport shows the TODDY logo (not the moon drawing)');
+await page.click('#dash summary:has-text("How Season points work")'); const how = await page.locator('#dash .howto').innerText();
+check(/Silver 16/.test(how) && /Gold 20/.test(how) && /separate/.test(how) && /6:30 pm/.test(how), 'dashboard: "How Season points work" explains medals, separate game score and the night time');
 for (const w of [320, 390, 1280]) { await page.setViewportSize({ width: w, height: 900 }); await page.waitForTimeout(150); check(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), 'dashboard: no sideways scroll at ' + w + ' px'); }
 await page.setViewportSize({ width: 390, height: 900 }); await page.screenshot({ path: shots + '/dash_full.png', fullPage: true });
 await page.setViewportSize({ width: 1280, height: 900 }); await page.screenshot({ path: shots + '/dash_desktop.png', fullPage: true });

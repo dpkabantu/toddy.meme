@@ -46,7 +46,7 @@
     if (res.counted) {
       var items = res.points.items || [], one = items.length === 1;
       var parts = items.map(function (x) { return one ? x.label : x.label + ' +' + x.amount; });
-      return { text: 'Season points: +' + res.points.total + (res.held ? ' (waiting for review)' : '') + ' \u00b7 ' + parts.join(' \u00b7 '), link: true };
+      return { text: 'Season points: +' + res.points.total + (res.held ? ' (waiting for review)' : '') + ' \u00b7 ' + parts.join(' \u00b7 ') + '. Your medal for the night sets these points, not your score.', link: true };
     }
     if (res.reason === 'already_counted') return { text: 'You already reached the top level for this game tonight. Season points for it are done until the next night.', link: true };
     if (res.reason === 'not_better') return { text: 'Season points for this game tonight are already counted. A better result would add the difference.', link: true };
