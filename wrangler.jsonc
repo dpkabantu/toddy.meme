@@ -12,11 +12,13 @@
   },
   // Private preview copies for test branches (e.g. games-beta). Needed by
   // `npx wrangler preview` in Cloudflare's preview builds; the live site is unaffected.
-  "previews": {},
-  // DATABASE (Season platform): the TEST database. The real one is created before the December rehearsal.
-  // The Database ID is not a secret.
-  "d1_databases": [
-    { "binding": "DB", "database_name": "toddy-season-dev", "database_id": "83d03f27-0b39-4b0d-866d-4d9d28fd003d", "migrations_dir": "server/migrations" }
-  ]
+  // Previews do NOT inherit production settings, so the TEST database is bound here.
+  // Every preview shares this one test database. The Database ID is not a secret.
+  // The LIVE site gets its own, separate database (top-level "d1_databases") before the December rehearsal.
+  "previews": {
+    "d1_databases": [
+      { "binding": "DB", "database_name": "toddy-season-dev", "database_id": "83d03f27-0b39-4b0d-866d-4d9d28fd003d" }
+    ]
+  }
   // Secrets (API keys, signing keys) belong in Cloudflare secrets, never in this file.
 }
