@@ -1393,14 +1393,17 @@ function showBrewSet() {
 }
 bind('brewset-back', () => show('title'));
 bind('btn-brewset', () => { sfx.tick(); showBrewSet(); });
+// Coming from the Season page: show a waiting screen straight away instead of flashing the home screen first.
+const toSeason = /[?&]play=season(&|$)/.test(location.search);
+const backToTitle = () => { if (toSeason && current === 'brewset' && !seasonM) show('title'); };
 fetch('/api/season', { credentials: 'same-origin' }).then((r) => r.json()).then((j) => {
-  if (!j || !j.ok) return;
+  if (!j || !j.ok) return backToTitle();
   const m = (j.missions || []).find((x) => x.id === 'moon-brew-season' && x.state !== 'locked');
-  if (!m || !Array.isArray(m.nights)) return;
+  if (!m || !Array.isArray(m.nights)) return backToTitle();
   seasonM = m; $('btn-brewset').hidden = false; $('btn-brewset').classList.add('glow'); $('btn-play').parentNode.insertBefore($('btn-brewset'), $('btn-play'));
   $('brewset-status').textContent = `7 nights · 20 trays each · counts for Season${m.state === 'late' ? ' (half points)' : ''}`;
   if (/[?&]play=season(&|$)/.test(location.search)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } showBrewSet(); }
-}).catch(() => { /* no Season server: the button stays hidden */ });
+}).catch(() => { backToTitle(); /* no Season server: the button stays hidden */ });
 bind('btn-endless', () => {
   if (endlessOpen()) { startEndless(false); return; }
   // locked: say why and how far along the player is, with a way straight there
@@ -1483,7 +1486,7 @@ toddy.cv = $('toddy'); toddy.ctx = toddy.cv.getContext('2d');
 toddy.cv.addEventListener('animationend', (e) => { if (e.animationName === 'hop') toddy.cv.classList.remove('hop'); });
 
 applySettings(); // (sound itself wakes on the first tap)
-show('title');
+if (toSeason) { show('brewset'); const w = document.createElement('p'); w.className = 'stat center'; w.textContent = 'Opening Season Nights\u2026'; $('brewset-body').appendChild(w); } else show('title');
 if (/[?&]play=daily(&|$)/.test(location.search)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } startDaily(); }   // link from the Season page
 track('open', { returning: Object.keys(save.stars).length > 0 || Object.keys(save.daily).length > 0 });
 

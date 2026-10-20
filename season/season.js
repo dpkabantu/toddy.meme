@@ -133,21 +133,24 @@
     $('mine').hidden = false;
   }
 
+  function reveal() { $('s-loading').hidden = true; if (S.season && S.season.status !== 'live') $('testbanner').hidden = false; }
   function start() {
     Promise.all([api('/api/me'), api('/api/season')]).then(function (rs) {
       var me = rs[0], season = rs[1];
-      $('s-loading').hidden = true;
-      if (!season || season.ok === false || !season.games) { $('s-off').hidden = false; return; }
+      if (!season || season.ok === false || !season.games) { $('s-loading').hidden = true; $('s-off').hidden = false; return; }
       S = season;
       if (me && me.pending) { location.replace('/passport/?step=join'); return; }
-      if (S.season && S.season.status !== 'live') $('testbanner').hidden = false;
       var q = new URLSearchParams(location.search).get('e'); if (q && ERR[q]) say(ERR[q], true);
       if (q) history.replaceState(null, '', location.pathname);
       if (me && me.signedIn) {
-        $('h-name').textContent = me.username; $('h-id').textContent = me.passportId; $('hello').hidden = false; $('acct').hidden = false;
-        api('/api/me/points').then(function (d) { P = d && d.ok ? d : null; renderTonight(); renderMissions(); if (P) renderMine(); renderHow(); });
+        // everything appears together (no header first and the columns later)
+        api('/api/me/points').then(function (d) {
+          P = d && d.ok ? d : null; 
+          $('h-name').textContent = me.username; $('h-id').textContent = me.passportId; $('hello').hidden = false; $('acct').hidden = false;
+          renderTonight(); renderMissions(); if (P) renderMine(); renderHow(); reveal();
+        });
       } else {
-        $('signin-card').hidden = false; renderTonight(); renderMissions(); renderHow();
+        $('signin-card').hidden = false; renderTonight(); renderMissions(); renderHow(); reveal();
         var ua = navigator.userAgent || '';
         if (/Twitter|Instagram|FBAN|FBAV|FB_IAB|TikTok|musical_ly|Bytedance|Line\/|; wv\)/i.test(ua)) $('inapp').hidden = false;
       }
