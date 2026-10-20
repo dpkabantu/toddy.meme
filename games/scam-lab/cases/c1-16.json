@@ -1,0 +1,281 @@
+{
+  "id": "c1-16",
+  "type": "hunt",
+  "chapter": 1,
+  "difficulty": 2,
+  "title": "Two Support Numbers",
+  "disguise": "support",
+  "intro": [
+    "Your parcel never arrived. You searched for the courier's support number.",
+    "Two results show a phone number. One is real. One is Mirage in a headset. Compare them side by side.",
+    "Sniff the details, then decide."
+  ],
+  "notify": {
+    "app": "Messages",
+    "from": "Toddy",
+    "text": "Need Parcelo support. Which number is real?"
+  },
+  "decide_q": "Which number belongs to the courier, and what will you do?",
+  "screen": {
+    "app": "compare",
+    "context": "You searched for \"Parcelo Express support number\". Your receipt shows the courier's real website.",
+    "panels": [
+      {
+        "label": "Result A",
+        "avatar": {
+          "glyph": "📦",
+          "clue": "logo_a"
+        },
+        "rows": [
+          {
+            "k": "Label",
+            "v": [
+              {
+                "clue": "ad_a",
+                "text": "No label. A normal result."
+              }
+            ]
+          },
+          {
+            "k": "Address",
+            "v": [
+              {
+                "clue": "addr_a",
+                "text": "parcelo.app/contact"
+              }
+            ]
+          },
+          {
+            "k": "Number",
+            "v": [
+              {
+                "clue": "num_a",
+                "text": "0800 555 0140"
+              }
+            ]
+          },
+          {
+            "k": "Your receipt",
+            "v": [
+              {
+                "clue": "receipt_a",
+                "text": "Shows this same address"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Result B",
+        "avatar": {
+          "glyph": "📦",
+          "clue": "logo_b"
+        },
+        "rows": [
+          {
+            "k": "Label",
+            "v": [
+              {
+                "clue": "ad_b",
+                "text": "Sponsored (an ad)"
+              }
+            ]
+          },
+          {
+            "k": "Address",
+            "v": [
+              {
+                "clue": "addr_b",
+                "text": "parcelo-careline.net"
+              }
+            ]
+          },
+          {
+            "k": "Number",
+            "v": [
+              {
+                "clue": "num_b",
+                "text": "0800 555 0199 · \"24/7 Instant Refund Line\""
+              }
+            ]
+          },
+          {
+            "k": "Your receipt",
+            "v": [
+              {
+                "clue": "receipt_b",
+                "text": "Does not show this address"
+              }
+            ]
+          }
+        ],
+        "note": [
+          {
+            "clue": "promise_b",
+            "text": "\"Call now for an instant refund.\""
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "ad_b": {
+      "label": "Paid ad",
+      "strength": "strong",
+      "lens": "Result B is a sponsored ad. Anyone can pay to appear at the top.",
+      "why": "Scammers pay to put fake support numbers in search results."
+    },
+    "addr_b": {
+      "label": "Not the courier's site",
+      "strength": "strong",
+      "lens": "parcelo-careline.net is not the courier's real parcelo.app.",
+      "why": "A support site with a different address is a look-alike."
+    },
+    "receipt_b": {
+      "label": "Not on your receipt",
+      "strength": "strong",
+      "lens": "Your receipt does not show this address or number.",
+      "why": "Your receipt, box or account shows the real contact details."
+    },
+    "promise_b": {
+      "label": "\"Instant refund\"",
+      "strength": "strong",
+      "lens": "It promises an instant refund.",
+      "why": "A promise of instant money is bait for your bank details."
+    },
+    "logo_a": {
+      "label": "Courier logo",
+      "strength": "harmless",
+      "lens": "A parcel picture.",
+      "why": "Logos are easy to copy, so they prove nothing on their own."
+    },
+    "logo_b": {
+      "label": "Courier logo",
+      "strength": "harmless",
+      "lens": "The same parcel picture.",
+      "why": "A copied logo takes seconds."
+    },
+    "ad_a": {
+      "label": "No ad label",
+      "strength": "harmless",
+      "lens": "A normal result, not an ad.",
+      "why": "Not being an ad does not prove a result is real, but it is not a warning sign."
+    },
+    "addr_a": {
+      "label": "The courier's real address",
+      "strength": "harmless",
+      "lens": "parcelo.app matches the address on your receipt.",
+      "why": "A match with something you already trust is real evidence."
+    },
+    "receipt_a": {
+      "label": "Matches your receipt",
+      "strength": "harmless",
+      "lens": "Your receipt shows this same address.",
+      "why": "Your own paperwork is the best check."
+    },
+    "num_a": {
+      "label": "Number",
+      "strength": "harmless",
+      "lens": "0800 555 0140.",
+      "why": "A number on its own proves nothing. Where it comes from matters."
+    },
+    "num_b": {
+      "label": "Number",
+      "strength": "harmless",
+      "lens": "0800 555 0199, plus a flashy name.",
+      "why": "A flashy name for a phone line is not evidence."
+    }
+  },
+  "actions": [
+    {
+      "id": "pick_b",
+      "label": "Call Result B. It says \"instant refund\"",
+      "trap": true
+    },
+    {
+      "id": "verify",
+      "label": "Use the number on my receipt or the courier's own site"
+    },
+    {
+      "id": "block_report",
+      "label": "A is the real one. Report B's ad"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "trap": {
+    "title": "Parcelo Careline",
+    "url": "parcelo-careline.net",
+    "ask": "The agent says: \"To refund you instantly, we need remote access to your phone and your bank details.\"",
+    "go": "Give access and details",
+    "back": "Hang up"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "You called the real number from your receipt and reported the fake ad. The parcel was traced the same day.",
+      "mirageSays": "My headset!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The number on your receipt reached the real courier. They found your parcel. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "pick_b": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The \"agent\" took remote access and your bank details. The refund never came, and money left.",
+      "mirageSays": "Thanks for calling!"
+    }
+  },
+  "what_if": {
+    "pick_b": "Using the number on your receipt, or typing the courier's own address, would have reached the real company.",
+    "verify": "Checking was smart. Reporting the fake ad as well helps get it removed."
+  },
+  "golden_rule": "Never trust the first phone number a search shows. Use the number on your receipt, box or account.",
+  "quick_check": {
+    "q": "You search for a courier's support number and the top result is an ad for an \"instant refund line\". What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Call it, it is at the top"
+      },
+      {
+        "id": "b",
+        "text": "Check the number on your receipt, box or account"
+      },
+      {
+        "id": "c",
+        "text": "Call it, but do not give your name"
+      },
+      {
+        "id": "d",
+        "text": "Trust it because it has the courier's logo"
+      }
+    ],
+    "answer": "b",
+    "explain": "Scammers pay to appear at the top of search results. Your own paperwork is the safest source."
+  },
+  "hints": {
+    "nudge": "Which result matches your receipt?",
+    "glow_order": [
+      "receipt_b",
+      "addr_b",
+      "ad_b",
+      "promise_b"
+    ]
+  },
+  "sources": [
+    "ftc-customerservice",
+    "ftc-techsupport",
+    "ftc-utility"
+  ],
+  "checked_on": "2026-10-21"
+}

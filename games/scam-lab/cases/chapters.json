@@ -3,8 +3,8 @@
   "chapters": [
     {
       "n": 1,
-      "title": "The Fake Helpers",
-      "blurb": "Impostor scams: the most reported kind.",
+      "title": "Fake Helpers",
+      "blurb": "Fake banks, couriers, support and admins: the most reported scams.",
       "card": "chapter_1",
       "cases": [
         "c1-01",
@@ -12,10 +12,24 @@
         "c1-03",
         "c1-04",
         "c1-05",
-        "c1-06"
+        "c1-06",
+        "c1-07",
+        "c1-08",
+        "c1-09",
+        "c1-10",
+        "c1-11",
+        "c1-12",
+        "c1-13",
+        "c1-14",
+        "c1-15",
+        "c1-16",
+        "c1-17",
+        "c1-18",
+        "c1-19",
+        "c1-20"
       ],
       "status": "open",
-      "learn": "fake support accounts, look-alike admins, \"verify your wallet\" bots, and when a message is simply honest."
+      "learn": "fake bank, courier, toll and refund messages, fake support and admins, and when a message is simply honest."
     },
     {
       "n": 2,

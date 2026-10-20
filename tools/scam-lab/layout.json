@@ -1,0 +1,35 @@
+{
+  "note": "The Season 1 layout: 7 chapters x 20 cases. 'old:cX-NN' = one of the original 48 cases (kept in tools/scam-lab/archive); 'new:key' = a case written in tools/scam-lab/specs/chN.mjs.",
+  "chapters": [
+    {
+      "n": 1,
+      "title": "Fake Helpers",
+      "blurb": "Fake banks, couriers, support and admins: the most reported scams.",
+      "card": "chapter_1",
+      "built": true,
+      "learn": "fake bank, courier, toll and refund messages, fake support and admins, and when a message is simply honest.",
+      "cases": [
+        "new:parcel-fee",
+        "old:c1-01",
+        "new:two-bank-sms",
+        "old:c1-05",
+        "old:c1-04",
+        "new:account-locked",
+        "new:toll-rush",
+        "old:c1-03",
+        "new:real-bank-alert",
+        "old:c1-02",
+        "new:support-reply",
+        "new:fake-mod",
+        "new:real-delivery",
+        "new:refund-rush",
+        "new:courier-otp",
+        "new:two-support-numbers",
+        "new:real-carrier-bill",
+        "new:power-cut",
+        "new:govt-refund",
+        "old:c1-06"
+      ]
+    }
+  ]
+}

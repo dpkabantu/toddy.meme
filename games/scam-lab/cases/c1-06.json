@@ -1,370 +1,273 @@
 {
   "id": "c1-06",
-  "type": "boss",
+  "type": "hunt",
   "chapter": 1,
-  "difficulty": 3,
-  "title": "Mirage's Help Desk",
+  "difficulty": 2,
+  "title": "Account Locked",
   "disguise": "support",
-  "disguise2": "admin",
   "intro": [
-    "This is it, Toddy. Mirage has set up a whole fake help desk.",
-    "He'll change disguises to fool you. Collect every clue you can.",
-    "At the end you'll pin the evidence on the case board and unmask him."
+    "An email just landed. Your bank, it says, has locked your account.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
   ],
   "notify": {
-    "app": "Chirp",
-    "from": "Zelvora Help Desk ✔",
-    "text": "We've opened ticket #4471 for your stuck swap!"
+    "app": "Mail",
+    "from": "Orrin Bank Security",
+    "text": "Your account has been LOCKED. Act now."
   },
   "screen": {
-    "app": "chirp",
+    "app": "mail",
     "head": {
-      "name": [
+      "from": [
         {
-          "clue": "tick",
-          "text": "Zelvora Help Desk ✔",
-          "id": "duel-name"
+          "clue": "from",
+          "text": "Orrin Bank Security"
         }
       ],
-      "sub": [
+      "addr": [
         {
-          "clue": "handle",
-          "text": "@zelvora.helpdesk.live"
+          "clue": "addr",
+          "text": "security@orrin-bank-help.com"
         }
       ],
-      "avatar": {
-        "glyph": "☾",
-        "clue": "avatar"
-      }
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "Your account has been LOCKED - act now"
+        }
+      ],
+      "time": [
+        "8:03 AM"
+      ]
     },
-    "banner": [
-      {
-        "clue": "dm_first",
-        "text": "Message request · they replied to your public post"
-      }
-    ],
-    "context": "You posted in the Zelvora community: \"Swap stuck again, anyone?\"",
     "items": [
       {
-        "msg": [
-          "Hello! We've opened ",
+        "p": [
           {
-            "clue": "ticket",
-            "text": "ticket #4471"
-          },
-          " for your stuck swap. 😊"
+            "clue": "greet",
+            "text": "Dear Customer,"
+          }
         ]
       },
       {
-        "msg": [
-          "Chat with a live agent here: ",
+        "p": [
+          "We noticed an unusual sign-in. ",
           {
-            "clue": "chatlink",
-            "text": "plenvo.me/zelvora-agent-live",
+            "clue": "deadline",
+            "text": "Restore access within 2 hours"
+          },
+          " or your account will be permanently closed."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "link",
+            "text": "Restore my account",
             "link": true
           }
+        ]
+      },
+      {
+        "p": [
+          "You will need your ",
+          {
+            "clue": "login",
+            "text": "online banking login and card PIN"
+          },
+          " to confirm it is you."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "nocall",
+            "text": "Do not contact your branch. This process is automatic."
+          }
+        ]
+      },
+      {
+        "foot": [
+          "Orrin Bank Security Team"
         ]
       }
     ]
   },
-  "duel": {
-    "start": "d1",
-    "nodes": {
-      "d1": {
-        "rename": "Agent Mira · Zelvora",
-        "say": [
-          {
-            "sys": [
-              "You joined a private chat with \"Agent Mira · Zelvora\""
-            ]
-          },
-          {
-            "msg": [
-              "Hi, I'm Mira! To fix the swap I need to see your screen. Please install ",
-              {
-                "clue": "screenshare",
-                "text": "Vewro Pro"
-              },
-              " and give me the code."
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Why do you need to see my screen?",
-            "next": "d2"
-          },
-          {
-            "text": "Installing it now",
-            "next": "d3"
-          },
-          {
-            "text": "Leave and report this chat",
-            "end": "block_report"
-          }
-        ]
-      },
-      "d2": {
-        "say": [
-          {
-            "msg": [
-              "It's standard procedure. ",
-              {
-                "clue": "otp",
-                "text": "Just read me the 6-digit code we texted you"
-              },
-              " and I'll do the rest."
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Here's the code",
-            "next": "d3"
-          },
-          {
-            "text": "That code says never share it. I'll use the in-app help instead.",
-            "end": "verify"
-          },
-          {
-            "text": "Leave and report this chat",
-            "end": "block_report"
-          }
-        ]
-      },
-      "d3": {
-        "rename": "Luna (Zelvora Admin)",
-        "disguise": "admin",
-        "say": [
-          {
-            "sys": [
-              {
-                "clue": "swap",
-                "text": "Agent Mira left. \"Luna (Zelvora Admin)\" joined the chat."
-              }
-            ]
-          },
-          {
-            "msg": [
-              "Supervisor here. Your wallet is at risk! ",
-              {
-                "clue": "move",
-                "text": "Move your coins to this safe wallet: 0x7Ee…a1F"
-              },
-              " right now."
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Moving them now",
-            "end": "go_ahead"
-          },
-          {
-            "text": "Real staff never tell you to move coins. Report.",
-            "end": "block_report"
-          },
-          {
-            "text": "I'll check on Zelvora's official site first",
-            "end": "verify"
-          }
-        ]
-      }
-    }
-  },
   "clues": {
-    "tick": {
-      "label": "Fake tick",
+    "addr": {
+      "label": "Not the bank's domain",
       "strength": "strong",
-      "lens": "The ✔ is typed into the name. No real badge after the handle.",
-      "why": "Anyone can type a tick."
+      "lens": "The email comes from orrin-bank-help.com. The bank's real address ends in orrin.app.",
+      "why": "Look-alike sender addresses add extra words. Check the part after the @, letter by letter."
     },
-    "handle": {
-      "label": "Not the official handle",
+    "deadline": {
+      "label": "Deadline and threat",
       "strength": "strong",
-      "lens": "@zelvora.helpdesk.live, joined last week. The official account is @zelvora.",
-      "why": "Extra words like helpdesk or live are a favourite disguise."
+      "lens": "Two hours, or the account is closed for good.",
+      "why": "A hard deadline is built to stop you thinking. Real banks do not work this way."
     },
-    "dm_first": {
-      "label": "They messaged first",
+    "link": {
+      "label": "Look-alike link",
       "strength": "strong",
-      "lens": "They found your public post and messaged you.",
-      "why": "Real support answers inside the app, not in surprise DMs."
+      "lens": "The button really goes to orrin-bank-help.com/restore.",
+      "why": "Never log in through a link in an email. Type the bank's address or use its app."
     },
-    "chatlink": {
-      "label": "Private chat link",
+    "login": {
+      "label": "Asks for login and PIN",
       "strength": "strong",
-      "lens": "This link takes you away to a private chat they control.",
-      "why": "Moving you to a private place is how scammers cut you off from help."
+      "lens": "The page wants your login and your card PIN.",
+      "why": "No real bank asks for your PIN. Anyone who does is a scammer."
     },
-    "screenshare": {
-      "label": "Screen-share app",
+    "nocall": {
+      "label": "\"Do not contact your branch\"",
       "strength": "strong",
-      "lens": "Vewro Pro would let them see and control your phone.",
-      "why": "Never install remote-access apps because a stranger asks."
+      "lens": "The email tells you not to check with your branch.",
+      "why": "Scammers block your way to a check. A real bank is happy for you to check."
     },
-    "otp": {
-      "label": "Wants your code",
-      "strength": "strong",
-      "lens": "That code is the key to your account.",
-      "why": "Login codes are for you only. Anyone asking for one is stealing your account."
-    },
-    "swap": {
-      "label": "Disguise swap",
-      "strength": "strong",
-      "lens": "\"Agent Mira\" vanished and an \"admin\" appeared in the same chat.",
-      "why": "When the person changes but the pressure stays, it's one con artist in two costumes."
-    },
-    "move": {
-      "label": "Move coins to a \"safe\" wallet",
-      "strength": "strong",
-      "lens": "That \"safe wallet\" belongs to whoever wrote this message.",
-      "why": "No real company ever tells you to move your coins to a wallet they give you."
-    },
-    "ticket": {
-      "label": "Ticket number",
+    "greet": {
+      "label": "\"Dear Customer\"",
       "strength": "harmless",
-      "lens": "Ticket #4471.",
-      "why": "Ticket numbers look official, but anyone can make one up. It proves nothing alone."
+      "lens": "No name, just \"Dear Customer\".",
+      "why": "Many real emails use your name, but a generic hello alone is not proof of a scam."
     },
-    "avatar": {
-      "label": "Moon logo",
+    "subject": {
+      "label": "Capital letters",
       "strength": "harmless",
-      "lens": "The Zelvora moon logo.",
-      "why": "Logos are easy to copy."
+      "lens": "\"LOCKED\" in capitals.",
+      "why": "Shouting alone proves nothing. The threats and the link do."
+    },
+    "from": {
+      "label": "Bank name",
+      "strength": "harmless",
+      "lens": "The sender name says Orrin Bank Security.",
+      "why": "A display name is easy to type. Look at the address behind it."
     }
   },
   "actions": [
     {
-      "id": "open_chat",
-      "label": "Open the live agent chat",
-      "goto": "duel"
+      "id": "go_ahead",
+      "label": "Click \"Restore my account\"",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
     },
     {
       "id": "verify",
-      "label": "Use the help button inside the Zelvora app"
+      "label": "Open the Orrin app myself and look"
     },
     {
       "id": "block_report",
-      "label": "Block and report the account"
-    },
-    {
-      "id": "go_ahead",
-      "label": "Move the coins",
-      "hidden": true
+      "label": "Report it as phishing and delete it"
     }
   ],
   "best_action": "block_report",
   "acceptable_actions": [
-    "verify"
+    "verify",
+    "ignore"
   ],
+  "trap": {
+    "title": "Orrin Bank · Restore access",
+    "url": "orrin-bank-help.com/restore",
+    "ask": "Enter your online banking login and card PIN to restore access.",
+    "go": "Restore access",
+    "back": "Close this page"
+  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
-      "mirage": "caught",
-      "stamp": "CASE CLOSED",
-      "line": "Reported. Plenvo traced every fake account back to one con artist.",
-      "mirageSays": "Unmasked by a civet?!"
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported as phishing. The bank's security team had the fake address blocked by lunchtime.",
+      "mirageSays": "Not my lovely email!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Zelvora's in-app help confirmed: no Agent Mira, no Luna, no ticket #4471.",
-      "mirageSays": "They checked AGAIN?"
+      "line": "The app showed no lock and no warning. The email was fake. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. The fake address is still sending the same email to thousands of others.",
+      "mirageSays": "Fine. Next!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "The \"safe wallet\" was Mirage's. The coins are gone.",
-      "mirageSays": "Safe with ME, that is!"
+      "stamp": "SCAMMED",
+      "line": "The page copied your login and PIN. The real account was emptied in minutes.",
+      "mirageSays": "Thanks for logging in!"
     }
   },
   "what_if": {
-    "go_ahead": "Any request to move your coins somewhere \"safe\" is the final trick. Stop there and report.",
-    "verify": "Checking in the official app was safe. Reporting as well gets all the fake accounts removed."
+    "go_ahead": "Opening the bank's own app would have shown no lock, and no problem at all.",
+    "ignore": "Forwarding the email to the bank's fraud address helps get the fake site taken down.",
+    "verify": "Checking was smart. Reporting the email as well protects other people."
   },
-  "board": {
-    "q": "What's really going on?",
-    "verdicts": [
-      {
-        "id": "scam",
-        "text": "One scammer pretending to be Zelvora support and an admin"
-      },
-      {
-        "id": "real",
-        "text": "Real Zelvora support, just being careful"
-      },
-      {
-        "id": "unsure",
-        "text": "Not enough evidence to tell"
-      }
-    ],
-    "answer": "scam",
-    "pick": 3,
-    "explain": "Fake tick, a look-alike handle, a private chat, a code request and a costume change. One con artist, many masks."
-  },
-  "golden_rule": "When someone \"helpful\" moves you to a private chat and keeps changing faces, it's one con artist in many masks.",
+  "golden_rule": "Never log in through a link in an email. Open the bank's own app or type its address yourself.",
   "quick_check": {
-    "q": "Support asks you to move your coins to a \"safe wallet\" right now. What do you do?",
+    "q": "An email says your account is locked and you have two hours to log in through a button. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Move them, they're protecting you"
+        "text": "Click fast, two hours is short"
       },
       {
         "id": "b",
-        "text": "Stop, don't move anything, and report"
+        "text": "Reply asking if it is real"
       },
       {
         "id": "c",
-        "text": "Move half to be safe"
+        "text": "Open the bank's own app yourself, and report the email"
+      },
+      {
+        "id": "d",
+        "text": "Forward it to a friend to check"
       }
     ],
-    "answer": "b",
-    "explain": "A \"safe wallet\" from a stranger is their wallet."
+    "answer": "c",
+    "explain": "The deadline and the link are the trap. Your bank's own app shows the truth in seconds."
   },
   "hints": {
-    "nudge": "Look at where they want to take you.",
+    "nudge": "Look at the address the email really came from.",
     "glow_order": [
-      "chatlink",
-      "handle",
-      "tick",
-      "dm_first",
-      "screenshare",
-      "otp",
-      "swap",
-      "move"
+      "addr",
+      "link",
+      "login",
+      "deadline",
+      "nocall"
     ]
   },
   "sources": [
-    "cafc-wallet",
-    "ftc-tech-support",
-    "ftc-crypto",
-    "europol-report"
+    "ftc-bank-call",
+    "ftc-spamtexts"
   ],
-  "checked_on": "2026-10-13",
+  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check profile",
-      "title": "@zelvora.helpdesk.live",
+      "label": "Check sender",
+      "title": "Who really sent this",
       "rows": [
         {
-          "k": "Account created",
-          "v": "Last week",
-          "clue": "handle"
+          "k": "Shown as",
+          "v": "Orrin Bank Security",
+          "clue": "from"
         },
         {
-          "k": "Verified badge",
-          "v": "None. The ✔ is typed into the name",
-          "clue": "tick"
+          "k": "Real address behind it",
+          "v": "security@orrin-bank-help.com",
+          "clue": "addr"
         },
         {
-          "k": "Official account",
-          "v": "@zelvora"
+          "k": "The bank's real domain",
+          "v": "orrin.app"
         }
       ]
     },
@@ -372,38 +275,43 @@
       "id": "link",
       "icon": "🔗",
       "label": "Check link",
-      "title": "Where the chat link really goes",
+      "title": "Where the button goes",
       "rows": [
         {
-          "k": "It really opens",
-          "v": "A private chat they control",
-          "clue": "chatlink"
+          "k": "Button says",
+          "v": "Restore my account"
         },
         {
-          "k": "Zelvora's real help",
-          "v": "Inside the Zelvora app only"
+          "k": "It really opens",
+          "v": "orrin-bank-help.com/restore",
+          "clue": "link"
+        },
+        {
+          "k": "Asks for",
+          "v": "Login and card PIN",
+          "clue": "login"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Official page",
-      "title": "Zelvora's real help page says",
+      "label": "Official advice",
+      "title": "What the bank and consumer advice say",
       "rows": [
         {
-          "k": "Will support ask for a login code?",
+          "k": "Does a bank ask for your PIN?",
           "v": "Never",
-          "clue": "otp"
+          "clue": "login"
         },
         {
-          "k": "Will support take control of your phone?",
-          "v": "Never",
-          "clue": "screenshare"
+          "k": "How to check an alarming message",
+          "v": "Open your own app or call the number on your statement"
         },
         {
-          "k": "Real support",
-          "v": "Answers inside the app, not in surprise DMs"
+          "k": "\"Do not contact us\"",
+          "v": "A warning sign: real banks welcome checks",
+          "clue": "nocall"
         }
       ]
     }

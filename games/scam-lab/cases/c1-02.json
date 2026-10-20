@@ -1,127 +1,325 @@
 {
   "id": "c1-02",
-  "type": "rush",
+  "type": "hunt",
   "chapter": 1,
   "difficulty": 1,
-  "title": "Morning Inbox",
-  "seconds": 60,
+  "title": "The Helpful Stranger",
+  "disguise": "support",
   "intro": [
-    "Busy morning, Toddy. Ten messages, one minute.",
-    "Swipe left if it's a scam, right if it's safe. Or tap the buttons.",
-    "Careful: some of them are honest. Don't cry wolf."
+    "Evening, Toddy. Your phone just buzzed.",
+    "Tap anything that looks odd to sniff it closer. Pin what's suspicious, clear what's harmless.",
+    "When you're sure, decide what to do."
   ],
-  "cards": [
+  "notify": {
+    "app": "Chirp",
+    "from": "Zelvora Support ✔",
+    "text": "Hi there! 👋 We saw your post. Your wallet is out of sync…"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "tick",
+          "text": "Zelvora Support ✔"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@zelvora_helpdesk_24"
+        }
+      ],
+      "avatar": {
+        "glyph": "☾",
+        "clue": "avatar"
+      }
+    },
+    "banner": [
+      {
+        "clue": "dm_first",
+        "text": "New message request · you don't follow this account"
+      }
+    ],
+    "context": "Earlier you posted in the Zelvora community chat: \"My swap is stuck 😩 anyone know why?\"",
+    "items": [
+      {
+        "time": [
+          {
+            "clue": "time",
+            "text": "2:14 AM"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "greeting",
+            "text": "Hi there! 👋"
+          },
+          " We saw your post. Your wallet is out of sync, so your swap is frozen."
+        ]
+      },
+      {
+        "msg": [
+          "To unlock it, re-sync here: ",
+          {
+            "clue": "link",
+            "text": "zelvora-sync.help/verify",
+            "link": true
+          }
+        ]
+      },
+      {
+        "msg": [
+          "You'll need to enter ",
+          {
+            "clue": "phrase",
+            "text": "your 12-word recovery phrase"
+          },
+          " so we can restore access."
+        ]
+      },
+      {
+        "msg": [
+          "⏱ Hurry, this fix ",
+          {
+            "clue": "timer",
+            "text": "expires in",
+            "countdown": 900
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "dm_first": {
+      "label": "They messaged first",
+      "strength": "strong",
+      "lens": "You never contacted them. They found your public post and messaged you first.",
+      "why": "Real support teams don't slide into your DMs. Scammers watch public help posts."
+    },
+    "tick": {
+      "label": "Fake tick",
+      "strength": "strong",
+      "lens": "The ✔ is just an emoji typed into the name. Plenvo's real verified badge sits after the handle, and there isn't one.",
+      "why": "Anyone can type a tick into a display name."
+    },
+    "handle": {
+      "label": "2-day-old account",
+      "strength": "strong",
+      "lens": "Joined 2 days ago · 3 followers. The official account is @zelvora.",
+      "why": "Brand-new look-alike accounts are a classic impersonation sign."
+    },
+    "link": {
+      "label": "Look-alike link",
+      "strength": "strong",
+      "lens": "This link really goes to zelvora-sync.help, not the official zelvora.app.",
+      "why": "Always check where a link really goes. Look-alike sites steal your details."
+    },
+    "phrase": {
+      "label": "Asks for recovery phrase",
+      "strength": "strong",
+      "lens": "Whoever has your recovery phrase controls your wallet, forever.",
+      "why": "No real support team ever asks for your recovery phrase."
+    },
+    "timer": {
+      "label": "Countdown pressure",
+      "strength": "strong",
+      "lens": "A countdown that pushes you to act before you think.",
+      "why": "Rushing you is a pressure trick. Real fixes don't expire in 15 minutes."
+    },
+    "avatar": {
+      "label": "Moon logo",
+      "strength": "harmless",
+      "lens": "It's the Zelvora moon logo.",
+      "why": "A logo is easy to copy, so it proves nothing either way on its own."
+    },
+    "time": {
+      "label": "Sent at 2:14 AM",
+      "strength": "harmless",
+      "lens": "Sent at 2:14 AM.",
+      "why": "Messages arrive at all hours. The time alone proves nothing."
+    },
+    "greeting": {
+      "label": "Friendly hello",
+      "strength": "harmless",
+      "lens": "A friendly hello and a wave.",
+      "why": "Being friendly isn't suspicious by itself."
+    }
+  },
+  "actions": [
     {
-      "id": "r1",
-      "app": "SMS",
-      "from": "Zelvora",
-      "text": "Your account is LOCKED. Verify within 1 hour: zelvora-secure.co/login",
-      "scam": true,
-      "why": "Look-alike link plus a deadline. Real apps tell you to open the app, not a strange link."
+      "id": "go_ahead",
+      "label": "Open the link and re-sync",
+      "trap": true
     },
     {
-      "id": "r2",
-      "app": "Chirp",
-      "from": "@zelvora ☑",
-      "text": "Planned maintenance tonight, 1–2 AM. Swaps pause for an hour. No action needed.",
-      "scam": false,
-      "why": "The official handle with Plenvo's real badge, and it asks you for nothing."
+      "id": "ignore",
+      "label": "Ignore it"
     },
     {
-      "id": "r3",
-      "app": "Plenvo DM",
-      "from": "Admin Luna 💜",
-      "text": "You won the community raffle! 🎉 Send 10 ZLV to cover the fee and claim your prize.",
-      "scam": true,
-      "why": "Real prizes never cost money to claim, and admins don't DM winners asking for coins."
+      "id": "verify",
+      "label": "Check Zelvora's official help page"
     },
     {
-      "id": "r4",
-      "app": "SMS",
-      "from": "Kiko (friend)",
-      "text": "Movie night Friday? I'll bring the popcorn 🍿",
-      "scam": false,
-      "why": "A friend you know, asking for nothing. Not every message is a trap."
-    },
-    {
-      "id": "r5",
-      "app": "Plenvo DM",
-      "from": "Hedrio Support",
-      "text": "We detected suspicious activity. Reply with your recovery phrase so we can secure your funds.",
-      "scam": true,
-      "why": "No real support ever asks for your recovery phrase, whatever the reason."
-    },
-    {
-      "id": "r6",
-      "app": "Email",
-      "from": "no-reply@hedrio.app",
-      "text": "New login from Lisbon. If this wasn't you, open the Hedrio app and go to Security.",
-      "scam": false,
-      "why": "From the real domain, no link to click, and it sends you to the app you already have."
-    },
-    {
-      "id": "r7",
-      "app": "SMS",
-      "from": "+44 7700 900123",
-      "text": "🎁 Free airdrop waiting for you! Claim at kelvaro-airdrop.claim-now.xyz. Only 5 min left!",
-      "scam": true,
-      "why": "Unknown sender, strange link, and a countdown. Free money that expires in minutes is bait."
-    },
-    {
-      "id": "r8",
-      "app": "Plenvo DM",
-      "from": "HR Recruiter Elena",
-      "text": "Earn €250 a day just liking posts! Pay €49 registration and start today.",
-      "scam": true,
-      "why": "Real jobs never make you pay to start. Easy money for likes is a task scam."
-    },
-    {
-      "id": "r9",
-      "app": "SMS",
-      "from": "Zelvora",
-      "text": "482913 is your Zelvora login code. Never share this code with anyone, not even Zelvora staff.",
-      "scam": false,
-      "why": "You just logged in, and the message itself warns you never to share the code. Use it, don't share it."
-    },
-    {
-      "id": "r10",
-      "app": "SMS",
-      "from": "Unknown number",
-      "text": "Hi Mum, I dropped my phone 😭 this is my new number. Can you send €800 urgently? I'll explain later.",
-      "scam": true,
-      "why": "A new number plus an urgent money request. Call the old number first to check it's really them."
+      "id": "block_report",
+      "label": "Block and report the account"
     }
   ],
-  "golden_rule": "Urgent plus money, codes or links means stop and check. Calm messages that ask for nothing are usually fine.",
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "trap": {
+    "title": "Zelvora Wallet Sync",
+    "url": "zelvora-sync.help/verify",
+    "ask": "Enter your 12-word recovery phrase to re-sync your wallet.",
+    "go": "Re-sync now",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Blocked and reported. Plenvo removed the fake account, so it can't fool the next person.",
+      "mirageSays": "Curses! Blocked again!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Zelvora's help page says: \"We never message you first and never ask for your recovery phrase.\" Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the account is still out there messaging other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "Mirage used the phrase to empty the wallet in seconds. In real life, that money is gone for good.",
+      "mirageSays": "Thanks for the help!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "If you'd blocked and reported instead, the account would be gone and your vault still full.",
+    "ignore": "Reporting takes two taps and gets the fake account removed before it reaches someone else.",
+    "verify": "Checking was smart. Blocking and reporting as well gets the account removed for everyone."
+  },
+  "golden_rule": "No real support team will ever ask for your recovery phrase.",
   "quick_check": {
-    "q": "A text from a new number says it's your cousin and needs money urgently. What's the best first step?",
+    "q": "A \"Support\" account asks for your 12-word recovery phrase to fix your wallet. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Send a small amount, just in case"
+        "text": "Share it, but only if they have a ✔"
       },
       {
         "id": "b",
-        "text": "Call your cousin's old number to check"
+        "text": "Never share it. Block and report."
       },
       {
         "id": "c",
-        "text": "Reply asking them to prove it"
+        "text": "Share just the first 6 words"
       },
       {
         "id": "d",
-        "text": "Ignore all messages from family"
+        "text": "Ask them to call you first"
       }
     ],
     "answer": "b",
-    "explain": "Check through a way you already trust. A scammer can answer questions; they can't answer your cousin's real phone."
+    "explain": "Your recovery phrase is the master key. Nobody real ever needs it, not even part of it."
+  },
+  "hints": {
+    "nudge": "Start with who sent it. Do you know this account?",
+    "glow_order": [
+      "phrase",
+      "handle",
+      "link",
+      "dm_first",
+      "tick",
+      "timer"
+    ]
   },
   "sources": [
-    "ftc-phishing",
     "cafc-wallet",
     "ftc-crypto",
-    "ftc-family",
-    "ftc-jobs"
+    "europol-report"
   ],
-  "checked_on": "2026-10-18"
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check profile",
+      "title": "Profile check · @zelvora_helpdesk_24",
+      "rows": [
+        {
+          "k": "Account created",
+          "v": "2 days ago",
+          "clue": "handle"
+        },
+        {
+          "k": "Followers",
+          "v": "3"
+        },
+        {
+          "k": "Verified badge",
+          "v": "None. The ✔ is typed into the name",
+          "clue": "tick"
+        },
+        {
+          "k": "Official account",
+          "v": "@zelvora, 4 years old"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check link",
+      "title": "Where the link really goes",
+      "rows": [
+        {
+          "k": "Message says",
+          "v": "re-sync here"
+        },
+        {
+          "k": "It really opens",
+          "v": "zelvora-sync.help",
+          "clue": "link"
+        },
+        {
+          "k": "Real Zelvora site",
+          "v": "zelvora.app"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official page",
+      "title": "Zelvora's real help page says",
+      "rows": [
+        {
+          "k": "Does support message you first?",
+          "v": "Never",
+          "clue": "dm_first"
+        },
+        {
+          "k": "Do they ask for your recovery phrase?",
+          "v": "Never, from anyone",
+          "clue": "phrase"
+        }
+      ]
+    }
+  ]
 }

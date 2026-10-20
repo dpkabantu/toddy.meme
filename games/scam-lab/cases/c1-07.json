@@ -1,0 +1,124 @@
+{
+  "id": "c1-07",
+  "type": "rush",
+  "chapter": 1,
+  "difficulty": 2,
+  "title": "Toll Road Texts",
+  "seconds": 60,
+  "intro": [
+    "Ten texts, one minute. Your phone has been busy.",
+    "Swipe left if it is a scam, right if it is safe. Or tap the buttons.",
+    "Careful: some are honest. Do not cry wolf."
+  ],
+  "cards": [
+    {
+      "id": "r1",
+      "app": "SMS",
+      "from": "Tarvo Toll",
+      "text": "Final notice: you owe $4.60 in unpaid tolls. Pay now to avoid a $50 fine: tarvo-tollpay.live/pay",
+      "scam": true,
+      "why": "You get a text out of the blue demanding payment through a link. Toll agencies do not collect this way."
+    },
+    {
+      "id": "r2",
+      "app": "SMS",
+      "from": "Tarvo Toll",
+      "text": "Your monthly statement is ready. Open the Tarvo Toll app to view it. No action needed.",
+      "scam": false,
+      "why": "It asks for nothing and sends you to the app you already installed."
+    },
+    {
+      "id": "r3",
+      "app": "SMS",
+      "from": "Parcelo",
+      "text": "Your parcel is held. Pay €1.20 redelivery: parcelo-pay.help",
+      "scam": true,
+      "why": "An unexpected parcel text with a fee and a link: classic."
+    },
+    {
+      "id": "r4",
+      "app": "SMS",
+      "from": "Orrin Bank",
+      "text": "Orrin: your login code is 551907. Never share this code with anyone, including Orrin staff.",
+      "scam": false,
+      "why": "You just tried to log in, and the text itself warns you never to share the code."
+    },
+    {
+      "id": "r5",
+      "app": "SMS",
+      "from": "Unknown number",
+      "text": "Your toll account is suspended. Update your card at tarvo-secure.net within 30 minutes.",
+      "scam": true,
+      "why": "A deadline, a threat and a look-alike link, all in one text."
+    },
+    {
+      "id": "r6",
+      "app": "SMS",
+      "from": "Meridu Store",
+      "text": "Your order #48213 has shipped. Track it in your Meridu account.",
+      "scam": false,
+      "why": "You ordered it yourself, it asks for nothing, and it sends you to your account."
+    },
+    {
+      "id": "r7",
+      "app": "SMS",
+      "from": "Vantel Mobile",
+      "text": "Your phone is blocked for unpaid charges. Pay now: vantel-unlock.co/pay",
+      "scam": true,
+      "why": "Your phone company does not text a link to pay or unlock. Open its app or check your bill."
+    },
+    {
+      "id": "r8",
+      "app": "SMS",
+      "from": "Kiko (friend)",
+      "text": "Running late for the road trip, save me a seat 😅",
+      "scam": false,
+      "why": "A friend you know, asking for nothing."
+    },
+    {
+      "id": "r9",
+      "app": "SMS",
+      "from": "Road Fines Office",
+      "text": "You have an unpaid road fine of $65. Pay within 24h or your licence will be suspended: roadfines-pay.site",
+      "scam": true,
+      "why": "A threat and a link, with a payment page that is not an official address."
+    },
+    {
+      "id": "r10",
+      "app": "SMS",
+      "from": "Tarvo Toll",
+      "text": "Your toll tag balance is low. Top up in the Tarvo Toll app or at tarvo.app.",
+      "scam": false,
+      "why": "No link to click: it points you to the app and to the real site you already know."
+    }
+  ],
+  "golden_rule": "A text that demands payment through a link is a trap. Check on the official app or website you already know.",
+  "quick_check": {
+    "q": "A text says you owe $4.60 in tolls and must pay through a link. You do not use toll roads. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay it, it is only $4.60"
+      },
+      {
+        "id": "b",
+        "text": "Do not click. Check with the toll agency using contact details you already know, then report and delete the text"
+      },
+      {
+        "id": "c",
+        "text": "Reply STOP"
+      },
+      {
+        "id": "d",
+        "text": "Click the link but do not enter your card"
+      }
+    ],
+    "answer": "b",
+    "explain": "The small amount is bait. Real agencies send bills through channels you already know."
+  },
+  "sources": [
+    "ftc-tolls",
+    "ftc-spamtexts"
+  ],
+  "checked_on": "2026-10-21"
+}

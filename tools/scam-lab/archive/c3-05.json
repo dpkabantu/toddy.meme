@@ -1,0 +1,255 @@
+{
+  "id": "c3-05",
+  "type": "hunt",
+  "chapter": 3,
+  "difficulty": 2,
+  "title": "The Real Reward",
+  "disguise": null,
+  "intro": [
+    "After so many fake prizes, here's another reward message.",
+    "Fake ones are everywhere. But real ones exist too.",
+    "Sniff carefully before you report anything."
+  ],
+  "notify": {
+    "app": "Ostrel",
+    "from": "Ostrel (in-app)",
+    "text": "Your monthly rewards are ready"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        "Ostrel"
+      ],
+      "addr": [
+        {
+          "clue": "addr",
+          "text": "in-app message"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "Your October rewards are ready 🎉"
+        }
+      ],
+      "time": [
+        "9:00 AM"
+      ]
+    },
+    "context": "You opened the Ostrel app you already use. This is in its message inbox.",
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "points",
+            "text": "You earned 40 reward points this month for your trades."
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "where",
+            "text": "See them any time in the Rewards tab."
+          },
+          " ",
+          {
+            "clue": "nothing",
+            "text": "There's nothing you need to do."
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "warn",
+            "text": "Reminder: Ostrel will never ask you to connect your wallet to claim rewards."
+          }
+        ]
+      },
+      {
+        "foot": [
+          {
+            "clue": "foot",
+            "text": "Ostrel · Rewards"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "addr": {
+      "label": "Inside the app",
+      "strength": "harmless",
+      "lens": "It arrived in the app's own inbox, not by text or email.",
+      "why": "Messages inside an app you opened yourself are hard to fake."
+    },
+    "subject": {
+      "label": "Happy subject",
+      "strength": "harmless",
+      "lens": "A cheerful subject.",
+      "why": "Emoji and good news aren't warning signs alone."
+    },
+    "points": {
+      "label": "Modest points",
+      "strength": "harmless",
+      "lens": "40 points for trades you really made.",
+      "why": "Small, believable and matching what you did."
+    },
+    "where": {
+      "label": "Points to the app",
+      "strength": "harmless",
+      "lens": "It sends you to the Rewards tab.",
+      "why": "No link, no connection needed."
+    },
+    "nothing": {
+      "label": "Asks for nothing",
+      "strength": "harmless",
+      "lens": "Nothing to do or pay.",
+      "why": "Real rewards ask for nothing."
+    },
+    "warn": {
+      "label": "Safety reminder",
+      "strength": "harmless",
+      "lens": "It warns you about wallet-connect scams.",
+      "why": "Honest companies warn you."
+    },
+    "foot": {
+      "label": "Footer",
+      "strength": "harmless",
+      "lens": "App footer.",
+      "why": "Normal."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Check the Rewards tab in the app"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "40 real points, right where the message said. Nice!",
+      "toddy": "happy"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was Ostrel's real in-app message. False alarms make real warnings easier to ignore.",
+      "mirageSays": "Trust nothing? Perfect."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "SAFE",
+      "line": "Nothing bad happened. It was a real reward.",
+      "toddy": "happy"
+    }
+  },
+  "what_if": {
+    "block_report": "It was inside the real app, asked for nothing and warned about scams. That's what genuine looks like."
+  },
+  "golden_rule": "Real rewards appear inside apps you already use, and never need a link, fee or wallet connection.",
+  "quick_check": {
+    "q": "What made this reward genuine?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The emoji in the subject"
+      },
+      {
+        "id": "b",
+        "text": "It was inside the real app and asked for nothing"
+      },
+      {
+        "id": "c",
+        "text": "It said \"rewards\""
+      }
+    ],
+    "answer": "b",
+    "explain": "Where it appears and what it asks for matter most."
+  },
+  "hints": {
+    "nudge": "Where did this message arrive, and what does it ask?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-phishing",
+    "cafc-wallet"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check where it came from",
+      "title": "The message",
+      "rows": [
+        {
+          "k": "Arrived in",
+          "v": "The app's own inbox",
+          "clue": "addr"
+        },
+        {
+          "k": "Subject",
+          "v": "A cheerful line",
+          "clue": "subject"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check what it asks",
+      "title": "Anything to click or pay?",
+      "rows": [
+        {
+          "k": "Where it sends you",
+          "v": "The Rewards tab",
+          "clue": "where"
+        },
+        {
+          "k": "You must do or pay",
+          "v": "Nothing",
+          "clue": "nothing"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check your history",
+      "title": "Where 40 points come from",
+      "rows": [
+        {
+          "k": "Points",
+          "v": "For trades you really made",
+          "clue": "points"
+        },
+        {
+          "k": "Warning",
+          "v": "About wallet-connect scams",
+          "clue": "warn"
+        }
+      ]
+    }
+  ]
+}

@@ -75,5 +75,68 @@
     "published": "2025-02-14",
     "checked_on": "2026-10-13",
     "supports": "Relationship-investment ('pig butchering') scams led crypto scam revenue in 2024, up 40%."
+  },
+  "ftc-shipping": {
+    "title": "FTC: Fake shipping notification emails and text messages",
+    "url": "https://consumer.ftc.gov/consumer-alerts/2023/12/fake-shipping-notification-emails-text-messages-what-you-need-know-holiday-season",
+    "published": "2023-12",
+    "checked_on": "2026-10-21",
+    "supports": "Delivery-problem messages with a link are a common scam; don't click; check the retailer's own site or contact the shipper using a phone number or website you know is real."
+  },
+  "ftc-tolls": {
+    "title": "FTC: Got a text about unpaid tolls? It's probably a scam",
+    "url": "https://consumer.ftc.gov/consumer-alerts/2025/01/got-text-about-unpaid-tolls-its-probably-scam",
+    "published": "2025-01",
+    "checked_on": "2026-10-21",
+    "supports": "Unexpected texts demanding toll payment are scams; don't click or respond; check with the tolling agency using contact details you already know; report junk texts and delete."
+  },
+  "ftc-bank-call": {
+    "title": "FTC: Got a call about fraud activity on your bank account? It could be a scammer",
+    "url": "https://consumer.ftc.gov/consumer-alerts/2024/06/got-call-about-fraud-activity-your-bank-account-it-could-be-scammer",
+    "published": "2024-06",
+    "checked_on": "2026-10-21",
+    "supports": "Never move money to 'protect' it; never share a verification code; check by calling your real bank on a number from your statement; bank accounts have fewer protections than credit cards."
+  },
+  "ftc-codes": {
+    "title": "FTC: What's a verification code and why would someone ask me for it?",
+    "url": "https://consumer.ftc.gov/consumer-alerts/2024/03/whats-verification-code-why-would-someone-ask-me-it",
+    "published": "2024-03",
+    "checked_on": "2026-10-21",
+    "supports": "Anyone who asks for your verification code is a scammer; the code is only for you to log in; end the contact and contact your bank yourself."
+  },
+  "ftc-government": {
+    "title": "FTC: How to avoid a government impersonation scam",
+    "url": "https://consumer.ftc.gov/articles/how-avoid-government-impersonation-scam",
+    "published": "n/a",
+    "checked_on": "2026-10-21",
+    "supports": "Government agencies never call, email, text or message to ask for money or personal information; caller ID can be faked; verify by calling the agency on a number you know is correct; gift cards, crypto and wire transfers are scam payment methods."
+  },
+  "ftc-techsupport": {
+    "title": "FTC: How to spot, avoid, and report tech support scams",
+    "url": "https://consumer.ftc.gov/articles/how-spot-avoid-and-report-tech-support-scams",
+    "published": "n/a",
+    "checked_on": "2026-10-21",
+    "supports": "Real pop-ups never ask you to call a number; search ads can show scam numbers; no real support needs remote access plus payment by gift card or transfer; contact the company on a number you know is real."
+  },
+  "ftc-customerservice": {
+    "title": "FTC: Scammers and 'customer service': another imposter scam",
+    "url": "https://consumer.ftc.gov/consumer-alerts/2020/08/scammers-customer-service-another-imposter-scam",
+    "published": "2020-08",
+    "checked_on": "2026-10-21",
+    "supports": "Scammers pay to put fake customer-service numbers in search results; use the number in your manual or on the box or type the official website yourself; no real company asks for gift cards or wire transfers."
+  },
+  "ftc-spamtexts": {
+    "title": "FTC: How to recognize and report spam text messages",
+    "url": "https://consumer.ftc.gov/articles/how-recognize-and-report-spam-text-messages",
+    "published": "n/a",
+    "checked_on": "2026-10-21",
+    "supports": "Legitimate companies won't ask for account information by text; don't click links; use a number or website you know is real; report spam texts to your provider and to the fraud-reporting site."
+  },
+  "ftc-utility": {
+    "title": "FTC: Scammers pretend to be your utility company",
+    "url": "https://consumer.ftc.gov/articles/scammers-pretend-be-your-utility-company",
+    "published": "n/a",
+    "checked_on": "2026-10-21",
+    "supports": "Scammers threaten shutoff to rush you; real utilities don't demand same-day payment; they ask for wire, crypto, payment apps or gift cards; contact the company using the number on your bill or its website; paid search ads can lead to impersonators."
   }
 }

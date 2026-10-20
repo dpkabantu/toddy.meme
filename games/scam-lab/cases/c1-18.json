@@ -1,0 +1,250 @@
+{
+  "id": "c1-18",
+  "type": "hunt",
+  "chapter": 1,
+  "difficulty": 2,
+  "title": "Lights Out Tonight",
+  "disguise": "support",
+  "intro": [
+    "A text from your electricity company. It looks urgent.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Messages",
+    "from": "Brightgrid Energy",
+    "text": "Your power will be cut tonight at 9:30 PM…"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "sender",
+          "text": "Brightgrid Energy"
+        }
+      ]
+    },
+    "context": "You paid your last bill on the 3rd.",
+    "items": [
+      {
+        "time": [
+          "Today 5:12 PM"
+        ]
+      },
+      {
+        "msg": [
+          "Brightgrid Energy: your ",
+          {
+            "clue": "unpaid",
+            "text": "bill of ₹1,240 is unpaid"
+          },
+          ". ",
+          {
+            "clue": "cut",
+            "text": "Your power will be cut tonight at 9:30 PM."
+          }
+        ]
+      },
+      {
+        "msg": [
+          "Call our officer ",
+          {
+            "clue": "number",
+            "text": "immediately on 70000 55123"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          "He will send you an app to ",
+          {
+            "clue": "app",
+            "text": "update your details"
+          },
+          "."
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "unpaid": {
+      "label": "Says the bill is unpaid",
+      "strength": "strong",
+      "lens": "You paid your last bill on the 3rd.",
+      "why": "A claim that does not match your own records is a warning sign. Check your bill."
+    },
+    "cut": {
+      "label": "Cut-off tonight",
+      "strength": "strong",
+      "lens": "Power cut tonight at 9:30 PM.",
+      "why": "Real utilities do not demand same-day payment to avoid disconnection."
+    },
+    "number": {
+      "label": "A new number to call",
+      "strength": "strong",
+      "lens": "The number is not the one on your bill.",
+      "why": "Use the number on your bill or the company's website, never one from a text."
+    },
+    "app": {
+      "label": "Installs an app",
+      "strength": "strong",
+      "lens": "The \"officer\" will send you an app to update your details.",
+      "why": "No real company needs you to install an app from a message. It can give a stranger control of your phone."
+    },
+    "sender": {
+      "label": "Company name",
+      "strength": "harmless",
+      "lens": "The sender says Brightgrid Energy.",
+      "why": "A name is easy to copy. It proves nothing alone."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Call the number now to save my power",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Check my last bill and call the number printed on it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam and delete it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "trap": {
+    "title": "Call 70000 55123",
+    "url": "tel:70000 55123",
+    "ask": "The \"officer\" says: \"Install this app and share the code it shows, then I will clear your bill.\" The app shows your screen to the caller.",
+    "go": "Install the app",
+    "back": "Hang up"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported and deleted. Your real power stayed on, and the number was flagged for others.",
+      "mirageSays": "My officer!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The number on your bill reached the real company. They said: \"Your account is paid, and we never cut power by text.\" Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. The lights stayed on, but the same text is landing on thousands of other phones.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The app let the caller see your phone. They read your bank codes and emptied your account.",
+      "mirageSays": "Thanks for installing!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Checking the number printed on your own bill takes a minute, and it would have reached the real company.",
+    "ignore": "Reporting takes two taps and helps others avoid the same call.",
+    "verify": "Checking was smart. Reporting the text as well protects other people."
+  },
+  "golden_rule": "A same-day cut-off threat is a pressure trick. Use the number on your bill, never a number from a text.",
+  "quick_check": {
+    "q": "A text says your power will be cut tonight unless you call a number and install an app. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Call quickly, it is only tonight"
+      },
+      {
+        "id": "b",
+        "text": "Install the app but do not share a code"
+      },
+      {
+        "id": "c",
+        "text": "Check your bill and use the number printed on it, and report the text"
+      },
+      {
+        "id": "d",
+        "text": "Pay in gift cards to be safe"
+      }
+    ],
+    "answer": "c",
+    "explain": "Real utilities do not demand same-day payment. Your own bill has the right number."
+  },
+  "hints": {
+    "nudge": "Does the text match what you know about your last bill?",
+    "glow_order": [
+      "number",
+      "app",
+      "cut",
+      "unpaid"
+    ]
+  },
+  "sources": [
+    "ftc-utility",
+    "ftc-techsupport"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Who sent this text",
+      "rows": [
+        {
+          "k": "Sender",
+          "v": "Brightgrid Energy",
+          "clue": "sender"
+        },
+        {
+          "k": "Your last bill",
+          "v": "Paid on the 3rd",
+          "clue": "unpaid"
+        },
+        {
+          "k": "Number in the text",
+          "v": "Not the one on your bill",
+          "clue": "number"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What consumer advice says",
+      "rows": [
+        {
+          "k": "Real utilities demand same-day payment to avoid disconnection?",
+          "v": "No",
+          "clue": "cut"
+        },
+        {
+          "k": "How to check",
+          "v": "Use the number on your bill or the company's website",
+          "clue": "number"
+        }
+      ]
+    }
+  ]
+}

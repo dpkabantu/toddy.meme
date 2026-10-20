@@ -1,0 +1,310 @@
+{
+  "id": "c1-12",
+  "type": "hunt",
+  "chapter": 1,
+  "difficulty": 2,
+  "title": "The Strike Notice",
+  "disguise": "admin",
+  "intro": [
+    "You posted a photo of your cat on Chirp. A message arrives from \"Chirp Safety\".",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Chirp Safety ✔",
+    "text": "Copyright claim on your photo. Appeal within 24 hours…"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "tick",
+          "text": "Chirp Safety ✔"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@chirp_safety_appeals"
+        }
+      ],
+      "avatar": {
+        "glyph": "🛡️",
+        "clue": "logo"
+      }
+    },
+    "banner": [
+      {
+        "clue": "dmfirst",
+        "text": "New message request · you do not follow this account"
+      }
+    ],
+    "context": "You posted a photo of your cat this morning.",
+    "items": [
+      {
+        "time": [
+          "11:36 AM"
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "strike",
+            "text": "Copyright claim: your photo breaks our rules."
+          },
+          " Your account will be ",
+          {
+            "clue": "deadline",
+            "text": "deleted in 24 hours"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          "To appeal, log in here: ",
+          {
+            "clue": "link",
+            "text": "chirp-appeal.support/login",
+            "link": true
+          }
+        ]
+      },
+      {
+        "msg": [
+          "Appeals need your ",
+          {
+            "clue": "login",
+            "text": "password and the code we text you"
+          },
+          "."
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "dmfirst": {
+      "label": "They messaged first",
+      "strength": "strong",
+      "lens": "A private message from an account you do not follow.",
+      "why": "Real platforms send notices inside the app, not through DMs from strangers."
+    },
+    "tick": {
+      "label": "Fake tick",
+      "strength": "strong",
+      "lens": "The ✔ is typed into the name. Chirp's real verified badge sits after the handle, and there is none.",
+      "why": "Anyone can type a tick into a display name."
+    },
+    "handle": {
+      "label": "New look-alike account",
+      "strength": "strong",
+      "lens": "Joined 3 days ago, 7 followers. Chirp's real account is @chirp.",
+      "why": "Brand-new look-alike accounts are a classic impersonation sign."
+    },
+    "link": {
+      "label": "Look-alike link",
+      "strength": "strong",
+      "lens": "This goes to chirp-appeal.support, not the real chirp.app.",
+      "why": "Never log in through a link in a message. Open the app yourself and look at your notices."
+    },
+    "login": {
+      "label": "Asks for password and code",
+      "strength": "strong",
+      "lens": "It wants your password and your texted code.",
+      "why": "No real platform needs your password or code for an appeal."
+    },
+    "deadline": {
+      "label": "Delete-in-24-hours threat",
+      "strength": "strong",
+      "lens": "Your account will be deleted in 24 hours.",
+      "why": "A threat with a short deadline is a pressure trick."
+    },
+    "strike": {
+      "label": "Copyright claim",
+      "strength": "harmless",
+      "lens": "A claim that your cat photo breaks the rules.",
+      "why": "The claim sounds serious, but it comes from an unknown account. The claim alone proves nothing."
+    },
+    "logo": {
+      "label": "Shield logo",
+      "strength": "harmless",
+      "lens": "A shield picture.",
+      "why": "Logos are easy to copy, so they prove nothing on their own."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Open the link and appeal",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Open the Chirp app and check my notices"
+    },
+    {
+      "id": "block_report",
+      "label": "Block and report the account"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "trap": {
+    "title": "Chirp · Appeal",
+    "url": "chirp-appeal.support/login",
+    "ask": "Enter your password and the code we text you to appeal.",
+    "go": "Log in and appeal",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Blocked and reported. The fake account was removed before it reached other people.",
+      "mirageSays": "Curses! Blocked again!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The app showed no claim and no warning on your account. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the account is still out there messaging other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The page copied your password and code. Within minutes the account was locked and used to message your friends.",
+      "mirageSays": "Thanks for logging in!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Opening the app yourself would have shown no claim anywhere. Real notices live inside the app.",
+    "ignore": "Reporting takes two taps and gets the fake account removed.",
+    "verify": "Checking was smart. Blocking and reporting as well protects others."
+  },
+  "golden_rule": "Real platforms send notices inside the app. A DM that threatens deletion and asks for your password is a trap.",
+  "quick_check": {
+    "q": "An account you do not follow DMs that your account will be deleted unless you log in through a link. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Log in quickly through the link"
+      },
+      {
+        "id": "b",
+        "text": "Reply and explain your cat photo"
+      },
+      {
+        "id": "c",
+        "text": "Open the app yourself to check, then block and report"
+      },
+      {
+        "id": "d",
+        "text": "Ask your friends if they got it"
+      }
+    ],
+    "answer": "c",
+    "explain": "Real notices live inside the app. Never log in through a link a stranger sends."
+  },
+  "hints": {
+    "nudge": "Start with who sent it. Do you know this account?",
+    "glow_order": [
+      "login",
+      "handle",
+      "link",
+      "dmfirst",
+      "tick",
+      "deadline"
+    ]
+  },
+  "sources": [
+    "ftc-phishing",
+    "ftc-spamtexts",
+    "ftc-codes"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check profile",
+      "title": "Profile check · @chirp_safety_appeals",
+      "rows": [
+        {
+          "k": "Account created",
+          "v": "3 days ago",
+          "clue": "handle"
+        },
+        {
+          "k": "Followers",
+          "v": "7"
+        },
+        {
+          "k": "Verified badge",
+          "v": "None. The ✔ is typed into the name",
+          "clue": "tick"
+        },
+        {
+          "k": "Official account",
+          "v": "@chirp, 7 years old"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check link",
+      "title": "Where the link really goes",
+      "rows": [
+        {
+          "k": "Message says",
+          "v": "log in to appeal"
+        },
+        {
+          "k": "It really opens",
+          "v": "chirp-appeal.support",
+          "clue": "link"
+        },
+        {
+          "k": "Real Chirp site",
+          "v": "chirp.app"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What Chirp's help page says",
+      "rows": [
+        {
+          "k": "Does Chirp DM you about strikes?",
+          "v": "Never. Notices appear in the app"
+        },
+        {
+          "k": "Does it ask for your password or code?",
+          "v": "Never, from anyone",
+          "clue": "login"
+        }
+      ]
+    }
+  ]
+}

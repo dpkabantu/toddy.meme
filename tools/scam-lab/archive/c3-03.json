@@ -1,0 +1,334 @@
+{
+  "id": "c3-03",
+  "type": "duel",
+  "chapter": 3,
+  "difficulty": 2,
+  "title": "Double Your Coins Live",
+  "disguise": "influencer",
+  "intro": [
+    "A \"live stream\" is running: a famous trader is giving away coins.",
+    "The chat moderator messages you directly.",
+    "Talk back, and sniff what they say."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Droveo Live Mod",
+    "text": "🔴 You're selected for the 2x event!"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "text": "Droveo Live Mod",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@droveolive_mod"
+        }
+      ],
+      "avatar": {
+        "glyph": "🔴",
+        "clue": "avatar"
+      }
+    },
+    "context": "A \"live\" video shows a famous trader talking about a giveaway.",
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "live",
+            "text": "🔴 LIVE: 40,000 watching"
+          }
+        ]
+      }
+    ]
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              "Congrats! ",
+              {
+                "clue": "double",
+                "text": "Send any amount, Max sends back double"
+              }
+            ]
+          },
+          {
+            "msg": [
+              "Scan the QR on screen: ",
+              {
+                "clue": "qr",
+                "text": "[QR code → wallet 0x41c…d9e]"
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Is this really Max?",
+            "next": "n2"
+          },
+          {
+            "text": "Sending 100 ZLV now",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Report the stream as a scam",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "proof",
+                "text": "Yes! Look, others already got paid"
+              },
+              " ",
+              {
+                "clue": "fakeproof",
+                "text": "[screenshot: \"I got 2x!!\" ×5]"
+              }
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "ends",
+                "text": "Only 3 minutes left in the event!"
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Real people don't double your money. Report.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll check Max's official channel first",
+            "end": "verify"
+          },
+          {
+            "text": "OK, sending",
+            "end": "go_ahead"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "double": {
+      "label": "Send 1, get 2",
+      "strength": "strong",
+      "lens": "They want you to send first.",
+      "why": "Nobody doubles your money. Giveaways that ask you to send first are always fake."
+    },
+    "qr": {
+      "label": "QR to a wallet",
+      "strength": "strong",
+      "lens": "The QR is just their wallet address.",
+      "why": "Scanning and sending can't be undone."
+    },
+    "proof": {
+      "label": "\"Others got paid\"",
+      "strength": "strong",
+      "lens": "They point to \"proof\".",
+      "why": "Fake proof is part of the show."
+    },
+    "fakeproof": {
+      "label": "Screenshot \"winners\"",
+      "strength": "strong",
+      "lens": "Five identical-looking screenshots.",
+      "why": "Screenshots are easy to fake."
+    },
+    "ends": {
+      "label": "Minutes left",
+      "strength": "strong",
+      "lens": "A countdown again.",
+      "why": "Pressure stops you checking."
+    },
+    "handle": {
+      "label": "Mod handle",
+      "strength": "harmless",
+      "lens": "A \"mod\" account.",
+      "why": "Anyone can call themselves a moderator."
+    },
+    "avatar": {
+      "label": "Red dot",
+      "strength": "harmless",
+      "lens": "A red \"live\" dot.",
+      "why": "Proves nothing."
+    },
+    "live": {
+      "label": "40,000 watching",
+      "strength": "harmless",
+      "lens": "A big viewer count.",
+      "why": "Old videos re-streamed with fake counts are common. The number proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Send coins"
+    },
+    {
+      "id": "verify",
+      "label": "Check the trader's official channel"
+    },
+    {
+      "id": "block_report",
+      "label": "Report the stream"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Reported. The stream was an old video re-uploaded by Mirage.",
+      "mirageSays": "My stolen stream!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The real trader's channel: \"I never do giveaways. Report these streams.\"",
+      "mirageSays": "Busted again!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "Nothing came back. The \"event\" ended the moment the coins arrived.",
+      "mirageSays": "Double for me!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "\"Send 1 get 2\" is always a scam, whoever seems to be saying it."
+  },
+  "golden_rule": "Nobody doubles your coins. \"Send first to receive more\" is always a scam.",
+  "quick_check": {
+    "q": "A live stream says \"send coins and we'll send double back\". What is it?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A rare chance"
+      },
+      {
+        "id": "b",
+        "text": "Always a scam"
+      },
+      {
+        "id": "c",
+        "text": "Safe if many people watch"
+      }
+    ],
+    "answer": "b",
+    "explain": "Viewer counts and famous faces can be faked. The ask never changes."
+  },
+  "hints": {
+    "nudge": "Who sends first, and who promises later?",
+    "glow_order": [
+      "double",
+      "qr",
+      "proof",
+      "fakeproof",
+      "ends"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-phishing",
+    "cafc-wallet"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the account",
+      "title": "Droveo Live Mod",
+      "rows": [
+        {
+          "k": "Account",
+          "v": "A \"mod\" account",
+          "clue": "handle"
+        },
+        {
+          "k": "Picture",
+          "v": "A red live dot",
+          "clue": "avatar"
+        },
+        {
+          "k": "Viewers",
+          "v": "A big viewer count",
+          "clue": "live"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the offer",
+      "title": "Double your coins",
+      "rows": [
+        {
+          "k": "Order",
+          "v": "You send first",
+          "clue": "double"
+        },
+        {
+          "k": "QR code",
+          "v": "Just their wallet address",
+          "clue": "qr"
+        },
+        {
+          "k": "Real streams",
+          "v": "Never ask viewers to send coins to double them"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the proof",
+      "title": "What they point to",
+      "rows": [
+        {
+          "k": "Proof",
+          "v": "They point to it",
+          "clue": "proof"
+        },
+        {
+          "k": "Screenshots",
+          "v": "Five identical-looking ones",
+          "clue": "fakeproof"
+        },
+        {
+          "k": "Timer",
+          "v": "A countdown again",
+          "clue": "ends"
+        },
+        {
+          "k": "Real giveaways",
+          "v": "Never need coins from you first"
+        }
+      ]
+    }
+  ]
+}

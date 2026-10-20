@@ -1,0 +1,306 @@
+{
+  "id": "c5-03",
+  "type": "hunt",
+  "chapter": 5,
+  "difficulty": 3,
+  "title": "Two Swap Sites",
+  "disguise": "support",
+  "intro": [
+    "Toddy searched \"Zelvora\" and clicked the first result: an ad.",
+    "Two sites look almost identical.",
+    "Compare them before connecting anything."
+  ],
+  "notify": {
+    "app": "Browser",
+    "from": "Search results",
+    "text": "Zelvora — the #1 swap (Ad)"
+  },
+  "decide_q": "Which site is real, and what will you do?",
+  "screen": {
+    "app": "compare",
+    "context": "Two Zelvora sites, side by side.",
+    "panels": [
+      {
+        "label": "From your bookmark",
+        "avatar": {
+          "glyph": "☾",
+          "clue": "logo_a"
+        },
+        "rows": [
+          {
+            "k": "Address",
+            "v": [
+              {
+                "clue": "addr_a",
+                "text": "zelvora.app"
+              }
+            ]
+          },
+          {
+            "k": "Asks",
+            "v": [
+              {
+                "clue": "asks_a",
+                "text": "Connect wallet to swap"
+              }
+            ]
+          },
+          {
+            "k": "Came from",
+            "v": [
+              {
+                "clue": "bookmark",
+                "text": "Your saved bookmark"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "From the search ad",
+        "avatar": {
+          "glyph": "☾",
+          "clue": "logo_b"
+        },
+        "rows": [
+          {
+            "k": "Address",
+            "v": [
+              {
+                "clue": "addr_b",
+                "text": "zelvora.app-secure.io"
+              }
+            ]
+          },
+          {
+            "k": "Asks",
+            "v": [
+              {
+                "clue": "asks_b",
+                "text": "\"Validate wallet\" + sign a message"
+              }
+            ]
+          },
+          {
+            "k": "Came from",
+            "v": [
+              {
+                "clue": "ad",
+                "text": "Sponsored search result"
+              }
+            ]
+          },
+          {
+            "k": "Banner",
+            "v": [
+              {
+                "clue": "promo",
+                "text": "\"Fee-free swaps today only!\""
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "addr_b": {
+      "label": "Look-alike address",
+      "strength": "strong",
+      "lens": "zelvora.app-secure.io: the real name is just the start of a different site.",
+      "why": "Read web addresses from the right: the real site is \"app-secure.io\"."
+    },
+    "ad": {
+      "label": "Sponsored result",
+      "strength": "strong",
+      "lens": "A paid ad at the top of the search.",
+      "why": "Scammers buy search ads that copy real sites."
+    },
+    "asks_b": {
+      "label": "\"Validate wallet\"",
+      "strength": "strong",
+      "lens": "It wants a signature before any swap.",
+      "why": "Real swaps don't need you to \"validate\" your wallet."
+    },
+    "promo": {
+      "label": "Today-only deal",
+      "strength": "strong",
+      "lens": "Fee-free today only.",
+      "why": "Urgency again."
+    },
+    "addr_a": {
+      "label": "Real address",
+      "strength": "harmless",
+      "lens": "zelvora.app.",
+      "why": "The real address, letter by letter."
+    },
+    "asks_a": {
+      "label": "Normal connect",
+      "strength": "harmless",
+      "lens": "Connect to swap.",
+      "why": "Normal for a real swap site."
+    },
+    "bookmark": {
+      "label": "Your bookmark",
+      "strength": "harmless",
+      "lens": "You saved it yourself.",
+      "why": "Bookmarks are the safest way to reach crypto sites."
+    },
+    "logo_a": {
+      "label": "Logo",
+      "strength": "harmless",
+      "lens": "Zelvora logo.",
+      "why": "Proves nothing."
+    },
+    "logo_b": {
+      "label": "Same logo",
+      "strength": "harmless",
+      "lens": "A copied logo.",
+      "why": "Proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "pick_b",
+      "label": "Use the ad site, it has free swaps",
+      "trap": true
+    },
+    {
+      "id": "verify",
+      "label": "Use only your bookmark from now on"
+    },
+    {
+      "id": "block_report",
+      "label": "Use the bookmark and report the fake ad"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "trap": {
+    "title": "Zelvora · Validate wallet",
+    "url": "zelvora.app-secure.io",
+    "ask": "Sign this message to validate your wallet before swapping.",
+    "go": "Sign",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Reported. The search engine pulled the ad.",
+      "mirageSays": "I paid for that ad!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Bookmark used. Swap done safely on the real site.",
+      "mirageSays": "Bookmarks… my nemesis."
+    },
+    "pick_b": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "The \"validation\" signature handed over the wallet.",
+      "mirageSays": "Validated… for me!"
+    }
+  },
+  "what_if": {
+    "pick_b": "The address ended in \"app-secure.io\". The bookmark was the safe road."
+  },
+  "golden_rule": "Reach crypto sites from your own bookmarks, never from ads or links.",
+  "quick_check": {
+    "q": "What is the real website in \"zelvora.app-secure.io\"?",
+    "options": [
+      {
+        "id": "a",
+        "text": "zelvora.app"
+      },
+      {
+        "id": "b",
+        "text": "app-secure.io"
+      }
+    ],
+    "answer": "b",
+    "explain": "Read the address from the right: the name just before the ending is the real site. Here that is app-secure.io."
+  },
+  "hints": {
+    "nudge": "Read each address from right to left.",
+    "glow_order": [
+      "addr_b",
+      "ad",
+      "asks_b",
+      "promo"
+    ]
+  },
+  "sources": [
+    "cafc-wallet",
+    "ftc-crypto",
+    "chainalysis-2025"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check addresses",
+      "title": "The two sites",
+      "rows": [
+        {
+          "k": "Site A",
+          "v": "zelvora.app",
+          "clue": "addr_a"
+        },
+        {
+          "k": "Site B",
+          "v": "zelvora.app-secure.io",
+          "clue": "addr_b"
+        },
+        {
+          "k": "You saved",
+          "v": "Site A as a bookmark",
+          "clue": "bookmark"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check how you got here",
+      "title": "Search results",
+      "rows": [
+        {
+          "k": "Site B",
+          "v": "A paid ad at the top",
+          "clue": "ad"
+        },
+        {
+          "k": "Site B offer",
+          "v": "Fee-free today only",
+          "clue": "promo"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check what each asks",
+      "title": "Before any swap",
+      "rows": [
+        {
+          "k": "Site A",
+          "v": "Connect to swap",
+          "clue": "asks_a"
+        },
+        {
+          "k": "Site B",
+          "v": "A signature first",
+          "clue": "asks_b"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,328 @@
+{
+  "id": "c1-15",
+  "type": "duel",
+  "chapter": 1,
+  "difficulty": 2,
+  "title": "The Code at the Door",
+  "disguise": "support",
+  "intro": [
+    "A text says a courier is outside with your parcel. This time you can talk back.",
+    "Pick your replies and sniff each message as it arrives.",
+    "Every chat ends with your choice. Choose wisely."
+  ],
+  "notify": {
+    "app": "Messages",
+    "from": "Parcelo driver",
+    "text": "I am outside with your parcel. Please send me the code…"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "text": "Parcelo driver",
+          "id": "duel-name"
+        }
+      ]
+    },
+    "banner": [
+      "Text message · unknown number"
+    ],
+    "items": []
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "outside",
+                "text": "Hi! I am outside with your parcel."
+              },
+              " Nobody is answering the bell."
+            ]
+          },
+          {
+            "msg": [
+              "Please ",
+              {
+                "clue": "code",
+                "text": "send me the code that just arrived on your phone"
+              },
+              " so I can hand it over."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "What code?",
+            "next": "n2"
+          },
+          {
+            "text": "I did not order anything. Who sent you?",
+            "next": "n3"
+          },
+          {
+            "text": "Block and report this number",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "sys": [
+              {
+                "clue": "bankcode",
+                "text": "Orrin Bank: 482913 is your login code. Never share it with anyone."
+              }
+            ]
+          },
+          {
+            "msg": [
+              "That one! 482913. ",
+              {
+                "clue": "rush",
+                "text": "Quickly please, I have 20 more parcels today."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, here it is: 482913",
+            "end": "go_ahead"
+          },
+          {
+            "text": "That text is from my bank. Why do you need it?",
+            "next": "n4"
+          },
+          {
+            "text": "Block and report this number",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n3": {
+        "say": [
+          {
+            "msg": [
+              "It is a gift, from someone who likes you 😉 ",
+              {
+                "clue": "gift",
+                "text": "The code is how I confirm it is you."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Fine, I will read you the code",
+            "next": "n2"
+          },
+          {
+            "text": "I will check with the courier's own app",
+            "end": "verify"
+          },
+          {
+            "text": "Block and report this number",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n4": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "delivery",
+                "text": "It is just the delivery code, the bank name is a coincidence."
+              },
+              " Please hurry!"
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, here it is",
+            "end": "go_ahead"
+          },
+          {
+            "text": "A bank code is never a delivery code. I will tell my bank.",
+            "end": "verify"
+          },
+          {
+            "text": "Block and report this number",
+            "end": "block_report"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "outside": {
+      "label": "Out-of-the-blue visit",
+      "strength": "strong",
+      "lens": "You did not order anything, and the \"driver\" is texting from a number you do not know.",
+      "why": "A surprise delivery with a request for a code is a way to start a conversation."
+    },
+    "code": {
+      "label": "Asks for a code",
+      "strength": "strong",
+      "lens": "It asks you to send the code that just arrived on your phone.",
+      "why": "No delivery needs a code from your phone. Anyone who asks for it is a scammer."
+    },
+    "bankcode": {
+      "label": "The code is from your bank",
+      "strength": "strong",
+      "lens": "The code in the text says \"login code\". It is your bank's, not the courier's.",
+      "why": "Someone is trying to log in to your bank right now. They need you to read them the code."
+    },
+    "rush": {
+      "label": "Hurry",
+      "strength": "strong",
+      "lens": "\"Quickly please, I have 20 more parcels.\"",
+      "why": "Rushing you is a pressure trick."
+    },
+    "gift": {
+      "label": "\"Someone likes you\"",
+      "strength": "strong",
+      "lens": "A parcel from a mystery admirer.",
+      "why": "A gift story is a hook, not a reason to hand over a code."
+    },
+    "delivery": {
+      "label": "\"Just a delivery code\"",
+      "strength": "strong",
+      "lens": "\"The bank name is a coincidence.\"",
+      "why": "Explaining away the bank name does not change what the code unlocks."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Send the code"
+    },
+    {
+      "id": "verify",
+      "label": "Check with the courier's own app and tell my bank"
+    },
+    {
+      "id": "block_report",
+      "label": "Block and report the number"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Blocked and reported. Your bank also saw the login attempt fail, since you never sent the code.",
+      "mirageSays": "Curses! Blocked again!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The courier's app showed no parcel for you. Your bank blocked the login attempt. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The code let Mirage log in to your bank and move money out within minutes.",
+      "mirageSays": "Thanks for the code!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "The text with the code said \"login code\" and \"never share\". Reading that line once was the way out.",
+    "verify": "Checking was smart. Blocking and reporting as well helps others."
+  },
+  "golden_rule": "A login code is for you alone. If someone asks you to read it out, it is a scammer, whatever the story.",
+  "quick_check": {
+    "q": "A \"driver\" asks you to send the code that just arrived by text from your bank. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Send it, they have a parcel for you"
+      },
+      {
+        "id": "b",
+        "text": "Send it, but only after they confirm your name"
+      },
+      {
+        "id": "c",
+        "text": "Never share it. Block and report, and tell your bank"
+      },
+      {
+        "id": "d",
+        "text": "Send half of it"
+      }
+    ],
+    "answer": "c",
+    "explain": "That code lets someone log in as you. Nobody real ever needs it, not even part of it."
+  },
+  "hints": {
+    "nudge": "Look at the text with the code. Whose code is it?",
+    "glow_order": [
+      "code",
+      "bankcode",
+      "outside",
+      "rush",
+      "gift",
+      "delivery"
+    ]
+  },
+  "sources": [
+    "ftc-codes",
+    "ftc-shipping"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the number",
+      "title": "Who is texting",
+      "rows": [
+        {
+          "k": "Number",
+          "v": "Not one you know",
+          "clue": "outside"
+        },
+        {
+          "k": "Your orders this week",
+          "v": "None"
+        },
+        {
+          "k": "Courier's own app",
+          "v": "Shows no parcel for you"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What consumer advice says",
+      "rows": [
+        {
+          "k": "A login code",
+          "v": "Is only for you to log in",
+          "clue": "code"
+        },
+        {
+          "k": "Anyone who asks for it",
+          "v": "Is a scammer",
+          "clue": "bankcode"
+        }
+      ]
+    }
+  ]
+}

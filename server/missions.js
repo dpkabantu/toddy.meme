@@ -5,13 +5,12 @@ import { missionWindow } from './clock.js';
 import { isoTime } from './lib/util.js';
 import { CHAPTERS } from './games/scam-lab-cases.js';
 
-// Scam Lab launch mission (placeholder): one chapter, in Scam Lab's launch week.
-function chapterMissions() {
-  const cm = RULES.chapterMissions;
-  return CHAPTERS.filter((ch) => ch.n === cm.chapter && ch.status === 'open' && ch.cases.length).map((ch) => ({
-    id: 'scam-lab-ch' + ch.n, game: 'scam-lab', kind: 'chapter', title: 'Chapter ' + ch.n + ': ' + ch.title, week: cm.week, chapter: ch.n, cases: ch.cases,
-    stages: [{ id: 'half', needCases: Math.min(cm.halfCases, ch.cases.length), points: cm.halfPoints, label: Math.min(cm.halfCases, ch.cases.length) + ' cases' }, { id: 'done', needCases: ch.cases.length, points: cm.donePoints, label: 'Chapter done' }],
-  }));
+// Scam Lab launch mission: Season Chapters. One chapter opens per day; chapters have 20 cases each, in order; 15 points at every 5 cases of a chapter.
+// A chapter joins the mission when it is built (open, with all 20 cases), so the mission grows to 7 chapters = 420 points.
+function seasonChaptersMission() {
+  const s = RULES.seasonNights, chs = CHAPTERS.filter((ch) => ch.status === 'open' && ch.cases.length === s.trays).sort((x, y) => x.n - y.n), stages = [];
+  for (const ch of chs) for (let k = 1; k * s.every <= s.trays; k++) stages.push({ id: 'n' + ch.n + 's' + k, night: ch.n, needCases: k * s.every, points: s.points, label: 'Chapter ' + ch.n + ': ' + k * s.every + ' cases' });
+  return { id: 'scam-lab-season', game: 'scam-lab', week: RULES.launchWeek['scam-lab'], kind: 'labset', title: 'Season Chapters', nights: chs.length, trays: s.trays, cases: chs.flatMap((ch) => ch.cases), stages };
 }
 // Full Moon launch mission (placeholder): one fixed puzzle with that week's twist.
 function fullMoonMissions() {
@@ -28,14 +27,17 @@ function seasonNightsMission() {
   }
   return { id: 'moon-brew-season', game: 'moon-brew', week: RULES.launchWeek['moon-brew'], kind: 'brewset', title: 'Season Nights', nights: s.nights, trays: s.trays, cases, stages };
 }
-export const allMissions = () => [...RULES.missions, seasonNightsMission(), ...chapterMissions(), ...fullMoonMissions()];
-export const parseTray = (id) => { const m = /^n(\d+)t(\d+)$/.exec(String(id)); return m ? { night: Number(m[1]), tray: Number(m[2]) } : null; };
+export const allMissions = () => [...RULES.missions, seasonNightsMission(), seasonChaptersMission(), ...fullMoonMissions()];
+// Moon Brew trays are 'n<night>t<tray>'; Scam Lab cases are 'c<chapter>-<case>' (chapter = night).
+export const parseTray = (id) => { const m = /^n(\d+)t(\d+)$/.exec(String(id)) || /^c(\d+)-(\d+)$/.exec(String(id)); return m ? { night: Number(m[1]), tray: Number(m[2]) } : null; };
+export const trayId = (m, night, tray) => (m.kind === 'labset' ? 'c' + night + '-' + String(tray).padStart(2, '0') : 'n' + night + 't' + tray);
+export const isSetMission = (m) => m.kind === 'brewset' || m.kind === 'labset';
 // When Season night n of a launch mission opens: one per day from the mission's first night. Before the Season is live everything is open (rehearsal).
 export function nightOpensMs(m, n) { return missionWindow(RULES.startNight, m.week).opensMs + (n - 1) * 86400000; }
 export function nightOpen(seasonStatus, m, n, now) { return seasonStatus !== 'live' || now >= nightOpensMs(m, n); }
 // The game's daily challenge counts from the week after its launch week.
 export const dailyFromWeek = (game) => (RULES.launchWeek[game] || 0) + 1;
-export const isCaseMission = (m) => m.kind === 'chapter' || m.kind === 'brewset';
+export const isCaseMission = (m) => m.kind === 'chapter' || isSetMission(m);
 
 // The Season week it is right now (1..8). Before the Season is live, rehearsal always shows week 1.
 export function currentSeasonWeek(seasonStatus, now, weeks = 8) {

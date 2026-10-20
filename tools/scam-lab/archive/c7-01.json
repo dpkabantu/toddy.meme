@@ -1,0 +1,277 @@
+{
+  "id": "c7-01",
+  "type": "hunt",
+  "chapter": 7,
+  "difficulty": 2,
+  "title": "The Pump Group",
+  "disguise": "influencer",
+  "intro": [
+    "Chapter 7: hype. The scam where the crowd is the bait.",
+    "Toddy was added to a \"VIP signals\" group.",
+    "Sniff the big announcement."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Kelvaro Signals VIP 🚀",
+    "text": "🚨 BIG PUMP TONIGHT 20:00 🚨"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "group",
+          "text": "Kelvaro Signals VIP 🚀"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "members",
+          "text": "48,201 members · only admins can post"
+        }
+      ],
+      "avatar": {
+        "glyph": "🚀",
+        "clue": "avatar"
+      }
+    },
+    "banner": [
+      {
+        "clue": "added",
+        "text": "An admin added you to this group"
+      }
+    ],
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "pump",
+            "text": "🚨 At exactly 20:00 we all buy $ROCKETPAW 🚨"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "x100",
+            "text": "100x guaranteed!"
+          },
+          " ",
+          {
+            "clue": "hold",
+            "text": "Don't sell before 10x!!"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "vip",
+            "text": "VIP members got the coin name 5 minutes early (VIP = 0.5 ZLV)."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "gif",
+            "text": "🚀🚀🚀 [rocket GIF]"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "pump": {
+      "label": "Everyone buys at one time",
+      "strength": "strong",
+      "lens": "A coordinated buy at a set minute.",
+      "why": "Pump-and-dumps make the price jump, then organisers sell on you."
+    },
+    "x100": {
+      "label": "Guaranteed 100x",
+      "strength": "strong",
+      "lens": "A guaranteed 100x.",
+      "why": "Only scammers guarantee profits."
+    },
+    "hold": {
+      "label": "\"Don't sell\"",
+      "strength": "strong",
+      "lens": "They tell you not to sell.",
+      "why": "Your holding lets them sell at the top."
+    },
+    "vip": {
+      "label": "VIPs get it first",
+      "strength": "strong",
+      "lens": "Paying members buy before you.",
+      "why": "Early buyers are the ones who profit when you buy."
+    },
+    "added": {
+      "label": "Added without asking",
+      "strength": "strong",
+      "lens": "You never joined.",
+      "why": "Scam groups mass-add people."
+    },
+    "members": {
+      "label": "Big member count",
+      "strength": "harmless",
+      "lens": "48,201 members.",
+      "why": "Bots and fake accounts inflate numbers. Proves nothing alone."
+    },
+    "group": {
+      "label": "Group name",
+      "strength": "harmless",
+      "lens": "\"VIP\" in the name.",
+      "why": "Names prove nothing."
+    },
+    "gif": {
+      "label": "Rocket GIF",
+      "strength": "harmless",
+      "lens": "Rocket emojis and a GIF.",
+      "why": "Hype decoration. Not evidence alone."
+    },
+    "avatar": {
+      "label": "Rocket picture",
+      "strength": "harmless",
+      "lens": "A rocket.",
+      "why": "Proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Buy at 20:00 with everyone"
+    },
+    {
+      "id": "ignore",
+      "label": "Leave the group"
+    },
+    {
+      "id": "block_report",
+      "label": "Leave and report the group"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Reported. Fewer people walked into the pump that night.",
+      "mirageSays": "My crowd is shrinking!"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You left. Reporting too helps get the group shut down.",
+      "mirageSays": "One less buyer."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DUMPED",
+      "line": "The price spiked for 40 seconds. The admins sold. Toddy was left holding a coin worth almost nothing.",
+      "mirageSays": "Thanks for buying my bags!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "In a pump, the people who announce it have already bought. You are the exit."
+  },
+  "golden_rule": "If a group tells you exactly when to buy and promises 100x, you are the one being sold to.",
+  "quick_check": {
+    "q": "Who usually makes money in a pump-and-dump group?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Everyone who buys at the signal"
+      },
+      {
+        "id": "b",
+        "text": "The organisers who bought first and sell on the crowd"
+      }
+    ],
+    "answer": "b",
+    "explain": "The crowd's buying is what lets the organisers cash out."
+  },
+  "hints": {
+    "nudge": "Who buys first, and who buys last?",
+    "glow_order": [
+      "pump",
+      "vip",
+      "x100",
+      "hold",
+      "added"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "chainalysis-2025",
+    "ic3-2024"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the group",
+      "title": "Kelvaro Signals VIP",
+      "rows": [
+        {
+          "k": "You joined?",
+          "v": "No, you were added",
+          "clue": "added"
+        },
+        {
+          "k": "Members",
+          "v": "48,201",
+          "clue": "members"
+        },
+        {
+          "k": "Name",
+          "v": "Has \"VIP\" in it",
+          "clue": "group"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the plan",
+      "title": "What they say",
+      "rows": [
+        {
+          "k": "Buy at",
+          "v": "A set minute, all together",
+          "clue": "pump"
+        },
+        {
+          "k": "Promise",
+          "v": "A guaranteed 100x",
+          "clue": "x100"
+        },
+        {
+          "k": "Advice",
+          "v": "Do not sell",
+          "clue": "hold"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check who profits",
+      "title": "Who buys first",
+      "rows": [
+        {
+          "k": "Paying members",
+          "v": "Buy before you",
+          "clue": "vip"
+        }
+      ]
+    }
+  ]
+}

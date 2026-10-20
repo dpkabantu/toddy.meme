@@ -1,0 +1,241 @@
+{
+  "id": "c5-05",
+  "type": "hunt",
+  "chapter": 5,
+  "difficulty": 2,
+  "title": "A Normal Swap",
+  "disguise": null,
+  "intro": [
+    "After all those drainers, Toddy is nervous about every wallet pop-up.",
+    "This one comes from a swap Toddy started on the real site.",
+    "Sniff it. Is it safe to approve?"
+  ],
+  "notify": {
+    "app": "Hedrio",
+    "from": "Confirm swap",
+    "text": "zelvora.app: swap 50 ZLV → 0.02 STAR"
+  },
+  "screen": {
+    "app": "wallet",
+    "site": [
+      {
+        "clue": "site",
+        "text": "zelvora.app"
+      }
+    ],
+    "title": "Confirm swap",
+    "context": "You opened zelvora.app from your bookmark and chose a swap yourself.",
+    "rows": [
+      {
+        "k": "You pay",
+        "v": [
+          {
+            "clue": "pay",
+            "text": "50 ZLV (exact)"
+          }
+        ]
+      },
+      {
+        "k": "You get",
+        "v": [
+          {
+            "clue": "get",
+            "text": "about 0.02 STAR"
+          }
+        ]
+      },
+      {
+        "k": "Network fee",
+        "v": [
+          {
+            "clue": "fee",
+            "text": "0.0003 ZLV"
+          }
+        ]
+      },
+      {
+        "k": "Approval",
+        "v": [
+          {
+            "clue": "approval",
+            "text": "None needed (exact amount only)"
+          }
+        ]
+      }
+    ],
+    "note": [
+      {
+        "clue": "match",
+        "text": "Matches the swap you set up on the page."
+      }
+    ],
+    "buttons": [
+      "Reject",
+      "Confirm"
+    ]
+  },
+  "clues": {
+    "site": {
+      "label": "Real site, from your bookmark",
+      "strength": "harmless",
+      "lens": "zelvora.app, opened from your bookmark.",
+      "why": "The real address, reached the safe way."
+    },
+    "pay": {
+      "label": "Exact amount",
+      "strength": "harmless",
+      "lens": "Exactly 50 ZLV.",
+      "why": "An exact amount, not \"unlimited\"."
+    },
+    "get": {
+      "label": "Expected result",
+      "strength": "harmless",
+      "lens": "The amount you expected.",
+      "why": "Matches what you chose."
+    },
+    "fee": {
+      "label": "Small fee",
+      "strength": "harmless",
+      "lens": "A tiny network fee.",
+      "why": "Normal."
+    },
+    "approval": {
+      "label": "No approval needed",
+      "strength": "harmless",
+      "lens": "No spending permission.",
+      "why": "Nothing beyond this one swap."
+    },
+    "match": {
+      "label": "Matches your action",
+      "strength": "harmless",
+      "lens": "It matches what you just did.",
+      "why": "You started it; it does what you asked."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Confirm the swap"
+    },
+    {
+      "id": "ignore",
+      "label": "Cancel, just in case"
+    },
+    {
+      "id": "block_report",
+      "label": "Report Zelvora as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "Swap done: 0.02 STAR arrived. Exactly what Toddy asked for.",
+      "toddy": "happy"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "Zelvora was real. Reporting real sites wastes everyone's time and hides real warnings.",
+      "mirageSays": "Fear everything? Lovely."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "SAFE",
+      "line": "Cancelling was safe, just unnecessary: everything matched.",
+      "toddy": "happy"
+    }
+  },
+  "what_if": {
+    "block_report": "Bookmark, exact amount, no approval, matches your action: that's a safe pop-up."
+  },
+  "golden_rule": "A safe pop-up matches what you just did: right site, exact amount, nothing unlimited.",
+  "quick_check": {
+    "q": "Which wallet pop-up is safe?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Unlimited approval for a free mint"
+      },
+      {
+        "id": "b",
+        "text": "An exact-amount swap you started on your bookmarked site"
+      }
+    ],
+    "answer": "b",
+    "explain": "Exact, expected and from the right site."
+  },
+  "hints": {
+    "nudge": "Does it match what you just did?",
+    "glow_order": []
+  },
+  "sources": [
+    "cafc-wallet",
+    "ftc-crypto",
+    "chainalysis-2025"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the site",
+      "title": "Where you are",
+      "rows": [
+        {
+          "k": "Address",
+          "v": "zelvora.app, from your bookmark",
+          "clue": "site"
+        },
+        {
+          "k": "Matches what you did",
+          "v": "Yes",
+          "clue": "match"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the amounts",
+      "title": "What you pay and get",
+      "rows": [
+        {
+          "k": "You pay",
+          "v": "Exactly 50 ZLV",
+          "clue": "pay"
+        },
+        {
+          "k": "You get",
+          "v": "The amount you expected",
+          "clue": "get"
+        },
+        {
+          "k": "Fee",
+          "v": "A tiny network fee",
+          "clue": "fee"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check permissions",
+      "title": "What it allows",
+      "rows": [
+        {
+          "k": "Spending permission",
+          "v": "None",
+          "clue": "approval"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,122 @@
+{
+  "id": "c4-04",
+  "type": "rush",
+  "chapter": 4,
+  "difficulty": 2,
+  "title": "Scary Inbox",
+  "seconds": 60,
+  "intro": [
+    "Ten alarming messages. One minute.",
+    "Swipe left for scam, right for safe.",
+    "Some alerts are real. Don't panic, sort."
+  ],
+  "cards": [
+    {
+      "id": "s1",
+      "app": "Pop-up",
+      "from": "Browser warning",
+      "text": "⚠️ VIRUS DETECTED! Call support now on +44 7700 900321 or your files will be deleted.",
+      "scam": true,
+      "why": "Real virus warnings never ask you to call a number."
+    },
+    {
+      "id": "s2",
+      "app": "Email",
+      "from": "no-reply@ostrel.io",
+      "text": "Your password was changed. If this was you, nothing to do. If not, open the Ostrel app → Security.",
+      "scam": false,
+      "why": "You just changed it, and it points to the app, not a link."
+    },
+    {
+      "id": "s3",
+      "app": "SMS",
+      "from": "Customs Office",
+      "text": "Your parcel is held. Pay €3.99 customs fee here: customs-eu-pay.co",
+      "scam": true,
+      "why": "A small fee through an odd link is phishing."
+    },
+    {
+      "id": "s4",
+      "app": "Email",
+      "from": "Security Team",
+      "text": "Your wallet was hacked! Enter your recovery phrase to secure it within 1 hour.",
+      "scam": true,
+      "why": "Nobody needs your phrase to \"secure\" anything."
+    },
+    {
+      "id": "s5",
+      "app": "Bank app",
+      "from": "Your bank (in-app)",
+      "text": "Was this you? Card payment €480 at 03:12. Answer Yes or No here.",
+      "scam": false,
+      "why": "Inside your real bank app, asking only yes or no."
+    },
+    {
+      "id": "s6",
+      "app": "Email",
+      "from": "Tax Refund Office",
+      "text": "You are owed a €612 tax refund. Enter your card details to receive it.",
+      "scam": true,
+      "why": "Refunds never need your card details by email."
+    },
+    {
+      "id": "s7",
+      "app": "SMS",
+      "from": "Kiko (friend)",
+      "text": "Heads up: someone made a fake account with my photo. Please report it if it messages you!",
+      "scam": false,
+      "why": "A friend you know, warning you and asking nothing."
+    },
+    {
+      "id": "s8",
+      "app": "Plenvo DM",
+      "from": "Account Security",
+      "text": "Your account will be deleted for copyright violation. Appeal here within 2 hours: plenvo-appeal.help",
+      "scam": true,
+      "why": "Fake \"account violation\" links steal logins."
+    },
+    {
+      "id": "s9",
+      "app": "Email",
+      "from": "no-reply@zelvora.app",
+      "text": "Scheduled maintenance tonight 1–2 AM. Your funds are safe. No action needed.",
+      "scam": false,
+      "why": "Real domain, calm, and asks nothing."
+    },
+    {
+      "id": "s10",
+      "app": "SMS",
+      "from": "Police Dept",
+      "text": "Warrant issued in your name. Pay bail in crypto now to cancel it.",
+      "scam": true,
+      "why": "Police never take \"bail\" in crypto by text."
+    }
+  ],
+  "golden_rule": "Scary message? Slow down. Real alerts point you to the app or official number, never to a payment, phrase or link.",
+  "quick_check": {
+    "q": "A pop-up says \"VIRUS! Call this number now\". What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Call quickly"
+      },
+      {
+        "id": "b",
+        "text": "Close it; never call numbers from pop-ups"
+      },
+      {
+        "id": "c",
+        "text": "Pay for the cleaner they offer"
+      }
+    ],
+    "answer": "b",
+    "explain": "Fake virus pop-ups lead to \"tech support\" scams."
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-data-2024",
+    "ic3-2024",
+    "ftc-phishing"
+  ],
+  "checked_on": "2026-10-13"
+}

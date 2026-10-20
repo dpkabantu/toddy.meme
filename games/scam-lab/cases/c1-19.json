@@ -1,0 +1,319 @@
+{
+  "id": "c1-19",
+  "type": "hunt",
+  "chapter": 1,
+  "difficulty": 3,
+  "title": "The Tax Refund",
+  "disguise": "support",
+  "intro": [
+    "An email says the tax office owes you money. Who does not like a refund?",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Mail",
+    "from": "Civic Revenue Portal",
+    "text": "You are eligible for a refund of $412.80"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        {
+          "clue": "from",
+          "text": "Civic Revenue Portal"
+        }
+      ],
+      "addr": [
+        {
+          "clue": "addr",
+          "text": "refunds@civic-revenue-portal.info"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "You are eligible for a refund of $412.80"
+        }
+      ],
+      "time": [
+        "7:50 AM"
+      ]
+    },
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "name",
+            "text": "Dear Taxpayer,"
+          }
+        ]
+      },
+      {
+        "p": [
+          "After a review, you are ",
+          {
+            "clue": "owed",
+            "text": "owed a refund of $412.80"
+          },
+          "."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "link",
+            "text": "Claim my refund",
+            "link": true
+          }
+        ]
+      },
+      {
+        "p": [
+          "To receive it, enter your ",
+          {
+            "clue": "bank",
+            "text": "bank account number and the code on the back of your card"
+          },
+          "."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "deadline",
+            "text": "This offer expires in 24 hours."
+          },
+          " Failure to claim may ",
+          {
+            "clue": "threat",
+            "text": "result in a penalty."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "addr": {
+      "label": "Not an official address",
+      "strength": "strong",
+      "lens": "The email comes from civic-revenue-portal.info. An official tax office uses its own government address.",
+      "why": "Look-alike or odd addresses are a warning sign. Check the part after the @."
+    },
+    "link": {
+      "label": "Look-alike link",
+      "strength": "strong",
+      "lens": "The button goes to civic-revenue-portal.info/claim, not to an official site.",
+      "why": "Never claim money through an email link. Go to the official website you already know."
+    },
+    "bank": {
+      "label": "Asks for bank and card details",
+      "strength": "strong",
+      "lens": "It wants your account number and the code on the back of your card.",
+      "why": "Getting a refund never requires your card code. That is for paying."
+    },
+    "deadline": {
+      "label": "Deadline pressure",
+      "strength": "strong",
+      "lens": "The refund \"expires in 24 hours\".",
+      "why": "Real refunds do not vanish in a day."
+    },
+    "threat": {
+      "label": "Threat of a penalty",
+      "strength": "strong",
+      "lens": "It warns of a penalty if you do not claim.",
+      "why": "You cannot be penalised for not claiming a gift. A threat gives it away."
+    },
+    "name": {
+      "label": "\"Dear Taxpayer\"",
+      "strength": "harmless",
+      "lens": "A generic greeting.",
+      "why": "Many real emails use your name, but a generic hello alone is not proof of a scam."
+    },
+    "owed": {
+      "label": "Sounds welcome",
+      "strength": "harmless",
+      "lens": "Money owed to you.",
+      "why": "Good news can still be a trap. What it asks you to do decides."
+    },
+    "from": {
+      "label": "Official-sounding name",
+      "strength": "harmless",
+      "lens": "The sender says Civic Revenue Portal.",
+      "why": "A name is easy to copy. Look at the address and the ask."
+    },
+    "subject": {
+      "label": "A precise amount",
+      "strength": "harmless",
+      "lens": "$412.80, not a round number.",
+      "why": "A precise number looks real, but scammers choose precise numbers on purpose."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Click \"Claim my refund\"",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Check my tax account on the official website I already know"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as phishing and delete it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "trap": {
+    "title": "Civic Revenue Portal · Claim",
+    "url": "civic-revenue-portal.info/claim",
+    "ask": "Enter your bank account number and the code on the back of your card to receive $412.80.",
+    "go": "Claim refund",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported and deleted. The fake site was reported and taken down.",
+      "mirageSays": "Not my lovely refund!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The official tax website showed no refund and no message. The email was fake. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same email is landing in thousands of other inboxes.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The page copied your account number and card code. No refund came, but money left your account.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Checking your tax account on the official site you already know would have shown no refund at all.",
+    "ignore": "Reporting takes two taps and gets the fake site taken down.",
+    "verify": "Checking was smart. Reporting the email as well protects other people."
+  },
+  "golden_rule": "Government offices do not email or text to ask for your bank details. Use the official website you already know.",
+  "quick_check": {
+    "q": "An email says the tax office owes you a refund and asks for your bank details through a button. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Click it, it is your money"
+      },
+      {
+        "id": "b",
+        "text": "Reply to ask if it is real"
+      },
+      {
+        "id": "c",
+        "text": "Do not click. Check on the official website you already know, and report it"
+      },
+      {
+        "id": "d",
+        "text": "Enter only your name"
+      }
+    ],
+    "answer": "c",
+    "explain": "Government offices do not ask for your bank details by email or text. A refund never needs your card code."
+  },
+  "hints": {
+    "nudge": "Look at the address the email really came from.",
+    "glow_order": [
+      "addr",
+      "bank",
+      "link",
+      "deadline",
+      "threat"
+    ]
+  },
+  "sources": [
+    "ftc-government",
+    "ftc-spamtexts"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Who really sent this",
+      "rows": [
+        {
+          "k": "Shown as",
+          "v": "Civic Revenue Portal",
+          "clue": "from"
+        },
+        {
+          "k": "Real address behind it",
+          "v": "refunds@civic-revenue-portal.info",
+          "clue": "addr"
+        },
+        {
+          "k": "An official address",
+          "v": "A government website you already know"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check link",
+      "title": "Where the button goes",
+      "rows": [
+        {
+          "k": "Button says",
+          "v": "Claim my refund"
+        },
+        {
+          "k": "It really opens",
+          "v": "civic-revenue-portal.info/claim",
+          "clue": "link"
+        },
+        {
+          "k": "Asks for",
+          "v": "Bank account and card code",
+          "clue": "bank"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What consumer advice says",
+      "rows": [
+        {
+          "k": "Do government offices ask for money or details by email or text?",
+          "v": "Never"
+        },
+        {
+          "k": "How to check",
+          "v": "Call or visit the official website on a number or address you know is correct"
+        }
+      ]
+    }
+  ]
+}

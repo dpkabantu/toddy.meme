@@ -1,0 +1,337 @@
+{
+  "id": "c8-02",
+  "type": "hunt",
+  "chapter": 8,
+  "difficulty": 2,
+  "title": "Two Staking Offers",
+  "disguise": "support",
+  "intro": [
+    "Toddy read about \"staking\": locking coins to help a network and earn rewards.",
+    "Two offers look very different.",
+    "Compare them."
+  ],
+  "notify": {
+    "app": "Browser",
+    "from": "Two staking pages",
+    "text": "Earn with your ZLV"
+  },
+  "decide_q": "Which offer is a scam, and what will you do?",
+  "screen": {
+    "app": "compare",
+    "context": "Two staking offers, side by side.",
+    "panels": [
+      {
+        "label": "Ostrel Staking",
+        "avatar": {
+          "glyph": "★",
+          "clue": "logo_a"
+        },
+        "rows": [
+          {
+            "k": "Reward",
+            "v": [
+              {
+                "clue": "rate_a",
+                "text": "About 4% a year, changes over time"
+              }
+            ]
+          },
+          {
+            "k": "Lock",
+            "v": [
+              {
+                "clue": "lock_a",
+                "text": "7-day unlock period, explained"
+              }
+            ]
+          },
+          {
+            "k": "Risks",
+            "v": [
+              {
+                "clue": "risk_a",
+                "text": "Listed clearly: price can fall"
+              }
+            ]
+          },
+          {
+            "k": "Where",
+            "v": [
+              {
+                "clue": "where_a",
+                "text": "Inside the exchange app you use"
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "Nistora Yield Max",
+        "avatar": {
+          "glyph": "💰",
+          "clue": "logo_b"
+        },
+        "rows": [
+          {
+            "k": "Reward",
+            "v": [
+              {
+                "clue": "rate_b",
+                "text": "Fixed 3% every day"
+              }
+            ]
+          },
+          {
+            "k": "Bonus",
+            "v": [
+              {
+                "clue": "ref_b",
+                "text": "+10% for every friend you invite"
+              }
+            ]
+          },
+          {
+            "k": "Withdraw",
+            "v": [
+              {
+                "clue": "wd_b",
+                "text": "\"Withdrawals open after 90 days\""
+              }
+            ]
+          },
+          {
+            "k": "Proof",
+            "v": [
+              {
+                "clue": "proof_b",
+                "text": "Screenshots of payouts"
+              }
+            ]
+          },
+          {
+            "k": "Where",
+            "v": [
+              {
+                "clue": "where_b",
+                "text": "Send coins to their wallet"
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "rate_b": {
+      "label": "3% every day",
+      "strength": "strong",
+      "lens": "Over 1,000% a year, fixed.",
+      "why": "Real rewards change and are small. Fixed huge returns are a scam."
+    },
+    "ref_b": {
+      "label": "Referral bonus",
+      "strength": "strong",
+      "lens": "Paid to recruit.",
+      "why": "Recruitment bonuses suggest new money pays old members."
+    },
+    "wd_b": {
+      "label": "Can't withdraw for 90 days",
+      "strength": "strong",
+      "lens": "Your coins are stuck.",
+      "why": "Long withdrawal locks give scammers time to disappear."
+    },
+    "proof_b": {
+      "label": "Screenshot \"proof\"",
+      "strength": "strong",
+      "lens": "Payout screenshots.",
+      "why": "Screenshots are easy to fake."
+    },
+    "where_b": {
+      "label": "Send to their wallet",
+      "strength": "strong",
+      "lens": "You hand them your coins.",
+      "why": "Once sent, they control them."
+    },
+    "rate_a": {
+      "label": "Small, changing reward",
+      "strength": "harmless",
+      "lens": "About 4%, variable.",
+      "why": "Realistic."
+    },
+    "lock_a": {
+      "label": "Clear unlock period",
+      "strength": "harmless",
+      "lens": "Explained up front.",
+      "why": "Normal and honest."
+    },
+    "risk_a": {
+      "label": "Risks listed",
+      "strength": "harmless",
+      "lens": "Price can fall.",
+      "why": "Honest firms list risks."
+    },
+    "where_a": {
+      "label": "Inside your app",
+      "strength": "harmless",
+      "lens": "In the exchange you already use.",
+      "why": "No sending to strangers."
+    },
+    "logo_a": {
+      "label": "Star logo",
+      "strength": "harmless",
+      "lens": "A star.",
+      "why": "Proves nothing."
+    },
+    "logo_b": {
+      "label": "Money bag logo",
+      "strength": "harmless",
+      "lens": "A money bag.",
+      "why": "Proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "pick_b",
+      "label": "Join Nistora Yield Max for 3% a day",
+      "trap": true
+    },
+    {
+      "id": "verify",
+      "label": "Stick with what you understand, read Ostrel's risks first"
+    },
+    {
+      "id": "block_report",
+      "label": "Avoid Nistora Yield Max and report it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "trap": {
+    "title": "Nistora Yield Max",
+    "url": "nistorayield-max.fi",
+    "ask": "Send ZLV to start earning 3% every day!",
+    "go": "Send ZLV",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Reported. Nistora Yield Max later appeared on an official warning list.",
+      "mirageSays": "My money machine!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Toddy read the risks and decided slowly. Nistora Yield Max vanished at day 80.",
+      "mirageSays": "Slow and careful… boring!"
+    },
+    "pick_b": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "VANISHED",
+      "line": "At day 80, before withdrawals opened, the site disappeared.",
+      "mirageSays": "Day 90 never comes!"
+    }
+  },
+  "what_if": {
+    "pick_b": "Fixed 3% a day plus a 90-day withdrawal lock is how these schemes buy time to vanish."
+  },
+  "golden_rule": "Real rewards are small and change. Fixed huge daily returns are a scam.",
+  "quick_check": {
+    "q": "Which is more realistic for staking?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Fixed 3% every day"
+      },
+      {
+        "id": "b",
+        "text": "About 4% a year, changing"
+      }
+    ],
+    "answer": "b",
+    "explain": "Big fixed daily returns are a scam signal."
+  },
+  "hints": {
+    "nudge": "Compare the rewards and how you withdraw.",
+    "glow_order": [
+      "rate_b",
+      "wd_b",
+      "ref_b",
+      "where_b",
+      "proof_b"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-data-2024",
+    "ic3-2024"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the rates",
+      "title": "Two offers",
+      "rows": [
+        {
+          "k": "Offer A",
+          "v": "About 4%, variable",
+          "clue": "rate_a"
+        },
+        {
+          "k": "Offer B",
+          "v": "Over 1,000% a year, fixed",
+          "clue": "rate_b"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check where your coins go",
+      "title": "Who holds them",
+      "rows": [
+        {
+          "k": "Offer A",
+          "v": "In the exchange you already use",
+          "clue": "where_a"
+        },
+        {
+          "k": "Offer B",
+          "v": "You hand them your coins",
+          "clue": "where_b"
+        },
+        {
+          "k": "Taking them out",
+          "v": "Stuck on B",
+          "clue": "wd_b"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the small print",
+      "title": "Risk and rules",
+      "rows": [
+        {
+          "k": "Offer A",
+          "v": "Lock explained up front; price can fall",
+          "clue": "lock_a"
+        },
+        {
+          "k": "Offer B",
+          "v": "Paid to recruit; payout screenshots",
+          "clue": "ref_b"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,293 @@
+{
+  "id": "c3-01",
+  "type": "hunt",
+  "chapter": 3,
+  "difficulty": 2,
+  "title": "The Free Airdrop",
+  "disguise": "influencer",
+  "intro": [
+    "Chapter 3, Toddy: free money. The oldest bait there is.",
+    "Someone replied to the official TODDY post with a \"free airdrop\".",
+    "Sniff the reply before you touch anything."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Replies to @ToddyOfficial",
+    "text": "🎁 5,000 $TODDY airdrop live now!"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "TODDY Airdrop 🎁"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@toddy_offical_drop"
+        }
+      ],
+      "avatar": {
+        "glyph": "☾",
+        "clue": "avatar"
+      }
+    },
+    "context": "A reply under the real TODDY account's latest post.",
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "free",
+            "text": "🎁 5,000 $TODDY airdrop for the community!"
+          }
+        ]
+      },
+      {
+        "msg": [
+          "Claim at ",
+          {
+            "clue": "link",
+            "text": "toddy-claim.xyz",
+            "link": true
+          },
+          " — ",
+          {
+            "clue": "connect",
+            "text": "connect your wallet to receive"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "rush",
+            "text": "⏱ First 500 wallets only!"
+          },
+          " ",
+          {
+            "clue": "likes",
+            "text": "❤️ 2.4K"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "handle": {
+      "label": "Misspelled handle",
+      "strength": "strong",
+      "lens": "@toddy_offi-c-al_drop. \"offical\" is missing an i, and it's not the real account.",
+      "why": "Look-alike accounts reply under real posts to borrow trust."
+    },
+    "link": {
+      "label": "Unofficial link",
+      "strength": "strong",
+      "lens": "toddy-claim.xyz is not toddy.meme.",
+      "why": "Only trust links from the official website itself."
+    },
+    "connect": {
+      "label": "\"Connect your wallet\"",
+      "strength": "strong",
+      "lens": "Connecting to a fake site lets it ask your wallet to sign away your coins.",
+      "why": "\"Connect to claim\" is the most common way wallets get drained."
+    },
+    "rush": {
+      "label": "First 500 only",
+      "strength": "strong",
+      "lens": "A tiny window to make you hurry.",
+      "why": "Scarcity is pressure."
+    },
+    "free": {
+      "label": "Free tokens",
+      "strength": "strong",
+      "lens": "Free tokens out of nowhere.",
+      "why": "Surprise free money is always bait."
+    },
+    "name": {
+      "label": "TODDY in the name",
+      "strength": "harmless",
+      "lens": "The display name says TODDY.",
+      "why": "Anyone can put a brand in their name. Check the handle."
+    },
+    "avatar": {
+      "label": "Moon logo",
+      "strength": "harmless",
+      "lens": "A copy of the TODDY moon.",
+      "why": "Logos are easy to copy."
+    },
+    "likes": {
+      "label": "Lots of likes",
+      "strength": "harmless",
+      "lens": "2.4K likes.",
+      "why": "Likes can be bought or botted. They prove nothing either way."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Claim the airdrop",
+      "trap": true
+    },
+    {
+      "id": "verify",
+      "label": "Check toddy.meme for any official airdrop news"
+    },
+    {
+      "id": "ignore",
+      "label": "Scroll past"
+    },
+    {
+      "id": "block_report",
+      "label": "Report the fake account"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "trap": {
+    "title": "TODDY Airdrop · Claim",
+    "url": "toddy-claim.xyz",
+    "ask": "Connect your wallet and approve to receive 5,000 $TODDY.",
+    "go": "Connect & approve",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Reported. The fake account was removed before it reached more of the community.",
+      "mirageSays": "My beautiful airdrop!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "toddy.meme says nothing about an airdrop. Case cracked.",
+      "mirageSays": "They checked the real site?!"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You scrolled past safely. Reporting would protect the next person.",
+      "mirageSays": "Fine, someone else will click."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "The \"claim\" approved the site to empty the wallet.",
+      "mirageSays": "Free for me, anyway!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Checking toddy.meme first would have shown there was no airdrop.",
+    "ignore": "Scrolling past was safe; a quick report helps everyone.",
+    "verify": "Checking was right. Reporting the fake helps others."
+  },
+  "golden_rule": "Never \"connect your wallet\" to claim free tokens. Check the official website first.",
+  "quick_check": {
+    "q": "A reply under an official post offers free tokens if you connect your wallet. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Connect quickly before it runs out"
+      },
+      {
+        "id": "b",
+        "text": "Check the official website, then report the reply"
+      },
+      {
+        "id": "c",
+        "text": "Connect a small wallet only"
+      }
+    ],
+    "answer": "b",
+    "explain": "Real airdrops are announced on the official site. Look-alike replies are the trap."
+  },
+  "hints": {
+    "nudge": "Read the handle letter by letter.",
+    "glow_order": [
+      "connect",
+      "link",
+      "handle",
+      "free",
+      "rush"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-phishing",
+    "cafc-wallet"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check account",
+      "title": "@toddy_offi-c-al_drop",
+      "rows": [
+        {
+          "k": "Handle",
+          "v": "Spelled \"offical\", not the real account",
+          "clue": "handle"
+        },
+        {
+          "k": "Display name",
+          "v": "Says TODDY",
+          "clue": "name"
+        },
+        {
+          "k": "Real account",
+          "v": "@ToddyOfficial"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check link",
+      "title": "Where it goes",
+      "rows": [
+        {
+          "k": "The link opens",
+          "v": "toddy-claim.xyz",
+          "clue": "link"
+        },
+        {
+          "k": "Real site",
+          "v": "toddy.meme"
+        },
+        {
+          "k": "It asks you to",
+          "v": "Connect your wallet",
+          "clue": "connect"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official page",
+      "title": "What TODDY says",
+      "rows": [
+        {
+          "k": "Free tokens for replies?",
+          "v": "Never"
+        },
+        {
+          "k": "Free tokens out of nowhere",
+          "v": "Not a thing TODDY does",
+          "clue": "free"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,411 @@
+{
+  "id": "c1-06",
+  "type": "boss",
+  "chapter": 1,
+  "difficulty": 3,
+  "title": "Mirage's Help Desk",
+  "disguise": "support",
+  "disguise2": "admin",
+  "intro": [
+    "This is it, Toddy. Mirage has set up a whole fake help desk.",
+    "He'll change disguises to fool you. Collect every clue you can.",
+    "At the end you'll pin the evidence on the case board and unmask him."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Zelvora Help Desk ✔",
+    "text": "We've opened ticket #4471 for your stuck swap!"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "tick",
+          "text": "Zelvora Help Desk ✔",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@zelvora.helpdesk.live"
+        }
+      ],
+      "avatar": {
+        "glyph": "☾",
+        "clue": "avatar"
+      }
+    },
+    "banner": [
+      {
+        "clue": "dm_first",
+        "text": "Message request · they replied to your public post"
+      }
+    ],
+    "context": "You posted in the Zelvora community: \"Swap stuck again, anyone?\"",
+    "items": [
+      {
+        "msg": [
+          "Hello! We've opened ",
+          {
+            "clue": "ticket",
+            "text": "ticket #4471"
+          },
+          " for your stuck swap. 😊"
+        ]
+      },
+      {
+        "msg": [
+          "Chat with a live agent here: ",
+          {
+            "clue": "chatlink",
+            "text": "plenvo.me/zelvora-agent-live",
+            "link": true
+          }
+        ]
+      }
+    ]
+  },
+  "duel": {
+    "start": "d1",
+    "nodes": {
+      "d1": {
+        "rename": "Agent Mira · Zelvora",
+        "say": [
+          {
+            "sys": [
+              "You joined a private chat with \"Agent Mira · Zelvora\""
+            ]
+          },
+          {
+            "msg": [
+              "Hi, I'm Mira! To fix the swap I need to see your screen. Please install ",
+              {
+                "clue": "screenshare",
+                "text": "Vewro Pro"
+              },
+              " and give me the code."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Why do you need to see my screen?",
+            "next": "d2"
+          },
+          {
+            "text": "Installing it now",
+            "next": "d3"
+          },
+          {
+            "text": "Leave and report this chat",
+            "end": "block_report"
+          }
+        ]
+      },
+      "d2": {
+        "say": [
+          {
+            "msg": [
+              "It's standard procedure. ",
+              {
+                "clue": "otp",
+                "text": "Just read me the 6-digit code we texted you"
+              },
+              " and I'll do the rest."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Here's the code",
+            "next": "d3"
+          },
+          {
+            "text": "That code says never share it. I'll use the in-app help instead.",
+            "end": "verify"
+          },
+          {
+            "text": "Leave and report this chat",
+            "end": "block_report"
+          }
+        ]
+      },
+      "d3": {
+        "rename": "Luna (Zelvora Admin)",
+        "disguise": "admin",
+        "say": [
+          {
+            "sys": [
+              {
+                "clue": "swap",
+                "text": "Agent Mira left. \"Luna (Zelvora Admin)\" joined the chat."
+              }
+            ]
+          },
+          {
+            "msg": [
+              "Supervisor here. Your wallet is at risk! ",
+              {
+                "clue": "move",
+                "text": "Move your coins to this safe wallet: 0x7Ee…a1F"
+              },
+              " right now."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Moving them now",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Real staff never tell you to move coins. Report.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll check on Zelvora's official site first",
+            "end": "verify"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "tick": {
+      "label": "Fake tick",
+      "strength": "strong",
+      "lens": "The ✔ is typed into the name. No real badge after the handle.",
+      "why": "Anyone can type a tick."
+    },
+    "handle": {
+      "label": "Not the official handle",
+      "strength": "strong",
+      "lens": "@zelvora.helpdesk.live, joined last week. The official account is @zelvora.",
+      "why": "Extra words like helpdesk or live are a favourite disguise."
+    },
+    "dm_first": {
+      "label": "They messaged first",
+      "strength": "strong",
+      "lens": "They found your public post and messaged you.",
+      "why": "Real support answers inside the app, not in surprise DMs."
+    },
+    "chatlink": {
+      "label": "Private chat link",
+      "strength": "strong",
+      "lens": "This link takes you away to a private chat they control.",
+      "why": "Moving you to a private place is how scammers cut you off from help."
+    },
+    "screenshare": {
+      "label": "Screen-share app",
+      "strength": "strong",
+      "lens": "Vewro Pro would let them see and control your phone.",
+      "why": "Never install remote-access apps because a stranger asks."
+    },
+    "otp": {
+      "label": "Wants your code",
+      "strength": "strong",
+      "lens": "That code is the key to your account.",
+      "why": "Login codes are for you only. Anyone asking for one is stealing your account."
+    },
+    "swap": {
+      "label": "Disguise swap",
+      "strength": "strong",
+      "lens": "\"Agent Mira\" vanished and an \"admin\" appeared in the same chat.",
+      "why": "When the person changes but the pressure stays, it's one con artist in two costumes."
+    },
+    "move": {
+      "label": "Move coins to a \"safe\" wallet",
+      "strength": "strong",
+      "lens": "That \"safe wallet\" belongs to whoever wrote this message.",
+      "why": "No real company ever tells you to move your coins to a wallet they give you."
+    },
+    "ticket": {
+      "label": "Ticket number",
+      "strength": "harmless",
+      "lens": "Ticket #4471.",
+      "why": "Ticket numbers look official, but anyone can make one up. It proves nothing alone."
+    },
+    "avatar": {
+      "label": "Moon logo",
+      "strength": "harmless",
+      "lens": "The Zelvora moon logo.",
+      "why": "Logos are easy to copy."
+    }
+  },
+  "actions": [
+    {
+      "id": "open_chat",
+      "label": "Open the live agent chat",
+      "goto": "duel"
+    },
+    {
+      "id": "verify",
+      "label": "Use the help button inside the Zelvora app"
+    },
+    {
+      "id": "block_report",
+      "label": "Block and report the account"
+    },
+    {
+      "id": "go_ahead",
+      "label": "Move the coins",
+      "hidden": true
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "caught",
+      "stamp": "CASE CLOSED",
+      "line": "Reported. Plenvo traced every fake account back to one con artist.",
+      "mirageSays": "Unmasked by a civet?!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Zelvora's in-app help confirmed: no Agent Mira, no Luna, no ticket #4471.",
+      "mirageSays": "They checked AGAIN?"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "The \"safe wallet\" was Mirage's. The coins are gone.",
+      "mirageSays": "Safe with ME, that is!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Any request to move your coins somewhere \"safe\" is the final trick. Stop there and report.",
+    "verify": "Checking in the official app was safe. Reporting as well gets all the fake accounts removed."
+  },
+  "board": {
+    "q": "What's really going on?",
+    "verdicts": [
+      {
+        "id": "scam",
+        "text": "One scammer pretending to be Zelvora support and an admin"
+      },
+      {
+        "id": "real",
+        "text": "Real Zelvora support, just being careful"
+      },
+      {
+        "id": "unsure",
+        "text": "Not enough evidence to tell"
+      }
+    ],
+    "answer": "scam",
+    "pick": 3,
+    "explain": "Fake tick, a look-alike handle, a private chat, a code request and a costume change. One con artist, many masks."
+  },
+  "golden_rule": "When someone \"helpful\" moves you to a private chat and keeps changing faces, it's one con artist in many masks.",
+  "quick_check": {
+    "q": "Support asks you to move your coins to a \"safe wallet\" right now. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Move them, they're protecting you"
+      },
+      {
+        "id": "b",
+        "text": "Stop, don't move anything, and report"
+      },
+      {
+        "id": "c",
+        "text": "Move half to be safe"
+      }
+    ],
+    "answer": "b",
+    "explain": "A \"safe wallet\" from a stranger is their wallet."
+  },
+  "hints": {
+    "nudge": "Look at where they want to take you.",
+    "glow_order": [
+      "chatlink",
+      "handle",
+      "tick",
+      "dm_first",
+      "screenshare",
+      "otp",
+      "swap",
+      "move"
+    ]
+  },
+  "sources": [
+    "cafc-wallet",
+    "ftc-tech-support",
+    "ftc-crypto",
+    "europol-report"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check profile",
+      "title": "@zelvora.helpdesk.live",
+      "rows": [
+        {
+          "k": "Account created",
+          "v": "Last week",
+          "clue": "handle"
+        },
+        {
+          "k": "Verified badge",
+          "v": "None. The ✔ is typed into the name",
+          "clue": "tick"
+        },
+        {
+          "k": "Official account",
+          "v": "@zelvora"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check link",
+      "title": "Where the chat link really goes",
+      "rows": [
+        {
+          "k": "It really opens",
+          "v": "A private chat they control",
+          "clue": "chatlink"
+        },
+        {
+          "k": "Zelvora's real help",
+          "v": "Inside the Zelvora app only"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official page",
+      "title": "Zelvora's real help page says",
+      "rows": [
+        {
+          "k": "Will support ask for a login code?",
+          "v": "Never",
+          "clue": "otp"
+        },
+        {
+          "k": "Will support take control of your phone?",
+          "v": "Never",
+          "clue": "screenshare"
+        },
+        {
+          "k": "Real support",
+          "v": "Answers inside the app, not in surprise DMs"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,310 @@
+{
+  "id": "c8-03",
+  "type": "duel",
+  "chapter": 8,
+  "difficulty": 3,
+  "title": "The Trading Bot",
+  "disguise": "influencer",
+  "intro": [
+    "An \"AI trading bot\" ad caught Toddy's eye. The seller is in the chat.",
+    "Talk to him. Find out what he really needs from you.",
+    "Sniff carefully."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Pivlo AI 🤖",
+    "text": "Our AI bot made 312% last month!"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "text": "Pivlo AI 🤖",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@tradehelper_ai_official"
+        }
+      ],
+      "avatar": {
+        "glyph": "🤖",
+        "clue": "avatar"
+      }
+    },
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "ad",
+            "text": "AI arbitrage bot: 312% last month 📈"
+          }
+        ]
+      }
+    ]
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "norisk",
+                "text": "It's risk-free, the AI never loses."
+              }
+            ]
+          },
+          {
+            "msg": [
+              "Just ",
+              {
+                "clue": "apikey",
+                "text": "send your exchange API key with withdrawal rights on"
+              },
+              " so the bot can trade."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Why does it need withdrawal rights?",
+            "next": "n2"
+          },
+          {
+            "text": "OK, here's my key",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Nothing is risk-free. Block and report.",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "excuse",
+                "text": "To move profits between exchanges, standard stuff."
+              },
+              " ",
+              {
+                "clue": "or",
+                "text": "Or just deposit 500 ZLV into the bot wallet."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "That gives you my money. No. Report.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll look the bot up with official regulators first",
+            "end": "verify"
+          },
+          {
+            "text": "I'll deposit instead",
+            "end": "go_ahead"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "ad": {
+      "label": "312% last month",
+      "strength": "strong",
+      "lens": "Enormous returns.",
+      "why": "Promised giant returns are a scam signal."
+    },
+    "norisk": {
+      "label": "\"Never loses\"",
+      "strength": "strong",
+      "lens": "Risk-free claim.",
+      "why": "Nothing in trading is risk-free."
+    },
+    "apikey": {
+      "label": "API key with withdrawals",
+      "strength": "strong",
+      "lens": "A key that can move your money out.",
+      "why": "Never give anyone a key that can withdraw your funds."
+    },
+    "excuse": {
+      "label": "\"Standard stuff\"",
+      "strength": "strong",
+      "lens": "A vague excuse.",
+      "why": "Not a real reason."
+    },
+    "or": {
+      "label": "Or deposit to them",
+      "strength": "strong",
+      "lens": "Hand them your coins instead.",
+      "why": "Either way, they control your money."
+    },
+    "handle": {
+      "label": "\"Official\" handle",
+      "strength": "harmless",
+      "lens": "\"official\" in the handle.",
+      "why": "Anyone can type that."
+    },
+    "avatar": {
+      "label": "Robot",
+      "strength": "harmless",
+      "lens": "A robot emoji.",
+      "why": "Proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Give access or deposit"
+    },
+    {
+      "id": "verify",
+      "label": "Check with official regulators"
+    },
+    {
+      "id": "block_report",
+      "label": "Block and report"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Reported. The \"AI\" was a man with a spreadsheet.",
+      "mirageSays": "My robot costume!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "No regulator had heard of Pivlo AI, except on a warning list.",
+      "mirageSays": "Warning lists, again!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "The key emptied the exchange account within an hour.",
+      "mirageSays": "Beep boop, thanks!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "A key with withdrawal rights is a key to your money. Never share it."
+  },
+  "golden_rule": "Never give anyone an API key that can withdraw, or deposit into a \"bot\" that promises risk-free returns.",
+  "quick_check": {
+    "q": "A trading bot needs your API key with withdrawal rights. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Give it, bots need access"
+      },
+      {
+        "id": "b",
+        "text": "Refuse: that key can take your money"
+      }
+    ],
+    "answer": "b",
+    "explain": "Real tools never need withdrawal rights."
+  },
+  "hints": {
+    "nudge": "What could someone do with that key?",
+    "glow_order": [
+      "apikey",
+      "norisk",
+      "ad",
+      "or",
+      "excuse"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-data-2024",
+    "ic3-2024"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the bot",
+      "title": "Pivlo AI",
+      "rows": [
+        {
+          "k": "Handle",
+          "v": "Has \"official\" in it",
+          "clue": "handle"
+        },
+        {
+          "k": "Picture",
+          "v": "A robot emoji",
+          "clue": "avatar"
+        },
+        {
+          "k": "The ad",
+          "v": "Enormous returns",
+          "clue": "ad"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the claims",
+      "title": "What it promises",
+      "rows": [
+        {
+          "k": "Claim",
+          "v": "Risk-free",
+          "clue": "norisk"
+        },
+        {
+          "k": "API key",
+          "v": "Can move your money out",
+          "clue": "apikey"
+        },
+        {
+          "k": "Real bots",
+          "v": "Never need withdrawal rights"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the excuses",
+      "title": "And the ask",
+      "rows": [
+        {
+          "k": "Excuse",
+          "v": "A vague one",
+          "clue": "excuse"
+        },
+        {
+          "k": "Instead",
+          "v": "Hand them your coins",
+          "clue": "or"
+        },
+        {
+          "k": "Real platforms",
+          "v": "Show the risks clearly"
+        }
+      ]
+    }
+  ]
+}

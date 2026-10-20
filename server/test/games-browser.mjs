@@ -163,16 +163,16 @@ await page.screenshot({ path: shots + '/home_menu.png', clip: { x: 0, y: 0, widt
 
 // ---- Scam Lab chapter mission: a chapter case played for the mission, from the Season page link ----
 await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])'); await page.evaluate(() => document.querySelectorAll('#mg details').forEach((d) => { d.open = true; }));
-const chCard = page.locator('#mg .mrow', { hasText: 'Chapter 1' });
-check(/0 of 6 cases/.test(await chCard.innerText()) && (await chCard.locator('a').getAttribute('href')) === '/games/scam-lab/?mission=scam-lab-ch1', 'Season page: Scam Lab chapter 1 mission card shows 0 of 6 cases and opens the chapter');
+const chCard = page.locator('#mg .mrow', { hasText: 'Season Chapters' });
+check(/0 of 20 cases/.test(await chCard.innerText()) && /15 points every 5 cases/.test(await chCard.innerText()) && (await chCard.locator('a').getAttribute('href')) === '/games/scam-lab/?mission=scam-lab-season', 'Season page: the Scam Lab card shows 0 of 20 cases, 15 points every 5 cases, and opens the chapters');
 check(/Opening soon/.test(await page.locator('#mg').innerText()) === false, 'Season page: nothing is locked while the Season is in test mode');
-await page.goto(base + '/games/scam-lab/?mission=scam-lab-ch1&qa');
+await page.goto(base + '/games/scam-lab/?mission=scam-lab-season&qa');
 await page.waitForFunction(() => window.__lab, null, { timeout: 30000 }); await page.waitForTimeout(800);
-check(!/mission=/.test(page.url()) && /qa/.test(page.url()), 'Scam Lab: the mission link opens the chapter page and tidies the address');
+check(!/mission=/.test(page.url()) && /qa/.test(page.url()), 'Scam Lab: the mission link tidies the address');
 await page.waitForFunction(() => { const e = document.getElementById('chseason'); return e && !e.hidden; }, null, { timeout: 15000 });
-check(/0 of 6 cases counted/.test(await page.locator('#chseason').innerText()) && /3 cases: \+25/.test(await page.locator('#chseason').innerText()), 'Scam Lab chapter page: a line says "' + (await page.locator('#chseason').innerText()).slice(0, 70) + '..." (Season progress, separate from this device\u2019s dots)');
-await page.evaluate(() => ['c1-01', 'c1-02', 'c1-03', 'c1-04', 'c1-05', 'c1-06'].forEach((id) => window.__lab.store.record(id, 3, 900)));   // like a device that already played all of chapter 1 before the Season
-await page.evaluate(() => window.__lab.caseIntro('c1-03'));
+check(/0 of 20 cases counted/.test(await page.locator('#chseason').innerText()) && /15 points every 5 cases/.test(await page.locator('#chseason').innerText()), 'Scam Lab chapter page: a line says "' + (await page.locator('#chseason').innerText()).slice(0, 70) + '..." (Season progress, separate from this device\u2019s dots)');
+await page.evaluate(() => Array.from({ length: 20 }, (_, i) => 'c1-' + String(i + 1).padStart(2, '0')).forEach((id) => window.__lab.store.record(id, 3, 900)));   // like a device that already played all of chapter 1 before the Season
+await page.evaluate(() => window.__lab.caseIntro('c1-01'));
 await page.waitForSelector('#btn-go', { timeout: 30000 }); await page.click('#btn-go');
 for (let i = 0; i < 12 && !(await page.locator('#btn-decide').isVisible()); i++) {   // Milo's intro, the notification and similar steps: press whatever is offered
   const next = page.locator('#notif:visible, button:visible:text-is("Begin"), button:visible:text-is("Next"), button:visible:text-is("Got it")').first();
@@ -188,13 +188,13 @@ await page.waitForSelector('.choice[data-option="' + ch3.quick + '"]', { timeout
 await page.waitForSelector('#btn-result', { timeout: 15000 }); await page.click('#btn-result');
 await page.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 20000 });
 const chLine = await page.locator('#seasonline').innerText();
-check(/Next: Case 4/.test(await page.locator('#btn-next').innerText()), 'Scam Lab: replaying case 3 of a finished chapter offers "Next: Case 4", not another chapter ("' + (await page.locator('#btn-next').innerText()) + '")');
-check(/Case counted for the chapter mission: 1 of 6 cases done/.test(chLine), 'Scam Lab chapter case result says: "' + chLine.slice(0, 80) + '"');
+check(/Next: Case 2/.test(await page.locator('#btn-next').innerText()), 'Scam Lab: replaying case 1 of a finished chapter offers "Next: Case 2", not another chapter ("' + (await page.locator('#btn-next').innerText()) + '")');
+check(/Chapter 1: 1 of 20 cases/.test(chLine), 'Scam Lab chapter case result says: "' + chLine.slice(0, 80) + '"');
 const chRow = db.prepare("SELECT r.score, r.seed FROM game_runs r WHERE r.mode = 'weekly' AND r.game_id = 'scam-lab' AND r.status = 'accepted'").get();
 const chScore = await page.evaluate(() => Number(document.getElementById('total').firstChild.textContent));
-check(chRow && chRow.seed === 'scam-lab-ch1:c1-03' && chRow.score === chScore, 'Scam Lab chapter case: the server scored it again and got the same score (' + chScore + ')');
+check(chRow && chRow.seed === 'scam-lab-season:c1-01' && chRow.score === chScore, 'Scam Lab chapter case: the server scored it again and got the same score (' + chScore + ')');
 await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])'); await page.evaluate(() => document.querySelectorAll('#mg details').forEach((d) => { d.open = true; }));
-check(/1 of 6 cases/.test(await page.locator('#mg .mrow', { hasText: 'Chapter 1' }).innerText()), 'Season page: the chapter card now shows 1 of 6 cases');
+check(/1 of 20 cases/.test(await page.locator('#mg .mrow', { hasText: 'Season Chapters' }).innerText()), 'Season page: the Scam Lab card now shows 1 of 20 cases');
 
 // ---- Weekly Challenge (Full Moon), reached from the Season page ----
 RULES.fullMoonWeekly.silverBand = 0;   // test only: any finished try reaches stage one (a real Silver needs a skilled player)

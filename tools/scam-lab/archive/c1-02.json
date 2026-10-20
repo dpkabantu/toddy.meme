@@ -1,0 +1,127 @@
+{
+  "id": "c1-02",
+  "type": "rush",
+  "chapter": 1,
+  "difficulty": 1,
+  "title": "Morning Inbox",
+  "seconds": 60,
+  "intro": [
+    "Busy morning, Toddy. Ten messages, one minute.",
+    "Swipe left if it's a scam, right if it's safe. Or tap the buttons.",
+    "Careful: some of them are honest. Don't cry wolf."
+  ],
+  "cards": [
+    {
+      "id": "r1",
+      "app": "SMS",
+      "from": "Zelvora",
+      "text": "Your account is LOCKED. Verify within 1 hour: zelvora-secure.co/login",
+      "scam": true,
+      "why": "Look-alike link plus a deadline. Real apps tell you to open the app, not a strange link."
+    },
+    {
+      "id": "r2",
+      "app": "Chirp",
+      "from": "@zelvora ☑",
+      "text": "Planned maintenance tonight, 1–2 AM. Swaps pause for an hour. No action needed.",
+      "scam": false,
+      "why": "The official handle with Plenvo's real badge, and it asks you for nothing."
+    },
+    {
+      "id": "r3",
+      "app": "Plenvo DM",
+      "from": "Admin Luna 💜",
+      "text": "You won the community raffle! 🎉 Send 10 ZLV to cover the fee and claim your prize.",
+      "scam": true,
+      "why": "Real prizes never cost money to claim, and admins don't DM winners asking for coins."
+    },
+    {
+      "id": "r4",
+      "app": "SMS",
+      "from": "Kiko (friend)",
+      "text": "Movie night Friday? I'll bring the popcorn 🍿",
+      "scam": false,
+      "why": "A friend you know, asking for nothing. Not every message is a trap."
+    },
+    {
+      "id": "r5",
+      "app": "Plenvo DM",
+      "from": "Hedrio Support",
+      "text": "We detected suspicious activity. Reply with your recovery phrase so we can secure your funds.",
+      "scam": true,
+      "why": "No real support ever asks for your recovery phrase, whatever the reason."
+    },
+    {
+      "id": "r6",
+      "app": "Email",
+      "from": "no-reply@hedrio.app",
+      "text": "New login from Lisbon. If this wasn't you, open the Hedrio app and go to Security.",
+      "scam": false,
+      "why": "From the real domain, no link to click, and it sends you to the app you already have."
+    },
+    {
+      "id": "r7",
+      "app": "SMS",
+      "from": "+44 7700 900123",
+      "text": "🎁 Free airdrop waiting for you! Claim at kelvaro-airdrop.claim-now.xyz. Only 5 min left!",
+      "scam": true,
+      "why": "Unknown sender, strange link, and a countdown. Free money that expires in minutes is bait."
+    },
+    {
+      "id": "r8",
+      "app": "Plenvo DM",
+      "from": "HR Recruiter Elena",
+      "text": "Earn €250 a day just liking posts! Pay €49 registration and start today.",
+      "scam": true,
+      "why": "Real jobs never make you pay to start. Easy money for likes is a task scam."
+    },
+    {
+      "id": "r9",
+      "app": "SMS",
+      "from": "Zelvora",
+      "text": "482913 is your Zelvora login code. Never share this code with anyone, not even Zelvora staff.",
+      "scam": false,
+      "why": "You just logged in, and the message itself warns you never to share the code. Use it, don't share it."
+    },
+    {
+      "id": "r10",
+      "app": "SMS",
+      "from": "Unknown number",
+      "text": "Hi Mum, I dropped my phone 😭 this is my new number. Can you send €800 urgently? I'll explain later.",
+      "scam": true,
+      "why": "A new number plus an urgent money request. Call the old number first to check it's really them."
+    }
+  ],
+  "golden_rule": "Urgent plus money, codes or links means stop and check. Calm messages that ask for nothing are usually fine.",
+  "quick_check": {
+    "q": "A text from a new number says it's your cousin and needs money urgently. What's the best first step?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Send a small amount, just in case"
+      },
+      {
+        "id": "b",
+        "text": "Call your cousin's old number to check"
+      },
+      {
+        "id": "c",
+        "text": "Reply asking them to prove it"
+      },
+      {
+        "id": "d",
+        "text": "Ignore all messages from family"
+      }
+    ],
+    "answer": "b",
+    "explain": "Check through a way you already trust. A scammer can answer questions; they can't answer your cousin's real phone."
+  },
+  "sources": [
+    "ftc-phishing",
+    "cafc-wallet",
+    "ftc-crypto",
+    "ftc-family",
+    "ftc-jobs"
+  ],
+  "checked_on": "2026-10-18"
+}

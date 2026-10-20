@@ -1,0 +1,275 @@
+{
+  "id": "c2-05",
+  "type": "hunt",
+  "chapter": 2,
+  "difficulty": 2,
+  "title": "Coffee, Not Coins",
+  "disguise": null,
+  "intro": [
+    "Toddy matched with someone on the Spark dating app.",
+    "After Sophie, it's tempting to suspect everyone. But most people are just people.",
+    "Sniff carefully. Is this a con, or just a coffee?"
+  ],
+  "notify": {
+    "app": "Spark",
+    "from": "Marco · Spark ✓",
+    "text": "Hi! Loved your café photos ☕"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "Marco, 29"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "verified",
+          "text": "Photo verified by Spark ✓"
+        }
+      ],
+      "avatar": {
+        "glyph": "🙂",
+        "clue": "avatar"
+      }
+    },
+    "banner": [
+      {
+        "clue": "match",
+        "text": "You both liked each other"
+      }
+    ],
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "compliment",
+            "text": "Hi! Loved your café photos ☕ Is that the place by the river?"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "nomoney",
+            "text": "Just so you know, I never talk money or crypto on here 😅"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "public",
+            "text": "Want to meet for a coffee at a busy café on Saturday afternoon?"
+          },
+          " ",
+          {
+            "clue": "friend",
+            "text": "Bring a friend if you like!"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "verified": {
+      "label": "App-verified photo",
+      "strength": "harmless",
+      "lens": "Spark itself checked the photo matches the person.",
+      "why": "The app's own check is stronger evidence than any claim."
+    },
+    "match": {
+      "label": "Mutual match",
+      "strength": "harmless",
+      "lens": "You both liked each other in the app.",
+      "why": "You chose to connect. He didn't come out of nowhere."
+    },
+    "compliment": {
+      "label": "Compliment",
+      "strength": "harmless",
+      "lens": "He noticed something real from your photos.",
+      "why": "Friendly and specific. Normal on a dating app."
+    },
+    "nomoney": {
+      "label": "No money talk",
+      "strength": "harmless",
+      "lens": "He says he never talks money on dating apps.",
+      "why": "The opposite of what a romance-investment scammer wants."
+    },
+    "public": {
+      "label": "Meet in public",
+      "strength": "harmless",
+      "lens": "A busy café, in the afternoon.",
+      "why": "Meeting in a public place is what safety guides recommend."
+    },
+    "friend": {
+      "label": "Bring a friend",
+      "strength": "harmless",
+      "lens": "He invites you to bring a friend.",
+      "why": "Scammers try to isolate you. This does the opposite."
+    },
+    "name": {
+      "label": "Name and age",
+      "strength": "harmless",
+      "lens": "A first name and age.",
+      "why": "Normal on dating apps."
+    },
+    "avatar": {
+      "label": "Profile picture",
+      "strength": "harmless",
+      "lens": "A smiley profile picture.",
+      "why": "Proves nothing alone, but the app verified it."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Reply and meet at the busy café"
+    },
+    {
+      "id": "verify",
+      "label": "Suggest a quick video call first"
+    },
+    {
+      "id": "ignore",
+      "label": "Don't reply"
+    },
+    {
+      "id": "block_report",
+      "label": "Report him as a scammer"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "Saturday coffee was lovely. Marco never mentioned money once.",
+      "toddy": "happy"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "CHECKED",
+      "line": "A two-minute video call, then coffee. Careful and kind.",
+      "toddy": "happy"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "SAFE",
+      "line": "Nothing bad happened. It was just a real person saying hi.",
+      "toddy": "happy"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "Marco was real. When we treat everyone as a scammer, the real scams get lost in the noise.",
+      "mirageSays": "Suspect everyone? I love it."
+    }
+  },
+  "what_if": {
+    "block_report": "Nothing here asked for money, secrecy or a move to another app. Those are the signs that matter.",
+    "ignore": "Ignoring was safe. But nothing here was a warning sign: public meeting, no money talk, app-verified."
+  },
+  "golden_rule": "Watch what people ask for, not how friendly they are. No money, no secrecy, meet in public: that's what genuine looks like.",
+  "quick_check": {
+    "q": "Which of these is the strongest sign Marco is genuine?",
+    "options": [
+      {
+        "id": "a",
+        "text": "He paid you a compliment"
+      },
+      {
+        "id": "b",
+        "text": "He asked for nothing and suggested meeting in public"
+      },
+      {
+        "id": "c",
+        "text": "He has a nice profile picture"
+      }
+    ],
+    "answer": "b",
+    "explain": "Compliments and photos can be faked. Asking for nothing and meeting in public is hard for a scammer to fake."
+  },
+  "hints": {
+    "nudge": "What is Marco actually asking for?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check profile",
+      "title": "Marco on Spark",
+      "rows": [
+        {
+          "k": "Photo check",
+          "v": "Spark matched the photo to the person",
+          "clue": "verified"
+        },
+        {
+          "k": "You both",
+          "v": "Liked each other in the app",
+          "clue": "match"
+        },
+        {
+          "k": "Profile",
+          "v": "First name and age",
+          "clue": "name"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the plan",
+      "title": "Where and who",
+      "rows": [
+        {
+          "k": "Where",
+          "v": "A busy café, in the afternoon",
+          "clue": "public"
+        },
+        {
+          "k": "Bring a friend?",
+          "v": "He invites you to",
+          "clue": "friend"
+        },
+        {
+          "k": "Money talk",
+          "v": "He never does it on dating apps",
+          "clue": "nomoney"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "Spark safe-dating tips",
+      "rows": [
+        {
+          "k": "Meet where?",
+          "v": "Somewhere public"
+        },
+        {
+          "k": "Bring someone?",
+          "v": "Yes, tell a friend"
+        }
+      ]
+    }
+  ]
+}

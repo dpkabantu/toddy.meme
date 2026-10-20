@@ -1,0 +1,391 @@
+{
+  "id": "c8-06",
+  "type": "boss",
+  "chapter": 8,
+  "difficulty": 3,
+  "title": "The Pyramid Collapses",
+  "disguise": "admin",
+  "disguise2": "support",
+  "intro": [
+    "The final case. Mirage's biggest pyramid is collapsing, and he has one last trick.",
+    "Thousands of members, frozen withdrawals, and a \"solution\".",
+    "Collect the clues and unmask him, once and for all."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Pelmora Circle Official",
+    "text": "📢 Withdrawals paused for an upgrade"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "official",
+          "text": "Pelmora Circle Official",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        "announcement channel"
+      ],
+      "avatar": {
+        "glyph": "⭕",
+        "clue": "avatar"
+      }
+    },
+    "context": "You joined Pelmora Circle two months ago. Your balance shows 340 ZLV.",
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "paused",
+            "text": "📢 Withdrawals are paused for a system upgrade."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "migrate",
+            "text": "Migrate to our new token ZLX by depositing 50% more"
+          },
+          " ",
+          {
+            "clue": "or",
+            "text": "or lose your balance."
+          }
+        ]
+      }
+    ]
+  },
+  "duel": {
+    "start": "d1",
+    "nodes": {
+      "d1": {
+        "rename": "Pelmora Circle Support",
+        "say": [
+          {
+            "sys": [
+              "Pelmora Circle Support messaged you"
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "recruit",
+                "text": "Bring 2 new members and your withdrawals unlock faster 🙏"
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Why do withdrawals need new members?",
+            "next": "d2"
+          },
+          {
+            "text": "OK, depositing to migrate",
+            "next": "d3"
+          },
+          {
+            "text": "Stop paying and report it",
+            "end": "block_report"
+          }
+        ]
+      },
+      "d2": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "admit",
+                "text": "New deposits help pay out older members, that's how the circle works 😅"
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "That's a Ponzi. Report.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll report it to the police myself",
+            "end": "verify"
+          },
+          {
+            "text": "Fine, depositing",
+            "next": "d3"
+          }
+        ]
+      },
+      "d3": {
+        "rename": "Asset Recovery Lawyers",
+        "disguise": "support",
+        "say": [
+          {
+            "sys": [
+              {
+                "clue": "swap",
+                "text": "Pelmora Circle shut down. \"Asset Recovery Lawyers\" messaged you the next day."
+              }
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "lawyer",
+                "text": "We're suing Pelmora Circle. Pay €200 to join the case and get your money back."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Pay €200",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Recovery fees are the last trick. Report.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll go to the police directly",
+            "end": "verify"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "paused": {
+      "label": "Withdrawals paused",
+      "strength": "strong",
+      "lens": "You can't take money out.",
+      "why": "Frozen withdrawals are how schemes collapse."
+    },
+    "migrate": {
+      "label": "Deposit more to \"migrate\"",
+      "strength": "strong",
+      "lens": "Pay more to keep your balance.",
+      "why": "Asking for more money when you can't withdraw is a trap."
+    },
+    "or": {
+      "label": "\"Or lose it\"",
+      "strength": "strong",
+      "lens": "A threat.",
+      "why": "Pressure again."
+    },
+    "recruit": {
+      "label": "Recruit to unlock",
+      "strength": "strong",
+      "lens": "New members unlock your money.",
+      "why": "That proves the money comes from newcomers."
+    },
+    "admit": {
+      "label": "New deposits pay old members",
+      "strength": "strong",
+      "lens": "They admit it.",
+      "why": "That's the definition of a Ponzi scheme."
+    },
+    "swap": {
+      "label": "\"Lawyers\" appear",
+      "strength": "strong",
+      "lens": "Right after the collapse.",
+      "why": "Recovery scams target victims of the first scam."
+    },
+    "lawyer": {
+      "label": "Pay to join a lawsuit",
+      "strength": "strong",
+      "lens": "A fee to get money back.",
+      "why": "Real help doesn't charge you up front to recover scam losses."
+    },
+    "official": {
+      "label": "\"Official\" channel",
+      "strength": "harmless",
+      "lens": "Their announcement channel.",
+      "why": "It's really them; that's the problem."
+    },
+    "avatar": {
+      "label": "Circle logo",
+      "strength": "harmless",
+      "lens": "A circle.",
+      "why": "Proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "open_chat",
+      "label": "Reply to support",
+      "goto": "duel"
+    },
+    {
+      "id": "verify",
+      "label": "Report it to the police"
+    },
+    {
+      "id": "block_report",
+      "label": "Stop paying and report Pelmora Circle"
+    },
+    {
+      "id": "go_ahead",
+      "label": "Pay",
+      "hidden": true
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "caught",
+      "stamp": "CASE CLOSED",
+      "line": "Not another coin went in. The reports helped investigators find the organisers.",
+      "mirageSays": "My last circle… broken!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The police took the report and warned others. Toddy paid nothing more.",
+      "mirageSays": "The police, again!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "The migration fee and the \"lawyer\" fee both went to Mirage.",
+      "mirageSays": "Full circle!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "When withdrawals freeze, the answer is never \"pay more\". Stop and report."
+  },
+  "board": {
+    "q": "The final board: what's really going on?",
+    "verdicts": [
+      {
+        "id": "scam",
+        "text": "A Ponzi scheme collapses, then fake lawyers come for victims"
+      },
+      {
+        "id": "real",
+        "text": "A real upgrade and real lawyers"
+      },
+      {
+        "id": "unsure",
+        "text": "Not enough evidence"
+      }
+    ],
+    "answer": "scam",
+    "pick": 3,
+    "explain": "Frozen withdrawals, pay-more \"migration\", recruit-to-unlock, then a recovery fee. The whole con in one case."
+  },
+  "golden_rule": "When you can't withdraw, never pay more, and never pay anyone to get it back. Stop and report.",
+  "quick_check": {
+    "q": "A scheme freezes withdrawals and asks for a deposit to \"migrate\". What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay to keep the balance"
+      },
+      {
+        "id": "b",
+        "text": "Stop paying and report it"
+      }
+    ],
+    "answer": "b",
+    "explain": "Paying more only adds to the loss."
+  },
+  "hints": {
+    "nudge": "Where is the money for withdrawals coming from?",
+    "glow_order": [
+      "admit",
+      "paused",
+      "migrate",
+      "recruit",
+      "lawyer",
+      "swap"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-data-2024",
+    "ic3-2024",
+    "cafc-wallet"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the channel",
+      "title": "Pelmora Circle Official",
+      "rows": [
+        {
+          "k": "It is",
+          "v": "Their announcement channel",
+          "clue": "official"
+        },
+        {
+          "k": "Money out",
+          "v": "Paused",
+          "clue": "paused"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the new rules",
+      "title": "What they ask",
+      "rows": [
+        {
+          "k": "To keep your balance",
+          "v": "Pay more",
+          "clue": "migrate"
+        },
+        {
+          "k": "Or",
+          "v": "Lose it",
+          "clue": "or"
+        },
+        {
+          "k": "To unlock",
+          "v": "Recruit new members",
+          "clue": "recruit"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check what they admit",
+      "title": "And what comes next",
+      "rows": [
+        {
+          "k": "Real recovery help",
+          "v": "Never charges you up front"
+        },
+        {
+          "k": "They admit",
+          "v": "New money pays the older members",
+          "clue": "admit"
+        },
+        {
+          "k": "Right after",
+          "v": "A \"lawyer\" appears",
+          "clue": "swap"
+        },
+        {
+          "k": "Their fee",
+          "v": "To get money back",
+          "clue": "lawyer"
+        }
+      ]
+    }
+  ]
+}

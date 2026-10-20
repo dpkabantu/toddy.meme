@@ -1,0 +1,373 @@
+{
+  "id": "c1-03",
+  "type": "hunt",
+  "chapter": 1,
+  "difficulty": 2,
+  "title": "Two Lunas",
+  "disguise": "admin",
+  "intro": [
+    "You asked a question in the Fenmira Club group. Now two accounts called Luna say they're the admin.",
+    "One is real. One is Mirage in a cap. Compare them side by side.",
+    "Sniff the details, then decide."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Luna ✦ ADMIN",
+    "text": "Saw your question! I can fix it for you here in DMs 💜"
+  },
+  "screen": {
+    "app": "compare",
+    "context": "Searching \"Luna\" in the Fenmira Club group shows two profiles.",
+    "panels": [
+      {
+        "label": "Profile A",
+        "avatar": {
+          "glyph": "🌙",
+          "clue": "photo_a"
+        },
+        "rows": [
+          {
+            "k": "Name",
+            "v": [
+              "Luna ✦ Fenmira"
+            ]
+          },
+          {
+            "k": "Handle",
+            "v": [
+              {
+                "clue": "handle_a",
+                "text": "@luna_moonbeam"
+              }
+            ]
+          },
+          {
+            "k": "Role",
+            "v": [
+              {
+                "clue": "role_a",
+                "text": "🛡 Group admin (set by Plenvo)"
+              }
+            ]
+          },
+          {
+            "k": "Joined",
+            "v": [
+              {
+                "clue": "joined_a",
+                "text": "March 2023"
+              }
+            ]
+          },
+          {
+            "k": "Followers",
+            "v": [
+              "12.4K"
+            ]
+          }
+        ],
+        "note": [
+          {
+            "clue": "bio_a",
+            "text": "\"I'll never DM you first. Report anyone who does.\""
+          }
+        ]
+      },
+      {
+        "label": "Profile B",
+        "avatar": {
+          "glyph": "🌙",
+          "clue": "photo_b"
+        },
+        "rows": [
+          {
+            "k": "Name",
+            "v": [
+              {
+                "clue": "name_b",
+                "text": "Luna ✦ ADMIN"
+              }
+            ]
+          },
+          {
+            "k": "Handle",
+            "v": [
+              {
+                "clue": "handle_b",
+                "text": "@luna_moonbearn"
+              }
+            ]
+          },
+          {
+            "k": "Role",
+            "v": [
+              {
+                "clue": "role_b",
+                "text": "Member"
+              }
+            ]
+          },
+          {
+            "k": "Joined",
+            "v": [
+              {
+                "clue": "joined_b",
+                "text": "3 days ago"
+              }
+            ]
+          },
+          {
+            "k": "Followers",
+            "v": [
+              "41"
+            ]
+          }
+        ],
+        "note": [
+          {
+            "clue": "dm_b",
+            "text": "Messaged you: \"I can fix it for you here in DMs 💜\""
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "handle_b": {
+      "label": "rn looks like m",
+      "strength": "strong",
+      "lens": "@luna_moonbea-r-n. Squeezed together, \"rn\" looks just like \"m\".",
+      "why": "Look-alike handles swap letters: rn for m, 0 for o, l for I."
+    },
+    "joined_b": {
+      "label": "Joined 3 days ago",
+      "strength": "strong",
+      "lens": "This account is 3 days old. The real admin has been here since 2023.",
+      "why": "A brand-new account claiming an important role is a warning sign."
+    },
+    "role_b": {
+      "label": "Not really an admin",
+      "strength": "strong",
+      "lens": "Plenvo lists this account as a plain Member.",
+      "why": "The app's own role label can't be faked. A name can."
+    },
+    "name_b": {
+      "label": "ADMIN typed in name",
+      "strength": "strong",
+      "lens": "\"ADMIN\" is just typed into the display name.",
+      "why": "Anyone can write ADMIN in their name."
+    },
+    "dm_b": {
+      "label": "DMed you first",
+      "strength": "strong",
+      "lens": "This one messaged you privately, offering to fix things in DMs.",
+      "why": "Real admins answer in the group, not in private messages."
+    },
+    "photo_b": {
+      "label": "Same photo",
+      "strength": "harmless",
+      "lens": "Exactly the same moon picture as Profile A.",
+      "why": "A copied photo takes one second. On its own it proves nothing."
+    },
+    "photo_a": {
+      "label": "Moon photo",
+      "strength": "harmless",
+      "lens": "A moon picture.",
+      "why": "Profile photos are easy to copy, so they don't prove who's real."
+    },
+    "handle_a": {
+      "label": "@luna_moonbeam",
+      "strength": "harmless",
+      "lens": "@l-u-n-a _ m-o-o-n-b-e-a-m. Every letter checks out.",
+      "why": "Spelled correctly, letter by letter."
+    },
+    "role_a": {
+      "label": "Admin set by Plenvo",
+      "strength": "harmless",
+      "lens": "Plenvo itself shows this account as a group admin.",
+      "why": "A role set by the app is real evidence it's the admin."
+    },
+    "joined_a": {
+      "label": "Since 2023",
+      "strength": "harmless",
+      "lens": "Joined March 2023.",
+      "why": "An older account fits a long-time admin."
+    },
+    "bio_a": {
+      "label": "Never DMs first",
+      "strength": "harmless",
+      "lens": "The bio says: I'll never DM you first.",
+      "why": "Real admins often warn about exactly this trick."
+    }
+  },
+  "actions": [
+    {
+      "id": "pick_b",
+      "label": "B is the admin. Reply to B's DM",
+      "trap": true
+    },
+    {
+      "id": "verify",
+      "label": "Not sure. Ask in the main group chat"
+    },
+    {
+      "id": "block_report",
+      "label": "A is the real admin. Report B to the group"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "trap": {
+    "title": "Fenmira Club · Member check",
+    "url": "fenmira-verify.club/check",
+    "ask": "Luna sent this link: connect your wallet to prove you're a real member.",
+    "go": "Connect wallet",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "The real Luna removed the fake account and warned the whole group. Nice spotting.",
+      "mirageSays": "How did you tell us apart?!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "In the group, the real Luna replied: \"That's not me! Reporting it now.\"",
+      "mirageSays": "Busted in public. Ugh."
+    },
+    "pick_b": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "The \"member check\" link drained the wallet. Fake Luna vanished an hour later.",
+      "mirageSays": "Admin powers, activate!"
+    }
+  },
+  "what_if": {
+    "pick_b": "Comparing the handle letter by letter would have shown the fake: luna_moonbea-r-n.",
+    "verify": "Asking in the group was safe. Reporting B too gets the fake removed for everyone."
+  },
+  "golden_rule": "Check the handle letter by letter. Look-alikes swap rn for m, 0 for o, l for I.",
+  "quick_check": {
+    "q": "Which of these is a look-alike of @zelvora?",
+    "options": [
+      {
+        "id": "a",
+        "text": "@zelvora"
+      },
+      {
+        "id": "b",
+        "text": "@zelv0ra"
+      },
+      {
+        "id": "c",
+        "text": "Neither"
+      }
+    ],
+    "answer": "b",
+    "explain": "The zero in \"zelv0ra\" pretends to be the letter \"o\". Read handles slowly, letter by letter."
+  },
+  "hints": {
+    "nudge": "Compare the two handles slowly. Every letter.",
+    "glow_order": [
+      "handle_b",
+      "role_b",
+      "joined_b",
+      "dm_b",
+      "name_b"
+    ]
+  },
+  "sources": [
+    "ftc-impersonator",
+    "cafc-wallet"
+  ],
+  "checked_on": "2026-10-13",
+  "decide_q": "Which Luna is real, and what will you do?",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Compare handles",
+      "title": "Letter by letter",
+      "rows": [
+        {
+          "k": "Profile A",
+          "v": "@luna_moonbeam: every letter checks out",
+          "clue": "handle_a"
+        },
+        {
+          "k": "Profile B",
+          "v": "@luna_moonbea-r-n: \"rn\" looks like \"m\"",
+          "clue": "handle_b"
+        },
+        {
+          "k": "Picture on A",
+          "v": "A moon picture",
+          "clue": "photo_a"
+        },
+        {
+          "k": "Picture on B",
+          "v": "Exactly the same moon",
+          "clue": "photo_b"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check account age",
+      "title": "Who has been here a while?",
+      "rows": [
+        {
+          "k": "Profile A",
+          "v": "Joined March 2023",
+          "clue": "joined_a"
+        },
+        {
+          "k": "Profile B",
+          "v": "3 days old",
+          "clue": "joined_b"
+        },
+        {
+          "k": "Profile B",
+          "v": "Messaged you privately",
+          "clue": "dm_b"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the roles",
+      "title": "What Plenvo itself shows",
+      "rows": [
+        {
+          "k": "Profile A",
+          "v": "Shown as a group admin",
+          "clue": "role_a"
+        },
+        {
+          "k": "Profile B",
+          "v": "A plain member",
+          "clue": "role_b"
+        },
+        {
+          "k": "Name on B",
+          "v": "\"ADMIN\" typed into it",
+          "clue": "name_b"
+        },
+        {
+          "k": "Bio on A",
+          "v": "\"I'll never DM you first\"",
+          "clue": "bio_a"
+        }
+      ]
+    }
+  ]
+}

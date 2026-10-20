@@ -1,4 +1,4 @@
-// Scam Lab case files for the server checks. Generated list: every case in games/scam-lab/cases is imported here, so the server
+// Scam Lab case files for the server checks. Generated list (tools/scam-lab/build.mjs): every case in games/scam-lab/cases is imported here, so the server
 // scores exactly what the game shows. A test fails if a case file is missing from this list (server/test/games.mjs).
 import chapters from '../../games/scam-lab/cases/chapters.json' with { type: 'json' };
 import c1_01 from '../../games/scam-lab/cases/c1-01.json' with { type: 'json' };
@@ -7,6 +7,20 @@ import c1_03 from '../../games/scam-lab/cases/c1-03.json' with { type: 'json' };
 import c1_04 from '../../games/scam-lab/cases/c1-04.json' with { type: 'json' };
 import c1_05 from '../../games/scam-lab/cases/c1-05.json' with { type: 'json' };
 import c1_06 from '../../games/scam-lab/cases/c1-06.json' with { type: 'json' };
+import c1_07 from '../../games/scam-lab/cases/c1-07.json' with { type: 'json' };
+import c1_08 from '../../games/scam-lab/cases/c1-08.json' with { type: 'json' };
+import c1_09 from '../../games/scam-lab/cases/c1-09.json' with { type: 'json' };
+import c1_10 from '../../games/scam-lab/cases/c1-10.json' with { type: 'json' };
+import c1_11 from '../../games/scam-lab/cases/c1-11.json' with { type: 'json' };
+import c1_12 from '../../games/scam-lab/cases/c1-12.json' with { type: 'json' };
+import c1_13 from '../../games/scam-lab/cases/c1-13.json' with { type: 'json' };
+import c1_14 from '../../games/scam-lab/cases/c1-14.json' with { type: 'json' };
+import c1_15 from '../../games/scam-lab/cases/c1-15.json' with { type: 'json' };
+import c1_16 from '../../games/scam-lab/cases/c1-16.json' with { type: 'json' };
+import c1_17 from '../../games/scam-lab/cases/c1-17.json' with { type: 'json' };
+import c1_18 from '../../games/scam-lab/cases/c1-18.json' with { type: 'json' };
+import c1_19 from '../../games/scam-lab/cases/c1-19.json' with { type: 'json' };
+import c1_20 from '../../games/scam-lab/cases/c1-20.json' with { type: 'json' };
 import c2_01 from '../../games/scam-lab/cases/c2-01.json' with { type: 'json' };
 import c2_02 from '../../games/scam-lab/cases/c2-02.json' with { type: 'json' };
 import c2_03 from '../../games/scam-lab/cases/c2-03.json' with { type: 'json' };
@@ -50,4 +64,4 @@ import c8_04 from '../../games/scam-lab/cases/c8-04.json' with { type: 'json' };
 import c8_05 from '../../games/scam-lab/cases/c8-05.json' with { type: 'json' };
 import c8_06 from '../../games/scam-lab/cases/c8-06.json' with { type: 'json' };
 export const CHAPTERS = chapters.chapters;
-export const CASES = { 'c1-01': c1_01, 'c1-02': c1_02, 'c1-03': c1_03, 'c1-04': c1_04, 'c1-05': c1_05, 'c1-06': c1_06, 'c2-01': c2_01, 'c2-02': c2_02, 'c2-03': c2_03, 'c2-04': c2_04, 'c2-05': c2_05, 'c2-06': c2_06, 'c3-01': c3_01, 'c3-02': c3_02, 'c3-03': c3_03, 'c3-04': c3_04, 'c3-05': c3_05, 'c3-06': c3_06, 'c4-01': c4_01, 'c4-02': c4_02, 'c4-03': c4_03, 'c4-04': c4_04, 'c4-05': c4_05, 'c4-06': c4_06, 'c5-01': c5_01, 'c5-02': c5_02, 'c5-03': c5_03, 'c5-04': c5_04, 'c5-05': c5_05, 'c5-06': c5_06, 'c6-01': c6_01, 'c6-02': c6_02, 'c6-03': c6_03, 'c6-04': c6_04, 'c6-05': c6_05, 'c6-06': c6_06, 'c7-01': c7_01, 'c7-02': c7_02, 'c7-03': c7_03, 'c7-04': c7_04, 'c7-05': c7_05, 'c7-06': c7_06, 'c8-01': c8_01, 'c8-02': c8_02, 'c8-03': c8_03, 'c8-04': c8_04, 'c8-05': c8_05, 'c8-06': c8_06 };
+export const CASES = { 'c1-01': c1_01, 'c1-02': c1_02, 'c1-03': c1_03, 'c1-04': c1_04, 'c1-05': c1_05, 'c1-06': c1_06, 'c1-07': c1_07, 'c1-08': c1_08, 'c1-09': c1_09, 'c1-10': c1_10, 'c1-11': c1_11, 'c1-12': c1_12, 'c1-13': c1_13, 'c1-14': c1_14, 'c1-15': c1_15, 'c1-16': c1_16, 'c1-17': c1_17, 'c1-18': c1_18, 'c1-19': c1_19, 'c1-20': c1_20, 'c2-01': c2_01, 'c2-02': c2_02, 'c2-03': c2_03, 'c2-04': c2_04, 'c2-05': c2_05, 'c2-06': c2_06, 'c3-01': c3_01, 'c3-02': c3_02, 'c3-03': c3_03, 'c3-04': c3_04, 'c3-05': c3_05, 'c3-06': c3_06, 'c4-01': c4_01, 'c4-02': c4_02, 'c4-03': c4_03, 'c4-04': c4_04, 'c4-05': c4_05, 'c4-06': c4_06, 'c5-01': c5_01, 'c5-02': c5_02, 'c5-03': c5_03, 'c5-04': c5_04, 'c5-05': c5_05, 'c5-06': c5_06, 'c6-01': c6_01, 'c6-02': c6_02, 'c6-03': c6_03, 'c6-04': c6_04, 'c6-05': c6_05, 'c6-06': c6_06, 'c7-01': c7_01, 'c7-02': c7_02, 'c7-03': c7_03, 'c7-04': c7_04, 'c7-05': c7_05, 'c7-06': c7_06, 'c8-01': c8_01, 'c8-02': c8_02, 'c8-03': c8_03, 'c8-04': c8_04, 'c8-05': c8_05, 'c8-06': c8_06 };

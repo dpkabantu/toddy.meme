@@ -91,7 +91,7 @@ const MISSION = {
 const missionOf = (c) => c.mission || MISSION[c.type === 'boss' || c.type === 'duel' || c.type === 'rush' ? c.type : c.screen && MISSION[c.screen.app] ? c.screen.app : c.type];
 
 // ---------- chapters and unlocking ----------
-// Chapter 1 teaches the basics, so it comes first. After that, every released chapter is open in any order.
+// Every released chapter is open in any order (Season 1: one chapter counts per day, the server decides).
 // Inside a chapter, cases go in order.
 const OPEN = () => CH.chapters.filter((c) => c.status === 'open' && c.cases.length);
 const ALL = () => OPEN().flatMap((c) => c.cases);
@@ -99,7 +99,7 @@ function where(id) { for (const ch of OPEN()) { const i = ch.cases.indexOf(id); 
 const chDone = (ch) => ch.cases.every((id) => store.played(id));
 const chSolved = (ch) => ch.cases.filter((id) => store.played(id)).length;
 const chStars = (ch) => ch.cases.reduce((a, id) => a + store.stars(id), 0);
-function chapterOpen(ch) { const first = OPEN()[0]; return ch === first || chDone(first); }
+function chapterOpen(ch) { return ch.status === 'open' && ch.cases.length > 0; }   // Season 1: every built chapter is open from the start (the server decides when a chapter counts for Season points); cases still go in order inside a chapter
 function unlocked(id) { const w = where(id); if (!w || !chapterOpen(w.ch)) return false; return w.i === 0 || store.played(w.ch.cases[w.i - 1]); }
 const nextIn = (ch) => ch.cases.find((id) => !store.played(id)) || null;
 function nextUp() {
@@ -217,11 +217,13 @@ function seasonLine(ch) {
   T.missions().then((ms) => {
     const el = $('chseason'); if (!el) return;
     if (ms === null) { T.signedIn().then((yes) => { if (yes) return; el.textContent = 'Season 1: sign in on the Season page to earn Season points for this chapter. '; const a = document.createElement('a'); a.href = '/season/'; a.textContent = 'Season page'; el.appendChild(a); el.hidden = false; }); return; }
-    const m = ms.find((x) => x.id === 'scam-lab-ch' + ch.n); if (!m) return;
-    const n = (m.casesDone || []).length, pts = m.stages.map((st) => `${st.label}: +${st.points}`).join(' · ');
-    el.textContent = m.done ? `Season 1: chapter mission done (${n} of ${m.cases.length} cases counted).`
-      : m.state === 'locked' ? `Season 1: this chapter opens for Season points on ${T.istDate(m.opensAt)}. Until then it is practice.`
-      : `Season 1: ${n} of ${m.cases.length} cases counted (${pts}${m.state === 'late' ? ', half points because the week is over' : ''}). Cases you played before signing in count again when you replay them.`;
+    const m = ms.find((x) => x.id === 'scam-lab-season'); if (!m) return;
+    const night = (m.nights || []).find((x) => x.night === ch.n); if (!night) return;   // this chapter is not part of the Season mission (yet)
+    const n = (m.casesDone || []).filter((id) => ch.cases.includes(id)).length, per = (m.stages.find((st) => st.night === ch.n) || { points: 15 }).points;
+    const done = n >= ch.cases.length;
+    el.textContent = done ? `Season 1: this chapter is done (${n} of ${ch.cases.length} cases counted).`
+      : !night.open ? `Season 1: this chapter opens for Season points on ${T.istDate(night.opensAt)}. Until then it is practice.`
+      : `Season 1: ${n} of ${ch.cases.length} cases counted · ${per} points every 5 cases${m.state === 'late' ? ' (half points because the week is over)' : ''}. Cases you played before signing in count again when you replay them.`;
     el.hidden = false;
   });
 }
@@ -252,7 +254,7 @@ function startCase(id) {
   hideAll(); setBg('lab_bg'); gameLayer(true); $('hud').hidden = true; $('phone').hidden = true;
   current = id; setUp(quitCase);
   const c = CASES[id];
-  if (window.ToddySeason && c.chapter) window.ToddySeason.start('scam-lab', { mode: 'weekly', mission: 'scam-lab-ch' + c.chapter, case: id });   // signed-in players only; the server decides if the chapter mission is open
+  if (window.ToddySeason && c.chapter) window.ToddySeason.start('scam-lab', { mode: 'weekly', mission: 'scam-lab-season', case: id });   // signed-in players only; the server decides if this chapter and case count
   if (c.type === 'rush') playRush(c, env); else playCase(c, env);
 }
 function startDaily() {
@@ -485,10 +487,16 @@ async function boot() {
   if (/[?&]play=daily\b/.test(location.search)) {
     history.replaceState(history.state, '', location.pathname + location.search.replace(/([?&])play=daily&?/, '$1').replace(/[?&]$/, '') + location.hash);
     if (store.played(ALL()[0])) caseIntro('daily'); else home();
-  } else if (/[?&]mission=scam-lab-ch\d\b/.test(location.search)) {   // Season page: a chapter mission opens that chapter's page
-    const n = parseInt(location.search.match(/mission=scam-lab-ch(\d)/)[1], 10), ch = CH.chapters.find((x) => x.n === n);
-    history.replaceState(history.state, '', location.pathname + location.search.replace(/([?&])mission=scam-lab-ch\d&?/, '$1').replace(/[?&]$/, '') + location.hash);
-    if (ch && store.played(ALL()[0]) && chapterOpen(ch)) chapterPage(ch); else home();
+  } else if (/[?&]mission=scam-lab-season\b/.test(location.search)) {   // Season page: opens the first chapter that is open and not finished yet
+    history.replaceState(history.state, '', location.pathname + location.search.replace(/([?&])mission=scam-lab-season&?/, '$1').replace(/[?&]$/, '') + location.hash);
+    const T = window.ToddySeason, first = () => (store.played(ALL()[0]) ? CH.chapters.find((x) => chapterOpen(x)) : null);
+    if (!T) { const c = first(); if (c) chapterPage(c); else home(); }
+    else T.missions().then((ms) => {
+      const m = ms && ms.find((x) => x.id === 'scam-lab-season');
+      let ch = null;
+      if (m) for (const nt of m.nights || []) { const c = CH.chapters.find((x) => x.n === nt.night); if (c && nt.open && (m.casesDone || []).filter((id) => c.cases.includes(id)).length < c.cases.length) ch = c; if (ch) break; }
+      ch = ch || first(); if (ch && store.played(ALL()[0]) && chapterOpen(ch)) chapterPage(ch); else home();
+    });
   }
   if (/[?&]qa\b/.test(location.search)) window.__lab = { caseIntro, chapterPage: (n) => chapterPage(CH.chapters.find((c) => c.n === n)), CASES, store, playState, rushState, dailyCase, dayKey, setCalm: (v) => { store.set('calm', v); applySettings(); } };
 }

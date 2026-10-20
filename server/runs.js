@@ -7,7 +7,7 @@ import { planAwards, planUpgrade, ruleVersionId, weekFacts, streakFrom, PLAYED }
 import * as moonBrew from './games/moon-brew.js';
 import * as fullMoon from './games/full-moon.js';
 import * as scamLab from './games/scam-lab.js';
-import { allMissions, isCaseMission, currentSeasonWeek, parseTray, nightOpen, nightOpensMs, dailyFromWeek, findMission, missionState, planMission, claimedStages, finishedCases, missionPublic } from './missions.js';
+import { allMissions, isCaseMission, isSetMission, trayId, currentSeasonWeek, parseTray, nightOpen, nightOpensMs, dailyFromWeek, findMission, missionState, planMission, claimedStages, finishedCases, missionPublic } from './missions.js';
 
 const ADAPTERS = { 'moon-brew': moonBrew, 'full-moon': fullMoon, 'scam-lab': scamLab };
 export const MIN_CASE_MS = 20000;          // a Scam Lab case cannot be finished in less than this (wall clock)
@@ -55,11 +55,11 @@ async function weeklyStart(env, p, body, now, night, sstatus) {
   const state = missionState(sstatus, m, now);
   if (state === 'locked') return json(409, { ok: false, error: 'mission_locked', opensAt: missionPublic(sstatus, m, now).opensAt });
   if (isCaseMission(m) && !m.cases.includes(body.case)) return json(400, { ok: false, error: 'case_not_in_mission' });
-  if (m.kind === 'brewset') {   // Season Nights: the night must be open, and trays go in order inside a night
+  if (isSetMission(m)) {   // Season Nights / Season Chapters: the night must be open, and trays go in order inside a night
     const tr = parseTray(body.case);
     if (!nightOpen(sstatus, m, tr.night, now)) return json(409, { ok: false, error: 'mission_locked', opensAt: isoTime(nightOpensMs(m, tr.night)) });
     if (tr.tray > 1) {
-      const prev = await env.DB.prepare("SELECT 1 x FROM game_runs WHERE player_id = ?1 AND mode = 'weekly' AND status = 'accepted' AND seed = ?2 LIMIT 1").bind(p.id, m.id + ':n' + tr.night + 't' + (tr.tray - 1)).first();
+      const prev = await env.DB.prepare("SELECT 1 x FROM game_runs WHERE player_id = ?1 AND mode = 'weekly' AND status = 'accepted' AND seed = ?2 LIMIT 1").bind(p.id, m.id + ':' + trayId(m, tr.night, tr.tray - 1)).first();
       if (!prev) return json(409, { ok: false, error: 'tray_order', needTray: tr.tray - 1 });
     }
   }
@@ -93,12 +93,12 @@ export async function runFinish(request, env) {
   const [missionId, caseId] = run.gmode === 'weekly' ? String(run.gseed).split(':') : [];
   const mission = run.gmode === 'weekly' ? findMission(missionId, run.game_id) : null;
   if (run.gmode === 'weekly' && !mission) { await reject(env, run, now, 'bad_mission'); return json(422, { ok: false, error: 'bad_log' }); }
-  const v = mission && mission.kind === 'chapter' ? ADAPTERS[run.game_id].verifyCase(caseId, body) : mission && mission.kind === 'brewset' ? ADAPTERS[run.game_id].verifySeasonTray(caseId, body) : ADAPTERS[run.game_id].verify(run.night_key, body, mission ? { seed: mission.seed, twist: mission.twist } : {});
+  const v = mission && (mission.kind === 'chapter' || mission.kind === 'labset') ? ADAPTERS[run.game_id].verifyCase(caseId, body) : mission && mission.kind === 'brewset' ? ADAPTERS[run.game_id].verifySeasonTray(caseId, body) : ADAPTERS[run.game_id].verify(run.night_key, body, mission ? { seed: mission.seed, twist: mission.twist } : {});
   const replayMs = Math.round(performance.now() - t0);
   if (!v.ok) { await reject(env, run, now, v.error); return json(422, { ok: false, error: v.error }); }
   const elapsed = now - run.started_ms;
   if (elapsed < v.seconds * 800 - SLACK_MS) { await reject(env, run, now, 'too_fast'); return json(422, { ok: false, error: 'too_fast' }); }
-  if (mission && mission.kind === 'chapter' && elapsed < MIN_CASE_MS) { await reject(env, run, now, 'too_fast'); return json(422, { ok: false, error: 'too_fast' }); }
+  if (mission && (mission.kind === 'chapter' || mission.kind === 'labset') && elapsed < MIN_CASE_MS) { await reject(env, run, now, 'too_fast'); return json(422, { ok: false, error: 'too_fast' }); }
   if (run.game_id === 'moon-brew' && v.seconds < body.log.length * MIN_SECONDS_PER_TAP) { await reject(env, run, now, 'too_fast'); return json(422, { ok: false, error: 'too_fast' }); }
 
   const logJson = JSON.stringify(v.stored || (run.game_id === 'moon-brew' ? body.log : { drops: body.drops, endTick: body.endTick }));
@@ -156,8 +156,8 @@ export async function runFinish(request, env) {
 async function weeklyFinish(env, p, run, m, v, now, replayMs, plain, counting, caseId) {
   let cases = 0;
   let byNight;
-  if (isCaseMission(m)) { const f = await finishedCases(env, p.id, m); f.add(caseId); cases = f.size; if (m.kind === 'brewset') { byNight = {}; f.forEach((id) => { const t = parseTray(id); byNight[t.night] = (byNight[t.night] || 0) + 1; }); } }
-  const tr = m.kind === 'brewset' ? parseTray(caseId) : null;
+  if (isCaseMission(m)) { const f = await finishedCases(env, p.id, m); f.add(caseId); cases = f.size; if (isSetMission(m)) { byNight = {}; f.forEach((id) => { const t = parseTray(id); byNight[t.night] = (byNight[t.night] || 0) + 1; }); } }
+  const tr = isSetMission(m) ? parseTray(caseId) : null;
   const progress = isCaseMission(m) ? { cases, of: m.cases.length, ...(tr ? { night: tr.night, tray: tr.tray, nightDone: byNight[tr.night], nightOf: m.trays } : {}) } : undefined;
   const answer = (extra) => json(200, { ok: true, score: v.score, band: v.band, bandName: RULES.bandNames[v.band], mission: m.id, progress, ...extra });
   if (!counting) { await env.DB.batch(plain); return answer({ counted: false, reason: 'points_paused', points: { total: 0, items: [] } }); }
@@ -168,7 +168,7 @@ async function weeklyFinish(env, p, run, m, v, now, replayMs, plain, counting, c
   const plan = planMission(m, claimed, { band: v.band, cases, byNight }, state, RULES.seasonMax - tot.t);
   // A newly cleared Season Nights tray also counts as playing tonight: the active-night points and the 5/7-night bonuses.
   let extras = [];
-  if (m.kind === 'brewset' && !(await finishedCases(env, p.id, m)).has(caseId)) {
+  if (isSetMission(m) && !(await finishedCases(env, p.id, m)).has(caseId)) {
     const facts = await weekFacts(env, p.id, m.game, run.week, run.night_key);
     extras = planAwards(RULES, { ...facts, game: m.game, band: 0, seasonTotal: tot.t + plan.reduce((a, x) => a + x.amount, 0) }).filter((x) => ['active_night', 'consistency5', 'consistency7'].includes(x.key));
   }

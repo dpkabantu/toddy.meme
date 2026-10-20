@@ -1,0 +1,247 @@
+{
+  "id": "c1-13",
+  "type": "hunt",
+  "chapter": 1,
+  "difficulty": 2,
+  "title": "The Order You Made",
+  "disguise": null,
+  "intro": [
+    "An email from Meridu Store. You really did order something on Monday.",
+    "But Mirage loves it when you stop trusting the honest ones.",
+    "Sniff carefully. Then decide."
+  ],
+  "notify": {
+    "app": "Mail",
+    "from": "Meridu Store",
+    "text": "Your order #48213 is on its way"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        "Meridu Store"
+      ],
+      "addr": [
+        {
+          "clue": "addr",
+          "text": "orders@meridu.store"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "Your order #48213 is on its way"
+        }
+      ],
+      "time": [
+        "10:41 AM"
+      ]
+    },
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "name",
+            "text": "Hi Toddy,"
+          }
+        ]
+      },
+      {
+        "p": [
+          "Your ",
+          {
+            "clue": "order",
+            "text": "desk lamp from Monday"
+          },
+          " has shipped and should arrive on Friday."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "status",
+            "text": "See the delivery status any time in your Meridu account."
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "nopay",
+            "text": "There is nothing to pay and nothing for you to do."
+          }
+        ]
+      },
+      {
+        "foot": [
+          {
+            "clue": "unsub",
+            "text": "Meridu Store · Unsubscribe · Privacy"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "addr": {
+      "label": "The shop's real address",
+      "strength": "harmless",
+      "lens": "Sent from orders@meridu.store, the shop's real domain.",
+      "why": "A matching domain is real evidence, though scammers can sometimes fake it, so look at what the email asks."
+    },
+    "subject": {
+      "label": "Order number",
+      "strength": "harmless",
+      "lens": "It quotes order #48213.",
+      "why": "You can match it against the order you made. An order you never made would be a warning."
+    },
+    "name": {
+      "label": "Uses your name",
+      "strength": "harmless",
+      "lens": "It greets you by name.",
+      "why": "Real shops know your name. (Scammers can too, so it proves nothing alone.)"
+    },
+    "order": {
+      "label": "Your own order",
+      "strength": "harmless",
+      "lens": "The desk lamp you ordered on Monday.",
+      "why": "It matches something you really did. That is the strongest sign of a genuine message."
+    },
+    "status": {
+      "label": "Check in your account",
+      "strength": "harmless",
+      "lens": "It sends you to your own account, not to a link.",
+      "why": "Pointing you to your account is what honest shops do."
+    },
+    "nopay": {
+      "label": "Asks for nothing",
+      "strength": "harmless",
+      "lens": "No payment, no fee, no code.",
+      "why": "A real delivery notice asks for nothing."
+    },
+    "unsub": {
+      "label": "Unsubscribe link",
+      "strength": "harmless",
+      "lens": "Standard footer links.",
+      "why": "Normal in real shop emails."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Check the status in my Meridu account on Friday"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "Friday came, the lamp arrived, and the account showed it delivered. Nothing to fear.",
+      "toddy": "happy"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "Nothing bad happened. It was a real notice, and the lamp turned up on Friday.",
+      "mirageSays": "Fine. Next!"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was the real Meridu Store. When every message looks like a scam, the real ones get lost too.",
+      "mirageSays": "If you trust nothing, I win anyway."
+    }
+  },
+  "what_if": {
+    "block_report": "It matched your own order, asked for nothing, and sent you to your own account. That calm is what real messages look like.",
+    "ignore": "Ignoring was safe. Recognising a real message is the skill: it matched something you really did."
+  },
+  "golden_rule": "A real delivery notice matches something you ordered, asks for nothing and sends you to your own account.",
+  "quick_check": {
+    "q": "What showed this delivery email was genuine?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It said Hi Toddy"
+      },
+      {
+        "id": "b",
+        "text": "It matched an order you made and asked for nothing"
+      },
+      {
+        "id": "c",
+        "text": "It came in the morning"
+      },
+      {
+        "id": "d",
+        "text": "It had an unsubscribe link"
+      }
+    ],
+    "answer": "b",
+    "explain": "Names, times and footers can all be copied. A match with your own order, and no payment or link, is the real sign."
+  },
+  "hints": {
+    "nudge": "What is this email actually asking you to do?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-shipping"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Sender check",
+      "rows": [
+        {
+          "k": "Sent from",
+          "v": "orders@meridu.store",
+          "clue": "addr"
+        },
+        {
+          "k": "Shop's real domain",
+          "v": "meridu.store"
+        },
+        {
+          "k": "Match?",
+          "v": "Same domain, letter for letter"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What consumer advice says",
+      "rows": [
+        {
+          "k": "A genuine delivery notice",
+          "v": "Matches something you really ordered",
+          "clue": "order"
+        },
+        {
+          "k": "How to check",
+          "v": "Look up the delivery on the shop's own site",
+          "clue": "status"
+        }
+      ]
+    }
+  ]
+}

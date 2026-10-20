@@ -1,0 +1,125 @@
+{
+  "id": "c1-14",
+  "type": "rush",
+  "chapter": 1,
+  "difficulty": 2,
+  "title": "Refund Inbox",
+  "seconds": 60,
+  "intro": [
+    "Ten messages promising money back. One minute.",
+    "Swipe left if it is a scam, right if it is safe. Or tap the buttons.",
+    "Some refunds are real. Do not turn away your own money."
+  ],
+  "cards": [
+    {
+      "id": "r1",
+      "app": "SMS",
+      "from": "Civic Revenue Portal",
+      "text": "You are eligible for a tax refund of $412.80. Claim it now: civic-refund.claims/start",
+      "scam": true,
+      "why": "Tax offices do not text or email to ask you to claim a refund through a link."
+    },
+    {
+      "id": "r2",
+      "app": "Mail",
+      "from": "orders@meridu.store",
+      "text": "We have refunded £18.00 for your returned item to your original payment method. Nothing else to do.",
+      "scam": false,
+      "why": "You returned the item, the money goes back to where it came from, and it asks for nothing."
+    },
+    {
+      "id": "r3",
+      "app": "SMS",
+      "from": "Brightgrid Energy",
+      "text": "You overpaid your bill by $96.20. Enter your bank details to receive it: brightgrid-refund.net",
+      "scam": true,
+      "why": "A real energy company does not ask you for bank details by text to refund an overpayment."
+    },
+    {
+      "id": "r4",
+      "app": "Mail",
+      "from": "Parcelo Express",
+      "text": "Your parcel was delayed. Claim your £5 refund: parcelo-compensation.co/claim",
+      "scam": true,
+      "why": "A refund you never asked for, through a link, from an address that is not the courier's."
+    },
+    {
+      "id": "r5",
+      "app": "SMS",
+      "from": "Orrin Bank",
+      "text": "Your refund of £12.50 from Gadgetz Direct has arrived in your account.",
+      "scam": false,
+      "why": "It tells you something that already happened, and asks for nothing."
+    },
+    {
+      "id": "r6",
+      "app": "Mail",
+      "from": "Streamly Support",
+      "text": "Your subscription renews for $349. Not you? Call 0800 555 0188 now for a refund.",
+      "scam": true,
+      "why": "A big surprise charge and a phone number to call is how support scams begin. Check the number on your own account."
+    },
+    {
+      "id": "r7",
+      "app": "SMS",
+      "from": "Civic Revenue Portal",
+      "text": "Final notice: you will be arrested unless you confirm your refund details at once.",
+      "scam": true,
+      "why": "Government offices do not threaten arrest over a refund."
+    },
+    {
+      "id": "r8",
+      "app": "Mail",
+      "from": "no-reply@vantel.app",
+      "text": "Your overpayment of £4.30 has been credited to your next bill. No action needed.",
+      "scam": false,
+      "why": "It happens inside your account and asks for nothing."
+    },
+    {
+      "id": "r9",
+      "app": "SMS",
+      "from": "Unknown number",
+      "text": "You are owed compensation for a data breach. Send a small processing fee to receive £3,000.",
+      "scam": true,
+      "why": "Real refunds never ask you to pay a fee first."
+    },
+    {
+      "id": "r10",
+      "app": "SMS",
+      "from": "Kiko (friend)",
+      "text": "Sent you the €15 for the cinema tickets, check your account 🎬",
+      "scam": false,
+      "why": "A friend you know. If you want to be sure, check your own account, not a link."
+    }
+  ],
+  "golden_rule": "Real refunds go back to where the money came from. If you must click, pay a fee or give bank details to get money, it is a scam.",
+  "quick_check": {
+    "q": "A text says you overpaid and asks for your bank details to send a refund. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Send the details, it is your money"
+      },
+      {
+        "id": "b",
+        "text": "Reply asking how much"
+      },
+      {
+        "id": "c",
+        "text": "Do not reply. Check your bill or account using contact details you already know"
+      },
+      {
+        "id": "d",
+        "text": "Click the link but only look"
+      }
+    ],
+    "answer": "c",
+    "explain": "Real companies refund to where the money came from. They never need your bank details by text."
+  },
+  "sources": [
+    "ftc-government",
+    "ftc-spamtexts",
+    "ftc-techsupport"
+  ],
+  "checked_on": "2026-10-21"
+}

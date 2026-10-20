@@ -3,89 +3,68 @@
   "type": "hunt",
   "chapter": 1,
   "difficulty": 1,
-  "title": "The Helpful Stranger",
+  "title": "The Redelivery Fee",
   "disguise": "support",
   "intro": [
-    "Evening, Toddy. Your phone just buzzed.",
-    "Tap anything that looks odd to sniff it closer. Pin what's suspicious, clear what's harmless.",
-    "When you're sure, decide what to do."
+    "Afternoon, Toddy. A text just arrived from a courier.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
   ],
   "notify": {
-    "app": "Chirp",
-    "from": "Zelvora Support ✔",
-    "text": "Hi there! 👋 We saw your post. Your wallet is out of sync…"
+    "app": "Messages",
+    "from": "Parcelo",
+    "text": "Your parcel could not be delivered. Pay a small fee…"
   },
   "screen": {
-    "app": "chirp",
+    "app": "sms",
     "head": {
       "name": [
         {
-          "clue": "tick",
-          "text": "Zelvora Support ✔"
+          "clue": "sender",
+          "text": "Parcelo"
         }
-      ],
-      "sub": [
-        {
-          "clue": "handle",
-          "text": "@zelvora_helpdesk_24"
-        }
-      ],
-      "avatar": {
-        "glyph": "☾",
-        "clue": "avatar"
-      }
+      ]
     },
-    "banner": [
-      {
-        "clue": "dm_first",
-        "text": "New message request · you don't follow this account"
-      }
-    ],
-    "context": "Earlier you posted in the Zelvora community chat: \"My swap is stuck 😩 anyone know why?\"",
+    "context": "You have not ordered anything this week.",
     "items": [
       {
         "time": [
           {
             "clue": "time",
-            "text": "2:14 AM"
+            "text": "Today 4:47 PM"
           }
         ]
       },
       {
         "msg": [
+          "Parcelo Express: your parcel ",
           {
-            "clue": "greeting",
-            "text": "Hi there! 👋"
+            "clue": "noorder",
+            "text": "could not be delivered"
           },
-          " We saw your post. Your wallet is out of sync, so your swap is frozen."
+          ". A ",
+          {
+            "clue": "fee",
+            "text": "redelivery fee of €1.20"
+          },
+          " is due."
         ]
       },
       {
         "msg": [
-          "To unlock it, re-sync here: ",
+          "Pay and rebook here: ",
           {
             "clue": "link",
-            "text": "zelvora-sync.help/verify",
+            "text": "parcelo-redeliver.help/track",
             "link": true
           }
         ]
       },
       {
         "msg": [
-          "You'll need to enter ",
-          {
-            "clue": "phrase",
-            "text": "your 12-word recovery phrase"
-          },
-          " so we can restore access."
-        ]
-      },
-      {
-        "msg": [
-          "⏱ Hurry, this fix ",
           {
             "clue": "timer",
-            "text": "expires in",
+            "text": "Your parcel will be returned in",
             "countdown": 900
           }
         ]
@@ -93,65 +72,47 @@
     ]
   },
   "clues": {
-    "dm_first": {
-      "label": "They messaged first",
+    "noorder": {
+      "label": "No parcel expected",
       "strength": "strong",
-      "lens": "You never contacted them. They found your public post and messaged you first.",
-      "why": "Real support teams don't slide into your DMs. Scammers watch public help posts."
+      "lens": "You have not ordered anything. A delivery you never ordered cannot need a fee.",
+      "why": "If you are not expecting a parcel, the message is the first thing to doubt."
     },
-    "tick": {
-      "label": "Fake tick",
+    "fee": {
+      "label": "A tiny fee",
       "strength": "strong",
-      "lens": "The ✔ is just an emoji typed into the name. Plenvo's real verified badge sits after the handle, and there isn't one.",
-      "why": "Anyone can type a tick into a display name."
-    },
-    "handle": {
-      "label": "2-day-old account",
-      "strength": "strong",
-      "lens": "Joined 2 days ago · 3 followers. The official account is @zelvora.",
-      "why": "Brand-new look-alike accounts are a classic impersonation sign."
+      "lens": "A fee of €1.20 sounds harmless. The page it leads to asks for your full card details.",
+      "why": "Small fees are bait: the real target is your card number and security code."
     },
     "link": {
       "label": "Look-alike link",
       "strength": "strong",
-      "lens": "This link really goes to zelvora-sync.help, not the official zelvora.app.",
-      "why": "Always check where a link really goes. Look-alike sites steal your details."
-    },
-    "phrase": {
-      "label": "Asks for recovery phrase",
-      "strength": "strong",
-      "lens": "Whoever has your recovery phrase controls your wallet, forever.",
-      "why": "No real support team ever asks for your recovery phrase."
+      "lens": "This link goes to parcelo-redeliver.help, not the real parcelo.app.",
+      "why": "Real couriers do not ask you to pay through a link in an unexpected text. Check where a link really goes."
     },
     "timer": {
       "label": "Countdown pressure",
       "strength": "strong",
       "lens": "A countdown that pushes you to act before you think.",
-      "why": "Rushing you is a pressure trick. Real fixes don't expire in 15 minutes."
+      "why": "Rushing you is a pressure trick. A real delivery does not vanish in 15 minutes."
     },
-    "avatar": {
-      "label": "Moon logo",
+    "sender": {
+      "label": "Courier name",
       "strength": "harmless",
-      "lens": "It's the Zelvora moon logo.",
-      "why": "A logo is easy to copy, so it proves nothing either way on its own."
+      "lens": "The sender says Parcelo. A name is easy to copy.",
+      "why": "Anyone can type a courier name into a text. It proves nothing either way."
     },
     "time": {
-      "label": "Sent at 2:14 AM",
+      "label": "Sent at 4:47 PM",
       "strength": "harmless",
-      "lens": "Sent at 2:14 AM.",
-      "why": "Messages arrive at all hours. The time alone proves nothing."
-    },
-    "greeting": {
-      "label": "Friendly hello",
-      "strength": "harmless",
-      "lens": "A friendly hello and a wave.",
-      "why": "Being friendly isn't suspicious by itself."
+      "lens": "Sent mid-afternoon.",
+      "why": "Scam texts arrive at any hour. The time alone proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Open the link and re-sync",
+      "label": "Open the link and pay the fee",
       "trap": true
     },
     {
@@ -160,11 +121,11 @@
     },
     {
       "id": "verify",
-      "label": "Check Zelvora's official help page"
+      "label": "Check the shop's site or the courier's own app"
     },
     {
       "id": "block_report",
-      "label": "Block and report the account"
+      "label": "Delete it and report the text as junk"
     }
   ],
   "best_action": "block_report",
@@ -173,112 +134,105 @@
     "ignore"
   ],
   "trap": {
-    "title": "Zelvora Wallet Sync",
-    "url": "zelvora-sync.help/verify",
-    "ask": "Enter your 12-word recovery phrase to re-sync your wallet.",
-    "go": "Re-sync now",
+    "title": "Parcelo Redelivery",
+    "url": "parcelo-redeliver.help/track",
+    "ask": "Enter your card number to pay €1.20 and rebook.",
+    "go": "Pay €1.20",
     "back": "Close this page"
   },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "BLOCKED",
-      "line": "Blocked and reported. Plenvo removed the fake account, so it can't fool the next person.",
-      "mirageSays": "Curses! Blocked again!"
+      "stamp": "REPORTED",
+      "line": "Reported and deleted. Your phone company can now block more of these texts.",
+      "mirageSays": "My lovely text!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Zelvora's help page says: \"We never message you first and never ask for your recovery phrase.\" Case cracked.",
+      "line": "No order, no parcel, nothing waiting. The courier's own app said so. Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the account is still out there messaging other people.",
+      "line": "You stayed safe. But the same text is landing on thousands of other phones.",
       "mirageSays": "Fine. Next!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "Mirage used the phrase to empty the wallet in seconds. In real life, that money is gone for good.",
-      "mirageSays": "Thanks for the help!"
+      "stamp": "SCAMMED",
+      "line": "The \"€1.20\" page copied your card details. Within an hour, bigger payments started to appear.",
+      "mirageSays": "Thanks for the card!"
     }
   },
   "what_if": {
-    "go_ahead": "If you'd blocked and reported instead, the account would be gone and your vault still full.",
-    "ignore": "Reporting takes two taps and gets the fake account removed before it reaches someone else.",
-    "verify": "Checking was smart. Blocking and reporting as well gets the account removed for everyone."
+    "go_ahead": "Checking on the shop's own site, or the courier's own app, takes a minute and costs nothing.",
+    "ignore": "Reporting takes two taps and helps your phone company block the next one.",
+    "verify": "Checking was smart. Reporting the text as well helps protect other people."
   },
-  "golden_rule": "No real support team will ever ask for your recovery phrase.",
+  "golden_rule": "A delivery text you did not expect is not a delivery. Check on the shop's own site, never through the text.",
   "quick_check": {
-    "q": "A \"Support\" account asks for your 12-word recovery phrase to fix your wallet. What do you do?",
+    "q": "A text says your parcel is held and you must pay a small fee through a link. You are not expecting anything. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Share it, but only if they have a ✔"
+        "text": "Pay the small fee, it is only €1.20"
       },
       {
         "id": "b",
-        "text": "Never share it. Block and report."
+        "text": "Reply STOP to the text"
       },
       {
         "id": "c",
-        "text": "Share just the first 6 words"
+        "text": "Do not click. Check the shop's site or the courier's app, and report the text"
       },
       {
         "id": "d",
-        "text": "Ask them to call you first"
+        "text": "Call the number in the text"
       }
     ],
-    "answer": "b",
-    "explain": "Your recovery phrase is the master key. Nobody real ever needs it, not even part of it."
+    "answer": "c",
+    "explain": "Small fees are bait for your card details. Real delivery updates are on the shop's site or the courier's own app."
   },
   "hints": {
-    "nudge": "Start with who sent it. Do you know this account?",
+    "nudge": "Were you expecting a parcel at all?",
     "glow_order": [
-      "phrase",
-      "handle",
+      "noorder",
       "link",
-      "dm_first",
-      "tick",
+      "fee",
       "timer"
     ]
   },
   "sources": [
-    "cafc-wallet",
-    "ftc-crypto",
-    "europol-report"
+    "ftc-shipping",
+    "ftc-spamtexts"
   ],
-  "checked_on": "2026-10-13",
+  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check profile",
-      "title": "Profile check · @zelvora_helpdesk_24",
+      "label": "Check sender",
+      "title": "Who sent this text",
       "rows": [
         {
-          "k": "Account created",
-          "v": "2 days ago",
-          "clue": "handle"
+          "k": "Number",
+          "v": "Not a number you know"
         },
         {
-          "k": "Followers",
-          "v": "3"
+          "k": "Name shown",
+          "v": "Parcelo",
+          "clue": "sender"
         },
         {
-          "k": "Verified badge",
-          "v": "None. The ✔ is typed into the name",
-          "clue": "tick"
-        },
-        {
-          "k": "Official account",
-          "v": "@zelvora, 4 years old"
+          "k": "Your orders this week",
+          "v": "None",
+          "clue": "noorder"
         }
       ]
     },
@@ -290,34 +244,42 @@
       "rows": [
         {
           "k": "Message says",
-          "v": "re-sync here"
+          "v": "pay and rebook"
         },
         {
           "k": "It really opens",
-          "v": "zelvora-sync.help",
+          "v": "parcelo-redeliver.help",
           "clue": "link"
         },
         {
-          "k": "Real Zelvora site",
-          "v": "zelvora.app"
+          "k": "Real courier site",
+          "v": "parcelo.app"
+        },
+        {
+          "k": "Deadline",
+          "v": "15 minutes",
+          "clue": "timer"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Official page",
-      "title": "Zelvora's real help page says",
+      "label": "Official advice",
+      "title": "What consumer advice says",
       "rows": [
         {
-          "k": "Does support message you first?",
-          "v": "Never",
-          "clue": "dm_first"
+          "k": "Unexpected delivery message with a link?",
+          "v": "Do not click"
         },
         {
-          "k": "Do they ask for your recovery phrase?",
-          "v": "Never, from anyone",
-          "clue": "phrase"
+          "k": "How to check",
+          "v": "Look up the delivery on the shop's own site, or use contact details you already know"
+        },
+        {
+          "k": "A fee for \"redelivery\"",
+          "v": "A common trick to get your card details",
+          "clue": "fee"
         }
       ]
     }
