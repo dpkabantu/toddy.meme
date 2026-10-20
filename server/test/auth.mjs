@@ -196,6 +196,6 @@ const other = await browser().req('GET', '/api/auth/google/start', { ip: '8.8.8.
 r = await browser().req('GET', '/api/me'); const mm = await r.json(); check(r.headers.get('cache-control') === 'no-store' && mm.signInAvailable === true && mm.termsVersion === '2026-10-draft', '/api/me: not cached; says sign-in is available');
 r = await browser().req('PUT', '/api/me'); check(r.status === 405, 'wrong method gets 405');
 r = await handle(new Request(ORIGIN + '/api/health'), env); const hb = await r.json();
-check(r.status === 200 && hb.ok && hb.schema === '0002' && hb.auth.googleClientSecret === true && !JSON.stringify(hb).includes('sek') && !JSON.stringify(hb).includes('salt-for-tests'), 'health: reports whether keys are set (yes/no only, never the values)');
+check(r.status === 200 && hb.ok && hb.schema === '0003' && hb.auth.googleClientSecret === true && !JSON.stringify(hb).includes('sek') && !JSON.stringify(hb).includes('salt-for-tests'), 'health: reports whether keys are set (yes/no only, never the values)');
 
 console.log(bad ? 'PROBLEMS: ' + bad : 'auth tests ok'); if (bad) process.exitCode = 1;

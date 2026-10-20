@@ -23,7 +23,7 @@ async function currentTerms(env) {
   return r ? r.version : null;
 }
 
-async function sessionPlayer(request, env) {
+export async function sessionPlayer(request, env) {
   const tok = parseCookies(request.headers.get('Cookie'))[SESSION];
   if (!tok || tok.length < 20) return null;
   const now = nowMs(env), h = await sha256Hex(tok);

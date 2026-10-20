@@ -2,14 +2,15 @@
 // Runs ONLY for /api/* (see wrangler.jsonc, run_worker_first). Everything else on toddy.meme is the static site.
 // No cookies, no secrets, no player data in this stage.
 
+import { runStart, runFinish, myPoints } from './runs.js';
 import { googleStart, googleCallback, me, signup, changeUsername, logout, deleteMe, authStatus } from './auth.js';
 
-export const EXPECTED_SCHEMA = '0002';
+export const EXPECTED_SCHEMA = '0003';
 export const EXPECTED_TABLES = [
   'schema_migrations', 'seasons', 'rule_versions', 'games', 'season_games', 'players', 'linked_accounts',
   'device_signals', 'game_runs', 'points_ledger', 'daily_activity', 'weekly_summary', 'referrals',
   'quest_completions', 'contributions', 'trust_scores', 'trust_flags', 'admin_audit_log', 'final_standings',
-  'privacy_requests', 'oauth_states', 'pending_signups', 'sessions', 'player_contacts', 'terms_versions', 'username_claims', 'rate_limits',
+  'privacy_requests', 'oauth_states', 'pending_signups', 'sessions', 'player_contacts', 'terms_versions', 'username_claims', 'rate_limits', 'settings', 'run_meta',
 ];
 
 // The API is JSON only and must never be cached or framed.
@@ -65,6 +66,9 @@ export async function handle(request, env, deps) {
     'POST /api/me/username': changeUsername,
     'POST /api/auth/logout': logout,
     'POST /api/me/delete': deleteMe,
+    'GET /api/me/points': myPoints,
+    'POST /api/run/start': runStart,
+    'POST /api/run/finish': runFinish,
   };
   const fn = routes[request.method + ' ' + path];
   if (fn) return fn(request, env);

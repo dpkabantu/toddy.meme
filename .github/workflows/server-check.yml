@@ -16,3 +16,6 @@ jobs:
           node-version: 22
       - run: node --no-warnings server/test/run.mjs
       - run: node --no-warnings server/test/auth.mjs
+      - run: node --no-warnings server/test/clock.mjs
+      - run: node --no-warnings server/test/games.mjs
+      - run: node --no-warnings server/test/runs.mjs
