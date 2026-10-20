@@ -301,7 +301,7 @@ function setSound(on) {
 }
 
 // ---------------- Screens ----------------
-const SCREENS = ['title', 'map', 'play', 'album', 'howto', 'stats', 'about', 'brewset'];
+const SCREENS = ['title', 'map', 'play', 'album', 'howto', 'stats', 'about', 'brewset', 'seasonmap'];
 let current = 'title';
 function show(name) {
   current = name;
@@ -332,12 +332,16 @@ function totalStars() { return Object.entries(save.stars).filter(([k]) => k.star
 function renderTitle() {
   const today = save.daily[dailyNumber()];
   const st = dailyStreak();
-  $('daily-status').textContent = today ? `Today: ${today.score || 0} pts${st.current > 1 ? ` · 🔥 ${st.current}` : ''} · counts for Season` : (st.current ? `Keep your ${st.current}-day streak · counts for Season` : 'New tray today · counts for Season');
+  const dailyLive = !seasonM || seasonDaily;   // in a game's launch week the Daily Brew is practice: its Season points start the week after
+  $('daily-status').textContent = !dailyLive ? `Practice now \u00B7 counts for Season from week ${seasonDailyWeek}` : today ? `Today: ${today.score || 0} pts${st.current > 1 ? ` · 🔥 ${st.current}` : ''} · counts for Season` : (st.current ? `Keep your ${st.current}-day streak · counts for Season` : 'New tray today · counts for Season');
   $('btn-daily').classList.toggle('glow', !today); // gentle glow until today's Daily Brew is played
   $('endless-status').textContent = endlessOpen() ? (save.endlessBest ? `Best ${save.endlessBest} · no Season points` : 'Open · no Season points') : `🔒 After Night 1 · ${night1Done()}/20`;
+  // while Season 1 runs the home screen is about the Season: Endless Brew and My Brew are tucked away (the code stays for after the Season)
+  $('btn-endless').hidden = !!seasonM; $('btn-stats').hidden = !!seasonM; document.querySelector('.menu-row').classList.toggle('three', !!seasonM);
   // the Play button says where the player is going: the Night and tray, so the 20-tray journey is visible from the start
   const nx = nextTray();
-  $('play-status').textContent = !Object.keys(save.stars).length ? `${nightInfo(0).name} · ${TRAYS_PER_NIGHT} trays · no Season points` : nx ? `Continue · ${nightInfo(nx[0]).name}, tray ${nx[1]} · no Season points` : 'Play';
+  const sfx2 = seasonM ? 'practice, learn the game' : 'no Season points';
+  $('play-status').textContent = !Object.keys(save.stars).length ? `${nightInfo(0).name} · ${TRAYS_PER_NIGHT} trays · ${sfx2}` : nx ? `Continue · ${nightInfo(nx[0]).name}, tray ${nx[1]} · ${sfx2}` : 'Play';
   $('btn-endless').classList.toggle('locked', !endlessOpen());
   $('build-label').textContent = PLAYTEST ? `Playtest build ${BUILD} · nothing here is public yet` : `Moon Brew ${BUILD}`;
 }
@@ -1124,9 +1128,9 @@ function finish(again) {
 
   if (mode.kind === 'brewset' && g.status === 'burnt') {
     card(`<h3>Burnt brew</h3><p>Three bumps. Only cleared trays count. Try again.</p>
-      <div class="btns"><button class="btn ghost" id="o-back" type="button">Season Nights</button><button class="btn primary" id="o-retry" type="button">Try again</button></div>
+      <div class="btns"><button class="btn ghost" id="o-back" type="button">Trays</button><button class="btn primary" id="o-retry" type="button">Try again</button></div>
       <div class="btns"><a class="btn ghost" href="/">\u2190 TODDY home</a><a class="btn ghost" href="/season/">My Season</a></div>`);
-    bind('o-retry', () => startBrewSet(mode.night, mode.t)); bind('o-back', () => showBrewSet());
+    bind('o-retry', () => startBrewSet(mode.night, mode.t)); bind('o-back', () => showSeasonMap(mode.night));
     return;
   }
   if (g.status === 'burnt') {
@@ -1143,9 +1147,9 @@ function finish(again) {
     card(`${serveHtml(true)}<h3>${mode.t === 20 ? `Season Night ${mode.night} complete!` : `Tray ${mode.t} served`}</h3>
       <p class="stat">Season Night ${mode.night} \u00B7 tray ${mode.t} of 20${check ? '' : ` \u00B7 next points at tray ${Math.ceil(mode.t / 5) * 5}`}</p>
       <p class="stat" id="seasonline" hidden></p>
-      <div class="btns"><button class="btn ghost" id="o-set" type="button">Season Nights</button>${nextT ? '<button class="btn primary" id="o-next" type="button">Next tray</button>' : ''}</div>
+      <div class="btns"><button class="btn ghost" id="o-set" type="button">Trays</button>${nextT ? '<button class="btn primary" id="o-next" type="button">Next tray</button>' : ''}</div>
       <div class="btns"><a class="btn ghost" id="o-site" href="/">\u2190 TODDY home</a><a class="btn ghost" id="o-season" href="/season/">My Season</a></div>`);
-    bind('o-set', () => showBrewSet());
+    bind('o-set', () => showSeasonMap(mode.night));
     bind('o-next', () => startBrewSet(mode.night, nextT));
     seasonShow();
     return;
@@ -1354,7 +1358,7 @@ bind('btn-play', () => {
 bind('btn-daily', () => { sfx.tick(); startDaily(); });
 // Season Nights: Moon Brew's Season launch mission. One night opens per day; trays go in order inside a night; 15 points every 5 trays.
 const toSeason = /[?&]play=season(&|$)/.test(location.search);   // opened from the Season page
-let seasonM = null;
+let seasonM = null, seasonDaily = true, seasonDailyWeek = 2;
 function seasonDone() { return new Set(save.season || []); }
 function showBrewSet() {
   const m = seasonM; if (!m) return;
@@ -1382,7 +1386,7 @@ function showBrewSet() {
       const head = add('b', '', 'Night ' + nt.night, info); add('span', 'sn-new', 'New: ' + SEASON_NEW[nt.night - 1], head);
       add('span', 'sn-state', !nt.open ? 'Opens ' + (T ? T.istDate(nt.opensAt) : 'soon') : !next ? 'Done ✓ all 20 trays' : c ? `${c} of 20 trays · next points at tray ${Math.ceil(next / 5) * 5}` : 'Not started · first points at tray 5', info);
       const b2 = add('div', 'sn-bar small', undefined, info); add('span', '', undefined, b2).style.width = Math.round(c / 20 * 100) + '%';
-      if (nt.open) { const btn = add('button', 'btn' + (next ? ' primary' : ' ghost'), !next ? 'Play again' : next > 1 ? 'Continue: tray ' + next : 'Start', row); btn.type = 'button'; btn.dataset.night = nt.night; btn.addEventListener('click', () => { sfx.tick(); startBrewSet(nt.night, next || 20); }); }
+      if (nt.open) { const btn = add('button', 'btn' + (next ? ' primary' : ' ghost'), !next ? 'Open' : next > 1 ? 'Continue' : 'Start', row); btn.type = 'button'; btn.dataset.night = nt.night; btn.addEventListener('click', () => { sfx.tick(); showSeasonMap(nt.night); }); }
     });
     add('p', 'sn-foot', 'The Daily Brew counts for Season points from week 2. Story and Endless Brew are just for fun.');
     const links = add('div', 'sn-links');
@@ -1393,6 +1397,40 @@ function showBrewSet() {
   if (T) T.missions().then((ms) => { const mine = ms && ms.find((x) => x.id === 'moon-brew-season'); if (!mine) return; const d = seasonDone(); (mine.casesDone || []).forEach((id) => d.add(id)); save.season = [...d]; writeSave(); if (current === 'brewset') render(d); });
 }
 // Back goes to where the player came from: the Season page if they opened Season Nights from there, otherwise the Moon Brew home screen.
+// Season Nights: the tray map of one Season night (like the Story's "Choose a tray", with the 15-point checkpoints marked).
+const trayTierCache = {};
+function seasonTier(night, t) { const k = night * 100 + t; if (trayTierCache[k] === undefined) trayTierCache[k] = tierOf(difficulty(generate(seasonTrayConfig(night, t)))); return trayTierCache[k]; }
+function showSeasonMap(night) {
+  const m = seasonM; if (!m) { show('title'); return; }
+  show('seasonmap'); $('overlay').hidden = true;
+  const done = seasonDone(), T = window.ToddySeason;
+  const tabs = $('sm-tabs'); tabs.textContent = '';
+  m.nights.forEach((nt) => {
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'tab'; b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', String(nt.night === night));
+    b.textContent = nt.open ? 'Night ' + nt.night : '\uD83D\uDD12 Night ' + nt.night;
+    if (!nt.open) { b.disabled = true; b.title = 'Opens ' + (T ? T.istDate(nt.opensAt) : 'soon'); }
+    b.addEventListener('click', () => showSeasonMap(nt.night)); tabs.appendChild(b);
+  });
+  const sel = tabs.children[night - 1]; if (sel) tabs.scrollLeft = Math.max(0, sel.offsetLeft - (tabs.clientWidth - sel.offsetWidth) / 2);
+  const vis = VISITOR_ORDER[(night - 1) % VISITOR_ORDER.length];
+  $('sm-visitor').src = ASSET + VISITOR[vis][0]; $('sm-visitor').alt = VISITORS[vis].name;
+  $('sm-name').textContent = `Season Night ${night} \u00B7 new: ${SEASON_NEW[night - 1]}`;
+  $('sm-title').textContent = `Night ${night} of 7`;
+  let c = 0; for (let t = 1; t <= 20; t++) if (done.has('n' + night + 't' + t)) c++;
+  $('sm-sub').textContent = `${c} of 20 trays cleared \u00B7 15 Season points at trays 5, 10, 15 and 20`;
+  $('sm-count').textContent = `\u2713 ${c}/20`;
+  const grid = $('sm-trays'); grid.textContent = ''; let marked = false;
+  for (let t = 1; t <= 20; t++) {
+    const id = 'n' + night + 't' + t, got = done.has(id), open = t === 1 || done.has('n' + night + 't' + (t - 1));
+    const b = document.createElement('button'); b.type = 'button'; b.className = 'tray-btn' + (t === 20 ? ' finale' : '') + (open ? '' : ' locked');
+    if (open && !got && !marked) { b.classList.add('next'); marked = true; }
+    b.innerHTML = `<span>${t}</span><small>${got ? '\u2713' : t % 5 === 0 ? '+15' : ''}</small><i class="pips" aria-hidden="true">${PIPS(seasonTier(night, t))}</i>`;
+    b.setAttribute('aria-label', `Tray ${t}, ${TIER_NAMES[seasonTier(night, t)]}${got ? ', cleared' : ''}${t % 5 === 0 ? ', 15 Season points' : ''}${open ? '' : ', locked'}`);
+    b.addEventListener('click', () => { if (open) startBrewSet(night, t); });
+    grid.appendChild(b);
+  }
+}
+bind('sm-back', () => showBrewSet());
 bind('brewset-back', () => { if (toSeason) location.href = '/season/'; else show('title'); });
 bind('btn-brewset', () => { sfx.tick(); showBrewSet(); });
 // Coming from the Season page: show a waiting screen straight away instead of flashing the home screen first.
@@ -1401,7 +1439,8 @@ fetch('/api/season', { credentials: 'same-origin' }).then((r) => r.json()).then(
   if (!j || !j.ok) return backToTitle();
   const m = (j.missions || []).find((x) => x.id === 'moon-brew-season' && x.state !== 'locked');
   if (!m || !Array.isArray(m.nights)) return backToTitle();
-  seasonM = m; $('btn-brewset').hidden = false; $('btn-brewset').classList.add('glow'); $('btn-play').parentNode.insertBefore($('btn-brewset'), $('btn-play'));
+  const mb = (j.games || []).find((g) => g.id === 'moon-brew'); seasonDailyWeek = (mb && mb.dailyFromWeek) || 2; seasonDaily = !(j.season && j.season.status === 'live') || (j.seasonWeek || 0) >= seasonDailyWeek;
+  seasonM = m; $('btn-brewset').hidden = false; renderTitle(); $('btn-brewset').classList.add('glow'); $('btn-play').parentNode.insertBefore($('btn-brewset'), $('btn-play'));
   $('brewset-status').textContent = `7 nights · 20 trays each · counts for Season${m.state === 'late' ? ' (half points)' : ''}`;
   if (/[?&]play=season(&|$)/.test(location.search)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } showBrewSet(); }
 }).catch(() => { backToTitle(); /* no Season server: the button stays hidden */ });
@@ -1417,7 +1456,7 @@ bind('btn-endless', () => {
   bind('lk-close', closeModal);
   bind('lk-go', () => { closeModal(); const nx = nextTray(); if (nx && nx[0] === 0) startTray(0, nx[1]); else { mapNight = 0; show('map'); } });
 });
-bind('where', () => { if (mode && mode.kind === 'story') { clearTimeout(finishTimer); mapNight = mode.n; show('map'); } });
+bind('where', () => { if (mode && mode.kind === 'brewset') { clearTimeout(finishTimer); showSeasonMap(mode.night); } else if (mode && mode.kind === 'story') { clearTimeout(finishTimer); mapNight = mode.n; show('map'); } });
 bind('btn-album', () => show('album'));
 bind('btn-stats', () => show('stats'));
 bind('stats-back', () => show('title'));
@@ -1432,7 +1471,7 @@ bind('play-sound', () => setSound(!save.sound));
 bind('map-back', () => show('title'));
 bind('album-back', () => show('title'));
 bind('howto-back', () => show('title'));
-bind('play-back', () => { clearTimeout(finishTimer); show(mode && mode.kind === 'story' ? 'map' : 'title'); });
+bind('play-back', () => { clearTimeout(finishTimer); if (mode && mode.kind === 'brewset') showSeasonMap(mode.night); else show(mode && mode.kind === 'story' ? 'map' : 'title'); });
 bind('btn-restart', () => { if (mode.kind === 'endless') { if (g.status === 'playing') load(endlessConfig(mode.seed, mode.k, mode.pieces)); } else if (mode.kind === 'daily') startDaily(); else if (mode.kind === 'brewset') startBrewSet(mode.night, mode.t); else startTray(mode.n, mode.t); });
 bind('btn-hint', () => {
   if (!g || g.status !== 'playing') return;

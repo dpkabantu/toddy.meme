@@ -387,3 +387,5 @@ a.btn { text-decoration: none; }
 .sn-foot { font-size: 13px; text-align: center; color: var(--cream); margin: 14px 0 8px; }
 .sn-links { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
 @media (min-width: 720px) { .sn-hero { grid-template-columns: 1fr 1fr; align-items: center; } .sn-hero img { max-height: none; height: 100%; } .sn-hero-text { padding: 14px; } }
+
+.menu-row.three { grid-template-columns: repeat(3, 1fr); }

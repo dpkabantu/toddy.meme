@@ -114,7 +114,7 @@ await page.screenshot({ path: shots + '/moonbrew_result.png' });
 await page.click('#o-home'); await page.waitForTimeout(500);
 const title = await page.locator('#screen-title').innerText().catch(() => '');
 check(await page.locator('a[href="/season/"]').first().isVisible() && await page.locator('a[href="/games/"]').first().isVisible(), 'Moon Brew title screen: links to My Season and All games');
-check(/Daily Brew/.test(title) && /counts for Season/.test(title) && /Story/.test(title) && /no Season points/.test(title), 'Moon Brew title: Daily Brew tagged "counts for Season"; Story and Endless say "no Season points"');
+check(/Daily Brew/.test(title) && /counts for Season/.test(title) && /Story/.test(title) && /practice/.test(title) && /Season Nights/.test(title) && !/Endless Brew/.test(title) && !/My Brew/.test(title), 'Moon Brew title: Season Nights and Daily Brew count for Season; Story says practice; Endless Brew and My Brew are hidden during the Season');
 await page.screenshot({ path: shots + '/moonbrew_title.png' });
 
 
@@ -233,6 +233,10 @@ await page.click('#brewset-back'); await page.waitForURL(/\/season\//, { timeout
 check(true, 'Season Nights: the back arrow returns to the Season page');
 await Promise.all([page.waitForURL(/moon-brew/), page.click('#mg .mrow:has-text("Season Nights") a')]); await page.waitForSelector('.nights button[data-night="1"]', { state: 'visible', timeout: 30000 });
 await page.click('.nights button[data-night="1"]');
+await page.waitForSelector('#sm-trays .tray-btn', { state: 'visible', timeout: 15000 });
+check((await page.locator('#sm-tabs .tab').count()) === 7 && (await page.locator('#sm-trays .tray-btn').count()) === 20 && (await page.locator('#sm-trays .tray-btn.locked').count()) === 19, 'Season Nights: Start opens the tray map (7 night tabs, 20 trays, only tray 1 open)');
+await page.screenshot({ path: shots + '/season_map.png', fullPage: true });
+await page.click('#sm-trays .tray-btn:first-child');
 await page.waitForFunction(() => window.__moonbrew && window.__moonbrew.g && window.__moonbrew.g.status === 'playing' && window.__moonbrew.mode.kind === 'brewset', null, { timeout: 30000 });
 await page.waitForTimeout(800);
 for (let i = 0; i < 200; i++) {
@@ -245,8 +249,12 @@ check(/Tray counted. Night 1: 1 of 20 trays/.test(bsLine), 'Season Nights result
 const bsRow = db.prepare("SELECT seed, score FROM game_runs WHERE mode = 'weekly' AND game_id = 'moon-brew' AND status = 'accepted'").get();
 check(bsRow && bsRow.seed === 'moon-brew-season:n1t1' && bsRow.score > 0, 'Season Nights: the server replayed night 1 tray 1 and accepted it (seed ' + (bsRow && bsRow.seed) + ')');
 check(await page.locator('#o-site').isVisible() && await page.locator('#o-season').isVisible() && await page.locator('#o-next').isVisible(), 'Season Nights result: Next tray, TODDY home and My Season buttons');
-await page.click('#o-set'); await page.waitForSelector('.nights button[data-night="1"]', { state: 'visible' });
-check(/Continue: tray 2/.test(await page.locator('.nights button[data-night="1"]').innerText()), 'Season Nights list: night 1 now says "Continue: tray 2"');
+await page.click('#o-set'); await page.waitForSelector('#sm-trays .tray-btn', { state: 'visible' });
+check((await page.locator('#sm-trays .tray-btn.locked').count()) === 18 && /\u2713/.test(await page.locator('#sm-trays .tray-btn').first().innerText()) && /1\/20/.test(await page.locator('#sm-count').innerText()), 'Season Nights: the tray map shows tray 1 cleared and tray 2 open');
+await page.click('#sm-back'); await page.waitForSelector('.nights button[data-night="1"]', { state: 'visible' });
+check(/Continue/.test(await page.locator('.nights button[data-night="1"]').innerText()) && /1 of 20 trays/.test(await page.locator('.sn-night').first().innerText()), 'Season Nights list: night 1 now says Continue, 1 of 20 trays');
+await page.click('#btn-brewset', { force: true }).catch(() => {});
+
 
 // ---- a guest plays Moon Brew from the Season page: nothing is sent ----
 const gctx = await browser.newContext({ viewport: { width: 420, height: 860 } }); await gctx.route('https://fonts.g*apis.com/**', (r) => r.abort()); await gctx.route('https://fonts.gstatic.com/**', (r) => r.abort());
