@@ -9,6 +9,7 @@ import { createRequire } from 'node:module';
 import { DatabaseSync } from 'node:sqlite';
 import { handle } from '../index.js';
 import { fakeD1 } from './fake-d1.mjs';
+import { RULES } from '../rules.js';
 const require = createRequire('/opt/npm-tools/');
 const { chromium } = require('playwright');
 const here = path.dirname(fileURLToPath(import.meta.url)); const root = path.join(here, '..', '..');
@@ -88,7 +89,7 @@ check(await page.locator('.card a[href="/season/"]').count() === 2 && await page
 await page.screenshot({ path: shots + '/fullmoon_result.png' });
 await page.evaluate(() => window.__mm.showMenu());
 const menu = await page.locator('.card').innerText();
-check(/Tonight.s challenge/.test(menu) && /counts for Season points/.test(menu) && /Practice/.test(menu) && /does not count for Season/.test(menu) && await page.locator('.card .tag').count() === 1, 'Full Moon menu: "Tonight\u2019s challenge" tagged Season; "Practice" says it does not count');
+check(/Tonight.s challenge/.test(menu) && /counts for Season points/.test(menu) && /Practice/.test(menu) && /does not count for Season/.test(menu) && await page.locator('.card .tag').count() === 2 && /Weekly Challenge/.test(menu) && /half points if finished late/.test(menu), 'Full Moon menu: "Tonight\u2019s challenge" and "Weekly Challenge" tagged Season; "Practice" says it does not count');
 await page.screenshot({ path: shots + '/fullmoon_menu.png' });
 
 // ---- Moon Brew: reached through the Season page link ----
@@ -157,6 +158,28 @@ await page.goto(base + '/'); await page.waitForSelector('#nav-season:not([hidden
 check(/Night_Owl . Season 1/.test(await page.locator('#nav-season').innerText()) && (await page.locator('#nav-season a').getAttribute('href')) === '/season/', 'main page menu: shows the player\'s name and goes to Season 1');
 await page.screenshot({ path: shots + '/home_menu.png', clip: { x: 0, y: 0, width: 1280, height: 120 } });
 
+// ---- Weekly Challenge (Full Moon), reached from the Season page ----
+RULES.missions[0].stages[0].minBand = 0;   // test only: any finished try reaches stage one (a real Silver needs a skilled player)
+await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])');
+const mtxt = await page.locator('#mg').innerText();
+check(/Full Moon . Weekly Challenge/.test(mtxt) && /Silver \+40/.test(mtxt) && /Gold \+10/.test(mtxt) && /Open until/.test(mtxt), 'Season page: the Weekly Challenge card shows its stages and when it closes');
+await page.screenshot({ path: shots + '/season_mission.png', fullPage: true });
+await Promise.all([page.waitForURL(/full-moon/), page.click('#mg .tg-card a')]);
+await page.waitForFunction(() => window.__mm && window.__mm.mode === 'play', null, { timeout: 30000 });
+check(!/play=weekly/.test(page.url()) && /Weekly/.test(await page.locator('#mode').innerText().catch(() => 'Weekly')), 'Season page button starts the Weekly Challenge directly');
+await page.evaluate(() => { window.__drop = setInterval(() => { if (window.__mm.mode === 'play') window.__mm.dropAt(560); }, 60); });
+await page.waitForFunction(() => window.__mm.mode !== 'play' && window.__mm.lastRun, null, { timeout: 170000, polling: 500 });
+await page.evaluate(() => clearInterval(window.__drop));
+await page.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 15000 });
+const wLine = await page.locator('#seasonline').innerText(); const wScore = await page.evaluate(() => window.__mm.lastRun.score);
+check(/^Weekly Challenge points: \+40/.test(wLine) && !/Active night/.test(wLine), 'Weekly Challenge result says: "' + wLine.slice(0, 80) + '..."');
+const wRow = db.prepare("SELECT r.score, r.seed FROM game_runs r WHERE r.mode = 'weekly' AND r.status = 'accepted'").get();
+check(wRow && wRow.score === wScore && wRow.seed === 'full-moon-w3', 'Weekly Challenge: the server replayed the fixed puzzle and stored the same score (' + wScore + ')');
+check(db.prepare("SELECT COUNT(*) c FROM points_ledger WHERE source_type = 'mission' AND amount = 40").get().c === 1, 'Weekly Challenge: exactly one 40-point ledger row');
+await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])');
+check(/\u2713 Silver \+40/.test(await page.locator('#mg').innerText()), 'Season page: the finished stage shows a tick');
+RULES.missions[0].stages[0].minBand = 2;
+
 // ---- a guest plays Moon Brew from the Season page: nothing is sent ----
 const gctx = await browser.newContext({ viewport: { width: 420, height: 860 } }); await gctx.route('https://fonts.g*apis.com/**', (r) => r.abort()); await gctx.route('https://fonts.gstatic.com/**', (r) => r.abort());
 const g = await gctx.newPage(); watch(g);
@@ -172,7 +195,7 @@ for (let i = 0; i < 200; i++) {
 await g.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 20000 });
 check(/Playing as a guest/.test(await g.locator('#seasonline').innerText()) && (await g.locator('#seasonline a').getAttribute('href')) === '/season/', 'guest: result says "Playing as a guest" with a link to the Season page');
 check(!apiCalls.some((c) => /run\//.test(c)), 'guest: no run was sent to the server (' + apiCalls.join(', ') + ')');
-check(db.prepare("SELECT COUNT(*) c FROM game_runs").get().c === 3, 'guest play left no rows in the database');
+check(db.prepare("SELECT COUNT(*) c FROM game_runs").get().c === 4, 'guest play left no rows in the database (3 daily runs + 1 weekly run from the signed-in player)');
 
 check(viol.length === 0, 'no Content-Security-Policy violations in any page (' + viol.length + ') ' + viol.slice(0, 2).join(' | ')); check(errs.length === 0, 'no page errors ' + errs.slice(0, 3).join('|'));
 await browser.close(); server.close();

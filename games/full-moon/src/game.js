@@ -463,7 +463,7 @@ function store(key, val) {
   try { if (val === undefined) return window.localStorage.getItem(key); window.localStorage.setItem(key, val); } catch (e) { /* private window */ }
   return null;
 }
-const bestKey = () => (kind === 'daily' ? 'mm.best.daily.' + S.seed : 'mm.best.free' + (twist ? '.w' + twist : ''));
+const bestKey = () => (kind === 'daily' ? 'mm.best.daily.' + S.seed : kind === 'weekly' ? 'mm.best.weekly.' + S.seed : 'mm.best.free' + (twist ? '.w' + twist : ''));
 
 // ---------- layout ----------
 function placeTicket() { /* the bonus row now lives inside the HUD, nothing to place */ }
@@ -656,6 +656,7 @@ function dateLabel() {
 }
 
 function todayTwist() { return C.twistForDate(C.dateSeed(nightNow())); }
+let weeklyMission = null;   // this week's Weekly Challenge from /api/season: { id, seed, twist, state, stages }, or null
 function startRun(k2, seedOverride, twistOverride) {
   kind = k2;
   const seed = seedOverride !== undefined ? seedOverride : (kind === 'daily' ? C.dateSeed(nightNow()) : (Math.random() * 2147483647) | 0);
@@ -664,9 +665,10 @@ function startRun(k2, seedOverride, twistOverride) {
   dropPoseUntil = -1; pressed = false;
   aimX = (C.FIELD.L + C.FIELD.R) / 2; toddyX = aimX;
   bestVal = parseInt(store(bestKey()) || '0', 10) || 0;
-  elMode.textContent = (kind === 'daily' ? 'Tonight · ' : 'Free · ') + C.TWISTS[twist].name;
+  elMode.textContent = (kind === 'daily' ? 'Tonight · ' : kind === 'weekly' ? 'Weekly · ' : 'Free · ') + C.TWISTS[twist].name;
   mode = 'play'; overlay.hidden = true;
   if (kind === 'daily' && window.ToddySeason) window.ToddySeason.start('full-moon');
+  if (kind === 'weekly' && window.ToddySeason && weeklyMission) window.ToddySeason.start('full-moon', { mode: 'weekly', mission: weeklyMission.id });
   setScore(); setNext();
   banner(C.TWISTS[twist].name + ' · ' + C.TWISTS[twist].blurb, 'new', 2600);
 }
@@ -743,7 +745,7 @@ function frame(t) {
 function finishRun() {
   lastRun = { seed: S.seed, twist, moonrises, kind, drops: log.slice(), endTick: S.tick, score: S.score, maxLevel: S.maxLevel };
   if (kind === 'daily') streakDone();
-  const sentDaily = kind === 'daily' && window.ToddySeason;
+  const sentDaily = (kind === 'daily' || kind === 'weekly') && window.ToddySeason;
   if (S.score > bestVal) { bestVal = S.score; store(bestKey(), String(bestVal)); }
   setScore();
   showOver();
@@ -759,12 +761,18 @@ function strip() {
   for (let i = 0; i < 11; i++) h += '<img alt="" class="ps' + i + '" src="' + ASSET[PIECE_KEYS[i]] + '">';
   return h + '</div>';
 }
+function weeklyButton() {
+  const m = weeklyMission; if (!m) return '';
+  const stages = m.stages.map((st) => st.label + ' ' + st.points).join(' · '), late = m.state === 'late';
+  return '<button class="btn alt" data-act="weekly">Weekly Challenge<span class="tag">Season</span><small>Same puzzle all week · ' + C.TWISTS[m.twist].name + ' · ' + stages + ' points' + (late ? ' · this week is over: half points' : ' · half points if finished late') + '</small></button>';
+}
 function showMenu() {
   mode = 'menu';
   overlay.hidden = false;
   overlay.innerHTML =
     '<div class="card"><div class="label">TODDY</div><h1>Full Moon</h1><p class="sub">Two the same make the next one. Reach Toddy’s Full Moon.</p>' + strip() +
     '<button class="btn" data-act="daily">Tonight’s challenge<span class="tag">Season</span><small>' + dateLabel() + ' · ' + C.TWISTS[todayTwist()].name + ' · same for everyone · counts for Season points' + (streakNow() > 0 ? ' · ' + streakNow() + '-night streak' : '') + '</small></button>' +
+    weeklyButton() +
     '<button class="btn alt" data-act="free">Practice<small>Free play · does not count for Season</small></button>' +
     settingsRow() +
     '<div class="links"><button class="chip" data-act="how">How to play</button><button class="chip" data-act="weeks">Weekly twists</button><button class="chip" data-act="pieces">Pieces</button><button class="chip" data-act="about">About</button><button class="chip" data-act="sharegame">Share game</button></div>' +
@@ -835,7 +843,7 @@ function makeShareCard() {
   const tg = g.createLinearGradient(0, 130, 0, 250); tg.addColorStop(0, '#fff1c4'); tg.addColorStop(0.55, '#fdaf1e'); tg.addColorStop(1, '#c9822a');
   g.save(); g.shadowColor = 'rgba(253,175,30,.45)'; g.shadowBlur = 28; g.fillStyle = tg; g.font = '700 ' + tsize + 'px' + SERIF; g.fillText('Full Moon', mid, 232); g.restore();
   g.fillStyle = '#fde3bd'; g.font = 'italic 500 38px' + SERIF;
-  g.fillText((kind === 'daily' ? 'The night of ' + dateLabel() : 'A free-play night') + '  ·  ' + C.TWISTS[twist].name, mid, 290);
+  g.fillText((kind === 'daily' ? 'The night of ' + dateLabel() : kind === 'weekly' ? 'The Weekly Challenge' : 'A free-play night') + '  ·  ' + C.TWISTS[twist].name, mid, 290);
   // ornament line with a small moon in the middle
   const mm = moonMark(70); g.strokeStyle = 'rgba(201,154,59,.6)'; g.lineWidth = 2;
   g.beginPath(); g.moveTo(190, 330); g.lineTo(mid - 52, 330); g.moveTo(mid + 52, 330); g.lineTo(CWD - 190, 330); g.stroke(); g.drawImage(mm, mid - 35, 295, 70, 70);
@@ -891,7 +899,7 @@ async function showPicture() {
 let shareBlob = null, shareUrl = '';
 const gameLink = () => location.origin + location.pathname;
 function resultText() {
-  return 'TODDY Full Moon · ' + (kind === 'daily' ? 'Tonight ' + dateLabel() : 'Free play') + ' · ' + C.TWISTS[twist].name + ' · ' + S.score.toLocaleString('en-US') + ' · ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal · ' + lasted() + (moonrises ? ' · Moonrise ×' + moonrises : '') + ' — can you beat it? ' + gameLink();
+  return 'TODDY Full Moon · ' + (kind === 'daily' ? 'Tonight ' + dateLabel() : kind === 'weekly' ? 'Weekly Challenge' : 'Free play') + ' · ' + C.TWISTS[twist].name + ' · ' + S.score.toLocaleString('en-US') + ' · ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal · ' + lasted() + (moonrises ? ' · Moonrise ×' + moonrises : '') + ' — can you beat it? ' + gameLink();
 }
 function flash(btn, msg) { const t = btn.textContent; btn.textContent = msg; setTimeout(() => { btn.textContent = t; }, 1800); }
 async function doShare(btn) {
@@ -926,7 +934,7 @@ function showOver() {
     '<div class="card"><h2>Night over</h2><img class="medal" alt="" src="' + ASSET['medal_' + (band + 1)] + '">' +
     '<div class="band">' + nm + '</div><div class="final">' + S.score.toLocaleString('en-US') + '</div>' +
     '<p class="sub">Lasted <b>' + lasted() + '</b> · ' + S.drops + ' drops</p><p class="sub">' + (kind === 'daily' ? "Tonight's best " : 'Best ') + bestVal.toLocaleString('en-US') + ' · highest piece ' + S.maxLevel + ' of 11' + (S.served ? ' · ' + S.served + ' visitor' + (S.served > 1 ? 's' : '') + ' served' : '') + (moonrises ? ' · Moonrise ×' + moonrises : '') + (next ? ' · next medal at ' + next.toLocaleString('en-US') : '') + '</p>' +
-    '' + (kind === 'daily' ? '<p class="sub" id="seasonline" hidden></p>' : '') + '<button class="btn" data-act="again">Play again</button><button class="btn share" data-act="pic">Share your night</button><button class="btn alt" data-act="menu">Menu</button><div class="pair"><a class="btn alt" href="/">\u2190 TODDY home</a><a class="btn alt" href="/season/">My Season</a></div><p class="help"><a href="/games/">All games</a></p></div>';
+    '' + ((kind === 'daily' || kind === 'weekly') ? '<p class="sub" id="seasonline" hidden></p>' : '') + '<button class="btn" data-act="again">Play again</button><button class="btn share" data-act="pic">Share your night</button><button class="btn alt" data-act="menu">Menu</button><div class="pair"><a class="btn alt" href="/">\u2190 TODDY home</a><a class="btn alt" href="/season/">My Season</a></div><p class="help"><a href="/games/">All games</a></p></div>';
 }
 
 // ---------- full screen (Android and desktop browsers; iPhone Safari has no full screen for web pages) ----------
@@ -985,11 +993,12 @@ overlay.addEventListener('click', (e) => {
   else if (a === 'iosfull') showIosFull(false);
   else if (a === 'pause') { mode = 'play'; showPause(); }
   else if (a === 'daily') startRun('daily');
+  else if (a === 'weekly' && weeklyMission) startRun('weekly', weeklyMission.seed, weeklyMission.twist);
   else if (a === 'free') startRun('free');
   else if (a === 'weeks') showWeeks();
   else if (a === 'tw') startRun('free', undefined, parseInt(b.dataset.w, 10));
   else if (a === 'resume') { mode = 'play'; overlay.hidden = true; }
-  else if (a === 'restart' || a === 'again') startRun(kind, undefined, twist);
+  else if (a === 'restart' || a === 'again') startRun(kind, kind === 'weekly' && weeklyMission ? weeklyMission.seed : undefined, twist);
   else if (a === 'menu') showMenu();
   else if (a === 'pic') showPicture();
   else if (a === 'back') showOver();
@@ -1047,9 +1056,15 @@ async function boot() {
   names.forEach((n, i) => { IMG[n] = imgs[i]; });
   try { await document.fonts.load('700 20px Fredoka'); } catch (e) { /* fallback font is fine */ }
   layout();
+  try {   // this week's Weekly Challenge, if the Season server knows one (guests can play it too; nothing is sent for them)
+    const r = await Promise.race([fetch('/api/season', { credentials: 'same-origin' }).then((x) => x.json()), new Promise((res) => setTimeout(() => res(null), 1500))]);
+    const m = r && r.missions && r.missions.find((x) => x.game === 'full-moon' && x.state !== 'locked');
+    if (m && Number.isInteger(m.seed) && Number.isInteger(m.twist) && C.TWISTS[m.twist]) weeklyMission = m;
+  } catch (e) { /* no Season server: the button simply does not show */ }
   twist = todayTwist(); S = C.newGame(C.dateSeed(nightNow()), twist);     // an idle crate behind the menu
   mode = 'menu'; setScore(); setNext(); showMenu();
   if (/[?&]play=daily(&|$)/.test(location.search)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } startRun('daily'); }   // link from the Season page
+  else if (weeklyMission && /[?&]play=weekly(&|$)/.test(location.search)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } startRun('weekly', weeklyMission.seed, weeklyMission.twist); }
   requestAnimationFrame(frame);
   $('loading').hidden = true;
 }

@@ -89,3 +89,6 @@ input[type=text]:focus-visible, .btn:focus-visible, .chip:focus-visible, summary
 .tg-card .btn { padding: 11px 14px; font-size: 16px; }
 .tg-card .btn.alt { box-shadow: none; }
 .tag { display: inline-block; font: 600 11px Fredoka, system-ui, sans-serif; letter-spacing: .08em; text-transform: uppercase; color: #1b1236; background: var(--gold); border-radius: 8px; padding: 2px 7px; margin-left: 6px; vertical-align: middle; }
+
+.stages { list-style: none; margin: 0; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 14px; font-size: 15px; color: var(--mute); }
+.stages li.got { color: var(--gold); font-weight: 600; }

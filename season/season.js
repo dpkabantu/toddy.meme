@@ -39,6 +39,30 @@
     tonightLine(); $('tonight').hidden = false;
   }
 
+  function istDate(iso) { try { return new Date(iso).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' }); } catch (e) { return ''; } }
+  function renderMissions() {
+    var list = S.missions || []; if (!list.length) return;
+    var box = $('mg'); box.textContent = '';
+    var mine = {}; if (P && P.missions) P.missions.forEach(function (m) { mine[m.id] = m; });
+    var name = {}; S.games.forEach(function (g) { name[g.id] = g.title; });
+    list.forEach(function (m) {
+      var my = mine[m.id], done = my && my.done, card = el('div', 'tg-card'), top = el('div', 'top'), nm = el('span', 'name', (name[m.game] || m.game) + ' · ' + m.title);
+      nm.appendChild(el('span', 'tag', 'Week ' + m.week)); top.appendChild(nm);
+      var state = m.state === 'locked' ? 'Opens ' + istDate(m.opensAt) + ', 6:30 pm India time' : m.state === 'late' ? 'This week is over: half points' : 'Open until ' + istDate(m.closesAt) + ', 6:30 pm India time';
+      top.appendChild(el('span', 'state' + (done ? ' done' : ''), done ? 'Done' : state)); card.appendChild(top);
+      var ul = el('ul', 'stages');
+      m.stages.forEach(function (st, i) { var got = my && my.stages[i] && my.stages[i].done; ul.appendChild(el('li', got ? 'got' : '', (got ? '\u2713 ' : '') + st.label + ' +' + st.points)); });
+      card.appendChild(ul);
+      if (m.state !== 'locked') {
+        var a = el('a', 'btn' + (done ? ' alt' : '')); a.href = '/games/' + m.game + '/?play=weekly';
+        a.textContent = done ? 'All stages done. Play again for fun' : m.state === 'late' ? 'Finish it for half points' : 'Play the Weekly Challenge';
+        card.appendChild(a);
+      }
+      box.appendChild(card);
+    });
+    $('missions').hidden = false;
+  }
+
   function renderHow() {
     var r = S.rules, ol = $('how-list'); ol.textContent = '';
     [
@@ -92,9 +116,9 @@
       if (q) history.replaceState(null, '', location.pathname);
       if (me && me.signedIn) {
         $('h-name').textContent = me.username; $('h-id').textContent = me.passportId; $('hello').hidden = false; $('acct').hidden = false;
-        api('/api/me/points').then(function (d) { P = d && d.ok ? d : null; renderTonight(); if (P) renderMine(); renderHow(); });
+        api('/api/me/points').then(function (d) { P = d && d.ok ? d : null; renderTonight(); renderMissions(); if (P) renderMine(); renderHow(); });
       } else {
-        $('signin-card').hidden = false; renderTonight(); renderHow();
+        $('signin-card').hidden = false; renderTonight(); renderMissions(); renderHow();
         var ua = navigator.userAgent || '';
         if (/Twitter|Instagram|FBAN|FBAV|FB_IAB|TikTok|musical_ly|Bytedance|Line\/|; wv\)/i.test(ua)) $('inapp').hidden = false;
       }

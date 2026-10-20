@@ -7,6 +7,7 @@ import { planAwards, planUpgrade, ruleVersionId, weekFacts, streakFrom } from '.
 import * as moonBrew from './games/moon-brew.js';
 import * as fullMoon from './games/full-moon.js';
 import * as scamLab from './games/scam-lab.js';
+import { findMission, missionState, planMission, claimedStages, missionPublic } from './missions.js';
 
 const ADAPTERS = { 'moon-brew': moonBrew, 'full-moon': fullMoon, 'scam-lab': scamLab };
 export const MIN_SECONDS_PER_TAP = 0.35;   // Moon Brew: faster than this on average is not a person
@@ -20,7 +21,8 @@ async function ctx(request, env) {
   return { p };
 }
 const pointsOn = async (env) => { const r = await env.DB.prepare("SELECT value FROM settings WHERE key = 'points_enabled'").first(); return !r || r.value !== '0'; };
-async function seasonOpen(env) { const r = await env.DB.prepare('SELECT status FROM seasons WHERE id = ?1').bind(RULES.seasonId).first(); return !!r && ['draft', 'rehearsal', 'live'].includes(r.status); }
+const seasonStatus = async (env) => { const r = await env.DB.prepare('SELECT status FROM seasons WHERE id = ?1').bind(RULES.seasonId).first(); return r ? r.status : null; };
+const isOpenStatus = (st) => ['draft', 'rehearsal', 'live'].includes(st);
 
 export async function runStart(request, env) {
   const c = await ctx(request, env); if (c.err) return c.err; const p = c.p;
@@ -30,7 +32,9 @@ export async function runStart(request, env) {
   if (!body || !ADAPTERS[body.game]) return json(400, { ok: false, error: 'game_not_supported' });
   const now = nowMs(env), night = nightKey(now);
   if (body.night !== night) return json(409, { ok: false, error: 'clock_off', night });
-  if (!(await seasonOpen(env))) return json(409, { ok: false, error: 'season_closed' });
+  const sstatus = await seasonStatus(env);
+  if (!isOpenStatus(sstatus)) return json(409, { ok: false, error: 'season_closed' });
+  if (body.mode === 'weekly') return weeklyStart(env, p, body, now, night, sstatus);
   const done = await env.DB.prepare('SELECT MAX(band) band FROM run_meta WHERE player_id = ?1 AND game_id = ?2 AND night_key = ?3 AND counted = 1 OR (player_id = ?1 AND game_id = ?2 AND night_key = ?3 AND points > 0)').bind(p.id, body.game, night).first();
   if (done && done.band !== null && done.band >= 3) return json(200, { ok: true, runId: null, night, alreadyCounted: true });   // top band already reached tonight
   const id = 'run_' + randomToken(12), week = weekOfNight(night);
@@ -39,6 +43,22 @@ export async function runStart(request, env) {
     env.DB.prepare('INSERT INTO run_meta (run_id, player_id, game_id, night_key, week, started_ms) VALUES (?1, ?2, ?3, ?4, ?5, ?6)').bind(id, p.id, body.game, night, week, now),
   ]);
   return json(200, { ok: true, runId: id, night, week, counting: await pointsOn(env) });
+}
+
+// Weekly Challenge: one fixed puzzle for the mission's week. Unlimited tries; the stages pay once each.
+async function weeklyStart(env, p, body, now, night, sstatus) {
+  const m = findMission(body.mission, body.game);
+  if (!m) return json(400, { ok: false, error: 'mission_not_found' });
+  const state = missionState(sstatus, m, now);
+  if (state === 'locked') return json(409, { ok: false, error: 'mission_locked' });
+  const claimed = await claimedStages(env, p.id, m), info = missionPublic(sstatus, m, now);
+  if (m.stages.every((st) => claimed.has(st.id))) return json(200, { ok: true, runId: null, night, alreadyCounted: true, mission: info });
+  const id = 'run_' + randomToken(12), week = weekOfNight(night);
+  await env.DB.batch([
+    env.DB.prepare("INSERT INTO game_runs (id, player_id, season_id, game_id, mode, seed, rules_version, status, submitted_at) VALUES (?1, ?2, ?3, ?4, 'weekly', ?5, ?6, 'pending', ?7)").bind(id, p.id, RULES.seasonId, m.game, m.id, RULES.version, isoTime(now)),
+    env.DB.prepare('INSERT INTO run_meta (run_id, player_id, game_id, night_key, week, started_ms) VALUES (?1, ?2, ?3, ?4, ?5, ?6)').bind(id, p.id, m.game, night, week, now),
+  ]);
+  return json(200, { ok: true, runId: id, night, week, counting: await pointsOn(env), mission: info });
 }
 
 async function reject(env, run, now, reason) {
@@ -53,12 +73,14 @@ export async function runFinish(request, env) {
   if (await limited(env, 'rfin:' + p.id, 60, 3600)) return json(429, { ok: false, error: 'rate' });
   const body = await readJson(request, 120000);
   if (!body || typeof body.runId !== 'string' || body.runId.length > 40) return json(400, { ok: false, error: 'bad_request' });
-  const run = await env.DB.prepare('SELECT m.*, g.status gstatus FROM run_meta m JOIN game_runs g ON g.id = m.run_id WHERE m.run_id = ?1 AND m.player_id = ?2 AND m.finished_ms IS NULL').bind(body.runId, p.id).first();
+  const run = await env.DB.prepare('SELECT m.*, g.status gstatus, g.mode gmode, g.seed gseed FROM run_meta m JOIN game_runs g ON g.id = m.run_id WHERE m.run_id = ?1 AND m.player_id = ?2 AND m.finished_ms IS NULL').bind(body.runId, p.id).first();
   if (!run) return json(404, { ok: false, error: 'run_not_found' });
   const now = nowMs(env);
   if (now > nightEndMs(run.night_key) + RULES.graceMs) { await reject(env, run, now, 'night_over'); return json(422, { ok: false, error: 'night_over' }); }
   const t0 = performance.now();
-  const v = ADAPTERS[run.game_id].verify(run.night_key, body);
+  const mission = run.gmode === 'weekly' ? findMission(run.gseed, run.game_id) : null;
+  if (run.gmode === 'weekly' && !mission) { await reject(env, run, now, 'bad_mission'); return json(422, { ok: false, error: 'bad_log' }); }
+  const v = ADAPTERS[run.game_id].verify(run.night_key, body, mission ? { seed: mission.seed, twist: mission.twist } : {});
   const replayMs = Math.round(performance.now() - t0);
   if (!v.ok) { await reject(env, run, now, v.error); return json(422, { ok: false, error: v.error }); }
   const elapsed = now - run.started_ms;
@@ -71,6 +93,7 @@ export async function runFinish(request, env) {
   ];
   const plain = [...finishRun, env.DB.prepare('UPDATE run_meta SET finished_ms = ?2, band = ?3, replay_ms = ?4 WHERE run_id = ?1').bind(run.run_id, now, v.band, replayMs)];
   const counting = await pointsOn(env);
+  if (mission) return weeklyFinish(env, p, run, mission, v, now, replayMs, plain, counting);
   const bestRow = await env.DB.prepare('SELECT MAX(band) band, SUM(counted) c FROM run_meta WHERE player_id = ?1 AND game_id = ?2 AND night_key = ?3').bind(p.id, run.game_id, run.night_key).first();
   const best = bestRow && bestRow.c > 0 ? bestRow : null;
   const answer = (extra) => json(200, { ok: true, score: v.score, band: v.band, bandName: RULES.bandNames[v.band], ...extra });
@@ -115,6 +138,31 @@ export async function runFinish(request, env) {
   return answer({ counted: true, held: status === 'pending', points: { total, items: plan.map((x) => ({ label: x.reason, amount: x.amount })) } });
 }
 
+// A weekly run finished and verified: pay the stages it reaches, by the server clock (full in the mission's week, half after).
+async function weeklyFinish(env, p, run, m, v, now, replayMs, plain, counting) {
+  const answer = (extra) => json(200, { ok: true, score: v.score, band: v.band, bandName: RULES.bandNames[v.band], mission: m.id, ...extra });
+  if (!counting) { await env.DB.batch(plain); return answer({ counted: false, reason: 'points_paused', points: { total: 0, items: [] } }); }
+  const sstatus = await seasonStatus(env), state = missionState(sstatus, m, now);
+  if (state === 'locked') { await env.DB.batch(plain); return answer({ counted: false, reason: 'mission_locked', points: { total: 0, items: [] } }); }
+  const claimed = await claimedStages(env, p.id, m);
+  const tot = await env.DB.prepare("SELECT COALESCE(SUM(amount),0) t FROM points_ledger WHERE player_id = ?1 AND season_id = ?2 AND status IN ('settled','pending')").bind(p.id, RULES.seasonId).first();
+  const plan = planMission(m, claimed, v.band, state, RULES.seasonMax - tot.t);
+  if (!plan.length) { await env.DB.batch(plain); return answer({ counted: false, reason: claimed.size ? 'not_better' : 'below_stage', points: { total: 0, items: [] } }); }
+  const st = p.status === 'held' ? 'pending' : 'settled', rv = await ruleVersionId(env), total = plan.reduce((a, x) => a + x.amount, 0);
+  try {
+    await env.DB.batch([
+      ...plain,
+      ...plan.map((x) => env.DB.prepare('INSERT INTO points_ledger (player_id, season_id, category, amount, reason, rule_version_id, source_type, source_id, status, settled_at) VALUES (?1, ?2, ?3, ?4, ?5, ?6, ?7, ?8, ?9, ?10)')
+        .bind(p.id, RULES.seasonId, 'quests', x.amount, x.reason, rv, 'mission', p.id + ':' + m.id + ':' + x.stage, st, st === 'settled' ? isoTime(now) : null)),
+      env.DB.prepare('UPDATE players SET last_active_at = ?2 WHERE id = ?1').bind(p.id, isoTime(now)),
+    ]);
+  } catch (e) {
+    if (!/UNIQUE|constraint/i.test(String((e && e.message) || e))) throw e;
+    await env.DB.batch(plain); return answer({ counted: false, reason: 'already_counted', points: { total: 0, items: [] } });   // two finishes at once: the database lets one stage pay once
+  }
+  return answer({ counted: true, held: st === 'pending', late: state === 'late', points: { total, items: plan.map((x) => ({ label: x.reason, amount: x.amount })) } });
+}
+
 const rulesSummary = () => ({ bandPoints: [0, 1, 2, 3].map((b) => bandPoints(b)), activeNight: RULES.activeNight, weeklyCap: RULES.weeklyCapPerGame, consistency5Nights: 5, consistency5: RULES.consistency[5], consistency7Extra: RULES.consistency[7] - RULES.consistency[5], allRounder: RULES.allRounderWeek, allRounderNights: RULES.allRounderNights });
 
 // ---- GET /api/season: public facts for the Season page (works for guests, nothing personal) ----
@@ -124,7 +172,7 @@ export async function seasonInfo(request, env) {
   const s = await env.DB.prepare('SELECT id, name, status, starts_at, ends_at FROM seasons WHERE id = ?1').bind(RULES.seasonId).first();
   return json(200, { ok: true, season: s ? { id: s.id, name: s.name, status: s.status, startsAt: s.starts_at, endsAt: s.ends_at } : null,
     night: { key: night, endsAt: isoTime(nightEndMs(night)), week: weekOfNight(night) },
-    games: RULES.games.map((id) => ({ id, title: RULES.names[id], ready: id in ADAPTERS })), rules: rulesSummary(), rulesVersion: RULES.version });
+    games: RULES.games.map((id) => ({ id, title: RULES.names[id], ready: id in ADAPTERS })), missions: RULES.missions.map((m) => missionPublic(s ? s.status : null, m, now)), rules: rulesSummary(), rulesVersion: RULES.version });
 }
 
 // ---- GET /api/me/points: everything the Passport dashboard shows ----
@@ -149,6 +197,12 @@ export async function myPoints(request, env) {
   const weekNights = [...played].filter((k) => weekOfNight(k) === week).length;
   const gotBonus = new Set(have.results.map((r) => r.source_type));
   const games = RULES.games.map((id) => ({ id, title: RULES.names[id], weekPoints: (gm[id] || {}).pts || 0, weekCap: RULES.weeklyCapPerGame, nightsThisWeek: (gm[id] || {}).nights || 0, playedTonight: id in tmap, tonightBand: id in tmap ? RULES.bandNames[tmap[id]] : null, ready: id in ADAPTERS }));
+  const sst = await seasonStatus(env);
+  const missions = [];
+  for (const m of RULES.missions) {
+    const info = missionPublic(sst, m, now), claimed = await claimedStages(env, p.id, m);
+    missions.push({ ...info, stages: info.stages.map((st) => ({ ...st, done: claimed.has(st.id) })), done: m.stages.every((st) => claimed.has(st.id)) });
+  }
   const allRounderDone = RULES.games.filter((id) => ((gm[id] || {}).nights || 0) >= RULES.allRounderNights).length;
   return json(200, {
     ok: true, rulesVersion: RULES.version, season: { id: RULES.seasonId },
@@ -156,7 +210,7 @@ export async function myPoints(request, env) {
     points: { season: tot.results[0].settled, pending: tot.results[0].pending, week: wk.results[0].s, seasonMax: RULES.seasonMax },
     streak: { current: streakFrom(played, night), weekNights, last7: lastNights(night, 7).map((k) => ({ night: k, played: played.has(k) })) },
     rules: rulesSummary(),
-    games,
+    games, missions,
     goals: [
       { id: 'allrounder', label: 'All-Rounder: ' + RULES.allRounderNights + ' nights in each game this week', progress: allRounderDone, target: RULES.games.length, reward: RULES.allRounderWeek, done: gotBonus.has('allrounder') },
       { id: 'consistency5', label: 'Play 5 nights this week', progress: Math.min(5, weekNights), target: 5, reward: RULES.consistency[5], done: gotBonus.has('consistency5') },

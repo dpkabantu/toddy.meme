@@ -179,4 +179,73 @@ const big = await handle(new Request(ORIGIN + '/api/run/finish', { method: 'POST
 r = await post('/api/run/finish', { runId: "x'; DROP TABLE points_ledger;--" }, mira); check(r.status === 404 && db.prepare('SELECT COUNT(*) c FROM points_ledger').get().c > 0, 'SQL text in a field is only data (table still there)');
 check(db.prepare("SELECT COUNT(*) c FROM game_runs WHERE log_json IS NOT NULL AND raw_delete_after IS NULL").get().c === 0, 'every stored move log has a deletion date');
 
+// ---- Weekly missions: full points in the mission's week, half points after, each stage pays once ----
+{
+  RULES.startNight = '2027-02-01';
+  RULES.missions.push({ id: 'test-m', game: 'full-moon', week: 2, kind: 'weekly-puzzle', title: 'Weekly Challenge', seed: 900300, twist: 2,
+    stages: [{ id: 'a', minBand: 0, points: 40, label: 'Played' }, { id: 'b', minBand: 1, points: 10, label: 'Bronze' }] });
+  const botW = (rate, sd) => { let q = sd; const rr = () => (q = (q * 1664525 + 1013904223) >>> 0) / 4294967296; const g = FM.newGame(900300, 2), drops = [];
+    while (!g.over && g.tick < 40000) { if (FM.canDrop(g) && rr() < rate) { const x = Math.floor(FM.FIELD.L + rr() * (FM.FIELD.R - FM.FIELD.L)); if (FM.drop(g, x)) drops.push([g.tick, x]); } FM.step(g); g.events.length = 0; }
+    return { drops, endTick: g.tick, score: g.score, seconds: g.tick / 60, band: FM.bandFor(g.score, 2) }; };
+  const weak = botW(0.1, 2), strong = botW(0.1, 1);
+  check(weak.band === 0 && strong.band === 1, 'weekly test bots: one run is band 0, the other band 1');
+  const missionRows = (id) => db.prepare("SELECT amount, reason, source_id FROM points_ledger WHERE player_id = ?1 AND source_type = 'mission' ORDER BY id").all(id);
+  const play = async (cookie, bot, tamper) => {
+    const night = nightKey(NOW), st = await post('/api/run/start', { game: 'full-moon', mode: 'weekly', mission: 'test-m', night }, cookie);
+    if (!st.body.runId) return { st };
+    NOW += bot.seconds * 1000 + 1000;
+    const fin = await post('/api/run/finish', { runId: st.body.runId, drops: bot.drops, endTick: bot.endTick, score: tamper ? bot.score + 1 : bot.score }, cookie);
+    return { st, fin };
+  };
+  db.prepare("UPDATE seasons SET status='live' WHERE id='season-1'").run();
+
+  // before the mission opens (the Season is live): locked
+  NOW = Date.parse('2027-02-08T12:00:00Z'); const early = await mkPlayer('TDY-AAAA0010', 'Early');
+  let pub = await get('/api/season'); check(pub.body.missions.some((m) => m.id === 'test-m' && m.state === 'locked' && m.week === 2), 'public Season info: the mission shows as locked before its week');
+  r = await post('/api/run/start', { game: 'full-moon', mode: 'weekly', mission: 'test-m', night: nightKey(NOW) }, early); check(r.status === 409 && r.body.error === 'mission_locked', 'a locked mission cannot be started');
+
+  // on time: both stages at full points, never twice
+  NOW = Date.parse('2027-02-09T14:00:00Z'); const ontime = await mkPlayer('TDY-AAAA0011', 'OnTime');
+  pub = await get('/api/season'); check(pub.body.missions.some((m) => m.id === 'test-m' && m.state === 'open'), 'public Season info: the mission is open during its week');
+  let x = await play(ontime, weak); check(x.fin.status === 200 && x.fin.body.counted && x.fin.body.points.total === 40 && !x.fin.body.late, 'on time: the first stage pays the full 40');
+  check(db.prepare("SELECT COUNT(*) c FROM run_meta WHERE player_id='TDY-AAAA0011' AND counted = 1").get().c === 0 && db.prepare("SELECT COUNT(*) c FROM daily_activity WHERE player_id='TDY-AAAA0011'").get().c === 0, 'a weekly run is not a nightly run: no active night, no night medal');
+  x = await play(ontime, weak); check(x.fin.body.counted === false, 'playing the same level again pays nothing more');
+  x = await play(ontime, strong); check(x.fin.body.counted && x.fin.body.points.total === 10, 'on time: reaching the next stage pays its 10 once');
+  x = await play(ontime, strong); check(x.st.body.runId === null && x.st.body.alreadyCounted, 'every stage done: a new try is allowed to start for fun but sends nothing');
+  check(ledgerSum('TDY-AAAA0011') === 50 && missionRows('TDY-AAAA0011').length === 2, 'on time total is 50 in two ledger rows');
+  const d1 = await get('/api/me/points', ontime); check(d1.body.missions.some((m) => m.id === 'test-m' && m.done && m.stages.every((st) => st.done)) && d1.body.points.season === 50, 'dashboard lists the mission as done and the season total matches');
+
+  // late: half points, rounded down
+  NOW = Date.parse('2027-02-16T14:00:00Z'); const late = await mkPlayer('TDY-AAAA0012', 'Late2');
+  pub = await get('/api/season'); check(pub.body.missions.some((m) => m.id === 'test-m' && m.state === 'late'), 'public Season info: the mission shows as late after its week');
+  x = await play(late, strong); check(x.fin.body.counted && x.fin.body.late && x.fin.body.points.total === 25 && x.fin.body.points.items.every((i) => /late, half points/.test(i.label)), 'late: both stages at half (20 + 5 = 25)');
+
+  // starts in the week, finishes the next week: on-time part full, late part half
+  NOW = Date.parse('2027-02-14T10:00:00Z'); const split = await mkPlayer('TDY-AAAA0013', 'Split');
+  x = await play(split, weak); check(x.fin.body.points.total === 40, 'split player: stage one on time pays 40');
+  NOW = Date.parse('2027-02-16T09:00:00Z');
+  x = await play(split, strong); check(x.fin.body.counted && x.fin.body.late && x.fin.body.points.total === 5, 'split player: stage two done after the deadline pays half (5)');
+  check(ledgerSum('TDY-AAAA0013') === 45, 'split player total is 45');
+
+  // run that STARTS in time but FINISHES after the deadline is paid by the finish time
+  NOW = Date.parse('2027-02-15T12:55:00Z'); const edge = await mkPlayer('TDY-AAAA0014', 'Edge');
+  const es = await post('/api/run/start', { game: 'full-moon', mode: 'weekly', mission: 'test-m', night: nightKey(NOW) }, edge);
+  NOW = Date.parse('2027-02-15T13:05:00Z');
+  const ef = await post('/api/run/finish', { runId: es.body.runId, drops: weak.drops, endTick: weak.endTick, score: weak.score }, edge);
+  check(ef.body.counted && ef.body.late && ef.body.points.total === 20, 'started before the deadline but finished after: half points by the finish time');
+
+  // safety
+  NOW = Date.parse('2027-02-10T14:00:00Z'); const cheat = await mkPlayer('TDY-AAAA0015', 'Cheat');
+  x = await play(cheat, strong, true); check(x.fin.status === 422 && x.fin.body.error === 'mismatch' && ledgerSum('TDY-AAAA0015') === 0, 'a wrong score on a weekly run is refused, no points');
+  r = await post('/api/run/start', { game: 'full-moon', mode: 'weekly', mission: 'nope', night: nightKey(NOW) }, cheat); check(r.status === 400 && r.body.error === 'mission_not_found', 'unknown mission is refused');
+  r = await post('/api/run/start', { game: 'moon-brew', mode: 'weekly', mission: 'test-m', night: nightKey(NOW) }, cheat); check(r.status === 400, 'a mission cannot be started through another game');
+  const hw = await mkPlayer('TDY-AAAA0016', 'HeldW', 'held'); x = await play(hw, weak);
+  check(x.fin.body.counted && x.fin.body.held && db.prepare("SELECT status FROM points_ledger WHERE player_id='TDY-AAAA0016'").all().every((y) => y.status === 'pending'), 'a player under review: mission points wait as pending');
+  db.prepare("UPDATE settings SET value='0' WHERE key='points_enabled'").run(); const ks2 = await mkPlayer('TDY-AAAA0017', 'Sw2'); x = await play(ks2, weak);
+  check(x.fin.body.counted === false && x.fin.body.reason === 'points_paused' && ledgerSum('TDY-AAAA0017') === 0, 'kill switch also stops mission points');
+  db.prepare("UPDATE settings SET value='1' WHERE key='points_enabled'").run();
+  db.prepare("UPDATE seasons SET status='draft' WHERE id='season-1'").run();
+  RULES.missions.pop();
+}
+
 console.log(bad ? 'PROBLEMS: ' + bad : 'runs and points ok'); if (bad) process.exitCode = 1;

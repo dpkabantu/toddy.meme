@@ -15,3 +15,6 @@ export function weekOfNight(key) { return isoWeek(Date.parse(key + 'T12:00:00Z')
 export function shiftNight(key, days) { return new Date(Date.parse(key + 'T00:00:00Z') + days * DAY).toISOString().slice(0, 10); }
 // Last 7 nights ending at key (oldest first), for streak strips.
 export function lastNights(key, n = 7) { const out = []; for (let i = n - 1; i >= 0; i--) out.push(shiftNight(key, -i)); return out; }
+
+// A mission's week: opens at the start of night (startNight + 7 x (week - 1)) and the on-time period ends 7 nights later.
+export function missionWindow(startNight, week) { const opens = nightStartMs(startNight) + (week - 1) * 7 * DAY; return { opensMs: opens, closesMs: opens + 7 * DAY }; }

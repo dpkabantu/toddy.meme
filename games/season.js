@@ -15,8 +15,10 @@
     if (!meP) meP = fetch('/api/me', { credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (j) { return !!(j && j.signedIn); }).catch(function () { return false; });
     return meP;
   }
-  function start(game) {
-    runs[game] = signedIn().then(function (yes) { return yes ? post('/api/run/start', { game: game, night: night() }) : { ok: false, guest: true }; });
+  // opts (optional): { mode: 'weekly', mission: id } for a weekly mission. Nothing is sent for guests.
+  function start(game, opts) {
+    var body = { game: game, night: night() }; Object.keys(opts || {}).forEach(function (k) { body[k] = opts[k]; });
+    runs[game] = signedIn().then(function (yes) { return yes ? post('/api/run/start', body) : { ok: false, guest: true }; });
     return runs[game];
   }
   // payload: what the game recorded (Moon Brew: { log }, Full Moon: { drops, endTick, score }). Resolves to the server's answer, or null for guests.
@@ -26,12 +28,13 @@
     return p.then(function (s) {
       if (!s || s.guest) return null;
       if (!s.ok) return s;
-      if (!s.runId) return { ok: true, counted: false, reason: 'already_counted' };
+      if (!s.runId) return { ok: true, counted: false, reason: 'already_counted', mission: s.mission ? s.mission.id : undefined };
       var body = { runId: s.runId }; Object.keys(payload || {}).forEach(function (k) { body[k] = payload[k]; });
       return post('/api/run/finish', body);
     });
   }
   var MSG = {
+    mission_locked: 'This mission has not opened yet.',
     clock_off: 'Your device clock looks off, so this run cannot earn Season points.',
     rate: 'Too many runs in a short time. Season points will work again soon.',
     season_closed: 'The Season is not open right now.',
@@ -43,6 +46,12 @@
   function describe(res) {
     if (!res) return null;
     if (res.ok === false) { if (res.error === 'offline' || res.error === 'not_configured' || res.error === 'sign_in_first') return null; return { text: MSG[res.error] || 'This run could not be confirmed, so it earned no Season points.' }; }
+    if (res.mission) {
+      if (res.counted) { var mi = res.points.items || []; return { text: 'Weekly Challenge points: +' + res.points.total + (res.held ? ' (waiting for review)' : '') + ' \u00b7 ' + mi.map(function (x) { return x.label + ' +' + x.amount; }).join(' \u00b7 ') + '.', link: true }; }
+      if (res.reason === 'below_stage' || res.reason === 'not_better' || res.reason === 'already_counted') return { text: 'This try did not reach a new stage, so the Weekly Challenge points stay as they are.', link: true };
+      if (res.reason === 'points_paused') return { text: 'Season points are paused right now. Your run was kept.' };
+      return null;
+    }
     if (res.counted) {
       var items = res.points.items || [], one = items.length === 1;
       var parts = items.map(function (x) { return one ? x.label : x.label + ' +' + x.amount; });
