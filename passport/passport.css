@@ -1,0 +1,38 @@
+:root { --bg: #14102e; --bg2: #1d1742; --ink: #fff4d6; --mute: #c9bde0; --gold: #fdaf1e; --brass: #c99a3b; --danger: #ff8c7a; --line: rgba(201,154,59,.45); }
+* { box-sizing: border-box; }
+html { background: var(--bg); }
+body { margin: 0; min-height: 100vh; background: radial-gradient(120% 70% at 50% 0%, #2a2160 0%, var(--bg) 60%); color: var(--ink); font: 500 16px/1.45 Fredoka, system-ui, sans-serif; padding: max(20px, env(safe-area-inset-top)) max(16px, env(safe-area-inset-right)) max(28px, env(safe-area-inset-bottom)) max(16px, env(safe-area-inset-left)); }
+.wrap { max-width: 440px; margin: 0 auto; display: flex; flex-direction: column; gap: 12px; align-items: stretch; }
+.back { color: var(--mute); text-decoration: none; font-size: 14px; align-self: flex-start; }
+.back:hover, .back:focus-visible { color: var(--ink); text-decoration: underline; }
+.moon { width: 64px; height: 64px; border-radius: 50%; margin: 6px auto 0; background: radial-gradient(circle at 36% 34%, #fff3c4 0%, #fdaf1e 55%, #b9741a 100%); box-shadow: 0 0 36px rgba(253,175,30,.35); position: relative; overflow: hidden; }
+.moon::after { content: ""; position: absolute; width: 56px; height: 56px; border-radius: 50%; background: var(--bg); top: -6px; left: 24px; opacity: .92; }
+.eyebrow { margin: 0; text-align: center; letter-spacing: .32em; font-size: 13px; color: var(--brass); }
+.eyebrow.small { font-size: 11px; }
+h1 { margin: 0; text-align: center; font: 700 40px/1.1 "Playfair Display", Georgia, serif; text-wrap: balance; }
+h2 { margin: 0; font: 700 24px/1.2 "Playfair Display", Georgia, serif; }
+.card { background: linear-gradient(180deg, var(--bg2), #181338); border: 1.5px solid var(--line); border-radius: 18px; padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+.sub { margin: 0; color: var(--ink); }
+.note { margin: 0; color: var(--mute); font-size: 14px; }
+.msg { margin: 0; padding: 10px 14px; border-radius: 12px; border: 1.5px solid var(--gold); background: rgba(253,175,30,.1); text-align: center; }
+.msg.bad { border-color: var(--danger); background: rgba(255,140,122,.1); }
+label { font-size: 14px; color: var(--mute); }
+.check { display: flex; gap: 10px; align-items: flex-start; color: var(--ink); font-size: 15px; }
+.check input { width: 22px; height: 22px; flex: none; accent-color: var(--gold); margin-top: 1px; }
+.check a, .note a { color: var(--gold); }
+input[type=text] { flex: 1 1 auto; min-width: 0; font: 600 18px Fredoka, system-ui, sans-serif; color: var(--ink); background: #0f0b25; border: 1.5px solid var(--line); border-radius: 12px; padding: 11px 12px; }
+input[type=text]:focus-visible, .btn:focus-visible, .chip:focus-visible, summary:focus-visible, .check input:focus-visible { outline: 3px solid #fff4d6; outline-offset: 2px; }
+.row { display: flex; gap: 8px; align-items: center; }
+.btn { font: 600 18px Fredoka, system-ui, sans-serif; text-align: center; text-decoration: none; padding: 13px 18px; border-radius: 14px; border: 2px solid #1b1236; background: var(--gold); color: #1b1236; box-shadow: 0 3px 0 #b9741a; cursor: pointer; display: block; width: 100%; }
+.btn.alt { background: transparent; color: var(--ink); border-color: var(--brass); box-shadow: none; }
+.btn[disabled], .chip[disabled] { opacity: .55; cursor: default; }
+.chip { font: 600 14px Fredoka, system-ui, sans-serif; padding: 9px 12px; border-radius: 11px; border: 1.5px solid var(--brass); background: transparent; color: var(--ink); cursor: pointer; white-space: nowrap; }
+.chip.danger { border-color: var(--danger); color: var(--danger); }
+.pid { margin: 0; text-align: center; font: 700 30px/1.1 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .06em; color: var(--gold); overflow-wrap: anywhere; }
+.pname { margin: 0; text-align: center; font: 600 22px/1.2 Fredoka, system-ui, sans-serif; }
+#p-since { text-align: center; }
+.more { border-top: 1px solid var(--line); padding-top: 10px; }
+.more summary { cursor: pointer; color: var(--mute); font-size: 15px; padding: 4px 0; }
+.more[open] summary { margin-bottom: 8px; }
+.more > * + * { margin-top: 8px; }
+[hidden] { display: none !important; }

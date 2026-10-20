@@ -15,3 +15,4 @@ jobs:
         with:
           node-version: 22
       - run: node --no-warnings server/test/run.mjs
+      - run: node --no-warnings server/test/auth.mjs

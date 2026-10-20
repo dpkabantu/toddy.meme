@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>TODDY Passport</title>
+<meta name="description" content="One TODDY Passport for every TODDY game. Games always work as a guest; a Passport saves your progress.">
+<meta name="robots" content="noindex">
+<meta name="theme-color" content="#14102e">
+<meta name="color-scheme" content="dark">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link rel="apple-touch-icon" href="/assets/apple-touch-icon.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Playfair+Display:ital,wght@0,700;1,500&display=swap">
+<link rel="stylesheet" href="passport.css">
+<script src="passport.js" defer></script>
+</head>
+<body>
+<main class="wrap">
+  <a class="back" href="/games/">&larr; All games</a>
+  <div class="moon" aria-hidden="true"></div>
+  <p class="eyebrow">TODDY</p>
+  <h1>Passport</h1>
+  <p id="msg" class="msg" role="status" aria-live="polite" hidden></p>
+
+  <section id="s-loading" class="card"><p class="sub">Checking&hellip;</p></section>
+
+  <section id="s-out" class="card" hidden>
+    <p class="sub">One ID for every TODDY game. Playing never needs it: every game works as a guest. A Passport saves your progress and lets you join the Season rankings when they open.</p>
+    <a id="signin" class="btn" href="/api/auth/google/start?return=/passport/">Continue with Google</a>
+    <p id="off" class="note" hidden>Sign-in is not switched on yet on this address.</p>
+    <p class="note">We only receive your email address from Google, nothing else: no name, no photo. Season accounts are for people 18 or older.</p>
+    <p class="note">If the Google page does not open, you are probably inside another app&rsquo;s browser. Open this page in Safari or Chrome instead.</p>
+  </section>
+
+  <section id="s-join" class="card" hidden>
+    <h2>Almost there</h2>
+    <p class="sub">Signed in with Google as <b id="hint"></b>.</p>
+    <label for="j-name">Choose a username</label>
+    <div class="row"><input id="j-name" type="text" maxlength="20" autocomplete="off" autocapitalize="off" spellcheck="false" aria-describedby="j-rules"><button id="j-shuffle" class="chip" type="button">New idea</button></div>
+    <p id="j-rules" class="note">3 to 20 letters, numbers or _ . Please do not use your real name.</p>
+    <label class="check"><input id="j-adult" type="checkbox"><span>I am 18 or older.</span></label>
+    <label class="check"><input id="j-terms" type="checkbox"><span>I accept the <a href="/terms.html">Terms</a> (version <span id="j-ver"></span>) and have read the <a href="/privacy.html">Privacy page</a>.</span></label>
+    <button id="j-go" class="btn" type="button">Create my Passport</button>
+  </section>
+
+  <section id="s-in" class="card" hidden>
+    <p class="eyebrow small">TODDY PASSPORT</p>
+    <p id="p-id" class="pid"></p>
+    <p id="p-name" class="pname"></p>
+    <p id="p-since" class="note"></p>
+    <details class="more">
+      <summary>Change username</summary>
+      <div class="row"><input id="r-name" type="text" maxlength="20" autocomplete="off" autocapitalize="off" spellcheck="false" aria-label="New username"><button id="r-go" class="chip" type="button">Save</button></div>
+      <p id="r-note" class="note"></p>
+    </details>
+    <a class="btn alt" href="/games/">Play games</a>
+    <button id="out" class="btn alt" type="button">Sign out</button>
+    <details class="more">
+      <summary>Delete my Passport</summary>
+      <p class="note">This removes your email address, your Google link and your username from our records and signs you out everywhere. Your game results stay, tied to an ID that no longer leads to anyone. It cannot be undone. Type DELETE to confirm.</p>
+      <div class="row"><input id="d-word" type="text" autocomplete="off" autocapitalize="characters" spellcheck="false" aria-label="Type DELETE to confirm"><button id="d-go" class="chip danger" type="button">Delete</button></div>
+    </details>
+  </section>
+</main>
+</body>
+</html>

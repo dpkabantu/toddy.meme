@@ -2,12 +2,14 @@
 // Runs ONLY for /api/* (see wrangler.jsonc, run_worker_first). Everything else on toddy.meme is the static site.
 // No cookies, no secrets, no player data in this stage.
 
-export const EXPECTED_SCHEMA = '0001';
+import { googleStart, googleCallback, me, signup, changeUsername, logout, deleteMe, authStatus } from './auth.js';
+
+export const EXPECTED_SCHEMA = '0002';
 export const EXPECTED_TABLES = [
   'schema_migrations', 'seasons', 'rule_versions', 'games', 'season_games', 'players', 'linked_accounts',
   'device_signals', 'game_runs', 'points_ledger', 'daily_activity', 'weekly_summary', 'referrals',
   'quest_completions', 'contributions', 'trust_scores', 'trust_flags', 'admin_audit_log', 'final_standings',
-  'privacy_requests',
+  'privacy_requests', 'oauth_states', 'pending_signups', 'sessions', 'player_contacts', 'terms_versions', 'username_claims', 'rate_limits',
 ];
 
 // The API is JSON only and must never be cached or framed.
@@ -35,15 +37,15 @@ async function health(env) {
       const r = await env.DB.prepare('SELECT version FROM schema_migrations ORDER BY version DESC LIMIT 1').first();
       schema = r ? r.version : null;
     }
-    const ok = missing.length === 0 && schema === EXPECTED_SCHEMA;
-    return json(ok ? 200 : 503, { ok, service: 'toddy-api', db: 'connected', schema, expectedSchema: EXPECTED_SCHEMA, tables: EXPECTED_TABLES.length - missing.length, missing, time: new Date().toISOString() });
+    const ok = missing.length === 0 && schema !== null && schema >= EXPECTED_SCHEMA;
+    return json(ok ? 200 : 503, { ok, service: 'toddy-api', db: 'connected', schema, expectedSchema: EXPECTED_SCHEMA, tables: EXPECTED_TABLES.length - missing.length, missing, auth: authStatus(env), time: new Date().toISOString() });
   } catch (e) {
     console.error('health check failed', e && e.message);     // detail stays in the Cloudflare logs, never in the answer
     return json(503, { ok: false, service: 'toddy-api', db: 'error' });
   }
 }
 
-export async function handle(request, env) {
+export async function handle(request, env, deps) {
   const url = new URL(request.url);
   const path = url.pathname.replace(/\/+$/, '') || '/';
   if (path !== '/api' && !path.startsWith('/api/')) {
@@ -55,6 +57,18 @@ export async function handle(request, env) {
     const res = await health(env);
     return request.method === 'HEAD' ? new Response(null, { status: res.status, headers: res.headers }) : res;
   }
+  const routes = {
+    'GET /api/auth/google/start': googleStart,
+    'GET /api/auth/google/callback': (r, e) => googleCallback(r, e, deps),
+    'GET /api/me': me,
+    'POST /api/signup': signup,
+    'POST /api/me/username': changeUsername,
+    'POST /api/auth/logout': logout,
+    'POST /api/me/delete': deleteMe,
+  };
+  const fn = routes[request.method + ' ' + path];
+  if (fn) return fn(request, env);
+  if (Object.keys(routes).some((k) => k.endsWith(' ' + path))) return json(405, { ok: false, error: 'method_not_allowed' });
   return json(404, { ok: false, error: 'not_found' });
 }
 
