@@ -13,10 +13,10 @@ export const RULES = {
   startNight: '2027-01-05',           // PLACEHOLDER: first night of Season week 1 (owner has not chosen the Season dates)
   // Weekly missions: open for one Season week (from 18:30 India time), finished in time = full points, finished later = half (rounded down).
   // Each stage pays once. Points are placeholders.
-  missions: [
-    { id: 'full-moon-w3', game: 'full-moon', week: 3, kind: 'weekly-puzzle', title: 'Weekly Challenge', seed: 900300, twist: 2,
-      stages: [{ id: 'silver', minBand: 2, points: 40, label: 'Silver' }, { id: 'gold', minBand: 3, points: 10, label: 'Gold' }] },
-  ],
+  // Full Moon: Weekly Challenge n = twist n-1 (week 1 Opening Night ... week 8 Grand Finale), one fixed puzzle per week. Moon Brew: Brew Set, 5 fixed trays per week.
+  fullMoonWeekly: { weeks: 8, silverBand: 2, silverPoints: 40, goldPoints: 10 },
+  brewSet: { weeks: 8, trays: 5, halfTrays: 3, halfPoints: 25, donePoints: 25 },
+  missions: [],
   // Scam Lab: one mission per chapter, made from games/scam-lab/cases/chapters.json. Chapter n opens in Season week firstWeek + n - 1 (PLACEHOLDER schedule).
   chapterMissions: { firstWeek: 1, halfPoints: 25, donePoints: 25, halfCases: 3 },
   games: ['moon-brew', 'full-moon', 'scam-lab'],

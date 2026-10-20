@@ -40,42 +40,42 @@
   }
 
   function istDate(iso) { try { return new Date(iso).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' }); } catch (e) { return ''; } }
-  function missionRow(m, my) {
-    var done = my && my.done, row = el('div', 'mrow' + (m.state === 'locked' ? ' locked' : '')), info = el('div', 'minfo');
-    info.appendChild(el('b', '', m.title));
+  function missionRow(m, my, name) {
+    var done = my && my.done, row = el('div', 'mrow' + (m.state === 'locked' ? ' locked' : '')), info = el('div', 'minfo'), cased = m.kind === 'chapter' || m.kind === 'brewset', unit = m.kind === 'brewset' ? 'trays' : 'cases';
+    var t = el('b', '', (name || m.game) + ' · ' + m.title); info.appendChild(t);
     var casesDone = my && my.casesDone ? my.casesDone.length : 0;
-    var sub = 'Week ' + m.week + ' \u00b7 ' + (m.state === 'locked' ? 'opens ' + istDate(m.opensAt) : m.state === 'late' ? 'week is over: half points' : 'open until ' + istDate(m.closesAt));
-    if (m.kind === 'chapter' && m.state !== 'locked') sub += ' \u00b7 ' + casesDone + ' of ' + m.cases.length + ' cases';
-    info.appendChild(el('span', 'msub' + (done ? ' done' : ''), done ? 'Done \u00b7 Week ' + m.week : sub));
-    if (m.kind === 'chapter' && m.state !== 'locked') info.appendChild(bar(casesDone, m.cases.length));
+    var sub = m.state === 'locked' ? 'opens ' + istDate(m.opensAt) : m.state === 'late' ? 'week is over: half points' : 'open until ' + istDate(m.closesAt);
+    if (cased && m.state !== 'locked') sub += ' · ' + casesDone + ' of ' + m.cases.length + ' ' + unit;
+    info.appendChild(el('span', 'msub' + (done ? ' done' : ''), done ? 'Done' : sub));
+    if (cased && m.state !== 'locked') info.appendChild(bar(casesDone, m.cases.length));
     var ul = el('ul', 'stages');
-    m.stages.forEach(function (st, i) { var got = my && my.stages[i] && my.stages[i].done; ul.appendChild(el('li', got ? 'got' : '', (got ? '\u2713 ' : '') + st.label + ' +' + st.points)); });
+    m.stages.forEach(function (st, i) { var got = my && my.stages[i] && my.stages[i].done; ul.appendChild(el('li', got ? 'got' : '', (got ? '✓ ' : '') + st.label + ' +' + st.points)); });
     info.appendChild(ul); row.appendChild(info);
     if (m.state !== 'locked') {
-      var a = el('a', 'btn sm' + (done ? ' alt' : '')); a.href = '/games/' + m.game + '/' + (m.kind === 'chapter' ? '?mission=' + m.id : '?play=weekly');
-      a.textContent = done ? 'Play again' : m.kind === 'chapter' ? 'Open' : 'Play'; a.setAttribute('aria-label', (done ? 'Play again: ' : m.kind === 'chapter' ? 'Open ' : 'Play ') + m.title);
+      var a = el('a', 'btn sm' + (done ? ' alt' : '')); a.href = '/games/' + m.game + '/' + (m.kind === 'chapter' ? '?mission=' + m.id : m.kind === 'brewset' ? '?play=brewset&week=' + m.week : '?play=weekly&mission=' + m.id);
+      a.textContent = done ? 'Play again' : cased ? 'Open' : 'Play'; a.setAttribute('aria-label', (done ? 'Play again: ' : cased ? 'Open ' : 'Play ') + (name || m.game) + ' ' + m.title);
       row.appendChild(a);
     }
     return row;
   }
+  var GAME_ORDER = ['moon-brew', 'full-moon', 'scam-lab'];
   function renderMissions() {
     var list = S.missions || []; if (!list.length) return;
     var box = $('mg'); box.textContent = '';
     var mine = {}; if (P && P.missions) P.missions.forEach(function (m) { mine[m.id] = m; });
     var name = {}; S.games.forEach(function (g) { name[g.id] = g.title; });
-    var order = [], byGame = {};
-    list.forEach(function (m) { if (!byGame[m.game]) { byGame[m.game] = []; order.push(m.game); } byGame[m.game].push(m); });
-    order.forEach(function (gid) {
-      var ms = byGame[gid].slice().sort(function (a, b) { return a.week - b.week; }), card = el('div', 'tg-card'), top = el('div', 'top'), nm = el('span', 'name gname', name[gid] || gid);
-      nm.appendChild(el('span', 'tag', ms.length > 1 ? ms.length + ' missions' : 'Week ' + ms[0].week)); top.appendChild(nm); card.appendChild(top);
-      // first three that still matter (open or late, not done) stay visible; the rest fold away
-      var rank = function (m) { var d = mine[m.id] && mine[m.id].done; return m.state === 'locked' ? 2 : d ? 1 : 0; };
-      var sorted = ms.slice().sort(function (a, b) { return rank(a) - rank(b) || a.week - b.week; });
-      var shown = ms.length > 4 ? sorted.slice(0, 3) : sorted, rest = ms.length > 4 ? sorted.slice(3) : [];
-      shown.forEach(function (m) { card.appendChild(missionRow(m, mine[m.id])); });
-      if (rest.length) { var d = el('details', 'rest'); d.appendChild(el('summary', '', 'Show all ' + ms.length + ' missions')); sorted.slice(3).forEach(function (m) { d.appendChild(missionRow(m, mine[m.id])); }); card.appendChild(d); }
-      box.appendChild(card);
-    });
+    var weeks = {}; list.forEach(function (m) { (weeks[m.week] = weeks[m.week] || []).push(m); });
+    var nums = Object.keys(weeks).map(Number).sort(function (a, b) { return a - b; }), cur = S.seasonWeek >= 1 ? S.seasonWeek : nums[0];
+    var rows = function (w) { return weeks[w].slice().sort(function (a, b) { return GAME_ORDER.indexOf(a.game) - GAME_ORDER.indexOf(b.game); }).map(function (m) { return missionRow(m, mine[m.id], name[m.game]); }); };
+    var card = el('div', 'tg-card'), top = el('div', 'top'), nm = el('span', 'name gname', 'Week ' + cur); nm.appendChild(el('span', 'tag', 'This week')); top.appendChild(nm); card.appendChild(top);
+    if (weeks[cur]) rows(cur).forEach(function (r) { card.appendChild(r); });
+    var fold = function (label, ws) {
+      if (!ws.length) return; var d = el('details', 'rest'); d.appendChild(el('summary', '', label));
+      ws.forEach(function (w) { d.appendChild(el('p', 'wk', 'Week ' + w)); rows(w).forEach(function (r) { d.appendChild(r); }); }); card.appendChild(d);
+    };
+    fold('Earlier weeks (half points)', nums.filter(function (w) { return w < cur; }));
+    fold('Coming weeks', nums.filter(function (w) { return w > cur; }));
+    box.appendChild(card);
     $('missions').hidden = false;
   }
 

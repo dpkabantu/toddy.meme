@@ -9,7 +9,7 @@ import { fakeD1 } from './fake-d1.mjs';
 import { sha256Hex } from '../lib/util.js';
 import * as FM from '../games/full-moon-core.js';
 import { generate, newGame, tap, hint, canRoll, frozen } from '../../games/moon-brew/src/core.js';
-import { dailyConfig } from '../../games/moon-brew/src/levels.js';
+import { dailyConfig, brewSetConfig } from '../../games/moon-brew/src/levels.js';
 import { dailyCase } from '../../games/scam-lab/src/daily.js';
 import { scoreDaily, strongClues, scoreCase, scoreRush } from '../../games/scam-lab/src/engine.js';
 import { CASES as LAB } from '../games/scam-lab-cases.js';
@@ -311,6 +311,50 @@ check(db.prepare("SELECT COUNT(*) c FROM game_runs WHERE log_json IS NOT NULL AN
   check(ledgerSum('TDY-AAAA0023') === 0, 'none of those paid anything');
   const e = await mkPlayer('TDY-AAAA0024', 'ChapHeld', 'held'); for (const id of ch1.slice(0, 3)) x = await playCase(e, 'scam-lab-ch1', id);
   check(x.fin.body.counted && x.fin.body.held && db.prepare("SELECT status FROM points_ledger WHERE player_id='TDY-AAAA0024'").all().every((y) => y.status === 'pending'), 'a player under review: chapter points wait as pending');
+  db.prepare("UPDATE seasons SET status='draft' WHERE id='season-1'").run();
+}
+
+// ---- Season Brew Set (Moon Brew): 5 fixed trays per Season week; 25 at 3 trays, 25 at 5; late = half ----
+{
+  RULES.startNight = '2027-03-01';
+  db.prepare("UPDATE seasons SET status='live' WHERE id='season-1'").run();
+  const setRun = (week, t, wrongTray) => { const g = newGame(generate(brewSetConfig(wrongTray ? 3 : week, t))); let at = 1000; while (g.status === 'playing') { const b = hint(g); if (!b) break; tap(g, b, at); at += 900; } return { log: g.log, seconds: at / 1000, status: g.status }; };
+  const playTray = async (cookie, week, t, wrongTray) => {
+    const st = await post('/api/run/start', { game: 'moon-brew', mode: 'weekly', mission: 'moon-brew-w' + week, case: 't' + t, night: nightKey(NOW) }, cookie);
+    if (!st.body.runId) return { st };
+    const r = setRun(week, t, wrongTray); NOW += r.seconds * 1000 + 1000;
+    return { st, fin: await post('/api/run/finish', { runId: st.body.runId, log: r.log }, cookie) };
+  };
+  const rows = (id) => db.prepare("SELECT amount FROM points_ledger WHERE player_id = ?1 AND source_type = 'mission' ORDER BY id").all(id).map((x) => x.amount);
+  NOW = Date.parse('2027-03-02T14:00:00Z'); const a = await mkPlayer('TDY-AAAA0030', 'BrewA');
+  const pub = await get('/api/season'); const bm = pub.body.missions.filter((m) => m.game === 'moon-brew' && m.kind === 'brewset');
+  check(bm.length === 8 && bm.every((m, i) => m.week === i + 1 && m.cases.length === 5), 'Season info lists 8 Brew Sets, one per week, 5 trays each');
+  check(pub.body.seasonWeek === 1, 'Season info says it is Season week 1');
+  const fm = pub.body.missions.filter((m) => m.game === 'full-moon');
+  check(fm.length === 8 && fm.every((m, i) => m.week === i + 1 && m.twist === i && m.seed === 900000 + (i + 1) * 100), 'Season info lists 8 Full Moon Weekly Challenges, week n = twist n-1');
+  check(bm[1].state === 'locked' && fm[1].state === 'locked', 'week 2 missions are locked in week 1');
+  let x = await playTray(a, 2, 1); check(x.st.status === 409 && x.st.body.error === 'mission_locked', 'a Brew Set that has not opened cannot be played for points');
+  x = await playTray(a, 1, 1, true); check(x.fin.status === 422, 'a log from a different tray is refused');
+  check(ledgerSum('TDY-AAAA0030') === 0, 'refused log paid nothing');
+  for (let t = 1; t <= 2; t++) { x = await playTray(a, 1, t); check(x.fin.body.ok && x.fin.body.counted === false && x.fin.body.progress.cases === t, 'tray ' + t + ': counted for the set, nothing paid yet'); }
+  x = await playTray(a, 1, 2); check(x.fin.body.progress.cases === 2, 'the same tray again does not count twice');
+  x = await playTray(a, 1, 3); check(x.fin.body.counted && x.fin.body.points.total === 25, 'tray 3 pays the first stage (25)');
+  x = await playTray(a, 1, 4); x = await playTray(a, 1, 5); check(x.fin.body.counted && x.fin.body.points.total === 25, 'tray 5 pays the second stage (25)');
+  check(rows('TDY-AAAA0030').join() === '25,25', 'Brew Set total 50 in two ledger rows');
+  x = await playTray(a, 1, 1); check(x.st.body.runId === null && x.st.body.alreadyCounted, 'set done: a new try sends nothing');
+  check(db.prepare("SELECT COUNT(*) c FROM run_meta WHERE player_id='TDY-AAAA0030' AND counted = 1").get().c === 0, 'Brew Set trays are not nightly runs');
+  // late: week 1 is over
+  NOW = Date.parse('2027-03-09T14:00:00Z'); const b = await mkPlayer('TDY-AAAA0031', 'BrewLate');
+  for (let t = 1; t <= 5; t++) x = await playTray(b, 1, t);
+  check(rows('TDY-AAAA0031').join() === '12,12', 'late Brew Set pays half, rounded down (12 + 12)');
+  const pub2 = await get('/api/season'); check(pub2.body.seasonWeek === 2, 'on 9 March Season info says week 2');
+  // a lost tray is not counted
+  const burn = (() => { const g = newGame(generate(brewSetConfig(2, 1))); let at = 1000, guard = 0; while (g.status === 'playing' && guard++ < 300) { let bb = g.beans.find((y) => !y.gone && y.awake && !frozen(g, y) && !canRoll(g, y)); if (!bb) bb = hint(g); if (!bb) break; tap(g, bb, at); at += 900; } return { log: g.log, seconds: at / 1000, status: g.status }; })();
+  if (burn.status === 'burnt') { const c = await mkPlayer('TDY-AAAA0032', 'BrewBurnt'); const st = await post('/api/run/start', { game: 'moon-brew', mode: 'weekly', mission: 'moon-brew-w2', case: 't1', night: nightKey(NOW) }, c); NOW += burn.seconds * 1000 + 1000; const f = await post('/api/run/finish', { runId: st.body.runId, log: burn.log }, c); check(f.status === 422 && f.body.error === 'not_won', 'a burnt tray is not counted'); }
+  else check(true, '(burnt-tray bot did not burn this tray; skipped)');
+  // every Season tray can be built and won
+  let all = true; for (let w = 1; w <= 8; w++) for (let t = 1; t <= 5; t++) { const r = setRun(w, t); if (r.status !== 'won') all = false; }
+  check(all, 'all 40 Brew Set trays can be built and cleared');
   db.prepare("UPDATE seasons SET status='draft' WHERE id='season-1'").run();
 }
 

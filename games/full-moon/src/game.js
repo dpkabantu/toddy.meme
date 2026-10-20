@@ -764,7 +764,7 @@ function strip() {
 function weeklyButton() {
   const m = weeklyMission; if (!m) return '';
   const stages = m.stages.map((st) => st.label + ' ' + st.points).join(' · '), late = m.state === 'late';
-  return '<button class="btn alt" data-act="weekly">Weekly Challenge<span class="tag">Season</span><small>Same puzzle all week · ' + C.TWISTS[m.twist].name + ' · ' + stages + ' points' + (late ? ' · this week is over: half points' : ' · half points if finished late') + '</small></button>';
+  return '<button class="btn alt" data-act="weekly">Weekly Challenge ' + m.week + '<span class="tag">Season</span><small>Same puzzle all week · ' + C.TWISTS[m.twist].name + ' · ' + stages + ' points' + (late ? ' · this week is over: half points' : ' · half points if finished late') + '</small></button>';
 }
 function showMenu() {
   mode = 'menu';
@@ -1058,8 +1058,10 @@ async function boot() {
   layout();
   try {   // this week's Weekly Challenge, if the Season server knows one (guests can play it too; nothing is sent for them)
     const r = await Promise.race([fetch('/api/season', { credentials: 'same-origin' }).then((x) => x.json()), new Promise((res) => setTimeout(() => res(null), 1500))]);
-    const m = r && r.missions && r.missions.find((x) => x.game === 'full-moon' && x.state !== 'locked');
-    if (m && Number.isInteger(m.seed) && Number.isInteger(m.twist) && C.TWISTS[m.twist]) weeklyMission = m;
+    const open = r && r.missions ? r.missions.filter((x) => x.game === 'full-moon' && x.state !== 'locked' && Number.isInteger(x.seed) && Number.isInteger(x.twist) && C.TWISTS[x.twist]) : [];
+    const want = (location.search.match(/[?&]mission=([\w-]+)/) || [])[1];
+    const m = open.find((x) => x.id === want) || open.find((x) => x.week === r.seasonWeek) || open[open.length - 1];
+    if (m) weeklyMission = m;
   } catch (e) { /* no Season server: the button simply does not show */ }
   twist = todayTwist(); S = C.newGame(C.dateSeed(nightNow()), twist);     // an idle crate behind the menu
   mode = 'menu'; setScore(); setNext(); showMenu();

@@ -13,7 +13,31 @@ function chapterMissions() {
     stages: [{ id: 'half', needCases: Math.min(cm.halfCases, ch.cases.length), points: cm.halfPoints, label: Math.min(cm.halfCases, ch.cases.length) + ' cases' }, { id: 'done', needCases: ch.cases.length, points: cm.donePoints, label: 'Chapter done' }],
   }));
 }
-export const allMissions = () => [...RULES.missions, ...chapterMissions()];
+function fullMoonMissions() {
+  const f = RULES.fullMoonWeekly, out = [];
+  for (let w = 1; w <= f.weeks; w++) out.push({ id: 'full-moon-w' + w, game: 'full-moon', week: w, kind: 'weekly-puzzle', title: 'Weekly Challenge ' + w, seed: 900000 + w * 100, twist: w - 1,
+    stages: [{ id: 'silver', minBand: f.silverBand, points: f.silverPoints, label: 'Silver' }, { id: 'gold', minBand: 3, points: f.goldPoints, label: 'Gold' }] });
+  return out;
+}
+// Moon Brew Brew Set: 5 fixed trays per Season week, each its own small case (t1..t5). Separate from the Story, no earlier progress needed.
+function brewSetMissions() {
+  const b = RULES.brewSet, out = [];
+  for (let w = 1; w <= b.weeks; w++) {
+    const cases = Array.from({ length: b.trays }, (_, i) => 't' + (i + 1));
+    out.push({ id: 'moon-brew-w' + w, game: 'moon-brew', week: w, kind: 'brewset', title: 'Brew Set ' + w, cases,
+      stages: [{ id: 'half', needCases: b.halfTrays, points: b.halfPoints, label: b.halfTrays + ' trays' }, { id: 'done', needCases: b.trays, points: b.donePoints, label: 'Set done' }] });
+  }
+  return out;
+}
+export const allMissions = () => [...RULES.missions, ...fullMoonMissions(), ...brewSetMissions(), ...chapterMissions()];
+export const isCaseMission = (m) => m.kind === 'chapter' || m.kind === 'brewset';
+
+// The Season week it is right now (1..8). Before the Season is live, rehearsal always shows week 1.
+export function currentSeasonWeek(seasonStatus, now, weeks = 8) {
+  if (seasonStatus !== 'live') return 1;
+  for (let w = weeks; w >= 1; w--) if (now >= missionWindow(RULES.startNight, w).opensMs) return w;
+  return 0;
+}
 export const findMission = (id, game) => allMissions().find((m) => m.id === id && (!game || m.game === game));
 
 // 'locked' (not open yet), 'open' (on time) or 'late' (half points). Before the Season is live every mission counts as open, for rehearsal.

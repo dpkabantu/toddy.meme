@@ -7,7 +7,7 @@ import { planAwards, planUpgrade, ruleVersionId, weekFacts, streakFrom } from '.
 import * as moonBrew from './games/moon-brew.js';
 import * as fullMoon from './games/full-moon.js';
 import * as scamLab from './games/scam-lab.js';
-import { allMissions, findMission, missionState, planMission, claimedStages, finishedCases, missionPublic } from './missions.js';
+import { allMissions, isCaseMission, currentSeasonWeek, findMission, missionState, planMission, claimedStages, finishedCases, missionPublic } from './missions.js';
 
 const ADAPTERS = { 'moon-brew': moonBrew, 'full-moon': fullMoon, 'scam-lab': scamLab };
 export const MIN_CASE_MS = 20000;          // a Scam Lab case cannot be finished in less than this (wall clock)
@@ -52,12 +52,12 @@ async function weeklyStart(env, p, body, now, night, sstatus) {
   if (!m) return json(400, { ok: false, error: 'mission_not_found' });
   const state = missionState(sstatus, m, now);
   if (state === 'locked') return json(409, { ok: false, error: 'mission_locked', opensAt: missionPublic(sstatus, m, now).opensAt });
-  if (m.kind === 'chapter' && !m.cases.includes(body.case)) return json(400, { ok: false, error: 'case_not_in_mission' });
+  if (isCaseMission(m) && !m.cases.includes(body.case)) return json(400, { ok: false, error: 'case_not_in_mission' });
   const claimed = await claimedStages(env, p.id, m), info = missionPublic(sstatus, m, now);
   if (m.stages.every((st) => claimed.has(st.id))) return json(200, { ok: true, runId: null, night, alreadyCounted: true, mission: info });
   const id = 'run_' + randomToken(12), week = weekOfNight(night);
   await env.DB.batch([
-    env.DB.prepare("INSERT INTO game_runs (id, player_id, season_id, game_id, mode, seed, rules_version, status, submitted_at) VALUES (?1, ?2, ?3, ?4, 'weekly', ?5, ?6, 'pending', ?7)").bind(id, p.id, RULES.seasonId, m.game, m.kind === 'chapter' ? m.id + ':' + body.case : m.id, RULES.version, isoTime(now)),
+    env.DB.prepare("INSERT INTO game_runs (id, player_id, season_id, game_id, mode, seed, rules_version, status, submitted_at) VALUES (?1, ?2, ?3, ?4, 'weekly', ?5, ?6, 'pending', ?7)").bind(id, p.id, RULES.seasonId, m.game, isCaseMission(m) ? m.id + ':' + body.case : m.id, RULES.version, isoTime(now)),
     env.DB.prepare('INSERT INTO run_meta (run_id, player_id, game_id, night_key, week, started_ms) VALUES (?1, ?2, ?3, ?4, ?5, ?6)').bind(id, p.id, m.game, night, week, now),
   ]);
   return json(200, { ok: true, runId: id, night, week, counting: await pointsOn(env), mission: info });
@@ -83,7 +83,7 @@ export async function runFinish(request, env) {
   const [missionId, caseId] = run.gmode === 'weekly' ? String(run.gseed).split(':') : [];
   const mission = run.gmode === 'weekly' ? findMission(missionId, run.game_id) : null;
   if (run.gmode === 'weekly' && !mission) { await reject(env, run, now, 'bad_mission'); return json(422, { ok: false, error: 'bad_log' }); }
-  const v = mission && mission.kind === 'chapter' ? ADAPTERS[run.game_id].verifyCase(caseId, body) : ADAPTERS[run.game_id].verify(run.night_key, body, mission ? { seed: mission.seed, twist: mission.twist } : {});
+  const v = mission && mission.kind === 'chapter' ? ADAPTERS[run.game_id].verifyCase(caseId, body) : mission && mission.kind === 'brewset' ? ADAPTERS[run.game_id].verifyTray(mission.week, caseId, body) : ADAPTERS[run.game_id].verify(run.night_key, body, mission ? { seed: mission.seed, twist: mission.twist } : {});
   const replayMs = Math.round(performance.now() - t0);
   if (!v.ok) { await reject(env, run, now, v.error); return json(422, { ok: false, error: v.error }); }
   const elapsed = now - run.started_ms;
@@ -145,8 +145,8 @@ export async function runFinish(request, env) {
 // A weekly run finished and verified: pay the stages it reaches, by the server clock (full in the mission's week, half after).
 async function weeklyFinish(env, p, run, m, v, now, replayMs, plain, counting, caseId) {
   let cases = 0;
-  if (m.kind === 'chapter') { const f = await finishedCases(env, p.id, m); f.add(caseId); cases = f.size; }
-  const progress = m.kind === 'chapter' ? { cases, of: m.cases.length } : undefined;
+  if (isCaseMission(m)) { const f = await finishedCases(env, p.id, m); f.add(caseId); cases = f.size; }
+  const progress = isCaseMission(m) ? { cases, of: m.cases.length } : undefined;
   const answer = (extra) => json(200, { ok: true, score: v.score, band: v.band, bandName: RULES.bandNames[v.band], mission: m.id, progress, ...extra });
   if (!counting) { await env.DB.batch(plain); return answer({ counted: false, reason: 'points_paused', points: { total: 0, items: [] } }); }
   const sstatus = await seasonStatus(env), state = missionState(sstatus, m, now);
@@ -178,7 +178,7 @@ export async function seasonInfo(request, env) {
   const now = nowMs(env), night = nightKey(now);
   const s = await env.DB.prepare('SELECT id, name, status, starts_at, ends_at FROM seasons WHERE id = ?1').bind(RULES.seasonId).first();
   return json(200, { ok: true, season: s ? { id: s.id, name: s.name, status: s.status, startsAt: s.starts_at, endsAt: s.ends_at } : null,
-    night: { key: night, endsAt: isoTime(nightEndMs(night)), week: weekOfNight(night) },
+    night: { key: night, endsAt: isoTime(nightEndMs(night)), week: weekOfNight(night) }, seasonWeek: currentSeasonWeek(s ? s.status : null, now),
     games: RULES.games.map((id) => ({ id, title: RULES.names[id], ready: id in ADAPTERS })), missions: allMissions().map((m) => missionPublic(s ? s.status : null, m, now)), rules: rulesSummary(), rulesVersion: RULES.version });
 }
 
@@ -208,7 +208,7 @@ export async function myPoints(request, env) {
   const missions = [];
   for (const m of allMissions()) {
     const info = missionPublic(sst, m, now), claimed = await claimedStages(env, p.id, m);
-    const casesDone = m.kind === 'chapter' ? [...(await finishedCases(env, p.id, m))] : undefined;
+    const casesDone = isCaseMission(m) ? [...(await finishedCases(env, p.id, m))] : undefined;
     missions.push({ ...info, stages: info.stages.map((st) => ({ ...st, done: claimed.has(st.id) })), done: m.stages.every((st) => claimed.has(st.id)), casesDone });
   }
   const allRounderDone = RULES.games.filter((id) => ((gm[id] || {}).nights || 0) >= RULES.allRounderNights).length;

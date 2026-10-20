@@ -136,3 +136,4 @@ details.rest[open] > summary { padding-bottom: 6px; }
   #tg .tg-card .top { flex-direction: column; align-items: flex-start; gap: 2px; }
   #mine .dash { border-top: 0; padding-top: 0; }
 }
+.tg-card .wk { margin: 12px 0 0; font-size: 13px; font-weight: 700; color: var(--gold); letter-spacing: .04em; text-transform: uppercase; }

@@ -436,6 +436,12 @@ export function dailyConfig(d = nightDate()) {
     visitor: VISITOR_ORDER[n % VISITOR_ORDER.length] };
 }
 
+// Season Brew Set: 5 fixed trays for each Season week (t = 1..5). Same trays for everyone, separate from the Story, a little harder in later weeks.
+export function brewSetConfig(week, t) {
+  const c = endlessConfig(880000 + week * 1000, t + Math.floor((week - 1) / 2));
+  return { ...c, seed: (880000 + week * 1000 + t * 17) >>> 0, band: 'brewset' };
+}
+
 // Endless Brew: tray k of a run gets steadily harder.
 export function endlessConfig(runSeed, k, pieces = {}) {
   const size = Math.min(10, 5 + Math.floor(k / 2));
