@@ -438,11 +438,19 @@ export function dailyConfig(d = nightDate()) {
 }
 
 // Season launch mission: 7 Season nights x 20 trays, the same for everyone, apart from the Story.
-// Picked by tools/build-season-trays.mjs so difficulty rises every tray and every night. No special Story pieces.
+// Night s teaches the same pieces in the same order as the Story (sleepy beans, ice and sugar pairs, milk, cinnamon,
+// spinner beans, moon doors) so a player who never played the Story is taught them here, but every layout is new.
+// Layout seeds are picked by tools/build-season-trays.mjs so difficulty rises every tray and every night.
+export const SEASON_NEW = ['Sleepy beans', 'Ice cubes and sugar pairs', 'Milk swirls', 'Cinnamon sticks', 'Spinner beans', 'A busy mix', 'Moon doors'];
+export function seasonRecipe(night, t) {
+  const c = trayConfig(night - 1, t);
+  if (night === 6) { c.walls = Math.min(8, c.walls + 1); c.spin = t >= 3 ? 1 + (t >= 10 ? 1 : 0) : 0; }   // night 6: no new piece, more of the old ones
+  return c;
+}
 export function seasonTrayConfig(night, t) {
-  const row = SEASON_TRAYS[night - 1], e = row && row[t - 1];
-  if (!e) return null;
-  return { ...endlessConfig(e[1], e[0]), seed: e[1], band: 'season' };
+  const row = SEASON_TRAYS[night - 1], seed = row && row[t - 1];
+  if (!seed) return null;
+  return { ...seasonRecipe(night, t), seed, band: 'season' };
 }
 
 // Endless Brew: tray k of a run gets steadily harder.

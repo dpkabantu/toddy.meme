@@ -1,7 +1,7 @@
 // TODDY: Moon Brew — screens, drawing, sound and saving.
 import { DX, DY, MAX_BUMPS, generate, newGame, beanAt, frozen, unitOf, traceBean, canRoll, tap, stars, hint, useHint, dailyScore, streaks, fromFrozen, difficulty } from './core.js';
 import { TRAYS } from './trays.js';
-import { INTROS, TRAYS_PER_NIGHT, trayLevelConfig, seasonTrayConfig, dailyConfig, dailyNumber, nightDate, endlessConfig, ENDLESS_LINES, nightInfo, VISITORS, VISITOR_ORDER, TIER_NAMES, trayTier, tierOf } from './levels.js';
+import { INTROS, TRAYS_PER_NIGHT, trayLevelConfig, seasonTrayConfig, SEASON_NEW, dailyConfig, dailyNumber, nightDate, endlessConfig, ENDLESS_LINES, nightInfo, VISITORS, VISITOR_ORDER, TIER_NAMES, trayTier, tierOf } from './levels.js';
 import { buildPostcard } from './postcard.js';
 
 const BUILD = '1.0.0-rc12';
@@ -552,7 +552,7 @@ function load(cfg, ready) {
   say('');
   // first-time coaching: ring the bean that matters, one short line
   coach = null;
-  const tipKey = mode.kind === 'story' ? trayKey(mode.n, mode.t) : null;
+  const tipKey = mode.kind === 'story' ? trayKey(mode.n, mode.t) : mode.kind === 'brewset' ? seasonTip(cfg) : null;
   if (tipKey && INTROS[tipKey] && !save.intros[tipKey]) startCoach(tipKey);
   // a small mystery: one bean in each Night's finale carries a crown mark
   markBean = mode.kind === 'story' && mode.t === TRAYS_PER_NIGHT ? g.beans[level.solution[level.solution.length - 1][0]] : null;
@@ -564,6 +564,13 @@ function load(cfg, ready) {
 }
 
 // ---------------- First-time coaching ----------------
+// Season trays teach each piece the first time it shows up, in the same words as the Story (a player who saw it in the Story is not told twice).
+function seasonTip(cfg) {
+  const order = [['n1-1', true], ['n1-3', cfg.ticket > 0], ['n1-4', cfg.sleepy > 0], ['n2-1', cfg.ice > 0], ['n2-10', cfg.pairs > 0], ['n3-1', cfg.swirls > 0], ['n4-3', cfg.walls > 0], ['n5-3', cfg.spin > 0], ['n7-3', cfg.portals > 0]];
+  const hit = order.find(([k, here]) => here && !save.intros[k]);
+  return hit ? hit[0] : null;
+}
+
 let coach = null, markBean = null, bubbleTimer = 0;
 function startCoach(k) {
   const c = INTROS[k];
@@ -1353,22 +1360,33 @@ function showBrewSet() {
   show('brewset'); $('overlay').hidden = true;
   const late = m.state === 'late', body = $('brewset-body'), T = window.ToddySeason;
   const render = (done) => {
-    body.innerHTML = `<div class="rule one"><div><b>Seven nights, 20 trays each</b><p>The same trays for everyone, apart from the Story. Each tray is a little harder, and each night harder than the one before. A new night opens every day. Every 5 trays you clear gives 15 Season points, up to 420${late ? '. This week is over, so points are half' : '. Finish after this week and points are half'}.</p></div></div>
-      <p class="stat center" id="set-prog"></p>
-      <div class="nights" id="set-nights"></div>`;
-    const box = $('set-nights'); let all = 0;
-    m.nights.forEach((nt) => {
-      let c = 0, next = 0; for (let t = 1; t <= 20; t++) { if (done.has('n' + nt.night + 't' + t)) c++; else if (!next) next = t; }
-      all += c;
-      const row = document.createElement('div'); row.className = 'rule one night-row';
-      const info = document.createElement('div');
-      const bt = document.createElement('b'); bt.textContent = 'Night ' + nt.night; info.appendChild(bt);
-      const p = document.createElement('p'); p.textContent = !nt.open ? 'Opens ' + (T ? T.istDate(nt.opensAt) : 'soon') : !next ? 'Done ✓ 20 of 20 trays' : c + ' of 20 trays · next points at tray ' + Math.ceil(next / 5) * 5; info.appendChild(p);
-      row.appendChild(info);
-      if (nt.open) { const b = document.createElement('button'); b.className = 'btn' + (next ? ' primary' : ' ghost'); b.type = 'button'; b.dataset.night = nt.night; b.textContent = !next ? 'Play again' : next > 1 ? 'Continue: tray ' + next : 'Start'; b.addEventListener('click', () => { sfx.tick(); startBrewSet(nt.night, next || 20); }); row.appendChild(b); }
-      box.appendChild(row);
+    body.textContent = '';
+    const add = (tag, cls, text, parent) => { const e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; (parent || body).appendChild(e); return e; };
+    let all = 0; const per = [];
+    m.nights.forEach((nt) => { let c = 0, next = 0; for (let t = 1; t <= 20; t++) { if (done.has('n' + nt.night + 't' + t)) c++; else if (!next) next = t; } per.push({ nt, c, next }); all += c; });
+    const hero = add('div', 'sn-hero');
+    const img = add('img', '', undefined, hero); img.src = ASSET + 'postcard_n1_v02.webp'; img.alt = 'Toddy serves Milo the owl a Moon Brew'; img.width = 1200; img.height = 800;
+    const txt = add('div', 'sn-hero-text', undefined, hero);
+    add('p', 'eyebrow', 'MOON BREW · SEASON 1 · WEEK 1', txt);
+    add('h3', '', 'Season Nights', txt);
+    add('p', 'sn-big', 'Up to 420 Season points', txt);
+    add('p', 'sn-sub', `${all} of 140 trays cleared`, txt);
+    const bar = add('div', 'sn-bar', undefined, txt); const fill = add('span', '', undefined, bar); fill.style.width = Math.round(all / 140 * 100) + '%';
+    const how = add('div', 'sn-how');
+    [['7 nights', '20 trays each. Every tray is a little harder, and every night harder than the last.'], ['15 points', 'every 5 trays you clear (5, 10, 15, 20). 60 a night.'], ['One night a day', 'A new night opens every day and stays open all week.'], [late ? 'Half points' : 'Half points later', late ? 'This week is over, so points are half until the Season ends.' : 'Finish after this week and points are half, until the Season ends.']].forEach(([h, t]) => { const r = add('div', 'sn-rule', undefined, how); add('b', '', h, r); add('span', '', t, r); });
+    add('h4', 'sn-h', 'Your nights');
+    const box = add('div', 'nights');
+    per.forEach(({ nt, c, next }) => {
+      const row = add('div', 'sn-night' + (nt.open ? '' : ' closed'), undefined, box), info = add('div', 'sn-info', undefined, row);
+      const head = add('b', '', 'Night ' + nt.night, info); add('span', 'sn-new', 'New: ' + SEASON_NEW[nt.night - 1], head);
+      add('span', 'sn-state', !nt.open ? 'Opens ' + (T ? T.istDate(nt.opensAt) : 'soon') : !next ? 'Done ✓ all 20 trays' : c ? `${c} of 20 trays · next points at tray ${Math.ceil(next / 5) * 5}` : 'Not started · first points at tray 5', info);
+      const b2 = add('div', 'sn-bar small', undefined, info); add('span', '', undefined, b2).style.width = Math.round(c / 20 * 100) + '%';
+      if (nt.open) { const btn = add('button', 'btn' + (next ? ' primary' : ' ghost'), !next ? 'Play again' : next > 1 ? 'Continue: tray ' + next : 'Start', row); btn.type = 'button'; btn.dataset.night = nt.night; btn.addEventListener('click', () => { sfx.tick(); startBrewSet(nt.night, next || 20); }); }
     });
-    $('set-prog').textContent = all + ' of 140 trays cleared';
+    add('p', 'sn-foot', 'The Daily Brew counts for Season points from week 2. Story and Endless Brew are just for fun.');
+    const links = add('div', 'sn-links');
+    const a1 = add('a', 'btn ghost', '← TODDY home', links); a1.href = '/';
+    const a2 = add('a', 'btn ghost', 'My Season', links); a2.href = '/season/';
   };
   render(seasonDone());
   if (T) T.missions().then((ms) => { const mine = ms && ms.find((x) => x.id === 'moon-brew-season'); if (!mine) return; const d = seasonDone(); (mine.casesDone || []).forEach((id) => d.add(id)); save.season = [...d]; writeSave(); if (current === 'brewset') render(d); });
@@ -1379,7 +1397,7 @@ fetch('/api/season', { credentials: 'same-origin' }).then((r) => r.json()).then(
   if (!j || !j.ok) return;
   const m = (j.missions || []).find((x) => x.id === 'moon-brew-season' && x.state !== 'locked');
   if (!m || !Array.isArray(m.nights)) return;
-  seasonM = m; $('btn-brewset').hidden = false;
+  seasonM = m; $('btn-brewset').hidden = false; $('btn-brewset').classList.add('glow'); $('btn-play').parentNode.insertBefore($('btn-brewset'), $('btn-play'));
   $('brewset-status').textContent = `7 nights · 20 trays each · counts for Season${m.state === 'late' ? ' (half points)' : ''}`;
   if (/[?&]play=season(&|$)/.test(location.search)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } showBrewSet(); }
 }).catch(() => { /* no Season server: the button stays hidden */ });

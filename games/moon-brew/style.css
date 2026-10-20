@@ -361,3 +361,29 @@ a.btn { text-decoration: none; }
 .nights { display: grid; gap: 8px; }
 .rule.one.night-row { grid-template-columns: 1fr auto; }
 .night-row .btn { white-space: nowrap; }
+
+/* Season Nights screen */
+.sn-hero { display: grid; gap: 12px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; overflow: hidden; }
+.sn-hero img { width: 100%; height: auto; max-height: 190px; object-fit: cover; display: block; }
+.sn-hero-text { padding: 0 14px 14px; display: grid; gap: 4px; }
+.sn-hero h3 { margin: 0; font-size: 26px; color: var(--cream); }
+.sn-big { margin: 0; font-size: 20px; font-weight: 800; color: var(--gold); }
+.sn-sub { margin: 0; font-size: 13px; color: var(--cream); }
+.sn-bar { height: 8px; border-radius: 6px; background: rgba(255,255,255,.12); overflow: hidden; }
+.sn-bar span { display: block; height: 100%; background: var(--gold); border-radius: 6px; }
+.sn-bar.small { height: 5px; margin-top: 6px; }
+.sn-how { display: grid; gap: 8px; margin: 12px 0; }
+.sn-rule { display: grid; gap: 2px; background: var(--panel); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+.sn-rule b { color: var(--gold); }
+.sn-rule span { font-size: 13px; line-height: 1.4; color: var(--cream); }
+.sn-h { margin: 14px 0 8px; font-size: 14px; letter-spacing: .08em; text-transform: uppercase; color: var(--gold); }
+.sn-night { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: center; background: var(--panel); border: 1px solid var(--line); border-radius: 14px; padding: 10px 12px; }
+.sn-night.closed { opacity: .6; }
+.sn-info { display: grid; min-width: 0; }
+.sn-info b { color: var(--gold); display: flex; flex-wrap: wrap; gap: 4px 8px; align-items: baseline; }
+.sn-new { font-size: 12px; font-weight: 600; color: var(--cream); background: rgba(255,255,255,.1); padding: 2px 8px; border-radius: 10px; }
+.sn-state { font-size: 13px; color: var(--cream); margin-top: 2px; }
+.sn-night .btn { white-space: nowrap; }
+.sn-foot { font-size: 13px; text-align: center; color: var(--cream); margin: 14px 0 8px; }
+.sn-links { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; margin-bottom: 18px; }
+@media (min-width: 720px) { .sn-hero { grid-template-columns: 1fr 1fr; align-items: center; } .sn-hero img { max-height: none; height: 100%; } .sn-hero-text { padding: 14px; } }
