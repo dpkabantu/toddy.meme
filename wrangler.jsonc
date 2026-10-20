@@ -16,6 +16,8 @@
   // Every preview shares this one test database. The Database ID is not a secret.
   // The LIVE site gets its own, separate database (top-level "d1_databases") before the December rehearsal.
   "previews": {
+    // Google sign-in client ID (public, not a secret). The secrets GOOGLE_CLIENT_SECRET and ID_SALT are set in Cloudflare (Previews Base).
+    "vars": { "GOOGLE_CLIENT_ID": "163959731925-pi8qljtdd45gf9j424m7d8jk41mv47rh.apps.googleusercontent.com" },
     "d1_databases": [
       { "binding": "DB", "database_name": "toddy-season-dev", "database_id": "83d03f27-0b39-4b0d-866d-4d9d28fd003d" }
     ]
