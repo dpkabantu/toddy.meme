@@ -348,14 +348,14 @@ const PIPS = (tier) => '\u25CF'.repeat(tier + 1);
 function renderMap() {
   const tabs = $('night-tabs');
   tabs.textContent = '';
-  const top = lastOpenNight() + (unlocked() ? 0 : 1); // every open Night, plus the next one (locked until this one is done)
+  const top = Math.max(6, lastOpenNight() + (unlocked() ? 0 : 1)); // every open Night, then the next ones locked, always showing at least Nights 1 to 7
   let selected = null;
   for (let n = 0; n <= top; n++) {
     const b = document.createElement('button');
     b.type = 'button'; b.className = 'tab'; b.setAttribute('role', 'tab');
     b.setAttribute('aria-selected', String(n === mapNight));
     b.textContent = `Night ${n + 1}`;
-    if (!nightOpen(n)) { b.disabled = true; b.title = `Finish Night ${n} to open`; }
+    if (!nightOpen(n)) { b.disabled = true; b.title = `Finish Night ${n} to open`; b.textContent = `\uD83D\uDD12 Night ${n + 1}`; }
     b.addEventListener('click', () => { mapNight = n; renderMap(); });
     tabs.appendChild(b);
     if (n === mapNight) selected = b;
