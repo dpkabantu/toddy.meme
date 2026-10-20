@@ -446,13 +446,15 @@ document.addEventListener('keydown', ensureAudio);
 const elBanner = $('banner');
 function banner(text, cls, ms) { elBanner.textContent = text; elBanner.className = 'show ' + (cls || ''); bannerUntil = performance.now() + (ms || 1300); }
 // night streak: consecutive days with a finished Tonight's night (stored on this device only)
+// The TODDY night starts at 13:00 UTC (18:30 India time). All dates in the game follow it, so every player gets the same night.
+const nightNow = () => new Date(Date.now() - 13 * 3600000);
 function dayNum(d) { return Math.floor(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) / 86400000); }
 function streakNow() {
-  try { const o = JSON.parse(store('mmStreak') || 'null'); if (o && dayNum(new Date()) - o.day <= 1) return o.n; } catch (e) { /* none */ }
+  try { const o = JSON.parse(store('mmStreak') || 'null'); if (o && dayNum(nightNow()) - o.day <= 1) return o.n; } catch (e) { /* none */ }
   return 0;
 }
 function streakDone() {
-  const today = dayNum(new Date());
+  const today = dayNum(nightNow());
   try { const o = JSON.parse(store('mmStreak') || 'null'); if (o && o.day === today) return; store('mmStreak', JSON.stringify({ day: today, n: o && today - o.day === 1 ? o.n + 1 : 1 })); } catch (e) { store('mmStreak', JSON.stringify({ day: today, n: 1 })); }
 }
 
@@ -649,14 +651,14 @@ function setNext() {
   if (n !== shownNext) { shownNext = n; elNext.src = ASSET[PIECE_KEYS[n - 1]]; }
 }
 function dateLabel() {
-  const d = new Date(), m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+  const d = nightNow(), m = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
   return d.getUTCDate() + ' ' + m[d.getUTCMonth()];
 }
 
-function todayTwist() { return C.twistForDate(C.dateSeed(new Date())); }
+function todayTwist() { return C.twistForDate(C.dateSeed(nightNow())); }
 function startRun(k2, seedOverride, twistOverride) {
   kind = k2;
-  const seed = seedOverride !== undefined ? seedOverride : (kind === 'daily' ? C.dateSeed(new Date()) : (Math.random() * 2147483647) | 0);
+  const seed = seedOverride !== undefined ? seedOverride : (kind === 'daily' ? C.dateSeed(nightNow()) : (Math.random() * 2147483647) | 0);
   twist = kind === 'daily' && twistOverride === undefined ? todayTwist() : (twistOverride || 0);
   S = C.newGame(seed, twist); lastMax = 0; moonrises = 0; shake = 0; ticketKey = '~'; log = []; fx.length = 0; pops.length = 0; shownNext = 0;
   dropPoseUntil = -1; pressed = false;
@@ -664,6 +666,7 @@ function startRun(k2, seedOverride, twistOverride) {
   bestVal = parseInt(store(bestKey()) || '0', 10) || 0;
   elMode.textContent = (kind === 'daily' ? 'Tonight · ' : 'Free · ') + C.TWISTS[twist].name;
   mode = 'play'; overlay.hidden = true;
+  if (kind === 'daily' && window.ToddySeason) window.ToddySeason.start('full-moon');
   setScore(); setNext();
   banner(C.TWISTS[twist].name + ' · ' + C.TWISTS[twist].blurb, 'new', 2600);
 }
@@ -740,9 +743,14 @@ function frame(t) {
 function finishRun() {
   lastRun = { seed: S.seed, twist, moonrises, kind, drops: log.slice(), endTick: S.tick, score: S.score, maxLevel: S.maxLevel };
   if (kind === 'daily') streakDone();
+  const sentDaily = kind === 'daily' && window.ToddySeason;
   if (S.score > bestVal) { bestVal = S.score; store(bestKey(), String(bestVal)); }
   setScore();
   showOver();
+  if (sentDaily) {
+    const T = window.ToddySeason;
+    T.finish('full-moon', { drops: lastRun.drops, endTick: lastRun.endTick, score: lastRun.score }).then(function (res) { const el = document.getElementById('seasonline'); if (!res) T.guestHint(el); else T.show(el, res); });
+  }
 }
 
 // ---------- screens ----------
@@ -917,7 +925,7 @@ function showOver() {
     '<div class="card"><h2>Night over</h2><img class="medal" alt="" src="' + ASSET['medal_' + (band + 1)] + '">' +
     '<div class="band">' + nm + '</div><div class="final">' + S.score.toLocaleString('en-US') + '</div>' +
     '<p class="sub">Lasted <b>' + lasted() + '</b> · ' + S.drops + ' drops</p><p class="sub">' + (kind === 'daily' ? "Tonight's best " : 'Best ') + bestVal.toLocaleString('en-US') + ' · highest piece ' + S.maxLevel + ' of 11' + (S.served ? ' · ' + S.served + ' visitor' + (S.served > 1 ? 's' : '') + ' served' : '') + (moonrises ? ' · Moonrise ×' + moonrises : '') + (next ? ' · next medal at ' + next.toLocaleString('en-US') : '') + '</p>' +
-    '<button class="btn" data-act="again">Play again</button><button class="btn share" data-act="pic">Share your night</button><button class="btn alt" data-act="menu">Menu</button></div>';
+    '' + (kind === 'daily' ? '<p class="sub" id="seasonline" hidden></p>' : '') + '<button class="btn" data-act="again">Play again</button><button class="btn share" data-act="pic">Share your night</button><button class="btn alt" data-act="menu">Menu</button></div>';
 }
 
 // ---------- full screen (Android and desktop browsers; iPhone Safari has no full screen for web pages) ----------
@@ -1038,7 +1046,7 @@ async function boot() {
   names.forEach((n, i) => { IMG[n] = imgs[i]; });
   try { await document.fonts.load('700 20px Fredoka'); } catch (e) { /* fallback font is fine */ }
   layout();
-  twist = todayTwist(); S = C.newGame(C.dateSeed(new Date()), twist);     // an idle crate behind the menu
+  twist = todayTwist(); S = C.newGame(C.dateSeed(nightNow()), twist);     // an idle crate behind the menu
   mode = 'menu'; setScore(); setNext(); showMenu();
   requestAnimationFrame(frame);
   $('loading').hidden = true;

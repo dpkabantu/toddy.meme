@@ -1,7 +1,7 @@
 // TODDY: Moon Brew — screens, drawing, sound and saving.
 import { DX, DY, MAX_BUMPS, generate, newGame, beanAt, frozen, unitOf, traceBean, canRoll, tap, stars, hint, useHint, dailyScore, streaks, fromFrozen, difficulty } from './core.js';
 import { TRAYS } from './trays.js';
-import { INTROS, TRAYS_PER_NIGHT, trayLevelConfig, dailyConfig, dailyNumber, endlessConfig, ENDLESS_LINES, nightInfo, VISITORS, VISITOR_ORDER, TIER_NAMES, trayTier, tierOf } from './levels.js';
+import { INTROS, TRAYS_PER_NIGHT, trayLevelConfig, dailyConfig, dailyNumber, nightDate, endlessConfig, ENDLESS_LINES, nightInfo, VISITORS, VISITOR_ORDER, TIER_NAMES, trayTier, tierOf } from './levels.js';
 import { buildPostcard } from './postcard.js';
 
 const BUILD = '1.0.0-rc12';
@@ -418,7 +418,7 @@ function renderStats() {
   }).join('');
   // last 7 days, oldest first
   const days = [];
-  const now = new Date();
+  const now = nightDate();
   for (let i = 6; i >= 0; i--) {
     const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - i));
     const num = dailyNumber(d);
@@ -487,7 +487,7 @@ let startedAt = 0;
 let finishTimer = 0;
 
 function startTray(n, t) { mode = { kind: 'story', n, t }; const f = TRAYS[trayKey(n, t)]; load(f ? null : trayLevelConfig(n, t), f ? fromFrozen(f) : null); }
-function startDaily() { const cfg = dailyConfig(); mode = { kind: 'daily', num: cfg.daily, visitor: cfg.visitor }; load(cfg); }
+function startDaily() { const cfg = dailyConfig(); mode = { kind: 'daily', num: cfg.daily, visitor: cfg.visitor }; if (window.ToddySeason) window.ToddySeason.start('moon-brew'); load(cfg); }
 function startEndless(cont) {
   // pieces the player has already met in the story may show up here too (nothing unexplained)
   if (!cont) mode = { kind: 'endless', seed: (Date.now() % 1e9) >>> 0, k: 0, score: 0, pieces: { walls: nightOpen(3), spin: nightOpen(4), portals: nightOpen(6) } };
@@ -1043,7 +1043,20 @@ let result = null;
 function modeInfo() {
   return mode.kind === 'story' ? { mode: 'story', night: mode.n + 1, tray: mode.t } : mode.kind === 'daily' ? { mode: 'daily', day: mode.num } : { mode: 'endless', tray: mode.k + 1 };
 }
+// Season: a signed-in player's daily run is sent to the server, which replays it and decides the points. Guests send nothing.
+let seasonRes = null;
+function seasonSend() {
+  const T = window.ToddySeason;
+  if (!T || mode.kind !== 'daily' || g.log.length > 600) { seasonRes = null; return; }
+  seasonRes = T.finish('moon-brew', { log: g.log.slice() }).then((res) => res || { guest: true });
+}
+function seasonShow() {
+  if (!seasonRes || mode.kind !== 'daily') return;
+  const T = window.ToddySeason;
+  seasonRes.then((res) => { const el = document.getElementById('seasonline'); if (!el) return; if (res && res.guest) T.guestHint(el); else T.show(el, res); });
+}
 function record() {
+  if (mode.kind === 'daily' && g.status !== 'playing') seasonSend();
   const hintsUsed = g.log.filter(e => e[1] === 'h').length;
   track('tray_end', { ...modeInfo(), result: g.status, stars: stars(g), secs: Math.round((performance.now() - startedAt) / 1000), bumps: g.bumps, hints: hintsUsed, beans: level.beans.length });
   result = { s: stars(g), secs: Math.round((performance.now() - startedAt) / 1000) };
@@ -1092,10 +1105,11 @@ function finish(again) {
   }
 
   if (g.status === 'burnt') {
-    card(`<h3>Burnt brew</h3><p>Three bumps. Check each tip before you tap.</p>
+    card(`<h3>Burnt brew</h3><p>Three bumps. Check each tip before you tap.</p>${mode.kind === 'daily' ? '<p class="stat" id="seasonline" hidden></p>' : ''}
       <div class="btns"><button class="btn ghost" id="o-back" type="button">${mode.kind === 'daily' ? 'Title' : 'Trays'}</button><button class="btn primary" id="o-retry" type="button">Try again</button></div>`);
     bind('o-retry', () => (mode.kind === 'daily' ? startDaily() : startTray(mode.n, mode.t)));
     bind('o-back', () => show(mode.kind === 'daily' ? 'title' : 'map'));
+    seasonShow();
     return;
   }
 
@@ -1114,9 +1128,11 @@ function finish(again) {
         <div class="total"><span>Score</span><span>${sc.total} / 1000</span></div>
       </div>
       <p class="stat">${result.official ? 'Today\u2019s score is saved.' : `Practice. Today\u2019s score stays ${best}.`} Streak: ${st.current} day${st.current === 1 ? '' : 's'}</p>
+      <p class="stat" id="seasonline" hidden></p>
       <div class="btns"><button class="btn primary" id="o-share" type="button">Share</button></div>
       <div class="btns"><button class="btn ghost" id="o-retry" type="button">Practice again</button><button class="btn ghost" id="o-home" type="button">Done</button></div>`);
     bind('o-retry', startDaily); bind('o-home', () => show('title'));
+    seasonShow();
     const shareData = { kind: 'daily', num: mode.num, score: save.daily[mode.num].score, stars: save.daily[mode.num].stars, secs: save.daily[mode.num].time, bumps: save.daily[mode.num].bumps, streak: st.current, visitor: mode.visitor };
     bind('o-share', () => openShare(shareData, () => finish(true)));
     return;

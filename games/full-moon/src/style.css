@@ -97,3 +97,5 @@ body { overflow: hidden; font-family: var(--body); -webkit-user-select: none; us
 .strip .ps8{height:29px}
 .strip .ps9{height:31px}
 .strip .ps10{height:33px}
+
+.sub a { color: inherit; text-decoration: underline; }

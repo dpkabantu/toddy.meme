@@ -351,3 +351,5 @@ button.where .tier { font-size: 10px; letter-spacing: .1em; color: var(--gold); 
 .coming img { width: 44px; height: 44px; object-fit: contain; flex: none; filter: brightness(0) invert(.55) sepia(.3) saturate(2) hue-rotate(220deg); opacity: .8; }
 .coming p { margin: 0; font-size: 13px; color: var(--muted); line-height: 1.35; }
 .coming b { color: var(--cream); }
+
+.stat a { color: inherit; text-decoration: underline; }
