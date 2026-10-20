@@ -33,43 +33,49 @@
   <section id="s-loading" class="card"><p class="sub">Loading&hellip;</p></section>
   <section id="s-off" class="card" hidden><p class="sub">Season 1 is not switched on at this address yet. You can still play every game as a guest.</p><a class="btn" href="/games/">Play games</a></section>
 
-  <section id="hello" class="card" hidden>
-    <p class="eyebrow small">WELCOME BACK</p>
-    <p id="h-name" class="pname"></p>
-    <p id="h-id" class="pid"></p>
-  </section>
+  <div class="cols">
+    <div class="col col-side">
+      <section id="hello" class="card" hidden>
+        <p class="eyebrow small">WELCOME BACK</p>
+        <p id="h-name" class="pname"></p>
+        <p id="h-id" class="pid"></p>
+      </section>
 
-  <section id="tonight" class="card" hidden>
-    <h2>Tonight&rsquo;s challenges</h2>
-    <p id="night-line" class="note"></p>
-    <div id="tg" class="games"></div>
-    <p class="note">Only tonight&rsquo;s challenge counts for Season points. Practice, Story and Free play inside the games are just for fun.</p>
-  </section>
+      <section id="signin-card" class="card" hidden>
+        <h2>Save your points</h2>
+        <p class="sub">You can play every game without signing in. To keep your Season points, sign in with Google and get your TODDY Passport. It takes under a minute.</p>
+        <div id="inapp" class="inapp" hidden>
+          <p class="note"><b>Easier sign-in:</b> you are inside another app&rsquo;s browser, so Google will ask for your full email and password. Tap the three dots (or the share icon) and choose <b>Open in browser</b>, then sign in.</p>
+          <button id="copylink" class="chip" type="button">Copy this page&rsquo;s link</button>
+        </div>
+        <a id="signin" class="btn" href="/api/auth/google/start?return=/season/">Continue with Google</a>
+        <p class="note">We only receive your email address from Google, nothing else. Season accounts are for people 18 or older.</p>
+      </section>
 
-  <section id="missions" class="card" hidden>
-    <h2>Weekly missions</h2>
-    <p class="note">A weekly mission stays open all week, so you can do it any day. Finish it in its week for full points. Finish it later and you still get half.</p>
-    <div id="mg" class="games"></div>
-  </section>
+      <section id="mine" class="card" hidden><div id="dash" class="dash"></div></section>
 
-  <section id="signin-card" class="card" hidden>
-    <h2>Save your points</h2>
-    <p class="sub">You can play every game without signing in. To keep your Season points, sign in with Google and get your TODDY Passport. It takes under a minute.</p>
-    <div id="inapp" class="inapp" hidden>
-      <p class="note"><b>Easier sign-in:</b> you are inside another app&rsquo;s browser, so Google will ask for your full email and password. Tap the three dots (or the share icon) and choose <b>Open in browser</b>, then sign in.</p>
-      <button id="copylink" class="chip" type="button">Copy this page&rsquo;s link</button>
+      <details id="how" class="card how" hidden>
+        <summary><h2>How Season 1 works</h2></summary>
+        <ol id="how-list" class="howto"></ol>
+        <p class="note">Season points are a record of your activity. They have no cash value. The numbers are a draft and can change before the Season opens.</p>
+      </details>
     </div>
-    <a id="signin" class="btn" href="/api/auth/google/start?return=/season/">Continue with Google</a>
-    <p class="note">We only receive your email address from Google, nothing else. Season accounts are for people 18 or older.</p>
-  </section>
 
-  <section id="mine" class="card" hidden><div id="dash" class="dash"></div></section>
+    <div class="col col-main">
+      <section id="tonight" class="card" hidden>
+        <h2>Tonight&rsquo;s challenges</h2>
+        <p id="night-line" class="note"></p>
+        <div id="tg" class="games"></div>
+        <p class="note">Only tonight&rsquo;s challenge counts for Season points. Practice, Story and Free play inside the games are just for fun.</p>
+      </section>
 
-  <section id="how" class="card" hidden>
-    <h2>How Season 1 works</h2>
-    <ol id="how-list" class="howto"></ol>
-    <p class="note">Season points are a record of your activity. They have no cash value. The numbers are a draft and can change before the Season opens.</p>
-  </section>
+      <section id="missions" class="card" hidden>
+        <h2>Weekly missions</h2>
+        <p class="note">A weekly mission stays open all week, so you can do it any day. Finish it in its week for full points. Finish it later and you still get half.</p>
+        <div id="mg" class="games"></div>
+      </section>
+    </div>
+  </div>
 </main>
 </body>
 </html>

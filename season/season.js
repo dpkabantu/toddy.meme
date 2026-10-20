@@ -40,36 +40,47 @@
   }
 
   function istDate(iso) { try { return new Date(iso).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' }); } catch (e) { return ''; } }
+  function missionRow(m, my) {
+    var done = my && my.done, row = el('div', 'mrow' + (m.state === 'locked' ? ' locked' : '')), info = el('div', 'minfo');
+    info.appendChild(el('b', '', m.title));
+    var casesDone = my && my.casesDone ? my.casesDone.length : 0;
+    var sub = 'Week ' + m.week + ' \u00b7 ' + (m.state === 'locked' ? 'opens ' + istDate(m.opensAt) : m.state === 'late' ? 'week is over: half points' : 'open until ' + istDate(m.closesAt));
+    if (m.kind === 'chapter' && m.state !== 'locked') sub += ' \u00b7 ' + casesDone + ' of ' + m.cases.length + ' cases';
+    info.appendChild(el('span', 'msub' + (done ? ' done' : ''), done ? 'Done \u00b7 Week ' + m.week : sub));
+    if (m.kind === 'chapter' && m.state !== 'locked') info.appendChild(bar(casesDone, m.cases.length));
+    var ul = el('ul', 'stages');
+    m.stages.forEach(function (st, i) { var got = my && my.stages[i] && my.stages[i].done; ul.appendChild(el('li', got ? 'got' : '', (got ? '\u2713 ' : '') + st.label + ' +' + st.points)); });
+    info.appendChild(ul); row.appendChild(info);
+    if (m.state !== 'locked') {
+      var a = el('a', 'btn sm' + (done ? ' alt' : '')); a.href = '/games/' + m.game + '/' + (m.kind === 'chapter' ? '?mission=' + m.id : '?play=weekly');
+      a.textContent = done ? 'Play again' : m.kind === 'chapter' ? 'Open' : 'Play'; a.setAttribute('aria-label', (done ? 'Play again: ' : m.kind === 'chapter' ? 'Open ' : 'Play ') + m.title);
+      row.appendChild(a);
+    }
+    return row;
+  }
   function renderMissions() {
     var list = S.missions || []; if (!list.length) return;
     var box = $('mg'); box.textContent = '';
     var mine = {}; if (P && P.missions) P.missions.forEach(function (m) { mine[m.id] = m; });
     var name = {}; S.games.forEach(function (g) { name[g.id] = g.title; });
-    var coming = [];
-    list.forEach(function (m) {
-      if (m.state === 'locked') { coming.push(m); return; }
-      var my = mine[m.id], done = my && my.done, card = el('div', 'tg-card'), top = el('div', 'top'), nm = el('span', 'name', (name[m.game] || m.game) + ' · ' + m.title);
-      nm.appendChild(el('span', 'tag', 'Week ' + m.week)); top.appendChild(nm);
-      var state = m.state === 'late' ? 'This week is over: half points' : 'Open until ' + istDate(m.closesAt) + ', 6:30 pm India time';
-      top.appendChild(el('span', 'state' + (done ? ' done' : ''), done ? 'Done' : state)); card.appendChild(top);
-      if (m.kind === 'chapter') card.appendChild(el('p', 'note', (my && my.casesDone ? my.casesDone.length : 0) + ' of ' + m.cases.length + ' cases finished'));
-      var ul = el('ul', 'stages');
-      m.stages.forEach(function (st, i) { var got = my && my.stages[i] && my.stages[i].done; ul.appendChild(el('li', got ? 'got' : '', (got ? '\u2713 ' : '') + st.label + ' +' + st.points)); });
-      card.appendChild(ul);
-      var a = el('a', 'btn' + (done ? ' alt' : '')); a.href = '/games/' + m.game + '/' + (m.kind === 'chapter' ? '?mission=' + m.id : '?play=weekly');
-      a.textContent = done ? 'All stages done. Play again for fun' : m.state === 'late' ? 'Finish it for half points' : m.kind === 'chapter' ? 'Open this chapter' : 'Play the Weekly Challenge';
-      card.appendChild(a); box.appendChild(card);
+    var order = [], byGame = {};
+    list.forEach(function (m) { if (!byGame[m.game]) { byGame[m.game] = []; order.push(m.game); } byGame[m.game].push(m); });
+    order.forEach(function (gid) {
+      var ms = byGame[gid].slice().sort(function (a, b) { return a.week - b.week; }), card = el('div', 'tg-card'), top = el('div', 'top'), nm = el('span', 'name gname', name[gid] || gid);
+      nm.appendChild(el('span', 'tag', ms.length > 1 ? ms.length + ' missions' : 'Week ' + ms[0].week)); top.appendChild(nm); card.appendChild(top);
+      // first three that still matter (open or late, not done) stay visible; the rest fold away
+      var rank = function (m) { var d = mine[m.id] && mine[m.id].done; return m.state === 'locked' ? 2 : d ? 1 : 0; };
+      var sorted = ms.slice().sort(function (a, b) { return rank(a) - rank(b) || a.week - b.week; });
+      var shown = ms.length > 4 ? sorted.slice(0, 3) : sorted, rest = ms.length > 4 ? sorted.slice(3) : [];
+      shown.forEach(function (m) { card.appendChild(missionRow(m, mine[m.id])); });
+      if (rest.length) { var d = el('details', 'rest'); d.appendChild(el('summary', '', 'Show all ' + ms.length + ' missions')); sorted.slice(3).forEach(function (m) { d.appendChild(missionRow(m, mine[m.id])); }); card.appendChild(d); }
+      box.appendChild(card);
     });
-    if (coming.length) {
-      var more = el('div', 'tg-card'); more.appendChild(el('h3', 'name', 'Opening soon'));
-      var ul2 = el('ul', 'stages soon');
-      coming.forEach(function (m) { ul2.appendChild(el('li', '', (name[m.game] || m.game) + ' · ' + m.title + ' · opens ' + istDate(m.opensAt))); });
-      more.appendChild(ul2); box.appendChild(more);
-    }
     $('missions').hidden = false;
   }
 
   function renderHow() {
+    try { var wide = window.matchMedia('(min-width: 960px)'); if (wide.matches) $('how').open = true; wide.addEventListener('change', function (e) { if (e.matches) $('how').open = true; }); } catch (e) { /* stays folded */ }
     var r = S.rules, ol = $('how-list'); ol.textContent = '';
     [
       'Every day at 6:30 pm India time a new night starts. Each game has one challenge for the night, the same for everyone.',

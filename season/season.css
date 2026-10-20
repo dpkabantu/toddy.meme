@@ -94,3 +94,45 @@ input[type=text]:focus-visible, .btn:focus-visible, .chip:focus-visible, summary
 .stages li.got { color: var(--gold); font-weight: 600; }
 .stages.soon { flex-direction: column; gap: 4px; font-size: 14px; }
 .tg-card h3.name { margin: 0; }
+
+/* ---- layout: one column on phones, two columns on wide screens ---- */
+.cols, .col { display: contents; }
+#hello, #signin-card { order: 1; } #tonight { order: 2; } #missions { order: 3; } #mine { order: 4; } #how { order: 5; }
+.how > summary { list-style: none; cursor: pointer; display: flex; align-items: center; justify-content: space-between; gap: 8px; }
+.how > summary::-webkit-details-marker { display: none; }
+.how > summary::after { content: "+"; font: 600 24px/1 Fredoka, system-ui, sans-serif; color: var(--gold); }
+.how[open] > summary::after { content: "\2212"; }
+.how[open] > summary { margin-bottom: 10px; }
+.how > summary h2 { font-size: 20px; }
+/* mission groups: one card per game, one row per mission */
+.mrow { display: flex; gap: 10px; align-items: center; justify-content: space-between; padding: 10px 0; border-top: 1px solid rgba(201,154,59,.25); }
+.mrow:first-of-type { border-top: 0; padding-top: 2px; }
+.minfo { min-width: 0; display: grid; gap: 4px; flex: 1 1 auto; }
+.minfo b { font-weight: 600; overflow-wrap: anywhere; }
+.msub { font-size: 13px; color: var(--mute); }
+.msub.done { color: var(--gold); }
+.mrow .stages { font-size: 13px; gap: 4px 12px; }
+.mrow .bar { height: 6px; max-width: 220px; }
+.btn.sm { width: auto; flex: none; padding: 8px 14px; font-size: 15px; box-shadow: none; }
+.mrow.locked { opacity: .6; }
+details.rest > summary { cursor: pointer; color: var(--gold); font-size: 14px; padding: 8px 0 2px; }
+details.rest[open] > summary { padding-bottom: 6px; }
+.tg-card .gname { display: flex; align-items: baseline; gap: 6px; flex-wrap: wrap; }
+@media (max-width: 420px) { .mrow { flex-wrap: wrap; } .btn.sm { width: 100%; } }
+@media (min-width: 640px) { .wrap { max-width: 720px; } }
+@media (min-width: 960px) {
+  body { padding-top: 24px; }
+  .wrap { max-width: 1120px; gap: 14px; }
+  .logo { width: 56px; height: 56px; margin-top: 0; }
+  h1 { font-size: 44px; }
+  .lead { max-width: 640px; margin: 0 auto; }
+  .banner { max-width: 760px; margin: 0 auto; }
+  .cols { display: grid; grid-template-columns: minmax(0, 1.55fr) minmax(0, 1fr); gap: 16px; align-items: start; }
+  .col { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .col-main { grid-column: 1; grid-row: 1; } .col-side { grid-column: 2; grid-row: 1; }
+  .card { padding: 20px; }
+  #tg { grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 10px; }
+  #tg .tg-card { align-content: space-between; }
+  #tg .tg-card .top { flex-direction: column; align-items: flex-start; gap: 2px; }
+  #mine .dash { border-top: 0; padding-top: 0; }
+}

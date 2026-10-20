@@ -150,6 +150,9 @@ check(await page.locator('#dash .recent li').count() >= 3 && await page.locator(
 for (const w of [320, 390, 1280]) { await page.setViewportSize({ width: w, height: 900 }); await page.waitForTimeout(150); check(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), 'Season page: no sideways scroll at ' + w + ' px'); }
 await page.setViewportSize({ width: 390, height: 900 }); await page.screenshot({ path: shots + '/season_full.png', fullPage: true });
 await page.setViewportSize({ width: 1280, height: 900 }); await page.screenshot({ path: shots + '/season_desktop.png', fullPage: true });
+{ const bx = async (sel) => page.locator(sel).boundingBox(); const t = await bx('#tonight'), hl = await bx('#hello'), m = await bx('#mine'), mi = await bx('#missions'), h = await page.evaluate(() => document.documentElement.scrollHeight);
+  check(t && hl && m && hl.x > t.x + t.width - 2 && m.x === hl.x && Math.abs(hl.y - t.y) < 4 && mi.x === t.x, 'desktop 1280 px: two columns (tonight and missions on the left, your Season on the right, side by side)');
+  check(h < 2400, 'desktop 1280 px: the whole page is ' + h + ' px tall (was about 4500)'); }
 // account page
 await page.goto(base + '/passport/'); await page.waitForSelector('#s-in:not([hidden])');
 check(await page.locator('a[href="/season/"]').first().isVisible() && await page.locator('#dash').count() === 0, 'Passport page: account page with a "Go to Season 1" button (no duplicate dashboard)');
@@ -160,8 +163,8 @@ await page.screenshot({ path: shots + '/home_menu.png', clip: { x: 0, y: 0, widt
 
 // ---- Scam Lab chapter mission: a chapter case played for the mission, from the Season page link ----
 await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])');
-const chCard = page.locator('#mg .tg-card', { hasText: 'Chapter 1' });
-check(/0 of 6 cases finished/.test(await chCard.innerText()) && (await chCard.locator('a').getAttribute('href')) === '/games/scam-lab/?mission=scam-lab-ch1', 'Season page: Scam Lab chapter 1 mission card shows 0 of 6 cases and opens the chapter');
+const chCard = page.locator('#mg .mrow', { hasText: 'Chapter 1' });
+check(/0 of 6 cases/.test(await chCard.innerText()) && (await chCard.locator('a').getAttribute('href')) === '/games/scam-lab/?mission=scam-lab-ch1', 'Season page: Scam Lab chapter 1 mission card shows 0 of 6 cases and opens the chapter');
 check(/Opening soon/.test(await page.locator('#mg').innerText()) === false, 'Season page: nothing is locked while the Season is in test mode');
 await page.goto(base + '/games/scam-lab/?mission=scam-lab-ch1&qa');
 await page.waitForFunction(() => window.__lab, null, { timeout: 30000 }); await page.waitForTimeout(800);
@@ -187,13 +190,13 @@ const chRow = db.prepare("SELECT r.score, r.seed FROM game_runs r WHERE r.mode =
 const chScore = await page.evaluate(() => Number(document.getElementById('total').firstChild.textContent));
 check(chRow && chRow.seed === 'scam-lab-ch1:c1-03' && chRow.score === chScore, 'Scam Lab chapter case: the server scored it again and got the same score (' + chScore + ')');
 await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])');
-check(/1 of 6 cases finished/.test(await page.locator('#mg .tg-card', { hasText: 'Chapter 1' }).innerText()), 'Season page: the chapter card now shows 1 of 6 cases');
+check(/1 of 6 cases/.test(await page.locator('#mg .mrow', { hasText: 'Chapter 1' }).innerText()), 'Season page: the chapter card now shows 1 of 6 cases');
 
 // ---- Weekly Challenge (Full Moon), reached from the Season page ----
 RULES.missions[0].stages[0].minBand = 0;   // test only: any finished try reaches stage one (a real Silver needs a skilled player)
 await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])');
 const mtxt = await page.locator('#mg').innerText();
-check(/Full Moon . Weekly Challenge/.test(mtxt) && /Silver \+40/.test(mtxt) && /Gold \+10/.test(mtxt) && /Open until/.test(mtxt), 'Season page: the Weekly Challenge card shows its stages and when it closes');
+check(/Full Moon/.test(mtxt) && /Weekly Challenge/.test(mtxt) && /Silver \+40/.test(mtxt) && /Gold \+10/.test(mtxt) && /open until/.test(mtxt), 'Season page: the Weekly Challenge card shows its stages and when it closes');
 await page.screenshot({ path: shots + '/season_mission.png', fullPage: true });
 await Promise.all([page.waitForURL(/full-moon/), page.click('#mg .tg-card a')]);
 await page.waitForFunction(() => window.__mm && window.__mm.mode === 'play', null, { timeout: 30000 });
