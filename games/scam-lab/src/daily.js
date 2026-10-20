@@ -11,7 +11,7 @@ const BRANDS = [
 const FRIENDS = ['Kiko', 'Lena', 'Marco', 'Sam'];
 const CITIES = ['Lisbon', 'Vienna', 'Lyon', 'Ghent'];
 
-// The TODDY night starts at 13:00 UTC (18:30 India time), the same for every player in every time zone.
+// The TODDY night starts at 13:00 UTC, the same for every player in every time zone.
 // The key is the UTC date of (now - 13 hours), for example 2026-12-08 for 8 Dec 13:00 UTC to 9 Dec 13:00 UTC.
 export function dayKey(d = new Date()) {
   return new Date(d.getTime() - 13 * 3600000).toISOString().slice(0, 10);

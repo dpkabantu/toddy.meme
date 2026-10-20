@@ -3,7 +3,7 @@
 (function () {
   'use strict';
   var H = 3600000, meP = null, runs = {};
-  // The TODDY night starts at 13:00 UTC (18:30 India time). Same rule as the server (server/clock.js).
+  // The TODDY night starts at 13:00 UTC. Same rule as the server (server/clock.js).
   function nightDate() { return new Date(Date.now() - 13 * H); }
   function night() { return nightDate().toISOString().slice(0, 10); }
   function post(path, body) {
@@ -16,7 +16,7 @@
     return meP;
   }
   // opts (optional): { mode: 'weekly', mission: id } for a weekly mission. Nothing is sent for guests.
-  function istDate(iso) { try { return new Date(iso).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' }); } catch (e) { return ''; } }
+  function istDate(iso) { try { return new Date(iso).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }); } catch (e) { return ''; } }
   // The player's missions from the server (signed in), or null for guests / when the server does not answer.
   var missionsP = null;
   function missions() {
@@ -51,7 +51,7 @@
   // Text for the result screen. Returns { text, link } or null when nothing should be shown.
   function describe(res) {
     if (!res) return null;
-    if (res.ok === false && res.error === 'mission_locked') return { text: 'This mission opens for Season points on ' + istDate(res.opensAt) + ', 6:30 pm India time. Until then, playing it is practice.', link: true };
+    if (res.ok === false && res.error === 'mission_locked') return { text: 'This mission opens for Season points on ' + istDate(res.opensAt) + '. Until then, playing it is practice.', link: true };
     if (res.ok === false) { if (res.error === 'offline' || res.error === 'not_configured' || res.error === 'sign_in_first' || res.error === 'mission_not_found' || res.error === 'case_not_in_mission') return null; return { text: MSG[res.error] || 'This run could not be confirmed, so it earned no Season points.' }; }
     if (res.mission) {
       var brew = String(res.mission).indexOf('moon-brew') === 0, unit = brew ? 'trays' : 'cases';

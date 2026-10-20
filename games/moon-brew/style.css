@@ -170,6 +170,7 @@ body.playing { background: #120b08 var(--counter-bg, none) center / cover no-rep
 .rule img { width: 56px; height: auto; justify-self: center; }
 .rule b { color: var(--gold); }
 .rule p { margin: 2px 0 0; font-size: 13px; line-height: 1.4; color: var(--cream); }
+.rule.one { grid-template-columns: 1fr; }
 .big-stars { color: var(--gold); font-size: 18px; text-align: center; }
 
 @media (min-width: 700px) {

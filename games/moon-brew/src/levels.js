@@ -422,7 +422,7 @@ export function seedFor(n, t) { const k = (PACE[n] && PACE[n][t - 1]) || 0; retu
 // The tray settings with the chosen try, ready for generate().
 export function trayLevelConfig(n, t) { const c = trayConfig(n, t); return { ...c, seed: n === 0 && t === 1 ? c.seed : seedFor(n, t) }; }
 
-// The TODDY night starts at 13:00 UTC (18:30 India time). The Daily Brew and its streak follow it, like the other games.
+// The TODDY night starts at 13:00 UTC. The Daily Brew and its streak follow it, like the other games.
 export const nightDate = () => new Date(Date.now() - 13 * 3600000);
 export function dailyNumber(d = nightDate()) {
   return d.getUTCFullYear() * 10000 + (d.getUTCMonth() + 1) * 100 + d.getUTCDate();

@@ -16,7 +16,7 @@
 
   var S = null, P = null;   // public season facts, personal points (null for guests)
 
-  function tonightLine() { $('night-line').textContent = 'Night of ' + nightLabel(S.night.key) + ' · ' + leftText(S.night.endsAt) + ' · a new night starts every day at 6:30 pm India time.'; }
+  function tonightLine() { $('night-line').textContent = 'Night of ' + nightLabel(S.night.key) + ' · ' + leftText(S.night.endsAt) + ' · a new night starts every day, at the same moment for everyone.'; }
 
   function renderTonight() {
     var box = $('tg'); box.textContent = '';
@@ -39,7 +39,7 @@
     tonightLine(); $('tonight').hidden = false;
   }
 
-  function istDate(iso) { try { return new Date(iso).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' }); } catch (e) { return ''; } }
+  function istDate(iso) { try { return new Date(iso).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }); } catch (e) { return ''; } }
   function missionRow(m, my, name) {
     var done = my && my.done, row = el('div', 'mrow' + (m.state === 'locked' ? ' locked' : '')), info = el('div', 'minfo'), cased = m.kind === 'chapter' || m.kind === 'brewset', unit = m.kind === 'brewset' ? 'trays' : 'cases';
     var t = el('b', '', (name || m.game) + ' · ' + m.title); info.appendChild(t);
@@ -83,7 +83,7 @@
     try { var wide = window.matchMedia('(min-width: 960px)'); if (wide.matches) $('how').open = true; wide.addEventListener('change', function (e) { if (e.matches) $('how').open = true; }); } catch (e) { /* stays folded */ }
     var r = S.rules, ol = $('how-list'); ol.textContent = '';
     [
-      'Every day at 6:30 pm India time a new night starts. Each game has one challenge for the night, the same for everyone.',
+      'Every day a new night starts, at the same moment for everyone. Each game has one challenge for the night, the same for everyone.',
       'Play tonight’s challenge. Your best result that night gives you a medal, and the medal gives Season points: Played ' + r.bandPoints[0] + ', Bronze ' + r.bandPoints[1] + ', Silver ' + r.bandPoints[2] + ', Gold ' + r.bandPoints[3] + '.',
       'Play again the same night if you like. Points are only added if you earn a better medal, and then only the difference.',
       'Finish a game each night for +' + r.activeNight + ' (Active night). Play ' + r.consistency5Nights + ' nights in a week for +' + r.consistency5 + ', and all 7 for +' + r.consistency7Extra + ' more.',

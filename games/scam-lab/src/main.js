@@ -220,7 +220,7 @@ function seasonLine(ch) {
     const m = ms.find((x) => x.id === 'scam-lab-ch' + ch.n); if (!m) return;
     const n = (m.casesDone || []).length, pts = m.stages.map((st) => `${st.label}: +${st.points}`).join(' · ');
     el.textContent = m.done ? `Season 1: chapter mission done (${n} of ${m.cases.length} cases counted).`
-      : m.state === 'locked' ? `Season 1: this chapter opens for Season points on ${T.istDate(m.opensAt)}, 6:30 pm India time. Until then it is practice.`
+      : m.state === 'locked' ? `Season 1: this chapter opens for Season points on ${T.istDate(m.opensAt)}. Until then it is practice.`
       : `Season 1: ${n} of ${m.cases.length} cases counted (${pts}${m.state === 'late' ? ', half points because the week is over' : ''}). Cases you played before signing in count again when you replay them.`;
     el.hidden = false;
   });

@@ -446,7 +446,7 @@ document.addEventListener('keydown', ensureAudio);
 const elBanner = $('banner');
 function banner(text, cls, ms) { elBanner.textContent = text; elBanner.className = 'show ' + (cls || ''); bannerUntil = performance.now() + (ms || 1300); }
 // night streak: consecutive days with a finished Tonight's night (stored on this device only)
-// The TODDY night starts at 13:00 UTC (18:30 India time). All dates in the game follow it, so every player gets the same night.
+// The TODDY night starts at 13:00 UTC. All dates in the game follow it, so every player gets the same night.
 const nightNow = () => new Date(Date.now() - 13 * 3600000);
 function dayNum(d) { return Math.floor(Date.UTC(d.getUTCFullYear(), d.getUTCMonth(), d.getUTCDate()) / 86400000); }
 function streakNow() {

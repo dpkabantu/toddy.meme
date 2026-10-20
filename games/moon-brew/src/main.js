@@ -1352,7 +1352,7 @@ function showBrewSet(week) {
   show('brewset'); $('overlay').hidden = true;
   $('brewset-title').textContent = 'Brew Set ' + set.week;
   const body = $('brewset-body');
-  body.innerHTML = `<div class="rule"><div><b>Five fixed trays</b><p>The same trays for everyone this week, apart from the Story: no earlier progress needed. Clear 3 trays for 25 Season points and all 5 for 25 more${late ? '. This week is over, so you get half points' : '. Finish after this week and you get half points'}.</p></div></div>
+  body.innerHTML = `<div class="rule one"><div><b>Five fixed trays</b><p>The same trays for everyone this week, apart from the Story: no earlier progress needed. Clear 3 trays for 25 Season points and all 5 for 25 more${late ? '. This week is over, so you get half points' : '. Finish after this week and you get half points'}.</p></div></div>
     <p class="stat center" id="set-prog">Counting only when you are signed in.</p>
     <div class="about-btns" id="set-trays">${[1, 2, 3, 4, 5].map((t) => `<button class="btn" data-t="${t}" type="button">Tray ${t}</button>`).join('')}</div>
     ${brewSets.length > 1 ? `<p class="stat center">Other weeks</p><div class="about-btns">${brewSets.filter((m) => m.week !== week).map((m) => `<button class="btn ghost" data-w="${m.week}" type="button">Week ${m.week}</button>`).join('')}</div>` : ''}`;
