@@ -332,12 +332,12 @@ function totalStars() { return Object.entries(save.stars).filter(([k]) => k.star
 function renderTitle() {
   const today = save.daily[dailyNumber()];
   const st = dailyStreak();
-  $('daily-status').textContent = today ? `Today: ${today.score || 0} pts${st.current > 1 ? ` · 🔥 ${st.current}` : ''}` : (st.current ? `Keep your ${st.current}-day streak` : 'New tray today');
+  $('daily-status').textContent = today ? `Today: ${today.score || 0} pts${st.current > 1 ? ` · 🔥 ${st.current}` : ''} · counts for Season` : (st.current ? `Keep your ${st.current}-day streak · counts for Season` : 'New tray today · counts for Season');
   $('btn-daily').classList.toggle('glow', !today); // gentle glow until today's Daily Brew is played
-  $('endless-status').textContent = endlessOpen() ? (save.endlessBest ? `Best ${save.endlessBest}` : 'Open') : `🔒 After Night 1 · ${night1Done()}/20`;
+  $('endless-status').textContent = endlessOpen() ? (save.endlessBest ? `Best ${save.endlessBest} · no Season points` : 'Open · no Season points') : `🔒 After Night 1 · ${night1Done()}/20`;
   // the Play button says where the player is going: the Night and tray, so the 20-tray journey is visible from the start
   const nx = nextTray();
-  $('play-status').textContent = !Object.keys(save.stars).length ? `${nightInfo(0).name} · ${TRAYS_PER_NIGHT} trays` : nx ? `Continue · ${nightInfo(nx[0]).name}, tray ${nx[1]}` : 'Play';
+  $('play-status').textContent = !Object.keys(save.stars).length ? `${nightInfo(0).name} · ${TRAYS_PER_NIGHT} trays · no Season points` : nx ? `Continue · ${nightInfo(nx[0]).name}, tray ${nx[1]} · no Season points` : 'Play';
   $('btn-endless').classList.toggle('locked', !endlessOpen());
   $('build-label').textContent = PLAYTEST ? `Playtest build ${BUILD} · nothing here is public yet` : `Moon Brew ${BUILD}`;
 }
@@ -1396,6 +1396,7 @@ toddy.cv.addEventListener('animationend', (e) => { if (e.animationName === 'hop'
 
 applySettings(); // (sound itself wakes on the first tap)
 show('title');
+if (/[?&]play=daily(&|$)/.test(location.search)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } startDaily(); }   // link from the Season page
 track('open', { returning: Object.keys(save.stars).length > 0 || Object.keys(save.daily).length > 0 });
 
 // Hooks for the automatic browser tests (tools/smoke.py). Not used by players.

@@ -2115,3 +2115,10 @@ a.game-card:focus-visible { outline: 2px solid var(--gold-light); outline-offset
   .games-filter { flex: 0 0 auto; }
 }
 @media (prefers-reduced-motion: reduce) { .play-all { transition: none; } .play-all:hover { transform: none; } }
+
+/* Season 1 / sign-in link in the menu (shown only when the Season server answers) */
+.nav-links li[hidden] { display: none; }
+.nav-links a.nav-season { color: var(--gold); border: 1px solid rgba(201,168,76,0.55); border-radius: 999px; padding: 5px 12px; }
+.nav-links a.nav-season::after { display: none; }
+.nav-links a.nav-season:hover { background: rgba(201,168,76,0.14); }
+@media (max-width: 768px) { .nav-links a.nav-season { display: inline-block; } }

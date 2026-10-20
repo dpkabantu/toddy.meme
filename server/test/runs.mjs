@@ -117,6 +117,7 @@ let dash = await get('/api/me/points', mira);
 check(dash.status === 200 && dash.body.points.season === t1 && dash.body.points.week === t1 && dash.body.streak.current === 1 && dash.body.games.length === 3, 'dashboard: totals match the ledger (' + t1 + '), streak 1');
 check(dash.body.games.find((g) => g.id === 'full-moon').playedTonight && dash.body.games.find((g) => g.id === 'moon-brew').playedTonight && !dash.body.games.find((g) => g.id === 'scam-lab').playedTonight, 'dashboard: tonight shows which games are done');
 check((await get('/api/me/points', null)).status === 401, 'dashboard needs sign-in');
+{ const si = await get('/api/season', null); check(si.status === 200 && si.body.night.key === '2026-12-08' && si.body.games.length === 3 && si.body.games.find((g) => g.id === 'scam-lab').ready === false && si.body.rules.bandPoints.join() === '8,12,16,20' && si.body.season.status === 'draft' && !JSON.stringify(si.body).includes('TDY-'), 'public /api/season: works without sign-in, shows the night, games and rules, nothing personal'); }
 check(/cash value/.test(dash.body.note), 'dashboard states points have no cash value');
 
 // A full week: 7 nights, Mira plays both ready games each night (Scam Lab not built yet), Noor never plays. All-Rounder cannot happen without Scam Lab.

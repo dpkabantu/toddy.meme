@@ -764,11 +764,11 @@ function showMenu() {
   overlay.hidden = false;
   overlay.innerHTML =
     '<div class="card"><div class="label">TODDY</div><h1>Full Moon</h1><p class="sub">Two the same make the next one. Reach Toddy’s Full Moon.</p>' + strip() +
-    '<button class="btn" data-act="daily">Tonight’s night<small>' + dateLabel() + ' · ' + C.TWISTS[todayTwist()].name + ' · same drops for everyone' + (streakNow() > 0 ? ' · ' + streakNow() + '-night streak' : '') + '</small></button>' +
-    '<button class="btn alt" data-act="free">Free play</button>' +
+    '<button class="btn" data-act="daily">Tonight’s challenge<span class="tag">Season</span><small>' + dateLabel() + ' · ' + C.TWISTS[todayTwist()].name + ' · same for everyone · counts for Season points' + (streakNow() > 0 ? ' · ' + streakNow() + '-night streak' : '') + '</small></button>' +
+    '<button class="btn alt" data-act="free">Practice<small>Free play · does not count for Season</small></button>' +
     settingsRow() +
     '<div class="links"><button class="chip" data-act="how">How to play</button><button class="chip" data-act="weeks">Weekly twists</button><button class="chip" data-act="pieces">Pieces</button><button class="chip" data-act="about">About</button><button class="chip" data-act="sharegame">Share game</button></div>' +
-    '<div class="links"><a class="chip" href="/games/">All games</a><a class="chip" href="/passport/">My Passport</a></div>' +
+    '<div class="links"><a class="chip" href="/games/">All games</a><a class="chip" href="/season/">My Season</a></div>' +
     '<p class="help">A calm puzzle. Every piece is made up and the game never asks for real details. As a guest, everything stays on this device. If you sign in with a Passport, tonight\u2019s night result is sent to be checked for Season points.</p></div>';
 }
 function showWeeks() {
@@ -926,7 +926,7 @@ function showOver() {
     '<div class="card"><h2>Night over</h2><img class="medal" alt="" src="' + ASSET['medal_' + (band + 1)] + '">' +
     '<div class="band">' + nm + '</div><div class="final">' + S.score.toLocaleString('en-US') + '</div>' +
     '<p class="sub">Lasted <b>' + lasted() + '</b> · ' + S.drops + ' drops</p><p class="sub">' + (kind === 'daily' ? "Tonight's best " : 'Best ') + bestVal.toLocaleString('en-US') + ' · highest piece ' + S.maxLevel + ' of 11' + (S.served ? ' · ' + S.served + ' visitor' + (S.served > 1 ? 's' : '') + ' served' : '') + (moonrises ? ' · Moonrise ×' + moonrises : '') + (next ? ' · next medal at ' + next.toLocaleString('en-US') : '') + '</p>' +
-    '' + (kind === 'daily' ? '<p class="sub" id="seasonline" hidden></p>' : '') + '<button class="btn" data-act="again">Play again</button><button class="btn share" data-act="pic">Share your night</button><button class="btn alt" data-act="menu">Menu</button><p class="help"><a href="/games/">All games</a> \u00b7 <a href="/passport/">My Passport</a></p></div>';
+    '' + (kind === 'daily' ? '<p class="sub" id="seasonline" hidden></p>' : '') + '<button class="btn" data-act="again">Play again</button><button class="btn share" data-act="pic">Share your night</button><button class="btn alt" data-act="menu">Menu</button><p class="help"><a href="/games/">All games</a> \u00b7 <a href="/season/">My Season</a></p></div>';
 }
 
 // ---------- full screen (Android and desktop browsers; iPhone Safari has no full screen for web pages) ----------
@@ -1049,6 +1049,7 @@ async function boot() {
   layout();
   twist = todayTwist(); S = C.newGame(C.dateSeed(nightNow()), twist);     // an idle crate behind the menu
   mode = 'menu'; setScore(); setNext(); showMenu();
+  if (/[?&]play=daily(&|$)/.test(location.search)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } startRun('daily'); }   // link from the Season page
   requestAnimationFrame(frame);
   $('loading').hidden = true;
 }

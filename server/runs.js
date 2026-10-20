@@ -114,6 +114,18 @@ export async function runFinish(request, env) {
   return answer({ counted: true, held: status === 'pending', points: { total, items: plan.map((x) => ({ label: x.reason, amount: x.amount })) } });
 }
 
+const rulesSummary = () => ({ bandPoints: [0, 1, 2, 3].map((b) => bandPoints(b)), activeNight: RULES.activeNight, weeklyCap: RULES.weeklyCapPerGame, consistency5Nights: 5, consistency5: RULES.consistency[5], consistency7Extra: RULES.consistency[7] - RULES.consistency[5], allRounder: RULES.allRounderWeek, allRounderNights: RULES.allRounderNights });
+
+// ---- GET /api/season: public facts for the Season page (works for guests, nothing personal) ----
+export async function seasonInfo(request, env) {
+  if (!env.DB) return json(503, { ok: false, error: 'not_configured' });
+  const now = nowMs(env), night = nightKey(now);
+  const s = await env.DB.prepare('SELECT id, name, status, starts_at, ends_at FROM seasons WHERE id = ?1').bind(RULES.seasonId).first();
+  return json(200, { ok: true, season: s ? { id: s.id, name: s.name, status: s.status, startsAt: s.starts_at, endsAt: s.ends_at } : null,
+    night: { key: night, endsAt: isoTime(nightEndMs(night)), week: weekOfNight(night) },
+    games: RULES.games.map((id) => ({ id, title: RULES.names[id], ready: id in ADAPTERS })), rules: rulesSummary(), rulesVersion: RULES.version });
+}
+
 // ---- GET /api/me/points: everything the Passport dashboard shows ----
 export async function myPoints(request, env) {
   if (!env.DB) return json(503, { ok: false, error: 'not_configured' });
@@ -125,7 +137,7 @@ export async function myPoints(request, env) {
     env.DB.prepare("SELECT COALESCE(SUM(CASE WHEN status='settled' THEN amount ELSE 0 END),0) settled, COALESCE(SUM(CASE WHEN status='pending' THEN amount ELSE 0 END),0) pending FROM points_ledger WHERE player_id = ?1 AND season_id = ?2").bind(p.id, RULES.seasonId),
     env.DB.prepare("SELECT COALESCE(SUM(amount),0) s FROM points_ledger WHERE player_id = ?1 AND season_id = ?2 AND status IN ('settled','pending') AND ((source_type IN ('run','run_upgrade') AND source_id IN (SELECT run_id FROM run_meta WHERE player_id = ?1 AND week = ?3)) OR (source_type = 'active_night' AND source_id IN (?4,?5,?6,?7,?8,?9,?10)) OR (source_id = ?11 AND source_type IN ('consistency5','consistency7','allrounder')))").bind(p.id, RULES.seasonId, week, ...weekKeys.map((k) => p.id + ':' + k), p.id + ':' + week),
     env.DB.prepare('SELECT game_id, COUNT(DISTINCT CASE WHEN counted = 1 THEN night_key END) nights, COALESCE(SUM(points),0) pts FROM run_meta WHERE player_id = ?1 AND week = ?2 GROUP BY game_id').bind(p.id, week),
-    env.DB.prepare('SELECT game_id, band FROM run_meta WHERE player_id = ?1 AND night_key = ?2 AND counted = 1').bind(p.id, night),
+    env.DB.prepare('SELECT game_id, MAX(band) band FROM run_meta WHERE player_id = ?1 AND night_key = ?2 AND (counted = 1 OR points > 0) GROUP BY game_id').bind(p.id, night),
     env.DB.prepare('SELECT DISTINCT night_key FROM run_meta WHERE player_id = ?1 AND counted = 1 AND night_key >= ?2').bind(p.id, lastNights(night, 60)[0]),
     env.DB.prepare('SELECT created_at, reason, amount, status, category FROM points_ledger WHERE player_id = ?1 AND season_id = ?2 ORDER BY id DESC LIMIT 15').bind(p.id, RULES.seasonId),
     env.DB.prepare("SELECT source_type FROM points_ledger WHERE player_id = ?1 AND source_id = ?2 AND source_type IN ('consistency5','consistency7','allrounder') AND reverses_id IS NULL").bind(p.id, p.id + ':' + week),
@@ -142,7 +154,7 @@ export async function myPoints(request, env) {
     night: { key: night, endsAt: isoTime(nightEndMs(night)), week },
     points: { season: tot.results[0].settled, pending: tot.results[0].pending, week: wk.results[0].s, seasonMax: RULES.seasonMax },
     streak: { current: streakFrom(played, night), weekNights, last7: lastNights(night, 7).map((k) => ({ night: k, played: played.has(k) })) },
-    rules: { bandPoints: [0, 1, 2, 3].map((b) => bandPoints(b)), activeNight: RULES.activeNight, weeklyCap: RULES.weeklyCapPerGame, consistency5Nights: 5, consistency5: RULES.consistency[5], consistency7Extra: RULES.consistency[7] - RULES.consistency[5], allRounder: RULES.allRounderWeek, allRounderNights: RULES.allRounderNights },
+    rules: rulesSummary(),
     games,
     goals: [
       { id: 'allrounder', label: 'All-Rounder: ' + RULES.allRounderNights + ' nights in each game this week', progress: allRounderDone, target: RULES.games.length, reward: RULES.allRounderWeek, done: gotBonus.has('allrounder') },

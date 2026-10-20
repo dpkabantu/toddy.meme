@@ -42,59 +42,6 @@
   }
   function dateText(iso) { try { return new Date(iso).toLocaleDateString(undefined, { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return iso; } }
 
-  // ---- Season dashboard (everything is set with textContent) ----
-  var el = function (tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text !== undefined) e.textContent = text; return e; };
-  var pct = function (a, b) { return Math.max(0, Math.min(100, b ? Math.round(100 * a / b) : 0)) + '%'; };
-  function bar(a, b) { var w = el('div', 'bar'); var i = el('i'); i.style.width = pct(a, b); w.appendChild(i); w.setAttribute('role', 'progressbar'); w.setAttribute('aria-valuemin', '0'); w.setAttribute('aria-valuemax', String(b)); w.setAttribute('aria-valuenow', String(a)); return w; }
-  function leftText(iso) { var ms = Date.parse(iso) - Date.now(); if (!(ms > 0)) return 'ending now'; var h = Math.floor(ms / 3600000), m = Math.floor(ms % 3600000 / 60000); return h + 'h ' + m + 'm left'; }
-  function dayInitial(key) { return 'SMTWTFS'.charAt(new Date(key + 'T12:00:00Z').getUTCDay()); }
-  function when(iso) { try { return new Date(iso).toLocaleDateString(undefined, { day: 'numeric', month: 'short' }); } catch (e) { return ''; } }
-  function renderDash(d) {
-    var box = $('dash'); box.textContent = '';
-    var s = el('div'); s.appendChild(el('h3', '', 'Season points'));
-    var big = el('div', 'big'); big.appendChild(el('b', '', String(d.points.season))); big.appendChild(el('span', '', d.points.pending ? '+ ' + d.points.pending + ' waiting for review' : 'of ' + d.points.seasonMax.toLocaleString('en-US') + ' possible')); s.appendChild(big);
-    box.appendChild(s);
-    var k = el('div', 'kpis');
-    [[d.points.week, 'this week'], [d.streak.current, d.streak.current === 1 ? 'night in a row' : 'nights in a row'], [d.streak.weekNights, 'nights this week']].forEach(function (x) { var c = el('div', 'kpi'); c.appendChild(el('b', '', String(x[0]))); c.appendChild(el('span', '', x[1])); k.appendChild(c); });
-    box.appendChild(k);
-    var n = el('p', 'night'); n.appendChild(document.createTextNode('Tonight (')); n.appendChild(el('b', '', dateText(d.night.key + 'T12:00:00Z'))); n.appendChild(document.createTextNode(') \u00b7 ' + leftText(d.night.endsAt) + ' \u00b7 a new night starts at 6:30 pm India time')); box.appendChild(n);
-    if (d.rules) {
-      var r = d.rules, det = el('details', 'more'); det.appendChild(el('summary', '', 'How Season points work'));
-      var ul2 = el('ul', 'howto');
-      [
-        'Each night, each game: your best result that night gives you a medal. Played ' + r.bandPoints[0] + ', Bronze ' + r.bandPoints[1] + ', Silver ' + r.bandPoints[2] + ', Gold ' + r.bandPoints[3] + ' points.',
-        'Playing again the same night only adds points if you earn a better medal, and then only the difference.',
-        'Your game score (like 2,002) is separate. It is for your own records. Your medal decides the Season points.',
-        'Active night: +' + r.activeNight + ' the first time you finish a game each night.',
-        'One game can give at most ' + r.weeklyCap + ' points a week, so every game counts the same.',
-        'Play ' + r.consistency5Nights + ' nights in a week: +' + r.consistency5 + '. All 7 nights: +' + r.consistency7Extra + ' more.',
-        'All-Rounder: ' + r.allRounderNights + ' nights in every game in a week: +' + r.allRounder + '.',
-        'A new night starts every day at 6:30 pm India time.'
-      ].forEach(function (t) { ul2.appendChild(el('li', '', t)); });
-      det.appendChild(ul2); box.appendChild(det);
-    }
-    var gs = el('div', 'games'); box.appendChild(el('h3', '', 'Your games this week'));
-    d.games.forEach(function (g) {
-      var card = el('div', 'game'), top = el('div', 'top');
-      top.appendChild(el('span', 'name', g.title));
-      top.appendChild(el('span', 'state' + (g.playedTonight ? ' done' : ''), !g.ready ? 'Joins the Season soon' : g.playedTonight ? 'Tonight: ' + g.tonightBand : 'Not played tonight'));
-      card.appendChild(top); card.appendChild(bar(g.weekPoints, g.weekCap));
-      var m = el('div', 'meta'); m.appendChild(el('span', '', g.weekPoints + ' / ' + g.weekCap + ' points this week')); m.appendChild(el('span', '', g.nightsThisWeek + ' night' + (g.nightsThisWeek === 1 ? '' : 's') + ' this week')); card.appendChild(m);
-      gs.appendChild(card);
-    });
-    box.appendChild(gs);
-    box.appendChild(el('h3', '', 'Last 7 nights'));
-    var dots = el('div', 'dots'); d.streak.last7.forEach(function (x, i) { var e = el('i', (x.played ? 'on' : '') + (i === 6 ? ' now' : ''), dayInitial(x.night)); e.setAttribute('aria-label', x.night + (x.played ? ': played' : ': not played')); dots.appendChild(e); }); box.appendChild(dots);
-    box.appendChild(el('h3', '', 'This week\u2019s goals'));
-    d.goals.forEach(function (g) { var w = el('div', 'goal' + (g.done ? ' done' : '')), t = el('div', 'top'); t.appendChild(el('span', '', g.label)); t.appendChild(el('span', '', g.done ? 'done +' + g.reward : '+' + g.reward)); w.appendChild(t); w.appendChild(bar(g.progress, g.target)); box.appendChild(w); });
-    box.appendChild(el('h3', '', 'Recent points'));
-    if (!d.recent.length) box.appendChild(el('p', 'note', 'Nothing yet. Play tonight\u2019s Moon Brew or Full Moon while signed in, and your points appear here.'));
-    else { var ul = el('ul', 'recent'); d.recent.forEach(function (r) { var li = el('li', r.status === 'pending' ? 'pending' : ''); var a = el('span', '', when(r.at) + ' \u00b7 ' + r.label + (r.status === 'pending' ? ' (waiting)' : '')); li.appendChild(a); li.appendChild(el('b', '', (r.amount > 0 ? '+' : '') + r.amount)); ul.appendChild(li); }); box.appendChild(ul); }
-    box.appendChild(el('p', 'note', d.note + ' Point rules are a draft and can change before the Season opens (version ' + d.rulesVersion + ').'));
-    box.hidden = false;
-  }
-  function loadDash() { api('GET', '/api/me/points').then(function (d) { if (d && d.ok) renderDash(d); else $('dash').hidden = true; }).catch(function () { $('dash').hidden = true; }); }
-
   var terms = '';
   function render(me) {
     say('');
@@ -106,7 +53,6 @@
       $('r-note').textContent = c.allowed ? (c.nextAt ? '' : 'You can change your username now. After that, changes are possible once every 30 days, and your old name stays reserved for you for those 30 days.') : 'You can change your username again on ' + dateText(c.nextAt) + '.';
       $('r-go').disabled = !c.allowed; $('r-name').disabled = !c.allowed;
       show('s-in');
-      loadDash();
     } else if (me.pending) {
       terms = me.termsVersion || '';
       $('hint').textContent = me.emailHint; $('j-ver').textContent = terms;
@@ -125,7 +71,7 @@
     var b = $('j-go'); b.disabled = true;
     api('POST', '/api/signup', { username: $('j-name').value, adult: $('j-adult').checked, terms: $('j-terms').checked ? terms : '' }).then(function (j) {
       b.disabled = false;
-      if (j.ok) { say('Welcome! Your Passport is ready.'); load().then(function () { say('Welcome! Your Passport is ready.'); }); return; }
+      if (j.ok) { location.href = '/season/'; return; }
       if (j.error === 'terms_required' && !$('j-terms').checked) return sayErr('terms_required');
       sayErr(j.error);
       if (j.error === 'sign_in_first' || j.error === 'already_registered') load();

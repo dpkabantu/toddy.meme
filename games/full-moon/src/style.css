@@ -101,3 +101,4 @@ body { overflow: hidden; font-family: var(--body); -webkit-user-select: none; us
 .sub a { color: inherit; text-decoration: underline; }
 .help a { color: inherit; text-decoration: underline; }
 a.chip { text-decoration: none; }
+.tag { display: inline-block; font: 600 10px var(--body); letter-spacing: .08em; text-transform: uppercase; color: #1b1236; background: #fdaf1e; border-radius: 7px; padding: 1px 6px; margin-left: 6px; vertical-align: middle; }

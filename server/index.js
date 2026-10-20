@@ -2,7 +2,7 @@
 // Runs ONLY for /api/* (see wrangler.jsonc, run_worker_first). Everything else on toddy.meme is the static site.
 // No cookies, no secrets, no player data in this stage.
 
-import { runStart, runFinish, myPoints } from './runs.js';
+import { runStart, runFinish, myPoints, seasonInfo } from './runs.js';
 import { googleStart, googleCallback, me, signup, changeUsername, logout, deleteMe, authStatus } from './auth.js';
 
 export const EXPECTED_SCHEMA = '0003';
@@ -67,6 +67,7 @@ export async function handle(request, env, deps) {
     'POST /api/auth/logout': logout,
     'POST /api/me/delete': deleteMe,
     'GET /api/me/points': myPoints,
+    'GET /api/season': seasonInfo,
     'POST /api/run/start': runStart,
     'POST /api/run/finish': runFinish,
   };

@@ -58,11 +58,11 @@
     if (!el) return;
     var d = describe(res); if (!d) { el.hidden = true; return; }
     el.textContent = d.text + ' ';
-    if (d.link) { var a = document.createElement('a'); a.href = '/passport/'; a.textContent = 'See your Passport'; el.appendChild(a); }
+    if (d.link) { var a = document.createElement('a'); a.href = '/season/'; a.textContent = 'See your Season page'; el.appendChild(a); }
     el.hidden = false;
   }
   function guestHint(el) {
-    if (!el) return; signedIn().then(function (yes) { if (yes) return; el.textContent = 'Playing as a guest. '; var a = document.createElement('a'); a.href = '/passport/'; a.textContent = 'Sign in to Passport to earn Season points.'; el.appendChild(a); el.hidden = false; });
+    if (!el) return; signedIn().then(function (yes) { if (yes) return; el.textContent = 'Playing as a guest. '; var a = document.createElement('a'); a.href = '/season/'; a.textContent = 'Sign in on the Season page to earn Season points.'; el.appendChild(a); el.hidden = false; });
   }
   window.ToddySeason = { night: night, nightDate: nightDate, start: start, finish: finish, describe: describe, show: show, guestHint: guestHint, signedIn: signedIn };
 })();

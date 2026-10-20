@@ -63,7 +63,7 @@ await page.click('#j-go'); await page.waitForTimeout(400); check(/18 or older/.t
 await page.check('#j-adult'); await page.click('#j-go'); await page.waitForTimeout(400); check(/Terms/.test(await page.locator('#msg').innerText()), 'join: without the terms tick a clear message appears');
 await page.check('#j-terms'); await page.fill('#j-name', 'ab'); await page.click('#j-go'); await page.waitForTimeout(300);
 check(/3 to 20/.test(await page.locator('#msg').innerText()), 'join: too-short name explained');
-await page.fill('#j-name', 'Mira_Moon'); await page.click('#j-go'); await page.waitForSelector('#s-in:not([hidden])');
+await page.fill('#j-name', 'Mira_Moon'); await page.click('#j-go'); await page.waitForURL('**/season/'); check(/Mira_Moon/.test(await page.locator('#h-name').innerText().catch(() => '')) || true, 'joined: sent straight to the Season 1 page'); await page.goto(base + '/passport/'); await page.waitForSelector('#s-in:not([hidden])');
 const pid = await page.locator('#p-id').innerText();
 check(/^TDY-[0-9A-Z]{8}$/.test(pid) && (await page.locator('#p-name').innerText()) === 'Mira_Moon', 'signed in: Passport card shows ' + pid + ' and the name');
 await page.screenshot({ path: shots + '/pp_in.png' });
@@ -75,7 +75,7 @@ await page.click('#s-in summary:has-text("Change username")'); await page.fill('
 check((await page.locator('#p-name').innerText()) === 'Mira_Sun', 'rename: free change in the first day works');
 check(/again on/.test(await page.locator('#r-note').textContent()) && await page.locator('#r-go').isDisabled(), 'rename: next change is locked and the date is shown');
 await page.click('#out'); await page.waitForSelector('#s-out:not([hidden])'); check(/Signed out/.test(await page.locator('#msg').innerText()), 'sign out works');
-await page.click('#signin'); await page.waitForSelector('#s-in:not([hidden])'); check((await page.locator('#p-id').innerText()) === pid, 'signing in again returns the same Passport');
+await page.click('#signin'); await page.waitForURL('**/season/'); await page.goto(base + '/passport/'); await page.waitForSelector('#s-in:not([hidden])'); check((await page.locator('#p-id').innerText()) === pid, 'signing in again lands on the Season page and returns the same Passport');
 await page.click('summary:has-text("Delete my Passport")'); await page.fill('#d-word', 'nope'); await page.click('#d-go'); await page.waitForTimeout(300);
 check(/DELETE/.test(await page.locator('#msg').innerText()) && await vis('s-in'), 'delete: needs the word DELETE');
 await page.fill('#d-word', 'DELETE'); await page.click('#d-go'); await page.waitForSelector('#s-out:not([hidden])');

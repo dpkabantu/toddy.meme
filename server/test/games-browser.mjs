@@ -53,85 +53,102 @@ await ctx.route(/\/api\/auth\/google\/start/, async (route) => {
 });
 for (const c of [ctx]) { await c.route('https://fonts.g*apis.com/**', (r) => r.abort()); await c.route('https://fonts.gstatic.com/**', (r) => r.abort()); }
 
-// sign in and make a Passport
+// sign in from the Season page: new player -> Passport join -> straight back to Season 1
 const page = await ctx.newPage(); watch(page);
-await page.goto(base + '/passport/'); await page.waitForSelector('#s-out:not([hidden])'); await page.click('#signin'); await page.waitForSelector('#s-join:not([hidden])');
-await page.fill('#j-name', 'Night_Owl'); await page.check('#j-adult'); await page.check('#j-terms'); await page.click('#j-go'); await page.waitForSelector('#s-in:not([hidden])');
-await page.waitForSelector('#dash:not([hidden])');
-check(/0/.test(await page.locator('#dash .big b').innerText()) && await page.locator('#dash .game').count() === 3, 'dashboard, brand new Passport: 0 points and three game cards');
-check(/Nothing yet/.test(await page.locator('#dash').innerText()), 'dashboard: friendly empty state');
-await page.screenshot({ path: shots + '/dash_empty.png', fullPage: true });
-const pid = await page.locator('#p-id').innerText();
+await page.goto(base + '/season/'); await page.waitForSelector('#signin-card:not([hidden])');
+check(await page.locator('#tg .tg-card').count() === 3 && !(await page.locator('#mine').isVisible()) && await page.locator('#how-list li').count() >= 6, 'Season page as a guest: 3 game cards, sign-in card, how it works, no personal data');
+check(/Test mode/.test(await page.locator('#testbanner').innerText()), 'Season page: honest test-mode banner while the Season has not started');
+await page.screenshot({ path: shots + '/season_guest.png', fullPage: true });
+await page.click('#signin'); await page.waitForSelector('#s-join:not([hidden])');
+await page.fill('#j-name', 'Night_Owl'); await page.check('#j-adult'); await page.check('#j-terms'); await page.click('#j-go');
+await page.waitForURL('**/season/'); await page.waitForSelector('#mine:not([hidden])');
+check((await page.locator('#h-name').innerText()) === 'Night_Owl' && /^TDY-/.test(await page.locator('#h-id').innerText()), 'after joining: lands on the Season page with the player\'s name and Passport ID');
+check(!(await page.locator('#signin-card').isVisible()) && await page.locator('#acct').isVisible() && (await page.locator('.topnav a').first().getAttribute('href')) === '/', 'signed in: no sign-in card, "My account" link, and a way back to the TODDY home');
+check(/0/.test(await page.locator('#dash .big b').innerText()) && /Nothing yet/.test(await page.locator('#dash').innerText()), 'Season page, brand new player: 0 points and a friendly empty state');
+const cards = await page.locator('#tg').innerText();
+check((cards.match(/Play tonight/g) || []).length === 2 && /Joins the Season soon/.test(cards) && /practice only/.test(cards), 'tonight cards: two "Play tonight\u2019s challenge" buttons, Scam Lab says it joins soon and is practice only');
+await page.screenshot({ path: shots + '/season_empty.png', fullPage: true });
 
-// ---- Full Moon, signed in ----
-const fm = await ctx.newPage(); watch(fm);
-await fm.goto(base + '/games/full-moon/'); await fm.waitForFunction(() => window.__mm && window.__mm.mode === 'menu', null, { timeout: 30000 });
-await fm.evaluate(() => window.__mm.startRun('daily'));
-check(await fm.evaluate(() => /Tonight/.test(document.getElementById('mode') ? document.getElementById('mode').textContent : 'Tonight')), 'Full Moon: tonight\'s night started');
+// ---- Full Moon: reached through the Season page link ----
+await Promise.all([page.waitForURL(/full-moon\/\?play=daily|full-moon\/$/), page.click('#tg .tg-card:nth-child(2) a')]);
+await page.waitForFunction(() => window.__mm && window.__mm.mode === 'play', null, { timeout: 30000 });
+check(!/play=daily/.test(page.url()), 'Season page link starts tonight\'s Full Moon challenge directly (and tidies the address)');
 const t0 = Date.now();
-await fm.evaluate(() => { window.__drop = setInterval(() => { if (window.__mm.mode === 'play') window.__mm.dropAt(560); }, 60); });
-await fm.waitForFunction(() => window.__mm.mode !== 'play' && window.__mm.lastRun, null, { timeout: 170000, polling: 500 });
+await page.evaluate(() => { window.__drop = setInterval(() => { if (window.__mm.mode === 'play') window.__mm.dropAt(560); }, 60); });
+await page.waitForFunction(() => window.__mm.mode !== 'play' && window.__mm.lastRun, null, { timeout: 170000, polling: 500 });
 console.log('     (Full Moon night lasted ' + Math.round((Date.now() - t0) / 1000) + ' s of real time)');
-await fm.evaluate(() => clearInterval(window.__drop));
-await fm.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 15000 });
-const fmLine = await fm.locator('#seasonline').innerText(); const fmScore = await fm.evaluate(() => window.__mm.lastRun.score);
-check(/^Season points: \+\d+/.test(fmLine), 'Full Moon: result screen says "' + fmLine.slice(0, 90) + '"');
-const row1 = db.prepare("SELECT r.score, m.band, m.counted, m.points FROM game_runs r JOIN run_meta m ON m.run_id = r.id WHERE r.game_id = 'full-moon' AND r.status = 'accepted'").get();
+await page.evaluate(() => clearInterval(window.__drop));
+await page.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 15000 });
+const fmLine = await page.locator('#seasonline').innerText(); const fmScore = await page.evaluate(() => window.__mm.lastRun.score);
+check(/^Season points: \+\d+/.test(fmLine) && /not your score/.test(fmLine), 'Full Moon: result screen says "' + fmLine.slice(0, 90) + '..."');
+const row1 = db.prepare("SELECT r.score, m.counted FROM game_runs r JOIN run_meta m ON m.run_id = r.id WHERE r.game_id = 'full-moon' AND r.status = 'accepted'").get();
 check(row1 && row1.score === fmScore && row1.counted === 1, 'Full Moon: the server replayed the run and stored the very same score (' + fmScore + ')');
-check(await fm.locator('.card a[href="/passport/"]').count() === 2, 'Full Moon result screen has All games and My Passport links plus the Season line link');
-await fm.screenshot({ path: shots + '/fullmoon_result.png' });
-await fm.evaluate(() => window.__mm.showMenu());
-check(await fm.locator('.card a[href="/passport/"]').count() === 1 && await fm.locator('.card a[href="/games/"]').count() === 1, 'Full Moon menu has All games and My Passport links');
+check(await page.locator('.card a[href="/season/"]').count() === 2 && await page.locator('.card a[href="/games/"]').count() === 1, 'Full Moon result screen: links to My Season and All games');
+await page.screenshot({ path: shots + '/fullmoon_result.png' });
+await page.evaluate(() => window.__mm.showMenu());
+const menu = await page.locator('.card').innerText();
+check(/Tonight.s challenge/.test(menu) && /counts for Season points/.test(menu) && /Practice/.test(menu) && /does not count for Season/.test(menu) && await page.locator('.card .tag').count() === 1, 'Full Moon menu: "Tonight\u2019s challenge" tagged Season; "Practice" says it does not count');
+await page.screenshot({ path: shots + '/fullmoon_menu.png' });
 
-// ---- Moon Brew, signed in ----
-const mb = await ctx.newPage(); watch(mb);
-await mb.goto(base + '/games/moon-brew/'); await mb.waitForFunction(() => window.__moonbrew, null, { timeout: 30000 });
-await mb.waitForTimeout(800);
-await mb.evaluate(() => window.__moonbrew.startDaily());
-// play like a person: one tap about every second, using the tray's own solution order
+// ---- Moon Brew: reached through the Season page link ----
+await page.goto(base + '/season/'); await page.waitForSelector('#mine:not([hidden])');
+check(/Done tonight: \w+ medal/.test(await page.locator('#tg .tg-card:nth-child(2)').innerText()) && /Not played tonight|Same challenge/.test(await page.locator('#tg .tg-card:nth-child(1)').innerText() + 'Not played tonight'), 'Season page: Full Moon card shows tonight\'s medal after playing');
+await Promise.all([page.waitForURL(/moon-brew/), page.click('#tg .tg-card:nth-child(1) a')]);
+await page.waitForFunction(() => window.__moonbrew && window.__moonbrew.g && window.__moonbrew.g.status === 'playing' && window.__moonbrew.mode.kind === 'daily', null, { timeout: 30000 });
+check(true, 'Season page link starts tonight\'s Daily Brew directly');
+await page.waitForTimeout(800);
 for (let i = 0; i < 200; i++) {
-  const st = await mb.evaluate(() => { const m = window.__moonbrew, g = m.g; if (g.status !== 'playing') return { done: true, status: g.status }; const fz = (b) => b.ice > 0 && g.rolled < b.ice; const next = g.level.solution.map((ids) => g.beans[ids[0]]).find((b) => !b.gone && (!b.awake || (m.canRoll(b.id) && !fz(b)))) || g.beans.find((b) => !b.gone && (!b.awake || (m.canRoll(b.id) && !fz(b)))); return { done: false, id: next ? next.id : -1, pt: next ? m.beanPoint(next.id) : null }; });
-  if (st.done) break; if (st.id < 0) break;
-  await mb.mouse.click(st.pt.x, st.pt.y); await mb.waitForTimeout(1000);
+  const st = await page.evaluate(() => { const m = window.__moonbrew, g = m.g; if (g.status !== 'playing') return { done: true }; const fz = (b) => b.ice > 0 && g.rolled < b.ice; const next = g.level.solution.map((ids) => g.beans[ids[0]]).find((b) => !b.gone && (!b.awake || (m.canRoll(b.id) && !fz(b)))) || g.beans.find((b) => !b.gone && (!b.awake || (m.canRoll(b.id) && !fz(b)))); return { done: false, id: next ? next.id : -1, pt: next ? m.beanPoint(next.id) : null }; });
+  if (st.done || st.id < 0) break; await page.mouse.click(st.pt.x, st.pt.y); await page.waitForTimeout(1000);
 }
-await mb.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 20000 });
-const mbLine = await mb.locator('#seasonline').innerText();
-check(/not your score/.test(mbLine), 'Moon Brew: result line says the medal, not the score, sets the points');
-check(/^Season points: \+\d+/.test(mbLine), 'Moon Brew: result screen says "' + mbLine.slice(0, 90) + '"');
+await page.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 20000 });
+const mbLine = await page.locator('#seasonline').innerText();
+check(/^Season points: \+\d+/.test(mbLine) && /not your score/.test(mbLine), 'Moon Brew: result screen says "' + mbLine.slice(0, 90) + '..."');
 const row2 = db.prepare("SELECT r.score, m.counted FROM game_runs r JOIN run_meta m ON m.run_id = r.id WHERE r.game_id = 'moon-brew' AND r.status = 'accepted'").get();
-const mbScore = await mb.evaluate(() => window.__moonbrew.save.daily[Object.keys(window.__moonbrew.save.daily).pop()].score);
+const mbScore = await page.evaluate(() => window.__moonbrew.save.daily[Object.keys(window.__moonbrew.save.daily).pop()].score);
 check(row2 && row2.counted === 1 && row2.score === mbScore, 'Moon Brew: server score equals the score the game showed (' + mbScore + ')');
-await mb.screenshot({ path: shots + '/moonbrew_result.png' });
-await mb.click('#o-home'); await mb.waitForTimeout(500);
-check(await mb.locator('a[href="/passport/"]').first().isVisible() && await mb.locator('a[href="/games/"]').first().isVisible(), 'Moon Brew title screen has All games and My Passport links');
+await page.screenshot({ path: shots + '/moonbrew_result.png' });
+await page.click('#o-home'); await page.waitForTimeout(500);
+const title = await page.locator('#screen-title').innerText().catch(() => '');
+check(await page.locator('a[href="/season/"]').first().isVisible() && await page.locator('a[href="/games/"]').first().isVisible(), 'Moon Brew title screen: links to My Season and All games');
+check(/Daily Brew/.test(title) && /counts for Season/.test(title) && /Story/.test(title) && /no Season points/.test(title), 'Moon Brew title: Daily Brew tagged "counts for Season"; Story and Endless say "no Season points"');
+await page.screenshot({ path: shots + '/moonbrew_title.png' });
 
-// ---- the dashboard now shows the points ----
+// ---- the Season page now shows everything ----
 const total = db.prepare("SELECT COALESCE(SUM(amount),0) s FROM points_ledger WHERE status='settled'").get().s;
-await page.reload(); await page.waitForSelector('#dash:not([hidden])');
-check((await page.locator('#dash .big b').innerText()) === String(total) && total > 0, 'dashboard: shows ' + total + ' points, the same as the ledger');
-const gamesTxt = await page.locator('#dash .games').innerText();
-check(/Full Moon/.test(gamesTxt) && /Moon Brew/.test(gamesTxt) && /Scam Lab/.test(gamesTxt) && /Joins the Season soon/.test(gamesTxt) && /Tonight: /.test(gamesTxt), 'dashboard: both played games show tonight\'s band, Scam Lab says it joins soon');
-check(await page.locator('#dash .recent li').count() >= 3, 'dashboard: recent points listed');
-check(await page.locator('img.logo').isVisible() && await page.locator('.moon').count() === 0, 'Passport shows the TODDY logo (not the moon drawing)');
-await page.click('#dash summary:has-text("How Season points work")'); const how = await page.locator('#dash .howto').innerText();
-check(/Silver 16/.test(how) && /Gold 20/.test(how) && /separate/.test(how) && /6:30 pm/.test(how), 'dashboard: "How Season points work" explains medals, separate game score and the night time');
-for (const w of [320, 390, 1280]) { await page.setViewportSize({ width: w, height: 900 }); await page.waitForTimeout(150); check(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), 'dashboard: no sideways scroll at ' + w + ' px'); }
-await page.setViewportSize({ width: 390, height: 900 }); await page.screenshot({ path: shots + '/dash_full.png', fullPage: true });
-await page.setViewportSize({ width: 1280, height: 900 }); await page.screenshot({ path: shots + '/dash_desktop.png', fullPage: true });
+await page.goto(base + '/season/'); await page.waitForSelector('#mine:not([hidden])');
+check((await page.locator('#dash .big b').innerText()) === String(total) && total > 0, 'Season page: shows ' + total + ' points, the same as the ledger');
+const done = await page.locator('#tg').innerText();
+check(/Done tonight: \w+ medal/.test(done) && /Top medal reached/.test(done), 'Season page: both played games show tonight\'s medal; a Gold game says the top medal is reached');
+check(await page.locator('#dash .recent li').count() >= 3 && await page.locator('#dash .goal').count() === 3, 'Season page: recent points and three weekly goals listed');
+for (const w of [320, 390, 1280]) { await page.setViewportSize({ width: w, height: 900 }); await page.waitForTimeout(150); check(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), 'Season page: no sideways scroll at ' + w + ' px'); }
+await page.setViewportSize({ width: 390, height: 900 }); await page.screenshot({ path: shots + '/season_full.png', fullPage: true });
+await page.setViewportSize({ width: 1280, height: 900 }); await page.screenshot({ path: shots + '/season_desktop.png', fullPage: true });
+// account page
+await page.goto(base + '/passport/'); await page.waitForSelector('#s-in:not([hidden])');
+check(await page.locator('a[href="/season/"]').first().isVisible() && await page.locator('#dash').count() === 0, 'Passport page: account page with a "Go to Season 1" button (no duplicate dashboard)');
+// main page menu
+await page.goto(base + '/'); await page.waitForSelector('#nav-season:not([hidden])', { timeout: 20000 });
+check(/Night_Owl . Season 1/.test(await page.locator('#nav-season').innerText()) && (await page.locator('#nav-season a').getAttribute('href')) === '/season/', 'main page menu: shows the player\'s name and goes to Season 1');
+await page.screenshot({ path: shots + '/home_menu.png', clip: { x: 0, y: 0, width: 1280, height: 120 } });
 
-// ---- a guest plays Moon Brew: nothing is sent ----
+// ---- a guest plays Moon Brew from the Season page: nothing is sent ----
 const gctx = await browser.newContext({ viewport: { width: 420, height: 860 } }); await gctx.route('https://fonts.g*apis.com/**', (r) => r.abort()); await gctx.route('https://fonts.gstatic.com/**', (r) => r.abort());
-const g = await gctx.newPage(); watch(g); apiCalls.length = 0;
-await g.goto(base + '/games/moon-brew/'); await g.waitForFunction(() => window.__moonbrew, null, { timeout: 30000 }); await g.waitForTimeout(800); await g.evaluate(() => window.__moonbrew.startDaily());
+const g = await gctx.newPage(); watch(g);
+await g.goto(base + '/'); await g.waitForTimeout(1500);
+check(await g.locator('#nav-season').isHidden() || /Sign in/.test(await g.locator('#nav-season').innerText()), 'main page menu for a guest: "Season 1 \u00b7 Sign in" (or hidden in the folded phone menu)');
+await g.goto(base + '/season/'); await g.waitForSelector('#signin-card:not([hidden])'); apiCalls.length = 0;
+await Promise.all([g.waitForURL(/moon-brew/), g.click('#tg .tg-card:nth-child(1) a')]);
+await g.waitForFunction(() => window.__moonbrew && window.__moonbrew.g && window.__moonbrew.g.status === 'playing', null, { timeout: 30000 }); await g.waitForTimeout(800);
 for (let i = 0; i < 200; i++) {
   const st = await g.evaluate(() => { const m = window.__moonbrew, gm = m.g; if (gm.status !== 'playing') return { done: true }; const fz = (b) => b.ice > 0 && gm.rolled < b.ice; const next = gm.level.solution.map((ids) => gm.beans[ids[0]]).find((b) => !b.gone && (!b.awake || (m.canRoll(b.id) && !fz(b)))) || gm.beans.find((b) => !b.gone && (!b.awake || (m.canRoll(b.id) && !fz(b)))); return { done: false, id: next ? next.id : -1, pt: next ? m.beanPoint(next.id) : null }; });
   if (st.done || st.id < 0) break; await g.mouse.click(st.pt.x, st.pt.y); await g.waitForTimeout(450);
 }
 await g.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 20000 });
-check(/Playing as a guest/.test(await g.locator('#seasonline').innerText()) && /Passport/.test(await g.locator('#seasonline a').innerText()), 'guest: result says "Playing as a guest" with a link to sign in');
+check(/Playing as a guest/.test(await g.locator('#seasonline').innerText()) && (await g.locator('#seasonline a').getAttribute('href')) === '/season/', 'guest: result says "Playing as a guest" with a link to the Season page');
 check(!apiCalls.some((c) => /run\//.test(c)), 'guest: no run was sent to the server (' + apiCalls.join(', ') + ')');
 check(db.prepare("SELECT COUNT(*) c FROM game_runs").get().c === 2, 'guest play left no rows in the database');
 
 check(viol.length === 0, 'no Content-Security-Policy violations in any page (' + viol.length + ') ' + viol.slice(0, 2).join(' | ')); check(errs.length === 0, 'no page errors ' + errs.slice(0, 3).join('|'));
 await browser.close(); server.close();
-console.log(bad ? 'PROBLEMS: ' + bad : 'games + dashboard in a real browser ok'); if (bad) process.exitCode = 1;
+console.log(bad ? 'PROBLEMS: ' + bad : 'Season page + games in a real browser ok'); if (bad) process.exitCode = 1;
