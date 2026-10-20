@@ -1,243 +1,159 @@
 {
   "id": "c2-02",
-  "type": "duel",
+  "type": "hunt",
   "chapter": 2,
   "difficulty": 2,
-  "title": "The Friendly Trader",
+  "title": "The Free Airdrop",
   "disguise": "influencer",
   "intro": [
-    "Three weeks later. \"Sophie\" and Toddy chat every day now.",
-    "Today she has a surprise. Talk back, and sniff every message.",
-    "Remember: you can leave the chat any time."
+    "Chapter 3, Toddy: free money. The oldest bait there is.",
+    "Someone replied to the official TODDY post with a \"free airdrop\".",
+    "Sniff the reply before you touch anything."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Sophie 🌸",
-    "text": "Look what I made this week!! 📈"
+    "from": "Replies to @ToddyOfficial",
+    "text": "🎁 5,000 $TODDY airdrop live now!"
   },
   "screen": {
     "app": "chirp",
     "head": {
       "name": [
         {
-          "text": "Sophie 🌸",
-          "id": "duel-name"
+          "clue": "name",
+          "text": "TODDY Airdrop 🎁"
         }
       ],
       "sub": [
-        "chatting for 3 weeks"
+        {
+          "clue": "handle",
+          "text": "@toddy_offical_drop"
+        }
       ],
       "avatar": {
-        "glyph": "🌸",
+        "glyph": "☾",
         "clue": "avatar"
       }
     },
-    "context": "You've chatted every day for three weeks: food, music, her cat.",
+    "context": "A reply under the real TODDY account's latest post.",
     "items": [
       {
         "msg": [
           {
-            "clue": "goodmorning",
-            "text": "Good morning sunshine ☀️"
+            "clue": "free",
+            "text": "🎁 5,000 $TODDY airdrop for the community!"
+          }
+        ]
+      },
+      {
+        "msg": [
+          "Claim at ",
+          {
+            "clue": "link",
+            "text": "toddy-claim.xyz",
+            "link": true
+          },
+          " — ",
+          {
+            "clue": "connect",
+            "text": "connect your wallet to receive"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "rush",
+            "text": "⏱ First 500 wallets only!"
+          },
+          " ",
+          {
+            "clue": "likes",
+            "text": "❤️ 2.4K"
           }
         ]
       }
     ]
   },
-  "duel": {
-    "start": "n1",
-    "nodes": {
-      "n1": {
-        "say": [
-          {
-            "msg": [
-              {
-                "clue": "profit",
-                "text": "📈 [screenshot: +€3,400 this week]"
-              }
-            ]
-          },
-          {
-            "msg": [
-              "My uncle is an analyst. ",
-              {
-                "clue": "insider",
-                "text": "He shares secret signals with family"
-              },
-              ". Want me to teach you?"
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "How does it work?",
-            "next": "n2"
-          },
-          {
-            "text": "I don't invest with people I've only met online.",
-            "next": "n3"
-          },
-          {
-            "text": "Block and report Sophie",
-            "end": "block_report"
-          }
-        ]
-      },
-      "n2": {
-        "say": [
-          {
-            "msg": [
-              "Easy! Use ",
-              {
-                "clue": "platform",
-                "text": "brenvoy-trade-pro.app",
-                "link": true
-              },
-              ". ",
-              {
-                "clue": "guaranteed",
-                "text": "It's guaranteed 2% a day"
-              },
-              " 💸"
-            ]
-          },
-          {
-            "msg": [
-              {
-                "clue": "small",
-                "text": "Start small, just €100. I'll guide you step by step."
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Guaranteed? Nothing is guaranteed.",
-            "next": "n3"
-          },
-          {
-            "text": "OK, depositing €100",
-            "end": "go_ahead"
-          },
-          {
-            "text": "Block and report Sophie",
-            "end": "block_report"
-          }
-        ]
-      },
-      "n3": {
-        "say": [
-          {
-            "msg": [
-              {
-                "clue": "guilt",
-                "text": "I thought we were friends 🥺"
-              },
-              " ",
-              {
-                "clue": "secret",
-                "text": "Don't tell your family, they won't understand."
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Real friends don't push investments. Bye.",
-            "end": "block_report"
-          },
-          {
-            "text": "I'll check whether Brenvoy Trade Pro is a licensed firm first",
-            "end": "verify"
-          },
-          {
-            "text": "Fine, I'll try it",
-            "end": "go_ahead"
-          }
-        ]
-      }
-    }
-  },
   "clues": {
-    "profit": {
-      "label": "Profit screenshot",
+    "handle": {
+      "label": "Misspelled handle",
       "strength": "strong",
-      "lens": "A screenshot of big profits. Screenshots are easy to fake.",
-      "why": "Showing off wins is the bait in investment scams."
+      "lens": "@toddy_offi-c-al_drop. \"offical\" is missing an i, and it's not the real account.",
+      "why": "Look-alike accounts reply under real posts to borrow trust."
     },
-    "insider": {
-      "label": "Secret insider tips",
+    "link": {
+      "label": "Unofficial link",
       "strength": "strong",
-      "lens": "\"Secret signals\" from an analyst uncle.",
-      "why": "Nobody shares real secret profits with strangers."
+      "lens": "toddy-claim.xyz is not toddy.meme.",
+      "why": "Only trust links from the official website itself."
     },
-    "platform": {
-      "label": "Unknown trading site",
+    "connect": {
+      "label": "\"Connect your wallet\"",
       "strength": "strong",
-      "lens": "A trading site you've never heard of, chosen by her.",
-      "why": "Fake platforms show fake gains so you keep depositing."
+      "lens": "Connecting to a fake site lets it ask your wallet to sign away your coins.",
+      "why": "\"Connect to claim\" is the most common way wallets get drained."
     },
-    "guaranteed": {
-      "label": "Guaranteed returns",
+    "rush": {
+      "label": "First 500 only",
       "strength": "strong",
-      "lens": "\"Guaranteed 2% a day.\" That's over 1,000% a year.",
-      "why": "Only scammers guarantee profits."
+      "lens": "A tiny window to make you hurry.",
+      "why": "Scarcity is pressure."
     },
-    "small": {
-      "label": "Start small",
+    "free": {
+      "label": "Free tokens",
       "strength": "strong",
-      "lens": "\"Just €100\" to start.",
-      "why": "Small first deposits build trust before the big ask."
+      "lens": "Free tokens out of nowhere.",
+      "why": "Surprise free money is always bait."
     },
-    "guilt": {
-      "label": "Guilt trip",
-      "strength": "strong",
-      "lens": "She acts hurt when you hesitate.",
-      "why": "Guilt is pressure wearing a friendly face."
-    },
-    "secret": {
-      "label": "Keep it secret",
-      "strength": "strong",
-      "lens": "She wants you to hide it from family.",
-      "why": "Scammers cut you off from people who would warn you."
-    },
-    "goodmorning": {
-      "label": "Sweet good morning",
+    "name": {
+      "label": "TODDY in the name",
       "strength": "harmless",
-      "lens": "A daily sweet message.",
-      "why": "Kind messages are normal between friends. Watch what comes next."
+      "lens": "The display name says TODDY.",
+      "why": "Anyone can put a brand in their name. Check the handle."
     },
     "avatar": {
-      "label": "Flower picture",
+      "label": "Moon logo",
       "strength": "harmless",
-      "lens": "A flower emoji.",
-      "why": "Proves nothing alone."
+      "lens": "A copy of the TODDY moon.",
+      "why": "Logos are easy to copy."
+    },
+    "likes": {
+      "label": "Lots of likes",
+      "strength": "harmless",
+      "lens": "2.4K likes.",
+      "why": "Likes can be bought or botted. They prove nothing either way."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Invest through Sophie's site",
+      "label": "Claim the airdrop",
       "trap": true
     },
     {
       "id": "verify",
-      "label": "Check the firm with the official regulator"
+      "label": "Check toddy.meme for any official airdrop news"
+    },
+    {
+      "id": "ignore",
+      "label": "Scroll past"
     },
     {
       "id": "block_report",
-      "label": "Block and report Sophie"
+      "label": "Report the fake account"
     }
   ],
   "best_action": "block_report",
   "acceptable_actions": [
-    "verify"
+    "verify",
+    "ignore"
   ],
   "trap": {
-    "title": "Brenvoy Trade Pro · Deposit",
-    "url": "brenvoy-trade-pro.app/deposit",
-    "ask": "Deposit €100 to start earning a guaranteed 2% a day.",
-    "go": "Deposit €100",
+    "title": "TODDY Airdrop · Claim",
+    "url": "toddy-claim.xyz",
+    "ask": "Connect your wallet and approve to receive 5,000 $TODDY.",
+    "go": "Connect & approve",
     "back": "Close this page"
   },
   "outcomes": {
@@ -245,145 +161,131 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "Reported. \"Sophie\" was one of hundreds of fake profiles run by the same group.",
-      "mirageSays": "Three weeks of work, wasted!"
+      "line": "Reported. The fake account was removed before it reached more of the community.",
+      "mirageSays": "My beautiful airdrop!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Brenvoy Trade Pro wasn't on any official register. It was on a warning list instead.",
-      "mirageSays": "They looked us up?!"
+      "line": "toddy.meme says nothing about an airdrop. Case cracked.",
+      "mirageSays": "They checked the real site?!"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You scrolled past safely. Reporting would protect the next person.",
+      "mirageSays": "Fine, someone else will click."
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "DRAINED",
-      "line": "The site showed big \"profits\" until Toddy tried to withdraw. Then Sophie vanished.",
-      "mirageSays": "Thanks, partner!"
+      "line": "The \"claim\" approved the site to empty the wallet.",
+      "mirageSays": "Free for me, anyway!"
     }
   },
   "what_if": {
-    "go_ahead": "\"Guaranteed 2% a day\" was the moment to stop. No real investment can promise that.",
-    "verify": "Checking the register was smart. Reporting Sophie too stops her reaching the next person."
+    "go_ahead": "Checking toddy.meme first would have shown there was no airdrop.",
+    "ignore": "Scrolling past was safe; a quick report helps everyone.",
+    "verify": "Checking was right. Reporting the fake helps others."
   },
-  "golden_rule": "Only scammers guarantee profits. Never invest because someone you met online tells you to.",
+  "golden_rule": "Never \"connect your wallet\" to claim free tokens. Check the official website first.",
   "quick_check": {
-    "q": "An online friend says a trading site gives \"guaranteed 2% a day\". What's true?",
+    "q": "A reply under an official post offers free tokens if you connect your wallet. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "It's fine if you start small"
+        "text": "Connect quickly before it runs out"
       },
       {
         "id": "b",
-        "text": "Guaranteed returns are a sure sign of a scam"
+        "text": "Check the official website, then report the reply"
       },
       {
         "id": "c",
-        "text": "It's safe because you've chatted for weeks"
+        "text": "Connect a small wallet only"
       }
     ],
     "answer": "b",
-    "explain": "No real investment can guarantee profits. Weeks of chatting are part of the con."
+    "explain": "Real airdrops are announced on the official site. Look-alike replies are the trap."
   },
   "hints": {
-    "nudge": "What is she really asking you to do with your money?",
+    "nudge": "Read the handle letter by letter.",
     "glow_order": [
-      "guaranteed",
-      "platform",
-      "insider",
-      "profit",
-      "secret",
-      "guilt",
-      "small"
+      "connect",
+      "link",
+      "handle",
+      "free",
+      "rush"
     ]
   },
   "sources": [
     "ftc-crypto",
-    "chainalysis-2025",
-    "ic3-2024"
+    "ftc-phishing",
+    "cafc-wallet"
   ],
   "checked_on": "2026-10-13",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check profile",
-      "title": "Sophie",
+      "label": "Check account",
+      "title": "@toddy_offi-c-al_drop",
       "rows": [
         {
-          "k": "Picture",
-          "v": "A flower emoji",
-          "clue": "avatar"
+          "k": "Handle",
+          "v": "Spelled \"offical\", not the real account",
+          "clue": "handle"
         },
         {
-          "k": "Daily message",
-          "v": "A sweet good morning",
-          "clue": "goodmorning"
+          "k": "Display name",
+          "v": "Says TODDY",
+          "clue": "name"
         },
         {
-          "k": "Real friends",
-          "v": "Do not need to sell you anything"
+          "k": "Real account",
+          "v": "@ToddyOfficial"
         }
       ]
     },
     {
       "id": "link",
       "icon": "🔗",
-      "label": "Check the platform",
-      "title": "Where she sends you",
+      "label": "Check link",
+      "title": "Where it goes",
       "rows": [
         {
-          "k": "Platform",
-          "v": "A site you have never heard of, chosen by her",
-          "clue": "platform"
+          "k": "The link opens",
+          "v": "toddy-claim.xyz",
+          "clue": "link"
         },
         {
-          "k": "Promise",
-          "v": "Guaranteed 2% a day",
-          "clue": "guaranteed"
+          "k": "Real site",
+          "v": "toddy.meme"
         },
         {
-          "k": "Start with",
-          "v": "Just €100",
-          "clue": "small"
-        },
-        {
-          "k": "Is it registered?",
-          "v": "Look it up on your regulator's list first"
+          "k": "It asks you to",
+          "v": "Connect your wallet",
+          "clue": "connect"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Check her story",
-      "title": "Proof and pressure",
+      "label": "Official page",
+      "title": "What TODDY says",
       "rows": [
         {
-          "k": "Proof",
-          "v": "A screenshot of big profits",
-          "clue": "profit"
+          "k": "Free tokens for replies?",
+          "v": "Never"
         },
         {
-          "k": "Her source",
-          "v": "Secret signals from an analyst uncle",
-          "clue": "insider"
-        },
-        {
-          "k": "If you hesitate",
-          "v": "She acts hurt",
-          "clue": "guilt"
-        },
-        {
-          "k": "Family",
-          "v": "She wants you to hide it",
-          "clue": "secret"
-        },
-        {
-          "k": "Screenshots",
-          "v": "Easy to edit"
+          "k": "Free tokens out of nowhere",
+          "v": "Not a thing TODDY does",
+          "clue": "free"
         }
       ]
     }

@@ -1,0 +1,301 @@
+{
+  "id": "c5-19",
+  "type": "hunt",
+  "chapter": 5,
+  "difficulty": 2,
+  "title": "The Student Job Story",
+  "disguise": "influencer",
+  "intro": [
+    "A story on your feed offers students ₹800 an hour. The job is only a message away.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Campus Earn",
+    "text": "Students: earn ₹800 an hour, part-time"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "Campus Earn"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@campus_earn_jobs"
+        }
+      ],
+      "avatar": {
+        "glyph": "🎓",
+        "clue": "pic"
+      }
+    },
+    "banner": [
+      {
+        "clue": "ad",
+        "text": "Story · \"Swipe up to join\""
+      }
+    ],
+    "context": "You are a student, looking for a part-time job.",
+    "items": [
+      {
+        "msg": [
+          "🎓 Students! Earn ",
+          {
+            "clue": "pay",
+            "text": "₹800 an hour"
+          },
+          ", ",
+          {
+            "clue": "hours",
+            "text": "only 2 hours a day"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "noexp",
+            "text": "No experience, no interview."
+          },
+          " ",
+          {
+            "clue": "fee",
+            "text": "Pay ₹500 to unlock the job link."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "rush",
+            "text": "Only 20 slots, closing tonight!"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "proof",
+            "text": "\"I earned ₹30,000 last week!\" - Riya"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "ad": {
+      "label": "A story ad from a stranger",
+      "strength": "strong",
+      "lens": "A page you do not know.",
+      "why": "Check who is behind a page before you trust it."
+    },
+    "pay": {
+      "label": "₹800 an hour",
+      "strength": "strong",
+      "lens": "Pay far above student work.",
+      "why": "Big pay for little work is the bait."
+    },
+    "noexp": {
+      "label": "No experience, no interview",
+      "strength": "strong",
+      "lens": "Anyone gets hired.",
+      "why": "Real jobs check who you are."
+    },
+    "fee": {
+      "label": "Pay ₹500 to unlock the link",
+      "strength": "strong",
+      "lens": "You pay to be paid.",
+      "why": "Honest employers never charge."
+    },
+    "rush": {
+      "label": "Closing tonight, 20 slots",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
+    },
+    "proof": {
+      "label": "A glowing testimonial",
+      "strength": "strong",
+      "lens": "A name and a number nobody can check.",
+      "why": "Testimonials can be written by anyone."
+    },
+    "hours": {
+      "label": "Only 2 hours a day",
+      "strength": "harmless",
+      "lens": "A light schedule.",
+      "why": "The hours alone prove nothing."
+    },
+    "name": {
+      "label": "A campus-sounding name",
+      "strength": "harmless",
+      "lens": "Campus Earn.",
+      "why": "Names are easy to invent."
+    },
+    "handle": {
+      "label": "A job handle",
+      "strength": "harmless",
+      "lens": "@campus_earn_jobs.",
+      "why": "Handles prove nothing alone."
+    },
+    "pic": {
+      "label": "Graduation cap picture",
+      "strength": "harmless",
+      "lens": "A little cap.",
+      "why": "Pictures prove nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Pay ₹500 and unlock the job",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Ask my college placement office and check for a real company"
+    },
+    {
+      "id": "block_report",
+      "label": "Report the story and block the page"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "trap": {
+    "title": "Campus Earn · Unlock",
+    "url": "campus-earn-unlock.in",
+    "ask": "Pay ₹500 to unlock your job link.",
+    "go": "Pay ₹500",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported and blocked. The platform removed the page before it reached more students.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Your college placement office knew nothing of it and warned students about fake offers. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The ₹500 went to a stranger. Then the \"job link\" needed another, bigger fee.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Asking the college, or any real company, would have ended it. Honest employers never charge.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "A student job that charges to unlock is a scam. Ask your college and check the company yourself.",
+  "quick_check": {
+    "q": "A story offers students ₹800 an hour but you must pay ₹500 first. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay, it is cheap"
+      },
+      {
+        "id": "b",
+        "text": "Pay and see"
+      },
+      {
+        "id": "c",
+        "text": "Do not pay. Ask your college and report the page"
+      },
+      {
+        "id": "d",
+        "text": "Share it with friends"
+      }
+    ],
+    "answer": "c",
+    "explain": "Honest employers never charge, especially not students."
+  },
+  "hints": {
+    "nudge": "Why would a job charge a student to start?",
+    "glow_order": [
+      "ad",
+      "pay",
+      "noexp",
+      "fee",
+      "rush",
+      "proof"
+    ]
+  },
+  "sources": [
+    "ftc-job-scams",
+    "ftc-jobs"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the page",
+      "title": "@campus_earn_jobs",
+      "rows": [
+        {
+          "k": "Page age",
+          "v": "5 days"
+        },
+        {
+          "k": "Asks you to pay",
+          "v": "₹500",
+          "clue": "fee"
+        },
+        {
+          "k": "Pay promised",
+          "v": "₹800 an hour",
+          "clue": "pay"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Pay to get a job?",
+          "v": "Honest employers never ask",
+          "clue": "fee"
+        },
+        {
+          "k": "How to check",
+          "v": "Ask a trusted adult or your placement office"
+        }
+      ]
+    }
+  ]
+}

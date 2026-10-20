@@ -1,0 +1,345 @@
+{
+  "id": "c7-15",
+  "type": "duel",
+  "chapter": 7,
+  "difficulty": 2,
+  "title": "The Influencer DM",
+  "disguise": "influencer",
+  "intro": [
+    "A crypto influencer with a blue tick messaged Toddy! Toddy is a fan.",
+    "Is it really her? And what does she want?",
+    "Talk back. Sniff everything."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Kirsta Invests Ava ✔",
+    "text": "Hey! Loved your comment 💜"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "text": "Kirsta Invests Ava ✔",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@kirstainvests_ava_vip"
+        }
+      ],
+      "avatar": {
+        "glyph": "👑",
+        "clue": "avatar"
+      }
+    },
+    "banner": [
+      {
+        "clue": "request",
+        "text": "Message request · you don't follow this account"
+      }
+    ],
+    "items": []
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              "Hey! ",
+              {
+                "clue": "flatter",
+                "text": "You seem smart, not like the others 💜"
+              }
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "alloc",
+                "text": "I can get you a private presale spot in my next project, only 50 spots."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "How do I join?",
+            "next": "n2"
+          },
+          {
+            "text": "Your real account is @kirstainvests_ava. Who are you?",
+            "next": "n3"
+          },
+          {
+            "text": "Block and report",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "pay",
+                "text": "Send 300 ZLV to my team wallet"
+              },
+              " ",
+              {
+                "clue": "nda",
+                "text": "and don't post about it, it's secret 🤫"
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Sending 300 ZLV",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Real influencers don't sell spots in DMs. Report.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll check her official account first",
+            "end": "verify"
+          }
+        ]
+      },
+      "n3": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "backup",
+                "text": "This is my backup account, the main one got shadowbanned 😢"
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Then I'll check with your main account.",
+            "end": "verify"
+          },
+          {
+            "text": "Nice try. Reporting.",
+            "end": "block_report"
+          },
+          {
+            "text": "Oh OK, how do I join?",
+            "next": "n2"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "handle": {
+      "label": "Extra \"_vip\"",
+      "strength": "strong",
+      "lens": "@kirstainvests_ava_vip: not her real handle.",
+      "why": "Impostor accounts add small extras."
+    },
+    "request": {
+      "label": "She messaged first",
+      "strength": "strong",
+      "lens": "A famous person DMing a fan first.",
+      "why": "Real influencers don't DM fans with offers."
+    },
+    "flatter": {
+      "label": "Flattery",
+      "strength": "strong",
+      "lens": "\"You're smart, not like the others.\"",
+      "why": "Flattery lowers your guard."
+    },
+    "alloc": {
+      "label": "Private presale spot",
+      "strength": "strong",
+      "lens": "An exclusive deal, limited spots.",
+      "why": "Secret deals in DMs are scams."
+    },
+    "pay": {
+      "label": "Pay her \"team\"",
+      "strength": "strong",
+      "lens": "Send coins to a wallet.",
+      "why": "Money to a stranger's wallet can't come back."
+    },
+    "nda": {
+      "label": "Keep it secret",
+      "strength": "strong",
+      "lens": "Don't tell anyone.",
+      "why": "Secrecy stops others warning you."
+    },
+    "backup": {
+      "label": "\"Backup account\"",
+      "strength": "strong",
+      "lens": "An excuse for the fake handle.",
+      "why": "The classic impostor excuse."
+    },
+    "avatar": {
+      "label": "Crown picture",
+      "strength": "harmless",
+      "lens": "A crown emoji.",
+      "why": "Proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Pay for the spot"
+    },
+    {
+      "id": "verify",
+      "label": "Check her official account"
+    },
+    {
+      "id": "block_report",
+      "label": "Block and report"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Reported. The real Ava had posted: \"I never DM. Fakes everywhere.\"",
+      "mirageSays": "Blue tick, wasted!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Her official account: \"Impostors are DMing fans. I will never ask for money.\"",
+      "mirageSays": "She warned them!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "No presale ever existed. The \"backup account\" vanished.",
+      "mirageSays": "Spot reserved… in my wallet!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "An influencer messaging you first with a secret deal is always an impostor."
+  },
+  "golden_rule": "Famous people don't DM you with secret deals. If they do, it isn't them.",
+  "quick_check": {
+    "q": "A famous crypto influencer DMs you a \"private presale spot\". What is it?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A lucky break"
+      },
+      {
+        "id": "b",
+        "text": "An impostor scam"
+      }
+    ],
+    "answer": "b",
+    "explain": "Real influencers warn about exactly this."
+  },
+  "hints": {
+    "nudge": "Compare the handle with the real one.",
+    "glow_order": [
+      "handle",
+      "request",
+      "alloc",
+      "pay",
+      "nda",
+      "backup",
+      "flatter"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "chainalysis-2025",
+    "ic3-2024"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the account",
+      "title": "Kirsta Invests Ava",
+      "rows": [
+        {
+          "k": "Handle",
+          "v": "@kirstainvests_ava_vip, not her real one",
+          "clue": "handle"
+        },
+        {
+          "k": "First message",
+          "v": "A famous person DMing a fan",
+          "clue": "request"
+        },
+        {
+          "k": "Picture",
+          "v": "A crown emoji",
+          "clue": "avatar"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the deal",
+      "title": "What she offers",
+      "rows": [
+        {
+          "k": "Compliment",
+          "v": "\"You are smart, not like the others\"",
+          "clue": "flatter"
+        },
+        {
+          "k": "Deal",
+          "v": "Exclusive, limited spots",
+          "clue": "alloc"
+        },
+        {
+          "k": "Real influencers",
+          "v": "Do not sell spots in DMs"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the rules",
+      "title": "What she asks",
+      "rows": [
+        {
+          "k": "To get in",
+          "v": "Send coins to a wallet",
+          "clue": "pay"
+        },
+        {
+          "k": "Secrecy",
+          "v": "Do not tell anyone",
+          "clue": "nda"
+        },
+        {
+          "k": "Handle",
+          "v": "She explains the fake one",
+          "clue": "backup"
+        },
+        {
+          "k": "Real accounts",
+          "v": "Have nothing to hide"
+        }
+      ]
+    }
+  ]
+}

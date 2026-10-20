@@ -1,0 +1,269 @@
+{
+  "id": "c6-07",
+  "type": "hunt",
+  "chapter": 6,
+  "difficulty": 2,
+  "title": "The Ship Engineer",
+  "disguise": "friend",
+  "intro": [
+    "Someone you met online works on a ship far away. He says he wants to visit you, but needs help first.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Arvind (ship engineer)",
+    "text": "I need $600 for my leave papers…"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "Arvind, ship engineer"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "where",
+          "text": "At sea, \"no network on deck\""
+        }
+      ],
+      "avatar": {
+        "glyph": "🚢",
+        "clue": "pic"
+      }
+    },
+    "banner": [
+      "Private chat"
+    ],
+    "context": "You have been chatting online for four weeks. You have never spoken or met.",
+    "items": [
+      {
+        "time": [
+          "11:20 PM"
+        ]
+      },
+      {
+        "msg": [
+          "My darling, my leave is approved! But the ",
+          {
+            "clue": "papers",
+            "text": "leave papers need $600"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          "My salary is ",
+          {
+            "clue": "stuck",
+            "text": "stuck until I reach port"
+          },
+          ". Can you send it now?"
+        ]
+      },
+      {
+        "msg": [
+          "I will ",
+          {
+            "clue": "repay",
+            "text": "repay you double"
+          },
+          " when I see you."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "rush",
+            "text": "The office closes tomorrow."
+          },
+          " ",
+          {
+            "clue": "love",
+            "text": "I love you, please do not let me down."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "papers": {
+      "label": "Money for \"leave papers\"",
+      "strength": "strong",
+      "lens": "A real employer handles its own paperwork.",
+      "why": "Needing money for papers is a classic story."
+    },
+    "stuck": {
+      "label": "Salary \"stuck\"",
+      "strength": "strong",
+      "lens": "A reason why he cannot pay himself.",
+      "why": "A reason that needs your money is a warning."
+    },
+    "repay": {
+      "label": "\"I will repay double\"",
+      "strength": "strong",
+      "lens": "A promise to win trust.",
+      "why": "A promise to repay is bait."
+    },
+    "rush": {
+      "label": "The office closes tomorrow",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
+    },
+    "love": {
+      "label": "Emotional pressure",
+      "strength": "strong",
+      "lens": "\"Do not let me down.\"",
+      "why": "Guilt and love are levers."
+    },
+    "where": {
+      "label": "\"At sea, no network\"",
+      "strength": "strong",
+      "lens": "He is conveniently unreachable.",
+      "why": "Being unreachable keeps you from checking."
+    },
+    "name": {
+      "label": "A job and a name",
+      "strength": "harmless",
+      "lens": "Arvind, ship engineer.",
+      "why": "A job title proves nothing."
+    },
+    "pic": {
+      "label": "Ship picture",
+      "strength": "harmless",
+      "lens": "A little ship.",
+      "why": "Pictures prove nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Send the $600"
+    },
+    {
+      "id": "verify",
+      "label": "Say I will only help after we meet in person and a video call"
+    },
+    {
+      "id": "block_report",
+      "label": "Send nothing and report the profile"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "You sent nothing and reported the profile. It was removed.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "You asked for a video call and a name of his company. He had no answers, and the chat ended. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The $600 was lost. A \"customs fee\" and an \"airport fee\" followed.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Never sending money to someone you have not met, and asking for a video call, would have stopped it.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "Someone far away, working at sea or abroad, who needs money for papers is the classic romance scam. Send nothing.",
+  "quick_check": {
+    "q": "An online love interest says he is a ship engineer and needs $600 for leave papers. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Send it, he will repay"
+      },
+      {
+        "id": "b",
+        "text": "Send half"
+      },
+      {
+        "id": "c",
+        "text": "Send nothing. Report the profile"
+      },
+      {
+        "id": "d",
+        "text": "Ask him to send papers first"
+      }
+    ],
+    "answer": "c",
+    "explain": "Working far away and needing money for papers is the classic story."
+  },
+  "hints": {
+    "nudge": "Why can he not pay for his own papers?",
+    "glow_order": [
+      "papers",
+      "stuck",
+      "repay",
+      "rush",
+      "love",
+      "where"
+    ]
+  },
+  "sources": [
+    "ftc-romance",
+    "ftc-gift-cards"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the profile",
+      "title": "Arvind",
+      "rows": [
+        {
+          "k": "Met in person?",
+          "v": "Never"
+        },
+        {
+          "k": "Where?",
+          "v": "At sea, \"no network\"",
+          "clue": "where"
+        },
+        {
+          "k": "Asked for",
+          "v": "$600",
+          "clue": "papers"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Working far away, needing money",
+          "v": "A romance scam red flag",
+          "clue": "papers"
+        },
+        {
+          "k": "Never send money",
+          "v": "To someone you have not met"
+        }
+      ]
+    }
+  ]
+}

@@ -2,234 +2,169 @@
   "id": "c2-03",
   "type": "hunt",
   "chapter": 2,
-  "difficulty": 2,
-  "title": "Two Trading Apps",
-  "disguise": "support",
+  "difficulty": 1,
+  "title": "Shoes at 80% Off",
+  "disguise": "influencer",
   "intro": [
-    "Toddy is curious about investing, the safe way. Two apps came up in a search.",
-    "One behaves like a real, regulated firm. One is built to take your money.",
-    "Compare them side by side."
+    "An ad for your favourite shoes pops up while you scroll. The price looks unreal.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
   ],
   "notify": {
-    "app": "Browser",
-    "from": "Search results",
-    "text": "Two trading apps compared"
+    "app": "Chirp",
+    "from": "Sponsored",
+    "text": "Strideway Runner: 80% OFF today only!"
   },
   "screen": {
-    "app": "compare",
-    "context": "Two trading apps, side by side.",
-    "panels": [
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "brand",
+          "text": "Strideway Outlet"
+        }
+      ],
+      "sub": [
+        "Sponsored"
+      ],
+      "avatar": {
+        "glyph": "👟",
+        "clue": "pic"
+      }
+    },
+    "banner": [
+      "Ad · you do not follow this page"
+    ],
+    "items": [
       {
-        "label": "Ostrel",
-        "avatar": {
-          "glyph": "★",
-          "clue": "logo_a"
-        },
-        "rows": [
+        "msg": [
           {
-            "k": "Returns",
-            "v": [
-              {
-                "clue": "risk_a",
-                "text": "\"Investments can lose value\""
-              }
-            ]
-          },
-          {
-            "k": "Licence",
-            "v": [
-              {
-                "clue": "licence_a",
-                "text": "Reg. no. you can check on the regulator's own site"
-              }
-            ]
-          },
-          {
-            "k": "Withdraw",
-            "v": [
-              {
-                "clue": "withdraw_a",
-                "text": "Any time, small fee from your balance"
-              }
-            ]
-          },
-          {
-            "k": "Support",
-            "v": [
-              {
-                "clue": "support_a",
-                "text": "In the app"
-              }
-            ]
-          },
-          {
-            "k": "Since",
-            "v": [
-              "2019"
-            ]
+            "clue": "deal",
+            "text": "Strideway Runner shoes: 80% OFF today only!"
           }
         ]
       },
       {
-        "label": "Brenvoy Trade Pro",
-        "avatar": {
-          "glyph": "🚀",
-          "clue": "logo_b"
-        },
-        "rows": [
+        "msg": [
+          "Was €120, now ",
           {
-            "k": "Returns",
-            "v": [
-              {
-                "clue": "guaranteed_b",
-                "text": "\"Guaranteed 2% daily\""
-              }
-            ]
+            "clue": "price",
+            "text": "€24"
           },
+          ". ",
           {
-            "k": "Licence",
-            "v": [
-              {
-                "clue": "licence_b",
-                "text": "\"Licensed ✔\" badge, no number"
-              }
-            ]
-          },
-          {
-            "k": "Withdraw",
-            "v": [
-              {
-                "clue": "withdraw_b",
-                "text": "Pay a 20% \"unlock fee\" first"
-              }
-            ]
-          },
-          {
-            "k": "Support",
-            "v": [
-              {
-                "clue": "support_b",
-                "text": "Only via Plenvo DM"
-              }
-            ]
-          },
-          {
-            "k": "Since",
-            "v": [
-              {
-                "clue": "new_b",
-                "text": "3 weeks ago"
-              }
-            ]
+            "clue": "stock",
+            "text": "Only 3 pairs left!"
           }
-        ],
-        "note": [
+        ]
+      },
+      {
+        "msg": [
+          "Shop now: ",
           {
-            "clue": "bonus_b",
-            "text": "\"Deposit today and get a 50% bonus!\""
+            "clue": "link",
+            "text": "strideway-outlet-sale.shop",
+            "link": true
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "pay",
+            "text": "We only take bank transfer or gift cards."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "reviews",
+            "text": "★★★★★ \"Best shop ever!\" · ★★★★★ \"Arrived fast!\""
           }
         ]
       }
     ]
   },
   "clues": {
-    "guaranteed_b": {
-      "label": "Guaranteed returns",
+    "deal": {
+      "label": "80% off",
       "strength": "strong",
-      "lens": "A promise of 2% every day.",
-      "why": "Only scammers guarantee profits."
+      "lens": "A brand-new shoe at a fifth of its usual price.",
+      "why": "A price far below normal is the bait. Real shops rarely cut this deep."
     },
-    "licence_b": {
-      "label": "Badge, no number",
+    "stock": {
+      "label": "\"Only 3 left\"",
       "strength": "strong",
-      "lens": "A tick picture with no registration number to check.",
-      "why": "Real firms give a number you can check on the regulator's own website."
+      "lens": "A countdown of pairs, to make you hurry.",
+      "why": "Pressure to buy now is a scam sign."
     },
-    "withdraw_b": {
-      "label": "Pay to withdraw",
+    "link": {
+      "label": "Strange shop address",
       "strength": "strong",
-      "lens": "You must pay before you can take your own money out.",
-      "why": "Fees to unlock your money are how fake platforms take even more."
+      "lens": "strideway-outlet-sale.shop is not the brand's own site, strideway.com.",
+      "why": "Look-alike shop names are easy to make. Type the brand's own address yourself."
     },
-    "support_b": {
-      "label": "Support only in DMs",
+    "pay": {
+      "label": "Only transfer or gift cards",
       "strength": "strong",
-      "lens": "No help inside the app, only private messages.",
-      "why": "Real firms have support in the app or on their official site."
+      "lens": "No card payment, only methods you cannot take back.",
+      "why": "Real shops accept cards, which can be disputed. Only scammers insist on transfers and gift cards."
     },
-    "new_b": {
-      "label": "3 weeks old",
+    "reviews": {
+      "label": "Only perfect reviews",
       "strength": "strong",
-      "lens": "The site appeared three weeks ago.",
-      "why": "Fake platforms pop up and vanish fast."
+      "lens": "Every review is five stars with no detail.",
+      "why": "Fake shops write their own praise."
     },
-    "bonus_b": {
-      "label": "Deposit bonus pressure",
-      "strength": "strong",
-      "lens": "\"Deposit today\" for a big bonus.",
-      "why": "Bonuses and \"today only\" push you to deposit before you check."
-    },
-    "risk_a": {
-      "label": "Risk warning",
+    "brand": {
+      "label": "A brand name",
       "strength": "harmless",
-      "lens": "It warns you can lose money.",
-      "why": "Honest firms warn about risk."
+      "lens": "The page is called Strideway Outlet.",
+      "why": "A name is easy to copy. It proves nothing."
     },
-    "licence_a": {
-      "label": "Checkable licence",
+    "pic": {
+      "label": "A shoe picture",
       "strength": "harmless",
-      "lens": "A registration number you can look up yourself.",
-      "why": "Checkable on the regulator's own site, not just a picture."
+      "lens": "A photo of a running shoe.",
+      "why": "Pictures are copied from real shops in seconds."
     },
-    "withdraw_a": {
-      "label": "Normal withdrawals",
+    "price": {
+      "label": "€24",
       "strength": "harmless",
-      "lens": "Withdraw any time; fees come out of your balance.",
-      "why": "That's how real platforms work."
-    },
-    "support_a": {
-      "label": "In-app support",
-      "strength": "harmless",
-      "lens": "Help inside the app.",
-      "why": "Normal for a real firm."
-    },
-    "logo_a": {
-      "label": "Star logo",
-      "strength": "harmless",
-      "lens": "A star logo.",
-      "why": "Logos prove nothing either way."
-    },
-    "logo_b": {
-      "label": "Rocket logo",
-      "strength": "harmless",
-      "lens": "A rocket logo.",
-      "why": "Logos prove nothing either way, even rockets."
+      "lens": "The price on its own.",
+      "why": "The price is only suspicious next to the real one: the 80% discount."
     }
   },
   "actions": [
     {
-      "id": "pick_b",
-      "label": "Sign up for Brenvoy Trade Pro, the returns are better",
+      "id": "go_ahead",
+      "label": "Click the ad and buy the shoes",
       "trap": true
     },
     {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
       "id": "verify",
-      "label": "Look up both on the official regulator's register"
+      "label": "Go to the brand's own website and compare"
     },
     {
       "id": "block_report",
-      "label": "Report Brenvoy Trade Pro, then check Ostrel's number on the regulator's site"
+      "label": "Report it and delete it"
     }
   ],
   "best_action": "block_report",
   "acceptable_actions": [
-    "verify"
+    "verify",
+    "ignore"
   ],
   "trap": {
-    "title": "Brenvoy Trade Pro · Sign up",
-    "url": "brenvoy-trade-pro.app/join",
-    "ask": "Deposit today and get a 50% bonus. Guaranteed 2% daily!",
-    "go": "Deposit now",
+    "title": "Strideway Outlet · Checkout",
+    "url": "strideway-outlet-sale.shop/checkout",
+    "ask": "Pay €24 by bank transfer to confirm your pair.",
+    "go": "Pay €24",
     "back": "Close this page"
   },
   "outcomes": {
@@ -237,133 +172,131 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "REPORTED",
-      "line": "Reported. The site went onto an official warning list a week later.",
-      "mirageSays": "My shiny rocket site!"
+      "line": "Reported the ad. The platform removed the page before it reached more people.",
+      "mirageSays": "Not my lovely scam!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Ostrel's number matched the register. Brenvoy Trade Pro wasn't there at all.",
-      "mirageSays": "Registers ruin everything."
+      "line": "The brand's real shop sold the same shoe at €120 and had never heard of this outlet. Case cracked.",
+      "mirageSays": "Hmph. They checked."
     },
-    "pick_b": {
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "The \"profits\" grew on screen. The 20% unlock fee was paid. Nothing came out.",
-      "mirageSays": "Withdrawals? Never heard of them."
+      "stamp": "SCAMMED",
+      "line": "The €24 went to a stranger. No shoes ever arrived, and the shop disappeared.",
+      "mirageSays": "Thanks for the details!"
     }
   },
   "what_if": {
-    "pick_b": "\"Pay 20% to withdraw\" means your money can't really come out. Check the licence number on the regulator's own site first.",
-    "verify": "Checking was exactly right. Reporting the fake as well helps it get shut down."
+    "go_ahead": "Looking up the brand's own site would have shown the true price. Paying by card would also have let you dispute the payment.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
   },
-  "golden_rule": "If you must pay to take your own money out, it's not your money any more. Check licences on the regulator's own site.",
+  "golden_rule": "A price that looks too good, plus transfer-only payment, is a fake shop. Type the real shop's address yourself.",
   "quick_check": {
-    "q": "A trading app asks for a 20% \"unlock fee\" before you can withdraw. What does that mean?",
+    "q": "An ad offers a €120 shoe for €24, payable only by bank transfer. What is the best move?",
     "options": [
       {
         "id": "a",
-        "text": "Normal tax, pay it"
+        "text": "Buy fast, it is nearly sold out"
       },
       {
         "id": "b",
-        "text": "It's a fake platform: stop paying and report it"
+        "text": "Pay a small deposit first"
       },
       {
         "id": "c",
-        "text": "Pay half and negotiate"
+        "text": "Skip it, and check the brand's own website if you want the shoes"
+      },
+      {
+        "id": "d",
+        "text": "Ask the ad to confirm it is real"
       }
     ],
-    "answer": "b",
-    "explain": "Real platforms take fees from your balance. \"Pay first to withdraw\" is how fake ones take more."
+    "answer": "c",
+    "explain": "A huge discount with transfer-only payment is the pattern. Real shops accept cards."
   },
   "hints": {
-    "nudge": "Compare how each app lets you take money out.",
+    "nudge": "Look at the price and how they want to be paid.",
     "glow_order": [
-      "withdraw_b",
-      "guaranteed_b",
-      "licence_b",
-      "support_b",
-      "new_b",
-      "bonus_b"
+      "deal",
+      "stock",
+      "link",
+      "pay",
+      "reviews"
     ]
   },
   "sources": [
-    "ftc-crypto",
-    "ic3-2024",
-    "ftc-data-2024"
+    "ftc-marketplace",
+    "ftc-phishing"
   ],
-  "checked_on": "2026-10-13",
-  "decide_q": "Which app is safe, and what will you do?",
+  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the registry",
-      "title": "Licence and age",
+      "label": "Check the page",
+      "title": "Strideway Outlet",
       "rows": [
         {
-          "k": "App A",
-          "v": "Registration number you can look up",
-          "clue": "licence_a"
+          "k": "Page created",
+          "v": "4 days ago",
+          "clue": "brand"
         },
         {
-          "k": "App B",
-          "v": "A tick picture, no number",
-          "clue": "licence_b"
+          "k": "Real brand site",
+          "v": "strideway.com"
         },
         {
-          "k": "App B appeared",
-          "v": "Three weeks ago",
-          "clue": "new_b"
+          "k": "Reviews",
+          "v": "All five stars, no detail",
+          "clue": "reviews"
         }
       ]
     },
     {
       "id": "link",
       "icon": "🔗",
-      "label": "Check the money rules",
-      "title": "Taking your money out",
+      "label": "Check the address",
+      "title": "Where the ad goes",
       "rows": [
         {
-          "k": "App A",
-          "v": "Withdraw any time; fees come out of your balance",
-          "clue": "withdraw_a"
+          "k": "Opens",
+          "v": "strideway-outlet-sale.shop",
+          "clue": "link"
         },
         {
-          "k": "App B",
-          "v": "Pay first to take your money out",
-          "clue": "withdraw_b"
-        },
-        {
-          "k": "App B promises",
-          "v": "2% every day",
-          "clue": "guaranteed_b"
+          "k": "Payment options",
+          "v": "Transfer or gift cards only",
+          "clue": "pay"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Check help and risk",
-      "title": "What each one tells you",
+      "label": "Official advice",
+      "title": "What advice says",
       "rows": [
         {
-          "k": "App A warns",
-          "v": "You can lose money",
-          "clue": "risk_a"
+          "k": "Paying safely online",
+          "v": "Use a card or a secure payment system that protects buyers",
+          "clue": "pay"
         },
         {
-          "k": "App A help",
-          "v": "Inside the app",
-          "clue": "support_a"
-        },
-        {
-          "k": "App B help",
-          "v": "Private messages only",
-          "clue": "support_b"
+          "k": "A price far below normal",
+          "v": "A warning sign",
+          "clue": "deal"
         }
       ]
     }

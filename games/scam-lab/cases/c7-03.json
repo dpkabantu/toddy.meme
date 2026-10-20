@@ -1,343 +1,274 @@
 {
   "id": "c7-03",
-  "type": "duel",
+  "type": "hunt",
   "chapter": 7,
   "difficulty": 2,
-  "title": "The Influencer DM",
+  "title": "The Star's Secret",
   "disguise": "influencer",
   "intro": [
-    "A crypto influencer with a blue tick messaged Toddy! Toddy is a fan.",
-    "Is it really her? And what does she want?",
-    "Talk back. Sniff everything."
+    "An ad shows a drawing of a famous TV host, saying he found a secret way to grow money. It is a drawing, not a real person.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Kirsta Invests Ava ✔",
-    "text": "Hey! Loved your comment 💜"
+    "from": "Sponsored",
+    "text": "A famous host reveals his money secret"
   },
   "screen": {
     "app": "chirp",
     "head": {
       "name": [
         {
-          "text": "Kirsta Invests Ava ✔",
-          "id": "duel-name"
+          "clue": "name",
+          "text": "MoneyMakers Daily"
         }
       ],
       "sub": [
-        {
-          "clue": "handle",
-          "text": "@kirstainvests_ava_vip"
-        }
+        "Sponsored"
       ],
       "avatar": {
-        "glyph": "👑",
-        "clue": "avatar"
+        "glyph": "🎙️",
+        "clue": "pic"
       }
     },
     "banner": [
-      {
-        "clue": "request",
-        "text": "Message request · you don't follow this account"
-      }
+      "Ad · you do not follow this page"
     ],
-    "items": []
-  },
-  "duel": {
-    "start": "n1",
-    "nodes": {
-      "n1": {
-        "say": [
+    "context": "The ad uses a drawing of \"a famous TV host\". No real person is shown.",
+    "items": [
+      {
+        "msg": [
           {
-            "msg": [
-              "Hey! ",
-              {
-                "clue": "flatter",
-                "text": "You seem smart, not like the others 💜"
-              }
-            ]
+            "clue": "star",
+            "text": "\"A famous host reveals his secret\""
           },
+          ": turn ₹25,000 into ₹5,00,000 in a month!"
+        ]
+      },
+      {
+        "msg": [
           {
-            "msg": [
-              {
-                "clue": "alloc",
-                "text": "I can get you a private presale spot in my next project, only 50 spots."
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "How do I join?",
-            "next": "n2"
-          },
-          {
-            "text": "Your real account is @kirstainvests_ava. Who are you?",
-            "next": "n3"
-          },
-          {
-            "text": "Block and report",
-            "end": "block_report"
+            "clue": "fast",
+            "text": "It is so easy, he says. Banks hate this trick."
           }
         ]
       },
-      "n2": {
-        "say": [
+      {
+        "msg": [
           {
-            "msg": [
-              {
-                "clue": "pay",
-                "text": "Send 300 ZLV to my team wallet"
-              },
-              " ",
-              {
-                "clue": "nda",
-                "text": "and don't post about it, it's secret 🤫"
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Sending 300 ZLV",
-            "end": "go_ahead"
-          },
-          {
-            "text": "Real influencers don't sell spots in DMs. Report.",
-            "end": "block_report"
-          },
-          {
-            "text": "I'll check her official account first",
-            "end": "verify"
+            "clue": "link",
+            "text": "Sign up now: vantage-trade-star.live",
+            "link": true
           }
         ]
       },
-      "n3": {
-        "say": [
+      {
+        "msg": [
           {
-            "msg": [
-              {
-                "clue": "backup",
-                "text": "This is my backup account, the main one got shadowbanned 😢"
-              }
-            ]
+            "clue": "limit",
+            "text": "Limited spots, closes at midnight."
           }
-        ],
-        "replies": [
+        ]
+      },
+      {
+        "msg": [
           {
-            "text": "Then I'll check with your main account.",
-            "end": "verify"
-          },
-          {
-            "text": "Nice try. Reporting.",
-            "end": "block_report"
-          },
-          {
-            "text": "Oh OK, how do I join?",
-            "next": "n2"
+            "clue": "risk",
+            "text": "No risk. Zero loss."
           }
         ]
       }
-    }
+    ]
   },
   "clues": {
-    "handle": {
-      "label": "Extra \"_vip\"",
+    "star": {
+      "label": "A famous face used",
       "strength": "strong",
-      "lens": "@kirstainvests_ava_vip: not her real handle.",
-      "why": "Impostor accounts add small extras."
+      "lens": "Scam ads use famous people who never agreed.",
+      "why": "A famous name is not an endorsement. Check the real person's own official channels."
     },
-    "request": {
-      "label": "She messaged first",
+    "fast": {
+      "label": "\"Turn ₹25,000 into ₹5,00,000\"",
       "strength": "strong",
-      "lens": "A famous person DMing a fan first.",
-      "why": "Real influencers don't DM fans with offers."
+      "lens": "A huge fast return.",
+      "why": "Huge fast returns are the bait."
     },
-    "flatter": {
-      "label": "Flattery",
+    "link": {
+      "label": "A strange sign-up address",
       "strength": "strong",
-      "lens": "\"You're smart, not like the others.\"",
-      "why": "Flattery lowers your guard."
+      "lens": "vantage-trade-star.live is not a regulated firm's site.",
+      "why": "Check that the firm is registered, on the regulator's own site."
     },
-    "alloc": {
-      "label": "Private presale spot",
+    "limit": {
+      "label": "Closes at midnight",
       "strength": "strong",
-      "lens": "An exclusive deal, limited spots.",
-      "why": "Secret deals in DMs are scams."
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
     },
-    "pay": {
-      "label": "Pay her \"team\"",
+    "risk": {
+      "label": "\"No risk, zero loss\"",
       "strength": "strong",
-      "lens": "Send coins to a wallet.",
-      "why": "Money to a stranger's wallet can't come back."
+      "lens": "All investments carry risk.",
+      "why": "There are no investments without risk."
     },
-    "nda": {
-      "label": "Keep it secret",
-      "strength": "strong",
-      "lens": "Don't tell anyone.",
-      "why": "Secrecy stops others warning you."
-    },
-    "backup": {
-      "label": "\"Backup account\"",
-      "strength": "strong",
-      "lens": "An excuse for the fake handle.",
-      "why": "The classic impostor excuse."
-    },
-    "avatar": {
-      "label": "Crown picture",
+    "name": {
+      "label": "A page name",
       "strength": "harmless",
-      "lens": "A crown emoji.",
-      "why": "Proves nothing."
+      "lens": "MoneyMakers Daily.",
+      "why": "Names are easy to invent."
+    },
+    "pic": {
+      "label": "Microphone picture",
+      "strength": "harmless",
+      "lens": "A little microphone.",
+      "why": "Pictures prove nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Pay for the spot"
+      "label": "Sign up and invest ₹25,000",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
     },
     {
       "id": "verify",
-      "label": "Check her official account"
+      "label": "Check if the firm is registered, and check the host's own channels"
     },
     {
       "id": "block_report",
-      "label": "Block and report"
+      "label": "Report the ad"
     }
   ],
   "best_action": "block_report",
   "acceptable_actions": [
-    "verify"
+    "verify",
+    "ignore"
   ],
+  "trap": {
+    "title": "Vantage Trade · Sign up",
+    "url": "vantage-trade-star.live",
+    "ask": "Deposit ₹25,000 by transfer to start trading.",
+    "go": "Deposit ₹25,000",
+    "back": "Close this page"
+  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "BLOCKED",
-      "line": "Reported. The real Ava had posted: \"I never DM. Fakes everywhere.\"",
-      "mirageSays": "Blue tick, wasted!"
+      "stamp": "REPORTED",
+      "line": "Reported. The platform removed the ad before it reached more people.",
+      "mirageSays": "Not my lovely scam!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Her official account: \"Impostors are DMing fans. I will never ask for money.\"",
-      "mirageSays": "She warned them!"
+      "line": "The host's real channels said he had never promoted it, and the firm was not registered. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "No presale ever existed. The \"backup account\" vanished.",
-      "mirageSays": "Spot reserved… in my wallet!"
+      "stamp": "SCAMMED",
+      "line": "The ₹25,000 went to a stranger. The site showed a fake profit, then locked you out.",
+      "mirageSays": "Thanks for the details!"
     }
   },
   "what_if": {
-    "go_ahead": "An influencer messaging you first with a secret deal is always an impostor."
+    "go_ahead": "Checking the firm's registration and the host's own channels would have ended it. \"No risk\" does not exist.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
   },
-  "golden_rule": "Famous people don't DM you with secret deals. If they do, it isn't them.",
+  "golden_rule": "An ad using a famous face and promising no risk is a scam. Check the firm is registered, and check the person's own channels.",
   "quick_check": {
-    "q": "A famous crypto influencer DMs you a \"private presale spot\". What is it?",
+    "q": "An ad with a famous face says you can turn ₹25,000 into ₹5,00,000 with no risk. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "A lucky break"
+        "text": "Sign up, a famous person backs it"
       },
       {
         "id": "b",
-        "text": "An impostor scam"
+        "text": "Invest a little"
+      },
+      {
+        "id": "c",
+        "text": "Do not invest. Report the ad, and check the firm is registered"
+      },
+      {
+        "id": "d",
+        "text": "Share it"
       }
     ],
-    "answer": "b",
-    "explain": "Real influencers warn about exactly this."
+    "answer": "c",
+    "explain": "A famous face is not proof. No investment is risk-free."
   },
   "hints": {
-    "nudge": "Compare the handle with the real one.",
+    "nudge": "Did the famous person really say this?",
     "glow_order": [
-      "handle",
-      "request",
-      "alloc",
-      "pay",
-      "nda",
-      "backup",
-      "flatter"
+      "star",
+      "fast",
+      "link",
+      "limit",
+      "risk"
     ]
   },
   "sources": [
-    "ftc-crypto",
-    "chainalysis-2025",
-    "ic3-2024"
+    "in-sebi-dos",
+    "ftc-invest-social",
+    "ftc-crypto"
   ],
-  "checked_on": "2026-10-13",
+  "checked_on": "2026-10-21",
   "kit": [
-    {
-      "id": "profile",
-      "icon": "🔍",
-      "label": "Check the account",
-      "title": "Kirsta Invests Ava",
-      "rows": [
-        {
-          "k": "Handle",
-          "v": "@kirstainvests_ava_vip, not her real one",
-          "clue": "handle"
-        },
-        {
-          "k": "First message",
-          "v": "A famous person DMing a fan",
-          "clue": "request"
-        },
-        {
-          "k": "Picture",
-          "v": "A crown emoji",
-          "clue": "avatar"
-        }
-      ]
-    },
     {
       "id": "link",
       "icon": "🔗",
-      "label": "Check the deal",
-      "title": "What she offers",
+      "label": "Check the firm",
+      "title": "Where the ad goes",
       "rows": [
         {
-          "k": "Compliment",
-          "v": "\"You are smart, not like the others\"",
-          "clue": "flatter"
+          "k": "Address",
+          "v": "vantage-trade-star.live",
+          "clue": "link"
         },
         {
-          "k": "Deal",
-          "v": "Exclusive, limited spots",
-          "clue": "alloc"
+          "k": "Registered?",
+          "v": "No"
         },
         {
-          "k": "Real influencers",
-          "v": "Do not sell spots in DMs"
+          "k": "Promise",
+          "v": "\"No risk, zero loss\"",
+          "clue": "risk"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Check the rules",
-      "title": "What she asks",
+      "label": "Official advice",
+      "title": "What advice says",
       "rows": [
         {
-          "k": "To get in",
-          "v": "Send coins to a wallet",
-          "clue": "pay"
+          "k": "No guaranteed returns",
+          "v": "And no investments without risk",
+          "clue": "risk"
         },
         {
-          "k": "Secrecy",
-          "v": "Do not tell anyone",
-          "clue": "nda"
-        },
-        {
-          "k": "Handle",
-          "v": "She explains the fake one",
-          "clue": "backup"
-        },
-        {
-          "k": "Real accounts",
-          "v": "Have nothing to hide"
+          "k": "Famous faces in ads",
+          "v": "May be used without consent",
+          "clue": "star"
         }
       ]
     }

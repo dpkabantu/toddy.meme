@@ -1,0 +1,244 @@
+{
+  "id": "c7-13",
+  "type": "hunt",
+  "chapter": 7,
+  "difficulty": 3,
+  "title": "The Registered Broker",
+  "disguise": null,
+  "intro": [
+    "A message from the broker you chose last month. After the day's cases, you wonder if even this one is a trap.",
+    "But some messages are real. Mirage loves it when you stop trusting the honest ones.",
+    "Sniff carefully. Then decide."
+  ],
+  "notify": {
+    "app": "Capitol Brokerage",
+    "from": "Account statement",
+    "text": "Your monthly statement is ready"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        "Capitol Brokerage"
+      ],
+      "addr": [
+        {
+          "clue": "addr",
+          "text": "statements@capitol-brokerage.example"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "Your monthly statement is ready"
+        }
+      ],
+      "time": [
+        "8:00 AM"
+      ]
+    },
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "name",
+            "text": "Hi Toddy,"
+          }
+        ]
+      },
+      {
+        "p": [
+          "Your statement for September is ready. ",
+          {
+            "clue": "app",
+            "text": "Open it in the Capitol app, or on capitol-brokerage.example."
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "risk",
+            "text": "Reminder: investing carries risk and values can fall as well as rise."
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "reg",
+            "text": "We are registered with the regulator. Our registration number is on every statement."
+          }
+        ]
+      },
+      {
+        "foot": [
+          {
+            "clue": "nopay",
+            "text": "We will never ask you to send money to a personal account, or share your password."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "addr": {
+      "label": "The firm's real address",
+      "strength": "harmless",
+      "lens": "It comes from the firm's own domain.",
+      "why": "A matching domain is good evidence."
+    },
+    "subject": {
+      "label": "A plain subject",
+      "strength": "harmless",
+      "lens": "Your monthly statement is ready.",
+      "why": "Calm subjects are typical."
+    },
+    "name": {
+      "label": "Uses your name",
+      "strength": "harmless",
+      "lens": "It greets you by name.",
+      "why": "Proves little alone."
+    },
+    "app": {
+      "label": "Open it in your own app",
+      "strength": "harmless",
+      "lens": "It sends you to the app or the site you chose.",
+      "why": "Pointing you to your own app is honest."
+    },
+    "risk": {
+      "label": "A risk reminder",
+      "strength": "harmless",
+      "lens": "It reminds you that investing carries risk.",
+      "why": "Honest firms warn about risk."
+    },
+    "reg": {
+      "label": "Registration mentioned",
+      "strength": "harmless",
+      "lens": "It names its registration, which you can check on the regulator's site.",
+      "why": "This is checkable evidence."
+    },
+    "nopay": {
+      "label": "Warns against personal accounts",
+      "strength": "harmless",
+      "lens": "It says it never asks you to send money to a personal account.",
+      "why": "Honest firms warn you about scams."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Open the statement in the Capitol app myself"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "The statement was in the app, matched your own trades, and the registration number matched the regulator's list.",
+      "toddy": "happy"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "Nothing bad happened. But a real statement deserves a look: it shows your own trades.",
+      "mirageSays": "Fine. Next!"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was a real statement from your broker. When every message looks like a scam, real ones get lost too.",
+      "mirageSays": "If you trust nothing, I win anyway."
+    }
+  },
+  "what_if": {
+    "block_report": "It sent you to your own app, warned about risk, named its registration and promised no personal-account requests. That calm is what real firms look like.",
+    "ignore": "Ignoring was safe. Recognising a real message is the skill: it asks for nothing secret and matches something you know."
+  },
+  "golden_rule": "A registered broker warns about risk, shows its registration and never asks for money in a personal account. Check in your own app.",
+  "quick_check": {
+    "q": "What made this broker email honest?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It had a logo"
+      },
+      {
+        "id": "b",
+        "text": "It sent you to your own app, warned about risk and named a registration you can check"
+      },
+      {
+        "id": "c",
+        "text": "It was long"
+      },
+      {
+        "id": "d",
+        "text": "It came in the morning"
+      }
+    ],
+    "answer": "b",
+    "explain": "A risk warning and a checkable registration are the real signs."
+  },
+  "hints": {
+    "nudge": "What is this message actually asking you to do?",
+    "glow_order": []
+  },
+  "sources": [
+    "in-sebi-dos",
+    "ftc-invest-social"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Sender check",
+      "rows": [
+        {
+          "k": "Sent from",
+          "v": "statements@capitol-brokerage.example",
+          "clue": "addr"
+        },
+        {
+          "k": "Registration",
+          "v": "Checkable on the regulator's site",
+          "clue": "reg"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Deal only with registered intermediaries",
+          "v": "Check the regulator's own website",
+          "clue": "reg"
+        },
+        {
+          "k": "Honest firms warn about risk",
+          "v": "Yes",
+          "clue": "risk"
+        }
+      ]
+    }
+  ]
+}

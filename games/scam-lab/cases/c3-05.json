@@ -1,253 +1,360 @@
 {
   "id": "c3-05",
-  "type": "hunt",
+  "type": "duel",
   "chapter": 3,
-  "difficulty": 2,
-  "title": "The Real Reward",
-  "disguise": null,
+  "difficulty": 3,
+  "title": "The Remote Fixer",
+  "disguise": "support",
   "intro": [
-    "After so many fake prizes, here's another reward message.",
-    "Fake ones are everywhere. But real ones exist too.",
-    "Sniff carefully before you report anything."
+    "Your internet has been slow. A caller says Vantel Mobile can fix it, but needs to see your screen.",
+    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
+    "Every chat ends with your choice. Choose wisely."
   ],
   "notify": {
-    "app": "Ostrel",
-    "from": "Ostrel (in-app)",
-    "text": "Your monthly rewards are ready"
+    "app": "Messages",
+    "from": "Vantel Support",
+    "text": "Install ShareView to fix your internet"
   },
   "screen": {
-    "app": "mail",
+    "app": "sms",
     "head": {
-      "from": [
-        "Ostrel"
-      ],
-      "addr": [
+      "name": [
         {
-          "clue": "addr",
-          "text": "in-app message"
+          "text": "Vantel Support",
+          "id": "duel-name"
         }
       ],
-      "subject": [
+      "sub": [
         {
-          "clue": "subject",
-          "text": "Your October rewards are ready 🎉"
+          "clue": "noreq",
+          "text": "They called you first"
         }
       ],
-      "time": [
-        "9:00 AM"
-      ]
+      "avatar": {
+        "glyph": "📞",
+        "clue": "logo"
+      }
     },
-    "context": "You opened the Ostrel app you already use. This is in its message inbox.",
-    "items": [
-      {
-        "p": [
+    "banner": [
+      "Text after a phone call"
+    ],
+    "items": []
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
           {
-            "clue": "points",
-            "text": "You earned 40 reward points this month for your trades."
-          }
-        ]
-      },
-      {
-        "p": [
-          {
-            "clue": "where",
-            "text": "See them any time in the Rewards tab."
+            "msg": [
+              "Hello, this is Vantel Support. ",
+              {
+                "clue": "slow",
+                "text": "We saw your internet is slow."
+              }
+            ]
           },
-          " ",
           {
-            "clue": "nothing",
-            "text": "There's nothing you need to do."
+            "msg": [
+              "To fix it, please install ",
+              {
+                "clue": "app",
+                "text": "ShareView"
+              },
+              " from this link: ",
+              {
+                "clue": "link",
+                "text": "vantel-fixnow.co/shareview",
+                "link": true
+              }
+            ]
+          },
+          {
+            "msg": [
+              "Then read me the ",
+              {
+                "clue": "code",
+                "text": "9-digit code on the screen"
+              },
+              "."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Why do I need to give you a code?",
+            "next": "n2"
+          },
+          {
+            "text": "Installing now",
+            "next": "n3"
+          },
+          {
+            "text": "I will hang up and report this",
+            "end": "block_report"
           }
         ]
       },
-      {
-        "p": [
+      "n2": {
+        "say": [
           {
-            "clue": "warn",
-            "text": "Reminder: Ostrel will never ask you to connect your wallet to claim rewards."
+            "msg": [
+              "It lets me see and fix your phone, like a mechanic. ",
+              {
+                "clue": "safe",
+                "text": "It is very safe."
+              }
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "rush",
+                "text": "Hurry, or your line will be cut tonight."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, installing",
+            "next": "n3"
+          },
+          {
+            "text": "I will call Vantel on the number on my bill instead",
+            "end": "verify"
+          },
+          {
+            "text": "Hang up and report",
+            "end": "block_report"
           }
         ]
       },
-      {
-        "foot": [
+      "n3": {
+        "say": [
           {
-            "clue": "foot",
-            "text": "Ostrel · Rewards"
+            "msg": [
+              "Great. Now open your ",
+              {
+                "clue": "bank",
+                "text": "banking app"
+              },
+              " so I can check your data use."
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "pin",
+                "text": "Type your PIN in the box, I will not look."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Opening it now",
+            "end": "go_ahead"
+          },
+          {
+            "text": "No way. Hanging up, and I will call my bank.",
+            "end": "block_report"
+          },
+          {
+            "text": "I will call Vantel on my bill's number",
+            "end": "verify"
           }
         ]
       }
-    ]
+    }
   },
   "clues": {
-    "addr": {
-      "label": "Inside the app",
-      "strength": "harmless",
-      "lens": "It arrived in the app's own inbox, not by text or email.",
-      "why": "Messages inside an app you opened yourself are hard to fake."
+    "noreq": {
+      "label": "They contacted you",
+      "strength": "strong",
+      "lens": "You never asked for help. They called you.",
+      "why": "Real support helps when you ask, not out of the blue."
     },
-    "subject": {
-      "label": "Happy subject",
-      "strength": "harmless",
-      "lens": "A cheerful subject.",
-      "why": "Emoji and good news aren't warning signs alone."
+    "slow": {
+      "label": "\"We saw your internet is slow\"",
+      "strength": "strong",
+      "lens": "They claim to know your problem without being told.",
+      "why": "A caller who \"knows\" your problem is guessing."
     },
-    "points": {
-      "label": "Modest points",
-      "strength": "harmless",
-      "lens": "40 points for trades you really made.",
-      "why": "Small, believable and matching what you did."
+    "app": {
+      "label": "A screen-sharing app",
+      "strength": "strong",
+      "lens": "It lets a stranger see and control your phone.",
+      "why": "Install a screen-sharing app only if the company's official number says so."
     },
-    "where": {
-      "label": "Points to the app",
-      "strength": "harmless",
-      "lens": "It sends you to the Rewards tab.",
-      "why": "No link, no connection needed."
+    "link": {
+      "label": "Look-alike link",
+      "strength": "strong",
+      "lens": "vantel-fixnow.co is not Vantel's real site.",
+      "why": "Real companies do not send you to look-alike sites."
     },
-    "nothing": {
-      "label": "Asks for nothing",
-      "strength": "harmless",
-      "lens": "Nothing to do or pay.",
-      "why": "Real rewards ask for nothing."
+    "code": {
+      "label": "The access code",
+      "strength": "strong",
+      "lens": "The code gives them control of your phone.",
+      "why": "Never read out a code to someone who called you."
     },
-    "warn": {
-      "label": "Safety reminder",
-      "strength": "harmless",
-      "lens": "It warns you about wallet-connect scams.",
-      "why": "Honest companies warn you."
+    "safe": {
+      "label": "\"It is very safe\"",
+      "strength": "strong",
+      "lens": "They reassure you before you ask.",
+      "why": "Reassurance is a tool."
     },
-    "foot": {
-      "label": "Footer",
+    "rush": {
+      "label": "\"Line cut tonight\"",
+      "strength": "strong",
+      "lens": "A threat to cut your line.",
+      "why": "Pressure is a trick to stop you checking."
+    },
+    "bank": {
+      "label": "\"Open your banking app\"",
+      "strength": "strong",
+      "lens": "A support call for internet has no reason to see your bank.",
+      "why": "The moment your bank appears, it is a theft, not a fix."
+    },
+    "pin": {
+      "label": "\"Type your PIN\"",
+      "strength": "strong",
+      "lens": "They ask for your PIN while watching.",
+      "why": "No one honest ever needs your PIN."
+    },
+    "logo": {
+      "label": "Phone picture",
       "strength": "harmless",
-      "lens": "App footer.",
-      "why": "Normal."
+      "lens": "A little phone.",
+      "why": "Pictures prove nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Check the Rewards tab in the app"
+      "label": "Open the banking app and type the PIN"
     },
     {
-      "id": "ignore",
-      "label": "Ignore it"
+      "id": "verify",
+      "label": "Call Vantel on the number on my own bill"
     },
     {
       "id": "block_report",
-      "label": "Report it as a scam"
+      "label": "Hang up and report the call"
     }
   ],
-  "best_action": "go_ahead",
+  "best_action": "block_report",
   "acceptable_actions": [
-    "ignore"
+    "verify"
   ],
   "outcomes": {
-    "go_ahead": {
-      "scene": "safe",
-      "mirage": null,
-      "stamp": "GENUINE",
-      "line": "40 real points, right where the message said. Nice!",
-      "toddy": "happy"
-    },
     "block_report": {
-      "scene": "wolf",
-      "mirage": "smug",
-      "stamp": "FALSE ALARM",
-      "line": "That was Ostrel's real in-app message. False alarms make real warnings easier to ignore.",
-      "mirageSays": "Trust nothing? Perfect."
-    },
-    "ignore": {
       "scene": "safe",
-      "mirage": null,
-      "stamp": "SAFE",
-      "line": "Nothing bad happened. It was a real reward.",
-      "toddy": "happy"
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "You hung up and reported the number. Your phone company blocked it within a day.",
+      "mirageSays": "Curses! Hung up on again!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Vantel's real helpline said: \"We never call to install apps or ask for codes.\" Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The caller watched your PIN and moved your money while the app was open.",
+      "mirageSays": "Thanks for the PIN!"
     }
   },
   "what_if": {
-    "block_report": "It was inside the real app, asked for nothing and warned about scams. That's what genuine looks like."
+    "go_ahead": "The word \"bank\" in a support call is the exit. No internet fix ever needs your bank app.",
+    "verify": "Checking was smart. Reporting the number as well protects others."
   },
-  "golden_rule": "Real rewards appear inside apps you already use, and never need a link, fee or wallet connection.",
+  "golden_rule": "Never install a screen-sharing app or read out a code for someone who called you. Call the company on the number on your bill.",
   "quick_check": {
-    "q": "What made this reward genuine?",
+    "q": "A \"support\" caller who phoned you asks you to install a screen-sharing app and read out a code. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "The emoji in the subject"
+        "text": "Do it, they are fixing the internet"
       },
       {
         "id": "b",
-        "text": "It was inside the real app and asked for nothing"
+        "text": "Do it but close your bank app"
       },
       {
         "id": "c",
-        "text": "It said \"rewards\""
+        "text": "Hang up. Call the company yourself, on the number on your bill"
+      },
+      {
+        "id": "d",
+        "text": "Ask them to prove who they are"
       }
     ],
-    "answer": "b",
-    "explain": "Where it appears and what it asks for matter most."
+    "answer": "c",
+    "explain": "A caller proves nothing. Calling the company yourself does."
   },
   "hints": {
-    "nudge": "Where did this message arrive, and what does it ask?",
-    "glow_order": []
+    "nudge": "What can a screen-sharing app do to your bank?",
+    "glow_order": [
+      "app",
+      "code",
+      "bank",
+      "pin",
+      "noreq",
+      "link",
+      "rush"
+    ]
   },
   "sources": [
-    "ftc-crypto",
-    "ftc-phishing",
-    "cafc-wallet"
+    "in-rbi-beaware",
+    "in-certin-booklet",
+    "ftc-techsupport"
   ],
-  "checked_on": "2026-10-13",
+  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check where it came from",
-      "title": "The message",
+      "label": "Check the call",
+      "title": "Vantel Support",
       "rows": [
         {
-          "k": "Arrived in",
-          "v": "The app's own inbox",
-          "clue": "addr"
+          "k": "Who called first?",
+          "v": "They did",
+          "clue": "noreq"
         },
         {
-          "k": "Subject",
-          "v": "A cheerful line",
-          "clue": "subject"
-        }
-      ]
-    },
-    {
-      "id": "link",
-      "icon": "🔗",
-      "label": "Check what it asks",
-      "title": "Anything to click or pay?",
-      "rows": [
-        {
-          "k": "Where it sends you",
-          "v": "The Rewards tab",
-          "clue": "where"
+          "k": "Real Vantel helpline",
+          "v": "On your bill"
         },
         {
-          "k": "You must do or pay",
-          "v": "Nothing",
-          "clue": "nothing"
+          "k": "Asked you to install",
+          "v": "ShareView",
+          "clue": "app"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Check your history",
-      "title": "Where 40 points come from",
+      "label": "Official advice",
+      "title": "What advice says",
       "rows": [
         {
-          "k": "Points",
-          "v": "For trades you really made",
-          "clue": "points"
+          "k": "Screen-sharing apps",
+          "v": "Install only if the official number from the company's website says so",
+          "clue": "app"
         },
         {
-          "k": "Warning",
-          "v": "About wallet-connect scams",
-          "clue": "warn"
+          "k": "Does support need your PIN or bank app?",
+          "v": "Never",
+          "clue": "pin"
         }
       ]
     }

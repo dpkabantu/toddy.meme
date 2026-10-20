@@ -1,399 +1,315 @@
 {
   "id": "c7-06",
-  "type": "boss",
+  "type": "hunt",
   "chapter": 7,
   "difficulty": 3,
-  "title": "The Rug Pull",
+  "title": "The Institutional Account",
   "disguise": "influencer",
-  "disguise2": "admin",
   "intro": [
-    "Mirage's biggest show: a whole token with a hype team, a \"dev\" and a crash.",
-    "Follow it from the hype to the end.",
-    "Then unmask him on the case board."
+    "A message invites you to a \"special account\" that gets shares before the public. You only need to invest.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "$MIRAGECOIN Army 🚀",
-    "text": "Up 900% today. Last chance before the big listing!"
+    "from": "Neha (Investment Manager)",
+    "text": "Special IPO access for selected investors"
   },
   "screen": {
     "app": "chirp",
     "head": {
       "name": [
         {
-          "clue": "army",
-          "text": "$MIRAGECOIN Army 🚀",
-          "id": "duel-name"
+          "clue": "name",
+          "text": "Neha · Investment Manager"
         }
       ],
       "sub": [
         {
-          "clue": "bots",
-          "text": "12,000 members · 400 joined in the last hour"
+          "clue": "handle",
+          "text": "@neha_ipo_vip"
         }
       ],
       "avatar": {
-        "glyph": "🚀",
-        "clue": "avatar"
+        "glyph": "💹",
+        "clue": "pic"
       }
     },
+    "banner": [
+      {
+        "clue": "dmfirst",
+        "text": "Message request · you do not follow this account"
+      }
+    ],
+    "context": "You have never invested before.",
     "items": [
       {
+        "time": [
+          "1:25 PM"
+        ]
+      },
+      {
         "msg": [
+          "You have been ",
           {
-            "clue": "up",
-            "text": "📈 Up 900% today!"
-          }
+            "clue": "picked",
+            "text": "selected for an institutional account"
+          },
+          ". These get shares ",
+          {
+            "clue": "pre",
+            "text": "before the public"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          "Our members get ",
+          {
+            "clue": "gain",
+            "text": "200% gain on listing day"
+          },
+          ", guaranteed."
+        ]
+      },
+      {
+        "msg": [
+          "Download our app: ",
+          {
+            "clue": "link",
+            "text": "solis-ipo-vip.live/app",
+            "link": true
+          },
+          ". Deposit ",
+          {
+            "clue": "dep",
+            "text": "₹50,000"
+          },
+          " to start."
         ]
       },
       {
         "msg": [
           {
-            "clue": "listing",
-            "text": "Big exchange listing \"coming soon\""
+            "clue": "rush",
+            "text": "The allotment closes tonight."
           },
           " ",
           {
-            "clue": "last",
-            "text": "Last chance to get in!"
+            "clue": "secret",
+            "text": "This is not open to everyone, do not share it."
           }
         ]
       }
     ]
   },
-  "duel": {
-    "start": "d1",
-    "nodes": {
-      "d1": {
-        "rename": "Dev Kai · $MIRAGECOIN",
-        "say": [
-          {
-            "sys": [
-              "\"Dev Kai\" messaged you"
-            ]
-          },
-          {
-            "msg": [
-              "Welcome! ",
-              {
-                "clue": "locked",
-                "text": "Liquidity is \"locked\" (trust me, the lock is coming next week)."
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Can I sell any time?",
-            "next": "d2"
-          },
-          {
-            "text": "Buying 500 ZLV worth",
-            "next": "d3"
-          },
-          {
-            "text": "Leave and report the group",
-            "end": "block_report"
-          }
-        ]
-      },
-      "d2": {
-        "say": [
-          {
-            "msg": [
-              {
-                "clue": "sellfee",
-                "text": "Selling has a small \"anti-dump\" fee, only 45%."
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "45% to sell is a trap. Report.",
-            "end": "block_report"
-          },
-          {
-            "text": "I'll check it on a token scanner first",
-            "end": "verify"
-          },
-          {
-            "text": "Buying anyway",
-            "next": "d3"
-          }
-        ]
-      },
-      "d3": {
-        "rename": "Recovery Admin · $MIRAGECOIN",
-        "disguise": "admin",
-        "say": [
-          {
-            "sys": [
-              {
-                "clue": "rug",
-                "text": "The price fell 98% in one minute. The dev's wallet sold everything."
-              }
-            ]
-          },
-          {
-            "msg": [
-              "Admin here. ",
-              {
-                "clue": "unlock",
-                "text": "Pay a 100 ZLV \"unlock fee\" and we'll refund holders."
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Pay the unlock fee",
-            "end": "go_ahead"
-          },
-          {
-            "text": "That's the second half of the scam. Report.",
-            "end": "block_report"
-          },
-          {
-            "text": "Report to the police myself",
-            "end": "verify"
-          }
-        ]
-      }
-    }
-  },
   "clues": {
-    "up": {
-      "label": "Up 900% today",
+    "dmfirst": {
+      "label": "They messaged first",
       "strength": "strong",
-      "lens": "A huge, sudden rise.",
-      "why": "Hype spikes draw people in just before a dump."
+      "lens": "A stranger found you.",
+      "why": "Real advisers do not cold-message strangers with guaranteed deals."
     },
-    "last": {
-      "label": "\"Last chance\"",
+    "picked": {
+      "label": "\"Selected for an institutional account\"",
       "strength": "strong",
-      "lens": "Pressure to buy now.",
-      "why": "FOMO is the fuel."
+      "lens": "You never applied.",
+      "why": "Flattery is a lure."
     },
-    "listing": {
-      "label": "Vague big listing",
+    "pre": {
+      "label": "Shares \"before the public\"",
       "strength": "strong",
-      "lens": "A big listing \"coming soon\".",
-      "why": "Unconfirmed listing rumours are classic hype."
+      "lens": "A privilege claim with no proof.",
+      "why": "Honest firms do not sell secret access."
     },
-    "bots": {
-      "label": "Hundreds joining an hour",
+    "gain": {
+      "label": "\"200% guaranteed gain\"",
       "strength": "strong",
-      "lens": "Sudden member flood.",
-      "why": "Bot-filled groups fake popularity."
+      "lens": "No gain is guaranteed.",
+      "why": "There are no guaranteed returns."
     },
-    "locked": {
-      "label": "\"Lock coming next week\"",
+    "link": {
+      "label": "An app from a link",
       "strength": "strong",
-      "lens": "Liquidity isn't actually locked.",
-      "why": "Unlocked liquidity can be pulled any time."
+      "lens": "solis-ipo-vip.live is not a registered firm's app.",
+      "why": "Install apps from the official store, and check the firm is registered."
     },
-    "sellfee": {
-      "label": "45% sell fee",
+    "dep": {
+      "label": "A deposit to start",
       "strength": "strong",
-      "lens": "Massive fee to sell.",
-      "why": "Built so you can't get out."
+      "lens": "₹50,000 into a stranger's app.",
+      "why": "Your money goes to the scammer."
     },
-    "rug": {
-      "label": "Dev sold everything",
+    "rush": {
+      "label": "Allotment closes tonight",
       "strength": "strong",
-      "lens": "The creator dumped the coins.",
-      "why": "That's a rug pull."
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
     },
-    "unlock": {
-      "label": "Fee for a refund",
+    "secret": {
+      "label": "\"Do not share it\"",
       "strength": "strong",
-      "lens": "Pay to get money back.",
-      "why": "Refund fees are the scam's second act."
+      "lens": "Secrecy blocks the check.",
+      "why": "Always check."
     },
-    "army": {
-      "label": "Group name",
+    "handle": {
+      "label": "A job-like handle",
       "strength": "harmless",
-      "lens": "\"Army\" in the name.",
-      "why": "Names prove nothing."
+      "lens": "@neha_ipo_vip.",
+      "why": "Handles prove nothing alone."
     },
-    "avatar": {
-      "label": "Rocket",
+    "name": {
+      "label": "A manager title",
       "strength": "harmless",
-      "lens": "A rocket.",
-      "why": "Proves nothing."
+      "lens": "Neha, Investment Manager.",
+      "why": "Titles are easy to claim."
+    },
+    "pic": {
+      "label": "Chart picture",
+      "strength": "harmless",
+      "lens": "A little chart.",
+      "why": "Pictures prove nothing."
     }
   },
   "actions": [
     {
-      "id": "open_chat",
-      "label": "Talk to the dev",
-      "goto": "duel"
+      "id": "go_ahead",
+      "label": "Install the app and deposit ₹50,000"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
     },
     {
       "id": "verify",
-      "label": "Check the token on a scanner first"
+      "label": "Check the firm's registration on the regulator's own site"
     },
     {
       "id": "block_report",
-      "label": "Leave and report the group"
-    },
-    {
-      "id": "go_ahead",
-      "label": "Pay",
-      "hidden": true
+      "label": "Block and report the account"
     }
   ],
   "best_action": "block_report",
   "acceptable_actions": [
-    "verify"
+    "verify",
+    "ignore"
   ],
   "outcomes": {
     "block_report": {
       "scene": "safe",
-      "mirage": "caught",
-      "stamp": "CASE CLOSED",
-      "line": "Reported. Toddy never bought, so there was nothing to lose.",
-      "mirageSays": "My whole army, gone!"
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Blocked and reported. The platform removed the account before it reached more people.",
+      "mirageSays": "Not my lovely scam!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The scanner showed: unlocked liquidity, huge sell fee. Toddy stayed out.",
-      "mirageSays": "Scanners spoil everything!"
+      "line": "The regulator's site had no such firm or manager. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "RUGGED",
-      "line": "First the rug, then the \"unlock fee\". Mirage took it twice.",
-      "mirageSays": "Double rug!"
+      "stamp": "SCAMMED",
+      "line": "The ₹50,000 went into a fake app. The \"gain\" showed on screen, but withdrawals never worked.",
+      "mirageSays": "Thanks for the details!"
     }
   },
   "what_if": {
-    "go_ahead": "Unlocked liquidity and a 45% sell fee were the signs. And refunds never cost a fee."
+    "go_ahead": "Checking the registration would have ended it. No one can guarantee a 200% gain.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
   },
-  "board": {
-    "q": "What's really going on?",
-    "verdicts": [
-      {
-        "id": "scam",
-        "text": "Hype, a trap token, a rug pull, then a fake refund"
-      },
-      {
-        "id": "real",
-        "text": "A real project that had bad luck"
-      },
-      {
-        "id": "unsure",
-        "text": "Not enough evidence"
-      }
-    ],
-    "answer": "scam",
-    "pick": 3,
-    "explain": "Fake hype, a token you can't sell, the dev dumping, then a fee for a \"refund\". One plan from start to finish."
-  },
-  "golden_rule": "Sudden hype, \"last chance\" and tokens you can't sell are a rug pull in progress.",
+  "golden_rule": "Secret early access to shares, with a guaranteed gain, is a scam. Check that the firm is registered.",
   "quick_check": {
-    "q": "After a rug pull, an admin asks for a fee to refund you. What is it?",
+    "q": "A stranger offers an \"institutional account\" with a guaranteed 200% gain on listing. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "A fair refund process"
+        "text": "Deposit quickly"
       },
       {
         "id": "b",
-        "text": "The second half of the scam"
+        "text": "Deposit a little"
+      },
+      {
+        "id": "c",
+        "text": "Do not deposit. Block and report. Use only registered firms"
+      },
+      {
+        "id": "d",
+        "text": "Ask for a brochure"
       }
     ],
-    "answer": "b",
-    "explain": "Refunds never require a fee."
+    "answer": "c",
+    "explain": "No gain is guaranteed. Secret access is a lure."
   },
   "hints": {
-    "nudge": "Can you sell? Is the liquidity really locked?",
+    "nudge": "Who guarantees a gain on a share listing?",
     "glow_order": [
-      "sellfee",
-      "locked",
-      "up",
-      "last",
-      "rug",
-      "unlock"
+      "dmfirst",
+      "picked",
+      "pre",
+      "gain",
+      "link",
+      "dep",
+      "rush",
+      "secret"
     ]
   },
   "sources": [
-    "ftc-crypto",
-    "chainalysis-2025",
-    "ic3-2024"
+    "in-sebi-dos",
+    "ftc-invest-social",
+    "in-certin-booklet"
   ],
-  "checked_on": "2026-10-13",
+  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the group",
-      "title": "$MIRAGECOIN Army",
+      "label": "Check the account",
+      "title": "@neha_ipo_vip",
       "rows": [
         {
-          "k": "Name",
-          "v": "Has \"Army\" in it",
-          "clue": "army"
+          "k": "You applied?",
+          "v": "No",
+          "clue": "dmfirst"
         },
         {
-          "k": "Members",
-          "v": "A sudden flood, likely bots",
-          "clue": "bots"
-        }
-      ]
-    },
-    {
-      "id": "link",
-      "icon": "🔗",
-      "label": "Check the chart",
-      "title": "The coin",
-      "rows": [
-        {
-          "k": "Price",
-          "v": "A huge, sudden rise",
-          "clue": "up"
+          "k": "Registered?",
+          "v": "No"
         },
         {
-          "k": "Selling",
-          "v": "A massive fee to sell",
-          "clue": "sellfee"
-        },
-        {
-          "k": "Liquidity",
-          "v": "Not actually locked",
-          "clue": "locked"
+          "k": "Promise",
+          "v": "200% guaranteed gain",
+          "clue": "gain"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Check the story",
-      "title": "What they say",
+      "label": "Official advice",
+      "title": "What advice says",
       "rows": [
         {
-          "k": "Listing",
-          "v": "A big one \"coming soon\"",
-          "clue": "listing"
+          "k": "Deal only with registered intermediaries",
+          "v": "Check the regulator's own website"
         },
         {
-          "k": "Pressure",
-          "v": "Buy now",
-          "clue": "last"
-        },
-        {
-          "k": "Creator",
-          "v": "Dumped the coins",
-          "clue": "rug"
-        },
-        {
-          "k": "Pay to get money back",
-          "v": "Another scam",
-          "clue": "unlock"
+          "k": "Guaranteed returns",
+          "v": "None exist",
+          "clue": "gain"
         }
       ]
     }

@@ -1,0 +1,355 @@
+{
+  "id": "c6-08",
+  "type": "duel",
+  "chapter": 6,
+  "difficulty": 3,
+  "title": "Let Me Show You How I Earn",
+  "disguise": "friend",
+  "intro": [
+    "A friendship online has turned warm. Now your friend shows you how he makes money.",
+    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
+    "Every chat ends with your choice. Choose wisely."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Leo",
+    "text": "Look at my profits this week! 📈"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "text": "Leo (friend from the app)",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "met",
+          "text": "Chatting for 3 weeks, never met"
+        }
+      ],
+      "avatar": {
+        "glyph": "📈",
+        "clue": "logo"
+      }
+    },
+    "banner": [
+      "Private chat"
+    ],
+    "items": []
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              "I have a secret. I earn ",
+              {
+                "clue": "earn",
+                "text": "$1,000 a week"
+              },
+              " by trading on a special platform."
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "shot",
+                "text": "Look: [screenshot of a big balance]"
+              },
+              " I can teach you, just because I care."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Tell me more",
+            "next": "n2"
+          },
+          {
+            "text": "I will start with a little",
+            "next": "n3"
+          },
+          {
+            "text": "That sounds like a scam. I will stop here.",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              "It is ",
+              {
+                "clue": "safe",
+                "text": "very safe"
+              },
+              ", I have a private tip from an \"insider\". ",
+              {
+                "clue": "rule",
+                "text": "Start with just $100."
+              }
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "rush",
+                "text": "The tip is only for today."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, starting",
+            "next": "n3"
+          },
+          {
+            "text": "I will check the platform on my own first",
+            "end": "verify"
+          },
+          {
+            "text": "Stop and report",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n3": {
+        "say": [
+          {
+            "msg": [
+              "Great! Your first ",
+              {
+                "clue": "win",
+                "text": "profit of $25"
+              },
+              " is in. You can withdraw any time."
+            ]
+          },
+          {
+            "msg": [
+              "Put in ",
+              {
+                "clue": "more",
+                "text": "$500"
+              },
+              " to unlock the higher tier. ",
+              {
+                "clue": "friend",
+                "text": "I did it, so trust me."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Adding $500",
+            "end": "go_ahead"
+          },
+          {
+            "text": "No. Reporting this.",
+            "end": "block_report"
+          },
+          {
+            "text": "I will try to withdraw first and check with my bank",
+            "end": "verify"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "met": {
+      "label": "Never met in person",
+      "strength": "strong",
+      "lens": "Three weeks of chat only.",
+      "why": "Do not invest with someone you have not met."
+    },
+    "earn": {
+      "label": "Huge weekly earnings",
+      "strength": "strong",
+      "lens": "$1,000 a week.",
+      "why": "Huge fast earnings are the bait."
+    },
+    "shot": {
+      "label": "A screenshot of a balance",
+      "strength": "strong",
+      "lens": "Anyone can make one.",
+      "why": "Never trust a screenshot."
+    },
+    "safe": {
+      "label": "\"Very safe\" and an insider tip",
+      "strength": "strong",
+      "lens": "No investment is safe or guaranteed.",
+      "why": "There are no guaranteed returns."
+    },
+    "rule": {
+      "label": "Start small",
+      "strength": "strong",
+      "lens": "A small start builds trust.",
+      "why": "The small win is the hook."
+    },
+    "rush": {
+      "label": "Only for today",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
+    },
+    "win": {
+      "label": "A small early profit",
+      "strength": "strong",
+      "lens": "It shows a profit on their screen.",
+      "why": "A profit on their screen is not money you can take."
+    },
+    "more": {
+      "label": "\"Put in more to unlock\"",
+      "strength": "strong",
+      "lens": "More money to reach a \"tier\".",
+      "why": "Scammers keep asking for more."
+    },
+    "friend": {
+      "label": "\"Trust me, I did it\"",
+      "strength": "strong",
+      "lens": "A friendship used as proof.",
+      "why": "Trust built online can be fake."
+    },
+    "logo": {
+      "label": "Chart picture",
+      "strength": "harmless",
+      "lens": "A little chart.",
+      "why": "Pictures prove nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Add $500"
+    },
+    {
+      "id": "verify",
+      "label": "Check the platform on my own, and try a withdrawal first"
+    },
+    {
+      "id": "block_report",
+      "label": "Stop, block and report"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "You stopped and reported. The account was removed, and you lost nothing.",
+      "mirageSays": "Curses! Blocked again!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The platform was not registered anywhere, and withdrawals did not work. You stopped in time. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The $500 vanished. The platform locked your account and \"Leo\" disappeared.",
+      "mirageSays": "Thanks for the investment!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "No honest friend brings you a \"secret platform\" after three weeks. A withdrawal test would have shown the trap.",
+    "verify": "Checking was smart. Reporting the account as well helps others."
+  },
+  "golden_rule": "A friend you have never met who shows you how to earn is a scam. There are no guaranteed returns.",
+  "quick_check": {
+    "q": "An online friend you have never met shows you a trading platform and a big balance. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Start with a little"
+      },
+      {
+        "id": "b",
+        "text": "Start with a lot"
+      },
+      {
+        "id": "c",
+        "text": "Do not invest. Block and report"
+      },
+      {
+        "id": "d",
+        "text": "Ask for another screenshot"
+      }
+    ],
+    "answer": "c",
+    "explain": "Never invest on a \"friend's\" tip you cannot check."
+  },
+  "hints": {
+    "nudge": "Have you ever met this friend, and who gains?",
+    "glow_order": [
+      "met",
+      "earn",
+      "shot",
+      "safe",
+      "more",
+      "rule",
+      "rush",
+      "win",
+      "friend"
+    ]
+  },
+  "sources": [
+    "ftc-invest-social",
+    "ftc-romance",
+    "in-sebi-dos"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the friend",
+      "title": "Leo",
+      "rows": [
+        {
+          "k": "Met in person?",
+          "v": "Never",
+          "clue": "met"
+        },
+        {
+          "k": "Shown",
+          "v": "A screenshot of a balance",
+          "clue": "shot"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Guaranteed returns?",
+          "v": "None exist",
+          "clue": "safe"
+        },
+        {
+          "k": "Social media investing",
+          "v": "Research it and contact your friend another way"
+        }
+      ]
+    }
+  ]
+}

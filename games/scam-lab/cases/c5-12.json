@@ -1,0 +1,124 @@
+{
+  "id": "c5-12",
+  "type": "rush",
+  "chapter": 5,
+  "difficulty": 2,
+  "title": "Job Inbox",
+  "seconds": 60,
+  "intro": [
+    "Ten job messages. One minute. Real offers exist too.",
+    "Swipe left if it is a scam, right if it is safe. Or tap the buttons.",
+    "Careful: some are honest. Do not cry wolf."
+  ],
+  "cards": [
+    {
+      "id": "r1",
+      "app": "Mail",
+      "from": "careers@quillon.example",
+      "text": "Thanks for applying for Junior Designer. Please pick a time for your interview on our careers page.",
+      "scam": false,
+      "why": "You applied, and it asks for nothing but a time on the company's own page."
+    },
+    {
+      "id": "r2",
+      "app": "Chirp",
+      "from": "Anya · Recruiter",
+      "text": "Earn ₹3,000 daily from home, no experience. Message me now!",
+      "scam": true,
+      "why": "A cold DM with big pay and no experience needed."
+    },
+    {
+      "id": "r3",
+      "app": "SMS",
+      "from": "TaskFlow Team",
+      "text": "Like 3 videos, get ₹450 at once. Join our group: taskflow-earn.in/join",
+      "scam": true,
+      "why": "Pay for liking videos, with a small payout first."
+    },
+    {
+      "id": "r4",
+      "app": "Mail",
+      "from": "Lumenara Tech HR",
+      "text": "Offer letter: pay ₹9,500 for your laptop kit within 24 hours.",
+      "scam": true,
+      "why": "No real employer charges you for a kit."
+    },
+    {
+      "id": "r5",
+      "app": "Mail",
+      "from": "talent@craftloop.example",
+      "text": "Your interview is on Tuesday at 3 PM on our company video link. No fees at any stage.",
+      "scam": false,
+      "why": "It follows your application and asks for nothing."
+    },
+    {
+      "id": "r6",
+      "app": "SMS",
+      "from": "SkyBridge Placements",
+      "text": "Job abroad, ₹2,00,000 a month. Pay ₹80,000 agent fee to start.",
+      "scam": true,
+      "why": "A huge salary and a big agent fee up front."
+    },
+    {
+      "id": "r7",
+      "app": "Mail",
+      "from": "Harlow Recruiting",
+      "text": "We are hiring a data entry clerk. Register with ₹1,200 to get your login.",
+      "scam": true,
+      "why": "A registration fee for a job is a scam."
+    },
+    {
+      "id": "r8",
+      "app": "Chirp",
+      "from": "Mira (HR)",
+      "text": "Your first 3 tasks are done. Top up ₹6,000 in crypto for the next set.",
+      "scam": true,
+      "why": "A crypto top-up to keep working."
+    },
+    {
+      "id": "r9",
+      "app": "Mail",
+      "from": "hr@quillon.example",
+      "text": "Your background check is clear. Welcome! Your start date is Monday. Your laptop will be posted to you.",
+      "scam": false,
+      "why": "It shares good news, asks for nothing, and the company sends the laptop."
+    },
+    {
+      "id": "r10",
+      "app": "SMS",
+      "from": "Unknown number",
+      "text": "Student part-time job: ₹800 per hour. Send ₹500 to unlock the link.",
+      "scam": true,
+      "why": "You pay ₹500 to be paid ₹800. It is a trap."
+    }
+  ],
+  "golden_rule": "A real job never asks you to pay, and a real recruiter replies to something you did. Check the company's own page.",
+  "quick_check": {
+    "q": "A job message asks you to pay a fee to get started. What is true?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It is normal for good jobs"
+      },
+      {
+        "id": "b",
+        "text": "Real jobs never ask you to pay to get started"
+      },
+      {
+        "id": "c",
+        "text": "It is fine if the fee is small"
+      },
+      {
+        "id": "d",
+        "text": "It is fine if it is refundable"
+      }
+    ],
+    "answer": "b",
+    "explain": "Honest employers never charge. A small fee is the bait."
+  },
+  "sources": [
+    "ftc-job-scams",
+    "ftc-jobs"
+  ],
+  "checked_on": "2026-10-21"
+}

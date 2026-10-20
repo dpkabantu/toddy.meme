@@ -1,0 +1,241 @@
+{
+  "id": "c4-11",
+  "type": "hunt",
+  "chapter": 4,
+  "difficulty": 1,
+  "title": "The Virus Alarm",
+  "disguise": "support",
+  "intro": [
+    "A loud warning fills your screen while you browse. It says your phone is infected.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Browser",
+    "from": "Warning",
+    "text": "⚠️ VIRUS DETECTED. Call now!"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "popup",
+          "text": "⚠️ Security Alert"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "site",
+          "text": "safe-phone-scan.live"
+        }
+      ],
+      "avatar": {
+        "glyph": "⚠️",
+        "clue": "pic"
+      }
+    },
+    "context": "A full-screen warning popped up in your browser.",
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "infected",
+            "text": "Your phone is infected with 7 viruses!"
+          }
+        ]
+      },
+      {
+        "msg": [
+          "Your ",
+          {
+            "clue": "data",
+            "text": "photos and bank details"
+          },
+          " are at risk."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "call",
+            "text": "Call Hedrio Support now: 0800 555 0147"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "lock",
+            "text": "Do not close this window or your phone will be locked."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "infected": {
+      "label": "A scary virus count",
+      "strength": "strong",
+      "lens": "A website cannot see viruses on your phone.",
+      "why": "Real security software does not warn you through a web page."
+    },
+    "call": {
+      "label": "\"Call this number now\"",
+      "strength": "strong",
+      "lens": "A real warning never asks you to call a number.",
+      "why": "Pop-ups that give a phone number are the start of a support scam."
+    },
+    "lock": {
+      "label": "A threat to lock your phone",
+      "strength": "strong",
+      "lens": "\"Do not close this window.\"",
+      "why": "You can always close the page or the browser."
+    },
+    "data": {
+      "label": "Your photos and bank details",
+      "strength": "strong",
+      "lens": "It names the things you fear losing.",
+      "why": "Fear is the tool."
+    },
+    "site": {
+      "label": "An odd address",
+      "strength": "strong",
+      "lens": "safe-phone-scan.live is not your phone's own security tool.",
+      "why": "A site you did not choose cannot scan your phone."
+    },
+    "popup": {
+      "label": "A big alert title",
+      "strength": "harmless",
+      "lens": "An alert with a warning sign.",
+      "why": "Big warning signs are easy to draw."
+    },
+    "pic": {
+      "label": "Warning icon",
+      "strength": "harmless",
+      "lens": "A triangle with an exclamation mark.",
+      "why": "Icons are easy to copy."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Call the number"
+    },
+    {
+      "id": "verify",
+      "label": "Close the browser and scan with my phone's own security tool"
+    },
+    {
+      "id": "block_report",
+      "label": "Close the page and report the site"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "You closed the page and reported the site. The browser added it to its warning list.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Your phone's own security tool found no viruses. The pop-up was fake. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The \"technician\" asked you to install a remote app, then moved money from your bank.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Closing the page was always allowed. A web page cannot detect viruses on your phone.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "A pop-up that says \"call now\" is a scam. Close it, and use only your phone's own security tool.",
+  "quick_check": {
+    "q": "A pop-up says your phone has viruses and tells you to call a number now. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Call, it sounds serious"
+      },
+      {
+        "id": "b",
+        "text": "Click Scan Now"
+      },
+      {
+        "id": "c",
+        "text": "Close the page. Use your phone's own security tool if worried"
+      },
+      {
+        "id": "d",
+        "text": "Call but give no details"
+      }
+    ],
+    "answer": "c",
+    "explain": "Real warnings never ask you to call a number."
+  },
+  "hints": {
+    "nudge": "Can a web page really see inside your phone?",
+    "glow_order": [
+      "infected",
+      "call",
+      "lock",
+      "data",
+      "site"
+    ]
+  },
+  "sources": [
+    "ftc-techsupport",
+    "cafc-wallet"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the page",
+      "title": "Where the warning came from",
+      "rows": [
+        {
+          "k": "Address",
+          "v": "safe-phone-scan.live",
+          "clue": "site"
+        },
+        {
+          "k": "Asks you to",
+          "v": "Call a number",
+          "clue": "call"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Do real pop-ups ask you to call?",
+          "v": "Never",
+          "clue": "call"
+        },
+        {
+          "k": "What to do",
+          "v": "Close the page, and use your own security tool"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,255 @@
+{
+  "id": "c2-17",
+  "type": "hunt",
+  "chapter": 2,
+  "difficulty": 2,
+  "title": "The Giveaway You Entered",
+  "disguise": null,
+  "intro": [
+    "A message says you won a giveaway. This time you really did enter one last week.",
+    "But some messages are real. Mirage loves it when you stop trusting the honest ones.",
+    "Sniff carefully. Then decide."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Meridu Store ✔",
+    "text": "You won our lamp giveaway!"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "Meridu Store ✔"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@meridu_store"
+        }
+      ],
+      "avatar": {
+        "glyph": "🛍️",
+        "clue": "logo"
+      }
+    },
+    "banner": [
+      {
+        "clue": "reply",
+        "text": "Reply to your comment on their giveaway post"
+      }
+    ],
+    "context": "Last week you commented on Meridu Store's public giveaway post. Their real account is @meridu_store.",
+    "items": [
+      {
+        "time": [
+          "10:02 AM"
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "won",
+            "text": "Congratulations! You won the desk lamp from our public giveaway."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "public",
+            "text": "We have also announced the winners in a post on our page."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "free",
+            "text": "Prizes are free to receive. We only need a delivery address, which you can send through our website's contact form."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "nopay",
+            "text": "We will never ask for payment, a card or a code."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "reply": {
+      "label": "A reply to your own comment",
+      "strength": "harmless",
+      "lens": "It answers the giveaway you entered, not a random DM.",
+      "why": "It matches something you did. That is a strong honest sign."
+    },
+    "name": {
+      "label": "Shop name",
+      "strength": "harmless",
+      "lens": "The name says Meridu Store.",
+      "why": "A name alone proves nothing, so check the handle and the page."
+    },
+    "handle": {
+      "label": "The shop's real account",
+      "strength": "harmless",
+      "lens": "@meridu_store is the real account, six years old.",
+      "why": "It matches the real handle on the shop's own website."
+    },
+    "won": {
+      "label": "You did enter",
+      "strength": "harmless",
+      "lens": "You commented on that giveaway post last week.",
+      "why": "A prize for a contest you entered is normal."
+    },
+    "public": {
+      "label": "Announced publicly too",
+      "strength": "harmless",
+      "lens": "The winners are also posted on the page.",
+      "why": "Real giveaways announce winners in public."
+    },
+    "free": {
+      "label": "Prize is free",
+      "strength": "harmless",
+      "lens": "It asks only for a delivery address, through the shop's own site.",
+      "why": "Real prizes are free and use the shop's own website."
+    },
+    "nopay": {
+      "label": "Never asks for payment",
+      "strength": "harmless",
+      "lens": "It says it will never ask for payment, card or code.",
+      "why": "Honest senders say this up front."
+    },
+    "logo": {
+      "label": "Shop logo",
+      "strength": "harmless",
+      "lens": "The shop's bag logo.",
+      "why": "Logos are easy to copy, so they prove little alone."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Check the shop's page, then send my address through its website form"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "The winner post was on the shop's page. You sent your address through the real site, and the lamp arrived free on Thursday.",
+      "toddy": "happy"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "Nothing bad happened. It was a real message, and you stayed careful.",
+      "mirageSays": "Fine. Next!"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was a real message. When every message looks like a scam, the real ones get lost too.",
+      "mirageSays": "If you trust nothing, I win anyway."
+    }
+  },
+  "what_if": {
+    "block_report": "You entered, the account is the real one, winners were announced in public, and nothing was asked of you but an address through the shop's own site.",
+    "ignore": "Ignoring was safe. Recognising a real message is the skill: it asks for nothing secret and matches something you know."
+  },
+  "golden_rule": "A prize for a contest you really entered, from the real account, with no payment, is honest. Check the shop's own page first.",
+  "quick_check": {
+    "q": "What made this giveaway message honest?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It was friendly"
+      },
+      {
+        "id": "b",
+        "text": "You had entered, it came from the real account, winners were public and nothing was asked but an address through the shop's own site"
+      },
+      {
+        "id": "c",
+        "text": "It had a logo"
+      },
+      {
+        "id": "d",
+        "text": "It used a tick"
+      }
+    ],
+    "answer": "b",
+    "explain": "You entered, it is the real account, nothing to pay: these three together."
+  },
+  "hints": {
+    "nudge": "What is this message actually asking you to do?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-prize",
+    "ftc-phishing"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the account",
+      "title": "@meridu_store",
+      "rows": [
+        {
+          "k": "Account age",
+          "v": "6 years",
+          "clue": "handle"
+        },
+        {
+          "k": "Real account on the shop's site?",
+          "v": "Yes, the same handle"
+        },
+        {
+          "k": "You entered this giveaway?",
+          "v": "Yes, last week",
+          "clue": "won"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Do real prizes cost money?",
+          "v": "No: real prizes are free",
+          "clue": "nopay"
+        },
+        {
+          "k": "Winners announced publicly?",
+          "v": "Yes, on the page",
+          "clue": "public"
+        }
+      ]
+    }
+  ]
+}

@@ -1,273 +1,332 @@
 {
   "id": "c2-05",
-  "type": "hunt",
+  "type": "duel",
   "chapter": 2,
   "difficulty": 2,
-  "title": "Coffee, Not Coins",
-  "disguise": null,
+  "title": "Double Your Coins Live",
+  "disguise": "influencer",
   "intro": [
-    "Toddy matched with someone on the Spark dating app.",
-    "After Sophie, it's tempting to suspect everyone. But most people are just people.",
-    "Sniff carefully. Is this a con, or just a coffee?"
+    "A \"live stream\" is running: a famous trader is giving away coins.",
+    "The chat moderator messages you directly.",
+    "Talk back, and sniff what they say."
   ],
   "notify": {
-    "app": "Spark",
-    "from": "Marco · Spark ✓",
-    "text": "Hi! Loved your café photos ☕"
+    "app": "Chirp",
+    "from": "Droveo Live Mod",
+    "text": "🔴 You're selected for the 2x event!"
   },
   "screen": {
     "app": "chirp",
     "head": {
       "name": [
         {
-          "clue": "name",
-          "text": "Marco, 29"
+          "text": "Droveo Live Mod",
+          "id": "duel-name"
         }
       ],
       "sub": [
         {
-          "clue": "verified",
-          "text": "Photo verified by Spark ✓"
+          "clue": "handle",
+          "text": "@droveolive_mod"
         }
       ],
       "avatar": {
-        "glyph": "🙂",
+        "glyph": "🔴",
         "clue": "avatar"
       }
     },
-    "banner": [
-      {
-        "clue": "match",
-        "text": "You both liked each other"
-      }
-    ],
+    "context": "A \"live\" video shows a famous trader talking about a giveaway.",
     "items": [
       {
         "msg": [
           {
-            "clue": "compliment",
-            "text": "Hi! Loved your café photos ☕ Is that the place by the river?"
-          }
-        ]
-      },
-      {
-        "msg": [
-          {
-            "clue": "nomoney",
-            "text": "Just so you know, I never talk money or crypto on here 😅"
-          }
-        ]
-      },
-      {
-        "msg": [
-          {
-            "clue": "public",
-            "text": "Want to meet for a coffee at a busy café on Saturday afternoon?"
-          },
-          " ",
-          {
-            "clue": "friend",
-            "text": "Bring a friend if you like!"
+            "clue": "live",
+            "text": "🔴 LIVE: 40,000 watching"
           }
         ]
       }
     ]
   },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              "Congrats! ",
+              {
+                "clue": "double",
+                "text": "Send any amount, Max sends back double"
+              }
+            ]
+          },
+          {
+            "msg": [
+              "Scan the QR on screen: ",
+              {
+                "clue": "qr",
+                "text": "[QR code → wallet 0x41c…d9e]"
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Is this really Max?",
+            "next": "n2"
+          },
+          {
+            "text": "Sending 100 ZLV now",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Report the stream as a scam",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "proof",
+                "text": "Yes! Look, others already got paid"
+              },
+              " ",
+              {
+                "clue": "fakeproof",
+                "text": "[screenshot: \"I got 2x!!\" ×5]"
+              }
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "ends",
+                "text": "Only 3 minutes left in the event!"
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Real people don't double your money. Report.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll check Max's official channel first",
+            "end": "verify"
+          },
+          {
+            "text": "OK, sending",
+            "end": "go_ahead"
+          }
+        ]
+      }
+    }
+  },
   "clues": {
-    "verified": {
-      "label": "App-verified photo",
-      "strength": "harmless",
-      "lens": "Spark itself checked the photo matches the person.",
-      "why": "The app's own check is stronger evidence than any claim."
+    "double": {
+      "label": "Send 1, get 2",
+      "strength": "strong",
+      "lens": "They want you to send first.",
+      "why": "Nobody doubles your money. Giveaways that ask you to send first are always fake."
     },
-    "match": {
-      "label": "Mutual match",
-      "strength": "harmless",
-      "lens": "You both liked each other in the app.",
-      "why": "You chose to connect. He didn't come out of nowhere."
+    "qr": {
+      "label": "QR to a wallet",
+      "strength": "strong",
+      "lens": "The QR is just their wallet address.",
+      "why": "Scanning and sending can't be undone."
     },
-    "compliment": {
-      "label": "Compliment",
-      "strength": "harmless",
-      "lens": "He noticed something real from your photos.",
-      "why": "Friendly and specific. Normal on a dating app."
+    "proof": {
+      "label": "\"Others got paid\"",
+      "strength": "strong",
+      "lens": "They point to \"proof\".",
+      "why": "Fake proof is part of the show."
     },
-    "nomoney": {
-      "label": "No money talk",
-      "strength": "harmless",
-      "lens": "He says he never talks money on dating apps.",
-      "why": "The opposite of what a romance-investment scammer wants."
+    "fakeproof": {
+      "label": "Screenshot \"winners\"",
+      "strength": "strong",
+      "lens": "Five identical-looking screenshots.",
+      "why": "Screenshots are easy to fake."
     },
-    "public": {
-      "label": "Meet in public",
-      "strength": "harmless",
-      "lens": "A busy café, in the afternoon.",
-      "why": "Meeting in a public place is what safety guides recommend."
+    "ends": {
+      "label": "Minutes left",
+      "strength": "strong",
+      "lens": "A countdown again.",
+      "why": "Pressure stops you checking."
     },
-    "friend": {
-      "label": "Bring a friend",
+    "handle": {
+      "label": "Mod handle",
       "strength": "harmless",
-      "lens": "He invites you to bring a friend.",
-      "why": "Scammers try to isolate you. This does the opposite."
-    },
-    "name": {
-      "label": "Name and age",
-      "strength": "harmless",
-      "lens": "A first name and age.",
-      "why": "Normal on dating apps."
+      "lens": "A \"mod\" account.",
+      "why": "Anyone can call themselves a moderator."
     },
     "avatar": {
-      "label": "Profile picture",
+      "label": "Red dot",
       "strength": "harmless",
-      "lens": "A smiley profile picture.",
-      "why": "Proves nothing alone, but the app verified it."
+      "lens": "A red \"live\" dot.",
+      "why": "Proves nothing."
+    },
+    "live": {
+      "label": "40,000 watching",
+      "strength": "harmless",
+      "lens": "A big viewer count.",
+      "why": "Old videos re-streamed with fake counts are common. The number proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Reply and meet at the busy café"
+      "label": "Send coins"
     },
     {
       "id": "verify",
-      "label": "Suggest a quick video call first"
-    },
-    {
-      "id": "ignore",
-      "label": "Don't reply"
+      "label": "Check the trader's official channel"
     },
     {
       "id": "block_report",
-      "label": "Report him as a scammer"
+      "label": "Report the stream"
     }
   ],
-  "best_action": "go_ahead",
+  "best_action": "block_report",
   "acceptable_actions": [
-    "verify",
-    "ignore"
+    "verify"
   ],
   "outcomes": {
-    "go_ahead": {
+    "block_report": {
       "scene": "safe",
-      "mirage": null,
-      "stamp": "GENUINE",
-      "line": "Saturday coffee was lovely. Marco never mentioned money once.",
-      "toddy": "happy"
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Reported. The stream was an old video re-uploaded by Mirage.",
+      "mirageSays": "My stolen stream!"
     },
     "verify": {
       "scene": "safe",
-      "mirage": null,
+      "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "A two-minute video call, then coffee. Careful and kind.",
-      "toddy": "happy"
+      "line": "The real trader's channel: \"I never do giveaways. Report these streams.\"",
+      "mirageSays": "Busted again!"
     },
-    "ignore": {
-      "scene": "safe",
-      "mirage": null,
-      "stamp": "SAFE",
-      "line": "Nothing bad happened. It was just a real person saying hi.",
-      "toddy": "happy"
-    },
-    "block_report": {
-      "scene": "wolf",
+    "go_ahead": {
+      "scene": "drained",
       "mirage": "smug",
-      "stamp": "FALSE ALARM",
-      "line": "Marco was real. When we treat everyone as a scammer, the real scams get lost in the noise.",
-      "mirageSays": "Suspect everyone? I love it."
+      "stamp": "DRAINED",
+      "line": "Nothing came back. The \"event\" ended the moment the coins arrived.",
+      "mirageSays": "Double for me!"
     }
   },
   "what_if": {
-    "block_report": "Nothing here asked for money, secrecy or a move to another app. Those are the signs that matter.",
-    "ignore": "Ignoring was safe. But nothing here was a warning sign: public meeting, no money talk, app-verified."
+    "go_ahead": "\"Send 1 get 2\" is always a scam, whoever seems to be saying it."
   },
-  "golden_rule": "Watch what people ask for, not how friendly they are. No money, no secrecy, meet in public: that's what genuine looks like.",
+  "golden_rule": "Nobody doubles your coins. \"Send first to receive more\" is always a scam.",
   "quick_check": {
-    "q": "Which of these is the strongest sign Marco is genuine?",
+    "q": "A live stream says \"send coins and we'll send double back\". What is it?",
     "options": [
       {
         "id": "a",
-        "text": "He paid you a compliment"
+        "text": "A rare chance"
       },
       {
         "id": "b",
-        "text": "He asked for nothing and suggested meeting in public"
+        "text": "Always a scam"
       },
       {
         "id": "c",
-        "text": "He has a nice profile picture"
+        "text": "Safe if many people watch"
       }
     ],
     "answer": "b",
-    "explain": "Compliments and photos can be faked. Asking for nothing and meeting in public is hard for a scammer to fake."
+    "explain": "Viewer counts and famous faces can be faked. The ask never changes."
   },
   "hints": {
-    "nudge": "What is Marco actually asking for?",
-    "glow_order": []
+    "nudge": "Who sends first, and who promises later?",
+    "glow_order": [
+      "double",
+      "qr",
+      "proof",
+      "fakeproof",
+      "ends"
+    ]
   },
   "sources": [
-    "ftc-crypto"
+    "ftc-crypto",
+    "ftc-phishing",
+    "cafc-wallet"
   ],
   "checked_on": "2026-10-13",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check profile",
-      "title": "Marco on Spark",
+      "label": "Check the account",
+      "title": "Droveo Live Mod",
       "rows": [
         {
-          "k": "Photo check",
-          "v": "Spark matched the photo to the person",
-          "clue": "verified"
+          "k": "Account",
+          "v": "A \"mod\" account",
+          "clue": "handle"
         },
         {
-          "k": "You both",
-          "v": "Liked each other in the app",
-          "clue": "match"
+          "k": "Picture",
+          "v": "A red live dot",
+          "clue": "avatar"
         },
         {
-          "k": "Profile",
-          "v": "First name and age",
-          "clue": "name"
+          "k": "Viewers",
+          "v": "A big viewer count",
+          "clue": "live"
         }
       ]
     },
     {
       "id": "link",
       "icon": "🔗",
-      "label": "Check the plan",
-      "title": "Where and who",
+      "label": "Check the offer",
+      "title": "Double your coins",
       "rows": [
         {
-          "k": "Where",
-          "v": "A busy café, in the afternoon",
-          "clue": "public"
+          "k": "Order",
+          "v": "You send first",
+          "clue": "double"
         },
         {
-          "k": "Bring a friend?",
-          "v": "He invites you to",
-          "clue": "friend"
+          "k": "QR code",
+          "v": "Just their wallet address",
+          "clue": "qr"
         },
         {
-          "k": "Money talk",
-          "v": "He never does it on dating apps",
-          "clue": "nomoney"
+          "k": "Real streams",
+          "v": "Never ask viewers to send coins to double them"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Official advice",
-      "title": "Spark safe-dating tips",
+      "label": "Check the proof",
+      "title": "What they point to",
       "rows": [
         {
-          "k": "Meet where?",
-          "v": "Somewhere public"
+          "k": "Proof",
+          "v": "They point to it",
+          "clue": "proof"
         },
         {
-          "k": "Bring someone?",
-          "v": "Yes, tell a friend"
+          "k": "Screenshots",
+          "v": "Five identical-looking ones",
+          "clue": "fakeproof"
+        },
+        {
+          "k": "Timer",
+          "v": "A countdown again",
+          "clue": "ends"
+        },
+        {
+          "k": "Real giveaways",
+          "v": "Never need coins from you first"
         }
       ]
     }

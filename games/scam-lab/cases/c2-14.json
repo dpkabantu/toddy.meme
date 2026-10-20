@@ -1,0 +1,257 @@
+{
+  "id": "c2-14",
+  "type": "hunt",
+  "chapter": 2,
+  "difficulty": 2,
+  "title": "The Cheap Phone",
+  "disguise": "influencer",
+  "intro": [
+    "You want a used Zephyr X5 phone. A seller on Tradely has one far below the usual price.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Messages",
+    "from": "Sameer (seller)",
+    "text": "Phone is yours, send the advance first…"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "sender",
+          "text": "Sameer (seller)"
+        }
+      ]
+    },
+    "context": "Listing: Zephyr X5, \"like new\". Usual price about ₹28,000.",
+    "items": [
+      {
+        "time": [
+          "Today 8:41 PM"
+        ]
+      },
+      {
+        "msg": [
+          "Hi! The Zephyr X5 is yours for ",
+          {
+            "clue": "price",
+            "text": "₹8,000"
+          },
+          ". I need cash urgently."
+        ]
+      },
+      {
+        "msg": [
+          "I am in another city, so I will ship it. ",
+          {
+            "clue": "advance",
+            "text": "Send ₹3,000 advance for courier first."
+          }
+        ]
+      },
+      {
+        "msg": [
+          "Pay to my ",
+          {
+            "clue": "phone",
+            "text": "personal number by phone transfer"
+          },
+          ", not through the app, to save fees."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "rush",
+            "text": "Another buyer is ready. Confirm in 30 minutes."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "pics",
+            "text": "Photos: the phone with its box and bill."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "price": {
+      "label": "Price far below normal",
+      "strength": "strong",
+      "lens": "₹8,000 for a phone that costs about ₹28,000.",
+      "why": "A price far below normal is the bait."
+    },
+    "advance": {
+      "label": "Advance before shipping",
+      "strength": "strong",
+      "lens": "He wants ₹3,000 before sending anything.",
+      "why": "Pay only when you hold the phone, or through a protected way."
+    },
+    "phone": {
+      "label": "Pay outside the marketplace",
+      "strength": "strong",
+      "lens": "He asks you to skip the app and pay his personal number.",
+      "why": "Leaving the marketplace removes every protection you had."
+    },
+    "rush": {
+      "label": "Hurry or lose it",
+      "strength": "strong",
+      "lens": "Confirm in 30 minutes or another buyer takes it.",
+      "why": "Rushing you is a pressure trick."
+    },
+    "pics": {
+      "label": "Nice photos with a bill",
+      "strength": "harmless",
+      "lens": "A phone, its box and a bill.",
+      "why": "Photos and bills are copied from other ads. They prove nothing."
+    },
+    "sender": {
+      "label": "A normal name",
+      "strength": "harmless",
+      "lens": "The seller is called Sameer.",
+      "why": "A name proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Send the ₹3,000 advance"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Ask to meet and see the phone first"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it and delete it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported the listing. The marketplace removed the seller before he fooled anyone else.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The seller refused to meet and went quiet. A search found the same photos in other ads. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The ₹3,000 went to a stranger. No phone came, and the number went dead.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Meeting the seller, paying only for the phone in your hand, or using the marketplace's own payment would have stopped it.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "Pay for a used item only when you hold it, or through the marketplace's own protected payment. Never an advance to a stranger.",
+  "quick_check": {
+    "q": "A seller offers a used phone at a third of its price and asks for an advance outside the app. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Send the advance, the price is great"
+      },
+      {
+        "id": "b",
+        "text": "Send a smaller advance"
+      },
+      {
+        "id": "c",
+        "text": "Only buy after seeing it, or by the marketplace's own protected payment"
+      },
+      {
+        "id": "d",
+        "text": "Ask for a bill photo"
+      }
+    ],
+    "answer": "c",
+    "explain": "An advance to a stranger, outside the app, is the trap."
+  },
+  "hints": {
+    "nudge": "How does he want to be paid, and when?",
+    "glow_order": [
+      "price",
+      "advance",
+      "phone",
+      "rush"
+    ]
+  },
+  "sources": [
+    "ftc-marketplace",
+    "in-rbi-beaware"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the listing",
+      "title": "Seller check",
+      "rows": [
+        {
+          "k": "Price",
+          "v": "₹8,000 (usual ₹28,000)",
+          "clue": "price"
+        },
+        {
+          "k": "Wants to be paid",
+          "v": "Outside the app, first",
+          "clue": "phone"
+        },
+        {
+          "k": "Willing to meet?",
+          "v": "No, \"other city\""
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Pay outside the marketplace?",
+          "v": "Never: you lose its protection",
+          "clue": "phone"
+        },
+        {
+          "k": "Payment methods to avoid",
+          "v": "Transfers, gift cards, crypto: you cannot get them back"
+        }
+      ]
+    }
+  ]
+}

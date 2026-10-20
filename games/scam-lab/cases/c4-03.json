@@ -3,130 +3,149 @@
   "type": "hunt",
   "chapter": 4,
   "difficulty": 2,
-  "title": "The Crypto ATM",
+  "title": "The Customs Call",
   "disguise": "admin",
   "intro": [
-    "A text, a phone call, and now instructions. Someone wants Toddy at a crypto ATM.",
-    "Crypto ATM scams have grown fast.",
-    "Read the instructions. Sniff every line."
+    "A call says a parcel in your name was stopped at the airport, with illegal items inside.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
   ],
   "notify": {
-    "app": "Messages",
-    "from": "Tax Office Notice",
-    "text": "Unpaid tax. Pay today at a crypto ATM to avoid arrest."
+    "app": "Phone",
+    "from": "Customs Desk",
+    "text": "Your parcel was stopped with illegal items"
   },
   "screen": {
     "app": "sms",
     "head": {
       "name": [
         {
-          "clue": "sender",
-          "text": "Tax Office Notice"
+          "clue": "name",
+          "text": "Customs Desk"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "num",
+          "text": "Unknown number"
         }
       ]
     },
+    "context": "You have not sent or expected any parcel abroad.",
     "items": [
       {
-        "msg": [
-          {
-            "clue": "owe",
-            "text": "You owe €2,300 in unpaid tax."
-          }
+        "time": [
+          "Today 11:40 AM"
         ]
       },
       {
         "msg": [
+          "This is the ",
           {
-            "clue": "atm",
-            "text": "Pay today at the crypto ATM on Market Street"
+            "clue": "title",
+            "text": "Customs Department"
           },
-          ". ",
+          ". A ",
           {
-            "clue": "qr",
-            "text": "Scan this QR code at the machine"
+            "clue": "parcel",
+            "text": "parcel in your name"
+          },
+          " was stopped with ",
+          {
+            "clue": "illegal",
+            "text": "illegal items"
           },
           "."
         ]
       },
       {
         "msg": [
+          "To avoid arrest, ",
           {
-            "clue": "arrest",
-            "text": "Failure to pay means arrest tonight."
+            "clue": "pay",
+            "text": "pay a clearance fee of ₹38,000"
           },
-          " ",
-          {
-            "clue": "nocall",
-            "text": "Do not call us. Reply here only."
-          }
+          " today."
         ]
       },
       {
-        "time": [
+        "msg": [
+          "Press 1 to connect to the ",
           {
-            "clue": "time",
-            "text": "Today 6:15 PM"
+            "clue": "officer",
+            "text": "senior officer"
+          },
+          ". ",
+          {
+            "clue": "noend",
+            "text": "Do not hang up."
           }
         ]
       }
     ]
   },
   "clues": {
-    "atm": {
-      "label": "Pay at a crypto ATM",
+    "parcel": {
+      "label": "A parcel you never sent",
       "strength": "strong",
-      "lens": "A government office telling you to use a crypto ATM.",
-      "why": "No tax office or government takes payment through crypto ATMs."
+      "lens": "You sent or expected nothing.",
+      "why": "A parcel you know nothing about is the first thing to doubt."
     },
-    "qr": {
-      "label": "Their QR code",
+    "illegal": {
+      "label": "\"Illegal items inside\"",
       "strength": "strong",
-      "lens": "The QR is their wallet.",
-      "why": "Money sent through it is gone."
+      "lens": "A frightening claim with no proof.",
+      "why": "Fear is used to stop you thinking."
     },
-    "arrest": {
-      "label": "Arrest threat",
+    "pay": {
+      "label": "A fee to avoid arrest",
       "strength": "strong",
-      "lens": "Arrest tonight.",
-      "why": "Threats of arrest are a pressure trick."
+      "lens": "You must pay ₹38,000 today.",
+      "why": "No honest office takes money to \"avoid arrest\" on a phone call."
     },
-    "nocall": {
-      "label": "Don't call us",
+    "officer": {
+      "label": "\"Press 1 for the senior officer\"",
       "strength": "strong",
-      "lens": "They block you from checking.",
-      "why": "Real offices are happy for you to call them."
+      "lens": "They pass you up a ladder of \"officers\".",
+      "why": "More \"officers\" make the story feel real. It is a script."
     },
-    "owe": {
-      "label": "Surprise debt",
+    "noend": {
+      "label": "\"Do not hang up\"",
       "strength": "strong",
-      "lens": "A debt you've never heard of.",
-      "why": "Real tax offices send letters first and give time to check."
+      "lens": "They want to keep you on the line.",
+      "why": "Hanging up is always allowed."
     },
-    "sender": {
-      "label": "Official name",
+    "title": {
+      "label": "An official department name",
       "strength": "harmless",
-      "lens": "\"Tax Office Notice\".",
-      "why": "Text sender names can be faked."
+      "lens": "The call says Customs Department.",
+      "why": "Anyone can say a department's name."
     },
-    "time": {
-      "label": "Evening text",
+    "name": {
+      "label": "A formal sender name",
       "strength": "harmless",
-      "lens": "Sent in the evening.",
-      "why": "Time alone proves nothing."
+      "lens": "Customs Desk.",
+      "why": "A name proves nothing."
+    },
+    "num": {
+      "label": "An unknown number",
+      "strength": "harmless",
+      "lens": "A number you do not know.",
+      "why": "The number alone proves little."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Go to the ATM and pay"
+      "label": "Press 1 and pay the fee"
     },
     {
       "id": "verify",
-      "label": "Call the tax office on the number from its official website"
+      "label": "Hang up and call the official customs office on a number I look up"
     },
     {
       "id": "block_report",
-      "label": "Report the text as spam and block it"
+      "label": "Hang up and report it on 1930"
     }
   ],
   "best_action": "block_report",
@@ -137,117 +156,102 @@
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "BLOCKED",
-      "line": "Blocked and reported. Your phone network flagged the sender.",
-      "mirageSays": "Not the ATM trick too!"
+      "stamp": "REPORTED",
+      "line": "You hung up and reported it. The number was traced and blocked.",
+      "mirageSays": "Not my lovely scam!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The real tax office: \"You owe nothing. We never ask for crypto.\"",
-      "mirageSays": "Checked with the real office!"
+      "line": "The official office said they had no parcel in your name. The call was a scam. Case cracked.",
+      "mirageSays": "Hmph. They checked."
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "The ATM turned the cash into crypto and sent it straight to Mirage.",
-      "mirageSays": "Tax-free for me!"
+      "stamp": "SCAMMED",
+      "line": "The ₹38,000 went to a stranger. Then came a second \"fee\", and a third.",
+      "mirageSays": "Thanks for the details!"
     }
   },
   "what_if": {
-    "go_ahead": "A government office telling you to use a crypto ATM is always a scam."
+    "go_ahead": "Hanging up and calling the real office would have ended it. A parcel you never sent is no case against you.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
   },
-  "golden_rule": "No government, bank or company will ever ask you to pay at a crypto ATM.",
+  "golden_rule": "A call that says a parcel was stopped and asks for money is a scam script. Hang up and check on a number you look up yourself.",
   "quick_check": {
-    "q": "Someone tells you to pay a bill at a crypto ATM. What is it?",
+    "q": "A call says a parcel in your name was stopped with illegal items and you must pay a fee to avoid arrest. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "A modern payment option"
+        "text": "Pay the fee to stay safe"
       },
       {
         "id": "b",
-        "text": "A scam, every time"
+        "text": "Press 1 to talk to the officer"
+      },
+      {
+        "id": "c",
+        "text": "Hang up. Look up the office yourself and report the call"
+      },
+      {
+        "id": "d",
+        "text": "Ask for a written notice"
       }
     ],
-    "answer": "b",
-    "explain": "Crypto ATM payments go straight to scammers and can't be reversed."
+    "answer": "c",
+    "explain": "Fear is the lure. A real office does not take money by phone to avoid arrest."
   },
   "hints": {
-    "nudge": "How do they want the money?",
+    "nudge": "Did you send any parcel at all?",
     "glow_order": [
-      "atm",
-      "qr",
-      "nocall",
-      "arrest",
-      "owe"
+      "parcel",
+      "illegal",
+      "pay",
+      "officer",
+      "noend"
     ]
   },
   "sources": [
-    "ftc-crypto",
-    "ftc-data-2024",
-    "ic3-2024",
-    "ftc-phishing"
+    "in-pib-alert",
+    "in-1930",
+    "ftc-government"
   ],
-  "checked_on": "2026-10-13",
+  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check sender",
-      "title": "Who texted",
+      "label": "Check the caller",
+      "title": "Customs Desk",
       "rows": [
         {
-          "k": "Name shown",
-          "v": "\"Tax Office Notice\"",
-          "clue": "sender"
+          "k": "Parcels you sent",
+          "v": "None",
+          "clue": "parcel"
         },
         {
-          "k": "Debt",
-          "v": "One you have never heard of",
-          "clue": "owe"
-        }
-      ]
-    },
-    {
-      "id": "link",
-      "icon": "🔗",
-      "label": "Check the payment",
-      "title": "How to pay",
-      "rows": [
-        {
-          "k": "Where",
-          "v": "A crypto ATM",
-          "clue": "atm"
-        },
-        {
-          "k": "The QR code",
-          "v": "Their wallet",
-          "clue": "qr"
+          "k": "Asked for money?",
+          "v": "Yes, to avoid arrest",
+          "clue": "pay"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Official page",
-      "title": "What the tax office says",
+      "label": "Official advice",
+      "title": "What the government says",
       "rows": [
         {
-          "k": "Do they demand crypto?",
-          "v": "Never"
+          "k": "Parcel with illegal goods claim",
+          "v": "A pattern the government warns about",
+          "clue": "illegal"
         },
         {
-          "k": "Arrest by text tonight?",
-          "v": "Never",
-          "clue": "arrest"
-        },
-        {
-          "k": "They block you from calling",
-          "v": "Real offices want you to check",
-          "clue": "nocall"
+          "k": "Where to report",
+          "v": "The cyber helpline 1930, or cybercrime.gov.in"
         }
       ]
     }

@@ -1,0 +1,357 @@
+{
+  "id": "c4-10",
+  "type": "duel",
+  "chapter": 4,
+  "difficulty": 3,
+  "title": "Your SIM Will Be Blocked",
+  "disguise": "admin",
+  "intro": [
+    "A caller from \"the cyber police\" says your SIM was misused and will be blocked in two hours.",
+    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
+    "Every chat ends with your choice. Choose wisely."
+  ],
+  "notify": {
+    "app": "Messages",
+    "from": "Cyber Police",
+    "text": "Your SIM will be blocked in 2 hours"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "text": "Cyber Police Unit",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "num",
+          "text": "Unknown number"
+        }
+      ],
+      "avatar": {
+        "glyph": "🛡️",
+        "clue": "badge"
+      }
+    },
+    "banner": [
+      "Text after a phone call"
+    ],
+    "items": []
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              "Your SIM was ",
+              {
+                "clue": "misuse",
+                "text": "misused for illegal calls"
+              },
+              ". It will be ",
+              {
+                "clue": "block",
+                "text": "blocked in 2 hours"
+              },
+              "."
+            ]
+          },
+          {
+            "msg": [
+              "To keep it active, press 1 or text your ",
+              {
+                "clue": "idno",
+                "text": "ID details"
+              },
+              " to this number."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "I did not do anything. Please do not block it.",
+            "next": "n2"
+          },
+          {
+            "text": "Sending my details",
+            "next": "n3"
+          },
+          {
+            "text": "I will call my phone company myself",
+            "end": "verify"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              "We can stop the block. ",
+              {
+                "clue": "pay",
+                "text": "Pay a ₹2,500 verification fee"
+              },
+              " and give the ",
+              {
+                "clue": "otp",
+                "text": "code we send"
+              },
+              "."
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "rush",
+                "text": "Only 90 minutes left."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, paying and sharing the code",
+            "next": "n3"
+          },
+          {
+            "text": "A fee and a code for a \"verification\"? I will call my phone company.",
+            "end": "verify"
+          },
+          {
+            "text": "Report this number",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n3": {
+        "say": [
+          {
+            "msg": [
+              "Good. Your ",
+              {
+                "clue": "done",
+                "text": "SIM is safe"
+              },
+              ". Now your account will be checked: ",
+              {
+                "clue": "bank",
+                "text": "send the code your bank texts you"
+              },
+              "."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Sending it",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Stop. I am reporting this.",
+            "end": "block_report"
+          },
+          {
+            "text": "I will call my phone company",
+            "end": "verify"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "num": {
+      "label": "An unknown number",
+      "strength": "strong",
+      "lens": "A stranger claiming to be police.",
+      "why": "Real police do not start with an unknown text."
+    },
+    "misuse": {
+      "label": "A \"misuse\" story",
+      "strength": "strong",
+      "lens": "They say your SIM was used for illegal calls, with no proof.",
+      "why": "A frightening story with no proof."
+    },
+    "block": {
+      "label": "\"Blocked in 2 hours\"",
+      "strength": "strong",
+      "lens": "A countdown to blocking.",
+      "why": "Deadlines are pressure."
+    },
+    "idno": {
+      "label": "Asks for your ID details",
+      "strength": "strong",
+      "lens": "They want your ID details by text.",
+      "why": "Never send ID details to a number that contacted you."
+    },
+    "pay": {
+      "label": "A fee to avoid blocking",
+      "strength": "strong",
+      "lens": "You must pay ₹2,500.",
+      "why": "No honest office charges to keep a SIM active by phone."
+    },
+    "otp": {
+      "label": "Asks for the code",
+      "strength": "strong",
+      "lens": "They want the code sent to you.",
+      "why": "A code is a key to your account. Never share it."
+    },
+    "rush": {
+      "label": "Only 90 minutes",
+      "strength": "strong",
+      "lens": "The deadline shrinks.",
+      "why": "Rushing is a pressure trick."
+    },
+    "done": {
+      "label": "\"Your SIM is safe\"",
+      "strength": "harmless",
+      "lens": "A friendly reassurance.",
+      "why": "Reassurance after a threat is a trick."
+    },
+    "bank": {
+      "label": "\"Send your bank code\"",
+      "strength": "strong",
+      "lens": "Now they ask for your bank code.",
+      "why": "The bank code is the real prize."
+    },
+    "badge": {
+      "label": "A badge picture",
+      "strength": "harmless",
+      "lens": "A shield icon.",
+      "why": "Badges are easy to fake."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Send the bank code"
+    },
+    {
+      "id": "verify",
+      "label": "Call my phone company on the number on my bill"
+    },
+    {
+      "id": "block_report",
+      "label": "Block the number and report it on 1930"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "You blocked and reported it. The number was traced and blocked.",
+      "mirageSays": "Curses! Blocked again!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Your phone company said: nothing is wrong with your SIM, and they never block lines through such texts. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The code gave them your account. It was emptied within minutes, and your SIM was never in danger.",
+      "mirageSays": "Thanks for the code!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Calling your phone company on the number on your bill would have shown the SIM was fine.",
+    "verify": "Checking was smart. Reporting the number as well protects others."
+  },
+  "golden_rule": "A call or text that threatens to block your SIM and asks for money, ID or a code is a scam. Check with your company on the number on your bill.",
+  "quick_check": {
+    "q": "A \"cyber police\" caller says your SIM will be blocked in two hours unless you pay a fee and share a code. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay and share the code"
+      },
+      {
+        "id": "b",
+        "text": "Share only the code"
+      },
+      {
+        "id": "c",
+        "text": "Hang up. Call your phone company yourself, and report the number"
+      },
+      {
+        "id": "d",
+        "text": "Ask for a written order"
+      }
+    ],
+    "answer": "c",
+    "explain": "A threat plus a fee plus a code is a scam. Your phone company tells the truth."
+  },
+  "hints": {
+    "nudge": "What do they want from you besides the SIM?",
+    "glow_order": [
+      "pay",
+      "otp",
+      "idno",
+      "bank",
+      "block",
+      "rush",
+      "misuse",
+      "num"
+    ]
+  },
+  "sources": [
+    "in-pib-alert",
+    "in-rbi-beaware",
+    "in-1930"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the caller",
+      "title": "Cyber Police Unit",
+      "rows": [
+        {
+          "k": "Called you first?",
+          "v": "Yes",
+          "clue": "num"
+        },
+        {
+          "k": "Asked for money",
+          "v": "₹2,500",
+          "clue": "pay"
+        },
+        {
+          "k": "Asked for a code",
+          "v": "Yes",
+          "clue": "otp"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Does anyone honest need your OTP?",
+          "v": "Never",
+          "clue": "otp"
+        },
+        {
+          "k": "Where to report",
+          "v": "The cyber helpline 1930"
+        }
+      ]
+    }
+  ]
+}

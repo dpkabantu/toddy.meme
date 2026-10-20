@@ -1,0 +1,325 @@
+{
+  "id": "c2-19",
+  "type": "hunt",
+  "chapter": 2,
+  "difficulty": 3,
+  "title": "Two Giveaway Posts",
+  "disguise": "influencer",
+  "intro": [
+    "Two posts offer a free phone, both using Kiko's name. One is Kiko. One is Mirage in a creator's hoodie.",
+    "Compare them side by side.",
+    "Sniff the details, then decide."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Two posts",
+    "text": "Phone giveaway: two different accounts"
+  },
+  "decide_q": "Which post is really from Kiko, and what will you do?",
+  "screen": {
+    "app": "compare",
+    "context": "Both posts say Kiko is giving away a phone. Kiko's own website lists @kiko as the real account.",
+    "panels": [
+      {
+        "label": "Post A",
+        "avatar": {
+          "glyph": "🎁",
+          "clue": "pic_a"
+        },
+        "rows": [
+          {
+            "k": "Account",
+            "v": [
+              {
+                "clue": "acct_a",
+                "text": "@kiko"
+              }
+            ]
+          },
+          {
+            "k": "Age and followers",
+            "v": [
+              {
+                "clue": "age_a",
+                "text": "4 years · 80,000 followers"
+              }
+            ]
+          },
+          {
+            "k": "How to enter",
+            "v": [
+              {
+                "clue": "how_a",
+                "text": "Comment on this public post"
+              }
+            ]
+          },
+          {
+            "k": "Cost",
+            "v": [
+              {
+                "clue": "cost_a",
+                "text": "Free"
+              }
+            ]
+          },
+          {
+            "k": "Winner chosen",
+            "v": [
+              {
+                "clue": "pick_a",
+                "text": "Live, in a public video, on Friday"
+              }
+            ]
+          }
+        ],
+        "note": [
+          {
+            "clue": "pin_a",
+            "text": "Pinned: \"Beware of copy accounts. We never DM winners asking for money.\""
+          }
+        ]
+      },
+      {
+        "label": "Post B",
+        "avatar": {
+          "glyph": "🎁",
+          "clue": "pic_b"
+        },
+        "rows": [
+          {
+            "k": "Account",
+            "v": [
+              {
+                "clue": "acct_b",
+                "text": "@kiko_giveaways_official"
+              }
+            ]
+          },
+          {
+            "k": "Age and followers",
+            "v": [
+              {
+                "clue": "age_b",
+                "text": "3 days · 400 followers"
+              }
+            ]
+          },
+          {
+            "k": "How to enter",
+            "v": [
+              {
+                "clue": "how_b",
+                "text": "Send us a DM with your details and €5 delivery",
+                "link": true
+              }
+            ]
+          },
+          {
+            "k": "Cost",
+            "v": [
+              {
+                "clue": "cost_b",
+                "text": "€5 delivery"
+              }
+            ]
+          },
+          {
+            "k": "Winner chosen",
+            "v": [
+              {
+                "clue": "pick_b",
+                "text": "Everyone wins! Pay within 2 hours"
+              }
+            ]
+          }
+        ],
+        "note": [
+          {
+            "clue": "pin_b",
+            "text": "No pinned notices. Comments are turned off."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "acct_b": {
+      "label": "A copy of the real name",
+      "strength": "strong",
+      "lens": "@kiko_giveaways_official adds words to @kiko.",
+      "why": "Copy accounts add words to a real name."
+    },
+    "age_b": {
+      "label": "Brand-new account",
+      "strength": "strong",
+      "lens": "3 days old with 400 followers.",
+      "why": "A new account with a famous name is a copy."
+    },
+    "how_b": {
+      "label": "Enter by DM and pay",
+      "strength": "strong",
+      "lens": "You must DM your details and pay delivery.",
+      "why": "A real giveaway is entered in public and costs nothing."
+    },
+    "cost_b": {
+      "label": "Costs money",
+      "strength": "strong",
+      "lens": "€5 for a \"free\" phone.",
+      "why": "A free prize that costs money is a scam."
+    },
+    "pick_b": {
+      "label": "Everyone wins, pay fast",
+      "strength": "strong",
+      "lens": "\"Everyone wins\" and a two-hour deadline.",
+      "why": "If everyone wins, it is not a contest. It is bait."
+    },
+    "pin_b": {
+      "label": "Comments turned off",
+      "strength": "strong",
+      "lens": "No pinned notice, and nobody can ask questions.",
+      "why": "Scammers turn off comments so doubters cannot warn others."
+    },
+    "pic_a": {
+      "label": "Gift picture",
+      "strength": "harmless",
+      "lens": "A gift box.",
+      "why": "Pictures are easy to copy."
+    },
+    "pic_b": {
+      "label": "The same gift picture",
+      "strength": "harmless",
+      "lens": "The same box.",
+      "why": "A copied picture takes seconds."
+    },
+    "acct_a": {
+      "label": "Real handle",
+      "strength": "harmless",
+      "lens": "@kiko matches the handle on Kiko's own website.",
+      "why": "A handle matching the official site is good evidence."
+    },
+    "age_a": {
+      "label": "Old, large account",
+      "strength": "harmless",
+      "lens": "4 years and 80,000 followers.",
+      "why": "Age and followers alone can be faked, but a long history helps."
+    },
+    "how_a": {
+      "label": "Comment in public",
+      "strength": "harmless",
+      "lens": "You enter in a public post.",
+      "why": "Public entry is how real giveaways work."
+    },
+    "cost_a": {
+      "label": "Free",
+      "strength": "harmless",
+      "lens": "No payment.",
+      "why": "Real giveaways are free."
+    },
+    "pick_a": {
+      "label": "Public live draw",
+      "strength": "harmless",
+      "lens": "The winner is chosen live, in public.",
+      "why": "A public draw is honest."
+    },
+    "pin_a": {
+      "label": "Warns about copies",
+      "strength": "harmless",
+      "lens": "The creator warns against copy accounts and money requests.",
+      "why": "Honest accounts warn their fans."
+    }
+  },
+  "actions": [
+    {
+      "id": "pick_b",
+      "label": "B is Kiko. DM and pay €5",
+      "trap": true
+    },
+    {
+      "id": "verify",
+      "label": "Not sure. Check Kiko's own website"
+    },
+    {
+      "id": "block_report",
+      "label": "A is Kiko. Report B as a copy"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "trap": {
+    "title": "Kiko Giveaways · Pay",
+    "url": "kiko-giveaway-claim.live",
+    "ask": "Pay €5 delivery and enter your card number.",
+    "go": "Pay €5",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "You entered the real giveaway for free and reported the copy. The fake was removed.",
+      "mirageSays": "My creator's hoodie!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Kiko's own website listed @kiko as the real account and warned about copies. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "pick_b": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The €5 page copied your card. No phone ever came.",
+      "mirageSays": "Thanks for the delivery fee!"
+    }
+  },
+  "what_if": {
+    "pick_b": "Account B had five warnings: a copied name, a new account, a DM entry, a fee and comments turned off.",
+    "verify": "Checking was smart. Reporting B as well helps get the copy removed."
+  },
+  "golden_rule": "A real giveaway is entered in public, costs nothing and is drawn in public. A copy hides, asks for money and rushes.",
+  "quick_check": {
+    "q": "Two giveaway posts. One draws live in public and is free. One needs a DM and a fee. Which is the copy?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The public live one"
+      },
+      {
+        "id": "b",
+        "text": "The DM-and-fee one"
+      },
+      {
+        "id": "c",
+        "text": "Neither"
+      },
+      {
+        "id": "d",
+        "text": "Both"
+      }
+    ],
+    "answer": "b",
+    "explain": "A fee and a private DM are the giveaways of a scam."
+  },
+  "hints": {
+    "nudge": "Which account is new, asks for money and has comments off?",
+    "glow_order": [
+      "cost_b",
+      "how_b",
+      "acct_b",
+      "age_b",
+      "pick_b",
+      "pin_b"
+    ]
+  },
+  "sources": [
+    "ftc-prize",
+    "ftc-phishing"
+  ],
+  "checked_on": "2026-10-21"
+}

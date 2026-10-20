@@ -2,220 +2,260 @@
   "id": "c5-02",
   "type": "hunt",
   "chapter": 5,
-  "difficulty": 3,
-  "title": "Poisoned Address",
-  "disguise": "friend",
-  "mission": [
-    "Wallet Check",
-    "Look closely at your wallet's history before you send. Sniff anything odd, then decide."
-  ],
+  "difficulty": 2,
+  "title": "Like and Get Paid",
+  "disguise": "influencer",
   "intro": [
-    "Toddy wants to pay Kiko back 300 ZLV. Kiko's address is in the wallet history.",
-    "But something new showed up in the history too.",
-    "Copy-paste carefully. Sniff the history."
+    "A message offers you money for liking and reviewing videos. It starts with a small free payment.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
   ],
   "notify": {
-    "app": "Hedrio",
-    "from": "History",
-    "text": "New incoming: 0 ZLV"
+    "app": "Messages",
+    "from": "TaskFlow Team",
+    "text": "Earn per task: like and review videos"
   },
   "screen": {
-    "app": "wallet",
-    "title": "Recent activity",
-    "context": "You're about to send 300 ZLV to Kiko.",
-    "list": [
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "TaskFlow Team"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "num",
+          "text": "Unknown number"
+        }
+      ]
+    },
+    "context": "You did not sign up for anything.",
+    "items": [
       {
-        "dir": "in",
-        "what": [
+        "time": [
+          "Today 1:12 PM"
+        ]
+      },
+      {
+        "msg": [
+          "Hello! Earn money by ",
           {
-            "clue": "poison",
-            "text": "From 0x7a3F…9c21 (yesterday)"
-          }
-        ],
-        "amt": [
+            "clue": "tasks",
+            "text": "liking and reviewing videos"
+          },
+          ". Each task pays ",
           {
-            "clue": "zero",
-            "text": "0 ZLV"
+            "clue": "per",
+            "text": "£15"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          "Do your ",
+          {
+            "clue": "first",
+            "text": "first 3 tasks free"
+          },
+          " and get paid £45 right now to see it works."
+        ]
+      },
+      {
+        "msg": [
+          "Then join the ",
+          {
+            "clue": "group",
+            "text": "private group"
+          },
+          " for bigger tasks: ",
+          {
+            "clue": "link",
+            "text": "taskflow-earn.in/join",
+            "link": true
           }
         ]
       },
       {
-        "dir": "out",
-        "what": [
+        "msg": [
           {
-            "clue": "real",
-            "text": "To 0x7a3F…9c21 · Kiko (saved contact)"
+            "clue": "noexp",
+            "text": "No skills needed."
           }
-        ],
-        "amt": [
-          "150 ZLV"
         ]
-      },
-      {
-        "dir": "in",
-        "what": [
-          {
-            "clue": "salary",
-            "text": "From Ostrel (your exchange)"
-          }
-        ],
-        "amt": [
-          "500 ZLV"
-        ]
-      }
-    ],
-    "note": [
-      {
-        "clue": "full",
-        "text": "Tap an address to see it in full: 0x7a3F5b…E1d9c21 vs 0x7a3F09…44a9c21"
       }
     ]
   },
   "clues": {
-    "poison": {
-      "label": "Look-alike address",
+    "tasks": {
+      "label": "Pay for liking videos",
       "strength": "strong",
-      "lens": "Same first and last letters as Kiko, different middle.",
-      "why": "Scammers create look-alike addresses and \"poison\" your history."
+      "lens": "Liking videos does not create value for anyone.",
+      "why": "Real jobs pay for real work. Fake task jobs pay for clicks."
     },
-    "zero": {
-      "label": "0 ZLV transfer",
+    "per": {
+      "label": "A good pay per tiny task",
       "strength": "strong",
-      "lens": "A worthless transfer you didn't expect.",
-      "why": "Zero-value transfers are how look-alike addresses get into your history."
+      "lens": "£15 for a like.",
+      "why": "Pay far out of proportion to the work is bait."
     },
-    "full": {
-      "label": "Middles differ",
+    "first": {
+      "label": "A small free payment first",
       "strength": "strong",
-      "lens": "The full addresses are different in the middle.",
-      "why": "Always check the whole address, not just the start and end."
+      "lens": "They pay £45 to make you trust them.",
+      "why": "The small payment is bait. The big losses come after."
     },
-    "real": {
-      "label": "Saved contact",
+    "group": {
+      "label": "A private group for \"bigger tasks\"",
+      "strength": "strong",
+      "lens": "They move you to a group where the pressure grows.",
+      "why": "A private group is where the deposits begin."
+    },
+    "link": {
+      "label": "A sign-up link",
+      "strength": "strong",
+      "lens": "It goes to a page that is not a company site.",
+      "why": "Check for a real company before joining anything."
+    },
+    "noexp": {
+      "label": "No skills needed",
+      "strength": "strong",
+      "lens": "Anyone can join.",
+      "why": "A job with no requirements is not a job."
+    },
+    "name": {
+      "label": "A team name",
       "strength": "harmless",
-      "lens": "Kiko, from your saved contacts.",
-      "why": "Sending to a saved contact is safest."
+      "lens": "TaskFlow Team.",
+      "why": "A name proves nothing."
     },
-    "salary": {
-      "label": "Exchange deposit",
+    "num": {
+      "label": "An unknown number",
       "strength": "harmless",
-      "lens": "A deposit from your exchange.",
-      "why": "Normal activity."
+      "lens": "A stranger.",
+      "why": "The number alone proves little."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Copy the newest address from history and send"
+      "label": "Join the group and do the tasks"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
     },
     {
       "id": "verify",
-      "label": "Send to Kiko's saved contact and check the full address"
+      "label": "Search \"like and review videos for pay\" for warnings"
     },
     {
       "id": "block_report",
-      "label": "Hide the 0 ZLV transfer and report the address"
+      "label": "Report the number and delete it"
     }
   ],
-  "best_action": "verify",
+  "best_action": "block_report",
   "acceptable_actions": [
-    "block_report"
+    "verify",
+    "ignore"
   ],
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "BLOCKED",
-      "line": "Hidden and reported. Then Toddy paid Kiko using the saved contact.",
-      "mirageSays": "My poison got spotted!"
-    },
-    "go_ahead": {
-      "scene": "drained",
-      "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "The newest entry was Mirage's look-alike address. 300 ZLV gone.",
-      "mirageSays": "Close enough!"
+      "stamp": "REPORTED",
+      "line": "Reported and deleted. Your phone company can block the next one.",
+      "mirageSays": "Not my lovely scam!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Saved contact, full address checked. Kiko got the 300 ZLV.",
-      "mirageSays": "He checked the middle!"
+      "line": "Consumer advice describes exactly this scam: small payouts, then a demand for money. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The first £45 arrived. Then \"bigger tasks\" needed a deposit, and the deposits never came back.",
+      "mirageSays": "Thanks for the details!"
     }
   },
   "what_if": {
-    "go_ahead": "The first and last letters matched, but the middle didn't. Use saved contacts and check the full address."
+    "go_ahead": "Real jobs never make you pay to keep earning. A small payout first is the hook.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
   },
-  "golden_rule": "Never copy addresses from your history. Use saved contacts and check the whole address.",
+  "golden_rule": "Money for liking videos, with a small payout first, is a task scam. Real jobs never make you pay to keep earning.",
   "quick_check": {
-    "q": "Two addresses start with 0x7a3F and end with 9c21. Are they the same?",
+    "q": "A message pays you £45 for 3 easy tasks and invites you to a group for bigger ones. What is true?",
     "options": [
       {
         "id": "a",
-        "text": "Yes"
+        "text": "It is a good side job"
       },
       {
         "id": "b",
-        "text": "Not necessarily; check the full address"
+        "text": "The small payout builds trust before a demand for money"
+      },
+      {
+        "id": "c",
+        "text": "It is risk-free if you stop early"
+      },
+      {
+        "id": "d",
+        "text": "Real companies do this"
       }
     ],
     "answer": "b",
-    "explain": "Look-alike addresses copy the start and end."
+    "explain": "Task scams pay a little to make you trust, then ask for deposits."
   },
   "hints": {
-    "nudge": "Compare the full addresses.",
+    "nudge": "Who gains when you like a video, and why would they pay you?",
     "glow_order": [
-      "poison",
-      "zero",
-      "full"
+      "tasks",
+      "per",
+      "first",
+      "group",
+      "link",
+      "noexp"
     ]
   },
   "sources": [
-    "cafc-wallet",
-    "ftc-crypto",
-    "chainalysis-2025"
+    "ftc-jobs",
+    "ftc-job-scams"
   ],
-  "checked_on": "2026-10-13",
+  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the addresses",
-      "title": "Kiko vs the transfer",
+      "label": "Check the offer",
+      "title": "TaskFlow Team",
       "rows": [
         {
-          "k": "Kiko in contacts",
-          "v": "Saved by you",
-          "clue": "real"
+          "k": "You applied?",
+          "v": "No"
         },
         {
-          "k": "Odd transfer",
-          "v": "Same start and end, different middle",
-          "clue": "poison"
+          "k": "Pay for a like",
+          "v": "£15",
+          "clue": "per"
         },
         {
-          "k": "Full addresses",
-          "v": "Different in the middle",
-          "clue": "full"
-        }
-      ]
-    },
-    {
-      "id": "link",
-      "icon": "🔗",
-      "label": "Check the amount",
-      "title": "What moved",
-      "rows": [
-        {
-          "k": "Transfer you did not expect",
-          "v": "Zero value",
-          "clue": "zero"
-        },
-        {
-          "k": "Your salary deposit",
-          "v": "From your exchange",
-          "clue": "salary"
+          "k": "First tasks",
+          "v": "Paid free to win trust",
+          "clue": "first"
         }
       ]
     },
@@ -223,15 +263,16 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What wallet teams say",
+      "title": "What advice says",
       "rows": [
         {
-          "k": "Copy addresses from history?",
-          "v": "Never"
+          "k": "Task scams",
+          "v": "Pay a little at first, then ask for money",
+          "clue": "first"
         },
         {
-          "k": "Always check",
-          "v": "Every character, or use contacts"
+          "k": "Real jobs",
+          "v": "Never make you pay to start earning"
         }
       ]
     }

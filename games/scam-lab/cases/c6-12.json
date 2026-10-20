@@ -1,0 +1,304 @@
+{
+  "id": "c6-12",
+  "type": "hunt",
+  "chapter": 6,
+  "difficulty": 2,
+  "title": "The Boss Needs Vouchers",
+  "disguise": "admin",
+  "intro": [
+    "A message from your \"boss\" arrives on a chat. He is in a meeting and needs a quick favour.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Mr. Sharma (CEO)",
+    "text": "Urgent favour, are you at your desk?"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "Mr. Sharma (CEO)"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "num",
+          "text": "New number, not saved"
+        }
+      ],
+      "avatar": {
+        "glyph": "👔",
+        "clue": "pic"
+      }
+    },
+    "banner": [
+      {
+        "clue": "dmfirst",
+        "text": "Message request · not in your contacts"
+      }
+    ],
+    "context": "Your real boss's number is saved in your phone. This one is different.",
+    "items": [
+      {
+        "time": [
+          "10:05 AM"
+        ]
+      },
+      {
+        "msg": [
+          "Hi, are you at your desk? I am ",
+          {
+            "clue": "meeting",
+            "text": "in a meeting and cannot talk"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          "I need ",
+          {
+            "clue": "vouchers",
+            "text": "5 gift vouchers of ₹5,000"
+          },
+          " for clients, right now."
+        ]
+      },
+      {
+        "msg": [
+          "Buy them and ",
+          {
+            "clue": "codes",
+            "text": "send me the codes"
+          },
+          ". I will ",
+          {
+            "clue": "repay",
+            "text": "repay you today"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "secret",
+            "text": "Keep this between us."
+          },
+          " ",
+          {
+            "clue": "rush",
+            "text": "It is urgent."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "dmfirst": {
+      "label": "A new, unsaved number",
+      "strength": "strong",
+      "lens": "Not your boss's real number.",
+      "why": "Check by calling the number you already have."
+    },
+    "meeting": {
+      "label": "\"Cannot talk\"",
+      "strength": "strong",
+      "lens": "A reason you cannot call back.",
+      "why": "A reason to avoid a call is a warning."
+    },
+    "vouchers": {
+      "label": "Gift vouchers",
+      "strength": "strong",
+      "lens": "Gift cards are a scammer's favourite payment.",
+      "why": "No honest boss asks you to buy gift cards."
+    },
+    "codes": {
+      "label": "\"Send me the codes\"",
+      "strength": "strong",
+      "lens": "The codes are as good as cash and cannot be traced.",
+      "why": "Never send gift card codes."
+    },
+    "repay": {
+      "label": "\"I will repay you today\"",
+      "strength": "strong",
+      "lens": "A promise to win trust.",
+      "why": "A promise to repay is bait."
+    },
+    "secret": {
+      "label": "\"Keep this between us\"",
+      "strength": "strong",
+      "lens": "Secrecy stops you checking.",
+      "why": "Always check."
+    },
+    "rush": {
+      "label": "Urgent",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
+    },
+    "name": {
+      "label": "The boss's name",
+      "strength": "harmless",
+      "lens": "Mr. Sharma, CEO.",
+      "why": "A name is easy to copy."
+    },
+    "pic": {
+      "label": "Suit picture",
+      "strength": "harmless",
+      "lens": "A little suit.",
+      "why": "Pictures prove nothing."
+    },
+    "num": {
+      "label": "A new number",
+      "strength": "harmless",
+      "lens": "A number you do not have saved.",
+      "why": "The number alone proves little. Call the real one."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Buy the vouchers and send the codes"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Call my boss on his real number"
+    },
+    {
+      "id": "block_report",
+      "label": "Report the account and tell my manager"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "You reported it and told your manager. The company warned everyone, and the account was removed.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Your real boss was at his desk and had sent nothing. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The ₹25,000 in vouchers were gone as soon as you sent the codes. No boss ever repaid you.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "A call to your boss's saved number would have ended it. No real boss asks for gift cards.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "A \"boss\" who messages from a new number and wants gift cards is a scam. Call the real number.",
+  "quick_check": {
+    "q": "A \"boss\" on a new number asks you to buy gift vouchers and send the codes. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Buy them, he is the boss"
+      },
+      {
+        "id": "b",
+        "text": "Buy two"
+      },
+      {
+        "id": "c",
+        "text": "Call your boss on his real number. Report the message"
+      },
+      {
+        "id": "d",
+        "text": "Ask him to pay you first"
+      }
+    ],
+    "answer": "c",
+    "explain": "No honest boss asks for gift card codes."
+  },
+  "hints": {
+    "nudge": "What payment method does the \"boss\" want?",
+    "glow_order": [
+      "dmfirst",
+      "meeting",
+      "vouchers",
+      "codes",
+      "repay",
+      "secret",
+      "rush"
+    ]
+  },
+  "sources": [
+    "ftc-gift-cards",
+    "ftc-family"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the sender",
+      "title": "Mr. Sharma",
+      "rows": [
+        {
+          "k": "The number",
+          "v": "Not your boss's real one",
+          "clue": "dmfirst"
+        },
+        {
+          "k": "Asks for",
+          "v": "Gift voucher codes",
+          "clue": "codes"
+        },
+        {
+          "k": "Can he talk?",
+          "v": "No, \"in a meeting\"",
+          "clue": "meeting"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Gift cards as payment",
+          "v": "No honest business or agency asks",
+          "clue": "vouchers"
+        },
+        {
+          "k": "How to check",
+          "v": "Call the person on a number you already know"
+        }
+      ]
+    }
+  ]
+}

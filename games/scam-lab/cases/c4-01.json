@@ -3,147 +3,163 @@
   "type": "hunt",
   "chapter": 4,
   "difficulty": 2,
-  "title": "Police Warning",
+  "title": "The Video Call Officer",
   "disguise": "admin",
   "intro": [
-    "Chapter 4. These scams don't charm you. They scare you.",
-    "Fear makes people skip every check. That's the whole trick.",
-    "An official-looking email just arrived. Breathe, then sniff."
+    "Your phone rings with a video call from someone in a police-style uniform. He says you are in serious trouble.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
   ],
   "notify": {
-    "app": "Mail",
-    "from": "Cyber Crime Unit",
-    "text": "URGENT: Your wallet is linked to a criminal case"
+    "app": "Chirp",
+    "from": "Cyber Crime Branch",
+    "text": "Video call: serious case in your name"
   },
   "screen": {
-    "app": "mail",
+    "app": "chirp",
     "head": {
-      "from": [
+      "name": [
         {
-          "clue": "from",
-          "text": "Cyber Crime Unit"
+          "clue": "name",
+          "text": "Inspector Kale · Cyber Crime Branch"
         }
       ],
-      "addr": [
+      "sub": [
         {
-          "clue": "addr",
-          "text": "cyber.unit.office@mailbox-eu.com"
+          "clue": "num",
+          "text": "Unknown number · video call"
         }
       ],
-      "subject": [
-        {
-          "clue": "subject",
-          "text": "URGENT: Case #EU-4471 — your wallet"
-        }
-      ],
-      "time": [
-        "11:52 PM"
-      ]
+      "avatar": {
+        "glyph": "🛡️",
+        "clue": "badge"
+      }
     },
+    "banner": [
+      {
+        "clue": "video",
+        "text": "They called you first, on video"
+      }
+    ],
+    "context": "You have never been contacted by any officer before.",
     "items": [
       {
-        "p": [
-          {
-            "clue": "crime",
-            "text": "Your crypto wallet has been linked to money laundering."
-          }
+        "time": [
+          "2:14 PM"
         ]
       },
       {
-        "p": [
-          "To avoid arrest, ",
+        "msg": [
+          "A parcel in your name was caught with ",
           {
-            "clue": "fine",
-            "text": "pay a €1,500 fine in crypto"
+            "clue": "parcel",
+            "text": "illegal items"
           },
-          " ",
+          ". A case is open against you."
+        ]
+      },
+      {
+        "msg": [
+          "You are under ",
           {
-            "clue": "deadline",
-            "text": "within 24 hours"
+            "clue": "digital",
+            "text": "\"digital arrest\""
           },
-          "."
-        ]
-      },
-      {
-        "p": [
+          ". ",
           {
-            "clue": "secret",
-            "text": "Do not discuss this case with anyone, including your bank."
+            "clue": "stay",
+            "text": "Stay on camera and do not leave this call."
           }
         ]
       },
       {
-        "foot": [
+        "msg": [
           {
-            "clue": "badge",
-            "text": "🛡️ Official seal · Case #EU-4471"
+            "clue": "tell",
+            "text": "Tell no one, not even your family. It is a secret investigation."
           }
+        ]
+      },
+      {
+        "msg": [
+          "To close the case, move your savings to a ",
+          {
+            "clue": "safe",
+            "text": "\"safe account\""
+          },
+          " for checking."
         ]
       }
     ]
   },
   "clues": {
-    "fine": {
-      "label": "Fine paid in crypto",
+    "video": {
+      "label": "They called you, on video",
       "strength": "strong",
-      "lens": "Police don't take fines in crypto.",
-      "why": "Only scammers demand payment in crypto."
+      "lens": "An officer you have never met calls you on video, out of the blue.",
+      "why": "Official cases are not handled by a surprise video call."
     },
-    "deadline": {
-      "label": "24-hour threat",
+    "parcel": {
+      "label": "\"A parcel in your name\"",
       "strength": "strong",
-      "lens": "Pay fast or be arrested.",
-      "why": "Real police don't threaten arrest by email to get paid."
+      "lens": "A parcel you never sent, full of illegal items.",
+      "why": "A parcel story is a common script."
     },
-    "secret": {
-      "label": "Tell no one",
+    "digital": {
+      "label": "\"Digital arrest\"",
       "strength": "strong",
-      "lens": "Not even your bank.",
-      "why": "Scammers isolate you so nobody can warn you."
+      "lens": "You are told you are arrested, but only through a screen.",
+      "why": "This is the scam the government warns about. Ending the call is always allowed."
     },
-    "addr": {
-      "label": "Free webmail address",
+    "stay": {
+      "label": "\"Stay on camera\"",
       "strength": "strong",
-      "lens": "mailbox-eu.com is a generic mail service.",
-      "why": "Real authorities use their official domain."
+      "lens": "They keep you on the call so you cannot check with anyone.",
+      "why": "Keeping you on camera is how victims are controlled."
     },
-    "crime": {
-      "label": "Scary accusation",
+    "tell": {
+      "label": "\"Tell no one\"",
       "strength": "strong",
-      "lens": "You're accused of a crime out of nowhere.",
-      "why": "Fear is the hook."
+      "lens": "You are told to keep it secret from your family.",
+      "why": "Secrecy stops people helping you. Always tell someone."
     },
-    "from": {
-      "label": "Official-sounding name",
+    "safe": {
+      "label": "\"Move your money to a safe account\"",
+      "strength": "strong",
+      "lens": "They want your savings moved to an account they give you.",
+      "why": "No honest officer asks you to move money anywhere."
+    },
+    "name": {
+      "label": "A strong title and name",
       "strength": "harmless",
-      "lens": "\"Cyber Crime Unit\".",
-      "why": "Any name can be typed in. Proves nothing."
+      "lens": "Inspector Kale of the Cyber Crime Branch.",
+      "why": "A title is easy to say. It proves nothing."
     },
-    "subject": {
-      "label": "Case number",
+    "num": {
+      "label": "An unknown number",
       "strength": "harmless",
-      "lens": "A case number.",
-      "why": "Numbers look official but are easy to invent."
+      "lens": "A number you do not know.",
+      "why": "The number alone proves little."
     },
     "badge": {
-      "label": "Seal emoji",
+      "label": "A badge picture",
       "strength": "harmless",
-      "lens": "A shield and \"official seal\".",
-      "why": "Pictures and seals prove nothing."
+      "lens": "A shield icon.",
+      "why": "Badges and uniforms are easy to fake."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Pay the fine to avoid trouble"
+      "label": "Do as the officer says and move the money"
     },
     {
       "id": "verify",
-      "label": "Call the police on their official number from their website"
+      "label": "End the call, then tell my family and call the helpline"
     },
     {
       "id": "block_report",
-      "label": "Report it as phishing and delete it"
+      "label": "End the call and report it on 1930"
     }
   ],
   "best_action": "block_report",
@@ -154,125 +170,108 @@
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "BLOCKED",
-      "line": "Reported. The same email went to thousands of crypto holders that night.",
-      "mirageSays": "Not scary enough?!"
+      "stamp": "REPORTED",
+      "line": "You ended the call and reported it on the cyber helpline. The number was traced and blocked.",
+      "mirageSays": "Not my lovely scam!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The real police: \"We never ask for fines in crypto. That's a scam.\"",
-      "mirageSays": "The real police?!"
+      "line": "You ended the call and rang your family. They knew at once it was a scam and helped you report it. Case cracked.",
+      "mirageSays": "Hmph. They checked."
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "There was no case. The €1,500 went straight to Mirage.",
-      "mirageSays": "Case closed: in my favour!"
+      "stamp": "SCAMMED",
+      "line": "Your savings moved to a stranger's account while you sat in front of the camera. The \"officer\" vanished.",
+      "mirageSays": "Thanks for the details!"
     }
   },
   "what_if": {
-    "go_ahead": "Police never ask for fines in crypto, and never tell you to keep it from your bank."
+    "go_ahead": "Ending the call and telling someone was always allowed. A real case is never closed by moving money.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
   },
-  "golden_rule": "Real police, tax offices and banks never demand payment in crypto, and never tell you to keep it secret.",
+  "golden_rule": "No one can arrest you through a screen. End the call, tell someone you trust, and report on the cyber helpline (1930 in India).",
   "quick_check": {
-    "q": "An email says pay a fine in crypto within 24 hours or be arrested. What is it?",
+    "q": "A video call says you are under \"digital arrest\" and must stay on camera, tell no one and move your savings. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Probably real, pay to be safe"
+        "text": "Obey, the officer sounds serious"
       },
       {
         "id": "b",
-        "text": "A scam: real authorities never ask for crypto"
+        "text": "Obey but ask for a letter"
       },
       {
         "id": "c",
-        "text": "Reply and ask for a discount"
+        "text": "End the call, tell your family and report it on the cyber helpline"
+      },
+      {
+        "id": "d",
+        "text": "Move only half the money"
       }
     ],
-    "answer": "b",
-    "explain": "Fear plus crypto payment is always a scam."
+    "answer": "c",
+    "explain": "Panic is the weapon. Ending the call and telling someone breaks the spell."
   },
   "hints": {
-    "nudge": "How do they want you to pay?",
+    "nudge": "Why would an officer tell you to keep a case secret?",
     "glow_order": [
-      "fine",
-      "secret",
-      "deadline",
-      "addr",
-      "crime"
+      "video",
+      "parcel",
+      "digital",
+      "stay",
+      "tell",
+      "safe"
     ]
   },
   "sources": [
-    "ftc-crypto",
-    "ftc-data-2024",
-    "ic3-2024",
-    "ftc-phishing"
+    "in-pib-alert",
+    "in-1930",
+    "ftc-government"
   ],
-  "checked_on": "2026-10-13",
+  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check sender",
-      "title": "Who really sent it",
+      "label": "Check the caller",
+      "title": "Inspector Kale",
       "rows": [
         {
-          "k": "Address",
-          "v": "mailbox-eu.com, a generic mail service",
-          "clue": "addr"
+          "k": "Called you first?",
+          "v": "Yes, on video",
+          "clue": "video"
         },
         {
-          "k": "Name shown",
-          "v": "\"Cyber Crime Unit\"",
-          "clue": "from"
+          "k": "Asked you to stay on camera",
+          "v": "Yes",
+          "clue": "stay"
         },
         {
-          "k": "Subject",
-          "v": "A case number",
-          "clue": "subject"
-        }
-      ]
-    },
-    {
-      "id": "link",
-      "icon": "🔗",
-      "label": "Check demands",
-      "title": "What it wants",
-      "rows": [
-        {
-          "k": "Payment",
-          "v": "In crypto",
-          "clue": "fine"
-        },
-        {
-          "k": "Deadline",
-          "v": "Pay fast or be arrested",
-          "clue": "deadline"
-        },
-        {
-          "k": "Secrecy",
-          "v": "Do not tell your bank",
-          "clue": "secret"
+          "k": "Asked you to tell no one",
+          "v": "Yes",
+          "clue": "tell"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Official page",
-      "title": "What real police say",
+      "label": "Official advice",
+      "title": "What the government says",
       "rows": [
         {
-          "k": "Do police fine you in crypto?",
-          "v": "Never"
+          "k": "Criminals pose as police and other agencies",
+          "v": "They claim a parcel or a relative, then demand money",
+          "clue": "parcel"
         },
         {
-          "k": "Do they email arrest threats?",
-          "v": "Never"
+          "k": "Where to report",
+          "v": "The cyber helpline 1930, or cybercrime.gov.in"
         }
       ]
     }

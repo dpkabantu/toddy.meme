@@ -1,0 +1,335 @@
+{
+  "id": "c7-18",
+  "type": "duel",
+  "chapter": 7,
+  "difficulty": 3,
+  "title": "The Bitcoin Withdrawal Fee",
+  "disguise": "support",
+  "intro": [
+    "Your \"Bitcoin platform\" shows a big profit. When you try to withdraw, support asks for a fee.",
+    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
+    "Every chat ends with your choice. Choose wisely."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Vantage Trade Support",
+    "text": "To withdraw, pay the tax first"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "text": "Vantage Trade Support",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "bal",
+          "text": "Your balance: ₹8,20,000"
+        }
+      ],
+      "avatar": {
+        "glyph": "₿",
+        "clue": "logo"
+      }
+    },
+    "banner": [
+      "Support chat inside the platform"
+    ],
+    "items": []
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              "Your profit is ready. ",
+              {
+                "clue": "tax",
+                "text": "Pay a 15% withdrawal tax of ₹1,23,000"
+              },
+              " first."
+            ]
+          },
+          {
+            "msg": [
+              "This is ",
+              {
+                "clue": "rule",
+                "text": "a standard rule"
+              },
+              ". The tax will be returned with your money."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Why can the tax not come out of my balance?",
+            "next": "n2"
+          },
+          {
+            "text": "OK, paying the tax",
+            "next": "n3"
+          },
+          {
+            "text": "I will stop and report this",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              "The system cannot do that. ",
+              {
+                "clue": "rush",
+                "text": "Pay within 24 hours, or your account is frozen forever."
+              }
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "proof",
+                "text": "Other users paid it and withdrew."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, paying",
+            "next": "n3"
+          },
+          {
+            "text": "I will check with my bank and the regulator first",
+            "end": "verify"
+          },
+          {
+            "text": "Report",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n3": {
+        "say": [
+          {
+            "msg": [
+              "Tax received. Now an ",
+              {
+                "clue": "anti",
+                "text": "anti-money-laundering deposit of ₹2,00,000"
+              },
+              " is needed."
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "again",
+                "text": "Pay it, or lose your profit and your tax."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Paying ₹2,00,000 more",
+            "end": "go_ahead"
+          },
+          {
+            "text": "No more. Reporting this.",
+            "end": "block_report"
+          },
+          {
+            "text": "I will stop and call my bank",
+            "end": "verify"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "bal": {
+      "label": "A balance in their platform",
+      "strength": "strong",
+      "lens": "A number on a screen, not money you hold.",
+      "why": "A balance in a stranger's platform is not money you own."
+    },
+    "tax": {
+      "label": "A \"tax\" to withdraw",
+      "strength": "strong",
+      "lens": "You must pay ₹1,23,000 first.",
+      "why": "Paying to withdraw is the scam."
+    },
+    "rule": {
+      "label": "\"A standard rule\"",
+      "strength": "strong",
+      "lens": "They explain it away.",
+      "why": "A reason does not make it right."
+    },
+    "rush": {
+      "label": "Pay in 24 hours",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
+    },
+    "proof": {
+      "label": "\"Others paid it\"",
+      "strength": "strong",
+      "lens": "A crowd you cannot see.",
+      "why": "A crowd proves nothing."
+    },
+    "anti": {
+      "label": "A new \"deposit\" after the tax",
+      "strength": "strong",
+      "lens": "After you pay, there is always one more fee.",
+      "why": "Scammers keep inventing fees."
+    },
+    "again": {
+      "label": "\"Pay or lose everything\"",
+      "strength": "strong",
+      "lens": "A threat of loss.",
+      "why": "The loss is already done."
+    },
+    "logo": {
+      "label": "Coin picture",
+      "strength": "harmless",
+      "lens": "A little coin.",
+      "why": "Pictures prove nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Pay the ₹2,00,000"
+    },
+    {
+      "id": "verify",
+      "label": "Stop and call my bank and check the platform's registration"
+    },
+    {
+      "id": "block_report",
+      "label": "Stop, and report it on 1930"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "You stopped and reported. The platform was flagged, and you paid no more.",
+      "mirageSays": "Curses! Blocked again!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Your bank said this is a known scam. The platform was not registered anywhere. You stopped in time. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The money was gone. The platform locked you out and the \"support\" vanished.",
+      "mirageSays": "Thanks for the deposit!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "A fee to withdraw is the sign. Every payment after is more loss.",
+    "verify": "Stopping was smart. Reporting as well helps others."
+  },
+  "golden_rule": "If you must pay a tax or fee to withdraw your own money, it is a scam. Stop at the first fee.",
+  "quick_check": {
+    "q": "An investing platform asks you to pay a 15% tax before you can withdraw. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay it, it comes back"
+      },
+      {
+        "id": "b",
+        "text": "Pay half"
+      },
+      {
+        "id": "c",
+        "text": "Stop. Do not pay. Report it"
+      },
+      {
+        "id": "d",
+        "text": "Ask for a discount"
+      }
+    ],
+    "answer": "c",
+    "explain": "Paying to withdraw your own money is the scam."
+  },
+  "hints": {
+    "nudge": "Why can the fee not come out of your own balance?",
+    "glow_order": [
+      "tax",
+      "anti",
+      "again",
+      "rush",
+      "proof",
+      "rule",
+      "bal"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-invest-social",
+    "in-1930"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the platform",
+      "title": "Vantage Trade",
+      "rows": [
+        {
+          "k": "Balance",
+          "v": "Only in their app",
+          "clue": "bal"
+        },
+        {
+          "k": "To withdraw",
+          "v": "Pay a \"tax\" first",
+          "clue": "tax"
+        },
+        {
+          "k": "Registered?",
+          "v": "No"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "A fee to withdraw",
+          "v": "A warning sign",
+          "clue": "tax"
+        },
+        {
+          "k": "Who demands payment in crypto?",
+          "v": "Only scammers"
+        }
+      ]
+    }
+  ]
+}

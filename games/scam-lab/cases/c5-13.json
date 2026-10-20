@@ -1,0 +1,238 @@
+{
+  "id": "c5-13",
+  "type": "hunt",
+  "chapter": 5,
+  "difficulty": 3,
+  "title": "The Freelance Client",
+  "disguise": null,
+  "intro": [
+    "A new client wants you to edit a video. After today's offers, you worry about being paid.",
+    "But some messages are real. Mirage loves it when you stop trusting the honest ones.",
+    "Sniff carefully. Then decide."
+  ],
+  "notify": {
+    "app": "Craftloop",
+    "from": "Client: Elena",
+    "text": "Project: edit a 3-minute video"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "Elena (client on Craftloop)"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "plat",
+          "text": "Project on the platform"
+        }
+      ]
+    },
+    "context": "The message arrived inside the Craftloop platform, on a project you bid for.",
+    "items": [
+      {
+        "time": [
+          "Today 11:00 AM"
+        ]
+      },
+      {
+        "msg": [
+          "Hi Toddy! I ",
+          {
+            "clue": "bid",
+            "text": "accepted your bid"
+          },
+          " for the video: €120."
+        ]
+      },
+      {
+        "msg": [
+          "Craftloop has put my money in ",
+          {
+            "clue": "escrow",
+            "text": "escrow"
+          },
+          ". It is released to you when I approve the work."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "onplat",
+            "text": "Let us keep everything on the platform, for both our safety."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "nopay",
+            "text": "I will never ask you to pay anything to start."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "name": {
+      "label": "A client name",
+      "strength": "harmless",
+      "lens": "Elena.",
+      "why": "A name proves little alone."
+    },
+    "plat": {
+      "label": "On the platform",
+      "strength": "harmless",
+      "lens": "The message is inside the platform.",
+      "why": "Staying on the platform keeps its protection."
+    },
+    "bid": {
+      "label": "You placed the bid",
+      "strength": "harmless",
+      "lens": "It answers your own bid.",
+      "why": "It matches something you did."
+    },
+    "escrow": {
+      "label": "Money held in escrow",
+      "strength": "harmless",
+      "lens": "The platform holds her payment until the work is approved.",
+      "why": "Escrow protects both sides."
+    },
+    "onplat": {
+      "label": "\"Keep it on the platform\"",
+      "strength": "harmless",
+      "lens": "She wants to stay inside the protected system.",
+      "why": "Scammers want you off the platform. Honest clients stay on."
+    },
+    "nopay": {
+      "label": "Asks you to pay nothing",
+      "strength": "harmless",
+      "lens": "No fees.",
+      "why": "Honest clients never ask you to pay."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Check the project and the escrow on the platform, then start the work"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "The platform showed €120 held in escrow. You delivered, she approved, and the money arrived two days later.",
+      "toddy": "happy"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "Nothing bad happened. But a real client who is ignored goes away. Checking on the platform was the better move.",
+      "mirageSays": "Fine. Next!"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was a real client. When every message looks like a scam, real work gets lost too.",
+      "mirageSays": "If you trust nothing, I win anyway."
+    }
+  },
+  "what_if": {
+    "block_report": "It answered your own bid, stayed on the platform, put the money in escrow and asked you to pay nothing. That is how honest clients look.",
+    "ignore": "Ignoring was safe. Recognising a real message is the skill: it asks for nothing secret and matches something you know."
+  },
+  "golden_rule": "A client who stays on the platform, uses escrow and asks you to pay nothing is a good sign. Check on the platform itself.",
+  "quick_check": {
+    "q": "What made this client honest?",
+    "options": [
+      {
+        "id": "a",
+        "text": "She was friendly"
+      },
+      {
+        "id": "b",
+        "text": "The message was inside the platform, the money was in escrow and she asked nothing of you"
+      },
+      {
+        "id": "c",
+        "text": "She offered €120"
+      },
+      {
+        "id": "d",
+        "text": "She wrote in the morning"
+      }
+    ],
+    "answer": "b",
+    "explain": "Staying on the platform, escrow and no payment asked are the real signs."
+  },
+  "hints": {
+    "nudge": "What is this message actually asking you to do?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-marketplace",
+    "ftc-job-scams"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the project",
+      "title": "On the platform",
+      "rows": [
+        {
+          "k": "Where is the message?",
+          "v": "Inside the platform",
+          "clue": "plat"
+        },
+        {
+          "k": "Your bid?",
+          "v": "Yes, accepted",
+          "clue": "bid"
+        },
+        {
+          "k": "Money",
+          "v": "€120 in escrow",
+          "clue": "escrow"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Pay outside the platform?",
+          "v": "Never: you lose its protection",
+          "clue": "onplat"
+        },
+        {
+          "k": "Does an honest client charge you?",
+          "v": "Never",
+          "clue": "nopay"
+        }
+      ]
+    }
+  ]
+}

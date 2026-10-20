@@ -1,0 +1,297 @@
+{
+  "id": "c5-07",
+  "type": "hunt",
+  "chapter": 5,
+  "difficulty": 2,
+  "title": "The Offer Letter",
+  "disguise": "admin",
+  "intro": [
+    "You got an offer letter from a famous company. You are thrilled, until it asks for a payment.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Mail",
+    "from": "Lumenara Tech HR",
+    "text": "Offer letter: Software Trainee"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        {
+          "clue": "from",
+          "text": "Lumenara Tech HR"
+        }
+      ],
+      "addr": [
+        {
+          "clue": "addr",
+          "text": "hr.lumenara-careers@freemail.example"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "Offer letter: Software Trainee, ₹6 LPA"
+        }
+      ],
+      "time": [
+        "12:30 PM"
+      ]
+    },
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "greet",
+            "text": "Dear Candidate,"
+          }
+        ]
+      },
+      {
+        "p": [
+          "Congratulations! You are ",
+          {
+            "clue": "selected",
+            "text": "selected as a Software Trainee"
+          },
+          " at Lumenara Tech with ",
+          {
+            "clue": "pay",
+            "text": "₹6 LPA"
+          },
+          "."
+        ]
+      },
+      {
+        "p": [
+          "You did not need to ",
+          {
+            "clue": "noint",
+            "text": "appear for any interview"
+          },
+          ", since your profile was shortlisted."
+        ]
+      },
+      {
+        "p": [
+          "To receive your laptop and joining kit, pay a ",
+          {
+            "clue": "fee",
+            "text": "refundable fee of ₹9,500"
+          },
+          " within 24 hours."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "link",
+            "text": "Pay and confirm your joining",
+            "link": true
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "addr": {
+      "label": "A free-mail address",
+      "strength": "strong",
+      "lens": "A big company's HR would write from the company's own domain, not a free mail address.",
+      "why": "Look at the address behind the name."
+    },
+    "selected": {
+      "label": "Selected without applying",
+      "strength": "strong",
+      "lens": "You never applied or took a test.",
+      "why": "A job offer out of nowhere is a warning sign."
+    },
+    "noint": {
+      "label": "No interview at all",
+      "strength": "strong",
+      "lens": "Real hiring involves interviews.",
+      "why": "A job with no interview is bait."
+    },
+    "fee": {
+      "label": "A \"refundable\" fee for a kit",
+      "strength": "strong",
+      "lens": "You must pay ₹9,500 to receive a laptop.",
+      "why": "Honest employers never ask you to pay to get a job or a kit."
+    },
+    "link": {
+      "label": "A pay-and-confirm link",
+      "strength": "strong",
+      "lens": "The button leads to a payment page.",
+      "why": "Never pay through an email link."
+    },
+    "pay": {
+      "label": "A good salary",
+      "strength": "harmless",
+      "lens": "₹6 LPA, a believable offer.",
+      "why": "The salary alone proves nothing."
+    },
+    "greet": {
+      "label": "\"Dear Candidate\"",
+      "strength": "harmless",
+      "lens": "No name.",
+      "why": "Vague greetings are common but not proof alone."
+    },
+    "from": {
+      "label": "The company name",
+      "strength": "harmless",
+      "lens": "Lumenara Tech HR.",
+      "why": "Names are easy to copy."
+    },
+    "subject": {
+      "label": "An offer subject",
+      "strength": "harmless",
+      "lens": "Offer letter: Software Trainee.",
+      "why": "Subjects prove nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Click the link and pay ₹9,500",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Check the company's own careers page and call its real HR line"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it and delete it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "trap": {
+    "title": "Lumenara Tech · Joining",
+    "url": "lumenara-joining.in/pay",
+    "ask": "Pay ₹9,500 by card to confirm your joining and receive your kit.",
+    "go": "Pay ₹9,500",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported as phishing and deleted. The fake address was blocked.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The company's real careers page said: \"We never charge candidates.\" Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The ₹9,500 went to a stranger. No laptop and no job ever came.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Honest employers never charge for a kit or a job. Checking the careers page took a minute.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "No real employer asks you to pay for a job, a laptop or a kit. Check on the company's own site.",
+  "quick_check": {
+    "q": "A famous company's offer letter, from a free-mail address, asks you to pay ₹9,500 for a laptop kit. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay, it is refundable"
+      },
+      {
+        "id": "b",
+        "text": "Pay half"
+      },
+      {
+        "id": "c",
+        "text": "Do not pay. Check the company's careers page, and report the email"
+      },
+      {
+        "id": "d",
+        "text": "Ask for an installment plan"
+      }
+    ],
+    "answer": "c",
+    "explain": "Never pay to get a job. A real company pays you."
+  },
+  "hints": {
+    "nudge": "Who pays whom in a real job?",
+    "glow_order": [
+      "addr",
+      "selected",
+      "noint",
+      "fee",
+      "link"
+    ]
+  },
+  "sources": [
+    "ftc-job-scams",
+    "ftc-jobs",
+    "in-rbi-beaware"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Who really sent this",
+      "rows": [
+        {
+          "k": "Address",
+          "v": "hr.lumenara-careers@freemail.example",
+          "clue": "addr"
+        },
+        {
+          "k": "Interview done?",
+          "v": "None",
+          "clue": "noint"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Pay to get a job?",
+          "v": "Honest employers never ask",
+          "clue": "fee"
+        },
+        {
+          "k": "How to check",
+          "v": "Look on the company's own careers page"
+        }
+      ]
+    }
+  ]
+}

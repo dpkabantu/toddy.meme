@@ -1,0 +1,258 @@
+{
+  "id": "c2-07",
+  "type": "hunt",
+  "chapter": 2,
+  "difficulty": 2,
+  "title": "The Cheap Flat",
+  "disguise": "influencer",
+  "intro": [
+    "You are looking for a flat in Pune. One listing is far cheaper than the rest.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Messages",
+    "from": "Rohit (owner)",
+    "text": "Flat is yours if you send the deposit today…"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "sender",
+          "text": "Rohit (owner)"
+        }
+      ]
+    },
+    "context": "You found his listing on a rental site. You have not seen the flat.",
+    "items": [
+      {
+        "time": [
+          "Today 6:12 PM"
+        ]
+      },
+      {
+        "msg": [
+          "Hello! The 2 BHK is available at ",
+          {
+            "clue": "rent",
+            "text": "₹9,000 a month"
+          },
+          ". Similar flats nearby cost ₹24,000."
+        ]
+      },
+      {
+        "msg": [
+          "I am ",
+          {
+            "clue": "abroad",
+            "text": "posted abroad for work"
+          },
+          ", so I cannot show it myself."
+        ]
+      },
+      {
+        "msg": [
+          "Send a ",
+          {
+            "clue": "deposit",
+            "text": "₹20,000 deposit"
+          },
+          " now by phone transfer and I will courier you the keys."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "rush",
+            "text": "Three other families are asking. Pay in one hour or I give it away."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "photos",
+            "text": "Photos attached: bright rooms, new kitchen."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "rent": {
+      "label": "Rent far below the area",
+      "strength": "strong",
+      "lens": "₹9,000 where similar flats cost ₹24,000.",
+      "why": "A rent far below nearby flats is the bait."
+    },
+    "abroad": {
+      "label": "Owner is \"abroad\"",
+      "strength": "strong",
+      "lens": "He cannot meet you or show the flat.",
+      "why": "Scammers are always somewhere else. Never pay for a place you have not seen."
+    },
+    "deposit": {
+      "label": "Deposit before viewing",
+      "strength": "strong",
+      "lens": "He wants ₹20,000 before you see the flat or sign anything.",
+      "why": "Pay only after seeing the place and signing a proper agreement."
+    },
+    "rush": {
+      "label": "Hurry or lose it",
+      "strength": "strong",
+      "lens": "Pay in one hour or it goes to someone else.",
+      "why": "A rush is a pressure trick to stop you checking."
+    },
+    "photos": {
+      "label": "Nice photos",
+      "strength": "harmless",
+      "lens": "Bright rooms and a new kitchen.",
+      "why": "Photos are copied from other listings. They prove nothing."
+    },
+    "sender": {
+      "label": "A normal name",
+      "strength": "harmless",
+      "lens": "The sender calls himself Rohit.",
+      "why": "A name proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Send the ₹20,000 deposit"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Ask to see the flat in person, or search the address"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it and delete it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported the listing. The rental site removed it before it fooled anyone else.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "A search of the address showed the same photos in three other ads under different names. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The ₹20,000 went to a stranger. No keys came, the number went dead, and the flat belonged to someone else.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Insisting on seeing the flat first would have ended it. A real owner understands.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "Never pay a deposit for a place you have not seen. A very cheap rent plus \"I am abroad\" is the pattern.",
+  "quick_check": {
+    "q": "A very cheap flat. The owner is abroad and wants a deposit today before you can visit. What is the best move?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay quickly before it is gone"
+      },
+      {
+        "id": "b",
+        "text": "Pay half now"
+      },
+      {
+        "id": "c",
+        "text": "Only go ahead after seeing it in person and signing an agreement"
+      },
+      {
+        "id": "d",
+        "text": "Ask him to send more photos"
+      }
+    ],
+    "answer": "c",
+    "explain": "Never pay for what you have not seen. That alone settles it."
+  },
+  "hints": {
+    "nudge": "Where is the owner, and what does he want before you see the flat?",
+    "glow_order": [
+      "rent",
+      "abroad",
+      "deposit",
+      "rush"
+    ]
+  },
+  "sources": [
+    "ftc-rental",
+    "in-rbi-beaware"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the listing",
+      "title": "Listing check",
+      "rows": [
+        {
+          "k": "Rent",
+          "v": "₹9,000 (area average ₹24,000)",
+          "clue": "rent"
+        },
+        {
+          "k": "Owner",
+          "v": "Posted abroad",
+          "clue": "abroad"
+        },
+        {
+          "k": "Same photos elsewhere",
+          "v": "Yes, in three other ads"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "A deposit before you see the place",
+          "v": "A major warning sign",
+          "clue": "deposit"
+        },
+        {
+          "k": "How to check",
+          "v": "Search the address and the owner's name, and visit in person"
+        }
+      ]
+    }
+  ]
+}

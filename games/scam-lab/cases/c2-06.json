@@ -1,381 +1,325 @@
 {
   "id": "c2-06",
-  "type": "boss",
+  "type": "hunt",
   "chapter": 2,
-  "difficulty": 3,
-  "title": "The Withdrawal Trap",
-  "disguise": "support",
-  "disguise2": "friend",
+  "difficulty": 2,
+  "title": "Two Shop Websites",
+  "disguise": "influencer",
   "intro": [
-    "This is Mirage's biggest con. A friend of Toddy's, Kiko, joined Brenvoy Trade Pro months ago.",
-    "Kiko asked Toddy to handle the withdrawal. Mirage will change faces twice.",
-    "Collect the clues. At the end, unmask him on the case board."
+    "You found a lamp you like on two websites. One is Meridu Store, the real shop.",
+    "The other is Mirage in a shopkeeper's apron. Compare them side by side.",
+    "Sniff the details, then decide."
   ],
   "notify": {
-    "app": "Chirp",
-    "from": "Brenvoy Trade Pro Support",
-    "text": "Your balance: €12,480 💰 Ready to withdraw!"
+    "app": "Browser",
+    "from": "Search results",
+    "text": "Meridu Store lamps: two results"
   },
+  "decide_q": "Which site is the real Meridu Store, and what will you do?",
   "screen": {
-    "app": "chirp",
-    "head": {
-      "name": [
-        {
-          "clue": "brand",
-          "text": "Brenvoy Trade Pro Support",
-          "id": "duel-name"
-        }
-      ],
-      "sub": [
-        "@brenvoy-trade_support_desk"
-      ],
-      "avatar": {
-        "glyph": "🚀",
-        "clue": "avatar"
-      }
-    },
-    "context": "Kiko deposited €2,000 in total. The site now shows a huge balance.",
-    "items": [
+    "app": "compare",
+    "context": "Both sites sell the same desk lamp. One of them is a copy.",
+    "panels": [
       {
-        "msg": [
-          "Great news! ",
+        "label": "Site A",
+        "avatar": {
+          "glyph": "🛍️",
+          "clue": "logo_a"
+        },
+        "rows": [
           {
-            "clue": "balance",
-            "text": "Your balance is €12,480 💰"
+            "k": "Address",
+            "v": [
+              {
+                "clue": "addr_a",
+                "text": "meridu.store"
+              }
+            ]
+          },
+          {
+            "k": "Lamp price",
+            "v": [
+              {
+                "clue": "price_a",
+                "text": "£39.00"
+              }
+            ]
+          },
+          {
+            "k": "Pay with",
+            "v": [
+              {
+                "clue": "pay_a",
+                "text": "Card, or a payment service that protects buyers"
+              }
+            ]
+          },
+          {
+            "k": "Contact",
+            "v": [
+              {
+                "clue": "contact_a",
+                "text": "Address, phone and returns page"
+              }
+            ]
+          },
+          {
+            "k": "Site started",
+            "v": [
+              {
+                "clue": "age_a",
+                "text": "6 years ago"
+              }
+            ]
+          }
+        ],
+        "note": [
+          {
+            "clue": "rev_a",
+            "text": "Mixed reviews, some 3 stars, some with photos"
           }
         ]
       },
       {
-        "msg": [
-          "To withdraw, first pay ",
+        "label": "Site B",
+        "avatar": {
+          "glyph": "🛍️",
+          "clue": "logo_b"
+        },
+        "rows": [
           {
-            "clue": "tax",
-            "text": "20% tax (€2,496) in crypto"
+            "k": "Address",
+            "v": [
+              {
+                "clue": "addr_b",
+                "text": "meridu-store-outlet.shop",
+                "link": true
+              }
+            ]
           },
-          " to our tax wallet."
+          {
+            "k": "Lamp price",
+            "v": [
+              {
+                "clue": "price_b",
+                "text": "£9.00 (was £39)"
+              }
+            ]
+          },
+          {
+            "k": "Pay with",
+            "v": [
+              {
+                "clue": "pay_b",
+                "text": "Bank transfer or gift card only"
+              }
+            ]
+          },
+          {
+            "k": "Contact",
+            "v": [
+              {
+                "clue": "contact_b",
+                "text": "A web form only"
+              }
+            ]
+          },
+          {
+            "k": "Site started",
+            "v": [
+              {
+                "clue": "age_b",
+                "text": "5 days ago"
+              }
+            ]
+          }
+        ],
+        "note": [
+          {
+            "clue": "rev_b",
+            "text": "All five stars, all posted this week"
+          }
         ]
       }
     ]
   },
-  "duel": {
-    "start": "d1",
-    "nodes": {
-      "d1": {
-        "rename": "Agent Mia · Brenvoy Trade Pro",
-        "say": [
-          {
-            "sys": [
-              "Agent Mia joined the chat"
-            ]
-          },
-          {
-            "msg": [
-              "Hi! I'm Mia. ",
-              {
-                "clue": "frozen",
-                "text": "If the tax isn't paid in 24 hours, the account is frozen forever."
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Why can't you take the tax from the balance?",
-            "next": "d2"
-          },
-          {
-            "text": "OK, paying the €2,496",
-            "next": "d3"
-          },
-          {
-            "text": "Stop. Stop paying and report this.",
-            "end": "block_report"
-          }
-        ]
-      },
-      "d2": {
-        "say": [
-          {
-            "msg": [
-              {
-                "clue": "rules",
-                "text": "System rules, sorry 🙏 The balance is locked until the fee arrives."
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Real platforms take fees from the balance. Report it.",
-            "end": "block_report"
-          },
-          {
-            "text": "Kiko should report this to the police first",
-            "end": "verify"
-          },
-          {
-            "text": "Fine, paying now",
-            "next": "d3"
-          }
-        ]
-      },
-      "d3": {
-        "rename": "Recovery Agent · Hollenor Legal Europe",
-        "disguise": "friend",
-        "say": [
-          {
-            "sys": [
-              {
-                "clue": "swap",
-                "text": "Agent Mia left. \"Recovery Agent · Hollenor Legal Europe\" messaged you."
-              }
-            ]
-          },
-          {
-            "msg": [
-              "We know you've been scammed. ",
-              {
-                "clue": "recovery",
-                "text": "For a €500 fee we recover 100% of your funds."
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Pay the €500 recovery fee",
-            "end": "go_ahead"
-          },
-          {
-            "text": "\"Recovery agents\" who charge first are a second scam. Report both.",
-            "end": "block_report"
-          },
-          {
-            "text": "Kiko will report to the police directly",
-            "end": "verify"
-          }
-        ]
-      }
-    }
-  },
   "clues": {
-    "balance": {
-      "label": "Too-good balance",
+    "addr_b": {
+      "label": "Look-alike address",
       "strength": "strong",
-      "lens": "€2,000 in, €12,480 on screen. Numbers on a fake site mean nothing.",
-      "why": "Fake platforms show huge gains so you pay more."
+      "lens": "meridu-store-outlet.shop adds extra words to the real name.",
+      "why": "Copy sites add extra words. Check the address letter by letter."
     },
-    "tax": {
-      "label": "Pay \"tax\" first",
+    "price_b": {
+      "label": "Far too cheap",
       "strength": "strong",
-      "lens": "A \"tax\" you must pay before you get anything.",
-      "why": "Real taxes aren't paid to the platform's crypto wallet."
+      "lens": "£9 for a £39 lamp.",
+      "why": "A price far below normal is the bait."
     },
-    "frozen": {
-      "label": "Frozen-forever threat",
+    "pay_b": {
+      "label": "Only transfer or gift card",
       "strength": "strong",
-      "lens": "Pay in 24 hours or lose it all.",
-      "why": "Deadlines and threats stop you checking."
+      "lens": "No card payment, only methods you cannot get back.",
+      "why": "Real shops take cards. Only scammers insist on transfers and gift cards."
     },
-    "rules": {
-      "label": "\"System rules\"",
+    "contact_b": {
+      "label": "No real contact details",
       "strength": "strong",
-      "lens": "An excuse for why they can't take the fee from the balance.",
-      "why": "If the balance were real, they could deduct the fee from it."
+      "lens": "Just a web form, no address and no phone.",
+      "why": "Real shops tell you who and where they are."
     },
-    "swap": {
-      "label": "New face appears",
+    "age_b": {
+      "label": "Brand new site",
       "strength": "strong",
-      "lens": "Right after the first trick, a \"recovery agent\" turns up.",
-      "why": "Scammers sell lists of victims, or come back in a new costume."
+      "lens": "Started 5 days ago.",
+      "why": "A brand-new shop with a famous name is a copy."
     },
-    "recovery": {
-      "label": "Paid \"recovery\"",
+    "rev_b": {
+      "label": "Perfect, fresh reviews",
       "strength": "strong",
-      "lens": "They promise 100% back, for a fee up front.",
-      "why": "Recovery scams target people who've already lost money."
+      "lens": "All five stars, all this week.",
+      "why": "Fake shops write their own reviews."
     },
-    "brand": {
-      "label": "Company name",
+    "logo_a": {
+      "label": "Shop logo",
       "strength": "harmless",
-      "lens": "The platform's name.",
-      "why": "Any site can name its support desk. Proves nothing alone."
+      "lens": "A shopping-bag picture.",
+      "why": "Logos are easy to copy, so they prove nothing."
     },
-    "avatar": {
-      "label": "Rocket logo",
+    "logo_b": {
+      "label": "Shop logo",
       "strength": "harmless",
-      "lens": "A rocket logo.",
-      "why": "Logos are easy to copy."
+      "lens": "The same shopping-bag picture.",
+      "why": "A copied logo takes seconds."
+    },
+    "addr_a": {
+      "label": "Shop's real address",
+      "strength": "harmless",
+      "lens": "meridu.store is the shop's own domain.",
+      "why": "A match is a good sign, but check what else the site shows."
+    },
+    "price_a": {
+      "label": "Normal price",
+      "strength": "harmless",
+      "lens": "£39.00.",
+      "why": "A normal price is not suspicious."
+    },
+    "pay_a": {
+      "label": "Safe payment options",
+      "strength": "harmless",
+      "lens": "Card or a protected payment service.",
+      "why": "These let you dispute a payment that goes wrong."
+    },
+    "contact_a": {
+      "label": "Real contact details",
+      "strength": "harmless",
+      "lens": "An address, a phone number and a returns page.",
+      "why": "Honest shops tell you where they are."
+    },
+    "age_a": {
+      "label": "Six years old",
+      "strength": "harmless",
+      "lens": "An old shop with history.",
+      "why": "Age alone does not prove it is safe, but new copies are always young."
+    },
+    "rev_a": {
+      "label": "Mixed reviews",
+      "strength": "harmless",
+      "lens": "Some 3-star reviews, some with photos.",
+      "why": "Real reviews are uneven. A mix is a good sign."
     }
   },
   "actions": [
     {
-      "id": "open_chat",
-      "label": "Open the support chat",
-      "goto": "duel"
+      "id": "pick_b",
+      "label": "B is the shop. Buy the £9 lamp",
+      "trap": true
     },
     {
       "id": "verify",
-      "label": "Tell Kiko to report it to the police"
+      "label": "Not sure. Go to the shop's own site and check"
     },
     {
       "id": "block_report",
-      "label": "Stop paying and report the platform"
-    },
-    {
-      "id": "go_ahead",
-      "label": "Pay",
-      "hidden": true
+      "label": "A is the real shop. Report B as a fake"
     }
   ],
   "best_action": "block_report",
   "acceptable_actions": [
     "verify"
   ],
+  "trap": {
+    "title": "Meridu Store Outlet · Pay",
+    "url": "meridu-store-outlet.shop/pay",
+    "ask": "Send £9.00 by bank transfer to confirm your order.",
+    "go": "Pay £9",
+    "back": "Close this page"
+  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
-      "mirage": "caught",
-      "stamp": "CASE CLOSED",
-      "line": "No more money went in. The report helped investigators link the fake platform and the fake recovery agent.",
-      "mirageSays": "Both my costumes, unmasked!"
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "You picked the real shop and reported the copy. The fake was taken down within days.",
+      "mirageSays": "My shopkeeper's apron!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "The police confirmed: no real tax, no real recovery agents. Kiko paid nothing more.",
-      "mirageSays": "Not the police!"
+      "stamp": "CHECKED",
+      "line": "The real shop's own site matched Site A in every detail. Site B was a copy. Case cracked.",
+      "mirageSays": "Hmph. They checked."
     },
-    "go_ahead": {
+    "pick_b": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "The tax, then the recovery fee. Both went to the same con artist.",
-      "mirageSays": "Twice the fun!"
+      "stamp": "SCAMMED",
+      "line": "The £9 went to a stranger. No lamp came, and the copy site vanished.",
+      "mirageSays": "Thanks for the transfer!"
     }
   },
   "what_if": {
-    "go_ahead": "Paying to unlock money, then paying to \"recover\" it, is the same scam twice. Stop paying and report.",
-    "verify": "Going to the police was right. Reporting the platform as well helps others."
+    "pick_b": "Four warnings sat on Site B: look-alike address, tiny price, transfer-only payment, brand-new site. One check would have been enough.",
+    "verify": "Checking was smart. Reporting B as well helps get the copy taken down."
   },
-  "board": {
-    "q": "What's really going on?",
-    "verdicts": [
-      {
-        "id": "scam",
-        "text": "A fake platform, then a fake recovery agent: the same con twice"
-      },
-      {
-        "id": "real",
-        "text": "Real profits, a real tax and a real lawyer"
-      },
-      {
-        "id": "unsure",
-        "text": "Not enough evidence to tell"
-      }
-    ],
-    "answer": "scam",
-    "pick": 3,
-    "explain": "Pay-to-withdraw, a frozen-account threat, then a paid \"recovery\". One con artist, two masks."
-  },
-  "golden_rule": "Never pay to get money back. Fees to withdraw and fees to \"recover\" are the same scam.",
+  "golden_rule": "Compare the address, the price, how you pay and who is behind the shop. A copy gets at least three wrong.",
   "quick_check": {
-    "q": "Someone offers to recover your lost crypto for a fee. What do you do?",
+    "q": "Two sites sell the same lamp. One is far cheaper, new, and takes only bank transfer. Which is the copy?",
     "options": [
       {
         "id": "a",
-        "text": "Pay, it's worth a try"
+        "text": "The old one with mixed reviews"
       },
       {
         "id": "b",
-        "text": "Don't pay; report to the police yourself"
+        "text": "The cheap new one that takes only transfer"
+      },
+      {
+        "id": "c",
+        "text": "Neither, they are the same shop"
+      },
+      {
+        "id": "d",
+        "text": "Both"
       }
     ],
     "answer": "b",
-    "explain": "Real police don't charge you to investigate."
+    "explain": "Cheap, new and transfer-only: three signs in one."
   },
   "hints": {
-    "nudge": "Ask yourself: why must you pay before you get anything?",
+    "nudge": "Which site is brand new and only takes transfers?",
     "glow_order": [
-      "tax",
-      "balance",
-      "frozen",
-      "rules",
-      "swap",
-      "recovery"
+      "price_b",
+      "pay_b",
+      "addr_b",
+      "age_b",
+      "rev_b",
+      "contact_b"
     ]
   },
   "sources": [
-    "ftc-crypto",
-    "cafc-wallet",
-    "europol-report",
-    "ic3-2024"
+    "ftc-marketplace",
+    "ftc-phishing"
   ],
-  "checked_on": "2026-10-13",
-  "kit": [
-    {
-      "id": "profile",
-      "icon": "🔍",
-      "label": "Check the account",
-      "title": "Brenvoy Trade Pro Support",
-      "rows": [
-        {
-          "k": "Balance shown",
-          "v": "€12,480 for €2,000 in",
-          "clue": "balance"
-        },
-        {
-          "k": "Brand name",
-          "v": "Just a name, proves nothing",
-          "clue": "brand"
-        },
-        {
-          "k": "Another voice",
-          "v": "A \"recovery agent\" turns up",
-          "clue": "swap"
-        }
-      ]
-    },
-    {
-      "id": "link",
-      "icon": "🔗",
-      "label": "Check the rules",
-      "title": "Why you cannot withdraw",
-      "rows": [
-        {
-          "k": "You must first pay",
-          "v": "A \"tax\"",
-          "clue": "tax"
-        },
-        {
-          "k": "The excuse",
-          "v": "They cannot take it from your balance",
-          "clue": "rules"
-        },
-        {
-          "k": "Deadline",
-          "v": "24 hours or lose it all",
-          "clue": "frozen"
-        }
-      ]
-    },
-    {
-      "id": "source",
-      "icon": "📖",
-      "label": "Official advice",
-      "title": "What real regulators say",
-      "rows": [
-        {
-          "k": "Fee to withdraw your own money?",
-          "v": "A real platform never asks"
-        },
-        {
-          "k": "Recovery for a fee up front?",
-          "v": "A second scam",
-          "clue": "recovery"
-        }
-      ]
-    }
-  ]
+  "checked_on": "2026-10-21"
 }

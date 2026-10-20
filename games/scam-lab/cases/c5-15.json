@@ -1,0 +1,348 @@
+{
+  "id": "c5-15",
+  "type": "duel",
+  "chapter": 5,
+  "difficulty": 3,
+  "title": "Receive and Forward",
+  "disguise": "admin",
+  "intro": [
+    "A \"company\" offers you easy money for receiving payments and sending them on.",
+    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
+    "Every chat ends with your choice. Choose wisely."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Dana (Payments Assistant)",
+    "text": "Easy job: receive and forward payments"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "text": "Dana (Payments Assistant)",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@dana_pay_assist"
+        }
+      ],
+      "avatar": {
+        "glyph": "💸",
+        "clue": "logo"
+      }
+    },
+    "banner": [
+      "Message request · you do not follow this account"
+    ],
+    "items": []
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              "We need a ",
+              {
+                "clue": "assistant",
+                "text": "payments assistant"
+              },
+              ". Money will arrive in your account."
+            ]
+          },
+          {
+            "msg": [
+              "You ",
+              {
+                "clue": "forward",
+                "text": "forward it to another account"
+              },
+              " and keep ",
+              {
+                "clue": "cut",
+                "text": "10% for yourself"
+              },
+              ". Easy!"
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Why not just send it directly?",
+            "next": "n2"
+          },
+          {
+            "text": "Sounds good, I am in",
+            "next": "n3"
+          },
+          {
+            "text": "I will report this",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              "Our ",
+              {
+                "clue": "why",
+                "text": "clients prefer a local middle person"
+              },
+              ". It is a normal arrangement."
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "rush",
+                "text": "Start today and earn at once."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, I will start",
+            "next": "n3"
+          },
+          {
+            "text": "That sounds like laundering. I will check and report.",
+            "end": "verify"
+          },
+          {
+            "text": "Report",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n3": {
+        "say": [
+          {
+            "msg": [
+              "First payment arrived: ",
+              {
+                "clue": "amount",
+                "text": "£4,000"
+              },
+              ". Forward £3,600 to this account now."
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "tell",
+                "text": "If your bank asks, say it is from a friend."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Forwarding it",
+            "end": "go_ahead"
+          },
+          {
+            "text": "No. I am telling my bank and reporting this.",
+            "end": "block_report"
+          },
+          {
+            "text": "I will ask my bank first",
+            "end": "verify"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "handle": {
+      "label": "A new account",
+      "strength": "strong",
+      "lens": "@dana_pay_assist has no history.",
+      "why": "A job from a brand-new account is a warning."
+    },
+    "assistant": {
+      "label": "A vague \"assistant\" job",
+      "strength": "strong",
+      "lens": "No clear work, just money moving.",
+      "why": "Real jobs have real work."
+    },
+    "forward": {
+      "label": "Receive and forward",
+      "strength": "strong",
+      "lens": "You pass money to another account.",
+      "why": "This is how stolen money is moved. The risk falls on you."
+    },
+    "cut": {
+      "label": "Keep 10%",
+      "strength": "strong",
+      "lens": "A cut for moving money.",
+      "why": "A cut for no work is the bait."
+    },
+    "why": {
+      "label": "\"Clients prefer a middle person\"",
+      "strength": "strong",
+      "lens": "A weak excuse for a strange step.",
+      "why": "There is no honest reason to route money through you."
+    },
+    "rush": {
+      "label": "Earn at once",
+      "strength": "strong",
+      "lens": "A quick start.",
+      "why": "Pressure is a trick."
+    },
+    "amount": {
+      "label": "A large sum arrives",
+      "strength": "strong",
+      "lens": "The money probably came from other victims.",
+      "why": "It is stolen, and your account now holds it."
+    },
+    "tell": {
+      "label": "\"Tell your bank it is from a friend\"",
+      "strength": "strong",
+      "lens": "They ask you to lie to your bank.",
+      "why": "Anything that needs a lie is a crime."
+    },
+    "logo": {
+      "label": "Money picture",
+      "strength": "harmless",
+      "lens": "A little money bag.",
+      "why": "Pictures prove nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Forward £3,600 and keep my cut"
+    },
+    {
+      "id": "verify",
+      "label": "Ask my bank first"
+    },
+    {
+      "id": "block_report",
+      "label": "Report the account and tell my bank"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "You reported it and told your bank. The money was returned, and you stayed clear of trouble.",
+      "mirageSays": "Curses! Blocked again!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Your bank said it was money laundering, froze the funds and helped you report it. You were safe. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The payment was stolen money. Your account was frozen, and you could be asked to answer for it.",
+      "mirageSays": "Thanks for the help!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Moving money for a stranger, for a cut, is how stolen money is washed. You carry the risk.",
+    "verify": "Asking your bank was smart. Reporting the account as well protects others."
+  },
+  "golden_rule": "Never receive and forward money for a stranger. It is a crime and you carry the risk.",
+  "quick_check": {
+    "q": "A job offers you 10% for receiving payments and forwarding them. What is it?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A normal payments job"
+      },
+      {
+        "id": "b",
+        "text": "A way to move stolen money, with the risk on you"
+      },
+      {
+        "id": "c",
+        "text": "A safe side income"
+      },
+      {
+        "id": "d",
+        "text": "A bank service"
+      }
+    ],
+    "answer": "b",
+    "explain": "Receiving and forwarding money for a stranger is how stolen money is moved."
+  },
+  "hints": {
+    "nudge": "Where does the money you receive come from?",
+    "glow_order": [
+      "forward",
+      "cut",
+      "tell",
+      "amount",
+      "why",
+      "handle",
+      "assistant",
+      "rush"
+    ]
+  },
+  "sources": [
+    "ftc-job-scams",
+    "in-1930"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the account",
+      "title": "@dana_pay_assist",
+      "rows": [
+        {
+          "k": "Account age",
+          "v": "2 days",
+          "clue": "handle"
+        },
+        {
+          "k": "The job",
+          "v": "Receive and forward money",
+          "clue": "forward"
+        },
+        {
+          "k": "Your cut",
+          "v": "10%",
+          "clue": "cut"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Receive and forward jobs",
+          "v": "Are scams: the goods or money are often stolen",
+          "clue": "forward"
+        },
+        {
+          "k": "If you are approached",
+          "v": "Report it, and tell your bank"
+        }
+      ]
+    }
+  ]
+}

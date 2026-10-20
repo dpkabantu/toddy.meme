@@ -1,0 +1,282 @@
+{
+  "id": "c3-09",
+  "type": "hunt",
+  "chapter": 3,
+  "difficulty": 2,
+  "title": "The KYC Update",
+  "disguise": "support",
+  "intro": [
+    "A text says your bank account will be blocked today unless you complete your KYC in an app.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Messages",
+    "from": "VM-ORRIN",
+    "text": "Your KYC has expired. Install the Orrin KYC app…"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "sender",
+          "text": "VM-ORRIN"
+        }
+      ]
+    },
+    "context": "You did your KYC at the branch last year.",
+    "items": [
+      {
+        "time": [
+          "Today 9:05 AM"
+        ]
+      },
+      {
+        "msg": [
+          "Orrin Bank: your ",
+          {
+            "clue": "kyc",
+            "text": "KYC has expired"
+          },
+          ". Your account will be ",
+          {
+            "clue": "block",
+            "text": "blocked today"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          "Install the KYC app and update: ",
+          {
+            "clue": "link",
+            "text": "orrin-kyc-update.in/OrrinKYC.apk",
+            "link": true
+          }
+        ]
+      },
+      {
+        "msg": [
+          "Keep your ",
+          {
+            "clue": "otp",
+            "text": "card details and OTP"
+          },
+          " ready."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "sig",
+            "text": "Orrin Bank Customer Care"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "kyc": {
+      "label": "A sudden KYC deadline",
+      "strength": "strong",
+      "lens": "KYC \"expired\" with no notice.",
+      "why": "KYC-update texts and links are a well-known trick."
+    },
+    "block": {
+      "label": "Block-today threat",
+      "strength": "strong",
+      "lens": "Account blocked today unless you act.",
+      "why": "Banks do not block accounts over a missed text."
+    },
+    "link": {
+      "label": "An app file and a look-alike site",
+      "strength": "strong",
+      "lens": "The link is not the bank's address and ends in \".apk\".",
+      "why": "Never install a bank app from a link. Use the official app store."
+    },
+    "otp": {
+      "label": "Asks for card details and OTP",
+      "strength": "strong",
+      "lens": "It wants your card details and the OTP.",
+      "why": "No bank asks for your OTP or card details."
+    },
+    "sender": {
+      "label": "A bank-like name",
+      "strength": "harmless",
+      "lens": "VM-ORRIN looks official.",
+      "why": "Sender names are easy to copy."
+    },
+    "sig": {
+      "label": "Signed by Customer Care",
+      "strength": "harmless",
+      "lens": "It sounds like the bank.",
+      "why": "A signature proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Install the KYC app and update",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Open the real Orrin app, or visit the branch"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it and delete it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "trap": {
+    "title": "Install unknown app?",
+    "url": "OrrinKYC.apk",
+    "ask": "This app wants to read your messages and show over other apps. Install?",
+    "go": "Install",
+    "back": "Cancel"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported and deleted. Your bank's fraud team had the fake site blocked.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The real app showed your KYC as complete. The text was fake. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The fake app read your messages and OTPs and emptied your account.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Opening the real app, or asking at the branch, would have shown your KYC was fine.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "Banks do not update KYC through an app from a text. Use the official app or visit the branch.",
+  "quick_check": {
+    "q": "A text says your KYC has expired and you must install an app from a link or your account is blocked. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Install it quickly"
+      },
+      {
+        "id": "b",
+        "text": "Reply to say you already did it"
+      },
+      {
+        "id": "c",
+        "text": "Do not install it. Check in the real app or at the branch, and report the text"
+      },
+      {
+        "id": "d",
+        "text": "Share the OTP when asked"
+      }
+    ],
+    "answer": "c",
+    "explain": "KYC updates happen in the official app or at a branch, never through a text link."
+  },
+  "hints": {
+    "nudge": "Where does a bank really update your KYC?",
+    "glow_order": [
+      "kyc",
+      "block",
+      "link",
+      "otp"
+    ]
+  },
+  "sources": [
+    "in-rbi-beaware",
+    "in-certin-booklet",
+    "in-1930"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Who sent this",
+      "rows": [
+        {
+          "k": "Sender",
+          "v": "VM-ORRIN",
+          "clue": "sender"
+        },
+        {
+          "k": "Your KYC status",
+          "v": "Complete, from last year",
+          "clue": "kyc"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check link",
+      "title": "Where it goes",
+      "rows": [
+        {
+          "k": "Message says",
+          "v": "install the KYC app"
+        },
+        {
+          "k": "File type",
+          "v": "App installer (.apk)",
+          "clue": "link"
+        },
+        {
+          "k": "Real bank app comes from",
+          "v": "The official app store"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "KYC-update calls and links",
+          "v": "A common trick: use the official site or branch",
+          "clue": "kyc"
+        },
+        {
+          "k": "Does a bank ask for your OTP?",
+          "v": "Never",
+          "clue": "otp"
+        }
+      ]
+    }
+  ]
+}

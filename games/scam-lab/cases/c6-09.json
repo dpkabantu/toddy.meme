@@ -1,0 +1,250 @@
+{
+  "id": "c6-09",
+  "type": "hunt",
+  "chapter": 6,
+  "difficulty": 2,
+  "title": "The Visit",
+  "disguise": null,
+  "intro": [
+    "A long-distance friend wants to visit you. You have been burned by \"friends\" today, so you are wary.",
+    "But some messages are real. Mirage loves it when you stop trusting the honest ones.",
+    "Sniff carefully. Then decide."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Nora",
+    "text": "I booked my trip to visit you! ✈️"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "Nora"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "old",
+          "text": "Friends for 3 years, met twice"
+        }
+      ],
+      "avatar": {
+        "glyph": "✈️",
+        "clue": "pic"
+      }
+    },
+    "banner": [
+      "Private chat"
+    ],
+    "context": "You and Nora met at a conference, and have video-called many times.",
+    "items": [
+      {
+        "time": [
+          "7:30 PM"
+        ]
+      },
+      {
+        "msg": [
+          "I booked my trip! I land on ",
+          {
+            "clue": "when",
+            "text": "the 14th at 3 PM"
+          },
+          ". ✈️"
+        ]
+      },
+      {
+        "msg": [
+          "I will ",
+          {
+            "clue": "stay",
+            "text": "stay at a hotel"
+          },
+          ", so no need to arrange anything."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "call",
+            "text": "Can we do a video call on Sunday to plan the day?"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "nomoney",
+            "text": "I do not need anything from you, just a coffee together."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "name": {
+      "label": "A friend's name",
+      "strength": "harmless",
+      "lens": "Nora.",
+      "why": "A name alone proves nothing."
+    },
+    "old": {
+      "label": "Friends for three years",
+      "strength": "harmless",
+      "lens": "A long history, with two real meetings.",
+      "why": "Real friendships have real history."
+    },
+    "when": {
+      "label": "A clear plan",
+      "strength": "harmless",
+      "lens": "A date and a time.",
+      "why": "Specific plans are honest."
+    },
+    "stay": {
+      "label": "She pays her own way",
+      "strength": "harmless",
+      "lens": "She arranges her own stay.",
+      "why": "No burden on you."
+    },
+    "call": {
+      "label": "Offers a video call",
+      "strength": "harmless",
+      "lens": "She suggests a video call.",
+      "why": "A real friend is happy to appear on camera."
+    },
+    "nomoney": {
+      "label": "Asks for nothing",
+      "strength": "harmless",
+      "lens": "She wants only a coffee.",
+      "why": "A message that asks for nothing is usually honest."
+    },
+    "pic": {
+      "label": "Plane picture",
+      "strength": "harmless",
+      "lens": "A little plane.",
+      "why": "Pictures prove nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Have the video call on Sunday and plan the coffee"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "The video call was warm and normal. Nora came, you shared a coffee, and nobody asked for a thing.",
+      "toddy": "happy"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "Nothing bad happened. But a real friend's trip deserves a reply.",
+      "mirageSays": "Fine. Next!"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was a real friend. When every message looks like a scam, real friendships get hurt too.",
+      "mirageSays": "If you trust nothing, I win anyway."
+    }
+  },
+  "what_if": {
+    "block_report": "You have met, you have video-called, she pays her own way, offers a call and asks for nothing. That is how real friends look.",
+    "ignore": "Ignoring was safe. Recognising a real message is the skill: it asks for nothing secret and matches something you know."
+  },
+  "golden_rule": "A real friend has history, appears on video, pays their own way and asks for nothing.",
+  "quick_check": {
+    "q": "What made Nora's message honest?",
+    "options": [
+      {
+        "id": "a",
+        "text": "She said she loved you"
+      },
+      {
+        "id": "b",
+        "text": "A real history, a video call offered, and no request for money"
+      },
+      {
+        "id": "c",
+        "text": "She used an emoji"
+      },
+      {
+        "id": "d",
+        "text": "She is far away"
+      }
+    ],
+    "answer": "b",
+    "explain": "History, video and no money requested are the real signs."
+  },
+  "hints": {
+    "nudge": "What is this message actually asking you to do?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-romance",
+    "ftc-gift-cards"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the friend",
+      "title": "Nora",
+      "rows": [
+        {
+          "k": "Met in person?",
+          "v": "Twice",
+          "clue": "old"
+        },
+        {
+          "k": "Video calls?",
+          "v": "Many, and she offers another",
+          "clue": "call"
+        },
+        {
+          "k": "Asks for money?",
+          "v": "No",
+          "clue": "nomoney"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Never send money to someone you have not met",
+          "v": "Nora asks for none"
+        },
+        {
+          "k": "A real friend",
+          "v": "Appears on video and has history",
+          "clue": "call"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,125 @@
+{
+  "id": "c3-13",
+  "type": "rush",
+  "chapter": 3,
+  "difficulty": 2,
+  "title": "Code Requests",
+  "seconds": 60,
+  "intro": [
+    "Ten messages mention codes. One minute. Some were really sent to you.",
+    "Swipe left if it is a scam, right if it is safe. Or tap the buttons.",
+    "Careful: some are honest. Do not cry wolf."
+  ],
+  "cards": [
+    {
+      "id": "r1",
+      "app": "SMS",
+      "from": "Unknown number",
+      "text": "Sorry! I sent my login code to your number by mistake. Can you read it out to me?",
+      "scam": true,
+      "why": "A code sent \"by mistake\" is a trick to get you to hand over your own."
+    },
+    {
+      "id": "r2",
+      "app": "SMS",
+      "from": "Orrin Bank",
+      "text": "Your login code is 482913. Never share it with anyone, including Orrin staff. You just tried to log in.",
+      "scam": false,
+      "why": "You just tried to log in, and the text warns you never to share it."
+    },
+    {
+      "id": "r3",
+      "app": "SMS",
+      "from": "Delivery agent",
+      "text": "I am at your door. Tell me the 6-digit code you just got to hand over your parcel.",
+      "scam": true,
+      "why": "A stranger asking you to read out a code that you did not request."
+    },
+    {
+      "id": "r4",
+      "app": "Chirp",
+      "from": "Kiko",
+      "text": "Hey, locked out of my account. Can you get a code on your phone for me? Pls urgent",
+      "scam": true,
+      "why": "A friend's account may be taken over. Ask by phone before doing anything."
+    },
+    {
+      "id": "r5",
+      "app": "SMS",
+      "from": "Meridu Store",
+      "text": "Your order code is 773104. Show it at the shop to collect your lamp.",
+      "scam": false,
+      "why": "You ordered it yourself, and the code is for showing in person."
+    },
+    {
+      "id": "r6",
+      "app": "Mail",
+      "from": "Support",
+      "text": "To fix your account, send us the verification code on your screen.",
+      "scam": true,
+      "why": "No real support asks you to send them your code."
+    },
+    {
+      "id": "r7",
+      "app": "SMS",
+      "from": "Vantel Mobile",
+      "text": "Your code to log into the Vantel app is 118267. Do not share it with anyone.",
+      "scam": false,
+      "why": "You were logging in, and the message says not to share it."
+    },
+    {
+      "id": "r8",
+      "app": "SMS",
+      "from": "Unknown number",
+      "text": "You won! To claim, reply with the code we just texted you.",
+      "scam": true,
+      "why": "A prize that needs your code is a trap."
+    },
+    {
+      "id": "r9",
+      "app": "Mail",
+      "from": "Orrin Bank",
+      "text": "New sign-in on your account. If this was you, no action needed. If not, open the Orrin app.",
+      "scam": false,
+      "why": "It asks for nothing and sends you to your own app."
+    },
+    {
+      "id": "r10",
+      "app": "SMS",
+      "from": "Seller",
+      "text": "To send your money, I need the code your bank texted you. Tell me it now.",
+      "scam": true,
+      "why": "You never receive money by giving someone a code."
+    }
+  ],
+  "golden_rule": "A code is a key to your account. Never read it out or send it to anyone who asks.",
+  "quick_check": {
+    "q": "Someone says they sent a code to your phone by mistake and asks you to read it out. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Read it, it is not yours"
+      },
+      {
+        "id": "b",
+        "text": "Read it but change your password later"
+      },
+      {
+        "id": "c",
+        "text": "Do not share it. Delete the message"
+      },
+      {
+        "id": "d",
+        "text": "Ask them why"
+      }
+    ],
+    "answer": "c",
+    "explain": "A code sent \"by mistake\" is the trick. Never share a code."
+  },
+  "sources": [
+    "ftc-codes",
+    "in-certin-booklet",
+    "in-rbi-beaware"
+  ],
+  "checked_on": "2026-10-21"
+}

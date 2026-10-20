@@ -1,0 +1,235 @@
+{
+  "id": "c7-17",
+  "type": "hunt",
+  "chapter": 7,
+  "difficulty": 2,
+  "title": "The Boring Fund",
+  "disguise": null,
+  "intro": [
+    "A text from your bank about your monthly investment. After all those promises of fast riches, a plain one feels odd.",
+    "But some messages are real. Mirage loves it when you stop trusting the honest ones.",
+    "Sniff carefully. Then decide."
+  ],
+  "notify": {
+    "app": "Messages",
+    "from": "Orrin Bank",
+    "text": "Your monthly investment was processed"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "sender",
+          "text": "Orrin Bank"
+        }
+      ]
+    },
+    "context": "Last year you set up a small monthly investment in a plain index fund, yourself, in the Orrin app.",
+    "items": [
+      {
+        "time": [
+          "Today 9:00 AM"
+        ]
+      },
+      {
+        "msg": [
+          "Orrin Bank: your ",
+          {
+            "clue": "plan",
+            "text": "monthly investment of £50"
+          },
+          " into the ",
+          {
+            "clue": "fund",
+            "text": "Orrin Global Index Fund"
+          },
+          " was processed."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "risk",
+            "text": "Investments can go down as well as up."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "app",
+            "text": "See your holdings in the Orrin app."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "nothing",
+            "text": "You do not need to do anything."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "sender": {
+      "label": "Same thread as your bank texts",
+      "strength": "harmless",
+      "lens": "It sits with your past bank messages.",
+      "why": "A name proves little. What it asks matters."
+    },
+    "plan": {
+      "label": "A plan you set up",
+      "strength": "harmless",
+      "lens": "A small monthly amount you chose yourself.",
+      "why": "It matches something you did."
+    },
+    "fund": {
+      "label": "A plain fund",
+      "strength": "harmless",
+      "lens": "An ordinary index fund, no secret.",
+      "why": "Boring is a good sign."
+    },
+    "risk": {
+      "label": "A risk warning",
+      "strength": "harmless",
+      "lens": "It says investments can go down as well as up.",
+      "why": "Honest firms warn about risk."
+    },
+    "app": {
+      "label": "Look in your own app",
+      "strength": "harmless",
+      "lens": "It sends you to your own app.",
+      "why": "Pointing you to your own app is honest."
+    },
+    "nothing": {
+      "label": "Asks for nothing",
+      "strength": "harmless",
+      "lens": "No link, no code.",
+      "why": "A message that asks for nothing is usually honest."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Check my holdings in the Orrin app myself"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "The app showed the £50 had been added to your fund, as planned. Nothing unusual, and nothing to fear.",
+      "toddy": "happy"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "Nothing bad happened. A quick look in the app would have confirmed the plan was working.",
+      "mirageSays": "Fine. Next!"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was your own monthly plan. When every message looks like a scam, you stop trusting your own choices.",
+      "mirageSays": "If you trust nothing, I win anyway."
+    }
+  },
+  "what_if": {
+    "block_report": "It matched a plan you made, warned about risk, asked for nothing and sent you to your own app. Boring and honest.",
+    "ignore": "Ignoring was safe. Recognising a real message is the skill: it asks for nothing secret and matches something you know."
+  },
+  "golden_rule": "A plain, boring plan you set up yourself, with a risk warning and nothing to give, is usually honest. Check in your own app.",
+  "quick_check": {
+    "q": "What made this investment text honest?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It promised profit"
+      },
+      {
+        "id": "b",
+        "text": "It matched a plan you set up, warned about risk and asked for nothing"
+      },
+      {
+        "id": "c",
+        "text": "It mentioned a fund"
+      },
+      {
+        "id": "d",
+        "text": "It came in the morning"
+      }
+    ],
+    "answer": "b",
+    "explain": "No promises, a risk warning and nothing asked are the real signs."
+  },
+  "hints": {
+    "nudge": "What is this message actually asking you to do?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-invest-social",
+    "in-sebi-dos"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Who sent this text",
+      "rows": [
+        {
+          "k": "Same thread as your bank texts",
+          "v": "Yes",
+          "clue": "sender"
+        },
+        {
+          "k": "A plan you set up?",
+          "v": "Yes, last year",
+          "clue": "plan"
+        },
+        {
+          "k": "Promises profit?",
+          "v": "No, warns of risk",
+          "clue": "risk"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "No guaranteed returns",
+          "v": "All investments carry risk",
+          "clue": "risk"
+        },
+        {
+          "k": "How to check",
+          "v": "Look in your own app",
+          "clue": "app"
+        }
+      ]
+    }
+  ]
+}

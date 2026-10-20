@@ -1,0 +1,342 @@
+// Chapter 3: Bad Apps, Links & Wallet Traps, new cases. Invented brands only: Chirp, Orrin Bank, Vantel Mobile, Parkly, ShareView, Hedrio wallet, ZLV token.
+import { chat, mail, wallet } from '../author.mjs';
+
+export default {
+  // 1 ---------------------------------------------------------------
+  'wedding-apk': {
+    type: 'hunt', diff: 1, disguise: 'friend', title: 'The Wedding Card',
+    intro: 'A wedding invitation arrives in a chat from a number you do not know. It is a file, not a picture.',
+    notify: ['Chirp', 'Unknown number', 'You are invited to our wedding 💍 Download the card…'],
+    screen: chat({
+      app: 'chirp', name: '{sender|+91 98•••• 1204}', sub: '{unknown|Not in your contacts}', av: ['💍', 'pic'],
+      items: [
+        't: 7:52 PM',
+        'm: Namaste! 🙏 You are warmly invited to our {wedding|daughter\'s wedding}.',
+        'm: Please download the card to see the date and venue: {file|WeddingInvite.apk|link}',
+        'm: {open|Open it and tap "Install" to view.}',
+        'm: {tell|Do forward it to your family and friends too!}',
+      ],
+    }),
+    clues: {
+      file: ['An app file, not a card', 's', '".apk" is an app installer, not a picture or a PDF. A wedding card does not need an app.', 'Never install an app that arrives as a file in a chat.'],
+      unknown: ['A stranger', 's', 'The number is not in your contacts.', 'Be careful with files from numbers you do not know.'],
+      open: ['"Tap Install"', 's', 'To "view" the card you must install something on your phone.', 'Viewing a card never needs installing. The install is the attack.'],
+      tell: ['"Forward to everyone"', 's', 'It asks you to forward the file to your contacts.', 'Scam apps spread by making you send them on.'],
+      sender: ['An Indian mobile number', 'h', 'A normal-looking number.', 'A number proves nothing either way.'],
+      wedding: ['A wedding invitation', 'h', 'A friendly, ordinary reason to write.', 'The story is believable. That is why it works.'],
+      pic: ['Ring picture', 'h', 'A little ring.', 'Pictures prove nothing.'],
+    },
+    go: 'Download it and tap Install', trap: ['Install unknown app?', 'WeddingInvite.apk', 'This app wants to read your messages and show over other apps. Allow installing from this source?', 'Install', 'Cancel'],
+    verify: 'Ask the family on a number I already know',
+    win: 'Deleted and reported. Your phone company can now block more of these messages.',
+    checked: 'You rang your cousin. No wedding, no invitation, and the same file had reached half the family. Case cracked.',
+    lose: 'The app read your messages and codes, then used your payment apps. Your bank account was emptied.',
+    avoid: 'A wedding card is a picture or a PDF. Any card that needs an app is an attack. Calling someone you know takes a minute.',
+    rule: 'Never install an app from a file in a chat. A real card is a picture or a PDF.',
+    quick: ['A chat from an unknown number sends "WeddingInvite.apk" and asks you to install it. What do you do?', ['Install it, it is only a card', 'Install it but do not give permissions', 'Do not open it. Delete it and report the message', 'Forward it to family so they can see it'], 'c', 'An app file in a chat is never a card. Real apps come from the official app store.'],
+    nudge: 'What kind of file is a "card" that ends in .apk?',
+    sources: ['in-certin-booklet', 'in-1930'],
+    kit: {
+      who: ['Check sender', 'Who sent this', [['Number', 'Not in your contacts', 'unknown'], ['File type', 'App installer (.apk)', 'file'], ['Real cards come as', 'Picture or PDF']]],
+      adv: ['What advice says', [['Where to install apps from', 'Only the official app store or a trusted site'], ['Apps from links in chats', 'Never install them', 'open']]],
+    },
+  },
+
+  // 3 ---------------------------------------------------------------
+  'traffic-fine-app': {
+    type: 'hunt', diff: 2, disguise: 'admin', title: 'The Traffic Fine',
+    intro: 'A text says you owe a traffic fine. It wants you to install an app to pay.',
+    notify: ['Messages', 'TRF-FINE', 'Pending traffic fine. Install the app to pay…'],
+    screen: chat({
+      app: 'sms', name: '{sender|TRF-FINE}', context: 'You have not had any traffic fine recently.',
+      items: [
+        't: Today 10:18 AM',
+        'm: Traffic Department: you have a {fine|pending fine of ₹500}.',
+        'm: {suspend|Pay today or your driving licence will be suspended.}',
+        'm: Install the payment app: {link|trafficfine-pay.in/ChallanPay.apk|link}',
+        'm: {notice|Challan No. 88231/2026}',
+      ],
+    }),
+    clues: {
+      fine: ['A fine you do not know of', 's', 'You have no recent traffic offence.', 'A fine out of nowhere deserves a check, not a payment.'],
+      suspend: ['Threat to suspend', 's', 'Pay today or lose your licence.', 'A threat with a deadline is a pressure trick.'],
+      link: ['An app file and a look-alike site', 's', 'The link ends in ".apk" and is not an official address.', 'Official offices do not ask you to install an app from a link.'],
+      sender: ['An official-looking name', 'h', 'The sender is TRF-FINE.', 'Sender names are easy to type.'],
+      notice: ['A challan number', 'h', 'A number that looks official.', 'Numbers are easy to invent. Check on the official portal.'],
+    },
+    go: 'Install the app and pay', trap: ['Install unknown app?', 'ChallanPay.apk', 'This app wants to read your messages and show over other apps. Install?', 'Install', 'Cancel'],
+    verify: 'Check for fines on the official traffic website I type myself',
+    win: 'Reported and deleted. Your phone company can block the next one.',
+    checked: 'The official traffic website showed no fine on your vehicle. The text was fake. Case cracked.',
+    lose: 'The app read your messages and codes, then emptied your account while you waited for a receipt.',
+    avoid: 'Checking the official site would have shown no fine. A real office never asks you to install an app from a link.',
+    rule: 'A fine is paid on an official website you type yourself. Never install an app from a text.',
+    quick: ['A text says you owe a traffic fine and must install an app to pay. What is the best move?', ['Pay quickly to avoid suspension', 'Install the app but do not log in', 'Check on the official website you type yourself, and report the text', 'Reply to ask if it is real'], 'c', 'Fines are not paid through apps from texts. Check on the official site.'],
+    nudge: 'What kind of file is that link, and who asks you to install it?',
+    sources: ['in-certin-booklet', 'in-pib-alert', 'ftc-government'],
+    kit: {
+      who: ['Check sender', 'Who sent this', [['Number', 'A short code, no phone number'], ['Your recent offences', 'None', 'fine']]],
+      link: ['Check link', 'Where the link goes', [['Message says', 'install the app to pay'], ['File type', 'App installer (.apk)', 'link'], ['Official offices', 'Do not ask you to install apps']]],
+      adv: ['What advice says', [['Where to install apps from', 'Only the official app store'], ['Threats to suspend', 'A pressure trick', 'suspend']]],
+    },
+  },
+
+  // 5 ---------------------------------------------------------------
+  'screenshare-support': {
+    type: 'duel', diff: 3, disguise: 'support', title: 'The Remote Fixer',
+    intro: 'Your internet has been slow. A caller says Vantel Mobile can fix it, but needs to see your screen.',
+    notify: ['Messages', 'Vantel Support', 'Install ShareView to fix your internet'],
+    screen: chat({
+      app: 'sms', name: [{ text: 'Vantel Support', id: 'duel-name' }], sub: '{noreq|They called you first}', av: ['📞', 'logo'], banner: 'Text after a phone call',
+    }),
+    duel: {
+      start: 'n1',
+      nodes: {
+        n1: {
+          say: ['m: Hello, this is Vantel Support. {slow|We saw your internet is slow.}', 'm: To fix it, please install {app|ShareView} from this link: {link|vantel-fixnow.co/shareview|link}', 'm: Then read me the {code|9-digit code on the screen}.'],
+          replies: [['Why do I need to give you a code?', 'n2'], ['Installing now', 'n3'], ['I will hang up and report this', '!block_report']],
+        },
+        n2: {
+          say: ['m: It lets me see and fix your phone, like a mechanic. {safe|It is very safe.}', 'm: {rush|Hurry, or your line will be cut tonight.}'],
+          replies: [['OK, installing', 'n3'], ['I will call Vantel on the number on my bill instead', '!verify'], ['Hang up and report', '!block_report']],
+        },
+        n3: {
+          say: ['m: Great. Now open your {bank|banking app} so I can check your data use.', 'm: {pin|Type your PIN in the box, I will not look.}'],
+          replies: [['Opening it now', '!go_ahead'], ['No way. Hanging up, and I will call my bank.', '!block_report'], ['I will call Vantel on my bill\'s number', '!verify']],
+        },
+      },
+    },
+    clues: {
+      noreq: ['They contacted you', 's', 'You never asked for help. They called you.', 'Real support helps when you ask, not out of the blue.'],
+      slow: ['"We saw your internet is slow"', 's', 'They claim to know your problem without being told.', 'A caller who "knows" your problem is guessing.'],
+      app: ['A screen-sharing app', 's', 'It lets a stranger see and control your phone.', 'Install a screen-sharing app only if the company\'s official number says so.'],
+      link: ['Look-alike link', 's', 'vantel-fixnow.co is not Vantel\'s real site.', 'Real companies do not send you to look-alike sites.'],
+      code: ['The access code', 's', 'The code gives them control of your phone.', 'Never read out a code to someone who called you.'],
+      safe: ['"It is very safe"', 's', 'They reassure you before you ask.', 'Reassurance is a tool.'],
+      rush: ['"Line cut tonight"', 's', 'A threat to cut your line.', 'Pressure is a trick to stop you checking.'],
+      bank: ['"Open your banking app"', 's', 'A support call for internet has no reason to see your bank.', 'The moment your bank appears, it is a theft, not a fix.'],
+      pin: ['"Type your PIN"', 's', 'They ask for your PIN while watching.', 'No one honest ever needs your PIN.'],
+      logo: ['Phone picture', 'h', 'A little phone.', 'Pictures prove nothing.'],
+    },
+    actions: [['go_ahead', 'Open the banking app and type the PIN'], ['verify', 'Call Vantel on the number on my own bill'], ['block_report', 'Hang up and report the call']],
+    best: 'block_report', ok: ['verify'],
+    out: {
+      block_report: ['win', 'BLOCKED', 'You hung up and reported the number. Your phone company blocked it within a day.', 'Curses! Hung up on again!'],
+      verify: ['win', 'CHECKED', 'Vantel\'s real helpline said: "We never call to install apps or ask for codes." Case cracked.', 'Hmph. They checked.'],
+      go_ahead: ['bad', 'SCAMMED', 'The caller watched your PIN and moved your money while the app was open.', 'Thanks for the PIN!'],
+    },
+    whatif: { go_ahead: 'The word "bank" in a support call is the exit. No internet fix ever needs your bank app.', verify: 'Checking was smart. Reporting the number as well protects others.' },
+    rule: 'Never install a screen-sharing app or read out a code for someone who called you. Call the company on the number on your bill.',
+    quick: ['A "support" caller who phoned you asks you to install a screen-sharing app and read out a code. What do you do?', ['Do it, they are fixing the internet', 'Do it but close your bank app', 'Hang up. Call the company yourself, on the number on your bill', 'Ask them to prove who they are'], 'c', 'A caller proves nothing. Calling the company yourself does.'],
+    hints: ['What can a screen-sharing app do to your bank?', ['app', 'code', 'bank', 'pin', 'noreq', 'link', 'rush']],
+    sources: ['in-rbi-beaware', 'in-certin-booklet', 'ftc-techsupport'],
+    kit: {
+      who: ['Check the call', 'Vantel Support', [['Who called first?', 'They did', 'noreq'], ['Real Vantel helpline', 'On your bill'], ['Asked you to install', 'ShareView', 'app']]],
+      adv: ['What advice says', [['Screen-sharing apps', 'Install only if the official number from the company\'s website says so', 'app'], ['Does support need your PIN or bank app?', 'Never', 'pin']]],
+    },
+  },
+
+  // 7 ---------------------------------------------------------------
+  'qr-sticker': {
+    type: 'hunt', diff: 2, disguise: 'support', title: 'The Parking Sticker',
+    intro: 'You park in town. The machine is "out of order", but a sticker offers a QR code to pay.',
+    notify: ['Camera', 'QR code scanned', 'Opens: parkly-pay-now.top'],
+    screen: chat({
+      app: 'sms', name: '{site|parkly-pay-now.top}', context: 'You scanned a sticker stuck on the parking machine. It looks stuck on top of the machine\'s own printed code.',
+      items: [
+        't: Opened from a scanned QR code',
+        'm: Welcome to Parkly Pay. {fee|Pay ₹50 for 2 hours.}',
+        'm: {card|Enter your card number and PIN to pay.}',
+        'm: {sticker|The code was a sticker placed over the machine\'s own code.}',
+        'm: {outoforder|The machine is out of order. Only pay here.}',
+        'm: {logo|🅿️ Parkly}',
+      ],
+    }),
+    clues: {
+      site: ['Not the parking company\'s site', 's', 'parkly-pay-now.top is not the real parking address on the machine\'s own printed code.', 'A scanned code can lead anywhere. Check the address it opens.'],
+      card: ['Asks for your card PIN', 's', 'Paying never needs your card PIN.', 'Anyone who asks for your PIN is a thief.'],
+      sticker: ['A sticker over the real code', 's', 'Someone stuck a new code on top of the machine\'s own.', 'A code stuck on top of another is a warning sign. Run your finger over it.'],
+      outoforder: ['"Out of order, only pay here"', 's', 'It tells you to use only the sticker.', 'A real machine does not send you to a sticker.'],
+      fee: ['A normal fee', 'h', '₹50 for 2 hours.', 'The price is normal. It proves nothing.'],
+      logo: ['A parking logo', 'h', 'A parking sign.', 'Logos are easy to copy.'],
+    },
+    go: 'Enter my card number and PIN', trap: ['Parkly Pay', 'parkly-pay-now.top', 'Enter your card number and PIN to pay ₹50.', 'Pay ₹50', 'Close this page'],
+    verify: 'Pay in the parking company\'s own app, or at another machine',
+    win: 'You reported the sticker to the parking company. They scraped it off and warned other drivers.',
+    checked: 'The parking company\'s own app showed the bay and took your card safely. The sticker was fake. Case cracked.',
+    lose: 'The page copied your card and PIN. Money left your account within the hour.',
+    avoid: 'Paying in the company\'s own app, or at another machine, would have been safe. No parking payment needs your PIN.',
+    rule: 'Check a QR code before you scan or pay: is it a sticker over another code? Pay in the real company\'s own app.',
+    quick: ['A parking machine says it is out of order and shows a QR sticker that looks stuck on top. What do you do?', ['Scan it and pay', 'Scan it but skip the PIN', 'Pay in the company\'s own app or at another machine, and report the sticker', 'Ask a passer-by'], 'c', 'A sticker over a real code is the trick. Use the real company\'s own app.'],
+    nudge: 'Look at how the code is stuck on.',
+    sources: ['ftc-phishing', 'in-rbi-beaware'],
+    kit: {
+      link: ['Check the page', 'Where the code went', [['Address it opened', 'parkly-pay-now.top', 'site'], ['The company\'s real site', 'On the machine\'s printed code'], ['Code on the machine', 'Stuck over the old one', 'sticker']]],
+      adv: ['What advice says', [['Does paying need your PIN?', 'Never', 'card'], ['How to pay safely', 'In the company\'s own app, or another machine']]],
+    },
+  },
+
+  // 9 ---------------------------------------------------------------
+  'kyc-app': {
+    type: 'hunt', diff: 2, disguise: 'support', title: 'The KYC Update',
+    intro: 'A text says your bank account will be blocked today unless you complete your KYC in an app.',
+    notify: ['Messages', 'VM-ORRIN', 'Your KYC has expired. Install the Orrin KYC app…'],
+    screen: chat({
+      app: 'sms', name: '{sender|VM-ORRIN}', context: 'You did your KYC at the branch last year.',
+      items: [
+        't: Today 9:05 AM',
+        'm: Orrin Bank: your {kyc|KYC has expired}. Your account will be {block|blocked today}.',
+        'm: Install the KYC app and update: {link|orrin-kyc-update.in/OrrinKYC.apk|link}',
+        'm: Keep your {otp|card details and OTP} ready.',
+        'm: {sig|Orrin Bank Customer Care}',
+      ],
+    }),
+    clues: {
+      kyc: ['A sudden KYC deadline', 's', 'KYC "expired" with no notice.', 'KYC-update texts and links are a well-known trick.'],
+      block: ['Block-today threat', 's', 'Account blocked today unless you act.', 'Banks do not block accounts over a missed text.'],
+      link: ['An app file and a look-alike site', 's', 'The link is not the bank\'s address and ends in ".apk".', 'Never install a bank app from a link. Use the official app store.'],
+      otp: ['Asks for card details and OTP', 's', 'It wants your card details and the OTP.', 'No bank asks for your OTP or card details.'],
+      sender: ['A bank-like name', 'h', 'VM-ORRIN looks official.', 'Sender names are easy to copy.'],
+      sig: ['Signed by Customer Care', 'h', 'It sounds like the bank.', 'A signature proves nothing.'],
+    },
+    go: 'Install the KYC app and update', trap: ['Install unknown app?', 'OrrinKYC.apk', 'This app wants to read your messages and show over other apps. Install?', 'Install', 'Cancel'],
+    verify: 'Open the real Orrin app, or visit the branch',
+    win: 'Reported and deleted. Your bank\'s fraud team had the fake site blocked.',
+    checked: 'The real app showed your KYC as complete. The text was fake. Case cracked.',
+    lose: 'The fake app read your messages and OTPs and emptied your account.',
+    avoid: 'Opening the real app, or asking at the branch, would have shown your KYC was fine.',
+    rule: 'Banks do not update KYC through an app from a text. Use the official app or visit the branch.',
+    quick: ['A text says your KYC has expired and you must install an app from a link or your account is blocked. What do you do?', ['Install it quickly', 'Reply to say you already did it', 'Do not install it. Check in the real app or at the branch, and report the text', 'Share the OTP when asked'], 'c', 'KYC updates happen in the official app or at a branch, never through a text link.'],
+    nudge: 'Where does a bank really update your KYC?',
+    sources: ['in-rbi-beaware', 'in-certin-booklet', 'in-1930'],
+    kit: {
+      who: ['Check sender', 'Who sent this', [['Sender', 'VM-ORRIN', 'sender'], ['Your KYC status', 'Complete, from last year', 'kyc']]],
+      link: ['Check link', 'Where it goes', [['Message says', 'install the KYC app'], ['File type', 'App installer (.apk)', 'link'], ['Real bank app comes from', 'The official app store']]],
+      adv: ['What advice says', [['KYC-update calls and links', 'A common trick: use the official site or branch', 'kyc'], ['Does a bank ask for your OTP?', 'Never', 'otp']]],
+    },
+  },
+
+  // 11 --------------------------------------------------------------
+  'real-app-update': {
+    type: 'hunt', diff: 2, honest: true, title: 'The App Update',
+    intro: 'Your bank app says an update is ready. After the last few cases, you are nervous about apps.',
+    notify: ['Orrin app', 'Update available', 'A new version of Orrin is ready'],
+    screen: chat({
+      app: 'sms', name: '{sender|Orrin Bank}', context: 'The same message also appeared as a banner inside your Orrin app.',
+      items: [
+        't: Today 8:15 AM',
+        'm: Orrin Bank: a new version of the Orrin app is available.',
+        'm: {store|Update it from your phone\'s app store, as usual.}',
+        'm: {nolink|There is no link in this message.}',
+        'm: {never|We will never ask you to install an app from a message, or for your PIN or codes.}',
+      ],
+    }),
+    clues: {
+      sender: ['Same thread as your bank texts', 'h', 'It sits with your past messages from the bank.', 'A name proves little. What it asks matters.'],
+      store: ['Use your usual app store', 'h', 'It tells you to update in the official app store.', 'Updating in the official store is exactly right.'],
+      nolink: ['No link', 'h', 'There is nothing to click.', 'No link means nowhere to be tricked.'],
+      never: ['Safety reminder', 'h', 'It says the bank never asks you to install apps from messages, or for a PIN.', 'Real banks warn you about scams.'],
+    },
+    go: 'Open my phone\'s app store and update from there', good: 'The app store offered the new version of the Orrin app. You updated it there, and nothing else was needed.',
+    calm: 'It had no link, told you to use the official store and warned you about scams. That calm is what real messages look like.',
+    rule: 'Update apps in your phone\'s official app store. A real message never sends you a file or a link to install.',
+    quick: ['What made this app update message honest?', ['It mentioned the bank', 'It had no link and told you to update in the official app store', 'It came in the morning', 'It was short'], 'b', 'No link and the official store are the real signs.'],
+    sources: ['in-certin-booklet', 'in-rbi-beaware'],
+    kit: {
+      who: ['Check sender', 'Who sent this text', [['Same thread as your bank texts', 'Yes', 'sender'], ['Link in the message', 'None', 'nolink']]],
+      adv: ['What advice says', [['Where to install apps from', 'The official app store', 'store'], ['Apps from links in messages', 'Never']]],
+    },
+  },
+
+  // 13 --------------------------------------------------------------
+  'code-rush': {
+    type: 'rush', diff: 2, title: 'Code Requests',
+    intro: 'Ten messages mention codes. One minute. Some were really sent to you.',
+    cards: [
+      ['r1', 'SMS', 'Unknown number', 'Sorry! I sent my login code to your number by mistake. Can you read it out to me?', true, 'A code sent "by mistake" is a trick to get you to hand over your own.'],
+      ['r2', 'SMS', 'Orrin Bank', 'Your login code is 482913. Never share it with anyone, including Orrin staff. You just tried to log in.', false, 'You just tried to log in, and the text warns you never to share it.'],
+      ['r3', 'SMS', 'Delivery agent', 'I am at your door. Tell me the 6-digit code you just got to hand over your parcel.', true, 'A stranger asking you to read out a code that you did not request.'],
+      ['r4', 'Chirp', 'Kiko', 'Hey, locked out of my account. Can you get a code on your phone for me? Pls urgent', true, 'A friend\'s account may be taken over. Ask by phone before doing anything.'],
+      ['r5', 'SMS', 'Meridu Store', 'Your order code is 773104. Show it at the shop to collect your lamp.', false, 'You ordered it yourself, and the code is for showing in person.'],
+      ['r6', 'Mail', 'Support', 'To fix your account, send us the verification code on your screen.', true, 'No real support asks you to send them your code.'],
+      ['r7', 'SMS', 'Vantel Mobile', 'Your code to log into the Vantel app is 118267. Do not share it with anyone.', false, 'You were logging in, and the message says not to share it.'],
+      ['r8', 'SMS', 'Unknown number', 'You won! To claim, reply with the code we just texted you.', true, 'A prize that needs your code is a trap.'],
+      ['r9', 'Mail', 'Orrin Bank', 'New sign-in on your account. If this was you, no action needed. If not, open the Orrin app.', false, 'It asks for nothing and sends you to your own app.'],
+      ['r10', 'SMS', 'Seller', 'To send your money, I need the code your bank texted you. Tell me it now.', true, 'You never receive money by giving someone a code.'],
+    ],
+    rule: 'A code is a key to your account. Never read it out or send it to anyone who asks.',
+    quick: ['Someone says they sent a code to your phone by mistake and asks you to read it out. What do you do?', ['Read it, it is not yours', 'Read it but change your password later', 'Do not share it. Delete the message', 'Ask them why'], 'c', 'A code sent "by mistake" is the trick. Never share a code.'],
+    sources: ['ftc-codes', 'in-certin-booklet', 'in-rbi-beaware'],
+  },
+
+  // 18 --------------------------------------------------------------
+  'sign-claim': {
+    type: 'hunt', diff: 3, disguise: 'influencer', title: 'Sign to Claim',
+    intro: 'A site in a group chat says you can claim free tokens. Your Hedrio wallet pops up a request.',
+    notify: ['Hedrio wallet', 'Signature request', 'Sign this message to claim your 1,000 ZLV'],
+    screen: wallet({
+      site: '{site|zlv-airdrop-claim.xyz}', title: 'Sign this message?', context: 'You clicked "Claim 1,000 free ZLV" on a site you found in a group chat.',
+      rows: [['You get', '{free|1,000 ZLV, free}'], ['Message', '{msg|Allow this site to transfer any of your tokens}'], ['Signing for', '{who|An unknown site}'], ['Network fee', '{fee|None, signing only}']],
+      note: '{warning|Hedrio: signing this lets the site move your tokens without asking again.}',
+    }),
+    clues: {
+      site: ['Found in a chat, not official', 's', 'A claim site from a group chat is not the project\'s official page.', 'Only use links from the project\'s own official site.'],
+      free: ['"Free" tokens', 's', '1,000 ZLV for nothing.', 'Free tokens are the bait.'],
+      msg: ['"Transfer any of your tokens"', 's', 'The message gives the site power over all your tokens.', 'Read what you sign. A claim never needs power over your tokens.'],
+      who: ['An unknown site', 's', 'The wallet does not know this site.', 'An unknown site asking for a signature is a warning.'],
+      warning: ['Wallet warning', 's', 'Your own wallet is warning you.', 'Believe your wallet\'s warning.'],
+      fee: ['No fee', 'h', 'Signing costs nothing.', 'No fee does not make it safe. The signature is the danger.'],
+    },
+    go: 'Sign the message', verify: 'Reject, then look for the project\'s official claim page',
+    report: 'Reject and report the site',
+    noIgnore: true,
+    win: 'You rejected and reported the site. The wallet company added it to its warning list.',
+    checked: 'The project\'s own site announced no airdrop. The group link was a trap. Case cracked.',
+    lose: 'The signature handed over your tokens. They left your wallet in a minute.',
+    avoid: 'Reading the message, "transfer any of your tokens", was enough. Rejecting costs nothing.',
+    rule: 'Never sign a message you do not understand. A free claim never needs power over your tokens.',
+    quick: ['Your wallet asks you to sign a message that lets a site "transfer any of your tokens" to claim a free airdrop. What do you do?', ['Sign, it is free', 'Sign, and revoke later', 'Reject it. Check the project\'s official site', 'Sign with a small wallet'], 'c', 'Rejecting is free. Signing could cost everything.'],
+    nudge: 'Read what the message says you are allowing.',
+    sources: ['cafc-wallet', 'ftc-crypto'],
+    kit: {
+      who: ['Check the request', 'What you would sign', [['Message', 'Transfer any of your tokens', 'msg'], ['Site', 'Unknown', 'who']]],
+      link: ['Check the site', 'Where it came from', [['Found in', 'A group chat', 'site'], ['What it offers', 'Free tokens', 'free']]],
+      adv: ['What your wallet says', [['Wallet warning', 'It is warning you', 'warning']]],
+    },
+  },
+
+  // 19 --------------------------------------------------------------
+  'surprise-token': {
+    type: 'hunt', diff: 2, disguise: 'influencer', title: 'The Surprise Token',
+    intro: 'A new token appears in your wallet. You never bought it, and it comes with a message.',
+    notify: ['Hedrio wallet', 'New token received', '5,000 ZLV-BONUS'],
+    screen: wallet({
+      site: '{from|Sent by an unknown address}', title: 'You received 5,000 ZLV-BONUS', context: 'The token appeared in your wallet by itself.',
+      rows: [['Token', '{token|ZLV-BONUS (not verified)}'], ['Worth', '{worth|"$5,000" says the token\'s name}'], ['To sell it', '{link|Visit zlv-bonus-sell.xyz and connect your wallet|link}'], ['Sent', '{sent|By an address you do not know}']],
+      note: '{note|Tokens you never asked for can be a trap.}', buttons: ['Hide it', 'Visit the site'],
+    }),
+    clues: {
+      from: ['A stranger sent it', 's', 'You never asked for this token.', 'Unrequested tokens are a trap, not a gift.'],
+      token: ['An unverified token', 's', 'Your wallet marks it as unverified.', 'Unverified tokens are often traps.'],
+      worth: ['A big worth in the name', 's', 'The name itself claims a value.', 'A name can say anything.'],
+      link: ['A link to "sell" it', 's', 'You must connect your wallet to a site to sell it.', 'Connecting your wallet to an unknown site is how drainers work.'],
+      sent: ['From an unknown address', 's', 'A stranger\'s address.', 'Strangers do not give away value.'],
+      note: ['Your wallet\'s hint', 'h', 'Your wallet warns that unasked tokens can be a trap.', 'A good hint to believe.'],
+    },
+    go: 'Visit the site and sell it', verify: 'Ignore it and check the real token on its official site',
+    report: 'Hide the token and report it', noIgnore: true,
+    win: 'You hid it and reported it. The wallet company marked the token as spam.',
+    checked: 'The project\'s official site had no ZLV-BONUS token. It was a trap. Case cracked.',
+    lose: 'The site asked to connect your wallet and sign. Then your real tokens moved out.',
+    avoid: 'Leaving the token alone costs nothing. The "sell" site was the trap.',
+    rule: 'A token you never asked for is bait. Do not visit its link or connect your wallet.',
+    quick: ['A token you never bought appears in your wallet, with a link to sell it. What do you do?', ['Sell it quickly', 'Connect and look', 'Hide it, do not visit the site, and report it', 'Send it to a friend'], 'c', 'The link is the trap. Hide it and move on.'],
+    nudge: 'What does the token want you to do?',
+    sources: ['cafc-wallet', 'ftc-crypto'],
+    kit: {
+      who: ['Check the token', 'Where it came from', [['Sent by', 'An unknown address', 'sent'], ['Status', 'Not verified', 'token']]],
+      link: ['Check the link', 'Where it goes', [['It asks you to', 'Connect your wallet', 'link']]],
+      adv: ['What your wallet says', [['Wallet hint', 'Tokens you never asked for can be a trap', 'note']]],
+    },
+  },
+};

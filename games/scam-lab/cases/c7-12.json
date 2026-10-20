@@ -1,0 +1,347 @@
+{
+  "id": "c7-12",
+  "type": "hunt",
+  "chapter": 7,
+  "difficulty": 3,
+  "title": "Two New Tokens",
+  "disguise": "admin",
+  "intro": [
+    "Two new tokens are trending. Toddy wants to understand which is risky and which is a trap.",
+    "Neither is a guaranteed win. One is built so you can't get out.",
+    "Compare the facts."
+  ],
+  "notify": {
+    "app": "Browser",
+    "from": "Token scanner",
+    "text": "Two trending tokens"
+  },
+  "decide_q": "Which token is a trap, and what will you do?",
+  "screen": {
+    "app": "compare",
+    "context": "Two token pages from a token scanner, side by side.",
+    "panels": [
+      {
+        "label": "$PAWPRINT",
+        "avatar": {
+          "glyph": "🐾",
+          "clue": "logo_a"
+        },
+        "rows": [
+          {
+            "k": "Team",
+            "v": [
+              {
+                "clue": "team_a",
+                "text": "Named team, public profiles"
+              }
+            ]
+          },
+          {
+            "k": "Liquidity",
+            "v": [
+              {
+                "clue": "liq_a",
+                "text": "Locked for 2 years"
+              }
+            ]
+          },
+          {
+            "k": "Selling",
+            "v": [
+              {
+                "clue": "sell_a",
+                "text": "1% tax, anyone can sell"
+              }
+            ]
+          },
+          {
+            "k": "Website says",
+            "v": [
+              {
+                "clue": "risk_a",
+                "text": "\"Risky. Only buy what you can lose.\""
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "label": "$ROCKETPAW",
+        "avatar": {
+          "glyph": "🚀",
+          "clue": "logo_b"
+        },
+        "rows": [
+          {
+            "k": "Team",
+            "v": [
+              {
+                "clue": "team_b",
+                "text": "Anonymous"
+              }
+            ]
+          },
+          {
+            "k": "Liquidity",
+            "v": [
+              {
+                "clue": "liq_b",
+                "text": "Not locked; owner can remove it"
+              }
+            ]
+          },
+          {
+            "k": "Selling",
+            "v": [
+              {
+                "clue": "sell_b",
+                "text": "99% sell tax · most holders can't sell"
+              }
+            ]
+          },
+          {
+            "k": "Owner",
+            "v": [
+              {
+                "clue": "mint_b",
+                "text": "Can create unlimited new tokens"
+              }
+            ]
+          },
+          {
+            "k": "Website says",
+            "v": [
+              {
+                "clue": "hype_b",
+                "text": "\"1000x. Can't lose. Moon soon.\""
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "sell_b": {
+      "label": "99% sell tax",
+      "strength": "strong",
+      "lens": "You can buy but practically can't sell.",
+      "why": "A \"honeypot\": money goes in, never out."
+    },
+    "liq_b": {
+      "label": "Liquidity not locked",
+      "strength": "strong",
+      "lens": "The owner can pull the money pool.",
+      "why": "That's how a rug pull happens."
+    },
+    "mint_b": {
+      "label": "Unlimited minting",
+      "strength": "strong",
+      "lens": "The owner can print endless tokens.",
+      "why": "They can flood the market and crash the price."
+    },
+    "hype_b": {
+      "label": "\"Can't lose\"",
+      "strength": "strong",
+      "lens": "Guaranteed wins.",
+      "why": "Only scammers say you can't lose."
+    },
+    "team_b": {
+      "label": "Anonymous team",
+      "strength": "strong",
+      "lens": "No one to hold responsible.",
+      "why": "Weak sign alone, but with the rest it matters."
+    },
+    "team_a": {
+      "label": "Named team",
+      "strength": "harmless",
+      "lens": "Public team.",
+      "why": "More accountable, not a guarantee."
+    },
+    "liq_a": {
+      "label": "Locked liquidity",
+      "strength": "harmless",
+      "lens": "Locked for 2 years.",
+      "why": "The pool can't be pulled quickly."
+    },
+    "sell_a": {
+      "label": "Normal selling",
+      "strength": "harmless",
+      "lens": "Anyone can sell.",
+      "why": "You can get out."
+    },
+    "risk_a": {
+      "label": "Honest risk warning",
+      "strength": "harmless",
+      "lens": "It says it's risky.",
+      "why": "Honesty about risk is a good sign, though it's still risky."
+    },
+    "logo_a": {
+      "label": "Paw logo",
+      "strength": "harmless",
+      "lens": "A paw.",
+      "why": "Proves nothing."
+    },
+    "logo_b": {
+      "label": "Rocket logo",
+      "strength": "harmless",
+      "lens": "A rocket.",
+      "why": "Proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "pick_b",
+      "label": "Buy $ROCKETPAW, it promises 1000x",
+      "trap": true
+    },
+    {
+      "id": "verify",
+      "label": "Buy neither until you understand the risks"
+    },
+    {
+      "id": "block_report",
+      "label": "Avoid $ROCKETPAW and report it to the token scanner"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "trap": {
+    "title": "Buy $ROCKETPAW",
+    "url": "rocketpaw.fun/buy",
+    "ask": "Swap your ZLV for $ROCKETPAW. 1000x incoming!",
+    "go": "Buy now",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Reported. The scanner now labels $ROCKETPAW a honeypot.",
+      "mirageSays": "My honeypot, labelled!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Toddy waited and read more. A week later, $ROCKETPAW's owner pulled the liquidity.",
+      "mirageSays": "He just… waited?"
+    },
+    "pick_b": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "RUGGED",
+      "line": "The 99% sell tax trapped the coins, then the owner pulled the pool.",
+      "mirageSays": "Rug pulled!"
+    }
+  },
+  "what_if": {
+    "pick_b": "A 99% sell tax means you can't get out. Check selling and liquidity before anything else."
+  },
+  "golden_rule": "Before buying any new token, check you can actually sell it, and that the money pool is locked.",
+  "quick_check": {
+    "q": "A token has a 99% sell tax. What does that mean?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Great, nobody will sell"
+      },
+      {
+        "id": "b",
+        "text": "You can buy but can't really sell: a trap"
+      }
+    ],
+    "answer": "b",
+    "explain": "That's a honeypot."
+  },
+  "hints": {
+    "nudge": "Compare the Selling rows.",
+    "glow_order": [
+      "sell_b",
+      "liq_b",
+      "mint_b",
+      "hype_b",
+      "team_b"
+    ]
+  },
+  "sources": [
+    "ftc-crypto",
+    "chainalysis-2025",
+    "ic3-2024"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Run the token scan",
+      "title": "Token B",
+      "rows": [
+        {
+          "k": "Selling",
+          "v": "You can buy but practically cannot sell",
+          "clue": "sell_b"
+        },
+        {
+          "k": "Owner",
+          "v": "Can pull the money pool",
+          "clue": "liq_b"
+        },
+        {
+          "k": "Supply",
+          "v": "Owner can print endless tokens",
+          "clue": "mint_b"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check Token A",
+      "title": "The safer one",
+      "rows": [
+        {
+          "k": "Selling",
+          "v": "Anyone can sell",
+          "clue": "sell_a"
+        },
+        {
+          "k": "Money pool",
+          "v": "Locked for 2 years",
+          "clue": "liq_a"
+        },
+        {
+          "k": "Risk warning",
+          "v": "It says it is risky",
+          "clue": "risk_a"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the team",
+      "title": "Who is behind it",
+      "rows": [
+        {
+          "k": "Token A",
+          "v": "Public team",
+          "clue": "team_a"
+        },
+        {
+          "k": "Token B",
+          "v": "No one to hold responsible",
+          "clue": "team_b"
+        },
+        {
+          "k": "B promises",
+          "v": "Guaranteed wins",
+          "clue": "hype_b"
+        }
+      ]
+    }
+  ]
+}

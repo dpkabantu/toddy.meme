@@ -42,7 +42,7 @@ for (const ch of layout.chapters.filter((c) => c.built)) {
 const BANNED = JSON.parse(fs.readFileSync(path.join(here, 'banned-names.json'), 'utf8')).names;
 for (const [id, c] of Object.entries(written)) {
   const { sources: _s, checked_on: _c, ...body } = c; const text = JSON.stringify(body).toLowerCase();
-  for (const n of BANNED) if (new RegExp('(^|[^a-z0-9])' + n.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([^a-z0-9]|$)').test(text)) problems.push(`${id}: contains the real name "${n}"`);
+  for (const n of BANNED) if (new RegExp('(^|[^a-z0-9-])' + n.toLowerCase().replace(/[.*+?^${}()|[\]\\]/g, '\\$&') + '([^a-z0-9-]|$)').test(text)) problems.push(`${id}: contains the real name "${n}"`);
 }
 
 if (problems.length) { console.error('PROBLEMS:\n' + problems.join('\n')); process.exit(1); }

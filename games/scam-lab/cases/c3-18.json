@@ -1,0 +1,250 @@
+{
+  "id": "c3-18",
+  "type": "hunt",
+  "chapter": 3,
+  "difficulty": 3,
+  "title": "Sign to Claim",
+  "disguise": "influencer",
+  "intro": [
+    "A site in a group chat says you can claim free tokens. Your Hedrio wallet pops up a request.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Hedrio wallet",
+    "from": "Signature request",
+    "text": "Sign this message to claim your 1,000 ZLV"
+  },
+  "screen": {
+    "app": "wallet",
+    "site": [
+      {
+        "clue": "site",
+        "text": "zlv-airdrop-claim.xyz"
+      }
+    ],
+    "title": "Sign this message?",
+    "context": "You clicked \"Claim 1,000 free ZLV\" on a site you found in a group chat.",
+    "rows": [
+      {
+        "k": "You get",
+        "v": [
+          {
+            "clue": "free",
+            "text": "1,000 ZLV, free"
+          }
+        ]
+      },
+      {
+        "k": "Message",
+        "v": [
+          {
+            "clue": "msg",
+            "text": "Allow this site to transfer any of your tokens"
+          }
+        ]
+      },
+      {
+        "k": "Signing for",
+        "v": [
+          {
+            "clue": "who",
+            "text": "An unknown site"
+          }
+        ]
+      },
+      {
+        "k": "Network fee",
+        "v": [
+          {
+            "clue": "fee",
+            "text": "None, signing only"
+          }
+        ]
+      }
+    ],
+    "note": [
+      {
+        "clue": "warning",
+        "text": "Hedrio: signing this lets the site move your tokens without asking again."
+      }
+    ],
+    "buttons": [
+      "Reject",
+      "Approve"
+    ]
+  },
+  "clues": {
+    "site": {
+      "label": "Found in a chat, not official",
+      "strength": "strong",
+      "lens": "A claim site from a group chat is not the project's official page.",
+      "why": "Only use links from the project's own official site."
+    },
+    "free": {
+      "label": "\"Free\" tokens",
+      "strength": "strong",
+      "lens": "1,000 ZLV for nothing.",
+      "why": "Free tokens are the bait."
+    },
+    "msg": {
+      "label": "\"Transfer any of your tokens\"",
+      "strength": "strong",
+      "lens": "The message gives the site power over all your tokens.",
+      "why": "Read what you sign. A claim never needs power over your tokens."
+    },
+    "who": {
+      "label": "An unknown site",
+      "strength": "strong",
+      "lens": "The wallet does not know this site.",
+      "why": "An unknown site asking for a signature is a warning."
+    },
+    "warning": {
+      "label": "Wallet warning",
+      "strength": "strong",
+      "lens": "Your own wallet is warning you.",
+      "why": "Believe your wallet's warning."
+    },
+    "fee": {
+      "label": "No fee",
+      "strength": "harmless",
+      "lens": "Signing costs nothing.",
+      "why": "No fee does not make it safe. The signature is the danger."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Sign the message"
+    },
+    {
+      "id": "verify",
+      "label": "Reject, then look for the project's official claim page"
+    },
+    {
+      "id": "block_report",
+      "label": "Reject and report the site"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "You rejected and reported the site. The wallet company added it to its warning list.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The project's own site announced no airdrop. The group link was a trap. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The signature handed over your tokens. They left your wallet in a minute.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Reading the message, \"transfer any of your tokens\", was enough. Rejecting costs nothing.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "Never sign a message you do not understand. A free claim never needs power over your tokens.",
+  "quick_check": {
+    "q": "Your wallet asks you to sign a message that lets a site \"transfer any of your tokens\" to claim a free airdrop. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Sign, it is free"
+      },
+      {
+        "id": "b",
+        "text": "Sign, and revoke later"
+      },
+      {
+        "id": "c",
+        "text": "Reject it. Check the project's official site"
+      },
+      {
+        "id": "d",
+        "text": "Sign with a small wallet"
+      }
+    ],
+    "answer": "c",
+    "explain": "Rejecting is free. Signing could cost everything."
+  },
+  "hints": {
+    "nudge": "Read what the message says you are allowing.",
+    "glow_order": [
+      "site",
+      "free",
+      "msg",
+      "who",
+      "warning"
+    ]
+  },
+  "sources": [
+    "cafc-wallet",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the request",
+      "title": "What you would sign",
+      "rows": [
+        {
+          "k": "Message",
+          "v": "Transfer any of your tokens",
+          "clue": "msg"
+        },
+        {
+          "k": "Site",
+          "v": "Unknown",
+          "clue": "who"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the site",
+      "title": "Where it came from",
+      "rows": [
+        {
+          "k": "Found in",
+          "v": "A group chat",
+          "clue": "site"
+        },
+        {
+          "k": "What it offers",
+          "v": "Free tokens",
+          "clue": "free"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What your wallet says",
+      "rows": [
+        {
+          "k": "Wallet warning",
+          "v": "It is warning you",
+          "clue": "warning"
+        }
+      ]
+    }
+  ]
+}

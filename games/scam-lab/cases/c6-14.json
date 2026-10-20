@@ -1,0 +1,125 @@
+{
+  "id": "c6-14",
+  "type": "rush",
+  "chapter": 6,
+  "difficulty": 2,
+  "title": "Messages Inbox",
+  "seconds": 60,
+  "intro": [
+    "Ten messages from people who say they know you. One minute. Some are real.",
+    "Swipe left if it is a scam, right if it is safe. Or tap the buttons.",
+    "Careful: some are honest. Do not cry wolf."
+  ],
+  "cards": [
+    {
+      "id": "r1",
+      "app": "SMS",
+      "from": "Unknown number",
+      "text": "Hi Mum, my phone broke, this is my new number. Can you pay a bill for me? Urgent.",
+      "scam": true,
+      "why": "A new number, a money request and a rush: the classic \"Hi Mum\" scam."
+    },
+    {
+      "id": "r2",
+      "app": "Chirp",
+      "from": "Nora",
+      "text": "I land on the 14th at 3 PM! Video call on Sunday? No need to arrange anything.",
+      "scam": false,
+      "why": "A long-time friend with a clear plan, offering a video call, and asking for nothing."
+    },
+    {
+      "id": "r3",
+      "app": "Chirp",
+      "from": "Sofia, 29",
+      "text": "I feel like I have known you for years. Let us move to a private app. 💕",
+      "scam": true,
+      "why": "Fast love and a fast move off the app."
+    },
+    {
+      "id": "r4",
+      "app": "SMS",
+      "from": "Mr. Sharma (CEO)",
+      "text": "Are you at your desk? I need 5 gift vouchers urgently. Send the codes.",
+      "scam": true,
+      "why": "A \"boss\" on a new number asking for gift card codes."
+    },
+    {
+      "id": "r5",
+      "app": "SMS",
+      "from": "Dev (cousin)",
+      "text": "Wrong number? No, I am just saying hi. Coming to the wedding on Saturday?",
+      "scam": false,
+      "why": "A cousin you know, asking about a wedding you both know about."
+    },
+    {
+      "id": "r6",
+      "app": "Chirp",
+      "from": "Arvind, ship engineer",
+      "text": "My leave papers need ₹60,000. Please send it now, my love.",
+      "scam": true,
+      "why": "Someone far away who needs money for papers."
+    },
+    {
+      "id": "r7",
+      "app": "SMS",
+      "from": "Unknown number",
+      "text": "Hey, sorry, wrong number! But you seem nice. Let us chat? 😊",
+      "scam": true,
+      "why": "A \"wrong number\" that turns into a friendship is how long cons start."
+    },
+    {
+      "id": "r8",
+      "app": "Chirp",
+      "from": "Marco, 34",
+      "text": "My camera is broken again. Can you send me some money for a new phone?",
+      "scam": true,
+      "why": "Never appears on video, and then asks for money."
+    },
+    {
+      "id": "r9",
+      "app": "SMS",
+      "from": "Sister",
+      "text": "Dinner is at 7, bring dessert 🍰",
+      "scam": false,
+      "why": "Your sister, asking for dessert."
+    },
+    {
+      "id": "r10",
+      "app": "Chirp",
+      "from": "Leo",
+      "text": "I earn ₹80,000 a week trading. Let me show you how.",
+      "scam": true,
+      "why": "A friend you never met, offering secret earnings."
+    }
+  ],
+  "golden_rule": "People you have not met in person, who ask for money or move you away, are the ones to check. Call people you know on numbers you know.",
+  "quick_check": {
+    "q": "A \"wrong number\" message turns into a friendly chat, and later asks you to invest. What is going on?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A new friend"
+      },
+      {
+        "id": "b",
+        "text": "A long con that starts with a wrong number"
+      },
+      {
+        "id": "c",
+        "text": "A coincidence"
+      },
+      {
+        "id": "d",
+        "text": "A real mistake"
+      }
+    ],
+    "answer": "b",
+    "explain": "Long cons often start with a harmless wrong number."
+  },
+  "sources": [
+    "ftc-romance",
+    "ftc-family",
+    "ftc-gift-cards"
+  ],
+  "checked_on": "2026-10-21"
+}

@@ -55,7 +55,7 @@
       {
         "msg": [
           {
-            "clue": "usdt",
+            "clue": "stablecoin",
             "text": "Can you send 200 ZLUSD (a stablecoin) to this new wallet?"
           },
           " ",
@@ -76,7 +76,7 @@
     ]
   },
   "clues": {
-    "usdt": {
+    "stablecoin": {
       "label": "Crypto to a new wallet",
       "strength": "strong",
       "lens": "Money in crypto, to an address you've never seen.",
@@ -190,7 +190,7 @@
     "nudge": "What would make this easy to check?",
     "glow_order": [
       "nocall",
-      "usdt",
+      "stablecoin",
       "wallet",
       "urgent",
       "story"
@@ -235,7 +235,7 @@
         {
           "k": "Send money in",
           "v": "Crypto, to an address you have never seen",
-          "clue": "usdt"
+          "clue": "stablecoin"
         },
         {
           "k": "A wallet you used with Kiko?",

@@ -2,146 +2,144 @@
   "id": "c3-01",
   "type": "hunt",
   "chapter": 3,
-  "difficulty": 2,
-  "title": "The Free Airdrop",
-  "disguise": "influencer",
+  "difficulty": 1,
+  "title": "The Wedding Card",
+  "disguise": "friend",
   "intro": [
-    "Chapter 3, Toddy: free money. The oldest bait there is.",
-    "Someone replied to the official TODDY post with a \"free airdrop\".",
-    "Sniff the reply before you touch anything."
+    "A wedding invitation arrives in a chat from a number you do not know. It is a file, not a picture.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Replies to @ToddyOfficial",
-    "text": "🎁 5,000 $TODDY airdrop live now!"
+    "from": "Unknown number",
+    "text": "You are invited to our wedding 💍 Download the card…"
   },
   "screen": {
     "app": "chirp",
     "head": {
       "name": [
         {
-          "clue": "name",
-          "text": "TODDY Airdrop 🎁"
+          "clue": "sender",
+          "text": "+91 98•••• 1204"
         }
       ],
       "sub": [
         {
-          "clue": "handle",
-          "text": "@toddy_offical_drop"
+          "clue": "unknown",
+          "text": "Not in your contacts"
         }
       ],
       "avatar": {
-        "glyph": "☾",
-        "clue": "avatar"
+        "glyph": "💍",
+        "clue": "pic"
       }
     },
-    "context": "A reply under the real TODDY account's latest post.",
     "items": [
       {
-        "msg": [
-          {
-            "clue": "free",
-            "text": "🎁 5,000 $TODDY airdrop for the community!"
-          }
+        "time": [
+          "7:52 PM"
         ]
       },
       {
         "msg": [
-          "Claim at ",
+          "Namaste! 🙏 You are warmly invited to our ",
           {
-            "clue": "link",
-            "text": "toddy-claim.xyz",
+            "clue": "wedding",
+            "text": "daughter's wedding"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          "Please download the card to see the date and venue: ",
+          {
+            "clue": "file",
+            "text": "WeddingInvite.apk",
             "link": true
-          },
-          " — ",
-          {
-            "clue": "connect",
-            "text": "connect your wallet to receive"
           }
         ]
       },
       {
         "msg": [
           {
-            "clue": "rush",
-            "text": "⏱ First 500 wallets only!"
-          },
-          " ",
+            "clue": "open",
+            "text": "Open it and tap \"Install\" to view."
+          }
+        ]
+      },
+      {
+        "msg": [
           {
-            "clue": "likes",
-            "text": "❤️ 2.4K"
+            "clue": "tell",
+            "text": "Do forward it to your family and friends too!"
           }
         ]
       }
     ]
   },
   "clues": {
-    "handle": {
-      "label": "Misspelled handle",
+    "file": {
+      "label": "An app file, not a card",
       "strength": "strong",
-      "lens": "@toddy_offi-c-al_drop. \"offical\" is missing an i, and it's not the real account.",
-      "why": "Look-alike accounts reply under real posts to borrow trust."
+      "lens": "\".apk\" is an app installer, not a picture or a PDF. A wedding card does not need an app.",
+      "why": "Never install an app that arrives as a file in a chat."
     },
-    "link": {
-      "label": "Unofficial link",
+    "unknown": {
+      "label": "A stranger",
       "strength": "strong",
-      "lens": "toddy-claim.xyz is not toddy.meme.",
-      "why": "Only trust links from the official website itself."
+      "lens": "The number is not in your contacts.",
+      "why": "Be careful with files from numbers you do not know."
     },
-    "connect": {
-      "label": "\"Connect your wallet\"",
+    "open": {
+      "label": "\"Tap Install\"",
       "strength": "strong",
-      "lens": "Connecting to a fake site lets it ask your wallet to sign away your coins.",
-      "why": "\"Connect to claim\" is the most common way wallets get drained."
+      "lens": "To \"view\" the card you must install something on your phone.",
+      "why": "Viewing a card never needs installing. The install is the attack."
     },
-    "rush": {
-      "label": "First 500 only",
+    "tell": {
+      "label": "\"Forward to everyone\"",
       "strength": "strong",
-      "lens": "A tiny window to make you hurry.",
-      "why": "Scarcity is pressure."
+      "lens": "It asks you to forward the file to your contacts.",
+      "why": "Scam apps spread by making you send them on."
     },
-    "free": {
-      "label": "Free tokens",
-      "strength": "strong",
-      "lens": "Free tokens out of nowhere.",
-      "why": "Surprise free money is always bait."
-    },
-    "name": {
-      "label": "TODDY in the name",
+    "sender": {
+      "label": "An Indian mobile number",
       "strength": "harmless",
-      "lens": "The display name says TODDY.",
-      "why": "Anyone can put a brand in their name. Check the handle."
+      "lens": "A normal-looking number.",
+      "why": "A number proves nothing either way."
     },
-    "avatar": {
-      "label": "Moon logo",
+    "wedding": {
+      "label": "A wedding invitation",
       "strength": "harmless",
-      "lens": "A copy of the TODDY moon.",
-      "why": "Logos are easy to copy."
+      "lens": "A friendly, ordinary reason to write.",
+      "why": "The story is believable. That is why it works."
     },
-    "likes": {
-      "label": "Lots of likes",
+    "pic": {
+      "label": "Ring picture",
       "strength": "harmless",
-      "lens": "2.4K likes.",
-      "why": "Likes can be bought or botted. They prove nothing either way."
+      "lens": "A little ring.",
+      "why": "Pictures prove nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Claim the airdrop",
+      "label": "Download it and tap Install",
       "trap": true
     },
     {
-      "id": "verify",
-      "label": "Check toddy.meme for any official airdrop news"
+      "id": "ignore",
+      "label": "Ignore it"
     },
     {
-      "id": "ignore",
-      "label": "Scroll past"
+      "id": "verify",
+      "label": "Ask the family on a number I already know"
     },
     {
       "id": "block_report",
-      "label": "Report the fake account"
+      "label": "Report it and delete it"
     }
   ],
   "best_action": "block_report",
@@ -150,142 +148,122 @@
     "ignore"
   ],
   "trap": {
-    "title": "TODDY Airdrop · Claim",
-    "url": "toddy-claim.xyz",
-    "ask": "Connect your wallet and approve to receive 5,000 $TODDY.",
-    "go": "Connect & approve",
-    "back": "Close this page"
+    "title": "Install unknown app?",
+    "url": "WeddingInvite.apk",
+    "ask": "This app wants to read your messages and show over other apps. Allow installing from this source?",
+    "go": "Install",
+    "back": "Cancel"
   },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "BLOCKED",
-      "line": "Reported. The fake account was removed before it reached more of the community.",
-      "mirageSays": "My beautiful airdrop!"
+      "stamp": "REPORTED",
+      "line": "Deleted and reported. Your phone company can now block more of these messages.",
+      "mirageSays": "Not my lovely scam!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "toddy.meme says nothing about an airdrop. Case cracked.",
-      "mirageSays": "They checked the real site?!"
+      "line": "You rang your cousin. No wedding, no invitation, and the same file had reached half the family. Case cracked.",
+      "mirageSays": "Hmph. They checked."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You scrolled past safely. Reporting would protect the next person.",
-      "mirageSays": "Fine, someone else will click."
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "The \"claim\" approved the site to empty the wallet.",
-      "mirageSays": "Free for me, anyway!"
+      "stamp": "SCAMMED",
+      "line": "The app read your messages and codes, then used your payment apps. Your bank account was emptied.",
+      "mirageSays": "Thanks for the details!"
     }
   },
   "what_if": {
-    "go_ahead": "Checking toddy.meme first would have shown there was no airdrop.",
-    "ignore": "Scrolling past was safe; a quick report helps everyone.",
-    "verify": "Checking was right. Reporting the fake helps others."
+    "go_ahead": "A wedding card is a picture or a PDF. Any card that needs an app is an attack. Calling someone you know takes a minute.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
   },
-  "golden_rule": "Never \"connect your wallet\" to claim free tokens. Check the official website first.",
+  "golden_rule": "Never install an app from a file in a chat. A real card is a picture or a PDF.",
   "quick_check": {
-    "q": "A reply under an official post offers free tokens if you connect your wallet. What do you do?",
+    "q": "A chat from an unknown number sends \"WeddingInvite.apk\" and asks you to install it. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Connect quickly before it runs out"
+        "text": "Install it, it is only a card"
       },
       {
         "id": "b",
-        "text": "Check the official website, then report the reply"
+        "text": "Install it but do not give permissions"
       },
       {
         "id": "c",
-        "text": "Connect a small wallet only"
+        "text": "Do not open it. Delete it and report the message"
+      },
+      {
+        "id": "d",
+        "text": "Forward it to family so they can see it"
       }
     ],
-    "answer": "b",
-    "explain": "Real airdrops are announced on the official site. Look-alike replies are the trap."
+    "answer": "c",
+    "explain": "An app file in a chat is never a card. Real apps come from the official app store."
   },
   "hints": {
-    "nudge": "Read the handle letter by letter.",
+    "nudge": "What kind of file is a \"card\" that ends in .apk?",
     "glow_order": [
-      "connect",
-      "link",
-      "handle",
-      "free",
-      "rush"
+      "file",
+      "unknown",
+      "open",
+      "tell"
     ]
   },
   "sources": [
-    "ftc-crypto",
-    "ftc-phishing",
-    "cafc-wallet"
+    "in-certin-booklet",
+    "in-1930"
   ],
-  "checked_on": "2026-10-13",
+  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check account",
-      "title": "@toddy_offi-c-al_drop",
+      "label": "Check sender",
+      "title": "Who sent this",
       "rows": [
         {
-          "k": "Handle",
-          "v": "Spelled \"offical\", not the real account",
-          "clue": "handle"
+          "k": "Number",
+          "v": "Not in your contacts",
+          "clue": "unknown"
         },
         {
-          "k": "Display name",
-          "v": "Says TODDY",
-          "clue": "name"
+          "k": "File type",
+          "v": "App installer (.apk)",
+          "clue": "file"
         },
         {
-          "k": "Real account",
-          "v": "@ToddyOfficial"
-        }
-      ]
-    },
-    {
-      "id": "link",
-      "icon": "🔗",
-      "label": "Check link",
-      "title": "Where it goes",
-      "rows": [
-        {
-          "k": "The link opens",
-          "v": "toddy-claim.xyz",
-          "clue": "link"
-        },
-        {
-          "k": "Real site",
-          "v": "toddy.meme"
-        },
-        {
-          "k": "It asks you to",
-          "v": "Connect your wallet",
-          "clue": "connect"
+          "k": "Real cards come as",
+          "v": "Picture or PDF"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Official page",
-      "title": "What TODDY says",
+      "label": "Official advice",
+      "title": "What advice says",
       "rows": [
         {
-          "k": "Free tokens for replies?",
-          "v": "Never"
+          "k": "Where to install apps from",
+          "v": "Only the official app store or a trusted site"
         },
         {
-          "k": "Free tokens out of nowhere",
-          "v": "Not a thing TODDY does",
-          "clue": "free"
+          "k": "Apps from links in chats",
+          "v": "Never install them",
+          "clue": "open"
         }
       ]
     }

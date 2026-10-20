@@ -2,274 +2,289 @@
   "id": "c7-01",
   "type": "hunt",
   "chapter": 7,
-  "difficulty": 2,
-  "title": "The Pump Group",
+  "difficulty": 1,
+  "title": "The Free Tips Group",
   "disguise": "influencer",
   "intro": [
-    "Chapter 7: hype. The scam where the crowd is the bait.",
-    "Toddy was added to a \"VIP signals\" group.",
-    "Sniff the big announcement."
+    "A stranger adds you to a group that shares free stock tips. The group looks very busy and very happy.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Kelvaro Signals VIP 🚀",
-    "text": "🚨 BIG PUMP TONIGHT 20:00 🚨"
+    "from": "Stock Gurus India",
+    "text": "Welcome! Free tips, 90% accuracy"
   },
   "screen": {
     "app": "chirp",
     "head": {
       "name": [
         {
-          "clue": "group",
-          "text": "Kelvaro Signals VIP 🚀"
+          "clue": "name",
+          "text": "Stock Gurus India"
         }
       ],
       "sub": [
         {
           "clue": "members",
-          "text": "48,201 members · only admins can post"
+          "text": "3,200 members"
         }
       ],
       "avatar": {
-        "glyph": "🚀",
-        "clue": "avatar"
+        "glyph": "📈",
+        "clue": "pic"
       }
     },
     "banner": [
       {
         "clue": "added",
-        "text": "An admin added you to this group"
+        "text": "You were added by someone you do not know"
       }
     ],
     "items": [
       {
-        "msg": [
-          {
-            "clue": "pump",
-            "text": "🚨 At exactly 20:00 we all buy $ROCKETPAW 🚨"
-          }
+        "time": [
+          "9:10 AM"
         ]
       },
       {
         "msg": [
+          "Welcome! Our tips have ",
           {
-            "clue": "x100",
-            "text": "100x guaranteed!"
+            "clue": "acc",
+            "text": "90% accuracy"
           },
-          " ",
-          {
-            "clue": "hold",
-            "text": "Don't sell before 10x!!"
-          }
+          " and double your money in a week. 🚀"
         ]
       },
       {
         "msg": [
+          {
+            "clue": "proof",
+            "text": "Members made ₹5 lakh yesterday!"
+          },
+          " [screenshot]"
+        ]
+      },
+      {
+        "msg": [
+          "For the next VIP tip, ",
           {
             "clue": "vip",
-            "text": "VIP members got the coin name 5 minutes early (VIP = 0.5 ZLV)."
+            "text": "pay ₹10,000 to join our VIP room"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "rush",
+            "text": "Only 10 VIP seats left today."
           }
         ]
       },
       {
         "msg": [
           {
-            "clue": "gif",
-            "text": "🚀🚀🚀 [rocket GIF]"
+            "clue": "guar",
+            "text": "Profit guaranteed or your money back."
           }
         ]
       }
     ]
   },
   "clues": {
-    "pump": {
-      "label": "Everyone buys at one time",
-      "strength": "strong",
-      "lens": "A coordinated buy at a set minute.",
-      "why": "Pump-and-dumps make the price jump, then organisers sell on you."
-    },
-    "x100": {
-      "label": "Guaranteed 100x",
-      "strength": "strong",
-      "lens": "A guaranteed 100x.",
-      "why": "Only scammers guarantee profits."
-    },
-    "hold": {
-      "label": "\"Don't sell\"",
-      "strength": "strong",
-      "lens": "They tell you not to sell.",
-      "why": "Your holding lets them sell at the top."
-    },
-    "vip": {
-      "label": "VIPs get it first",
-      "strength": "strong",
-      "lens": "Paying members buy before you.",
-      "why": "Early buyers are the ones who profit when you buy."
-    },
     "added": {
       "label": "Added without asking",
       "strength": "strong",
-      "lens": "You never joined.",
-      "why": "Scam groups mass-add people."
+      "lens": "You never asked to join.",
+      "why": "Unwanted groups are how scams find people."
+    },
+    "acc": {
+      "label": "\"90% accuracy\"",
+      "strength": "strong",
+      "lens": "No one predicts markets with 90% accuracy.",
+      "why": "No honest adviser promises this."
+    },
+    "proof": {
+      "label": "Screenshots of big profits",
+      "strength": "strong",
+      "lens": "Anyone can make one.",
+      "why": "Never trust a screenshot."
+    },
+    "vip": {
+      "label": "Pay to join the VIP room",
+      "strength": "strong",
+      "lens": "You pay for \"better\" tips.",
+      "why": "The VIP fee is the real business."
+    },
+    "rush": {
+      "label": "Only 10 seats left",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
+    },
+    "guar": {
+      "label": "\"Profit guaranteed\"",
+      "strength": "strong",
+      "lens": "No investment is guaranteed.",
+      "why": "There are no guaranteed returns."
     },
     "members": {
-      "label": "Big member count",
+      "label": "3,200 members",
       "strength": "harmless",
-      "lens": "48,201 members.",
-      "why": "Bots and fake accounts inflate numbers. Proves nothing alone."
+      "lens": "A big, busy group.",
+      "why": "Many of the members are fake, and a crowd proves nothing."
     },
-    "group": {
-      "label": "Group name",
+    "name": {
+      "label": "A confident name",
       "strength": "harmless",
-      "lens": "\"VIP\" in the name.",
-      "why": "Names prove nothing."
+      "lens": "Stock Gurus India.",
+      "why": "Names are easy to invent."
     },
-    "gif": {
-      "label": "Rocket GIF",
+    "pic": {
+      "label": "Chart picture",
       "strength": "harmless",
-      "lens": "Rocket emojis and a GIF.",
-      "why": "Hype decoration. Not evidence alone."
-    },
-    "avatar": {
-      "label": "Rocket picture",
-      "strength": "harmless",
-      "lens": "A rocket.",
-      "why": "Proves nothing."
+      "lens": "A little chart.",
+      "why": "Pictures prove nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Buy at 20:00 with everyone"
+      "label": "Pay ₹10,000 for the VIP room"
     },
     {
       "id": "ignore",
-      "label": "Leave the group"
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Check whether the group's adviser is registered, on the regulator's own site"
     },
     {
       "id": "block_report",
-      "label": "Leave and report the group"
+      "label": "Leave the group and report it"
     }
   ],
   "best_action": "block_report",
   "acceptable_actions": [
+    "verify",
     "ignore"
   ],
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "BLOCKED",
-      "line": "Reported. Fewer people walked into the pump that night.",
-      "mirageSays": "My crowd is shrinking!"
+      "stamp": "REPORTED",
+      "line": "You left and reported. The group was removed before it reached more people.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The regulator's own site had no adviser by that name. The group was unregistered. Case cracked.",
+      "mirageSays": "Hmph. They checked."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You left. Reporting too helps get the group shut down.",
-      "mirageSays": "One less buyer."
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "DUMPED",
-      "line": "The price spiked for 40 seconds. The admins sold. Toddy was left holding a coin worth almost nothing.",
-      "mirageSays": "Thanks for buying my bags!"
+      "stamp": "SCAMMED",
+      "line": "The VIP tips lost money, the \"guarantee\" never came, and the group vanished.",
+      "mirageSays": "Thanks for the details!"
     }
   },
   "what_if": {
-    "go_ahead": "In a pump, the people who announce it have already bought. You are the exit."
+    "go_ahead": "No adviser can guarantee profit. Checking that an adviser is registered takes a minute.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
   },
-  "golden_rule": "If a group tells you exactly when to buy and promises 100x, you are the one being sold to.",
+  "golden_rule": "No one can guarantee profit. Take investment advice only from a registered adviser, and never from tips in a group.",
   "quick_check": {
-    "q": "Who usually makes money in a pump-and-dump group?",
+    "q": "A group promises 90% accuracy and guaranteed profit if you pay ₹10,000 for VIP tips. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Everyone who buys at the signal"
+        "text": "Pay, it is a small price"
       },
       {
         "id": "b",
-        "text": "The organisers who bought first and sell on the crowd"
+        "text": "Pay a smaller VIP plan"
+      },
+      {
+        "id": "c",
+        "text": "Leave and report it. Use only a registered adviser"
+      },
+      {
+        "id": "d",
+        "text": "Share it with friends"
       }
     ],
-    "answer": "b",
-    "explain": "The crowd's buying is what lets the organisers cash out."
+    "answer": "c",
+    "explain": "No guaranteed profit exists. Hot tips in groups are a trap."
   },
   "hints": {
-    "nudge": "Who buys first, and who buys last?",
+    "nudge": "Can anyone really guarantee a profit?",
     "glow_order": [
-      "pump",
+      "added",
+      "acc",
+      "proof",
       "vip",
-      "x100",
-      "hold",
-      "added"
+      "rush",
+      "guar"
     ]
   },
   "sources": [
-    "ftc-crypto",
-    "chainalysis-2025",
-    "ic3-2024"
+    "in-sebi-dos",
+    "ftc-invest-social"
   ],
-  "checked_on": "2026-10-13",
+  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check the group",
-      "title": "Kelvaro Signals VIP",
+      "title": "Stock Gurus India",
       "rows": [
         {
-          "k": "You joined?",
-          "v": "No, you were added",
+          "k": "Added by",
+          "v": "Someone you do not know",
           "clue": "added"
         },
         {
-          "k": "Members",
-          "v": "48,201",
-          "clue": "members"
+          "k": "Registered adviser?",
+          "v": "No"
         },
         {
-          "k": "Name",
-          "v": "Has \"VIP\" in it",
-          "clue": "group"
-        }
-      ]
-    },
-    {
-      "id": "link",
-      "icon": "🔗",
-      "label": "Check the plan",
-      "title": "What they say",
-      "rows": [
-        {
-          "k": "Buy at",
-          "v": "A set minute, all together",
-          "clue": "pump"
-        },
-        {
-          "k": "Promise",
-          "v": "A guaranteed 100x",
-          "clue": "x100"
-        },
-        {
-          "k": "Advice",
-          "v": "Do not sell",
-          "clue": "hold"
+          "k": "Claims",
+          "v": "90% accuracy, guaranteed",
+          "clue": "acc"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Check who profits",
-      "title": "Who buys first",
+      "label": "Official advice",
+      "title": "What advice says",
       "rows": [
         {
-          "k": "Paying members",
-          "v": "Buy before you",
-          "clue": "vip"
+          "k": "Hot tips",
+          "v": "Do not base decisions on them",
+          "clue": "acc"
+        },
+        {
+          "k": "Who to take advice from",
+          "v": "A registered adviser"
         }
       ]
     }

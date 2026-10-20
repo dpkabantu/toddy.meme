@@ -1,0 +1,305 @@
+{
+  "id": "c6-15",
+  "type": "hunt",
+  "chapter": 6,
+  "difficulty": 3,
+  "title": "The Recovery Agent",
+  "disguise": "support",
+  "intro": [
+    "You lost money in a scam last month. A \"recovery agent\" says he can get it back, for a fee.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Mail",
+    "from": "Recovery Desk",
+    "text": "We can recover your lost funds"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        {
+          "clue": "from",
+          "text": "Fund Recovery Desk"
+        }
+      ],
+      "addr": [
+        {
+          "clue": "addr",
+          "text": "help@fundrecovery-desk.live"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "We can recover your lost funds"
+        }
+      ],
+      "time": [
+        "3:10 PM"
+      ]
+    },
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "name",
+            "text": "Dear Victim,"
+          }
+        ]
+      },
+      {
+        "p": [
+          "We know you ",
+          {
+            "clue": "knowloss",
+            "text": "lost ₹1,20,000 to an online scam last month"
+          },
+          "."
+        ]
+      },
+      {
+        "p": [
+          "Our team can ",
+          {
+            "clue": "guarantee",
+            "text": "recover 100% of your money"
+          },
+          ", guaranteed."
+        ]
+      },
+      {
+        "p": [
+          "First pay a ",
+          {
+            "clue": "fee",
+            "text": "processing fee of ₹15,000"
+          },
+          ", to open your case."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "nopolice",
+            "text": "Do not contact the police, it will delay recovery."
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "sure",
+            "text": "We have recovered millions for others."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "addr": {
+      "label": "A look-alike address",
+      "strength": "strong",
+      "lens": "The address is a strange new site.",
+      "why": "Check who is behind the address."
+    },
+    "knowloss": {
+      "label": "They know your loss",
+      "strength": "strong",
+      "lens": "They found your name on a list of scam victims.",
+      "why": "Scammers buy lists of victims and target them again."
+    },
+    "guarantee": {
+      "label": "A 100% guarantee",
+      "strength": "strong",
+      "lens": "No honest agent can guarantee recovery.",
+      "why": "Guarantees are a lie."
+    },
+    "fee": {
+      "label": "A fee up front",
+      "strength": "strong",
+      "lens": "You must pay ₹15,000 first.",
+      "why": "A second scam asks for a fee to recover the first loss."
+    },
+    "nopolice": {
+      "label": "\"Do not contact the police\"",
+      "strength": "strong",
+      "lens": "They stop you getting real help.",
+      "why": "Reporting is exactly what you should do."
+    },
+    "sure": {
+      "label": "\"Millions recovered for others\"",
+      "strength": "strong",
+      "lens": "A claim nobody can check.",
+      "why": "A crowd proves nothing."
+    },
+    "name": {
+      "label": "\"Dear Victim\"",
+      "strength": "harmless",
+      "lens": "A cold greeting.",
+      "why": "The greeting proves little alone."
+    },
+    "from": {
+      "label": "A recovery desk name",
+      "strength": "harmless",
+      "lens": "Fund Recovery Desk.",
+      "why": "Names are easy to invent."
+    },
+    "subject": {
+      "label": "A hopeful subject",
+      "strength": "harmless",
+      "lens": "We can recover your lost funds.",
+      "why": "Hope is the bait."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Pay the ₹15,000 processing fee",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Report my earlier loss on the cyber helpline instead"
+    },
+    {
+      "id": "block_report",
+      "label": "Report the email and delete it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "trap": {
+    "title": "Fund Recovery Desk · Open case",
+    "url": "fundrecovery-desk.live/pay",
+    "ask": "Pay ₹15,000 to open your recovery case.",
+    "go": "Pay ₹15,000",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported and deleted. You also reported your first loss through the official helpline.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The official helpline took your report and explained that no one can guarantee recovery or ask a fee. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "A second loss on top of the first. The \"agent\" asked for more fees, then vanished.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "No honest agent guarantees recovery or charges first. Reporting on the helpline is free.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "A recovery agent who guarantees your money back, for a fee, is a second scam. Report your first loss on the official helpline.",
+  "quick_check": {
+    "q": "After a scam loss, an agent guarantees to recover your money for a ₹15,000 fee and says not to call the police. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay, you want it back"
+      },
+      {
+        "id": "b",
+        "text": "Pay half"
+      },
+      {
+        "id": "c",
+        "text": "Do not pay. Report your loss on the official helpline"
+      },
+      {
+        "id": "d",
+        "text": "Ask for a refund policy"
+      }
+    ],
+    "answer": "c",
+    "explain": "A second scam targets victims. Reporting is free."
+  },
+  "hints": {
+    "nudge": "Who gains from a fee to recover lost money?",
+    "glow_order": [
+      "addr",
+      "knowloss",
+      "guarantee",
+      "fee",
+      "nopolice",
+      "sure"
+    ]
+  },
+  "sources": [
+    "in-1930",
+    "ftc-job-scams",
+    "in-rbi-beaware"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Fund Recovery Desk",
+      "rows": [
+        {
+          "k": "Address",
+          "v": "help@fundrecovery-desk.live",
+          "clue": "addr"
+        },
+        {
+          "k": "Guarantee",
+          "v": "100%",
+          "clue": "guarantee"
+        },
+        {
+          "k": "Fee",
+          "v": "₹15,000 first",
+          "clue": "fee"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Where to report a loss",
+          "v": "The cyber helpline 1930, or cybercrime.gov.in"
+        },
+        {
+          "k": "Do not contact the police?",
+          "v": "A warning sign",
+          "clue": "nopolice"
+        }
+      ]
+    }
+  ]
+}

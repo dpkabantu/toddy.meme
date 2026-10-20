@@ -1,0 +1,408 @@
+{
+  "id": "c5-20",
+  "type": "boss",
+  "chapter": 5,
+  "difficulty": 3,
+  "title": "The Task Factory",
+  "disguise": "influencer",
+  "disguise2": "admin",
+  "intro": [
+    "This is the Task Factory: a whole task scam, from the first message to the blocked withdrawal.",
+    "Open the chat and watch the masks change. Then say what is really going on.",
+    "Boss case. Choose carefully."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "TaskFlow Careers ✔",
+    "text": "Saw your story! Earn ₹3,000 a day…"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "tick",
+          "text": "TaskFlow Careers ✔",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@taskflow.careers.hiring"
+        }
+      ],
+      "avatar": {
+        "glyph": "🏭",
+        "clue": "avatar"
+      }
+    },
+    "banner": [
+      {
+        "clue": "dm_first",
+        "text": "Message request · they replied to your story"
+      }
+    ],
+    "context": "You posted a story saying you are looking for a part-time job.",
+    "items": [
+      {
+        "msg": [
+          "Hi! Saw your story. Our ",
+          {
+            "clue": "earn",
+            "text": "students earn ₹3,000 a day"
+          },
+          " doing simple tasks. 😊"
+        ]
+      },
+      {
+        "msg": [
+          "Start with a live chat here: ",
+          {
+            "clue": "chatlink",
+            "text": "taskflow-jobs.me/live",
+            "link": true
+          }
+        ]
+      }
+    ]
+  },
+  "duel": {
+    "start": "d1",
+    "nodes": {
+      "d1": {
+        "rename": "Anya · TaskFlow HR",
+        "say": [
+          {
+            "sys": [
+              "You joined a private chat with \"Anya · TaskFlow HR\""
+            ]
+          },
+          {
+            "msg": [
+              "Welcome! Do 3 free tasks: like and rate 3 videos. ",
+              {
+                "clue": "firstpay",
+                "text": "You will get ₹450 at once."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "How do I get paid?",
+            "next": "d2"
+          },
+          {
+            "text": "Starting the tasks",
+            "next": "d2"
+          },
+          {
+            "text": "Leave and report this chat",
+            "end": "block_report"
+          }
+        ]
+      },
+      "d2": {
+        "rename": "Rohan (Task Manager)",
+        "disguise": "admin",
+        "say": [
+          {
+            "sys": [
+              {
+                "clue": "swap",
+                "text": "Anya left. \"Rohan (Task Manager)\" joined the chat."
+              }
+            ]
+          },
+          {
+            "msg": [
+              "Paid! ₹450 sent. For Level 2 tasks you must ",
+              {
+                "clue": "dep",
+                "text": "deposit ₹5,000"
+              },
+              ". It comes back with a bonus."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Why a deposit?",
+            "next": "d3"
+          },
+          {
+            "text": "OK, depositing",
+            "next": "d3"
+          },
+          {
+            "text": "Leave and report this chat",
+            "end": "block_report"
+          }
+        ]
+      },
+      "d3": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "rush",
+                "text": "Limited seats today."
+              },
+              " ",
+              {
+                "clue": "proof",
+                "text": "Others withdrew ₹40,000 this week."
+              }
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "secret",
+                "text": "Do not tell your friends, or they will take your slot."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, here is the deposit",
+            "end": "go_ahead"
+          },
+          {
+            "text": "A job never makes me pay to work. Reporting.",
+            "end": "block_report"
+          },
+          {
+            "text": "I will check the company's own careers page",
+            "end": "verify"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "tick": {
+      "label": "Fake tick",
+      "strength": "strong",
+      "lens": "The ✔ is typed into the name. A real badge sits next to the handle, and there is none.",
+      "why": "Anyone can type a tick into a name."
+    },
+    "handle": {
+      "label": "A look-alike handle",
+      "strength": "strong",
+      "lens": "@taskflow.careers.hiring is new and not a company account.",
+      "why": "Look-alike handles are common."
+    },
+    "dm_first": {
+      "label": "They messaged first",
+      "strength": "strong",
+      "lens": "You never applied. They replied to your story.",
+      "why": "Real recruiters rarely start with a DM that promises easy money."
+    },
+    "earn": {
+      "label": "₹3,000 a day for simple tasks",
+      "strength": "strong",
+      "lens": "Big pay for little work.",
+      "why": "Big pay for little work is the bait."
+    },
+    "chatlink": {
+      "label": "A private chat link",
+      "strength": "strong",
+      "lens": "The link goes to a private chat, not a company site.",
+      "why": "A real employer has its own careers page."
+    },
+    "firstpay": {
+      "label": "A small payout first",
+      "strength": "strong",
+      "lens": "₹450 to win your trust.",
+      "why": "The small payout is the hook."
+    },
+    "swap": {
+      "label": "A costume change",
+      "strength": "strong",
+      "lens": "Anya left and a \"manager\" joined.",
+      "why": "One con artist, many masks."
+    },
+    "dep": {
+      "label": "A deposit to level up",
+      "strength": "strong",
+      "lens": "You must pay ₹5,000.",
+      "why": "Honest employers never charge."
+    },
+    "rush": {
+      "label": "Limited seats today",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
+    },
+    "proof": {
+      "label": "\"Others withdrew ₹40,000\"",
+      "strength": "strong",
+      "lens": "A crowd you cannot see.",
+      "why": "A crowd proves nothing."
+    },
+    "secret": {
+      "label": "\"Do not tell your friends\"",
+      "strength": "strong",
+      "lens": "Secrecy stops people helping you.",
+      "why": "Always tell someone."
+    },
+    "avatar": {
+      "label": "A factory picture",
+      "strength": "harmless",
+      "lens": "A little factory.",
+      "why": "Pictures prove nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "open_chat",
+      "label": "Open the live chat",
+      "goto": "duel"
+    },
+    {
+      "id": "verify",
+      "label": "Look for the job on the company's own careers page"
+    },
+    {
+      "id": "block_report",
+      "label": "Block and report the account"
+    },
+    {
+      "id": "go_ahead",
+      "label": "Pay the deposit",
+      "hidden": true
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CASE CLOSED",
+      "line": "Reported. The platform traced every fake account back to one con artist.",
+      "mirageSays": "Unmasked by a civet?!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The company's own careers page had no such job, and warned about task scams. Case cracked.",
+      "mirageSays": "They checked AGAIN?"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "The deposit was gone. The \"manager\" asked for more, then blocked you.",
+      "mirageSays": "Thanks for the deposit!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "A job that asks you to pay is the whole trap. Every deposit after is more loss.",
+    "verify": "Checking was smart. Reporting as well helps close the Factory."
+  },
+  "golden_rule": "A job that pays you a little, then asks you to pay a lot, is a task scam. Stop at the first deposit.",
+  "board": {
+    "q": "What is really going on?",
+    "verdicts": [
+      {
+        "id": "scam",
+        "text": "One con artist pretending to be a recruiter and a manager"
+      },
+      {
+        "id": "real",
+        "text": "A real company with a strict payment policy"
+      },
+      {
+        "id": "unsure",
+        "text": "Not enough evidence to tell"
+      }
+    ],
+    "answer": "scam",
+    "pick": 3,
+    "explain": "A fake tick, a look-alike handle, easy pay, a small payout, a costume change and a deposit. One con artist, many masks."
+  },
+  "hints": {
+    "nudge": "Look at who contacted you, and what they want from you.",
+    "glow_order": [
+      "chatlink",
+      "handle",
+      "tick",
+      "dm_first",
+      "earn",
+      "firstpay",
+      "swap",
+      "dep"
+    ]
+  },
+  "sources": [
+    "ftc-jobs",
+    "ftc-job-scams"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the account",
+      "title": "@taskflow.careers.hiring",
+      "rows": [
+        {
+          "k": "Account created",
+          "v": "5 days ago",
+          "clue": "handle"
+        },
+        {
+          "k": "Verified badge",
+          "v": "None. The ✔ is typed into the name",
+          "clue": "tick"
+        },
+        {
+          "k": "Official company page",
+          "v": "taskflow.example"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the link",
+      "title": "Where it goes",
+      "rows": [
+        {
+          "k": "Message says",
+          "v": "a live chat"
+        },
+        {
+          "k": "It really opens",
+          "v": "a private chat",
+          "clue": "chatlink"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Real jobs",
+          "v": "Never make you pay to start earning",
+          "clue": "dep"
+        },
+        {
+          "k": "Small payouts first",
+          "v": "A hook in task scams",
+          "clue": "firstpay"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,278 @@
+{
+  "id": "c4-19",
+  "type": "hunt",
+  "chapter": 4,
+  "difficulty": 2,
+  "title": "The Safe Account",
+  "disguise": "support",
+  "intro": [
+    "A caller says criminals are in your bank account right now, and tells you how to protect your money.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Phone",
+    "from": "Orrin Bank Fraud Team",
+    "text": "Your account is under attack. Move your money now!"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "Orrin Bank Fraud Team"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "num",
+          "text": "Unknown number"
+        }
+      ],
+      "avatar": {
+        "glyph": "🏦",
+        "clue": "logo"
+      }
+    },
+    "banner": [
+      {
+        "clue": "calledyou",
+        "text": "They called you first"
+      }
+    ],
+    "context": "You have had no problem with your account.",
+    "items": [
+      {
+        "time": [
+          "3:30 PM"
+        ]
+      },
+      {
+        "msg": [
+          "Our system shows ",
+          {
+            "clue": "attack",
+            "text": "criminals are in your account right now"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          "To protect your money, ",
+          {
+            "clue": "move",
+            "text": "move it to a \"safe account\""
+          },
+          " we will give you."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "rush",
+            "text": "Do it in the next 10 minutes."
+          },
+          " ",
+          {
+            "clue": "otp",
+            "text": "Read me the code we are texting you."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "hang",
+            "text": "Do not hang up or call the bank. It would delay us."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "calledyou": {
+      "label": "They called you",
+      "strength": "strong",
+      "lens": "You did not call the bank.",
+      "why": "A call about fraud that you did not ask for deserves a check."
+    },
+    "attack": {
+      "label": "\"Criminals are in your account now\"",
+      "strength": "strong",
+      "lens": "A scary claim with nothing shown.",
+      "why": "Fear is the lure."
+    },
+    "move": {
+      "label": "\"Move it to a safe account\"",
+      "strength": "strong",
+      "lens": "They give you an account to send money to.",
+      "why": "A bank never asks you to move your money to protect it."
+    },
+    "rush": {
+      "label": "10 minutes",
+      "strength": "strong",
+      "lens": "A countdown.",
+      "why": "Rushing is a pressure trick."
+    },
+    "otp": {
+      "label": "Asks for the code",
+      "strength": "strong",
+      "lens": "They want the code sent to you.",
+      "why": "A code is a key to your account. Never share it."
+    },
+    "hang": {
+      "label": "\"Do not call the bank\"",
+      "strength": "strong",
+      "lens": "They stop you checking.",
+      "why": "Scammers block your way to a check."
+    },
+    "name": {
+      "label": "A bank team name",
+      "strength": "harmless",
+      "lens": "Orrin Bank Fraud Team.",
+      "why": "Names are easy to copy."
+    },
+    "num": {
+      "label": "An unknown number",
+      "strength": "harmless",
+      "lens": "A number you do not know.",
+      "why": "Caller ID can be faked, so the number proves little."
+    },
+    "logo": {
+      "label": "A bank picture",
+      "strength": "harmless",
+      "lens": "A little bank.",
+      "why": "Logos are easy to copy."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Move the money to the \"safe account\""
+    },
+    {
+      "id": "verify",
+      "label": "Hang up and call the bank on the number on my card"
+    },
+    {
+      "id": "block_report",
+      "label": "Hang up and report the call"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "You hung up and reported the call. The bank blocked the number and warned other customers.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The bank's real line said: no problem with your account, and the bank never asks you to move money. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "Your savings went to a stranger's account. The \"fraud team\" vanished.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Hanging up and calling the number on your card would have shown the account was fine.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "A bank never asks you to move money to keep it safe. Hang up and call the number on your card.",
+  "quick_check": {
+    "q": "A caller says criminals are in your account and tells you to move your money to a \"safe account\". What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Move it fast"
+      },
+      {
+        "id": "b",
+        "text": "Move half"
+      },
+      {
+        "id": "c",
+        "text": "Hang up. Call the number on the back of your card"
+      },
+      {
+        "id": "d",
+        "text": "Share the code to prove it is you"
+      }
+    ],
+    "answer": "c",
+    "explain": "A bank never asks you to move money to protect it."
+  },
+  "hints": {
+    "nudge": "What does the caller want you to do with your money?",
+    "glow_order": [
+      "calledyou",
+      "attack",
+      "move",
+      "rush",
+      "otp",
+      "hang"
+    ]
+  },
+  "sources": [
+    "ftc-bank-call",
+    "in-rbi-beaware",
+    "ftc-codes"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the call",
+      "title": "Orrin Bank Fraud Team",
+      "rows": [
+        {
+          "k": "Called you first?",
+          "v": "Yes",
+          "clue": "calledyou"
+        },
+        {
+          "k": "Asked to move money",
+          "v": "Yes, to a \"safe account\"",
+          "clue": "move"
+        },
+        {
+          "k": "Told you not to call the bank",
+          "v": "Yes",
+          "clue": "hang"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Move money to \"protect\" it?",
+          "v": "Never. It is the scam",
+          "clue": "move"
+        },
+        {
+          "k": "How to check",
+          "v": "Call the number on your card"
+        }
+      ]
+    }
+  ]
+}

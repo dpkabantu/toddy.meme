@@ -1,0 +1,279 @@
+{
+  "id": "c5-14",
+  "type": "hunt",
+  "chapter": 5,
+  "difficulty": 3,
+  "title": "The Overpaid Cheque",
+  "disguise": "admin",
+  "intro": [
+    "A new \"employer\" sent you a cheque that is too big. They ask you to send back the difference.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Mail",
+    "from": "Mr. Hale (employer)",
+    "text": "Cheque sent. Please return the extra…"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        {
+          "clue": "from",
+          "text": "Mr. Hale, Hale Home Services"
+        }
+      ],
+      "addr": [
+        {
+          "clue": "addr",
+          "text": "hale.homeservices@freemail.example"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "Your cheque and next steps"
+        }
+      ],
+      "time": [
+        "1:40 PM"
+      ]
+    },
+    "items": [
+      {
+        "p": [
+          "Hello Toddy,"
+        ]
+      },
+      {
+        "p": [
+          "Welcome to the team! Your first cheque is on its way: ",
+          {
+            "clue": "amount",
+            "text": "£2,400"
+          },
+          ", including your equipment budget."
+        ]
+      },
+      {
+        "p": [
+          "The cheque is ",
+          {
+            "clue": "over",
+            "text": "£900 more than needed"
+          },
+          ". Please deposit it and ",
+          {
+            "clue": "back",
+            "text": "send me £900 back by bank transfer"
+          },
+          " today."
+        ]
+      },
+      {
+        "p": [
+          "Use the rest for the ",
+          {
+            "clue": "equip",
+            "text": "equipment you will buy from my supplier"
+          },
+          "."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "rush",
+            "text": "Do this today so I can start your training."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "addr": {
+      "label": "A free-mail address",
+      "strength": "strong",
+      "lens": "A real business writes from its own address.",
+      "why": "Look at the address behind the name."
+    },
+    "amount": {
+      "label": "A cheque before any work",
+      "strength": "strong",
+      "lens": "You are paid before you do a thing.",
+      "why": "Real employers do not pay a big cheque in advance."
+    },
+    "over": {
+      "label": "\"£900 too much\"",
+      "strength": "strong",
+      "lens": "An overpayment to be sent back.",
+      "why": "A cheque that is too big, with a request to return the difference, is a classic trick."
+    },
+    "back": {
+      "label": "\"Send me £900 back\"",
+      "strength": "strong",
+      "lens": "You send real money, then the cheque bounces.",
+      "why": "The cheque is fake. Your transfer is real. You lose the full amount."
+    },
+    "equip": {
+      "label": "Equipment from \"my supplier\"",
+      "strength": "strong",
+      "lens": "You are told where to spend.",
+      "why": "A supplier chosen by the \"employer\" is part of the trick."
+    },
+    "rush": {
+      "label": "Do it today",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
+    },
+    "from": {
+      "label": "A business name",
+      "strength": "harmless",
+      "lens": "Hale Home Services.",
+      "why": "Names are easy to invent."
+    },
+    "subject": {
+      "label": "A calm subject",
+      "strength": "harmless",
+      "lens": "Your cheque and next steps.",
+      "why": "A calm subject proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Deposit the cheque and send £900 back"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Do not send anything, and ask my bank if the cheque has really cleared"
+    },
+    {
+      "id": "block_report",
+      "label": "Do not send anything. Report the email"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported and deleted. The fake address was blocked.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Your bank said the cheque looked fake and had not cleared. You sent nothing and lost nothing. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The cheque bounced a week later. The £900 you sent was real, and the bank took the cheque's amount back.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Any request to send part of a cheque back is the scam. A bank showing a deposit does not mean the cheque has cleared.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "Never send money back from a cheque. A deposit that appears in your account may bounce days later.",
+  "quick_check": {
+    "q": "An \"employer\" sends a cheque too big and asks you to send back the difference. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Send it back, it is their mistake"
+      },
+      {
+        "id": "b",
+        "text": "Send half"
+      },
+      {
+        "id": "c",
+        "text": "Do not send anything. It is a scam"
+      },
+      {
+        "id": "d",
+        "text": "Wait a day and then send it"
+      }
+    ],
+    "answer": "c",
+    "explain": "A cheque can be fake even when the bank shows it. The overpayment is the trick."
+  },
+  "hints": {
+    "nudge": "What happens to the cheque after you send real money?",
+    "glow_order": [
+      "addr",
+      "amount",
+      "over",
+      "back",
+      "equip",
+      "rush"
+    ]
+  },
+  "sources": [
+    "ftc-job-scams",
+    "ftc-prize"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Who really sent this",
+      "rows": [
+        {
+          "k": "Address",
+          "v": "hale.homeservices@freemail.example",
+          "clue": "addr"
+        },
+        {
+          "k": "Work done yet?",
+          "v": "None",
+          "clue": "amount"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "A cheque and a request to send part back",
+          "v": "A scam: the cheque is fake",
+          "clue": "back"
+        },
+        {
+          "k": "Do not rely on a cheque",
+          "v": "Until your bank confirms the funds are fully available"
+        }
+      ]
+    }
+  ]
+}

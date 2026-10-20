@@ -1,0 +1,261 @@
+{
+  "id": "c3-07",
+  "type": "hunt",
+  "chapter": 3,
+  "difficulty": 2,
+  "title": "The Parking Sticker",
+  "disguise": "support",
+  "intro": [
+    "You park in town. The machine is \"out of order\", but a sticker offers a QR code to pay.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Camera",
+    "from": "QR code scanned",
+    "text": "Opens: parkly-pay-now.top"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "site",
+          "text": "parkly-pay-now.top"
+        }
+      ]
+    },
+    "context": "You scanned a sticker stuck on the parking machine. It looks stuck on top of the machine's own printed code.",
+    "items": [
+      {
+        "time": [
+          "Opened from a scanned QR code"
+        ]
+      },
+      {
+        "msg": [
+          "Welcome to Parkly Pay. ",
+          {
+            "clue": "fee",
+            "text": "Pay ₹50 for 2 hours."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "card",
+            "text": "Enter your card number and PIN to pay."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "sticker",
+            "text": "The code was a sticker placed over the machine's own code."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "outoforder",
+            "text": "The machine is out of order. Only pay here."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "logo",
+            "text": "🅿️ Parkly"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "site": {
+      "label": "Not the parking company's site",
+      "strength": "strong",
+      "lens": "parkly-pay-now.top is not the real parking address on the machine's own printed code.",
+      "why": "A scanned code can lead anywhere. Check the address it opens."
+    },
+    "card": {
+      "label": "Asks for your card PIN",
+      "strength": "strong",
+      "lens": "Paying never needs your card PIN.",
+      "why": "Anyone who asks for your PIN is a thief."
+    },
+    "sticker": {
+      "label": "A sticker over the real code",
+      "strength": "strong",
+      "lens": "Someone stuck a new code on top of the machine's own.",
+      "why": "A code stuck on top of another is a warning sign. Run your finger over it."
+    },
+    "outoforder": {
+      "label": "\"Out of order, only pay here\"",
+      "strength": "strong",
+      "lens": "It tells you to use only the sticker.",
+      "why": "A real machine does not send you to a sticker."
+    },
+    "fee": {
+      "label": "A normal fee",
+      "strength": "harmless",
+      "lens": "₹50 for 2 hours.",
+      "why": "The price is normal. It proves nothing."
+    },
+    "logo": {
+      "label": "A parking logo",
+      "strength": "harmless",
+      "lens": "A parking sign.",
+      "why": "Logos are easy to copy."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Enter my card number and PIN",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Pay in the parking company's own app, or at another machine"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it and delete it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "trap": {
+    "title": "Parkly Pay",
+    "url": "parkly-pay-now.top",
+    "ask": "Enter your card number and PIN to pay ₹50.",
+    "go": "Pay ₹50",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "You reported the sticker to the parking company. They scraped it off and warned other drivers.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The parking company's own app showed the bay and took your card safely. The sticker was fake. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The page copied your card and PIN. Money left your account within the hour.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Paying in the company's own app, or at another machine, would have been safe. No parking payment needs your PIN.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "Check a QR code before you scan or pay: is it a sticker over another code? Pay in the real company's own app.",
+  "quick_check": {
+    "q": "A parking machine says it is out of order and shows a QR sticker that looks stuck on top. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Scan it and pay"
+      },
+      {
+        "id": "b",
+        "text": "Scan it but skip the PIN"
+      },
+      {
+        "id": "c",
+        "text": "Pay in the company's own app or at another machine, and report the sticker"
+      },
+      {
+        "id": "d",
+        "text": "Ask a passer-by"
+      }
+    ],
+    "answer": "c",
+    "explain": "A sticker over a real code is the trick. Use the real company's own app."
+  },
+  "hints": {
+    "nudge": "Look at how the code is stuck on.",
+    "glow_order": [
+      "site",
+      "card",
+      "sticker",
+      "outoforder"
+    ]
+  },
+  "sources": [
+    "ftc-phishing",
+    "in-rbi-beaware"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the page",
+      "title": "Where the code went",
+      "rows": [
+        {
+          "k": "Address it opened",
+          "v": "parkly-pay-now.top",
+          "clue": "site"
+        },
+        {
+          "k": "The company's real site",
+          "v": "On the machine's printed code"
+        },
+        {
+          "k": "Code on the machine",
+          "v": "Stuck over the old one",
+          "clue": "sticker"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Does paying need your PIN?",
+          "v": "Never",
+          "clue": "card"
+        },
+        {
+          "k": "How to pay safely",
+          "v": "In the company's own app, or another machine"
+        }
+      ]
+    }
+  ]
+}

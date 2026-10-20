@@ -1,0 +1,230 @@
+{
+  "id": "c4-12",
+  "type": "hunt",
+  "chapter": 4,
+  "difficulty": 2,
+  "title": "The Threat Text",
+  "disguise": "support",
+  "intro": [
+    "A message arrives from a stranger. It says private pictures of you exist. It is a text only, and nothing is shown.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Messages",
+    "from": "Unknown number",
+    "text": "I have your private photos…"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "num",
+          "text": "Unknown number"
+        }
+      ]
+    },
+    "context": "No picture or file is attached. You have no idea what they mean.",
+    "items": [
+      {
+        "time": [
+          "Today 11:58 PM"
+        ]
+      },
+      {
+        "msg": [
+          "I have ",
+          {
+            "clue": "photos",
+            "text": "your private photos"
+          },
+          ". I will send them to everyone you know."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "pay",
+            "text": "Pay ₹15,000 in the next hour"
+          },
+          " and I will delete them."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "nopic",
+            "text": "I will not show them to you yet."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "secret",
+            "text": "Tell no one."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "photos": {
+      "label": "\"I have your photos\"",
+      "strength": "strong",
+      "lens": "A claim with nothing shown.",
+      "why": "Scammers send the same threat to thousands of people and hope some are frightened."
+    },
+    "pay": {
+      "label": "Pay within the hour",
+      "strength": "strong",
+      "lens": "A demand for money, with a short deadline.",
+      "why": "Paying never ends it. It usually leads to more demands."
+    },
+    "nopic": {
+      "label": "Nothing shown",
+      "strength": "strong",
+      "lens": "They show no picture, not even one.",
+      "why": "No proof means they probably have nothing."
+    },
+    "secret": {
+      "label": "\"Tell no one\"",
+      "strength": "strong",
+      "lens": "Secrecy keeps you alone with the fear.",
+      "why": "Telling someone you trust, and reporting, is the way out."
+    },
+    "num": {
+      "label": "An unknown number",
+      "strength": "harmless",
+      "lens": "A stranger at midnight.",
+      "why": "The number alone proves little."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Pay the ₹15,000"
+    },
+    {
+      "id": "verify",
+      "label": "Do not pay. Tell someone I trust"
+    },
+    {
+      "id": "block_report",
+      "label": "Do not pay. Block the number and report it on 1930"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "You blocked the number and reported it. Nothing was sent anywhere, and the threats stopped.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "You told a friend. They said it was a mass threat message and helped you report it. Nothing followed. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The first payment brought a second demand, then a third. Paying never ended it.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Not paying, telling someone and reporting would have stopped it. A threat with no proof is usually empty.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "Never pay a person who threatens you. Block, tell someone you trust, and report it. You are not alone.",
+  "quick_check": {
+    "q": "A stranger says they have private photos of you and demands money. They show nothing. What is the best move?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay quickly so it ends"
+      },
+      {
+        "id": "b",
+        "text": "Pay half"
+      },
+      {
+        "id": "c",
+        "text": "Do not pay. Block, tell someone you trust and report it"
+      },
+      {
+        "id": "d",
+        "text": "Reply to bargain"
+      }
+    ],
+    "answer": "c",
+    "explain": "Paying does not end it. Telling someone and reporting does."
+  },
+  "hints": {
+    "nudge": "What proof did they actually show?",
+    "glow_order": [
+      "photos",
+      "pay",
+      "nopic",
+      "secret"
+    ]
+  },
+  "sources": [
+    "in-pib-alert",
+    "in-1930",
+    "ftc-government"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the message",
+      "title": "What was sent",
+      "rows": [
+        {
+          "k": "Any picture shown?",
+          "v": "None",
+          "clue": "nopic"
+        },
+        {
+          "k": "Asked for money",
+          "v": "₹15,000 in an hour",
+          "clue": "pay"
+        },
+        {
+          "k": "Asked you to tell no one",
+          "v": "Yes",
+          "clue": "secret"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Blackmail messages",
+          "v": "The government warns about them and asks you to report",
+          "clue": "photos"
+        },
+        {
+          "k": "Where to report",
+          "v": "The cyber helpline 1930, or cybercrime.gov.in"
+        }
+      ]
+    }
+  ]
+}

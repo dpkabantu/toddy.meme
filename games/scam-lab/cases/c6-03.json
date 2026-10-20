@@ -2,240 +2,264 @@
   "id": "c6-03",
   "type": "hunt",
   "chapter": 6,
-  "difficulty": 3,
-  "title": "Lost Signal",
-  "disguise": "admin",
+  "difficulty": 2,
+  "title": "Hi Mum, New Number",
+  "disguise": "friend",
   "intro": [
-    "Late at night, Toddy's phone suddenly shows \"No service\".",
-    "Then a few messages arrive on the laptop.",
-    "This isn't a message to judge. It's an attack in progress. What do you do?"
+    "A message arrives from an unknown number. It says it is your child, with a new phone.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
   ],
   "notify": {
-    "app": "Mail",
-    "from": "Several emails",
-    "text": "Password reset requested…"
+    "app": "Messages",
+    "from": "Unknown number",
+    "text": "Hi Mum, my phone broke, this is my new number"
   },
   "screen": {
-    "app": "mail",
+    "app": "sms",
     "head": {
-      "from": [
-        "Your laptop inbox"
-      ],
-      "addr": [
+      "name": [
         {
-          "clue": "nosignal",
-          "text": "Phone: \"No service\" since 1:02 AM"
+          "clue": "num",
+          "text": "Unknown number"
         }
-      ],
-      "subject": [
-        {
-          "clue": "subject",
-          "text": "3 new emails"
-        }
-      ],
-      "time": [
-        "1:07 AM"
       ]
     },
+    "context": "You are a parent. Your child's real number is saved in your contacts.",
     "items": [
       {
-        "p": [
+        "time": [
+          "Today 5:48 PM"
+        ]
+      },
+      {
+        "msg": [
           {
-            "clue": "sim",
-            "text": "Mobile provider: \"Your number has been moved to a new SIM card.\""
+            "clue": "hi",
+            "text": "Hi Mum"
+          },
+          ", my phone broke. ",
+          {
+            "clue": "newnum",
+            "text": "This is my new number."
           }
         ]
       },
       {
-        "p": [
+        "msg": [
+          "Can you do me a ",
           {
-            "clue": "reset",
-            "text": "Ostrel: \"Password reset requested. Code sent by SMS.\""
-          }
+            "clue": "fav",
+            "text": "quick favour"
+          },
+          "? I cannot use my banking app on the new phone."
         ]
       },
       {
-        "p": [
+        "msg": [
+          "Please pay this bill for me, ",
           {
-            "clue": "reset2",
-            "text": "Email provider: \"Someone is trying to sign in to your account.\""
-          }
+            "clue": "urgent",
+            "text": "it is due today"
+          },
+          ": ",
+          {
+            "clue": "acct",
+            "text": "₹18,500 to the account below"
+          },
+          "."
         ]
       },
       {
-        "foot": [
+        "msg": [
           {
-            "clue": "foot",
-            "text": "All from the companies' real addresses"
+            "clue": "nocall",
+            "text": "I cannot talk, I am in a meeting. I will explain later."
           }
         ]
       }
     ]
   },
   "clues": {
-    "nosignal": {
-      "label": "Sudden \"No service\"",
+    "newnum": {
+      "label": "A \"new number\"",
       "strength": "strong",
-      "lens": "Your phone lost its signal for no reason.",
-      "why": "In a SIM swap, your number moves to the thief's SIM."
+      "lens": "You have the real number saved.",
+      "why": "Check by calling the number you already have."
     },
-    "sim": {
-      "label": "SIM moved",
+    "fav": {
+      "label": "A \"favour\" about money",
       "strength": "strong",
-      "lens": "Your number moved to a new SIM you didn't ask for.",
-      "why": "That's a SIM swap: the thief now gets your text codes."
+      "lens": "The first real request is money.",
+      "why": "Strangers using family names ask for money first."
     },
-    "reset": {
-      "label": "Password reset by SMS",
+    "urgent": {
+      "label": "Due today",
       "strength": "strong",
-      "lens": "Someone is resetting your exchange password.",
-      "why": "With your number, they receive the codes."
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
     },
-    "reset2": {
-      "label": "Email sign-in attempts",
+    "acct": {
+      "label": "A stranger's account number",
       "strength": "strong",
-      "lens": "Someone is going after your email.",
-      "why": "Email unlocks everything else."
+      "lens": "Money to an account you do not know.",
+      "why": "Never pay an account a \"relative\" sends by text."
     },
-    "subject": {
-      "label": "Several emails",
+    "nocall": {
+      "label": "Cannot talk or call",
+      "strength": "strong",
+      "lens": "They avoid hearing from you.",
+      "why": "A real child will answer a call."
+    },
+    "num": {
+      "label": "An unknown number",
       "strength": "harmless",
-      "lens": "Three emails at once.",
-      "why": "The real alerts are helping you here."
+      "lens": "A number you do not know.",
+      "why": "A new number can be real, so check, do not guess."
     },
-    "foot": {
-      "label": "Real senders",
+    "hi": {
+      "label": "\"Hi Mum\"",
       "strength": "harmless",
-      "lens": "Real company addresses.",
-      "why": "These alerts are genuine; the attack is real."
+      "lens": "A friendly greeting.",
+      "why": "It is a guess that fits many parents."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Go to sleep and deal with it tomorrow"
+      "label": "Pay the bill"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
     },
     {
       "id": "verify",
-      "label": "Call your mobile provider now from another phone, then lock your accounts"
+      "label": "Call my child on the number I already have"
     },
     {
       "id": "block_report",
-      "label": "Report the emails as spam"
+      "label": "Report and delete the message"
     }
   ],
-  "best_action": "verify",
-  "acceptable_actions": [],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
   "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported and deleted. Your phone company can block the number.",
+      "mirageSays": "Not my lovely scam!"
+    },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "STOPPED",
-      "line": "The provider froze the number, and Toddy locked the exchange and email in time.",
-      "mirageSays": "Woken up too soon!"
+      "stamp": "CHECKED",
+      "line": "You called the old number. Your child answered at once, safe and puzzled. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "By morning, the thief had used the text codes to empty the exchange account.",
-      "mirageSays": "Sweet dreams!"
-    },
-    "block_report": {
-      "scene": "drained",
-      "mirage": "smug",
-      "stamp": "TOO LATE",
-      "line": "These were real warnings. Marking them as spam gave the thief the night.",
-      "mirageSays": "Thanks for ignoring them!"
+      "stamp": "SCAMMED",
+      "line": "The ₹18,500 went to a stranger. Your child had lost nothing.",
+      "mirageSays": "Thanks for the details!"
     }
   },
   "what_if": {
-    "go_ahead": "Losing signal plus reset emails means act now: call the provider from another phone.",
-    "block_report": "These alerts were real. A SIM swap needs action, not deletion."
+    "go_ahead": "One call to the number you already have would have ended it. A message is not proof.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
   },
-  "golden_rule": "Sudden \"No service\" plus reset emails means a SIM swap. Call your provider at once, and use an app for codes instead of SMS.",
+  "golden_rule": "If a \"relative\" texts from a new number and wants money, call their old number first.",
   "quick_check": {
-    "q": "Your phone loses signal and you get password-reset emails. What's happening?",
+    "q": "A text from a new number says \"Hi Mum, my phone broke\" and asks you to pay a bill. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "A network glitch"
+        "text": "Pay, it is urgent"
       },
       {
         "id": "b",
-        "text": "Probably a SIM swap; act now"
+        "text": "Reply with questions"
+      },
+      {
+        "id": "c",
+        "text": "Call your child on the number you already have"
+      },
+      {
+        "id": "d",
+        "text": "Send half"
       }
     ],
-    "answer": "b",
-    "explain": "Thieves move your number to their SIM to receive your codes."
+    "answer": "c",
+    "explain": "Call the old number. A real child answers."
   },
   "hints": {
-    "nudge": "What links the lost signal and the reset emails?",
+    "nudge": "How can you check without trusting the message?",
     "glow_order": [
-      "sim",
-      "nosignal",
-      "reset",
-      "reset2"
+      "newnum",
+      "fav",
+      "urgent",
+      "acct",
+      "nocall"
     ]
   },
   "sources": [
-    "cafc-wallet",
-    "ftc-phishing",
-    "ftc-crypto"
+    "ftc-family",
+    "ftc-gift-cards"
   ],
-  "checked_on": "2026-10-13",
+  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check your phone",
-      "title": "What happened",
+      "label": "Check the message",
+      "title": "Unknown number",
       "rows": [
         {
-          "k": "Signal",
-          "v": "Lost for no reason",
-          "clue": "nosignal"
+          "k": "A number you know?",
+          "v": "No",
+          "clue": "newnum"
         },
         {
-          "k": "Your number",
-          "v": "Moved to a new SIM you did not ask for",
-          "clue": "sim"
-        }
-      ]
-    },
-    {
-      "id": "link",
-      "icon": "🔗",
-      "label": "Check the emails",
-      "title": "What arrived",
-      "rows": [
-        {
-          "k": "Emails",
-          "v": "Three at once",
-          "clue": "subject"
+          "k": "Asks for",
+          "v": "₹18,500",
+          "clue": "acct"
         },
         {
-          "k": "Exchange",
-          "v": "Someone is resetting your password",
-          "clue": "reset"
-        },
-        {
-          "k": "Email account",
-          "v": "Someone is going after it",
-          "clue": "reset2"
+          "k": "Will they call?",
+          "v": "No, \"in a meeting\"",
+          "clue": "nocall"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Check the senders",
-      "title": "Are they real?",
+      "label": "Official advice",
+      "title": "What advice says",
       "rows": [
         {
-          "k": "Addresses",
-          "v": "Real company addresses",
-          "clue": "foot"
+          "k": "A relative in need?",
+          "v": "Check on a number you already know",
+          "clue": "newnum"
+        },
+        {
+          "k": "A message asking for money fast",
+          "v": "A scam sign",
+          "clue": "urgent"
         }
       ]
     }

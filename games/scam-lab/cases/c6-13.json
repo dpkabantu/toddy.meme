@@ -1,0 +1,208 @@
+{
+  "id": "c6-13",
+  "type": "hunt",
+  "chapter": 6,
+  "difficulty": 3,
+  "title": "Dad's New Phone",
+  "disguise": null,
+  "intro": [
+    "A message says it is your dad, on a new phone. After today you are suspicious, but real people change numbers too.",
+    "But some messages are real. Mirage loves it when you stop trusting the honest ones.",
+    "Sniff carefully. Then decide."
+  ],
+  "notify": {
+    "app": "Messages",
+    "from": "Unknown number",
+    "text": "Hi it is Dad, I got a new phone"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "num",
+          "text": "New number"
+        }
+      ]
+    },
+    "context": "Your dad told you last week at dinner that he was getting a new phone.",
+    "items": [
+      {
+        "time": [
+          "Today 6:15 PM"
+        ]
+      },
+      {
+        "msg": [
+          "Hi, it is Dad. ",
+          {
+            "clue": "newphone",
+            "text": "I got the new phone, this is my number now."
+          }
+        ]
+      },
+      {
+        "msg": [
+          "Save it. ",
+          {
+            "clue": "call",
+            "text": "Call me when you are free, I would like to hear how your exam went."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "nomoney",
+            "text": "No rush, nothing needed. Just save the number."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "num": {
+      "label": "A new number",
+      "strength": "harmless",
+      "lens": "A number you do not have saved yet.",
+      "why": "A new number can be real, so check it calmly."
+    },
+    "newphone": {
+      "label": "It fits what he told you",
+      "strength": "harmless",
+      "lens": "He told you last week he would get a new phone.",
+      "why": "It matches something you already knew. That is a strong honest sign."
+    },
+    "call": {
+      "label": "Asks you to call",
+      "strength": "harmless",
+      "lens": "He wants to talk and hear about your exam.",
+      "why": "A real family member wants to talk, not hide."
+    },
+    "nomoney": {
+      "label": "Asks for nothing",
+      "strength": "harmless",
+      "lens": "No money, no codes, no rush.",
+      "why": "A message that asks for nothing is usually honest."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Call the new number, and also call his old number, before saving it"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "You called the old number, which was off, then the new one. It was Dad, with the new phone. You saved the number.",
+      "toddy": "happy"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "Nothing bad happened. A call would have confirmed it and let you save the number.",
+      "mirageSays": "Fine. Next!"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was really Dad. Checking, not reporting, is the skill: a call settles it.",
+      "mirageSays": "If you trust nothing, I win anyway."
+    }
+  },
+  "what_if": {
+    "block_report": "It matched something he told you, asked for nothing, and invited a call. A quick call confirms it.",
+    "ignore": "Ignoring was safe. Recognising a real message is the skill: it asks for nothing secret and matches something you know."
+  },
+  "golden_rule": "A new number that asks for nothing and matches something you know is likely honest. Confirm with a call before saving it.",
+  "quick_check": {
+    "q": "What made this \"new number\" message likely honest?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It said \"Dad\""
+      },
+      {
+        "id": "b",
+        "text": "It matched what he had told you and asked for no money"
+      },
+      {
+        "id": "c",
+        "text": "It had no emoji"
+      },
+      {
+        "id": "d",
+        "text": "It was sent in the evening"
+      }
+    ],
+    "answer": "b",
+    "explain": "It fit what you knew and asked for nothing. A call confirms it."
+  },
+  "hints": {
+    "nudge": "What is this message actually asking you to do?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-family"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the message",
+      "title": "New number",
+      "rows": [
+        {
+          "k": "Did he tell you about a new phone?",
+          "v": "Yes, last week",
+          "clue": "newphone"
+        },
+        {
+          "k": "Asks for money?",
+          "v": "No",
+          "clue": "nomoney"
+        },
+        {
+          "k": "Invites a call?",
+          "v": "Yes",
+          "clue": "call"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "A relative from a new number",
+          "v": "Check by calling a number you know"
+        },
+        {
+          "k": "No money asked",
+          "v": "A good sign",
+          "clue": "nomoney"
+        }
+      ]
+    }
+  ]
+}

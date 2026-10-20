@@ -1,304 +1,351 @@
 {
   "id": "c5-03",
-  "type": "hunt",
+  "type": "duel",
   "chapter": 5,
   "difficulty": 3,
-  "title": "Two Swap Sites",
+  "title": "The Deposit to Unlock",
   "disguise": "support",
   "intro": [
-    "Toddy searched \"Zelvora\" and clicked the first result: an ad.",
-    "Two sites look almost identical.",
-    "Compare them before connecting anything."
+    "You did a few paid tasks. Now the \"manager\" says the next level needs a deposit.",
+    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
+    "Every chat ends with your choice. Choose wisely."
   ],
   "notify": {
-    "app": "Browser",
-    "from": "Search results",
-    "text": "Zelvora — the #1 swap (Ad)"
+    "app": "Messages",
+    "from": "TaskFlow Manager",
+    "text": "Congratulations! You reached Level 2"
   },
-  "decide_q": "Which site is real, and what will you do?",
   "screen": {
-    "app": "compare",
-    "context": "Two Zelvora sites, side by side.",
-    "panels": [
-      {
-        "label": "From your bookmark",
-        "avatar": {
-          "glyph": "☾",
-          "clue": "logo_a"
-        },
-        "rows": [
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "text": "TaskFlow Manager",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "acct",
+          "text": "Your task account: balance £135"
+        }
+      ],
+      "avatar": {
+        "glyph": "📋",
+        "clue": "logo"
+      }
+    },
+    "banner": [
+      "Chat from the task group"
+    ],
+    "items": []
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
           {
-            "k": "Address",
-            "v": [
+            "msg": [
+              "Great work! Your balance is ",
               {
-                "clue": "addr_a",
-                "text": "zelvora.app"
-              }
+                "clue": "bal",
+                "text": "£135"
+              },
+              ". To withdraw it, you must reach Level 2."
             ]
           },
           {
-            "k": "Asks",
-            "v": [
+            "msg": [
+              "Level 2 needs a ",
               {
-                "clue": "asks_a",
-                "text": "Connect wallet to swap"
-              }
+                "clue": "dep",
+                "text": "deposit of £500"
+              },
+              ", which comes back with your earnings."
             ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Why do I pay to withdraw my own money?",
+            "next": "n2"
           },
           {
-            "k": "Came from",
-            "v": [
-              {
-                "clue": "bookmark",
-                "text": "Your saved bookmark"
-              }
-            ]
+            "text": "OK, paying £500",
+            "next": "n3"
+          },
+          {
+            "text": "I am leaving and reporting this",
+            "end": "block_report"
           }
         ]
       },
-      {
-        "label": "From the search ad",
-        "avatar": {
-          "glyph": "☾",
-          "clue": "logo_b"
-        },
-        "rows": [
+      "n2": {
+        "say": [
           {
-            "k": "Address",
-            "v": [
+            "msg": [
+              "It is ",
               {
-                "clue": "addr_b",
-                "text": "zelvora.app-secure.io"
+                "clue": "rule",
+                "text": "company policy"
+              },
+              ". Others did it and ",
+              {
+                "clue": "proof",
+                "text": "already withdrew £4,000"
+              },
+              ". Look: ",
+              {
+                "clue": "shot",
+                "text": "[screenshot of a big balance]"
               }
             ]
           },
           {
-            "k": "Asks",
-            "v": [
+            "msg": [
               {
-                "clue": "asks_b",
-                "text": "\"Validate wallet\" + sign a message"
-              }
-            ]
-          },
-          {
-            "k": "Came from",
-            "v": [
-              {
-                "clue": "ad",
-                "text": "Sponsored search result"
-              }
-            ]
-          },
-          {
-            "k": "Banner",
-            "v": [
-              {
-                "clue": "promo",
-                "text": "\"Fee-free swaps today only!\""
+                "clue": "rush",
+                "text": "Offer ends tonight."
               }
             ]
           }
+        ],
+        "replies": [
+          {
+            "text": "OK, paying",
+            "next": "n3"
+          },
+          {
+            "text": "A job never charges you to be paid. I am out.",
+            "end": "verify"
+          },
+          {
+            "text": "Report",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n3": {
+        "say": [
+          {
+            "msg": [
+              "Payment received. Oh, there is a ",
+              {
+                "clue": "more",
+                "text": "problem with the tasks"
+              },
+              ". You need £1,500 more to unlock your money."
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "again",
+                "text": "Pay now or lose everything you paid."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Paying £1,500 more",
+            "end": "go_ahead"
+          },
+          {
+            "text": "No more. I am done and reporting this.",
+            "end": "block_report"
+          },
+          {
+            "text": "I will stop and ask my bank about the payments",
+            "end": "verify"
+          }
         ]
       }
-    ]
+    }
   },
   "clues": {
-    "addr_b": {
-      "label": "Look-alike address",
+    "acct": {
+      "label": "A \"balance\" in their app",
       "strength": "strong",
-      "lens": "zelvora.app-secure.io: the real name is just the start of a different site.",
-      "why": "Read web addresses from the right: the real site is \"app-secure.io\"."
+      "lens": "The balance is just a number they control.",
+      "why": "A balance in a stranger's app is not money you own."
     },
-    "ad": {
-      "label": "Sponsored result",
+    "bal": {
+      "label": "Small earnings shown",
       "strength": "strong",
-      "lens": "A paid ad at the top of the search.",
-      "why": "Scammers buy search ads that copy real sites."
+      "lens": "They show £135, enough to feel real.",
+      "why": "Small earnings build trust."
     },
-    "asks_b": {
-      "label": "\"Validate wallet\"",
+    "dep": {
+      "label": "A deposit to unlock",
       "strength": "strong",
-      "lens": "It wants a signature before any swap.",
-      "why": "Real swaps don't need you to \"validate\" your wallet."
+      "lens": "You must pay £500 to withdraw.",
+      "why": "Real jobs never make you pay to be paid."
     },
-    "promo": {
-      "label": "Today-only deal",
+    "rule": {
+      "label": "\"Company policy\"",
       "strength": "strong",
-      "lens": "Fee-free today only.",
-      "why": "Urgency again."
+      "lens": "They explain it away.",
+      "why": "A reason does not make it right."
     },
-    "addr_a": {
-      "label": "Real address",
-      "strength": "harmless",
-      "lens": "zelvora.app.",
-      "why": "The real address, letter by letter."
+    "proof": {
+      "label": "\"Others withdrew\"",
+      "strength": "strong",
+      "lens": "A crowd you cannot see.",
+      "why": "A crowd proves nothing."
     },
-    "asks_a": {
-      "label": "Normal connect",
-      "strength": "harmless",
-      "lens": "Connect to swap.",
-      "why": "Normal for a real swap site."
+    "shot": {
+      "label": "A screenshot of a big balance",
+      "strength": "strong",
+      "lens": "Screenshots can be made by anyone.",
+      "why": "Never trust a screenshot."
     },
-    "bookmark": {
-      "label": "Your bookmark",
-      "strength": "harmless",
-      "lens": "You saved it yourself.",
-      "why": "Bookmarks are the safest way to reach crypto sites."
+    "rush": {
+      "label": "Offer ends tonight",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
     },
-    "logo_a": {
-      "label": "Logo",
-      "strength": "harmless",
-      "lens": "Zelvora logo.",
-      "why": "Proves nothing."
+    "more": {
+      "label": "A new problem and more money",
+      "strength": "strong",
+      "lens": "After you pay, there is always one more fee.",
+      "why": "Scammers keep inventing fees."
     },
-    "logo_b": {
-      "label": "Same logo",
+    "again": {
+      "label": "\"Pay or lose everything\"",
+      "strength": "strong",
+      "lens": "They threaten you with loss.",
+      "why": "The loss is already done. More money will not fix it."
+    },
+    "logo": {
+      "label": "A task list picture",
       "strength": "harmless",
-      "lens": "A copied logo.",
-      "why": "Proves nothing."
+      "lens": "A clipboard.",
+      "why": "Pictures prove nothing."
     }
   },
   "actions": [
     {
-      "id": "pick_b",
-      "label": "Use the ad site, it has free swaps",
-      "trap": true
+      "id": "go_ahead",
+      "label": "Pay the £1,500"
     },
     {
       "id": "verify",
-      "label": "Use only your bookmark from now on"
+      "label": "Stop paying and ask my bank"
     },
     {
       "id": "block_report",
-      "label": "Use the bookmark and report the fake ad"
+      "label": "Leave the group and report it"
     }
   ],
   "best_action": "block_report",
   "acceptable_actions": [
     "verify"
   ],
-  "trap": {
-    "title": "Zelvora · Validate wallet",
-    "url": "zelvora.app-secure.io",
-    "ask": "Sign this message to validate your wallet before swapping.",
-    "go": "Sign",
-    "back": "Close this page"
-  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "Reported. The search engine pulled the ad.",
-      "mirageSays": "I paid for that ad!"
+      "line": "You left and reported it. The group was removed. You lost the first deposit, but no more.",
+      "mirageSays": "Curses! Blocked again!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Bookmark used. Swap done safely on the real site.",
-      "mirageSays": "Bookmarks… my nemesis."
+      "line": "Your bank explained: these are task scams, and more payments would only mean more losses. You stopped in time.",
+      "mirageSays": "Hmph. They checked."
     },
-    "pick_b": {
+    "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "The \"validation\" signature handed over the wallet.",
-      "mirageSays": "Validated… for me!"
+      "stamp": "SCAMMED",
+      "line": "The money was gone. The \"manager\" asked for even more, then vanished.",
+      "mirageSays": "Thanks for the deposits!"
     }
   },
   "what_if": {
-    "pick_b": "The address ended in \"app-secure.io\". The bookmark was the safe road."
+    "go_ahead": "The moment a job asked you to pay to be paid, it was a scam. Every deposit after is just more loss.",
+    "verify": "Stopping was brave and smart. Reporting as well helps others."
   },
-  "golden_rule": "Reach crypto sites from your own bookmarks, never from ads or links.",
+  "golden_rule": "A real job never makes you pay to be paid. The more you pay, the more they ask. Stop at the first fee.",
   "quick_check": {
-    "q": "What is the real website in \"zelvora.app-secure.io\"?",
+    "q": "A task job says you must pay a deposit to withdraw your earnings. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "zelvora.app"
+        "text": "Pay it, it comes back"
       },
       {
         "id": "b",
-        "text": "app-secure.io"
+        "text": "Pay a smaller deposit"
+      },
+      {
+        "id": "c",
+        "text": "Stop. A job never charges you to pay you. Report it"
+      },
+      {
+        "id": "d",
+        "text": "Ask them to waive it"
       }
     ],
-    "answer": "b",
-    "explain": "Read the address from the right: the name just before the ending is the real site. Here that is app-secure.io."
+    "answer": "c",
+    "explain": "A deposit to withdraw is the trap. Stop at once."
   },
   "hints": {
-    "nudge": "Read each address from right to left.",
+    "nudge": "Why would a job charge you to pay you?",
     "glow_order": [
-      "addr_b",
-      "ad",
-      "asks_b",
-      "promo"
+      "dep",
+      "more",
+      "again",
+      "rush",
+      "proof",
+      "shot",
+      "rule"
     ]
   },
   "sources": [
-    "cafc-wallet",
-    "ftc-crypto",
-    "chainalysis-2025"
+    "ftc-jobs",
+    "ftc-job-scams"
   ],
-  "checked_on": "2026-10-13",
+  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check addresses",
-      "title": "The two sites",
+      "label": "Check the offer",
+      "title": "TaskFlow Manager",
       "rows": [
         {
-          "k": "Site A",
-          "v": "zelvora.app",
-          "clue": "addr_a"
+          "k": "Balance",
+          "v": "£135, only in their app",
+          "clue": "acct"
         },
         {
-          "k": "Site B",
-          "v": "zelvora.app-secure.io",
-          "clue": "addr_b"
-        },
-        {
-          "k": "You saved",
-          "v": "Site A as a bookmark",
-          "clue": "bookmark"
-        }
-      ]
-    },
-    {
-      "id": "link",
-      "icon": "🔗",
-      "label": "Check how you got here",
-      "title": "Search results",
-      "rows": [
-        {
-          "k": "Site B",
-          "v": "A paid ad at the top",
-          "clue": "ad"
-        },
-        {
-          "k": "Site B offer",
-          "v": "Fee-free today only",
-          "clue": "promo"
+          "k": "To withdraw",
+          "v": "Pay £500",
+          "clue": "dep"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Check what each asks",
-      "title": "Before any swap",
+      "label": "Official advice",
+      "title": "What advice says",
       "rows": [
         {
-          "k": "Site A",
-          "v": "Connect to swap",
-          "clue": "asks_a"
+          "k": "Real jobs",
+          "v": "Never make you pay to start earning or to get paid",
+          "clue": "dep"
         },
         {
-          "k": "Site B",
-          "v": "A signature first",
-          "clue": "asks_b"
+          "k": "A new fee after paying",
+          "v": "A sign you are being milked",
+          "clue": "more"
         }
       ]
     }

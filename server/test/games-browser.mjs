@@ -120,7 +120,7 @@ await page.screenshot({ path: shots + '/moonbrew_title.png' });
 
 // ---- Scam Lab: Daily Quickie reached through the Season page ----
 await page.goto(base + '/games/scam-lab/'); await page.waitForTimeout(2500);
-await page.evaluate(() => { const k = 'toddy.scamlab.v2'; const d = JSON.parse(localStorage.getItem(k) || '{}'); d.stars = { 'c1-01': 3 }; d.best = { 'c1-01': 900 }; d.howto = true; localStorage.setItem(k, JSON.stringify(d)); });
+await page.evaluate(() => { const k = 'toddy.scamlab.v3'; const d = JSON.parse(localStorage.getItem(k) || '{}'); d.stars = { 'c1-01': 3 }; d.best = { 'c1-01': 900 }; d.howto = true; localStorage.setItem(k, JSON.stringify(d)); });
 await page.goto(base + '/season/'); await page.waitForSelector('#mine:not([hidden])');
 check((await page.locator('#tg .tg-card:nth-child(3) a').getAttribute('href')) === '/games/scam-lab/?play=daily', 'Season page: the Scam Lab button opens tonight\u2019s Daily Quickie');
 await page.goto(base + '/games/scam-lab/?play=daily&qa');   // same address the Season button opens; &qa only adds the test hook
@@ -164,7 +164,7 @@ await page.screenshot({ path: shots + '/home_menu.png', clip: { x: 0, y: 0, widt
 // ---- Scam Lab chapter mission: a chapter case played for the mission, from the Season page link ----
 await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])'); await page.evaluate(() => document.querySelectorAll('#mg details').forEach((d) => { d.open = true; }));
 const chCard = page.locator('#mg .mrow', { hasText: 'Season Chapters' });
-check(/0 of 20 cases/.test(await chCard.innerText()) && /15 points every 5 cases/.test(await chCard.innerText()) && (await chCard.locator('a').getAttribute('href')) === '/games/scam-lab/?mission=scam-lab-season', 'Season page: the Scam Lab card shows 0 of 20 cases, 15 points every 5 cases, and opens the chapters');
+check(/0 of 140 cases/.test(await chCard.innerText()) && /15 points every 5 cases/.test(await chCard.innerText()) && (await chCard.locator('a').getAttribute('href')) === '/games/scam-lab/?mission=scam-lab-season', 'Season page: the Scam Lab card shows 0 of 140 cases, 15 points every 5 cases, and opens the chapters');
 check(/Opening soon/.test(await page.locator('#mg').innerText()) === false, 'Season page: nothing is locked while the Season is in test mode');
 await page.goto(base + '/games/scam-lab/?mission=scam-lab-season&qa');
 await page.waitForFunction(() => window.__lab, null, { timeout: 30000 }); await page.waitForTimeout(800);
@@ -194,7 +194,7 @@ const chRow = db.prepare("SELECT r.score, r.seed FROM game_runs r WHERE r.mode =
 const chScore = await page.evaluate(() => Number(document.getElementById('total').firstChild.textContent));
 check(chRow && chRow.seed === 'scam-lab-season:c1-01' && chRow.score === chScore, 'Scam Lab chapter case: the server scored it again and got the same score (' + chScore + ')');
 await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])'); await page.evaluate(() => document.querySelectorAll('#mg details').forEach((d) => { d.open = true; }));
-check(/1 of 20 cases/.test(await page.locator('#mg .mrow', { hasText: 'Season Chapters' }).innerText()), 'Season page: the Scam Lab card now shows 1 of 20 cases');
+check(/1 of 140 cases/.test(await page.locator('#mg .mrow', { hasText: 'Season Chapters' }).innerText()), 'Season page: the Scam Lab card now shows 1 of 140 cases');
 
 // ---- Weekly Challenge (Full Moon), reached from the Season page ----
 RULES.fullMoonWeekly.silverBand = 0;   // test only: any finished try reaches stage one (a real Silver needs a skilled player)

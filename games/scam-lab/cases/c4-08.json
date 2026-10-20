@@ -1,0 +1,251 @@
+{
+  "id": "c4-08",
+  "type": "hunt",
+  "chapter": 4,
+  "difficulty": 3,
+  "title": "The Official Letter",
+  "disguise": null,
+  "intro": [
+    "A letter arrives by post from a court. After today, any official letter feels like a trap.",
+    "But some messages are real. Mirage loves it when you stop trusting the honest ones.",
+    "Sniff carefully. Then decide."
+  ],
+  "notify": {
+    "app": "Post",
+    "from": "Registered letter",
+    "text": "A letter from the Civic Court"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        "Civic Court Registry"
+      ],
+      "addr": [
+        {
+          "clue": "post",
+          "text": "By registered post, to your home address"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "Notice of a hearing, case 2026/5521"
+        }
+      ],
+      "time": [
+        "Delivered today"
+      ]
+    },
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "name",
+            "text": "Mr T. Civet,"
+          }
+        ]
+      },
+      {
+        "p": [
+          "You are asked to ",
+          {
+            "clue": "attend",
+            "text": "attend a hearing on 12 November at 10:00 AM"
+          },
+          " at the Civic Court, Room 4."
+        ]
+      },
+      {
+        "p": [
+          "You can ",
+          {
+            "clue": "check",
+            "text": "check the case on the court's official website"
+          },
+          " using the case number above."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "nopay",
+            "text": "No payment is asked of you in this letter."
+          }
+        ]
+      },
+      {
+        "foot": [
+          {
+            "clue": "sign",
+            "text": "Signed by the Registrar, with the court's stamp"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "post": {
+      "label": "Arrived by post",
+      "strength": "harmless",
+      "lens": "A registered letter to your home, not a call or a link.",
+      "why": "Courts use official post. A surprise call is a different matter."
+    },
+    "subject": {
+      "label": "A case number",
+      "strength": "harmless",
+      "lens": "A number you can check on the court's official website.",
+      "why": "You can look it up yourself. A scammer's number cannot be found."
+    },
+    "name": {
+      "label": "Your full name",
+      "strength": "harmless",
+      "lens": "Your name and details are right.",
+      "why": "It fits, though a name alone proves little."
+    },
+    "attend": {
+      "label": "A hearing date and place",
+      "strength": "harmless",
+      "lens": "A date, time and room.",
+      "why": "Real notices give a date and place you can attend."
+    },
+    "check": {
+      "label": "Check on the official site",
+      "strength": "harmless",
+      "lens": "It tells you to check on the court's own website.",
+      "why": "Honest notices let you check."
+    },
+    "nopay": {
+      "label": "Asks for no money",
+      "strength": "harmless",
+      "lens": "No payment.",
+      "why": "No demand for money fits an honest notice."
+    },
+    "sign": {
+      "label": "Signed and stamped",
+      "strength": "harmless",
+      "lens": "A registrar's signature and stamp.",
+      "why": "Stamps can be copied, so check the case number too."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Check the case number on the court's official website I type myself"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "The court's own website listed the case and the hearing. You prepared and went, with no payment asked.",
+      "toddy": "happy"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "Nothing bad happened this time. But a real court notice must not be ignored: missing a hearing has consequences.",
+      "mirageSays": "Fine. Next!"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was a real court notice. A real hearing missed can mean real trouble. Checking, not ignoring, is the skill.",
+      "mirageSays": "If you trust nothing, I win anyway."
+    }
+  },
+  "what_if": {
+    "block_report": "It arrived by post, gave a case number you can check, asked for no money and invited you to a place and date. That is how real notices look.",
+    "ignore": "Ignoring was safe. Recognising a real message is the skill: it asks for nothing secret and matches something you know."
+  },
+  "golden_rule": "A real notice arrives by official post, asks for no money and lets you check the case number yourself. Check, do not ignore.",
+  "quick_check": {
+    "q": "What made this court letter genuine?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It was stamped"
+      },
+      {
+        "id": "b",
+        "text": "It arrived by post, gave a checkable case number and asked for no money"
+      },
+      {
+        "id": "c",
+        "text": "It named the court"
+      },
+      {
+        "id": "d",
+        "text": "It was in an envelope"
+      }
+    ],
+    "answer": "b",
+    "explain": "Stamps can be copied. A checkable case number and no money are the real signs."
+  },
+  "hints": {
+    "nudge": "What is this message actually asking you to do?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-government",
+    "in-pib-alert"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the letter",
+      "title": "Letter check",
+      "rows": [
+        {
+          "k": "Arrived by",
+          "v": "Registered post",
+          "clue": "post"
+        },
+        {
+          "k": "Case number",
+          "v": "Check on the court's own website",
+          "clue": "subject"
+        },
+        {
+          "k": "Payment asked?",
+          "v": "No",
+          "clue": "nopay"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Is a real notice checkable?",
+          "v": "Yes, on the official website you type yourself",
+          "clue": "check"
+        },
+        {
+          "k": "Do real notices ask for money by call or link?",
+          "v": "No"
+        }
+      ]
+    }
+  ]
+}

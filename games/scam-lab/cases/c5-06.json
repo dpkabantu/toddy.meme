@@ -1,397 +1,286 @@
 {
   "id": "c5-06",
-  "type": "boss",
+  "type": "hunt",
   "chapter": 5,
-  "difficulty": 3,
-  "title": "The Drainer Kit",
+  "difficulty": 2,
+  "title": "Boost the Reviews",
   "disguise": "influencer",
-  "disguise2": "support",
   "intro": [
-    "Mirage's quietest trap: a drainer kit with a friendly face.",
-    "It starts with a \"free NFT\" and ends with \"help\" to fix it.",
-    "Collect the clues and unmask him."
+    "A chat offers you easy money for boosting hotel reviews. Then it asks you to top up your account.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
   ],
   "notify": {
-    "app": "Hedrio",
-    "from": "New NFT received",
-    "text": "🎁 \"Kelvaro Pass\" arrived in your wallet"
+    "app": "Chirp",
+    "from": "Mira (HR)",
+    "text": "Boost hotel ratings and earn commission…"
   },
   "screen": {
     "app": "chirp",
     "head": {
       "name": [
         {
-          "clue": "nft",
-          "text": "Kelvaro Pass 🎁",
-          "id": "duel-name"
+          "clue": "name",
+          "text": "Mira (HR) · StayStars"
         }
       ],
       "sub": [
         {
-          "clue": "collection",
-          "text": "unverified collection"
+          "clue": "handle",
+          "text": "@mira_staystars_hr"
         }
       ],
       "avatar": {
-        "glyph": "🎁",
-        "clue": "avatar"
+        "glyph": "🏨",
+        "clue": "pic"
       }
     },
-    "context": "An NFT you never asked for appeared in your wallet.",
+    "banner": [
+      {
+        "clue": "dmfirst",
+        "text": "Message request · you do not follow this account"
+      }
+    ],
+    "context": "You are in a chat with a \"mentor\" who guides you through tasks.",
     "items": [
       {
-        "msg": [
-          {
-            "clue": "surprise",
-            "text": "You received a free Kelvaro Pass!"
-          }
+        "time": [
+          "5:05 PM"
         ]
       },
       {
         "msg": [
-          "Claim your bonus at ",
+          "Your ",
           {
-            "clue": "claimsite",
-            "text": "kelvaro-pass.app",
-            "link": true
+            "clue": "first",
+            "text": "first 3 tasks are done"
           },
-          " — ",
+          "! Here is your commission: $80. 🎉"
+        ]
+      },
+      {
+        "msg": [
+          "For the next set, you must ",
           {
-            "clue": "setall",
-            "text": "approve \"all NFTs\" to activate"
+            "clue": "topup",
+            "text": "top up your account with $600 in crypto"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          "It comes back with ",
+          {
+            "clue": "profit",
+            "text": "30% profit"
+          },
+          " in 20 minutes."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "rush",
+            "text": "Tasks close in 10 minutes."
+          },
+          " ",
+          {
+            "clue": "mentor",
+            "text": "Our top earners all follow my plan."
           }
         ]
       }
     ]
   },
-  "duel": {
-    "start": "d1",
-    "nodes": {
-      "d1": {
-        "rename": "Kelvaro Support",
-        "say": [
-          {
-            "sys": [
-              "You opened the help chat on the site"
-            ]
-          },
-          {
-            "msg": [
-              "To activate your pass, ",
-              {
-                "clue": "approveall",
-                "text": "approve access to all your NFTs"
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Why does a pass need all my NFTs?",
-            "next": "d2"
-          },
-          {
-            "text": "Approve all",
-            "next": "d3"
-          },
-          {
-            "text": "Close it and report",
-            "end": "block_report"
-          }
-        ]
-      },
-      "d2": {
-        "say": [
-          {
-            "msg": [
-              {
-                "clue": "standard",
-                "text": "Standard for all NFT passes 👍"
-              },
-              " Other holders already did it."
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Not standard. Report.",
-            "end": "block_report"
-          },
-          {
-            "text": "I'll hide the NFT and ask in the wallet's official help",
-            "end": "verify"
-          },
-          {
-            "text": "OK, approving",
-            "next": "d3"
-          }
-        ]
-      },
-      "d3": {
-        "rename": "Wallet Rescue Desk",
-        "disguise": "support",
-        "say": [
-          {
-            "sys": [
-              {
-                "clue": "swap",
-                "text": "A \"Wallet Rescue Desk\" messaged you right after."
-              }
-            ]
-          },
-          {
-            "msg": [
-              "We saw a drainer hit you! ",
-              {
-                "clue": "revoke",
-                "text": "Use our revoke tool and enter your phrase to save the rest."
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Use their tool",
-            "end": "go_ahead"
-          },
-          {
-            "text": "Rescuers who want my phrase are the same scam. Report.",
-            "end": "block_report"
-          },
-          {
-            "text": "I'll revoke it myself from the wallet's settings",
-            "end": "verify"
-          }
-        ]
-      }
-    }
-  },
   "clues": {
-    "surprise": {
-      "label": "NFT you never asked for",
+    "dmfirst": {
+      "label": "They messaged first",
       "strength": "strong",
-      "lens": "It appeared out of nowhere.",
-      "why": "Surprise NFTs are bait."
+      "lens": "A stranger found you.",
+      "why": "Real employers do not recruit through cold DMs on chat apps."
     },
-    "collection": {
-      "label": "Unverified collection",
+    "first": {
+      "label": "Small early payout",
       "strength": "strong",
-      "lens": "Your wallet marks it unverified.",
-      "why": "Unknown collections are often scams."
+      "lens": "They pay you first to build trust.",
+      "why": "The small payout is bait."
     },
-    "claimsite": {
-      "label": "Claim site",
+    "topup": {
+      "label": "A \"top-up\" in crypto",
       "strength": "strong",
-      "lens": "An outside site to \"claim\" a bonus.",
-      "why": "Claim sites are drainers."
+      "lens": "You must send money to keep working.",
+      "why": "Real jobs never ask you to pay in crypto."
     },
-    "setall": {
-      "label": "Approve all NFTs",
+    "profit": {
+      "label": "A promised 30% profit in 20 minutes",
       "strength": "strong",
-      "lens": "Access to every NFT you own.",
-      "why": "\"Approve all\" hands over the whole collection."
+      "lens": "A huge fast profit.",
+      "why": "No honest job returns 30% in 20 minutes."
     },
-    "approveall": {
-      "label": "Approve-all request again",
+    "rush": {
+      "label": "Tasks close in 10 minutes",
       "strength": "strong",
-      "lens": "Support repeats it.",
-      "why": "No real pass needs all your NFTs."
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
     },
-    "standard": {
-      "label": "\"Standard\" excuse",
+    "mentor": {
+      "label": "\"Top earners follow my plan\"",
       "strength": "strong",
-      "lens": "Calls it normal.",
-      "why": "Calling something \"standard\" is not an explanation."
+      "lens": "A crowd you cannot see.",
+      "why": "A crowd proves nothing."
     },
-    "swap": {
-      "label": "A rescuer appears",
-      "strength": "strong",
-      "lens": "Help arrives right after the attack.",
-      "why": "Scammers come back as rescuers."
-    },
-    "revoke": {
-      "label": "Phrase to \"revoke\"",
-      "strength": "strong",
-      "lens": "A revoke tool that wants your phrase.",
-      "why": "Revoking never needs your phrase."
-    },
-    "nft": {
-      "label": "Shiny name",
+    "handle": {
+      "label": "A work-like handle",
       "strength": "harmless",
-      "lens": "\"Kelvaro Pass\".",
-      "why": "Names prove nothing."
+      "lens": "@mira_staystars_hr.",
+      "why": "A handle proves nothing alone."
     },
-    "avatar": {
-      "label": "Gift icon",
+    "name": {
+      "label": "An HR title",
       "strength": "harmless",
-      "lens": "A gift emoji.",
-      "why": "Proves nothing."
+      "lens": "Mira from HR.",
+      "why": "Titles are easy to claim."
+    },
+    "pic": {
+      "label": "Hotel picture",
+      "strength": "harmless",
+      "lens": "A hotel icon.",
+      "why": "Pictures prove nothing."
     }
   },
   "actions": [
     {
-      "id": "open_chat",
-      "label": "Open the claim site's help chat",
-      "goto": "duel"
+      "id": "go_ahead",
+      "label": "Top up $600 in crypto"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
     },
     {
       "id": "verify",
-      "label": "Hide the NFT and ask the wallet's official help"
+      "label": "Stop and check the company on its own site"
     },
     {
       "id": "block_report",
-      "label": "Hide the NFT and report it"
-    },
-    {
-      "id": "go_ahead",
-      "label": "Use tool",
-      "hidden": true
+      "label": "Stop, block and report the account"
     }
   ],
   "best_action": "block_report",
   "acceptable_actions": [
-    "verify"
+    "verify",
+    "ignore"
   ],
   "outcomes": {
     "block_report": {
       "scene": "safe",
-      "mirage": "caught",
-      "stamp": "CASE CLOSED",
-      "line": "Hidden and reported. The wallet now warns everyone about that collection.",
-      "mirageSays": "My golden bait!"
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Blocked and reported. You kept your savings and lost only a little of your time.",
+      "mirageSays": "Not my lovely scam!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Official help: \"Never interact with surprise NFTs. Just hide them.\"",
-      "mirageSays": "Hidden?! Boring!"
+      "line": "The hotel company's real site had no such program and warned about fake review jobs. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "The approval took the NFTs, and the \"rescue\" took the phrase and everything else.",
-      "mirageSays": "Rescued… into my pocket!"
+      "stamp": "SCAMMED",
+      "line": "The top-up vanished. \"Tasks\" kept demanding more, and nothing ever came back.",
+      "mirageSays": "Thanks for the details!"
     }
   },
   "what_if": {
-    "go_ahead": "Hiding the surprise NFT and walking away was all it took."
+    "go_ahead": "Stopping at the first top-up request was the exit. A job that asks you to pay in crypto is a scam.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
   },
-  "board": {
-    "q": "What's really going on?",
-    "verdicts": [
-      {
-        "id": "scam",
-        "text": "Bait NFT, approve-all drainer, then a fake rescuer"
-      },
-      {
-        "id": "real",
-        "text": "A real free pass with normal settings"
-      },
-      {
-        "id": "unsure",
-        "text": "Not enough evidence"
-      }
-    ],
-    "answer": "scam",
-    "pick": 3,
-    "explain": "A surprise NFT, an approve-all request and a rescuer who wants your phrase. One kit, three steps."
-  },
-  "golden_rule": "Surprise NFTs are bait. Hide them, never \"claim\" them, and never let a \"rescuer\" have your phrase.",
+  "golden_rule": "A job that asks you to top up in crypto is a task scam. Stop at the first payment request.",
   "quick_check": {
-    "q": "A free NFT appears with a link to claim a bonus. What do you do?",
+    "q": "A review-boosting job asks you to top up $600 in crypto, promising 30% back. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Claim it"
+        "text": "Top up, 30% is great"
       },
       {
         "id": "b",
-        "text": "Hide it and ignore the link"
+        "text": "Top up a little"
+      },
+      {
+        "id": "c",
+        "text": "Stop. Block and report. Real jobs never ask for crypto"
+      },
+      {
+        "id": "d",
+        "text": "Ask for a refund first"
       }
     ],
-    "answer": "b",
-    "explain": "Surprise NFTs lead to drainer sites."
+    "answer": "c",
+    "explain": "A crypto top-up for a job is the trap. Only scammers demand crypto."
   },
   "hints": {
-    "nudge": "Did you ask for this NFT?",
+    "nudge": "What does a real job pay you, and what does this one ask from you?",
     "glow_order": [
-      "surprise",
-      "setall",
-      "claimsite",
-      "collection",
-      "revoke",
-      "swap"
+      "dmfirst",
+      "first",
+      "topup",
+      "profit",
+      "rush",
+      "mentor"
     ]
   },
   "sources": [
-    "cafc-wallet",
-    "ftc-crypto",
-    "chainalysis-2025"
+    "ftc-jobs",
+    "ftc-crypto"
   ],
-  "checked_on": "2026-10-13",
+  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the NFT",
-      "title": "What arrived",
+      "label": "Check the account",
+      "title": "@mira_staystars_hr",
       "rows": [
         {
-          "k": "Appeared",
-          "v": "Out of nowhere",
-          "clue": "surprise"
+          "k": "You applied?",
+          "v": "No",
+          "clue": "dmfirst"
         },
         {
-          "k": "Collection",
-          "v": "Marked unverified by your wallet",
-          "clue": "collection"
-        },
-        {
-          "k": "Name",
-          "v": "\"Kelvaro Pass\"",
-          "clue": "nft"
-        }
-      ]
-    },
-    {
-      "id": "link",
-      "icon": "🔗",
-      "label": "Check the claim site",
-      "title": "Where it sends you",
-      "rows": [
-        {
-          "k": "To claim a bonus",
-          "v": "An outside site",
-          "clue": "claimsite"
-        },
-        {
-          "k": "What it asks",
-          "v": "Access to every NFT you own",
-          "clue": "setall"
+          "k": "Asks you to pay",
+          "v": "$600 in crypto",
+          "clue": "topup"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Official page",
-      "title": "What the wallet says",
+      "label": "Official advice",
+      "title": "What advice says",
       "rows": [
         {
-          "k": "Real wallets",
-          "v": "Never ask for your phrase to revoke anything"
+          "k": "Who demands payment in crypto?",
+          "v": "Only scammers",
+          "clue": "topup"
         },
         {
-          "k": "Is \"approve all\" normal?",
-          "v": "No, it hands over everything",
-          "clue": "standard"
-        },
-        {
-          "k": "Revoke tool asking for your phrase",
-          "v": "Fake",
-          "clue": "revoke"
+          "k": "Task jobs",
+          "v": "Pay a little first, then ask for money",
+          "clue": "first"
         }
       ]
     }

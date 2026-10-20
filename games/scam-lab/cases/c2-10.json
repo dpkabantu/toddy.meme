@@ -1,0 +1,324 @@
+{
+  "id": "c2-10",
+  "type": "duel",
+  "chapter": 2,
+  "difficulty": 3,
+  "title": "The Payment Screenshot",
+  "disguise": "influencer",
+  "intro": [
+    "You are selling your old bicycle for ₹6,500 on Tradely. A buyer says he has paid.",
+    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
+    "Every chat ends with your choice. Choose wisely."
+  ],
+  "notify": {
+    "app": "Tradely",
+    "from": "Buyer: Arjun",
+    "text": "I have paid! Please check the screenshot…"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "text": "Arjun (Tradely buyer)",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        "Interested in: bicycle ₹6,500"
+      ],
+      "avatar": {
+        "glyph": "🚲",
+        "clue": "logo"
+      }
+    },
+    "banner": [
+      "Chat opened on Tradely, moved to texts at his request"
+    ],
+    "items": []
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              "Hi, I want the bicycle. ",
+              {
+                "clue": "offsite",
+                "text": "Let us skip the app and do this by text."
+              }
+            ]
+          },
+          {
+            "msg": [
+              "I have ",
+              {
+                "clue": "paid",
+                "text": "paid ₹6,500"
+              },
+              ". Look: ",
+              {
+                "clue": "shot",
+                "text": "[payment screenshot: \"Sent ₹6,500 · Success\"]"
+              }
+            ]
+          },
+          {
+            "msg": [
+              "Send the bicycle with my courier now."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Let me check my bank first",
+            "next": "n2"
+          },
+          {
+            "text": "Sending it now",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Stop. Report the buyer.",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              "The bank is slow on Sundays. ",
+              {
+                "clue": "screenshot",
+                "text": "The screenshot is proof enough."
+              }
+            ]
+          },
+          {
+            "msg": [
+              "I sent ₹16,500 by mistake. ",
+              {
+                "clue": "over",
+                "text": "Return the extra ₹10,000 to me and send the bicycle."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, returning ₹10,000",
+            "end": "go_ahead"
+          },
+          {
+            "text": "A screenshot proves nothing. I only trust my own bank balance.",
+            "next": "n3"
+          },
+          {
+            "text": "Report and block",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n3": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "angry",
+                "text": "You are wasting my time. Do it or I will write a bad review!"
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Fine, I will send it",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Money is not in my account, so no bicycle. I will tell Tradely.",
+            "end": "verify"
+          },
+          {
+            "text": "Report and block",
+            "end": "block_report"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "offsite": {
+      "label": "Off the marketplace",
+      "strength": "strong",
+      "lens": "He wants to leave the app and talk by text.",
+      "why": "Scammers move you away from the safety of the marketplace."
+    },
+    "paid": {
+      "label": "\"I have paid\"",
+      "strength": "strong",
+      "lens": "Money is claimed, but nothing has arrived in your account.",
+      "why": "Only your own bank or payment app can tell you a payment arrived."
+    },
+    "shot": {
+      "label": "A screenshot as proof",
+      "strength": "strong",
+      "lens": "A picture is not a payment. Anyone can make one in seconds.",
+      "why": "Never trust a screenshot. Trust your own account balance."
+    },
+    "screenshot": {
+      "label": "\"The screenshot is enough\"",
+      "strength": "strong",
+      "lens": "He pushes you to accept the picture.",
+      "why": "An honest buyer waits while you check."
+    },
+    "over": {
+      "label": "Overpayment and \"send back\"",
+      "strength": "strong",
+      "lens": "He says he overpaid and asks you to return the extra.",
+      "why": "Sending back \"extra\" money is a classic trick: the first payment never existed."
+    },
+    "angry": {
+      "label": "Anger and threats",
+      "strength": "strong",
+      "lens": "A bad-review threat to make you rush.",
+      "why": "Pressure is the tool. An honest buyer is patient."
+    },
+    "logo": {
+      "label": "Bicycle picture",
+      "strength": "harmless",
+      "lens": "A little bicycle.",
+      "why": "A picture proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Send the bicycle or the extra money"
+    },
+    {
+      "id": "verify",
+      "label": "Wait until the money is in my own account"
+    },
+    {
+      "id": "block_report",
+      "label": "Block and report the buyer"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Blocked and reported. Tradely removed the fake buyer before he reached another seller.",
+      "mirageSays": "Curses! Blocked again!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Your own account showed no payment at all. No money, no bicycle. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The payment never existed. You lost the bicycle, or ₹10,000, or both.",
+      "mirageSays": "Thanks for the bicycle!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Looking at your own account balance would have ended it in one tap. Nothing arrived.",
+    "verify": "Waiting for the money to appear in your own account is the right habit. Reporting the buyer as well protects others."
+  },
+  "golden_rule": "A screenshot is not a payment. Only your own account balance is proof. Never send \"extra\" money back.",
+  "quick_check": {
+    "q": "A buyer sends a screenshot saying he paid and asks you to ship now. What proves he paid?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The screenshot"
+      },
+      {
+        "id": "b",
+        "text": "His message saying so"
+      },
+      {
+        "id": "c",
+        "text": "The money showing in your own account"
+      },
+      {
+        "id": "d",
+        "text": "A promise to review you well"
+      }
+    ],
+    "answer": "c",
+    "explain": "Only your own account shows a payment. Pictures are easy to fake."
+  },
+  "hints": {
+    "nudge": "Where would you see a real payment?",
+    "glow_order": [
+      "shot",
+      "paid",
+      "over",
+      "offsite",
+      "screenshot",
+      "angry"
+    ]
+  },
+  "sources": [
+    "ftc-marketplace",
+    "ftc-job-scams"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the buyer",
+      "title": "Arjun",
+      "rows": [
+        {
+          "k": "Account age",
+          "v": "2 days"
+        },
+        {
+          "k": "Left the marketplace?",
+          "v": "Yes, asked for texts",
+          "clue": "offsite"
+        },
+        {
+          "k": "Money in your account",
+          "v": "₹0",
+          "clue": "paid"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Pay and sell inside the marketplace",
+          "v": "Keeps the site's protections",
+          "clue": "offsite"
+        },
+        {
+          "k": "A check or payment with \"send back the extra\"",
+          "v": "A scam, the first payment is fake",
+          "clue": "over"
+        }
+      ]
+    }
+  ]
+}

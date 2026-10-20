@@ -1,0 +1,249 @@
+{
+  "id": "c5-17",
+  "type": "hunt",
+  "chapter": 5,
+  "difficulty": 2,
+  "title": "The Laptop in the Post",
+  "disguise": null,
+  "intro": [
+    "A company you just joined says your laptop is on its way. Experience has made you wary.",
+    "But some messages are real. Mirage loves it when you stop trusting the honest ones.",
+    "Sniff carefully. Then decide."
+  ],
+  "notify": {
+    "app": "Mail",
+    "from": "Quillon Systems IT",
+    "text": "Your laptop has shipped"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        "Quillon Systems IT"
+      ],
+      "addr": [
+        {
+          "clue": "addr",
+          "text": "it@quillon.example"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "Your work laptop has shipped"
+        }
+      ],
+      "time": [
+        "9:05 AM"
+      ]
+    },
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "name",
+            "text": "Hi Toddy,"
+          }
+        ]
+      },
+      {
+        "p": [
+          "Welcome to Quillon Systems! Your ",
+          {
+            "clue": "laptop",
+            "text": "work laptop shipped today"
+          },
+          " and should arrive by Thursday."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "track",
+            "text": "Track it using the courier number in your Quillon HR portal."
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "nopay",
+            "text": "There is nothing to pay. We cover all equipment."
+          }
+        ]
+      },
+      {
+        "foot": [
+          {
+            "clue": "hr",
+            "text": "Questions? Call your manager or HR on the numbers in your offer letter."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "addr": {
+      "label": "The company's real address",
+      "strength": "harmless",
+      "lens": "It comes from the company's own domain.",
+      "why": "A matching domain is good evidence."
+    },
+    "subject": {
+      "label": "A plain subject",
+      "strength": "harmless",
+      "lens": "Your work laptop has shipped.",
+      "why": "Calm subjects are typical."
+    },
+    "name": {
+      "label": "Uses your name",
+      "strength": "harmless",
+      "lens": "It greets you by name.",
+      "why": "Proves little alone."
+    },
+    "laptop": {
+      "label": "A laptop the company sends",
+      "strength": "harmless",
+      "lens": "The company pays for and sends your equipment.",
+      "why": "Honest employers provide the equipment."
+    },
+    "track": {
+      "label": "Tracked in the portal",
+      "strength": "harmless",
+      "lens": "You check delivery in your own HR portal.",
+      "why": "Pointing you to your own account is honest."
+    },
+    "nopay": {
+      "label": "Nothing to pay",
+      "strength": "harmless",
+      "lens": "It says the company covers all equipment.",
+      "why": "Honest employers never ask you to pay."
+    },
+    "hr": {
+      "label": "Real numbers from your offer letter",
+      "strength": "harmless",
+      "lens": "It points to numbers you already hold.",
+      "why": "Using contact details you already have is honest."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Track the laptop in the HR portal and wait for it"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "The portal showed the courier's number. The laptop arrived on Thursday, and nobody asked for money.",
+      "toddy": "happy"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "Nothing bad happened. But checking the portal would have told you when to expect it.",
+      "mirageSays": "Fine. Next!"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was a real message from your new employer. When every message looks like a scam, real ones get lost too.",
+      "mirageSays": "If you trust nothing, I win anyway."
+    }
+  },
+  "what_if": {
+    "block_report": "The company sent the laptop, asked for nothing, and pointed you to your own HR portal. That is how an honest employer looks.",
+    "ignore": "Ignoring was safe. Recognising a real message is the skill: it asks for nothing secret and matches something you know."
+  },
+  "golden_rule": "An honest employer sends your equipment and never asks you to pay. Check in your own HR portal.",
+  "quick_check": {
+    "q": "What made this laptop email honest?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It had a laptop in it"
+      },
+      {
+        "id": "b",
+        "text": "The company paid for it, asked for nothing and sent you to your own portal"
+      },
+      {
+        "id": "c",
+        "text": "It came in the morning"
+      },
+      {
+        "id": "d",
+        "text": "It used your name"
+      }
+    ],
+    "answer": "b",
+    "explain": "Who pays and where you check are the real signs."
+  },
+  "hints": {
+    "nudge": "What is this message actually asking you to do?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-job-scams"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Sender check",
+      "rows": [
+        {
+          "k": "Sent from",
+          "v": "it@quillon.example",
+          "clue": "addr"
+        },
+        {
+          "k": "Who pays for the laptop?",
+          "v": "The company",
+          "clue": "nopay"
+        },
+        {
+          "k": "Where to track",
+          "v": "Your own HR portal",
+          "clue": "track"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Do honest employers charge for equipment?",
+          "v": "Never",
+          "clue": "nopay"
+        },
+        {
+          "k": "How to check",
+          "v": "Use the portal and numbers you already hold",
+          "clue": "hr"
+        }
+      ]
+    }
+  ]
+}

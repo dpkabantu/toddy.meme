@@ -1,0 +1,281 @@
+{
+  "id": "c5-11",
+  "type": "hunt",
+  "chapter": 5,
+  "difficulty": 2,
+  "title": "The Job Abroad",
+  "disguise": "admin",
+  "intro": [
+    "An agent offers a well-paid job abroad, with a visa and flights included. Almost.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Messages",
+    "from": "SkyBridge Placements",
+    "text": "Job abroad: free visa, high salary"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "SkyBridge Placements"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "num",
+          "text": "Mobile number only"
+        }
+      ]
+    },
+    "context": "You are looking for work abroad.",
+    "items": [
+      {
+        "time": [
+          "Today 4:20 PM"
+        ]
+      },
+      {
+        "msg": [
+          "Urgent hiring! ",
+          {
+            "clue": "job",
+            "text": "Warehouse worker abroad, ₹2,00,000 a month"
+          },
+          ". ",
+          {
+            "clue": "visa",
+            "text": "Free visa and flights."
+          }
+        ]
+      },
+      {
+        "msg": [
+          "Pay only a small ",
+          {
+            "clue": "fee",
+            "text": "registration and agent fee of ₹80,000"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          "You will first ",
+          {
+            "clue": "third",
+            "text": "fly to a third country"
+          },
+          " and the visa will follow."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "rush",
+            "text": "Few seats left. Pay today."
+          },
+          " ",
+          {
+            "clue": "noreg",
+            "text": "No papers to check, we handle everything."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "job": {
+      "label": "A huge salary for easy work",
+      "strength": "strong",
+      "lens": "₹2,00,000 a month for warehouse work.",
+      "why": "Big pay for little skill is the bait."
+    },
+    "visa": {
+      "label": "\"Free visa\"",
+      "strength": "strong",
+      "lens": "A visa is not something an agent can promise.",
+      "why": "Check what the destination country's own official site says."
+    },
+    "fee": {
+      "label": "A big agent fee up front",
+      "strength": "strong",
+      "lens": "You must pay ₹80,000 first.",
+      "why": "Honest placement firms are paid by the employer, not you."
+    },
+    "third": {
+      "label": "Fly to a third country first",
+      "strength": "strong",
+      "lens": "You are asked to fly somewhere else and wait.",
+      "why": "This is how people get stranded."
+    },
+    "rush": {
+      "label": "Few seats, pay today",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
+    },
+    "noreg": {
+      "label": "\"No papers to check\"",
+      "strength": "strong",
+      "lens": "They give no registration or licence number.",
+      "why": "A real agent shows a licence you can check."
+    },
+    "name": {
+      "label": "A firm name",
+      "strength": "harmless",
+      "lens": "SkyBridge Placements.",
+      "why": "Names are easy to invent."
+    },
+    "num": {
+      "label": "A mobile number",
+      "strength": "harmless",
+      "lens": "No office address, only a mobile.",
+      "why": "The number alone proves little."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Pay the ₹80,000 fee"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Check the agent's licence on the official government list"
+    },
+    {
+      "id": "block_report",
+      "label": "Report the number and delete it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported and deleted. Your phone company can block the number.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The official list had no agent by that name, and the government warned about fake job agents. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The ₹80,000 was lost. The \"visa\" never came, and the agent's number went dead.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Checking the agent on the official list would have ended it. A real agent is licensed and does not ask this much in advance.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "A job abroad with a huge salary and a big agent fee is a scam. Check the agent on the official list first.",
+  "quick_check": {
+    "q": "An agent offers a job abroad at ₹2,00,000 a month, asks ₹80,000 first and says you will fly to a third country. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay quickly, seats are few"
+      },
+      {
+        "id": "b",
+        "text": "Pay half"
+      },
+      {
+        "id": "c",
+        "text": "Check the agent on the official government list. Do not pay"
+      },
+      {
+        "id": "d",
+        "text": "Ask for a receipt"
+      }
+    ],
+    "answer": "c",
+    "explain": "A huge fee and a third country are classic signs."
+  },
+  "hints": {
+    "nudge": "Would an employer ask you to pay and to fly somewhere else?",
+    "glow_order": [
+      "job",
+      "visa",
+      "fee",
+      "third",
+      "rush",
+      "noreg"
+    ]
+  },
+  "sources": [
+    "ftc-job-scams",
+    "in-rbi-beaware",
+    "ftc-jobs"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the agent",
+      "title": "SkyBridge Placements",
+      "rows": [
+        {
+          "k": "Registration shown",
+          "v": "None",
+          "clue": "noreg"
+        },
+        {
+          "k": "Asked to pay",
+          "v": "₹80,000",
+          "clue": "fee"
+        },
+        {
+          "k": "Fly to",
+          "v": "A third country first",
+          "clue": "third"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Pay to get a job?",
+          "v": "Honest employers never ask",
+          "clue": "fee"
+        },
+        {
+          "k": "How to check",
+          "v": "Look the agent up on the official list"
+        }
+      ]
+    }
+  ]
+}

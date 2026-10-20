@@ -1,0 +1,311 @@
+// Chapter 4: Fear & Panic, new cases (part B). Invented names only.
+import { chat, mail } from '../author.mjs';
+
+export default {
+  // 11 --------------------------------------------------------------
+  'virus-popup': {
+    type: 'hunt', diff: 1, disguise: 'support', title: 'The Virus Alarm',
+    intro: 'A loud warning fills your screen while you browse. It says your phone is infected.',
+    notify: ['Browser', 'Warning', '⚠️ VIRUS DETECTED. Call now!'],
+    screen: chat({
+      app: 'chirp', name: '{popup|⚠️ Security Alert}', sub: '{site|safe-phone-scan.live}', av: ['⚠️', 'pic'],
+      context: 'A full-screen warning popped up in your browser.',
+      items: [
+        'm: {infected|Your phone is infected with 7 viruses!}',
+        'm: Your {data|photos and bank details} are at risk.',
+        'm: {call|Call Hedrio Support now: 0800 555 0147}',
+        'm: {lock|Do not close this window or your phone will be locked.}',
+      ],
+    }),
+    clues: {
+      infected: ['A scary virus count', 's', 'A website cannot see viruses on your phone.', 'Real security software does not warn you through a web page.'],
+      call: ['"Call this number now"', 's', 'A real warning never asks you to call a number.', 'Pop-ups that give a phone number are the start of a support scam.'],
+      lock: ['A threat to lock your phone', 's', '"Do not close this window."', 'You can always close the page or the browser.'],
+      data: ['Your photos and bank details', 's', 'It names the things you fear losing.', 'Fear is the tool.'],
+      site: ['An odd address', 's', 'safe-phone-scan.live is not your phone\'s own security tool.', 'A site you did not choose cannot scan your phone.'],
+      popup: ['A big alert title', 'h', 'An alert with a warning sign.', 'Big warning signs are easy to draw.'],
+      pic: ['Warning icon', 'h', 'A triangle with an exclamation mark.', 'Icons are easy to copy.'],
+    },
+    go: 'Call the number', verify: 'Close the browser and scan with my phone\'s own security tool',
+    report: 'Close the page and report the site',
+    noIgnore: true,
+    win: 'You closed the page and reported the site. The browser added it to its warning list.',
+    checked: 'Your phone\'s own security tool found no viruses. The pop-up was fake. Case cracked.',
+    lose: 'The "technician" asked you to install a remote app, then moved money from your bank.',
+    avoid: 'Closing the page was always allowed. A web page cannot detect viruses on your phone.',
+    rule: 'A pop-up that says "call now" is a scam. Close it, and use only your phone\'s own security tool.',
+    quick: ['A pop-up says your phone has viruses and tells you to call a number now. What do you do?', ['Call, it sounds serious', 'Click Scan Now', 'Close the page. Use your phone\'s own security tool if worried', 'Call but give no details'], 'c', 'Real warnings never ask you to call a number.'],
+    nudge: 'Can a web page really see inside your phone?',
+    sources: ['ftc-techsupport', 'cafc-wallet'],
+    kit: {
+      link: ['Check the page', 'Where the warning came from', [['Address', 'safe-phone-scan.live', 'site'], ['Asks you to', 'Call a number', 'call']]],
+      adv: ['What advice says', [['Do real pop-ups ask you to call?', 'Never', 'call'], ['What to do', 'Close the page, and use your own security tool']]],
+    },
+  },
+
+  // 12 --------------------------------------------------------------
+  'blackmail-text': {
+    type: 'hunt', diff: 2, disguise: 'support', title: 'The Threat Text',
+    intro: 'A message arrives from a stranger. It says private pictures of you exist. It is a text only, and nothing is shown.',
+    notify: ['Messages', 'Unknown number', 'I have your private photos…'],
+    screen: chat({
+      app: 'sms', name: '{num|Unknown number}', context: 'No picture or file is attached. You have no idea what they mean.',
+      items: [
+        't: Today 11:58 PM',
+        'm: I have {photos|your private photos}. I will send them to everyone you know.',
+        'm: {pay|Pay ₹15,000 in the next hour} and I will delete them.',
+        'm: {nopic|I will not show them to you yet.}',
+        'm: {secret|Tell no one.}',
+      ],
+    }),
+    clues: {
+      photos: ['"I have your photos"', 's', 'A claim with nothing shown.', 'Scammers send the same threat to thousands of people and hope some are frightened.'],
+      pay: ['Pay within the hour', 's', 'A demand for money, with a short deadline.', 'Paying never ends it. It usually leads to more demands.'],
+      nopic: ['Nothing shown', 's', 'They show no picture, not even one.', 'No proof means they probably have nothing.'],
+      secret: ['"Tell no one"', 's', 'Secrecy keeps you alone with the fear.', 'Telling someone you trust, and reporting, is the way out.'],
+      num: ['An unknown number', 'h', 'A stranger at midnight.', 'The number alone proves little.'],
+    },
+    go: 'Pay the ₹15,000', verify: 'Do not pay. Tell someone I trust',
+    report: 'Do not pay. Block the number and report it on 1930',
+    noIgnore: true,
+    win: 'You blocked the number and reported it. Nothing was sent anywhere, and the threats stopped.',
+    checked: 'You told a friend. They said it was a mass threat message and helped you report it. Nothing followed. Case cracked.',
+    lose: 'The first payment brought a second demand, then a third. Paying never ended it.',
+    avoid: 'Not paying, telling someone and reporting would have stopped it. A threat with no proof is usually empty.',
+    rule: 'Never pay a person who threatens you. Block, tell someone you trust, and report it. You are not alone.',
+    quick: ['A stranger says they have private photos of you and demands money. They show nothing. What is the best move?', ['Pay quickly so it ends', 'Pay half', 'Do not pay. Block, tell someone you trust and report it', 'Reply to bargain'], 'c', 'Paying does not end it. Telling someone and reporting does.'],
+    nudge: 'What proof did they actually show?',
+    sources: ['in-pib-alert', 'in-1930', 'ftc-government'],
+    kit: {
+      who: ['Check the message', 'What was sent', [['Any picture shown?', 'None', 'nopic'], ['Asked for money', '₹15,000 in an hour', 'pay'], ['Asked you to tell no one', 'Yes', 'secret']]],
+      adv: ['What advice says', [['Blackmail messages', 'The government warns about them and asks you to report', 'photos'], ['Where to report', 'The cyber helpline 1930, or cybercrime.gov.in']]],
+    },
+  },
+
+  // 13 --------------------------------------------------------------
+  'branch-kyc': {
+    type: 'hunt', diff: 2, honest: true, title: 'The Branch Visit',
+    intro: 'A message from your bank says you must update your details. After today, you suspect a trap.',
+    notify: ['Messages', 'Orrin Bank', 'Please visit your branch to update your details'],
+    screen: chat({
+      app: 'sms', name: '{sender|Orrin Bank}', context: 'The same notice was posted on the bank\'s own website last week.',
+      items: [
+        't: Today 10:10 AM',
+        'm: Orrin Bank: we need to {update|update your KYC details} on your account.',
+        'm: Please {visit|visit your home branch} with your ID within 30 days.',
+        'm: {nolink|There is no link to click, and we will not ask for your OTP, PIN or card details by phone or text.}',
+        'm: {check|You may call the number on the back of your card to confirm.}',
+      ],
+    }),
+    clues: {
+      sender: ['Same thread as your bank texts', 'h', 'It sits with your past bank messages.', 'A name proves little. What it asks matters.'],
+      update: ['A plain KYC notice', 'h', 'A routine update request, no threats.', 'A calm notice with no threat is typical of real banks.'],
+      visit: ['Visit your branch in person', 'h', 'You go to the bank, with 30 days to do it.', 'In-person visits and a long deadline are honest signs.'],
+      nolink: ['No link, no secret asked', 'h', 'No link, and it says it will never ask for OTP, PIN or card details.', 'Real banks warn you about scams.'],
+      check: ['A way to confirm', 'h', 'It tells you to call the number on your card.', 'Honest messages invite you to check.'],
+    },
+    go: 'Check on the bank\'s own website, then visit my branch with my ID', good: 'The bank\'s own website had the same notice. You visited the branch with your ID and finished the update in ten minutes.',
+    ignored: 'Nothing bad happened today. But a real KYC request ignored can restrict your account later. Checking was the better move.',
+    falseAlarm: 'That was a real notice. Ignoring or reporting it could have left your account restricted. Checking is the skill.',
+    calm: 'It had no link, a 30-day deadline, a visit to the branch and a reminder that the bank never asks for OTP or PIN. That calm is what real notices look like.',
+    rule: 'A real KYC request uses a branch visit or the official app, gives you time and asks for no OTP or PIN. Check, then visit.',
+    quick: ['What made this KYC message honest?', ['It named the bank', 'It had no link, gave 30 days, asked you to visit the branch and never asked for an OTP or PIN', 'It arrived in the morning', 'It was short'], 'b', 'No link, no rush, and no OTP asked: those are the real signs.'],
+    sources: ['in-rbi-beaware'],
+    kit: {
+      who: ['Check sender', 'Who sent this text', [['Same thread as your bank texts', 'Yes', 'sender'], ['Link in it?', 'None', 'nolink'], ['Deadline', '30 days', 'visit']]],
+      adv: ['What advice says', [['KYC update links and calls', 'A common trick: use the official site or branch', 'update'], ['How to check', 'Call the number on the back of your card', 'check']]],
+    },
+  },
+
+  // 15 --------------------------------------------------------------
+  'relative-arrested': {
+    type: 'duel', diff: 3, disguise: 'friend', title: 'Your Cousin Is in Trouble',
+    intro: 'A call comes at dinner. A stranger says your cousin has been in an accident and arrested.',
+    notify: ['Phone', 'Unknown number', 'Your cousin was arrested after an accident'],
+    screen: chat({
+      app: 'sms', name: [{ text: 'Unknown caller', id: 'duel-name' }], sub: '{num|Unknown number}', av: ['🚓', 'pic'], banner: 'Text after a phone call',
+    }),
+    duel: {
+      start: 'n1',
+      nodes: {
+        n1: {
+          say: ['m: I am a police officer. Your cousin Dev has been {arrested|arrested after an accident}.', 'm: {hurt|The other person is badly hurt.} {money|We need ₹50,000 now to settle it and avoid a case.}'],
+          replies: [['Let me speak to Dev', 'n2'], ['Sending the money now', '!go_ahead'], ['I will hang up and call Dev myself', '!verify']],
+        },
+        n2: {
+          say: ['m: He cannot talk, he is {crying|too upset}. Then we will take him to the station.', 'm: {rush|Pay in 10 minutes.}', 'm: {secret|And do not tell his parents.}'],
+          replies: [['OK, paying', '!go_ahead'], ['I will call Dev and his parents myself first', '!verify'], ['Hang up and report', '!block_report']],
+        },
+      },
+    },
+    clues: {
+      num: ['An unknown number', 's', 'A stranger, not a number you know.', 'Check with your family on numbers you already know.'],
+      arrested: ['"Arrested after an accident"', 's', 'A shocking story with no proof.', 'Shock is the weapon. Stop and check.'],
+      hurt: ['"Someone is badly hurt"', 's', 'They add guilt and urgency.', 'More fear, less thinking.'],
+      money: ['"Pay now to avoid a case"', 's', 'Real arrests are not settled by cash in minutes.', 'No honest officer takes cash by phone.'],
+      crying: ['He "cannot talk"', 's', 'They stop you hearing him, so you cannot check.', 'A real relative can come to the phone.'],
+      rush: ['Pay in 10 minutes', 's', 'A countdown.', 'Rushing is a pressure trick.'],
+      secret: ['"Do not tell his parents"', 's', 'Secrecy blocks your check.', 'Always tell the family. It breaks the scam.'],
+      pic: ['A police car', 'h', 'A little car icon.', 'Icons prove nothing.'],
+    },
+    actions: [['go_ahead', 'Send the ₹50,000'], ['verify', 'Call Dev and his parents myself, on numbers I know'], ['block_report', 'Hang up and report the call']],
+    best: 'block_report', ok: ['verify'],
+    out: {
+      block_report: ['win', 'BLOCKED', 'You hung up and reported the call. The number was blocked.', 'Curses! Hung up on again!'],
+      verify: ['win', 'CHECKED', 'Dev picked up at once. He was at home, safe and confused. Case cracked.', 'Hmph. They checked.'],
+      go_ahead: ['bad', 'SCAMMED', 'The money went to a stranger. Dev was at home all evening, perfectly fine.', 'Thanks for the cash!'],
+    },
+    whatif: { go_ahead: 'One call to Dev on a number you know would have ended it in 20 seconds.', verify: 'Checking was smart. Reporting the number as well protects other families.' },
+    rule: 'If a stranger says a relative is in trouble and wants money, hang up and call the relative on a number you know. It takes a minute.',
+    quick: ['A stranger calls to say your cousin was arrested and you must send money in 10 minutes. What do you do?', ['Send the money fast', 'Send half and ask for details', 'Hang up and call your cousin and his family on numbers you know', 'Ask the caller for his badge number'], 'c', 'Check on a number you know. A real relative answers.'],
+    hints: ['How can you check without trusting the caller?', ['money', 'crying', 'rush', 'secret', 'arrested', 'hurt', 'num']],
+    sources: ['ftc-family', 'in-pib-alert'],
+    kit: {
+      who: ['Check the call', 'Unknown caller', [['A number you know?', 'No', 'num'], ['Could Dev come to the phone?', 'No, "too upset"', 'crying']]],
+      adv: ['What advice says', [['A relative in trouble?', 'Check on a number you already know', 'money'], ['Money fast, secret?', 'A scam sign', 'secret']]],
+    },
+  },
+
+  // 16 --------------------------------------------------------------
+  'panic-rush': {
+    type: 'rush', diff: 3, title: 'Panic Inbox',
+    intro: 'Ten messages, each trying to scare you. One minute. Calm checking beats panic.',
+    cards: [
+      ['r1', 'SMS', 'Brightgrid Energy', 'Your electricity will be cut tonight unless you pay $120 now: brightgrid-pay.live', true, 'A threat to cut power tonight with a payment link. Check your own bill.'],
+      ['r2', 'SMS', 'Vantel Mobile', 'Your SIM will be blocked in 2 hours. Update your details: vantel-sim-update.net', true, 'A deadline and a look-alike link.'],
+      ['r3', 'Mail', 'Brightgrid Energy', 'Your bill for September is ready. See it in your Brightgrid account.', false, 'It asks for nothing and sends you to your own account.'],
+      ['r4', 'SMS', 'Orrin Bank', 'Your account is frozen! Verify now: orrin-unfreeze.co', true, 'A threat and a look-alike link. Open your own app.'],
+      ['r5', 'Call', 'Unknown number', 'This is the Cyber Crime Branch. A warrant is out in your name. Stay on the line.', true, 'A warrant over a call, with pressure to stay on the line.'],
+      ['r6', 'SMS', 'Orrin Bank', 'Payment of £212.00 at Gadgetz Direct was paused. If this was not you, open the Orrin app.', false, 'It names the payment and sends you to your own app.'],
+      ['r7', 'Mail', 'Civic Revenue Portal', 'FINAL NOTICE: pay now or face arrest.', true, 'A threat of arrest by email.'],
+      ['r8', 'SMS', 'Mum', 'Dinner at 7, bring bread please 🍞', false, 'Your mum, asking for bread.'],
+      ['r9', 'SMS', 'Unknown number', 'I have your photos. Pay ₹15,000 in the next hour or I send them to everyone.', true, 'A threat with no proof and a short deadline.'],
+      ['r10', 'SMS', 'Brightgrid Energy', 'Reminder: your bill of £62.40 is due on the 28th. Pay in your app or online as usual.', false, 'A calm reminder with a date, sent to your own account channels.'],
+    ],
+    rule: 'A message that scares you and hurries you is the one to check, slowly, on a number or site you already know.',
+    quick: ['A message says your power will be cut tonight unless you pay by a link. What do you do?', ['Pay fast, it is dark soon', 'Reply STOP', 'Check your own bill or app, and report the message', 'Call the number in the message'], 'c', 'Fear and a deadline are the trap. Your own bill shows the truth.'],
+    sources: ['ftc-utility', 'ftc-government', 'in-pib-alert'],
+  },
+
+  // 17 --------------------------------------------------------------
+  'real-utility': {
+    type: 'hunt', diff: 2, honest: true, title: 'The Bill Reminder',
+    intro: 'A reminder lands about your electricity bill. After a day of threats, you trust nothing.',
+    notify: ['Mail', 'Brightgrid Energy', 'Your bill is due on the 28th'],
+    screen: mail({
+      from: 'Brightgrid Energy', addr: '{addr|bills@brightgrid.energy}', subject: '{subject|Your October bill is due on the 28th}', time: '9:00 AM',
+      items: [
+        'p: {name|Hi Toddy,}',
+        'p: Your bill of {amount|£62.40} is due on {date|28 October}. It matches your usual monthly use.',
+        'p: {pay|Pay in your Brightgrid app or account, as usual.}',
+        'p: {nothreat|Nothing is wrong. This is only a reminder.}',
+        'foot: {foot|Your account number ends in 0412 · We never ask for your full card number or PIN by email.}',
+      ],
+    }),
+    clues: {
+      addr: ['The company\'s real address', 'h', 'It comes from bills@brightgrid.energy, the company\'s own domain.', 'A matching domain is good evidence, so also look at what it asks.'],
+      subject: ['A plain subject', 'h', 'No shouting, no threat.', 'Calm subjects are typical of real bills.'],
+      name: ['Uses your name', 'h', 'It greets you by name.', 'It proves little alone, but fits a real account.'],
+      amount: ['A normal amount', 'h', 'It matches your usual use.', 'You can compare with past bills.'],
+      date: ['A clear due date, not today', 'h', 'Due on the 28th, with time to pay.', 'Honest reminders give you time. Scams threaten tonight.'],
+      pay: ['Pay as usual', 'h', 'It sends you to your own app or account.', 'Pointing you to your own account is what honest companies do.'],
+      nothreat: ['No threat', 'h', 'It says nothing is wrong.', 'Honest reminders do not threaten you.'],
+      foot: ['Partial account number, and a safety line', 'h', 'It shows only the end of your account number, and says it never asks for card numbers or PINs.', 'Real companies warn you about scams.'],
+    },
+    go: 'Open my Brightgrid app and pay the bill as usual', good: 'The app showed the same £62.40, due on the 28th, matching your usual use. You paid in two taps.',
+    ignored: 'Nothing bad happened today. But a bill ignored too long can bring real late fees. Checking was the better move.',
+    falseAlarm: 'That was a real bill reminder. When every message looks like a scam, the real ones get lost too.',
+    calm: 'It matched your usual bill, gave you time, sent you to your own account and threatened nothing. That calm is what real messages look like.',
+    rule: 'A real bill reminder matches your usual bill, gives you time and sends you to your own account. A scam threatens tonight.',
+    quick: ['What made this bill reminder honest?', ['It mentioned the company', 'It matched your usual bill, gave time and sent you to your own account', 'It had an amount', 'It came in the morning'], 'b', 'Your usual amount, time to pay and no threat are the real signs.'],
+    sources: ['ftc-utility'],
+    kit: {
+      who: ['Check sender', 'Sender check', [['Sent from', 'bills@brightgrid.energy', 'addr'], ['Company\'s real domain', 'brightgrid.energy'], ['Amount vs usual', 'Matches', 'amount']]],
+      adv: ['What advice says', [['Do real utilities demand same-day payment?', 'No, they give you time', 'date'], ['How to pay', 'In your own app or account', 'pay']]],
+    },
+  },
+
+  // 18 --------------------------------------------------------------
+  'fake-lawyer': {
+    type: 'hunt', diff: 2, disguise: 'admin', title: 'The Lawyer\'s Letter',
+    intro: 'An email from a law firm says you are being sued, unless you settle today.',
+    notify: ['Mail', 'Harlow & Finch Legal', 'Legal notice: you are being sued'],
+    screen: mail({
+      from: '{from|Harlow & Finch Legal}', addr: '{addr|notice@harlowfinch-legal.net}', subject: '{subject|LEGAL NOTICE: you are being sued}', time: '6:45 AM',
+      items: [
+        'p: {greet|Dear Sir or Madam,}',
+        'p: A claim has been filed against you for {claim|unpaid dues of $1,850}.',
+        'p: {settle|Settle today to avoid court. After today the amount will double.}',
+        'p: {link|Settle now|link}',
+        'p: {who|We act for a client who wishes to remain anonymous.}',
+      ],
+    }),
+    clues: {
+      addr: ['A strange address', 's', 'It comes from harlowfinch-legal.net, not a normal law firm address.', 'Look at the address behind the name.'],
+      claim: ['Unpaid dues you do not know', 's', 'You owe nothing you can think of.', 'A claim you do not recognise needs checking, not paying.'],
+      settle: ['Settle today or it doubles', 's', 'A deadline and a doubling penalty.', 'A hard deadline stops you thinking.'],
+      link: ['A "settle now" link', 's', 'It leads to a payment page.', 'Real firms do not ask you to settle through an email link.'],
+      who: ['An anonymous client', 's', 'They will not say who is suing you.', 'A real claim names who is making it.'],
+      greet: ['"Dear Sir or Madam"', 'h', 'No name.', 'Vague greetings are common, but not proof alone.'],
+      from: ['A firm name', 'h', 'Harlow & Finch Legal.', 'Names are easy to invent.'],
+      subject: ['Capital letters', 'h', 'LEGAL NOTICE in capitals.', 'Shouting proves nothing alone.'],
+    },
+    go: 'Click Settle now', trap: ['Harlow & Finch · Settle', 'harlowfinch-legal.net/settle', 'Pay $1,850 by card to settle the claim.', 'Pay $1,850', 'Close this page'],
+    verify: 'Search for the firm and call a number I look up myself',
+    win: 'Reported as phishing and deleted. The fake address was blocked.',
+    checked: 'No such firm existed on the official register, and no claim had been filed. Case cracked.',
+    lose: 'The page copied your card. The "claim" never existed, and the money was gone.',
+    avoid: 'Checking whether the firm really exists would have ended it. A real claim names who is suing you.',
+    rule: 'A legal threat with a deadline and a payment link is a scam. Check that the firm exists, on a number you look up yourself.',
+    quick: ['An email says you are being sued and must settle today through a link. What do you do?', ['Pay to avoid court', 'Reply to negotiate', 'Do not click. Check the firm yourself, and report the email', 'Forward it to a friend'], 'c', 'A real claim names who is suing you and gives time. This one hurried you.'],
+    nudge: 'Who is the claim from, and how much time did they give you?',
+    sources: ['ftc-government', 'ftc-phishing'],
+    kit: {
+      who: ['Check sender', 'Who really sent this', [['Address', 'notice@harlowfinch-legal.net', 'addr'], ['Claimant named?', 'No, "anonymous"', 'who']]],
+      adv: ['What advice says', [['Settle through a link?', 'Never', 'link'], ['How to check', 'Look up the firm yourself and call it']]],
+    },
+  },
+
+  // 19 --------------------------------------------------------------
+  'safe-account': {
+    type: 'hunt', diff: 2, disguise: 'support', title: 'The Safe Account',
+    intro: 'A caller says criminals are in your bank account right now, and tells you how to protect your money.',
+    notify: ['Phone', 'Orrin Bank Fraud Team', 'Your account is under attack. Move your money now!'],
+    screen: chat({
+      app: 'sms', name: '{name|Orrin Bank Fraud Team}', sub: '{num|Unknown number}', av: ['🏦', 'logo'], banner: '{calledyou|They called you first}',
+      context: 'You have had no problem with your account.',
+      items: [
+        't: 3:30 PM',
+        'm: Our system shows {attack|criminals are in your account right now}.',
+        'm: To protect your money, {move|move it to a "safe account"} we will give you.',
+        'm: {rush|Do it in the next 10 minutes.} {otp|Read me the code we are texting you.}',
+        'm: {hang|Do not hang up or call the bank. It would delay us.}',
+      ],
+    }),
+    clues: {
+      calledyou: ['They called you', 's', 'You did not call the bank.', 'A call about fraud that you did not ask for deserves a check.'],
+      attack: ['"Criminals are in your account now"', 's', 'A scary claim with nothing shown.', 'Fear is the lure.'],
+      move: ['"Move it to a safe account"', 's', 'They give you an account to send money to.', 'A bank never asks you to move your money to protect it.'],
+      rush: ['10 minutes', 's', 'A countdown.', 'Rushing is a pressure trick.'],
+      otp: ['Asks for the code', 's', 'They want the code sent to you.', 'A code is a key to your account. Never share it.'],
+      hang: ['"Do not call the bank"', 's', 'They stop you checking.', 'Scammers block your way to a check.'],
+      name: ['A bank team name', 'h', 'Orrin Bank Fraud Team.', 'Names are easy to copy.'],
+      num: ['An unknown number', 'h', 'A number you do not know.', 'Caller ID can be faked, so the number proves little.'],
+      logo: ['A bank picture', 'h', 'A little bank.', 'Logos are easy to copy.'],
+    },
+    go: 'Move the money to the "safe account"', verify: 'Hang up and call the bank on the number on my card',
+    report: 'Hang up and report the call', noIgnore: true,
+    win: 'You hung up and reported the call. The bank blocked the number and warned other customers.',
+    checked: 'The bank\'s real line said: no problem with your account, and the bank never asks you to move money. Case cracked.',
+    lose: 'Your savings went to a stranger\'s account. The "fraud team" vanished.',
+    avoid: 'Hanging up and calling the number on your card would have shown the account was fine.',
+    rule: 'A bank never asks you to move money to keep it safe. Hang up and call the number on your card.',
+    quick: ['A caller says criminals are in your account and tells you to move your money to a "safe account". What do you do?', ['Move it fast', 'Move half', 'Hang up. Call the number on the back of your card', 'Share the code to prove it is you'], 'c', 'A bank never asks you to move money to protect it.'],
+    nudge: 'What does the caller want you to do with your money?',
+    sources: ['ftc-bank-call', 'in-rbi-beaware', 'ftc-codes'],
+    kit: {
+      who: ['Check the call', 'Orrin Bank Fraud Team', [['Called you first?', 'Yes', 'calledyou'], ['Asked to move money', 'Yes, to a "safe account"', 'move'], ['Told you not to call the bank', 'Yes', 'hang']]],
+      adv: ['What advice says', [['Move money to "protect" it?', 'Never. It is the scam', 'move'], ['How to check', 'Call the number on your card']]],
+    },
+  },
+};

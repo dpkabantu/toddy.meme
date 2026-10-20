@@ -258,7 +258,7 @@ check(db.prepare("SELECT COUNT(*) c FROM game_runs WHERE log_json IS NOT NULL AN
       return { answers, secondsLeft: left, quickAnswer: c.quick_check.answer, seconds: c.seconds - left, score: scoreRush(c, answers, left, c.quick_check.answer).total, ...over }; }
     const marks = {}; strongClues(c).forEach((k) => { marks[k] = 'flag'; });
     const board = c.board ? { verdict: c.board.answer, picks: strongClues(c).slice(0, c.board.pick) } : null;
-    const log = { marks, decision: c.best_action, quickAnswer: c.quick_check.answer, seconds: 40, hints: 0, seen: c.duel ? Object.keys(c.clues) : null, board };
+    const log = { marks, decision: c.best_action, quickAnswer: c.quick_check ? c.quick_check.answer : undefined, seconds: 40, hints: 0, seen: c.duel ? Object.keys(c.clues) : null, board };
     return { ...log, score: scoreCase(c, log).total, ...over };
   };
   const ch1 = Array.from({ length: 20 }, (_, i) => 'c1-' + String(i + 1).padStart(2, '0'));
@@ -274,10 +274,11 @@ check(db.prepare("SELECT COUNT(*) c FROM game_runs WHERE log_json IS NOT NULL AN
 
   NOW = Date.parse('2027-03-02T14:00:00Z'); const a = await mkPlayer('TDY-AAAA0020', 'ChapA');
   const pub = await get('/api/season'); const chm = pub.body.missions.filter((m) => m.game === 'scam-lab');
-  check(chm.length === 1 && chm[0].id === M && chm[0].week === 2 && chm[0].cases.length === 20 && chm[0].stages.length === 4 && chm[0].stages.every((st) => st.points === 15), 'public Season info lists one Scam Lab launch mission in week 2: each built chapter = 20 cases, 4 checkpoints of 15');
-  check(chm[0].state === 'open' && chm[0].nights.length === 1 && chm[0].nights[0].open, 'chapter 1 is open in Scam Lab\'s launch week');
+  check(chm.length === 1 && chm[0].id === M && chm[0].week === 2 && chm[0].cases.length === 140 && chm[0].stages.length === 28 && chm[0].stages.every((st) => st.points === 15) && chm[0].stages.reduce((n, st) => n + st.points, 0) === 420, 'public Season info lists one Scam Lab launch mission in week 2: 7 chapters = 140 cases, 28 checkpoints of 15 = 420 points');
+  check(chm[0].state === 'open' && chm[0].nights.length === 7 && chm[0].nights[0].open && chm[0].nights[1].open && !chm[0].nights[2].open, 'one chapter opens per day: on the second day chapters 1 and 2 are open, 3 is not');
   let x = await playCase(a, ch1[0], {}, 41, 'scam-lab-ch1'); check(x.st.status === 400 && x.st.body.error === 'mission_not_found', 'the old one-chapter missions are gone');
-  x = await post('/api/run/start', { game: 'scam-lab', mode: 'weekly', mission: M, case: 'c2-01', night: nightKey(NOW) }, a); check(x.status === 400 && x.body.error === 'case_not_in_mission', 'a case from a chapter that is not built yet is refused');
+  x = await post('/api/run/start', { game: 'scam-lab', mode: 'weekly', mission: M, case: 'c3-01', night: nightKey(NOW) }, a); check(x.status === 409 && x.body.error === 'mission_locked', 'a chapter that has not opened yet is refused');
+  x = await post('/api/run/start', { game: 'scam-lab', mode: 'weekly', mission: M, case: 'c8-01', night: nightKey(NOW) }, a); check(x.status === 400 && x.body.error === 'case_not_in_mission', 'a case from a chapter that does not exist is refused');
   x = await playCase(a, ch1[1]); check(x.st.status === 409 && x.st.body.error === 'tray_order', 'case 2 needs case 1 first');
   for (let i = 0; i < 4; i++) x = await playCase(a, ch1[i]);
   check(x.fin.body.counted === false && x.fin.body.progress.cases === 4 && x.fin.body.progress.nightDone === 4 && ledgerSum('TDY-AAAA0020') === RULES.activeNight, '4 cases: counted, no checkpoint yet, only the active-night points (paid once)');
@@ -285,15 +286,21 @@ check(db.prepare("SELECT COUNT(*) c FROM game_runs WHERE log_json IS NOT NULL AN
   x = await playCase(a, ch1[4]); check(x.fin.body.counted && x.fin.body.points.total === 15 && x.fin.body.progress.cases === 5, 'case 5 pays the first checkpoint (15)');
   for (let i = 5; i < 20; i++) x = await playCase(a, ch1[i]);
   check(rows('TDY-AAAA0020').join() === '15,15,15,15' && ledgerSum('TDY-AAAA0020') === 60 + RULES.activeNight, 'chapter done: 4 checkpoints, 60 points (plus the active night)');
-  x = await playCase(a, ch1[0]); check(x.st.body.runId === null && x.st.body.alreadyCounted, 'mission done: a new try sends nothing');
+  const ch2 = Array.from({ length: 5 }, (_, i) => 'c2-' + String(i + 1).padStart(2, '0'));
+  for (const id of ch2) x = await playCase(a, id);
+  check(x.fin.body.counted && rows('TDY-AAAA0020').join() === '15,15,15,15,15', 'chapter 2 opened on day 2: its first five cases pay the next checkpoint');
   const dash = await get('/api/me/points', a); const m1 = dash.body.missions.find((m) => m.id === M);
-  check(m1 && m1.done && m1.casesDone.length === 20 && dash.body.points.season === 60 + RULES.activeNight, 'dashboard: all 20 cases done, season total 72');
+  check(m1 && !m1.done && m1.casesDone.length === 25 && dash.body.points.season === 75 + RULES.activeNight, 'dashboard: 25 of 140 cases done, mission not finished, season total 75 plus the active night');
   check(db.prepare("SELECT COUNT(*) c FROM run_meta WHERE player_id='TDY-AAAA0020' AND counted = 1").get().c === 0, 'chapter cases are not nightly runs (no night medals)');
 
   // late: half points rounded down (15 -> 7)
   NOW = Date.parse('2027-03-09T14:00:00Z'); const b = await mkPlayer('TDY-AAAA0021', 'ChapLate');
   for (const id of ch1) x = await playCase(b, id);
   check(rows('TDY-AAAA0021').join() === '7,7,7,7', 'late: every checkpoint pays half, rounded down (7)');
+  { const all = []; for (let ch = 1; ch <= 7; ch++) for (let i = 1; i <= 20; i++) all.push('c' + ch + '-' + String(i).padStart(2, '0'));
+    const z = await mkPlayer('TDY-AAAA0025', 'ChapAll'); let ok = true;
+    for (const id of all) { x = await playCase(z, id, {}, 62); if (!x.fin || x.fin.status !== 200) { ok = false; console.log('  could not clear', id, x.st && x.st.body, x.fin && x.fin.body); break; } }
+    check(ok && rows('TDY-AAAA0025').length === 28 && rows('TDY-AAAA0025').every((v) => v === 7), 'all 140 chapter cases can be cleared, in order: 28 checkpoints'); }
 
   // split: five cases in the week, the rest after the deadline
   NOW = Date.parse('2027-03-07T09:00:00Z'); const c = await mkPlayer('TDY-AAAA0022', 'ChapSplit');

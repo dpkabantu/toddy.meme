@@ -1,0 +1,325 @@
+{
+  "id": "c7-11",
+  "type": "hunt",
+  "chapter": 7,
+  "difficulty": 3,
+  "title": "Two Broker Apps",
+  "disguise": "influencer",
+  "intro": [
+    "Two apps offer to help you invest. One is Capitol Brokerage, a real, registered firm.",
+    "The other is Mirage with a stock ticker on his tie. Compare them side by side.",
+    "Sniff the details, then decide."
+  ],
+  "notify": {
+    "app": "App store",
+    "from": "Two apps",
+    "text": "Invest in shares: two different apps"
+  },
+  "decide_q": "Which app is the registered broker, and what will you do?",
+  "screen": {
+    "app": "compare",
+    "context": "Both apps say they let you buy shares. You found one in the official store and one in a group.",
+    "panels": [
+      {
+        "label": "App A",
+        "avatar": {
+          "glyph": "📊",
+          "clue": "logo_a"
+        },
+        "rows": [
+          {
+            "k": "Where found",
+            "v": [
+              {
+                "clue": "src_a",
+                "text": "The phone's official app store"
+              }
+            ]
+          },
+          {
+            "k": "Registration",
+            "v": [
+              {
+                "clue": "reg_a",
+                "text": "Registration number shown, listed on the regulator's site"
+              }
+            ]
+          },
+          {
+            "k": "Promise",
+            "v": [
+              {
+                "clue": "promise_a",
+                "text": "\"Investing carries risk. Past results do not guarantee the future.\""
+              }
+            ]
+          },
+          {
+            "k": "Money goes to",
+            "v": [
+              {
+                "clue": "pay_a",
+                "text": "Your own bank account to the broker's regulated account"
+              }
+            ]
+          },
+          {
+            "k": "Withdrawals",
+            "v": [
+              {
+                "clue": "wd_a",
+                "text": "To your own bank account, any time"
+              }
+            ]
+          }
+        ],
+        "note": [
+          {
+            "clue": "note_a",
+            "text": "Support: office address and a published phone number."
+          }
+        ]
+      },
+      {
+        "label": "App B",
+        "avatar": {
+          "glyph": "📊",
+          "clue": "logo_b"
+        },
+        "rows": [
+          {
+            "k": "Where found",
+            "v": [
+              {
+                "clue": "src_b",
+                "text": "A link in a group chat",
+                "link": true
+              }
+            ]
+          },
+          {
+            "k": "Registration",
+            "v": [
+              {
+                "clue": "reg_b",
+                "text": "None shown"
+              }
+            ]
+          },
+          {
+            "k": "Promise",
+            "v": [
+              {
+                "clue": "promise_b",
+                "text": "\"Guaranteed 40% a month!\""
+              }
+            ]
+          },
+          {
+            "k": "Money goes to",
+            "v": [
+              {
+                "clue": "pay_b",
+                "text": "A personal account of \"our manager\""
+              }
+            ]
+          },
+          {
+            "k": "Withdrawals",
+            "v": [
+              {
+                "clue": "wd_b",
+                "text": "After paying a \"tax\" first"
+              }
+            ]
+          }
+        ],
+        "note": [
+          {
+            "clue": "note_b",
+            "text": "Support: a chat account only."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "src_b": {
+      "label": "Found in a group link",
+      "strength": "strong",
+      "lens": "Not the official store.",
+      "why": "Install investing apps from the official store."
+    },
+    "reg_b": {
+      "label": "No registration",
+      "strength": "strong",
+      "lens": "No registration number is shown.",
+      "why": "Deal only with registered firms, and check on the regulator's site."
+    },
+    "promise_b": {
+      "label": "\"Guaranteed 40% a month\"",
+      "strength": "strong",
+      "lens": "No gain is guaranteed.",
+      "why": "There are no guaranteed returns."
+    },
+    "pay_b": {
+      "label": "A personal account",
+      "strength": "strong",
+      "lens": "Your money goes to a person, not a firm.",
+      "why": "A real broker takes money into regulated accounts."
+    },
+    "wd_b": {
+      "label": "A \"tax\" to withdraw",
+      "strength": "strong",
+      "lens": "You must pay first to take your own money out.",
+      "why": "Paying to withdraw is the scam."
+    },
+    "note_b": {
+      "label": "Chat only support",
+      "strength": "strong",
+      "lens": "No office, no phone.",
+      "why": "Real firms tell you where they are."
+    },
+    "logo_a": {
+      "label": "Chart logo",
+      "strength": "harmless",
+      "lens": "A little chart.",
+      "why": "Logos are easy to copy."
+    },
+    "logo_b": {
+      "label": "The same chart",
+      "strength": "harmless",
+      "lens": "The same icon.",
+      "why": "A copied icon takes seconds."
+    },
+    "src_a": {
+      "label": "Official app store",
+      "strength": "harmless",
+      "lens": "Found in the phone's official store.",
+      "why": "A good sign, but check more."
+    },
+    "reg_a": {
+      "label": "Registration shown",
+      "strength": "harmless",
+      "lens": "A registration number you can check on the regulator's site.",
+      "why": "This is checkable evidence."
+    },
+    "promise_a": {
+      "label": "A risk warning",
+      "strength": "harmless",
+      "lens": "It warns that investing carries risk.",
+      "why": "Honest firms warn about risk."
+    },
+    "pay_a": {
+      "label": "Your own regulated account",
+      "strength": "harmless",
+      "lens": "Money goes to a regulated account.",
+      "why": "This is how real brokers work."
+    },
+    "wd_a": {
+      "label": "Withdraw any time to your bank",
+      "strength": "harmless",
+      "lens": "To your own bank account.",
+      "why": "This is honest."
+    },
+    "note_a": {
+      "label": "Real contact details",
+      "strength": "harmless",
+      "lens": "An office and a phone number.",
+      "why": "Honest firms are reachable."
+    }
+  },
+  "actions": [
+    {
+      "id": "pick_b",
+      "label": "B is the broker. Deposit ₹50,000",
+      "trap": true
+    },
+    {
+      "id": "verify",
+      "label": "Not sure. Check each firm on the regulator's site"
+    },
+    {
+      "id": "block_report",
+      "label": "A is the broker. Report B"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "trap": {
+    "title": "Solis Shares App · Deposit",
+    "url": "solis-shares-app.live",
+    "ask": "Deposit ₹50,000 to the account of our manager.",
+    "go": "Deposit ₹50,000",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "You picked the registered broker and reported the fake. The fake app was removed.",
+      "mirageSays": "My stock-ticker tie!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The regulator's site listed App A and not App B. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "pick_b": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The ₹50,000 went to a stranger. The app showed a fake profit, then locked you out.",
+      "mirageSays": "Thanks for the deposit!"
+    }
+  },
+  "what_if": {
+    "pick_b": "App B had five warnings: a group link, no registration, a guarantee, a personal account and a withdrawal tax.",
+    "verify": "Checking was smart. Reporting B as well helps get it removed."
+  },
+  "golden_rule": "Check that a broker is registered on the regulator's own site. A fake app has no registration, guarantees profit and takes money into a personal account.",
+  "quick_check": {
+    "q": "Two apps. One guarantees 40% a month and takes money into a personal account. Which is the fake?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The one with a risk warning"
+      },
+      {
+        "id": "b",
+        "text": "The one that guarantees profit and uses a personal account"
+      },
+      {
+        "id": "c",
+        "text": "Neither"
+      },
+      {
+        "id": "d",
+        "text": "Both"
+      }
+    ],
+    "answer": "b",
+    "explain": "A guarantee and a personal account are the giveaways."
+  },
+  "hints": {
+    "nudge": "Which app guarantees profit and wants money in a personal account?",
+    "glow_order": [
+      "promise_b",
+      "pay_b",
+      "reg_b",
+      "wd_b",
+      "src_b",
+      "note_b"
+    ]
+  },
+  "sources": [
+    "in-sebi-dos",
+    "ftc-invest-social"
+  ],
+  "checked_on": "2026-10-21"
+}

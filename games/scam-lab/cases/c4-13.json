@@ -1,0 +1,225 @@
+{
+  "id": "c4-13",
+  "type": "hunt",
+  "chapter": 4,
+  "difficulty": 2,
+  "title": "The Branch Visit",
+  "disguise": null,
+  "intro": [
+    "A message from your bank says you must update your details. After today, you suspect a trap.",
+    "But some messages are real. Mirage loves it when you stop trusting the honest ones.",
+    "Sniff carefully. Then decide."
+  ],
+  "notify": {
+    "app": "Messages",
+    "from": "Orrin Bank",
+    "text": "Please visit your branch to update your details"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "sender",
+          "text": "Orrin Bank"
+        }
+      ]
+    },
+    "context": "The same notice was posted on the bank's own website last week.",
+    "items": [
+      {
+        "time": [
+          "Today 10:10 AM"
+        ]
+      },
+      {
+        "msg": [
+          "Orrin Bank: we need to ",
+          {
+            "clue": "update",
+            "text": "update your KYC details"
+          },
+          " on your account."
+        ]
+      },
+      {
+        "msg": [
+          "Please ",
+          {
+            "clue": "visit",
+            "text": "visit your home branch"
+          },
+          " with your ID within 30 days."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "nolink",
+            "text": "There is no link to click, and we will not ask for your OTP, PIN or card details by phone or text."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "check",
+            "text": "You may call the number on the back of your card to confirm."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "sender": {
+      "label": "Same thread as your bank texts",
+      "strength": "harmless",
+      "lens": "It sits with your past bank messages.",
+      "why": "A name proves little. What it asks matters."
+    },
+    "update": {
+      "label": "A plain KYC notice",
+      "strength": "harmless",
+      "lens": "A routine update request, no threats.",
+      "why": "A calm notice with no threat is typical of real banks."
+    },
+    "visit": {
+      "label": "Visit your branch in person",
+      "strength": "harmless",
+      "lens": "You go to the bank, with 30 days to do it.",
+      "why": "In-person visits and a long deadline are honest signs."
+    },
+    "nolink": {
+      "label": "No link, no secret asked",
+      "strength": "harmless",
+      "lens": "No link, and it says it will never ask for OTP, PIN or card details.",
+      "why": "Real banks warn you about scams."
+    },
+    "check": {
+      "label": "A way to confirm",
+      "strength": "harmless",
+      "lens": "It tells you to call the number on your card.",
+      "why": "Honest messages invite you to check."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Check on the bank's own website, then visit my branch with my ID"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "The bank's own website had the same notice. You visited the branch with your ID and finished the update in ten minutes.",
+      "toddy": "happy"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "Nothing bad happened today. But a real KYC request ignored can restrict your account later. Checking was the better move.",
+      "mirageSays": "Fine. Next!"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was a real notice. Ignoring or reporting it could have left your account restricted. Checking is the skill.",
+      "mirageSays": "If you trust nothing, I win anyway."
+    }
+  },
+  "what_if": {
+    "block_report": "It had no link, a 30-day deadline, a visit to the branch and a reminder that the bank never asks for OTP or PIN. That calm is what real notices look like.",
+    "ignore": "Ignoring was safe. Recognising a real message is the skill: it asks for nothing secret and matches something you know."
+  },
+  "golden_rule": "A real KYC request uses a branch visit or the official app, gives you time and asks for no OTP or PIN. Check, then visit.",
+  "quick_check": {
+    "q": "What made this KYC message honest?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It named the bank"
+      },
+      {
+        "id": "b",
+        "text": "It had no link, gave 30 days, asked you to visit the branch and never asked for an OTP or PIN"
+      },
+      {
+        "id": "c",
+        "text": "It arrived in the morning"
+      },
+      {
+        "id": "d",
+        "text": "It was short"
+      }
+    ],
+    "answer": "b",
+    "explain": "No link, no rush, and no OTP asked: those are the real signs."
+  },
+  "hints": {
+    "nudge": "What is this message actually asking you to do?",
+    "glow_order": []
+  },
+  "sources": [
+    "in-rbi-beaware"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Who sent this text",
+      "rows": [
+        {
+          "k": "Same thread as your bank texts",
+          "v": "Yes",
+          "clue": "sender"
+        },
+        {
+          "k": "Link in it?",
+          "v": "None",
+          "clue": "nolink"
+        },
+        {
+          "k": "Deadline",
+          "v": "30 days",
+          "clue": "visit"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "KYC update links and calls",
+          "v": "A common trick: use the official site or branch",
+          "clue": "update"
+        },
+        {
+          "k": "How to check",
+          "v": "Call the number on the back of your card",
+          "clue": "check"
+        }
+      ]
+    }
+  ]
+}

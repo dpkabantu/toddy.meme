@@ -10,11 +10,12 @@ import { playRush, rushTick, rushState } from './rush.js';
 import { Toddy, preloadToddy } from './chars.js';
 import { makeCard, shareSheet, GAME_URL } from './share.js';
 
-export const VERSION = '0.6.0';
+export const VERSION = '0.7.0';
 const TELEGRAM = 'https://t.me/ToddyCoinCommunity';
 const PRIVACY = 'https://toddy.meme/privacy.html';
 const OVERLAYS = ['page', 'milo', 'lens', 'decide', 'scene', 'debrief', 'quick', 'result', 'sheet'];
 
+let dailyLock = null;   // set when the Season server says the Daily Quickie has not opened yet (launch week)
 let CH = null; const CASES = {}; let SOURCES = {};
 const toddy = new Toddy();
 const calm = () => store.settings.calm || matchMedia('(prefers-reduced-motion: reduce)').matches;
@@ -62,7 +63,7 @@ function title() {
         h('button', { class: 'chip', id: 't-howto', type: 'button', onclick: () => { sfx.tap(); howTo(title); } }, 'How to play'),
         h('button', { class: 'chip', id: 't-help', type: 'button', onclick: () => { sfx.tap(); help(title); } }, 'Real help'),
         h('button', { class: 'chip', id: 't-about', type: 'button', onclick: () => { sfx.tap(); about(title); } }, 'About')),
-      h('p', { class: 'legal', text: 'A safety game. Every brand, account and link is made up, nothing you do leaves this device, and the game never asks for real details. Education only, not financial advice.' })));
+      h('p', { class: 'legal', text: 'A safety game. Every brand, person, account and link is made up, and the cases are invented to teach common scam patterns. Nothing you do here leaves this device. Education only, not legal or financial advice.' })));
 }
 
 // ---------- how to play ----------
@@ -145,12 +146,12 @@ function home() {
             h('span', { class: 'small-ink', text: `Chapter ${w.ch.n} · ${w.ch.title} · Case ${w.i + 1} of ${w.k}` }),
             h('span', { class: 'play-pill', text: '▶ Play' }))
         : h('div', { class: 'continue done' },
-            h('span', { class: 'eyebrow', text: 'ALL 48 CASES SOLVED' }),
+            h('span', { class: 'eyebrow', text: `ALL ${ALL().length} CASES SOLVED` }),
             h('b', { text: `Every case cracked, ${rankFor(store.totalStars()).name}!` }),
             h('span', { class: 'small-ink', text: 'Replay cases for 3 stars, or keep your Daily Quickie streak going.' })),
 
       h('h2', { class: 'section-h', text: 'Chapters' }),
-      h('p', { class: 'small-ink section-sub', text: 'Ordered by how many people each kind of scam hurts. Chapter 1 first, then any order.' }),
+      h('p', { class: 'small-ink section-sub', text: '7 chapters, 20 cases each. Start with Chapter 1, then pick any chapter. Cases inside a chapter go in order.' }),
       h('div', { class: 'ch-grid' }, CH.chapters.map((ch) => {
         const released = ch.status === 'open' && ch.cases.length;
         const open = released && chapterOpen(ch);
@@ -168,8 +169,8 @@ function home() {
 
       h('button', { class: `daily${today ? ' done' : ''}`, id: 'btn-daily', type: 'button', disabled: !store.played(first), onclick: () => { sfx.tap(); caseIntro('daily'); } },
         h('div', { class: 'eyebrow', text: 'BONUS · DAILY QUICKIE' }),
-        h('b', { text: !store.played(first) ? 'Unlocks after your first case' : today ? `Done today · ${today.score} / 1000` : 'A new 90-second case every day' }),
-        h('span', { class: 'small-ink', text: `${st ? `🔥 ${st}-day streak · ` : ''}Same case for everyone${today ? ' · replay for practice' : ''}` })),
+        h('b', { text: !store.played(first) ? 'Unlocks after your first case' : dailyLock ? `🔒 Season points start in week ${dailyLock}` : today ? `Done today · ${today.score} / 1000` : 'A new 90-second case every day' }),
+        h('span', { class: 'small-ink', text: dailyLock ? 'This week: play the chapters. The Daily Quickie is practice until then.' : `${st ? `🔥 ${st}-day streak · ` : ''}Same case for everyone${today ? ' · replay for practice' : ''}` })),
       h('nav', { class: 'hub-nav' },
         h('button', { class: 'chip', id: 'btn-notebook', type: 'button', onclick: () => { sfx.tap(); notebook(); } }, '📒 Golden Rules'),
         h('button', { class: 'chip', id: 'btn-howto', type: 'button', onclick: () => { sfx.tap(); howTo(); } }, 'How to play'),
@@ -482,6 +483,11 @@ async function boot() {
   }
   setInterval(() => { tick(); rushTick(); }, 1000);
   title();
+  fetch('/api/season', { credentials: 'same-origin' }).then((r) => r.json()).then((j) => {   // launch week: the Daily Quickie is practice (owner FINAL)
+    if (!j || !j.ok || !(j.season && j.season.status === 'live')) return;
+    const g = (j.games || []).find((x) => x.id === 'scam-lab'); const wk = g && g.dailyFromWeek;
+    if (wk && (j.seasonWeek || 0) < wk) { dailyLock = wk; if ($('btn-daily') && !$('page').hidden) home(); }
+  }).catch(() => {});
   setTimeout(preloadToddy, 1500); // Toddy's animations load in the background after the title shows
   // Season page button: /games/scam-lab/?play=daily opens tonight's Daily Quickie (it unlocks after the first case, so new players land on the case files).
   if (/[?&]play=daily\b/.test(location.search)) {

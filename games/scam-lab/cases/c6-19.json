@@ -1,0 +1,303 @@
+{
+  "id": "c6-19",
+  "type": "hunt",
+  "chapter": 6,
+  "difficulty": 1,
+  "title": "The Distant Inheritance",
+  "disguise": "admin",
+  "intro": [
+    "An email from a lawyer abroad says a stranger left you a huge inheritance.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Mail",
+    "from": "Barrister Okoro Legal",
+    "text": "You are named in a will: $4,500,000"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        {
+          "clue": "from",
+          "text": "Barrister Okoro, Legal Chambers"
+        }
+      ],
+      "addr": [
+        {
+          "clue": "addr",
+          "text": "okoro.chambers@freemail.example"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "You are named in a will: $4,500,000"
+        }
+      ],
+      "time": [
+        "2:50 AM"
+      ]
+    },
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "greet",
+            "text": "Dear Beneficiary,"
+          }
+        ]
+      },
+      {
+        "p": [
+          "A wealthy client, ",
+          {
+            "clue": "stranger",
+            "text": "a man you have never met"
+          },
+          ", died without family and left you ",
+          {
+            "clue": "amount",
+            "text": "$4,500,000"
+          },
+          "."
+        ]
+      },
+      {
+        "p": [
+          "To release the funds, send your ",
+          {
+            "clue": "id",
+            "text": "ID copy and bank details"
+          },
+          ", and pay a ",
+          {
+            "clue": "fee",
+            "text": "transfer fee of $1,200"
+          },
+          "."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "secret",
+            "text": "Keep this confidential."
+          },
+          " ",
+          {
+            "clue": "rush",
+            "text": "The funds will be returned to the state in 7 days."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "addr": {
+      "label": "A free-mail address",
+      "strength": "strong",
+      "lens": "A real law firm writes from its own domain.",
+      "why": "Look at the address behind the name."
+    },
+    "stranger": {
+      "label": "A stranger left you money",
+      "strength": "strong",
+      "lens": "A man you have never met.",
+      "why": "Money from strangers does not exist."
+    },
+    "amount": {
+      "label": "A huge sum",
+      "strength": "strong",
+      "lens": "$4,500,000 for nothing.",
+      "why": "A huge windfall out of nowhere is the bait."
+    },
+    "id": {
+      "label": "Asks for your ID and bank details",
+      "strength": "strong",
+      "lens": "These are used to steal your identity.",
+      "why": "Never send these to a stranger."
+    },
+    "fee": {
+      "label": "A fee to release the money",
+      "strength": "strong",
+      "lens": "You must pay $1,200 first.",
+      "why": "A fee to receive a windfall is the scam."
+    },
+    "secret": {
+      "label": "\"Keep this confidential\"",
+      "strength": "strong",
+      "lens": "Secrecy stops you checking.",
+      "why": "Always check."
+    },
+    "rush": {
+      "label": "Funds returned in 7 days",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
+    },
+    "greet": {
+      "label": "\"Dear Beneficiary\"",
+      "strength": "harmless",
+      "lens": "No name.",
+      "why": "The greeting proves little alone."
+    },
+    "from": {
+      "label": "A barrister's name",
+      "strength": "harmless",
+      "lens": "Barrister Okoro.",
+      "why": "Names and titles are easy to invent."
+    },
+    "subject": {
+      "label": "A big subject",
+      "strength": "harmless",
+      "lens": "You are named in a will.",
+      "why": "The subject is the bait."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Send my ID, bank details and the fee",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Search the firm and the story for warnings"
+    },
+    {
+      "id": "block_report",
+      "label": "Report the email and delete it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "trap": {
+    "title": "Legal Chambers · Release funds",
+    "url": "okoro-chambers.example/release",
+    "ask": "Upload your ID and pay $1,200 to release $4,500,000.",
+    "go": "Pay $1,200",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported and deleted. The fake address was blocked.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "A search showed the same \"inheritance\" email in many scam warnings. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The fee was lost and your ID was used to open accounts in your name. No inheritance ever came.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "A stranger leaving you millions, and a fee to receive it, is the oldest trick there is.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "Money from a stranger that needs a fee to arrive is not an inheritance. Delete it.",
+  "quick_check": {
+    "q": "An email says a stranger left you $4,500,000 and you must pay a fee to release it. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay the fee, it is millions"
+      },
+      {
+        "id": "b",
+        "text": "Pay half"
+      },
+      {
+        "id": "c",
+        "text": "Do not pay or reply. Delete it and report it"
+      },
+      {
+        "id": "d",
+        "text": "Send your ID only"
+      }
+    ],
+    "answer": "c",
+    "explain": "A fee to receive a windfall is the scam."
+  },
+  "hints": {
+    "nudge": "Why would you pay to receive free money?",
+    "glow_order": [
+      "addr",
+      "stranger",
+      "amount",
+      "id",
+      "fee",
+      "secret",
+      "rush"
+    ]
+  },
+  "sources": [
+    "ftc-prize",
+    "ftc-phishing"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Who really sent this",
+      "rows": [
+        {
+          "k": "Address",
+          "v": "okoro.chambers@freemail.example",
+          "clue": "addr"
+        },
+        {
+          "k": "Do you know the man?",
+          "v": "No",
+          "clue": "stranger"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "A fee to receive a windfall",
+          "v": "A scam sign",
+          "clue": "fee"
+        },
+        {
+          "k": "How to check",
+          "v": "Search the story with \"scam\""
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,298 @@
+// Chapter 2: Too Good To Be True, new cases (part A). Invented brands only: Lakshmi Lucky Draw, Strideway, Tradely, Payzo, Orrin Bank, Meridu Store, Chirp.
+import { chat, mail, compare } from '../author.mjs';
+
+export default {
+  // 1 ---------------------------------------------------------------
+  'lottery-text': {
+    type: 'hunt', diff: 1, disguise: 'influencer', title: 'You Have Won!',
+    intro: 'A text just arrived. You have won a big prize, it says. You never entered anything.',
+    notify: ['Messages', 'Lakshmi Lucky Draw', 'Congratulations! You won ₹25,00,000…'],
+    screen: chat({
+      app: 'sms', name: '{sender|Lakshmi Lucky Draw}', context: 'You have not entered any contest.',
+      items: [
+        't: {time|Today 11:05 AM}',
+        'm: Congratulations! Your number won {prize|₹25,00,000} in the Lakshmi Lucky Draw.',
+        'm: To receive it, first pay a {tax|processing tax of ₹4,999}: {link|lakshmi-prizeclaim.in/pay|link}',
+        'm: {timer|Claim within|count:1800}',
+        'm: {noentry|You were picked from all mobile numbers.}',
+      ],
+    }),
+    clues: {
+      noentry: ['No contest entered', 's', 'You never entered a draw. You were "picked from all numbers".', 'Winning something you never entered is a warning sign.'],
+      prize: ['A huge prize', 's', '₹25,00,000 for doing nothing.', 'A big prize out of nowhere is the bait.'],
+      tax: ['Pay to collect', 's', 'You must pay ₹4,999 "tax" before the prize arrives.', 'Real prizes are free to collect. A fee is the scam.'],
+      link: ['Look-alike link', 's', 'The link goes to lakshmi-prizeclaim.in, a page made only to take your card details.', 'Never pay through a link in a text. Search the name yourself instead.'],
+      timer: ['Countdown pressure', 's', 'You must claim within 30 minutes.', 'Rushing you is a pressure trick. A real prize does not expire in minutes.'],
+      sender: ['A friendly name', 'h', 'The sender is called Lakshmi Lucky Draw.', 'Anyone can type a name into a text. It proves nothing.'],
+      time: ['Sent at 11:05 AM', 'h', 'Sent mid-morning.', 'Scam texts come at any hour. The time proves nothing.'],
+    },
+    go: 'Open the link and pay the tax', trap: ['Lakshmi Lucky Draw · Claim', 'lakshmi-prizeclaim.in/pay', 'Pay ₹4,999 to release your prize. Enter your card number.', 'Pay ₹4,999', 'Close this page'],
+    verify: 'Search the draw\'s name for warnings',
+    win: 'Reported and deleted. Your phone company can now block more of these texts.',
+    checked: 'No draw, no prize, and the name only appeared on scam warnings. Case cracked.',
+    lose: 'The "tax" page copied your card details. The prize never came, and bigger payments followed.',
+    avoid: 'A real prize never costs money to collect. Not having entered at all was the first clue.',
+    rule: 'If you must pay to collect a prize, it is not a prize. Delete it.',
+    quick: ['A text says you won a big prize but must pay a "tax" first. You never entered. What do you do?', ['Pay the tax, the prize is much bigger', 'Reply to ask for details', 'Do not pay. Delete it and report the text', 'Send half now and half later'], 'c', 'Real prizes are free. A fee to claim is the scam.'],
+    nudge: 'Did you ever enter this draw?',
+    sources: ['ftc-prize', 'in-rbi-beaware'],
+    kit: {
+      who: ['Check sender', 'Who sent this text', [['Number', 'A mobile number you do not know'], ['Draws you entered', 'None', 'noentry']]],
+      link: ['Check link', 'Where the link goes', [['Message says', 'pay a tax to claim'], ['It really opens', 'lakshmi-prizeclaim.in', 'link'], ['It asks for', 'A "tax" payment first', 'tax']]],
+      adv: ['What advice says', [['Do real prizes cost money?', 'No. A fee to collect a prize is a scam', 'tax'], ['A prize for a contest you never entered', 'A warning sign', 'noentry']]],
+    },
+  },
+
+  // 3 ---------------------------------------------------------------
+  'fake-shop-ad': {
+    type: 'hunt', diff: 1, disguise: 'influencer', title: 'Shoes at 80% Off',
+    intro: 'An ad for your favourite shoes pops up while you scroll. The price looks unreal.',
+    notify: ['Chirp', 'Sponsored', 'Strideway Runner: 80% OFF today only!'],
+    screen: chat({
+      app: 'chirp', name: '{brand|Strideway Outlet}', sub: 'Sponsored', av: ['👟', 'pic'], banner: 'Ad · you do not follow this page',
+      items: [
+        'm: {deal|Strideway Runner shoes: 80% OFF today only!}',
+        'm: Was €120, now {price|€24}. {stock|Only 3 pairs left!}',
+        'm: Shop now: {link|strideway-outlet-sale.shop|link}',
+        'm: {pay|We only take bank transfer or gift cards.}',
+        'm: {reviews|★★★★★ "Best shop ever!" · ★★★★★ "Arrived fast!"}',
+      ],
+    }),
+    clues: {
+      deal: ['80% off', 's', 'A brand-new shoe at a fifth of its usual price.', 'A price far below normal is the bait. Real shops rarely cut this deep.'],
+      stock: ['"Only 3 left"', 's', 'A countdown of pairs, to make you hurry.', 'Pressure to buy now is a scam sign.'],
+      link: ['Strange shop address', 's', 'strideway-outlet-sale.shop is not the brand\'s own site, strideway.com.', 'Look-alike shop names are easy to make. Type the brand\'s own address yourself.'],
+      pay: ['Only transfer or gift cards', 's', 'No card payment, only methods you cannot take back.', 'Real shops accept cards, which can be disputed. Only scammers insist on transfers and gift cards.'],
+      reviews: ['Only perfect reviews', 's', 'Every review is five stars with no detail.', 'Fake shops write their own praise.'],
+      brand: ['A brand name', 'h', 'The page is called Strideway Outlet.', 'A name is easy to copy. It proves nothing.'],
+      pic: ['A shoe picture', 'h', 'A photo of a running shoe.', 'Pictures are copied from real shops in seconds.'],
+      price: ['€24', 'h', 'The price on its own.', 'The price is only suspicious next to the real one: the 80% discount.'],
+    },
+    go: 'Click the ad and buy the shoes', trap: ['Strideway Outlet · Checkout', 'strideway-outlet-sale.shop/checkout', 'Pay €24 by bank transfer to confirm your pair.', 'Pay €24', 'Close this page'],
+    verify: 'Go to the brand\'s own website and compare',
+    win: 'Reported the ad. The platform removed the page before it reached more people.',
+    checked: 'The brand\'s real shop sold the same shoe at €120 and had never heard of this outlet. Case cracked.',
+    lose: 'The €24 went to a stranger. No shoes ever arrived, and the shop disappeared.',
+    avoid: 'Looking up the brand\'s own site would have shown the true price. Paying by card would also have let you dispute the payment.',
+    rule: 'A price that looks too good, plus transfer-only payment, is a fake shop. Type the real shop\'s address yourself.',
+    quick: ['An ad offers a €120 shoe for €24, payable only by bank transfer. What is the best move?', ['Buy fast, it is nearly sold out', 'Pay a small deposit first', 'Skip it, and check the brand\'s own website if you want the shoes', 'Ask the ad to confirm it is real'], 'c', 'A huge discount with transfer-only payment is the pattern. Real shops accept cards.'],
+    nudge: 'Look at the price and how they want to be paid.',
+    sources: ['ftc-marketplace', 'ftc-phishing'],
+    kit: {
+      who: ['Check the page', 'Strideway Outlet', [['Page created', '4 days ago', 'brand'], ['Real brand site', 'strideway.com'], ['Reviews', 'All five stars, no detail', 'reviews']]],
+      link: ['Check the address', 'Where the ad goes', [['Opens', 'strideway-outlet-sale.shop', 'link'], ['Payment options', 'Transfer or gift cards only', 'pay']]],
+      adv: ['What advice says', [['Paying safely online', 'Use a card or a secure payment system that protects buyers', 'pay'], ['A price far below normal', 'A warning sign', 'deal']]],
+    },
+  },
+
+  // 6 ---------------------------------------------------------------
+  'two-shops': {
+    type: 'hunt', diff: 2, disguise: 'influencer', title: 'Two Shop Websites',
+    intro: ['You found a lamp you like on two websites. One is Meridu Store, the real shop.', 'The other is Mirage in a shopkeeper\'s apron. Compare them side by side.', 'Sniff the details, then decide.'],
+    notify: ['Browser', 'Search results', 'Meridu Store lamps: two results'],
+    decide_q: 'Which site is the real Meridu Store, and what will you do?',
+    screen: compare({
+      context: 'Both sites sell the same desk lamp. One of them is a copy.',
+      panels: [
+        { label: 'Site A', av: ['🛍️', 'logo_a'], rows: [['Address', '{addr_a|meridu.store}'], ['Lamp price', '{price_a|£39.00}'], ['Pay with', '{pay_a|Card, or a payment service that protects buyers}'], ['Contact', '{contact_a|Address, phone and returns page}'], ['Site started', '{age_a|6 years ago}']], note: '{rev_a|Mixed reviews, some 3 stars, some with photos}' },
+        { label: 'Site B', av: ['🛍️', 'logo_b'], rows: [['Address', '{addr_b|meridu-store-outlet.shop|link}'], ['Lamp price', '{price_b|£9.00 (was £39)}'], ['Pay with', '{pay_b|Bank transfer or gift card only}'], ['Contact', '{contact_b|A web form only}'], ['Site started', '{age_b|5 days ago}']], note: '{rev_b|All five stars, all posted this week}' },
+      ],
+    }),
+    clues: {
+      addr_b: ['Look-alike address', 's', 'meridu-store-outlet.shop adds extra words to the real name.', 'Copy sites add extra words. Check the address letter by letter.'],
+      price_b: ['Far too cheap', 's', '£9 for a £39 lamp.', 'A price far below normal is the bait.'],
+      pay_b: ['Only transfer or gift card', 's', 'No card payment, only methods you cannot get back.', 'Real shops take cards. Only scammers insist on transfers and gift cards.'],
+      contact_b: ['No real contact details', 's', 'Just a web form, no address and no phone.', 'Real shops tell you who and where they are.'],
+      age_b: ['Brand new site', 's', 'Started 5 days ago.', 'A brand-new shop with a famous name is a copy.'],
+      rev_b: ['Perfect, fresh reviews', 's', 'All five stars, all this week.', 'Fake shops write their own reviews.'],
+      logo_a: ['Shop logo', 'h', 'A shopping-bag picture.', 'Logos are easy to copy, so they prove nothing.'],
+      logo_b: ['Shop logo', 'h', 'The same shopping-bag picture.', 'A copied logo takes seconds.'],
+      addr_a: ['Shop\'s real address', 'h', 'meridu.store is the shop\'s own domain.', 'A match is a good sign, but check what else the site shows.'],
+      price_a: ['Normal price', 'h', '£39.00.', 'A normal price is not suspicious.'],
+      pay_a: ['Safe payment options', 'h', 'Card or a protected payment service.', 'These let you dispute a payment that goes wrong.'],
+      contact_a: ['Real contact details', 'h', 'An address, a phone number and a returns page.', 'Honest shops tell you where they are.'],
+      age_a: ['Six years old', 'h', 'An old shop with history.', 'Age alone does not prove it is safe, but new copies are always young.'],
+      rev_a: ['Mixed reviews', 'h', 'Some 3-star reviews, some with photos.', 'Real reviews are uneven. A mix is a good sign.'],
+    },
+    actions: [['pick_b', 'B is the shop. Buy the £9 lamp', true], ['verify', 'Not sure. Go to the shop\'s own site and check'], ['block_report', 'A is the real shop. Report B as a fake']],
+    best: 'block_report', ok: ['verify'],
+    trap: ['Meridu Store Outlet · Pay', 'meridu-store-outlet.shop/pay', 'Send £9.00 by bank transfer to confirm your order.', 'Pay £9', 'Close this page'],
+    out: {
+      block_report: ['win', 'REPORTED', 'You picked the real shop and reported the copy. The fake was taken down within days.', 'My shopkeeper\'s apron!'],
+      verify: ['win', 'CHECKED', 'The real shop\'s own site matched Site A in every detail. Site B was a copy. Case cracked.', 'Hmph. They checked.'],
+      pick_b: ['bad', 'SCAMMED', 'The £9 went to a stranger. No lamp came, and the copy site vanished.', 'Thanks for the transfer!'],
+    },
+    whatif: { pick_b: 'Four warnings sat on Site B: look-alike address, tiny price, transfer-only payment, brand-new site. One check would have been enough.', verify: 'Checking was smart. Reporting B as well helps get the copy taken down.' },
+    rule: 'Compare the address, the price, how you pay and who is behind the shop. A copy gets at least three wrong.',
+    quick: ['Two sites sell the same lamp. One is far cheaper, new, and takes only bank transfer. Which is the copy?', ['The old one with mixed reviews', 'The cheap new one that takes only transfer', 'Neither, they are the same shop', 'Both'], 'b', 'Cheap, new and transfer-only: three signs in one.'],
+    hints: ['Which site is brand new and only takes transfers?', ['price_b', 'pay_b', 'addr_b', 'age_b', 'rev_b', 'contact_b']],
+    sources: ['ftc-marketplace', 'ftc-phishing'],
+  },
+
+  // 7 ---------------------------------------------------------------
+  'rental-deposit': {
+    type: 'hunt', diff: 2, disguise: 'influencer', title: 'The Cheap Flat',
+    intro: 'You are looking for a flat in Pune. One listing is far cheaper than the rest.',
+    notify: ['Messages', 'Rohit (owner)', 'Flat is yours if you send the deposit today…'],
+    screen: chat({
+      app: 'sms', name: '{sender|Rohit (owner)}', context: 'You found his listing on a rental site. You have not seen the flat.',
+      items: [
+        't: Today 6:12 PM',
+        'm: Hello! The 2 BHK is available at {rent|₹9,000 a month}. Similar flats nearby cost ₹24,000.',
+        'm: I am {abroad|posted abroad for work}, so I cannot show it myself.',
+        'm: Send a {deposit|₹20,000 deposit} now by phone transfer and I will courier you the keys.',
+        'm: {rush|Three other families are asking. Pay in one hour or I give it away.}',
+        'm: {photos|Photos attached: bright rooms, new kitchen.}',
+      ],
+    }),
+    clues: {
+      rent: ['Rent far below the area', 's', '₹9,000 where similar flats cost ₹24,000.', 'A rent far below nearby flats is the bait.'],
+      abroad: ['Owner is "abroad"', 's', 'He cannot meet you or show the flat.', 'Scammers are always somewhere else. Never pay for a place you have not seen.'],
+      deposit: ['Deposit before viewing', 's', 'He wants ₹20,000 before you see the flat or sign anything.', 'Pay only after seeing the place and signing a proper agreement.'],
+      rush: ['Hurry or lose it', 's', 'Pay in one hour or it goes to someone else.', 'A rush is a pressure trick to stop you checking.'],
+      photos: ['Nice photos', 'h', 'Bright rooms and a new kitchen.', 'Photos are copied from other listings. They prove nothing.'],
+      sender: ['A normal name', 'h', 'The sender calls himself Rohit.', 'A name proves nothing.'],
+    },
+    go: 'Send the ₹20,000 deposit', verify: 'Ask to see the flat in person, or search the address',
+    win: 'Reported the listing. The rental site removed it before it fooled anyone else.',
+    checked: 'A search of the address showed the same photos in three other ads under different names. Case cracked.',
+    lose: 'The ₹20,000 went to a stranger. No keys came, the number went dead, and the flat belonged to someone else.',
+    avoid: 'Insisting on seeing the flat first would have ended it. A real owner understands.',
+    rule: 'Never pay a deposit for a place you have not seen. A very cheap rent plus "I am abroad" is the pattern.',
+    quick: ['A very cheap flat. The owner is abroad and wants a deposit today before you can visit. What is the best move?', ['Pay quickly before it is gone', 'Pay half now', 'Only go ahead after seeing it in person and signing an agreement', 'Ask him to send more photos'], 'c', 'Never pay for what you have not seen. That alone settles it.'],
+    nudge: 'Where is the owner, and what does he want before you see the flat?',
+    sources: ['ftc-rental', 'in-rbi-beaware'],
+    kit: {
+      who: ['Check the listing', 'Listing check', [['Rent', '₹9,000 (area average ₹24,000)', 'rent'], ['Owner', 'Posted abroad', 'abroad'], ['Same photos elsewhere', 'Yes, in three other ads']]],
+      adv: ['What advice says', [['A deposit before you see the place', 'A major warning sign', 'deposit'], ['How to check', 'Search the address and the owner\'s name, and visit in person']]],
+    },
+  },
+
+  // 9 ---------------------------------------------------------------
+  'real-sale': {
+    type: 'hunt', diff: 2, honest: true, title: 'The Big Sale',
+    intro: 'An email from Meridu Store announces a sale. You are wary of every deal now.',
+    notify: ['Mail', 'Meridu Store', 'Our autumn sale starts today'],
+    screen: mail({
+      from: 'Meridu Store', addr: '{addr|news@meridu.store}', subject: '{subject|Our autumn sale starts today}', time: '8:00 AM',
+      items: [
+        'p: {name|Hi Toddy,}',
+        'p: Our {deal|autumn sale is on: up to 25% off lamps and desks}, until Sunday.',
+        'p: {site|See it on meridu.store, or in the Meridu app.}',
+        'p: {nopay|Nothing to pay now. Shop only if you want to.}',
+        'foot: {unsub|You get this because you signed up to our emails. Unsubscribe any time.}',
+      ],
+    }),
+    clues: {
+      addr: ['Shop\'s real address', 'h', 'It comes from news@meridu.store, the shop\'s real domain.', 'A matching domain is good evidence. Scammers can sometimes fake it, so also look at what is asked.'],
+      subject: ['An ordinary subject', 'h', 'No threats, no shouting.', 'Calm subjects are typical of honest mail.'],
+      name: ['Uses your name', 'h', 'It greets you by name.', 'It proves little, but it fits an email you signed up for.'],
+      deal: ['A believable discount', 'h', 'Up to 25% off, with an end date.', 'Normal sales are modest. 80% off is the red flag, not 25%.'],
+      site: ['Go to the site yourself', 'h', 'It sends you to the shop\'s own site or app.', 'Pointing you to the shop\'s real address is what honest shops do.'],
+      nopay: ['Asks for nothing', 'h', 'No payment, no code, no login.', 'A message that asks for nothing is usually honest.'],
+      unsub: ['Says why you got it', 'h', 'You signed up, and you can unsubscribe.', 'Honest senders say why they write and let you stop.'],
+    },
+    go: 'Open meridu.store myself and look at the sale', good: 'The sale was real: lamps at 25% off, on the shop\'s own site, and nothing to pay until you chose to.',
+    calm: 'It asked for nothing, gave a modest discount and sent you to the shop\'s own site. That calm is what real messages look like.',
+    rule: 'A believable offer that asks for nothing and sends you to the shop\'s own site is usually honest. Go there yourself.',
+    quick: ['What made this sale email believable?', ['It had a sale in it', 'A modest discount, a matching address, nothing to pay or give, and it sent you to the shop\'s own site', 'It came in the morning', 'It used capital letters'], 'b', 'Modest offers and no secret requests are the honest signs.'],
+    sources: ['ftc-phishing', 'ftc-marketplace'],
+    kit: {
+      who: ['Check sender', 'Sender check', [['Sent from', 'news@meridu.store', 'addr'], ['Shop\'s real domain', 'meridu.store'], ['You signed up?', 'Yes, in March', 'unsub']]],
+      adv: ['What advice says', [['A modest sale with an end date', 'Normal for real shops', 'deal'], ['How to check', 'Go to the shop\'s own site', 'site']]],
+    },
+  },
+
+  // 10 --------------------------------------------------------------
+  'buyer-screenshot': {
+    type: 'duel', diff: 3, disguise: 'influencer', title: 'The Payment Screenshot',
+    intro: 'You are selling your old bicycle for ₹6,500 on Tradely. A buyer says he has paid.',
+    notify: ['Tradely', 'Buyer: Arjun', 'I have paid! Please check the screenshot…'],
+    screen: chat({
+      app: 'sms', name: [{ text: 'Arjun (Tradely buyer)', id: 'duel-name' }], sub: 'Interested in: bicycle ₹6,500', av: ['🚲', 'logo'], banner: 'Chat opened on Tradely, moved to texts at his request',
+    }),
+    duel: {
+      start: 'n1',
+      nodes: {
+        n1: {
+          say: ['m: Hi, I want the bicycle. {offsite|Let us skip the app and do this by text.}', 'm: I have {paid|paid ₹6,500}. Look: {shot|[payment screenshot: "Sent ₹6,500 · Success"]}', 'm: Send the bicycle with my courier now.'],
+          replies: [['Let me check my bank first', 'n2'], ['Sending it now', '!go_ahead'], ['Stop. Report the buyer.', '!block_report']],
+        },
+        n2: {
+          say: ['m: The bank is slow on Sundays. {screenshot|The screenshot is proof enough.}', 'm: I sent ₹16,500 by mistake. {over|Return the extra ₹10,000 to me and send the bicycle.}'],
+          replies: [['OK, returning ₹10,000', '!go_ahead'], ['A screenshot proves nothing. I only trust my own bank balance.', 'n3'], ['Report and block', '!block_report']],
+        },
+        n3: {
+          say: ['m: {angry|You are wasting my time. Do it or I will write a bad review!}'],
+          replies: [['Fine, I will send it', '!go_ahead'], ['Money is not in my account, so no bicycle. I will tell Tradely.', '!verify'], ['Report and block', '!block_report']],
+        },
+      },
+    },
+    clues: {
+      offsite: ['Off the marketplace', 's', 'He wants to leave the app and talk by text.', 'Scammers move you away from the safety of the marketplace.'],
+      paid: ['"I have paid"', 's', 'Money is claimed, but nothing has arrived in your account.', 'Only your own bank or payment app can tell you a payment arrived.'],
+      shot: ['A screenshot as proof', 's', 'A picture is not a payment. Anyone can make one in seconds.', 'Never trust a screenshot. Trust your own account balance.'],
+      screenshot: ['"The screenshot is enough"', 's', 'He pushes you to accept the picture.', 'An honest buyer waits while you check.'],
+      over: ['Overpayment and "send back"', 's', 'He says he overpaid and asks you to return the extra.', 'Sending back "extra" money is a classic trick: the first payment never existed.'],
+      angry: ['Anger and threats', 's', 'A bad-review threat to make you rush.', 'Pressure is the tool. An honest buyer is patient.'],
+      logo: ['Bicycle picture', 'h', 'A little bicycle.', 'A picture proves nothing.'],
+    },
+    actions: [['go_ahead', 'Send the bicycle or the extra money'], ['verify', 'Wait until the money is in my own account'], ['block_report', 'Block and report the buyer']],
+    best: 'block_report', ok: ['verify'],
+    out: {
+      block_report: ['win', 'BLOCKED', 'Blocked and reported. Tradely removed the fake buyer before he reached another seller.', 'Curses! Blocked again!'],
+      verify: ['win', 'CHECKED', 'Your own account showed no payment at all. No money, no bicycle. Case cracked.', 'Hmph. They checked.'],
+      go_ahead: ['bad', 'SCAMMED', 'The payment never existed. You lost the bicycle, or ₹10,000, or both.', 'Thanks for the bicycle!'],
+    },
+    whatif: { go_ahead: 'Looking at your own account balance would have ended it in one tap. Nothing arrived.', verify: 'Waiting for the money to appear in your own account is the right habit. Reporting the buyer as well protects others.' },
+    rule: 'A screenshot is not a payment. Only your own account balance is proof. Never send "extra" money back.',
+    quick: ['A buyer sends a screenshot saying he paid and asks you to ship now. What proves he paid?', ['The screenshot', 'His message saying so', 'The money showing in your own account', 'A promise to review you well'], 'c', 'Only your own account shows a payment. Pictures are easy to fake.'],
+    hints: ['Where would you see a real payment?', ['shot', 'paid', 'over', 'offsite', 'screenshot', 'angry']],
+    sources: ['ftc-marketplace', 'ftc-job-scams'],
+    kit: {
+      who: ['Check the buyer', 'Arjun', [['Account age', '2 days'], ['Left the marketplace?', 'Yes, asked for texts', 'offsite'], ['Money in your account', '₹0', 'paid']]],
+      adv: ['What advice says', [['Pay and sell inside the marketplace', 'Keeps the site\'s protections', 'offsite'], ['A check or payment with "send back the extra"', 'A scam, the first payment is fake', 'over']]],
+    },
+  },
+
+  // 11 --------------------------------------------------------------
+  'copy-creator': {
+    type: 'hunt', diff: 2, disguise: 'influencer', title: 'The Copycat Giveaway',
+    intro: 'A creator you follow seems to be giving away phones. The message came straight to your inbox.',
+    notify: ['Chirp', 'Kiko Official ✔', 'You won a phone! Claim it now…'],
+    screen: chat({
+      app: 'chirp', name: '{tick|Kiko Official ✔}', sub: '{handle|@kiko_official_giveaway}', av: ['🎁', 'pic'], banner: '{dmfirst|New message request · you do not follow this account}',
+      context: 'You follow a creator called Kiko, whose real account is @kiko.',
+      items: [
+        't: 3:20 PM',
+        'm: 🎉 You are one of {few|10 lucky winners} of a free phone!',
+        'm: Claim here: {link|kiko-phones-claim.live|link}. {fee|Just pay €5 delivery.}',
+        'm: {deadline|Claim in 2 hours or we pick someone else.}',
+      ],
+    }),
+    clues: {
+      dmfirst: ['They messaged first', 's', 'A request from an account you do not follow.', 'Real creators announce winners in public posts, not by random DMs.'],
+      tick: ['Fake tick', 's', 'The ✔ is typed into the name. A real badge sits next to the handle, and there is none.', 'Anyone can type a tick into a display name.'],
+      handle: ['A copy of the real account', 's', '@kiko_official_giveaway is new. The real account is @kiko.', 'Copy accounts add words to a real name. Check the real handle.'],
+      link: ['Look-alike link', 's', 'kiko-phones-claim.live is not a place a creator would use.', 'Never claim a prize through a link a stranger sends.'],
+      fee: ['Pay to receive a "free" phone', 's', '€5 for "delivery" of a free phone.', 'A free prize that costs money is the scam.'],
+      deadline: ['Two-hour deadline', 's', 'Claim in 2 hours or lose it.', 'Pressure is a trick to stop you checking.'],
+      few: ['"10 lucky winners"', 'h', 'A small number of winners.', 'The number alone proves nothing.'],
+      pic: ['A gift picture', 'h', 'A little gift box.', 'Pictures are easy to copy.'],
+    },
+    go: 'Open the link and pay the €5', trap: ['Kiko Phones · Claim', 'kiko-phones-claim.live', 'Pay €5 delivery and enter your card number to receive your phone.', 'Pay €5', 'Close this page'],
+    verify: 'Look at the creator\'s real page',
+    win: 'Blocked and reported. The copy account was removed before it reached more fans.',
+    checked: 'The creator\'s real page had no giveaway, and a pinned warning about copy accounts. Case cracked.',
+    lose: 'The €5 page copied your card details. No phone came, and more charges followed.',
+    avoid: 'Checking the real page first would have shown a warning about copy accounts.',
+    rule: 'A free prize that asks you to pay is not free. Check the creator\'s real page, not the DM.',
+    quick: ['A DM says you won a free phone, but you must pay €5 for delivery. The account looks like a creator you follow. What do you do?', ['Pay €5, it is small', 'Reply to ask if it is real', 'Check the creator\'s real page, then block and report the copy', 'Ask the account to prove itself'], 'c', 'A prize that asks for money is the trap. Check the real page.'],
+    nudge: 'Does the real creator\'s page say anything about this?',
+    sources: ['ftc-prize', 'ftc-phishing'],
+    kit: {
+      who: ['Check the account', '@kiko_official_giveaway', [['Account created', '2 days ago', 'handle'], ['Verified badge', 'None. The ✔ is typed into the name', 'tick'], ['Real account', '@kiko, 4 years old']]],
+      link: ['Check the link', 'Where it goes', [['Opens', 'kiko-phones-claim.live', 'link'], ['A fee for the "free" phone', '€5', 'fee']]],
+    },
+  },
+};

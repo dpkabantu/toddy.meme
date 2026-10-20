@@ -138,5 +138,89 @@
     "published": "n/a",
     "checked_on": "2026-10-21",
     "supports": "Scammers threaten shutoff to rush you; real utilities don't demand same-day payment; they ask for wire, crypto, payment apps or gift cards; contact the company using the number on your bill or its website; paid search ads can lead to impersonators."
+  },
+  "in-pib-alert": {
+    "title": "Press Information Bureau (India): Alert against incidents of blackmail and digital arrest",
+    "url": "https://www.pib.gov.in/PressReleasePage.aspx?PRID=2020570",
+    "published": null,
+    "checked_on": "2026-10-21",
+    "supports": "Criminals pose as police and other agencies, claim a parcel with illegal goods was sent in your name or a relative is in custody, demand money, and keep victims on video calls; report at once on helpline 1930 or cybercrime.gov.in."
+  },
+  "in-1930": {
+    "title": "National Cyber Crime Reporting Portal (India): helpline 1930",
+    "url": "https://cybercrime.gov.in/Webform/Accept.aspx",
+    "published": null,
+    "checked_on": "2026-10-21",
+    "supports": "Toll-free helpline 1930 and the portal cybercrime.gov.in are where to report cyber fraud in India."
+  },
+  "in-rbi-beaware": {
+    "title": "Reserve Bank of India Ombudsman booklet: BE(A)WARE",
+    "url": "https://www.rbi.org.in/commonman/Upload/english/Content/PDFs/English%20BEAWARE.pdf",
+    "published": null,
+    "checked_on": "2026-10-21",
+    "supports": "Never share OTP, PIN, CVV or passwords; KYC-update calls and links are a common trick, so use the official website or branch; never pay a processing fee in advance for a loan or prize; install a screen-sharing app only on advice of the official number on the company website; report fraud quickly on 1930 or cybercrime.gov.in."
+  },
+  "in-certin-booklet": {
+    "title": "CERT-In: Cyber Security Awareness Booklet for Digital Nagriks",
+    "url": "https://www.cert-in.org.in/PDF/CSA_Booklet.pdf",
+    "published": null,
+    "checked_on": "2026-10-21",
+    "supports": "Download apps only from trusted sources or the official app store; do not install apps through links on chats or social media; never share an OTP, PIN or CVV, nor an OTP or UPI PIN to receive money; do not install remote access apps on the pretext of help."
+  },
+  "in-sebi-dos": {
+    "title": "SEBI Investor: Securities market do and dont",
+    "url": "https://investor.sebi.gov.in/securities-dos_and_donts.html",
+    "published": null,
+    "checked_on": "2026-10-21",
+    "supports": "Deal only with registered intermediaries; take investment advice from a registered adviser; do not base decisions on hot tips; beware Ponzi and unregistered deposit schemes."
+  },
+  "ftc-job-scams": {
+    "title": "FTC: Job Scams",
+    "url": "https://consumer.ftc.gov/articles/job-scams",
+    "published": null,
+    "checked_on": "2026-10-21",
+    "supports": "Honest employers never ask you to pay to get a job; big pay for little work is a warning; reshipping and forwarding jobs are scams; a check with a request to send part back is a scam; search the company name with scam or review."
+  },
+  "ftc-romance": {
+    "title": "FTC: Romance Scams",
+    "url": "https://consumer.ftc.gov/features/pass-it-on/impersonator-scams/romance-scams",
+    "published": null,
+    "checked_on": "2026-10-21",
+    "supports": "Unsolicited contact, pressure to move off the platform, living far away for work or service, and money requests are red flags; never send money, gift cards, wire transfers or crypto to an online love interest."
+  },
+  "ftc-gift-cards": {
+    "title": "FTC: Avoiding and Reporting Gift Card Scams",
+    "url": "https://consumer.ftc.gov/articles/avoiding-and-reporting-gift-card-scams",
+    "published": null,
+    "checked_on": "2026-10-21",
+    "supports": "No honest business or agency makes you buy a gift card to pay; never send money to someone you have not met; check with a friend or relative on a number you know."
+  },
+  "ftc-prize": {
+    "title": "FTC: Fake Prize, Sweepstakes and Lottery Scams",
+    "url": "https://consumer.ftc.gov/articles/fake-prize-sweepstakes-and-lottery-scams",
+    "published": null,
+    "checked_on": "2026-10-21",
+    "supports": "Real prizes are free; fees for taxes or shipping to collect a prize are a scam; winning a contest you never entered is a warning; pressure to act fast; delete and report."
+  },
+  "ftc-rental": {
+    "title": "FTC: Rental Listing Scams",
+    "url": "https://consumer.ftc.gov/articles/rental-listing-scams",
+    "published": null,
+    "checked_on": "2026-10-21",
+    "supports": "A price far below nearby rents, a deposit before you see the place, pressure, and wire, gift card or crypto payment are red flags; search the address and owner name."
+  },
+  "ftc-marketplace": {
+    "title": "FTC: Buying From an Online Marketplace",
+    "url": "https://consumer.ftc.gov/articles/buying-online-marketplace",
+    "published": null,
+    "checked_on": "2026-10-21",
+    "supports": "Use a safer payment method with buyer protection; avoid wire, gift card and crypto payment; do not pay outside the marketplace payment system."
+  },
+  "ftc-invest-social": {
+    "title": "FTC: Can you spot an investment scam on social media?",
+    "url": "https://consumer.ftc.gov/consumer-alerts/2025/05/can-you-spot-investment-scam-social-media",
+    "published": null,
+    "checked_on": "2026-10-21",
+    "supports": "Promises of big returns and pressure to act fast, thin details and a request to pay by crypto or a payment app are red flags; there are no guaranteed returns; research the offer and contact your friend another way."
   }
 }

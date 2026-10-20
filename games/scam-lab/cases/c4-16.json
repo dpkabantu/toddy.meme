@@ -1,0 +1,125 @@
+{
+  "id": "c4-16",
+  "type": "rush",
+  "chapter": 4,
+  "difficulty": 3,
+  "title": "Panic Inbox",
+  "seconds": 60,
+  "intro": [
+    "Ten messages, each trying to scare you. One minute. Calm checking beats panic.",
+    "Swipe left if it is a scam, right if it is safe. Or tap the buttons.",
+    "Careful: some are honest. Do not cry wolf."
+  ],
+  "cards": [
+    {
+      "id": "r1",
+      "app": "SMS",
+      "from": "Brightgrid Energy",
+      "text": "Your electricity will be cut tonight unless you pay $120 now: brightgrid-pay.live",
+      "scam": true,
+      "why": "A threat to cut power tonight with a payment link. Check your own bill."
+    },
+    {
+      "id": "r2",
+      "app": "SMS",
+      "from": "Vantel Mobile",
+      "text": "Your SIM will be blocked in 2 hours. Update your details: vantel-sim-update.net",
+      "scam": true,
+      "why": "A deadline and a look-alike link."
+    },
+    {
+      "id": "r3",
+      "app": "Mail",
+      "from": "Brightgrid Energy",
+      "text": "Your bill for September is ready. See it in your Brightgrid account.",
+      "scam": false,
+      "why": "It asks for nothing and sends you to your own account."
+    },
+    {
+      "id": "r4",
+      "app": "SMS",
+      "from": "Orrin Bank",
+      "text": "Your account is frozen! Verify now: orrin-unfreeze.co",
+      "scam": true,
+      "why": "A threat and a look-alike link. Open your own app."
+    },
+    {
+      "id": "r5",
+      "app": "Call",
+      "from": "Unknown number",
+      "text": "This is the Cyber Crime Branch. A warrant is out in your name. Stay on the line.",
+      "scam": true,
+      "why": "A warrant over a call, with pressure to stay on the line."
+    },
+    {
+      "id": "r6",
+      "app": "SMS",
+      "from": "Orrin Bank",
+      "text": "Payment of £212.00 at Gadgetz Direct was paused. If this was not you, open the Orrin app.",
+      "scam": false,
+      "why": "It names the payment and sends you to your own app."
+    },
+    {
+      "id": "r7",
+      "app": "Mail",
+      "from": "Civic Revenue Portal",
+      "text": "FINAL NOTICE: pay now or face arrest.",
+      "scam": true,
+      "why": "A threat of arrest by email."
+    },
+    {
+      "id": "r8",
+      "app": "SMS",
+      "from": "Mum",
+      "text": "Dinner at 7, bring bread please 🍞",
+      "scam": false,
+      "why": "Your mum, asking for bread."
+    },
+    {
+      "id": "r9",
+      "app": "SMS",
+      "from": "Unknown number",
+      "text": "I have your photos. Pay ₹15,000 in the next hour or I send them to everyone.",
+      "scam": true,
+      "why": "A threat with no proof and a short deadline."
+    },
+    {
+      "id": "r10",
+      "app": "SMS",
+      "from": "Brightgrid Energy",
+      "text": "Reminder: your bill of £62.40 is due on the 28th. Pay in your app or online as usual.",
+      "scam": false,
+      "why": "A calm reminder with a date, sent to your own account channels."
+    }
+  ],
+  "golden_rule": "A message that scares you and hurries you is the one to check, slowly, on a number or site you already know.",
+  "quick_check": {
+    "q": "A message says your power will be cut tonight unless you pay by a link. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay fast, it is dark soon"
+      },
+      {
+        "id": "b",
+        "text": "Reply STOP"
+      },
+      {
+        "id": "c",
+        "text": "Check your own bill or app, and report the message"
+      },
+      {
+        "id": "d",
+        "text": "Call the number in the message"
+      }
+    ],
+    "answer": "c",
+    "explain": "Fear and a deadline are the trap. Your own bill shows the truth."
+  },
+  "sources": [
+    "ftc-utility",
+    "ftc-government",
+    "in-pib-alert"
+  ],
+  "checked_on": "2026-10-21"
+}

@@ -1,0 +1,284 @@
+{
+  "id": "c2-11",
+  "type": "hunt",
+  "chapter": 2,
+  "difficulty": 2,
+  "title": "The Copycat Giveaway",
+  "disguise": "influencer",
+  "intro": [
+    "A creator you follow seems to be giving away phones. The message came straight to your inbox.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Kiko Official ✔",
+    "text": "You won a phone! Claim it now…"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "tick",
+          "text": "Kiko Official ✔"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@kiko_official_giveaway"
+        }
+      ],
+      "avatar": {
+        "glyph": "🎁",
+        "clue": "pic"
+      }
+    },
+    "banner": [
+      {
+        "clue": "dmfirst",
+        "text": "New message request · you do not follow this account"
+      }
+    ],
+    "context": "You follow a creator called Kiko, whose real account is @kiko.",
+    "items": [
+      {
+        "time": [
+          "3:20 PM"
+        ]
+      },
+      {
+        "msg": [
+          "🎉 You are one of ",
+          {
+            "clue": "few",
+            "text": "10 lucky winners"
+          },
+          " of a free phone!"
+        ]
+      },
+      {
+        "msg": [
+          "Claim here: ",
+          {
+            "clue": "link",
+            "text": "kiko-phones-claim.live",
+            "link": true
+          },
+          ". ",
+          {
+            "clue": "fee",
+            "text": "Just pay €5 delivery."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "deadline",
+            "text": "Claim in 2 hours or we pick someone else."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "dmfirst": {
+      "label": "They messaged first",
+      "strength": "strong",
+      "lens": "A request from an account you do not follow.",
+      "why": "Real creators announce winners in public posts, not by random DMs."
+    },
+    "tick": {
+      "label": "Fake tick",
+      "strength": "strong",
+      "lens": "The ✔ is typed into the name. A real badge sits next to the handle, and there is none.",
+      "why": "Anyone can type a tick into a display name."
+    },
+    "handle": {
+      "label": "A copy of the real account",
+      "strength": "strong",
+      "lens": "@kiko_official_giveaway is new. The real account is @kiko.",
+      "why": "Copy accounts add words to a real name. Check the real handle."
+    },
+    "link": {
+      "label": "Look-alike link",
+      "strength": "strong",
+      "lens": "kiko-phones-claim.live is not a place a creator would use.",
+      "why": "Never claim a prize through a link a stranger sends."
+    },
+    "fee": {
+      "label": "Pay to receive a \"free\" phone",
+      "strength": "strong",
+      "lens": "€5 for \"delivery\" of a free phone.",
+      "why": "A free prize that costs money is the scam."
+    },
+    "deadline": {
+      "label": "Two-hour deadline",
+      "strength": "strong",
+      "lens": "Claim in 2 hours or lose it.",
+      "why": "Pressure is a trick to stop you checking."
+    },
+    "few": {
+      "label": "\"10 lucky winners\"",
+      "strength": "harmless",
+      "lens": "A small number of winners.",
+      "why": "The number alone proves nothing."
+    },
+    "pic": {
+      "label": "A gift picture",
+      "strength": "harmless",
+      "lens": "A little gift box.",
+      "why": "Pictures are easy to copy."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Open the link and pay the €5",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Look at the creator's real page"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it and delete it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "trap": {
+    "title": "Kiko Phones · Claim",
+    "url": "kiko-phones-claim.live",
+    "ask": "Pay €5 delivery and enter your card number to receive your phone.",
+    "go": "Pay €5",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Blocked and reported. The copy account was removed before it reached more fans.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The creator's real page had no giveaway, and a pinned warning about copy accounts. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The €5 page copied your card details. No phone came, and more charges followed.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Checking the real page first would have shown a warning about copy accounts.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "A free prize that asks you to pay is not free. Check the creator's real page, not the DM.",
+  "quick_check": {
+    "q": "A DM says you won a free phone, but you must pay €5 for delivery. The account looks like a creator you follow. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay €5, it is small"
+      },
+      {
+        "id": "b",
+        "text": "Reply to ask if it is real"
+      },
+      {
+        "id": "c",
+        "text": "Check the creator's real page, then block and report the copy"
+      },
+      {
+        "id": "d",
+        "text": "Ask the account to prove itself"
+      }
+    ],
+    "answer": "c",
+    "explain": "A prize that asks for money is the trap. Check the real page."
+  },
+  "hints": {
+    "nudge": "Does the real creator's page say anything about this?",
+    "glow_order": [
+      "dmfirst",
+      "tick",
+      "handle",
+      "link",
+      "fee",
+      "deadline"
+    ]
+  },
+  "sources": [
+    "ftc-prize",
+    "ftc-phishing"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the account",
+      "title": "@kiko_official_giveaway",
+      "rows": [
+        {
+          "k": "Account created",
+          "v": "2 days ago",
+          "clue": "handle"
+        },
+        {
+          "k": "Verified badge",
+          "v": "None. The ✔ is typed into the name",
+          "clue": "tick"
+        },
+        {
+          "k": "Real account",
+          "v": "@kiko, 4 years old"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the link",
+      "title": "Where it goes",
+      "rows": [
+        {
+          "k": "Opens",
+          "v": "kiko-phones-claim.live",
+          "clue": "link"
+        },
+        {
+          "k": "A fee for the \"free\" phone",
+          "v": "€5",
+          "clue": "fee"
+        }
+      ]
+    }
+  ]
+}

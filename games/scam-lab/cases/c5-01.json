@@ -2,247 +2,283 @@
   "id": "c5-01",
   "type": "hunt",
   "chapter": 5,
-  "difficulty": 3,
-  "title": "Unlimited Approval",
-  "disguise": "support",
+  "difficulty": 1,
+  "title": "Earn From Home",
+  "disguise": "influencer",
   "intro": [
-    "Chapter 5. These scams don't ask for your phrase. They ask for one click.",
-    "Toddy found a \"free mint\" site. The wallet pops up asking to approve something.",
-    "Read what the pop-up really allows."
+    "A stranger writes to you about a job you never applied for. The pay sounds amazing.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
   ],
   "notify": {
-    "app": "Hedrio",
-    "from": "Signature request",
-    "text": "kelvaromint-free.xyz wants permission"
+    "app": "Chirp",
+    "from": "Anya (Recruiter)",
+    "text": "Earn ₹3,000 daily from home, no experience…"
   },
   "screen": {
-    "app": "wallet",
-    "site": [
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "Anya · Recruiter"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@anya_jobs_2026"
+        }
+      ],
+      "avatar": {
+        "glyph": "💼",
+        "clue": "pic"
+      }
+    },
+    "banner": [
       {
-        "clue": "site",
-        "text": "kelvaromint-free.xyz"
+        "clue": "dmfirst",
+        "text": "Message request · you do not follow this account"
       }
     ],
-    "title": "Allow access to your ZLV?",
-    "context": "You clicked \"Mint for free\" on a site you found in a group chat.",
-    "rows": [
+    "context": "You have not applied for any job.",
+    "items": [
       {
-        "k": "Spender",
-        "v": [
-          {
-            "clue": "spender",
-            "text": "0xA11c…F3e2 (unknown contract)"
-          }
+        "time": [
+          "10:26 AM"
         ]
       },
       {
-        "k": "Amount",
-        "v": [
+        "msg": [
+          "Hi! We are hiring for ",
           {
-            "clue": "amount",
-            "text": "UNLIMITED ZLV"
-          }
+            "clue": "parttime",
+            "text": "part-time work from home"
+          },
+          ". You can earn ",
+          {
+            "clue": "pay",
+            "text": "₹3,000 every day"
+          },
+          "."
         ]
       },
       {
-        "k": "Network fee",
-        "v": [
+        "msg": [
           {
-            "clue": "fee",
-            "text": "0.0004 ZLV"
-          }
+            "clue": "noexp",
+            "text": "No experience or interview needed."
+          },
+          " Just 1 hour a day on your phone."
         ]
       },
       {
-        "k": "Mint price",
-        "v": [
+        "msg": [
+          "Message me on ",
           {
-            "clue": "free",
-            "text": "Free"
+            "clue": "move",
+            "text": "the messaging app"
+          },
+          " to start today: ",
+          {
+            "clue": "link",
+            "text": "wa-style.me/anya-jobs",
+            "link": true
           }
         ]
       }
-    ],
-    "note": [
-      {
-        "clue": "warning",
-        "text": "Hedrio: This lets the site move your ZLV at any time, without asking again."
-      }
-    ],
-    "buttons": [
-      "Reject",
-      "Approve"
     ]
   },
   "clues": {
-    "amount": {
-      "label": "Unlimited amount",
+    "dmfirst": {
+      "label": "They messaged first",
       "strength": "strong",
-      "lens": "UNLIMITED: they could take all your ZLV, now or later.",
-      "why": "A free mint never needs permission to spend all your coins."
+      "lens": "You never applied. A stranger found you.",
+      "why": "Real recruiters rarely start with a cold DM offering instant pay."
     },
-    "spender": {
-      "label": "Unknown spender",
+    "pay": {
+      "label": "Big pay for little work",
       "strength": "strong",
-      "lens": "An unknown contract gets the permission.",
-      "why": "Approvals hand control to whoever owns that contract."
+      "lens": "₹3,000 a day for one hour a day.",
+      "why": "Big pay for little work is almost always a scam."
     },
-    "site": {
-      "label": "Random mint site",
+    "noexp": {
+      "label": "No experience, no interview",
       "strength": "strong",
-      "lens": "A site from a group chat, not an official link.",
-      "why": "Drainer sites pose as free mints and airdrops."
+      "lens": "Anyone gets hired at once.",
+      "why": "Real jobs check who you are. A job with no check is bait."
     },
-    "warning": {
-      "label": "Wallet warning",
+    "move": {
+      "label": "Move to another app",
       "strength": "strong",
-      "lens": "Your wallet itself is warning you.",
-      "why": "Read wallet warnings. They exist for this exact trick."
+      "lens": "They want you off this platform, where you can report them.",
+      "why": "Scammers move you to private chat fast."
     },
-    "free": {
-      "label": "Free mint",
+    "link": {
+      "label": "A link to a chat",
+      "strength": "strong",
+      "lens": "It goes to a private chat link, not a company site.",
+      "why": "A real employer has an official careers page."
+    },
+    "handle": {
+      "label": "A generic handle",
       "strength": "harmless",
-      "lens": "The mint itself costs nothing.",
-      "why": "Free mints exist. The approval is the problem, not the price."
+      "lens": "@anya_jobs_2026.",
+      "why": "A handle proves nothing alone."
     },
-    "fee": {
-      "label": "Small network fee",
+    "name": {
+      "label": "A friendly recruiter name",
       "strength": "harmless",
-      "lens": "A tiny network fee.",
-      "why": "Normal for any blockchain action."
+      "lens": "Anya, a recruiter.",
+      "why": "Names are easy to invent."
+    },
+    "parttime": {
+      "label": "\"Part-time work from home\"",
+      "strength": "harmless",
+      "lens": "A common kind of job.",
+      "why": "The kind of job is normal. What matters is how they hire."
+    },
+    "pic": {
+      "label": "Briefcase picture",
+      "strength": "harmless",
+      "lens": "A little briefcase.",
+      "why": "Pictures prove nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Approve"
+      "label": "Message Anya on the messaging app"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
     },
     {
       "id": "verify",
-      "label": "Reject, and look for the project's official mint link"
+      "label": "Look for a real company page and search the recruiter's name with \"scam\""
     },
     {
       "id": "block_report",
-      "label": "Reject and report the site"
+      "label": "Block and report the account"
     }
   ],
   "best_action": "block_report",
   "acceptable_actions": [
-    "verify"
+    "verify",
+    "ignore"
   ],
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "BLOCKED",
-      "line": "Rejected and reported. The wallet now flags that site for everyone.",
-      "mirageSays": "One click away!"
+      "stamp": "REPORTED",
+      "line": "Blocked and reported. The platform removed the fake recruiter before it reached more people.",
+      "mirageSays": "Not my lovely scam!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The real project had no free mint at all. Rejecting saved everything.",
-      "mirageSays": "So close!"
+      "line": "A search of the name showed other people warning about the same \"recruiter\". Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "Days later, every ZLV quietly left the wallet. The approval let it happen.",
-      "mirageSays": "Unlimited means unlimited!"
+      "stamp": "SCAMMED",
+      "line": "Anya sent you to a \"task\" job. It started well, then asked for money to continue.",
+      "mirageSays": "Thanks for the details!"
     }
   },
   "what_if": {
-    "go_ahead": "\"UNLIMITED\" plus an unknown spender was the moment to reject."
+    "go_ahead": "Searching the name with \"scam\" takes a minute. No honest job pays this much without an interview.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
   },
-  "golden_rule": "Read every wallet pop-up. Never approve \"unlimited\" spending for a site you don't fully trust.",
+  "golden_rule": "Big pay for little work, from a stranger, with no interview, is a scam. Look for the company's own careers page.",
   "quick_check": {
-    "q": "A free mint asks for UNLIMITED access to your coins. What do you do?",
+    "q": "A stranger DMs you about a work-from-home job paying ₹3,000 a day, no interview. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Approve, it's free"
+        "text": "Message her and start today"
       },
       {
         "id": "b",
-        "text": "Reject it"
+        "text": "Ask for her ID"
       },
       {
         "id": "c",
-        "text": "Approve and revoke later"
+        "text": "Ignore it, or block and report. Look only at real companies' own careers pages"
+      },
+      {
+        "id": "d",
+        "text": "Forward it to friends"
       }
     ],
-    "answer": "b",
-    "explain": "Drainers can act the moment you approve. \"Later\" may be too late."
+    "answer": "c",
+    "explain": "Big pay for little work, with no interview, is the pattern."
   },
   "hints": {
-    "nudge": "Read the Amount line.",
+    "nudge": "Why would anyone pay that much with no interview?",
     "glow_order": [
-      "amount",
-      "spender",
-      "warning",
-      "site"
+      "dmfirst",
+      "pay",
+      "noexp",
+      "move",
+      "link"
     ]
   },
   "sources": [
-    "cafc-wallet",
-    "ftc-crypto",
-    "chainalysis-2025"
+    "ftc-job-scams",
+    "ftc-jobs"
   ],
-  "checked_on": "2026-10-13",
+  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the request",
-      "title": "What you would approve",
+      "label": "Check the account",
+      "title": "@anya_jobs_2026",
       "rows": [
         {
-          "k": "Amount",
-          "v": "UNLIMITED",
-          "clue": "amount"
+          "k": "Account age",
+          "v": "4 days",
+          "clue": "handle"
         },
         {
-          "k": "Spender",
-          "v": "An unknown contract",
-          "clue": "spender"
+          "k": "You applied?",
+          "v": "No",
+          "clue": "dmfirst"
         },
         {
-          "k": "Fee",
-          "v": "A tiny network fee",
-          "clue": "fee"
-        }
-      ]
-    },
-    {
-      "id": "link",
-      "icon": "🔗",
-      "label": "Check the site",
-      "title": "Where it came from",
-      "rows": [
-        {
-          "k": "Found in",
-          "v": "A group chat, not an official link",
-          "clue": "site"
-        },
-        {
-          "k": "The mint itself",
-          "v": "Costs nothing",
-          "clue": "free"
+          "k": "Real company page?",
+          "v": "None"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Check the wallet",
-      "title": "What your wallet says",
+      "label": "Official advice",
+      "title": "What advice says",
       "rows": [
         {
-          "k": "Wallet warning",
-          "v": "It is warning you",
-          "clue": "warning"
+          "k": "Big pay for little work",
+          "v": "A warning sign",
+          "clue": "pay"
+        },
+        {
+          "k": "How to check",
+          "v": "Search the name with \"scam\" or \"review\""
         }
       ]
     }

@@ -86,13 +86,13 @@ export function scoreDaily(c, log) {
 }
 
 // ---------- ranks ----------
-// 48 cases × 3 stars = 144. Night Guardian needs most of the game at 2–3 stars.
+// 140 cases × 3 stars = 420. Night Guardian needs most of the game at 2–3 stars.
 export const RANKS = [
   { id: 1, name: 'Rookie', stars: 0 },
-  { id: 2, name: 'Sniffer', stars: 9 },
-  { id: 3, name: 'Detective', stars: 30 },
-  { id: 4, name: 'Scam Hunter', stars: 70 },
-  { id: 5, name: 'Night Guardian', stars: 120 },
+  { id: 2, name: 'Sniffer', stars: 25 },
+  { id: 3, name: 'Detective', stars: 90 },
+  { id: 4, name: 'Scam Hunter', stars: 210 },
+  { id: 5, name: 'Night Guardian', stars: 360 },
 ];
 export function rankFor(stars) { return [...RANKS].reverse().find((r) => stars >= r.stars); }
 export function nextRank(stars) { return RANKS.find((r) => r.stars > stars) || null; }

@@ -2,262 +2,269 @@
   "id": "c2-01",
   "type": "hunt",
   "chapter": 2,
-  "difficulty": 2,
-  "title": "Wrong Number",
-  "disguise": "friend",
+  "difficulty": 1,
+  "title": "You Have Won!",
+  "disguise": "influencer",
   "intro": [
-    "Chapter 2, Toddy. These scams don't rush you. They make friends first.",
-    "It's how the scams that cost people the most money begin: with a harmless-looking text.",
-    "Read the whole chat. Sniff what's odd, then decide."
+    "A text just arrived. You have won a big prize, it says. You never entered anything.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
   ],
   "notify": {
     "app": "Messages",
-    "from": "+44 7700 900288",
-    "text": "Hi Anna! Is dinner still on for 8? 😊"
+    "from": "Lakshmi Lucky Draw",
+    "text": "Congratulations! You won ₹25,00,000…"
   },
   "screen": {
     "app": "sms",
     "head": {
       "name": [
         {
-          "clue": "unknown",
-          "text": "+44 7700 900288"
+          "clue": "sender",
+          "text": "Lakshmi Lucky Draw"
         }
       ]
     },
+    "context": "You have not entered any contest.",
     "items": [
       {
         "time": [
           {
             "clue": "time",
-            "text": "Today 7:42 PM"
+            "text": "Today 11:05 AM"
           }
         ]
       },
       {
         "msg": [
+          "Congratulations! Your number won ",
           {
-            "clue": "wrong",
-            "text": "Hi Anna! Is dinner still on for 8? 😊"
-          }
-        ]
-      },
-      {
-        "msg": [
-          "Sorry, wrong number. I'm not Anna!"
-        ],
-        "from": "me"
-      },
-      {
-        "msg": [
-          {
-            "clue": "sorry",
-            "text": "Oh no, so sorry! 🙈"
+            "clue": "prize",
+            "text": "₹25,00,000"
           },
-          " ",
-          {
-            "clue": "keep",
-            "text": "But you seem lovely. Maybe it was fate? I'm Sophie."
-          }
+          " in the Lakshmi Lucky Draw."
         ]
       },
       {
         "msg": [
+          "To receive it, first pay a ",
           {
-            "clue": "brag",
-            "text": "I live in Zurich and trade crypto, it's going really well this year 📈"
-          }
-        ]
-      },
-      {
-        "msg": [
-          {
-            "clue": "move",
-            "text": "Texts are expensive, can we chat on Plenvo instead?"
+            "clue": "tax",
+            "text": "processing tax of ₹4,999"
           },
-          " ",
+          ": ",
           {
-            "clue": "photo",
-            "text": "📷 [selfie at a beach café]"
+            "clue": "link",
+            "text": "lakshmi-prizeclaim.in/pay",
+            "link": true
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "timer",
+            "text": "Claim within",
+            "countdown": 1800
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "noentry",
+            "text": "You were picked from all mobile numbers."
           }
         ]
       }
     ]
   },
   "clues": {
-    "wrong": {
-      "label": "\"Wrong number\" opener",
+    "noentry": {
+      "label": "No contest entered",
       "strength": "strong",
-      "lens": "A friendly text meant for someone else. Long cons often start exactly like this.",
-      "why": "\"Wrong number\" texts are a common way to start a friendship scam."
+      "lens": "You never entered a draw. You were \"picked from all numbers\".",
+      "why": "Winning something you never entered is a warning sign."
     },
-    "keep": {
-      "label": "Keeps chatting",
+    "prize": {
+      "label": "A huge prize",
       "strength": "strong",
-      "lens": "After the mistake, she doesn't say bye. She wants to keep talking.",
-      "why": "A real wrong-number sender apologises and leaves."
+      "lens": "₹25,00,000 for doing nothing.",
+      "why": "A big prize out of nowhere is the bait."
     },
-    "brag": {
-      "label": "Money success, early",
+    "tax": {
+      "label": "Pay to collect",
       "strength": "strong",
-      "lens": "Within two messages: \"I trade crypto, it's going really well.\"",
-      "why": "Mentioning trading wins early sets up the investment pitch later."
+      "lens": "You must pay ₹4,999 \"tax\" before the prize arrives.",
+      "why": "Real prizes are free to collect. A fee is the scam."
     },
-    "move": {
-      "label": "Move to another app",
+    "link": {
+      "label": "Look-alike link",
       "strength": "strong",
-      "lens": "She wants to switch to a different chat app.",
-      "why": "Moving you to another app makes the conversation harder to trace and report."
+      "lens": "The link goes to lakshmi-prizeclaim.in, a page made only to take your card details.",
+      "why": "Never pay through a link in a text. Search the name yourself instead."
     },
-    "unknown": {
-      "label": "Unknown number",
+    "timer": {
+      "label": "Countdown pressure",
+      "strength": "strong",
+      "lens": "You must claim within 30 minutes.",
+      "why": "Rushing you is a pressure trick. A real prize does not expire in minutes."
+    },
+    "sender": {
+      "label": "A friendly name",
       "strength": "harmless",
-      "lens": "A number you don't have saved.",
-      "why": "Real wrong numbers happen too. The number alone proves nothing."
+      "lens": "The sender is called Lakshmi Lucky Draw.",
+      "why": "Anyone can type a name into a text. It proves nothing."
     },
     "time": {
-      "label": "Evening text",
+      "label": "Sent at 11:05 AM",
       "strength": "harmless",
-      "lens": "Sent at 7:42 in the evening.",
-      "why": "A normal time for dinner plans."
-    },
-    "sorry": {
-      "label": "Polite apology",
-      "strength": "harmless",
-      "lens": "A polite \"so sorry\".",
-      "why": "Being polite isn't suspicious by itself."
-    },
-    "photo": {
-      "label": "Nice selfie",
-      "strength": "harmless",
-      "lens": "An attractive photo at a beach café.",
-      "why": "Photos are easy to steal, so a nice one proves nothing either way."
+      "lens": "Sent mid-morning.",
+      "why": "Scam texts come at any hour. The time proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Keep chatting and add her on Plenvo"
+      "label": "Open the link and pay the tax",
+      "trap": true
     },
     {
       "id": "ignore",
-      "label": "Don't reply"
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Search the draw's name for warnings"
     },
     {
       "id": "block_report",
-      "label": "Block the number and report it as spam"
+      "label": "Report it and delete it"
     }
   ],
   "best_action": "block_report",
   "acceptable_actions": [
+    "verify",
     "ignore"
   ],
+  "trap": {
+    "title": "Lakshmi Lucky Draw · Claim",
+    "url": "lakshmi-prizeclaim.in/pay",
+    "ask": "Pay ₹4,999 to release your prize. Enter your card number.",
+    "go": "Pay ₹4,999",
+    "back": "Close this page"
+  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "BLOCKED",
-      "line": "Blocked. \"Sophie\" had sent the same \"wrong number\" text to 2,000 people that night.",
-      "mirageSays": "My best opener!"
+      "stamp": "REPORTED",
+      "line": "Reported and deleted. Your phone company can now block more of these texts.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "No draw, no prize, and the name only appeared on scam warnings. Case cracked.",
+      "mirageSays": "Hmph. They checked."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "No reply means no hook. Blocking as well stops the next message.",
-      "mirageSays": "I'll try someone else."
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "HOOKED",
-      "line": "Weeks of sweet chats later, \"Sophie\" asked Toddy to invest with her. The money never came back.",
-      "mirageSays": "Friends share everything!"
+      "stamp": "SCAMMED",
+      "line": "The \"tax\" page copied your card details. The prize never came, and bigger payments followed.",
+      "mirageSays": "Thanks for the details!"
     }
   },
   "what_if": {
-    "go_ahead": "If you'd blocked after \"wrong number, but maybe it was fate\", the long con would never have started.",
-    "ignore": "Ignoring was safe. Blocking and reporting helps your phone network stop the same text reaching others."
+    "go_ahead": "A real prize never costs money to collect. Not having entered at all was the first clue.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
   },
-  "golden_rule": "A friendly stranger who brings up money or crypto is a red flag, however long you've chatted.",
+  "golden_rule": "If you must pay to collect a prize, it is not a prize. Delete it.",
   "quick_check": {
-    "q": "A stranger texts the wrong number, then keeps chatting and mentions their crypto profits. What is this most likely?",
+    "q": "A text says you won a big prize but must pay a \"tax\" first. You never entered. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "A lucky new friendship"
+        "text": "Pay the tax, the prize is much bigger"
       },
       {
         "id": "b",
-        "text": "The start of an investment scam"
+        "text": "Reply to ask for details"
       },
       {
         "id": "c",
-        "text": "A delivery problem"
+        "text": "Do not pay. Delete it and report the text"
+      },
+      {
+        "id": "d",
+        "text": "Send half now and half later"
       }
     ],
-    "answer": "b",
-    "explain": "Friendship first, money later. That's how the most costly crypto scams work."
+    "answer": "c",
+    "explain": "Real prizes are free. A fee to claim is the scam."
   },
   "hints": {
-    "nudge": "Read Sophie's messages after you said \"wrong number\".",
+    "nudge": "Did you ever enter this draw?",
     "glow_order": [
-      "keep",
-      "brag",
-      "move",
-      "wrong"
+      "noentry",
+      "prize",
+      "tax",
+      "link",
+      "timer"
     ]
   },
   "sources": [
-    "ftc-crypto",
-    "chainalysis-2025",
-    "ic3-2024"
+    "ftc-prize",
+    "in-rbi-beaware"
   ],
-  "checked_on": "2026-10-13",
+  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check number",
-      "title": "Who is texting?",
+      "label": "Check sender",
+      "title": "Who sent this text",
       "rows": [
         {
           "k": "Number",
-          "v": "Not in your contacts",
-          "clue": "unknown"
+          "v": "A mobile number you do not know"
         },
         {
-          "k": "Opening line",
-          "v": "Meant for someone else",
-          "clue": "wrong"
-        },
-        {
-          "k": "Her apology",
-          "v": "Polite, but she stays",
-          "clue": "sorry"
+          "k": "Draws you entered",
+          "v": "None",
+          "clue": "noentry"
         }
       ]
     },
     {
       "id": "link",
       "icon": "🔗",
-      "label": "Check the chat",
-      "title": "How the chat goes",
+      "label": "Check link",
+      "title": "Where the link goes",
       "rows": [
         {
-          "k": "After the mix-up",
-          "v": "She keeps chatting",
-          "clue": "keep"
+          "k": "Message says",
+          "v": "pay a tax to claim"
         },
         {
-          "k": "Within two messages",
-          "v": "She says she trades crypto",
-          "clue": "brag"
+          "k": "It really opens",
+          "v": "lakshmi-prizeclaim.in",
+          "clue": "link"
         },
         {
-          "k": "She wants to move to",
-          "v": "A different chat app",
-          "clue": "move"
+          "k": "It asks for",
+          "v": "A \"tax\" payment first",
+          "clue": "tax"
         }
       ]
     },
@@ -265,15 +272,17 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What fraud-prevention pages say",
+      "title": "What advice says",
       "rows": [
         {
-          "k": "A real wrong number",
-          "v": "One apology, and it ends"
+          "k": "Do real prizes cost money?",
+          "v": "No. A fee to collect a prize is a scam",
+          "clue": "tax"
         },
         {
-          "k": "A long con",
-          "v": "Starts friendly, then turns to investing"
+          "k": "A prize for a contest you never entered",
+          "v": "A warning sign",
+          "clue": "noentry"
         }
       ]
     }

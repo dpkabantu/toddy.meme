@@ -1,0 +1,286 @@
+{
+  "id": "c5-18",
+  "type": "hunt",
+  "chapter": 5,
+  "difficulty": 1,
+  "title": "Data Entry Registration",
+  "disguise": "admin",
+  "intro": [
+    "A message offers a simple data-entry job at home. You only need to pay a small registration fee.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Messages",
+    "from": "EasyWork India",
+    "text": "Data entry job: register today"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "EasyWork India"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "num",
+          "text": "Mobile number only"
+        }
+      ]
+    },
+    "context": "You are looking for work you can do from home.",
+    "items": [
+      {
+        "time": [
+          "Today 3:35 PM"
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "job",
+            "text": "Data entry work from home"
+          },
+          ": type 50 pages and earn ",
+          {
+            "clue": "pay",
+            "text": "₹25,000 a month"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "noexp",
+            "text": "No experience needed."
+          },
+          " Pay a ",
+          {
+            "clue": "fee",
+            "text": "registration fee of ₹1,200"
+          },
+          " to get your login."
+        ]
+      },
+      {
+        "msg": [
+          "Pay here: ",
+          {
+            "clue": "link",
+            "text": "easywork-register.in/pay",
+            "link": true
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "refund",
+            "text": "100% refundable after your first month."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "pay": {
+      "label": "Big pay for typing",
+      "strength": "strong",
+      "lens": "₹25,000 a month for simple typing.",
+      "why": "Pay far above the work is the bait."
+    },
+    "noexp": {
+      "label": "No experience needed",
+      "strength": "strong",
+      "lens": "Anyone can join.",
+      "why": "A job with no requirements is not a job."
+    },
+    "fee": {
+      "label": "A registration fee",
+      "strength": "strong",
+      "lens": "You must pay ₹1,200 to get a login.",
+      "why": "Honest employers never charge to register."
+    },
+    "link": {
+      "label": "A payment link",
+      "strength": "strong",
+      "lens": "It goes to a payment page.",
+      "why": "Never pay through a link from a text."
+    },
+    "refund": {
+      "label": "\"100% refundable\"",
+      "strength": "strong",
+      "lens": "A promise to win your trust.",
+      "why": "A promised refund is bait."
+    },
+    "job": {
+      "label": "A data entry job",
+      "strength": "harmless",
+      "lens": "A common type of job.",
+      "why": "The kind of job is normal. How it hires is not."
+    },
+    "name": {
+      "label": "A firm name",
+      "strength": "harmless",
+      "lens": "EasyWork India.",
+      "why": "Names are easy to invent."
+    },
+    "num": {
+      "label": "A mobile number",
+      "strength": "harmless",
+      "lens": "No office address.",
+      "why": "The number alone proves little."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Pay the ₹1,200 and register",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Search the firm's name with \"scam\" and look for a real company page"
+    },
+    {
+      "id": "block_report",
+      "label": "Report the number and delete it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "trap": {
+    "title": "EasyWork · Register",
+    "url": "easywork-register.in/pay",
+    "ask": "Pay ₹1,200 by card to get your login.",
+    "go": "Pay ₹1,200",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported and deleted. Your phone company can block the number.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "A search showed many warnings, and the firm had no real company page. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The ₹1,200 went to a stranger. No login came, and more \"fees\" followed.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Honest employers never charge to register. A search for the name would have shown the warnings.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "A job that charges you to register is a scam. Real employers pay you, not the other way round.",
+  "quick_check": {
+    "q": "A data-entry job asks for a ₹1,200 registration fee, refundable after a month. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay, it is refundable"
+      },
+      {
+        "id": "b",
+        "text": "Pay half"
+      },
+      {
+        "id": "c",
+        "text": "Do not pay. Search the name with \"scam\", and report the message"
+      },
+      {
+        "id": "d",
+        "text": "Ask for a discount"
+      }
+    ],
+    "answer": "c",
+    "explain": "Honest employers never charge. A refund promise is bait."
+  },
+  "hints": {
+    "nudge": "Who pays whom in a real job?",
+    "glow_order": [
+      "pay",
+      "noexp",
+      "fee",
+      "link",
+      "refund"
+    ]
+  },
+  "sources": [
+    "ftc-job-scams",
+    "ftc-jobs",
+    "in-rbi-beaware"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the offer",
+      "title": "EasyWork India",
+      "rows": [
+        {
+          "k": "Real company page?",
+          "v": "None"
+        },
+        {
+          "k": "Asks you to pay",
+          "v": "₹1,200",
+          "clue": "fee"
+        },
+        {
+          "k": "Pay for typing",
+          "v": "₹25,000 a month",
+          "clue": "pay"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Pay to get a job?",
+          "v": "Honest employers never ask",
+          "clue": "fee"
+        },
+        {
+          "k": "How to check",
+          "v": "Search the name with \"scam\" or \"review\""
+        }
+      ]
+    }
+  ]
+}

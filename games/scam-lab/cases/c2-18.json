@@ -1,0 +1,299 @@
+{
+  "id": "c2-18",
+  "type": "hunt",
+  "chapter": 2,
+  "difficulty": 1,
+  "title": "The Free Gift Card",
+  "disguise": "support",
+  "intro": [
+    "An email says a two-minute survey earns you a gift card. Easy money, it seems.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Mail",
+    "from": "Customer Rewards",
+    "text": "Take our survey and get a €100 gift card"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        {
+          "clue": "from",
+          "text": "Customer Rewards"
+        }
+      ],
+      "addr": [
+        {
+          "clue": "addr",
+          "text": "rewards@free-gift-surveys.com"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "Take our 2-minute survey: win a €100 gift card!"
+        }
+      ],
+      "time": [
+        "12:14 PM"
+      ]
+    },
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "greet",
+            "text": "Dear Valued Customer,"
+          }
+        ]
+      },
+      {
+        "p": [
+          "You have been ",
+          {
+            "clue": "picked",
+            "text": "selected"
+          },
+          " to give us your opinion. It takes only two minutes."
+        ]
+      },
+      {
+        "p": [
+          "Answer 3 questions and receive a ",
+          {
+            "clue": "prize",
+            "text": "€100 gift card"
+          },
+          " from a store of your choice."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "link",
+            "text": "Start the survey",
+            "link": true
+          }
+        ]
+      },
+      {
+        "p": [
+          "At the end, enter your ",
+          {
+            "clue": "card",
+            "text": "card number for €1.99 delivery"
+          },
+          "."
+        ]
+      },
+      {
+        "foot": [
+          "Customer Rewards Team"
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "addr": {
+      "label": "A strange address",
+      "strength": "strong",
+      "lens": "The email comes from free-gift-surveys.com, which is not any store you shop at.",
+      "why": "Look at the part after the @. It should match a company you know."
+    },
+    "greet": {
+      "label": "\"Dear Valued Customer\"",
+      "strength": "harmless",
+      "lens": "No name at all.",
+      "why": "A vague greeting alone proves little, but it fits mass mailings."
+    },
+    "picked": {
+      "label": "\"You were selected\"",
+      "strength": "strong",
+      "lens": "You never signed up for anything.",
+      "why": "Being picked out of nowhere is a warning sign."
+    },
+    "prize": {
+      "label": "€100 for two minutes",
+      "strength": "strong",
+      "lens": "A big reward for a tiny task.",
+      "why": "Big pay for little work is the bait."
+    },
+    "link": {
+      "label": "Look-alike link",
+      "strength": "strong",
+      "lens": "The button goes to a survey page that is not the store's own site.",
+      "why": "Never start from a link in an unexpected email."
+    },
+    "card": {
+      "label": "Asks for your card",
+      "strength": "strong",
+      "lens": "A \"free\" gift card that wants your card number for €1.99.",
+      "why": "A reward that wants your card is a trap."
+    },
+    "from": {
+      "label": "Friendly name",
+      "strength": "harmless",
+      "lens": "The sender is called Customer Rewards.",
+      "why": "A name is easy to copy."
+    },
+    "subject": {
+      "label": "Cheerful subject",
+      "strength": "harmless",
+      "lens": "A friendly, exciting subject line.",
+      "why": "Cheerful tone alone proves nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Click Start and do the survey",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Check the store's own site for any survey"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it and delete it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "trap": {
+    "title": "Rewards survey",
+    "url": "free-gift-surveys.com/start",
+    "ask": "Answer three questions, then enter your card number for €1.99 delivery.",
+    "go": "Start the survey",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported as phishing and deleted. The fake address was blocked within days.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The store's own site had no survey and a warning about fake gift-card emails. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The \"delivery\" page copied your card details. No gift card came, and strange charges did.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "A reward that asks for your card number is never a reward.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "A free gift card that wants your card number is a trap. Real rewards never need your card.",
+  "quick_check": {
+    "q": "An email offers a €100 gift card for a survey, then asks for your card number for €1.99 delivery. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay €1.99, it is tiny"
+      },
+      {
+        "id": "b",
+        "text": "Fill the survey but skip the card"
+      },
+      {
+        "id": "c",
+        "text": "Delete it, and report it as phishing"
+      },
+      {
+        "id": "d",
+        "text": "Forward it to friends"
+      }
+    ],
+    "answer": "c",
+    "explain": "A reward that wants your card is the trap. Even starting on the page is risky."
+  },
+  "hints": {
+    "nudge": "Why would a free gift card need your card?",
+    "glow_order": [
+      "addr",
+      "picked",
+      "prize",
+      "link",
+      "card"
+    ]
+  },
+  "sources": [
+    "ftc-phishing",
+    "ftc-prize"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Who really sent this",
+      "rows": [
+        {
+          "k": "Address",
+          "v": "rewards@free-gift-surveys.com",
+          "clue": "addr"
+        },
+        {
+          "k": "Any store you know?",
+          "v": "No"
+        },
+        {
+          "k": "You signed up?",
+          "v": "No",
+          "clue": "picked"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check link",
+      "title": "Where it goes",
+      "rows": [
+        {
+          "k": "Button says",
+          "v": "Start the survey"
+        },
+        {
+          "k": "It really opens",
+          "v": "a page that asks for your card",
+          "clue": "link"
+        },
+        {
+          "k": "Asks for",
+          "v": "Card number for €1.99",
+          "clue": "card"
+        }
+      ]
+    }
+  ]
+}

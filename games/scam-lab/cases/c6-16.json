@@ -1,0 +1,332 @@
+{
+  "id": "c6-16",
+  "type": "duel",
+  "chapter": 6,
+  "difficulty": 3,
+  "title": "Pay the Tax to Withdraw",
+  "disguise": "friend",
+  "intro": [
+    "Your partner online has shared profit screenshots for weeks. You finally tried it. Now you want to withdraw.",
+    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
+    "Every chat ends with your choice. Choose wisely."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Isha",
+    "text": "Look at today's profit! 📈"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "text": "Isha (partner online)",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "met",
+          "text": "Together online for 2 months, never met"
+        }
+      ],
+      "avatar": {
+        "glyph": "📈",
+        "clue": "logo"
+      }
+    },
+    "banner": [
+      "Private chat"
+    ],
+    "items": []
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              "Look, my balance is ",
+              {
+                "clue": "shot",
+                "text": "€9,400"
+              },
+              "! [screenshot]"
+            ]
+          },
+          {
+            "msg": [
+              "Yours is ",
+              {
+                "clue": "yours",
+                "text": "€2,100"
+              },
+              " now. You can withdraw any time."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "I will try to withdraw now",
+            "next": "n2"
+          },
+          {
+            "text": "Add more to grow it faster",
+            "next": "n3"
+          },
+          {
+            "text": "I will stop and ask my bank",
+            "end": "verify"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              "The platform needs you to pay ",
+              {
+                "clue": "tax",
+                "text": "a 20% tax of €420"
+              },
+              " before you can withdraw."
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "rush",
+                "text": "Pay within 24 hours or your account is frozen."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, paying the tax",
+            "next": "n3"
+          },
+          {
+            "text": "A tax to withdraw my own money? I am stopping.",
+            "end": "block_report"
+          },
+          {
+            "text": "I will ask my bank first",
+            "end": "verify"
+          }
+        ]
+      },
+      "n3": {
+        "say": [
+          {
+            "msg": [
+              "Paid! Oh, now there is a ",
+              {
+                "clue": "more",
+                "text": "\"verification fee\" of €300"
+              },
+              "."
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "love",
+                "text": "If you love me, you will trust me. Everything is tied to this."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Paying the verification fee",
+            "end": "go_ahead"
+          },
+          {
+            "text": "No more. I am done and reporting this.",
+            "end": "block_report"
+          },
+          {
+            "text": "I will stop and call my bank",
+            "end": "verify"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "met": {
+      "label": "Never met in person",
+      "strength": "strong",
+      "lens": "Two months of chat only.",
+      "why": "Do not invest with someone you have not met."
+    },
+    "shot": {
+      "label": "A huge balance screenshot",
+      "strength": "strong",
+      "lens": "Anyone can make one.",
+      "why": "Never trust a screenshot."
+    },
+    "yours": {
+      "label": "Your balance in their app",
+      "strength": "strong",
+      "lens": "It is a number on a screen, not money you hold.",
+      "why": "A balance in a stranger's app is not money you own."
+    },
+    "tax": {
+      "label": "A \"tax\" to withdraw",
+      "strength": "strong",
+      "lens": "You must pay €420 first.",
+      "why": "Real platforms take fees from your balance, not from you in advance. A demand to pay first is the scam."
+    },
+    "rush": {
+      "label": "Pay within 24 hours",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
+    },
+    "more": {
+      "label": "Another fee after the tax",
+      "strength": "strong",
+      "lens": "After you pay, there is always one more fee.",
+      "why": "Scammers keep inventing fees."
+    },
+    "love": {
+      "label": "\"If you love me, trust me\"",
+      "strength": "strong",
+      "lens": "Love used as pressure.",
+      "why": "Guilt and love are levers."
+    },
+    "logo": {
+      "label": "Chart picture",
+      "strength": "harmless",
+      "lens": "A little chart.",
+      "why": "Pictures prove nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Pay the verification fee"
+    },
+    {
+      "id": "verify",
+      "label": "Stop and call my bank"
+    },
+    {
+      "id": "block_report",
+      "label": "Stop, block and report"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "You stopped and reported. The account was removed, and you paid no more.",
+      "mirageSays": "Curses! Blocked again!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Your bank said this was a known scam, and helped you report it. You stopped in time. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The \"verification fee\" was lost. The platform locked you out and \"Isha\" vanished.",
+      "mirageSays": "Thanks for the fee!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "A fee to withdraw your own money is the signal. Every payment after the first is more loss.",
+    "verify": "Stopping was smart. Reporting as well helps others."
+  },
+  "golden_rule": "If you must pay a fee or tax to withdraw your own money, it is a scam. Stop at the first fee.",
+  "quick_check": {
+    "q": "An online partner's platform asks you to pay a 20% tax before you can withdraw. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay it, it comes back"
+      },
+      {
+        "id": "b",
+        "text": "Pay half"
+      },
+      {
+        "id": "c",
+        "text": "Stop. Do not pay. Report it"
+      },
+      {
+        "id": "d",
+        "text": "Ask for a discount"
+      }
+    ],
+    "answer": "c",
+    "explain": "Paying to withdraw your own money is the scam."
+  },
+  "hints": {
+    "nudge": "Why would you pay before you can withdraw your own money?",
+    "glow_order": [
+      "tax",
+      "more",
+      "yours",
+      "shot",
+      "met",
+      "rush",
+      "love"
+    ]
+  },
+  "sources": [
+    "ftc-romance",
+    "ftc-invest-social",
+    "in-rbi-beaware"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the platform",
+      "title": "Isha's platform",
+      "rows": [
+        {
+          "k": "Met in person?",
+          "v": "Never",
+          "clue": "met"
+        },
+        {
+          "k": "To withdraw",
+          "v": "Pay a \"tax\" first",
+          "clue": "tax"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "A fee to withdraw",
+          "v": "A warning sign",
+          "clue": "tax"
+        },
+        {
+          "k": "Guaranteed returns",
+          "v": "None exist"
+        }
+      ]
+    }
+  ]
+}

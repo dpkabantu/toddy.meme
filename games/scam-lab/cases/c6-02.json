@@ -3,317 +3,277 @@
   "type": "hunt",
   "chapter": 6,
   "difficulty": 2,
-  "title": "Two Wallet Apps",
-  "disguise": "support",
+  "title": "Wrong Number",
+  "disguise": "friend",
   "intro": [
-    "Toddy got a new phone and is reinstalling the wallet app.",
-    "The app store shows two \"Hedrio\" apps.",
-    "Compare them before you install."
+    "Chapter 2, Toddy. These scams don't rush you. They make friends first.",
+    "It's how the scams that cost people the most money begin: with a harmless-looking text.",
+    "Read the whole chat. Sniff what's odd, then decide."
   ],
   "notify": {
-    "app": "App store",
-    "from": "Search: Hedrio",
-    "text": "2 results"
+    "app": "Messages",
+    "from": "+44 7700 900288",
+    "text": "Hi Anna! Is dinner still on for 8? 😊"
   },
-  "decide_q": "Which app is real, and what will you do?",
   "screen": {
-    "app": "compare",
-    "context": "Two app-store listings, side by side.",
-    "panels": [
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "unknown",
+          "text": "+44 7700 900288"
+        }
+      ]
+    },
+    "items": [
       {
-        "label": "Hedrio",
-        "avatar": {
-          "glyph": "🐾",
-          "clue": "icon_a"
-        },
-        "rows": [
+        "time": [
           {
-            "k": "Publisher",
-            "v": [
-              {
-                "clue": "pub_a",
-                "text": "Hedrio Ltd (link on hedrio.app)"
-              }
-            ]
-          },
-          {
-            "k": "Downloads",
-            "v": [
-              {
-                "clue": "dl_a",
-                "text": "1M+ · since 2020"
-              }
-            ]
-          },
-          {
-            "k": "Reviews",
-            "v": [
-              {
-                "clue": "rev_a",
-                "text": "4.4★, mixed, over years"
-              }
-            ]
-          },
-          {
-            "k": "First screen",
-            "v": [
-              {
-                "clue": "first_a",
-                "text": "Create wallet or restore"
-              }
-            ]
+            "clue": "time",
+            "text": "Today 7:42 PM"
           }
         ]
       },
       {
-        "label": "Hedrio - Crypto Wallet",
-        "avatar": {
-          "glyph": "🐾",
-          "clue": "icon_b"
-        },
-        "rows": [
+        "msg": [
           {
-            "k": "Publisher",
-            "v": [
-              {
-                "clue": "pub_b",
-                "text": "Hedrio Apps Inc"
-              }
-            ]
+            "clue": "wrong",
+            "text": "Hi Anna! Is dinner still on for 8? 😊"
+          }
+        ]
+      },
+      {
+        "msg": [
+          "Sorry, wrong number. I'm not Anna!"
+        ],
+        "from": "me"
+      },
+      {
+        "msg": [
+          {
+            "clue": "sorry",
+            "text": "Oh no, so sorry! 🙈"
           },
+          " ",
           {
-            "k": "Downloads",
-            "v": [
-              {
-                "clue": "dl_b",
-                "text": "5K+ · last week"
-              }
-            ]
+            "clue": "keep",
+            "text": "But you seem lovely. Maybe it was fate? I'm Sophie."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "brag",
+            "text": "I live in Zurich and trade crypto, it's going really well this year 📈"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "move",
+            "text": "Texts are expensive, can we chat on Plenvo instead?"
           },
+          " ",
           {
-            "k": "Reviews",
-            "v": [
-              {
-                "clue": "rev_b",
-                "text": "5.0★, 300 reviews in one day"
-              }
-            ]
-          },
-          {
-            "k": "First screen",
-            "v": [
-              {
-                "clue": "first_b",
-                "text": "\"Enter your 12 words to sync\""
-              }
-            ]
+            "clue": "photo",
+            "text": "📷 [selfie at a beach café]"
           }
         ]
       }
     ]
   },
   "clues": {
-    "pub_b": {
-      "label": "Different publisher",
+    "wrong": {
+      "label": "\"Wrong number\" opener",
       "strength": "strong",
-      "lens": "A similar but different publisher name.",
-      "why": "Fake apps copy names. Check the publisher matches the official website."
+      "lens": "A friendly text meant for someone else. Long cons often start exactly like this.",
+      "why": "\"Wrong number\" texts are a common way to start a friendship scam."
     },
-    "dl_b": {
-      "label": "New, few downloads",
+    "keep": {
+      "label": "Keeps chatting",
       "strength": "strong",
-      "lens": "Only a week old.",
-      "why": "Real wallet apps have long histories."
+      "lens": "After the mistake, she doesn't say bye. She wants to keep talking.",
+      "why": "A real wrong-number sender apologises and leaves."
     },
-    "rev_b": {
-      "label": "Instant 5-star reviews",
+    "brag": {
+      "label": "Money success, early",
       "strength": "strong",
-      "lens": "300 perfect reviews in one day.",
-      "why": "Bought reviews are a giveaway."
+      "lens": "Within two messages: \"I trade crypto, it's going really well.\"",
+      "why": "Mentioning trading wins early sets up the investment pitch later."
     },
-    "first_b": {
-      "label": "Asks for your phrase at once",
+    "move": {
+      "label": "Move to another app",
       "strength": "strong",
-      "lens": "The first screen wants your 12 words.",
-      "why": "A fake app asking for your phrase steals the wallet."
+      "lens": "She wants to switch to a different chat app.",
+      "why": "Moving you to another app makes the conversation harder to trace and report."
     },
-    "pub_a": {
-      "label": "Publisher linked from site",
+    "unknown": {
+      "label": "Unknown number",
       "strength": "harmless",
-      "lens": "The official website links to this listing.",
-      "why": "The safest way to find the real app."
+      "lens": "A number you don't have saved.",
+      "why": "Real wrong numbers happen too. The number alone proves nothing."
     },
-    "dl_a": {
-      "label": "Long history",
+    "time": {
+      "label": "Evening text",
       "strength": "harmless",
-      "lens": "1M+ since 2020.",
-      "why": "Consistent with a real app."
+      "lens": "Sent at 7:42 in the evening.",
+      "why": "A normal time for dinner plans."
     },
-    "rev_a": {
-      "label": "Mixed reviews",
+    "sorry": {
+      "label": "Polite apology",
       "strength": "harmless",
-      "lens": "Mixed reviews over years.",
-      "why": "Real apps have real, mixed reviews."
+      "lens": "A polite \"so sorry\".",
+      "why": "Being polite isn't suspicious by itself."
     },
-    "first_a": {
-      "label": "Normal first screen",
+    "photo": {
+      "label": "Nice selfie",
       "strength": "harmless",
-      "lens": "Create or restore.",
-      "why": "Restoring on a real app you chose is fine."
-    },
-    "icon_a": {
-      "label": "Paw icon",
-      "strength": "harmless",
-      "lens": "A paw icon.",
-      "why": "Icons prove nothing."
-    },
-    "icon_b": {
-      "label": "Same icon",
-      "strength": "harmless",
-      "lens": "A copied icon.",
-      "why": "Icons prove nothing."
+      "lens": "An attractive photo at a beach café.",
+      "why": "Photos are easy to steal, so a nice one proves nothing either way."
     }
   },
   "actions": [
     {
-      "id": "pick_b",
-      "label": "Install \"Hedrio - Crypto Wallet\"",
-      "trap": true
+      "id": "go_ahead",
+      "label": "Keep chatting and add her on Plenvo"
     },
     {
-      "id": "verify",
-      "label": "Open hedrio.app and use its app-store link"
+      "id": "ignore",
+      "label": "Don't reply"
     },
     {
       "id": "block_report",
-      "label": "Install the real one and report the fake listing"
+      "label": "Block the number and report it as spam"
     }
   ],
   "best_action": "block_report",
   "acceptable_actions": [
-    "verify"
+    "ignore"
   ],
-  "trap": {
-    "title": "Hedrio - Crypto Wallet",
-    "url": "app: Hedrio Apps Inc",
-    "ask": "Enter your 12-word recovery phrase to sync your wallet.",
-    "go": "Sync wallet",
-    "back": "Close the app"
-  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "Reported. The store removed the fake app.",
-      "mirageSays": "My copycat app!"
+      "line": "Blocked. \"Sophie\" had sent the same \"wrong number\" text to 2,000 people that night.",
+      "mirageSays": "My best opener!"
     },
-    "verify": {
+    "ignore": {
       "scene": "safe",
-      "mirage": "panic",
-      "stamp": "CHECKED",
-      "line": "The official site's link went straight to the real listing.",
-      "mirageSays": "He used the official link!"
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "No reply means no hook. Blocking as well stops the next message.",
+      "mirageSays": "I'll try someone else."
     },
-    "pick_b": {
+    "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "The \"sync\" sent the phrase to Mirage. The wallet was emptied.",
-      "mirageSays": "Synced… to me!"
+      "stamp": "HOOKED",
+      "line": "Weeks of sweet chats later, \"Sophie\" asked Toddy to invest with her. The money never came back.",
+      "mirageSays": "Friends share everything!"
     }
   },
   "what_if": {
-    "pick_b": "The real app was linked from hedrio.app. A week-old app asking for your phrase was the fake."
+    "go_ahead": "If you'd blocked after \"wrong number, but maybe it was fate\", the long con would never have started.",
+    "ignore": "Ignoring was safe. Blocking and reporting helps your phone network stop the same text reaching others."
   },
-  "golden_rule": "Install wallet apps only from the link on the official website.",
+  "golden_rule": "A friendly stranger who brings up money or crypto is a red flag, however long you've chatted.",
   "quick_check": {
-    "q": "What's the safest way to find the real wallet app?",
+    "q": "A stranger texts the wrong number, then keeps chatting and mentions their crypto profits. What is this most likely?",
     "options": [
       {
         "id": "a",
-        "text": "Pick the one with the most stars"
+        "text": "A lucky new friendship"
       },
       {
         "id": "b",
-        "text": "Use the store link on the official website"
+        "text": "The start of an investment scam"
+      },
+      {
+        "id": "c",
+        "text": "A delivery problem"
       }
     ],
     "answer": "b",
-    "explain": "Stars can be bought. The official link can't be faked so easily."
+    "explain": "Friendship first, money later. That's how the most costly crypto scams work."
   },
   "hints": {
-    "nudge": "What does each app ask for first?",
+    "nudge": "Read Sophie's messages after you said \"wrong number\".",
     "glow_order": [
-      "first_b",
-      "pub_b",
-      "rev_b",
-      "dl_b"
+      "keep",
+      "brag",
+      "move",
+      "wrong"
     ]
   },
   "sources": [
-    "cafc-wallet",
-    "ftc-phishing",
-    "ftc-crypto"
+    "ftc-crypto",
+    "chainalysis-2025",
+    "ic3-2024"
   ],
   "checked_on": "2026-10-13",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check publisher",
-      "title": "Who made it",
+      "label": "Check number",
+      "title": "Who is texting?",
       "rows": [
         {
-          "k": "Listing A",
-          "v": "Linked from the official website",
-          "clue": "pub_a"
+          "k": "Number",
+          "v": "Not in your contacts",
+          "clue": "unknown"
         },
         {
-          "k": "Listing B",
-          "v": "A similar but different publisher name",
-          "clue": "pub_b"
+          "k": "Opening line",
+          "v": "Meant for someone else",
+          "clue": "wrong"
+        },
+        {
+          "k": "Her apology",
+          "v": "Polite, but she stays",
+          "clue": "sorry"
         }
       ]
     },
     {
       "id": "link",
       "icon": "🔗",
-      "label": "Check history",
-      "title": "Downloads and reviews",
+      "label": "Check the chat",
+      "title": "How the chat goes",
       "rows": [
         {
-          "k": "Listing A",
-          "v": "1M+ since 2020, mixed reviews",
-          "clue": "dl_a"
+          "k": "After the mix-up",
+          "v": "She keeps chatting",
+          "clue": "keep"
         },
         {
-          "k": "Listing B",
-          "v": "Only a week old",
-          "clue": "dl_b"
+          "k": "Within two messages",
+          "v": "She says she trades crypto",
+          "clue": "brag"
         },
         {
-          "k": "B reviews",
-          "v": "300 perfect ones in one day",
-          "clue": "rev_b"
+          "k": "She wants to move to",
+          "v": "A different chat app",
+          "clue": "move"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Check the first screen",
-      "title": "When you open it",
+      "label": "Official advice",
+      "title": "What fraud-prevention pages say",
       "rows": [
         {
-          "k": "App A",
-          "v": "Create or restore",
-          "clue": "first_a"
+          "k": "A real wrong number",
+          "v": "One apology, and it ends"
         },
         {
-          "k": "App B",
-          "v": "Wants your 12 words at once",
-          "clue": "first_b"
+          "k": "A long con",
+          "v": "Starts friendly, then turns to investing"
         }
       ]
     }

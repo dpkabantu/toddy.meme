@@ -1,0 +1,246 @@
+{
+  "id": "c3-19",
+  "type": "hunt",
+  "chapter": 3,
+  "difficulty": 2,
+  "title": "The Surprise Token",
+  "disguise": "influencer",
+  "intro": [
+    "A new token appears in your wallet. You never bought it, and it comes with a message.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Hedrio wallet",
+    "from": "New token received",
+    "text": "5,000 ZLV-BONUS"
+  },
+  "screen": {
+    "app": "wallet",
+    "site": [
+      {
+        "clue": "from",
+        "text": "Sent by an unknown address"
+      }
+    ],
+    "title": "You received 5,000 ZLV-BONUS",
+    "context": "The token appeared in your wallet by itself.",
+    "rows": [
+      {
+        "k": "Token",
+        "v": [
+          {
+            "clue": "token",
+            "text": "ZLV-BONUS (not verified)"
+          }
+        ]
+      },
+      {
+        "k": "Worth",
+        "v": [
+          {
+            "clue": "worth",
+            "text": "\"$5,000\" says the token's name"
+          }
+        ]
+      },
+      {
+        "k": "To sell it",
+        "v": [
+          {
+            "clue": "link",
+            "text": "Visit zlv-bonus-sell.xyz and connect your wallet",
+            "link": true
+          }
+        ]
+      },
+      {
+        "k": "Sent",
+        "v": [
+          {
+            "clue": "sent",
+            "text": "By an address you do not know"
+          }
+        ]
+      }
+    ],
+    "note": [
+      {
+        "clue": "note",
+        "text": "Tokens you never asked for can be a trap."
+      }
+    ],
+    "buttons": [
+      "Hide it",
+      "Visit the site"
+    ]
+  },
+  "clues": {
+    "from": {
+      "label": "A stranger sent it",
+      "strength": "strong",
+      "lens": "You never asked for this token.",
+      "why": "Unrequested tokens are a trap, not a gift."
+    },
+    "token": {
+      "label": "An unverified token",
+      "strength": "strong",
+      "lens": "Your wallet marks it as unverified.",
+      "why": "Unverified tokens are often traps."
+    },
+    "worth": {
+      "label": "A big worth in the name",
+      "strength": "strong",
+      "lens": "The name itself claims a value.",
+      "why": "A name can say anything."
+    },
+    "link": {
+      "label": "A link to \"sell\" it",
+      "strength": "strong",
+      "lens": "You must connect your wallet to a site to sell it.",
+      "why": "Connecting your wallet to an unknown site is how drainers work."
+    },
+    "sent": {
+      "label": "From an unknown address",
+      "strength": "strong",
+      "lens": "A stranger's address.",
+      "why": "Strangers do not give away value."
+    },
+    "note": {
+      "label": "Your wallet's hint",
+      "strength": "harmless",
+      "lens": "Your wallet warns that unasked tokens can be a trap.",
+      "why": "A good hint to believe."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Visit the site and sell it"
+    },
+    {
+      "id": "verify",
+      "label": "Ignore it and check the real token on its official site"
+    },
+    {
+      "id": "block_report",
+      "label": "Hide the token and report it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "You hid it and reported it. The wallet company marked the token as spam.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The project's official site had no ZLV-BONUS token. It was a trap. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The site asked to connect your wallet and sign. Then your real tokens moved out.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Leaving the token alone costs nothing. The \"sell\" site was the trap.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "A token you never asked for is bait. Do not visit its link or connect your wallet.",
+  "quick_check": {
+    "q": "A token you never bought appears in your wallet, with a link to sell it. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Sell it quickly"
+      },
+      {
+        "id": "b",
+        "text": "Connect and look"
+      },
+      {
+        "id": "c",
+        "text": "Hide it, do not visit the site, and report it"
+      },
+      {
+        "id": "d",
+        "text": "Send it to a friend"
+      }
+    ],
+    "answer": "c",
+    "explain": "The link is the trap. Hide it and move on."
+  },
+  "hints": {
+    "nudge": "What does the token want you to do?",
+    "glow_order": [
+      "from",
+      "token",
+      "worth",
+      "link",
+      "sent"
+    ]
+  },
+  "sources": [
+    "cafc-wallet",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the token",
+      "title": "Where it came from",
+      "rows": [
+        {
+          "k": "Sent by",
+          "v": "An unknown address",
+          "clue": "sent"
+        },
+        {
+          "k": "Status",
+          "v": "Not verified",
+          "clue": "token"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the link",
+      "title": "Where it goes",
+      "rows": [
+        {
+          "k": "It asks you to",
+          "v": "Connect your wallet",
+          "clue": "link"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What your wallet says",
+      "rows": [
+        {
+          "k": "Wallet hint",
+          "v": "Tokens you never asked for can be a trap",
+          "clue": "note"
+        }
+      ]
+    }
+  ]
+}

@@ -1,240 +1,357 @@
 {
   "id": "c4-05",
-  "type": "hunt",
+  "type": "duel",
   "chapter": 4,
-  "difficulty": 2,
-  "title": "The Real Alert",
-  "disguise": null,
+  "difficulty": 3,
+  "title": "Stay on Camera",
+  "disguise": "admin",
   "intro": [
-    "Another alarming message. After this chapter you might report everything.",
-    "But some alerts are real, and ignoring them is risky too.",
-    "Sniff it. Is it a threat, or your bank doing its job?"
+    "A caller says your SIM was used in a crime. He wants you on a video call and tells you to tell no one.",
+    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
+    "Every chat ends with your choice. Choose wisely."
   ],
   "notify": {
-    "app": "Bank app",
-    "from": "Your bank (in-app)",
-    "text": "Was this you? Card payment €480 at 03:12"
+    "app": "Chirp",
+    "from": "Officer Raman",
+    "text": "Your SIM is linked to a serious case"
   },
   "screen": {
-    "app": "mail",
+    "app": "chirp",
     "head": {
-      "from": [
-        "Your bank"
-      ],
-      "addr": [
+      "name": [
         {
-          "clue": "inapp",
-          "text": "inside your banking app"
+          "text": "Officer Raman · Cyber Cell",
+          "id": "duel-name"
         }
       ],
-      "subject": [
+      "sub": [
         {
-          "clue": "subject",
-          "text": "Was this you?"
+          "clue": "num",
+          "text": "Unknown number"
         }
       ],
-      "time": [
-        "3:13 AM"
-      ]
+      "avatar": {
+        "glyph": "🛡️",
+        "clue": "badge"
+      }
     },
-    "context": "Your phone showed a notification from the banking app you use every day. You opened the app yourself.",
-    "items": [
-      {
-        "p": [
+    "banner": [
+      "Video call request"
+    ],
+    "items": []
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
           {
-            "clue": "payment",
-            "text": "We paused a card payment of €480 to an online shop at 03:12."
-          }
-        ]
-      },
-      {
-        "p": [
-          {
-            "clue": "answer",
-            "text": "Was this you? Tap Yes or No below."
+            "msg": [
+              "Your SIM was used for ",
+              {
+                "clue": "crime",
+                "text": "illegal money transfers"
+              },
+              ". A case is open. ",
+              {
+                "clue": "arrest",
+                "text": "You may be arrested today."
+              }
+            ]
           },
-          " ",
           {
-            "clue": "nocode",
-            "text": "We will never ask for your PIN, passwords or codes."
+            "msg": [
+              "Join the video call now and ",
+              {
+                "clue": "stay",
+                "text": "stay on camera"
+              },
+              "."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "I did nothing. Why me?",
+            "next": "n2"
+          },
+          {
+            "text": "Joining the call",
+            "next": "n3"
+          },
+          {
+            "text": "I will hang up and report this",
+            "end": "block_report"
           }
         ]
       },
-      {
-        "p": [
+      "n2": {
+        "say": [
           {
-            "clue": "card",
-            "text": "If you tap No, we'll block the card and send a new one."
+            "msg": [
+              "We have ",
+              {
+                "clue": "proof",
+                "text": "proof"
+              },
+              ". You can clear your name only by ",
+              {
+                "clue": "co",
+                "text": "cooperating"
+              },
+              "."
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "secret",
+                "text": "Tell no one. If you do, it is a crime."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, I will cooperate",
+            "next": "n3"
+          },
+          {
+            "text": "That is not how cases work. I am telling my family and ending this.",
+            "end": "verify"
+          },
+          {
+            "text": "Hang up and report",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n3": {
+        "say": [
+          {
+            "msg": [
+              "Good. Now ",
+              {
+                "clue": "verify",
+                "text": "send your savings to our \"safe account\""
+              },
+              " so we can check them. They will be returned after."
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "rush",
+                "text": "You have 20 minutes."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Sending it now",
+            "end": "go_ahead"
+          },
+          {
+            "text": "No. I am ending the call and calling the helpline.",
+            "end": "block_report"
+          },
+          {
+            "text": "I will go to the police station in person",
+            "end": "verify"
           }
         ]
       }
-    ]
+    }
   },
   "clues": {
-    "inapp": {
-      "label": "Inside the bank app",
-      "strength": "harmless",
-      "lens": "You opened the real app yourself.",
-      "why": "Alerts inside your real app are hard to fake."
+    "num": {
+      "label": "An unknown number",
+      "strength": "strong",
+      "lens": "A stranger calling about a serious case.",
+      "why": "Real cases do not begin with a surprise call."
     },
-    "subject": {
-      "label": "\"Was this you?\"",
-      "strength": "harmless",
-      "lens": "A simple question.",
-      "why": "Normal wording for a fraud check."
+    "crime": {
+      "label": "A crime story",
+      "strength": "strong",
+      "lens": "Your SIM was supposedly used for illegal transfers.",
+      "why": "A frightening story fits everyone."
     },
-    "payment": {
-      "label": "A paused payment",
-      "strength": "harmless",
-      "lens": "A specific payment they stopped.",
-      "why": "Banks do pause suspicious payments."
+    "arrest": {
+      "label": "\"You may be arrested today\"",
+      "strength": "strong",
+      "lens": "A threat of arrest by phone.",
+      "why": "Arrests do not happen through a screen."
     },
-    "answer": {
-      "label": "Yes or No only",
-      "strength": "harmless",
-      "lens": "It only asks Yes or No.",
-      "why": "No codes, no links, no transfers."
+    "stay": {
+      "label": "\"Stay on camera\"",
+      "strength": "strong",
+      "lens": "They keep you watched.",
+      "why": "Keeping you on camera is how victims are controlled."
     },
-    "nocode": {
-      "label": "Never asks for codes",
-      "strength": "harmless",
-      "lens": "It says it never asks for PINs or codes.",
-      "why": "Honest banks remind you of this."
+    "proof": {
+      "label": "\"We have proof\"",
+      "strength": "strong",
+      "lens": "They claim proof but show none.",
+      "why": "No proof is shown because there is none."
     },
-    "card": {
-      "label": "Blocks the card for you",
+    "co": {
+      "label": "\"Clear your name by cooperating\"",
+      "strength": "strong",
+      "lens": "They make you feel guilty so you obey.",
+      "why": "Guilt is a lever."
+    },
+    "secret": {
+      "label": "\"Tell no one\"",
+      "strength": "strong",
+      "lens": "Secrecy stops people helping you.",
+      "why": "Always tell someone you trust."
+    },
+    "verify": {
+      "label": "\"Send savings to a safe account\"",
+      "strength": "strong",
+      "lens": "They want your money moved.",
+      "why": "No honest officer asks you to move money."
+    },
+    "rush": {
+      "label": "20 minutes",
+      "strength": "strong",
+      "lens": "A deadline to stop you thinking.",
+      "why": "Rushing is a pressure trick."
+    },
+    "badge": {
+      "label": "A badge picture",
       "strength": "harmless",
-      "lens": "They'll block it and send a new one.",
-      "why": "The bank does the work; you move no money."
+      "lens": "A shield icon.",
+      "why": "Badges are easy to fake."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Tap \"No, it wasn't me\" in the app"
+      "label": "Send the savings to the \"safe account\""
     },
     {
       "id": "verify",
-      "label": "Call the number on the back of your card"
+      "label": "Tell my family and visit the police station in person"
     },
     {
       "id": "block_report",
-      "label": "Ignore it, it must be a scam"
+      "label": "End the call and report it on 1930"
     }
   ],
-  "best_action": "go_ahead",
+  "best_action": "block_report",
   "acceptable_actions": [
     "verify"
   ],
   "outcomes": {
-    "go_ahead": {
-      "scene": "safe",
-      "mirage": null,
-      "stamp": "GENUINE",
-      "line": "The card was blocked and a new one is on its way. The €480 never left.",
-      "toddy": "happy"
-    },
     "block_report": {
-      "scene": "wolf",
-      "mirage": "smug",
-      "stamp": "FALSE ALARM",
-      "line": "It was the real bank. Ignoring a real alert let the €480 payment go through later.",
-      "mirageSays": "Panic or ignore, I win either way!"
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "You ended the call and reported it. The number was traced and the account frozen.",
+      "mirageSays": "Curses! Hung up on again!"
     },
     "verify": {
       "scene": "safe",
-      "mirage": null,
+      "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The bank confirmed it was a real alert and blocked the card.",
-      "toddy": "happy"
+      "line": "At the station they said: no case, no arrest, no officer by that name. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The savings moved to a stranger. The \"officer\" and the account disappeared.",
+      "mirageSays": "Thanks for the savings!"
     }
   },
   "what_if": {
-    "block_report": "It was inside your real app and asked only Yes or No. Real alerts deserve a response."
+    "go_ahead": "Telling one family member would have broken the spell. The secrecy was the trap.",
+    "verify": "Going in person was safe. Reporting the call as well helps trace the number."
   },
-  "golden_rule": "Real alerts live inside your real app and only ask you to confirm. They never ask for codes or transfers.",
+  "golden_rule": "No one can arrest you through a screen, and no one honest says \"tell no one\". End the call and tell someone you trust.",
   "quick_check": {
-    "q": "Why was this alert genuine?",
+    "q": "A caller says your SIM was used for a crime, keeps you on camera and tells you not to tell anyone. What is the best move?",
     "options": [
       {
         "id": "a",
-        "text": "It was urgent"
+        "text": "Obey to clear your name"
       },
       {
         "id": "b",
-        "text": "It was inside your bank app and asked only Yes or No"
+        "text": "Obey but record the call"
       },
       {
         "id": "c",
-        "text": "It used the word \"bank\""
+        "text": "End the call, tell someone you trust and report it on 1930"
+      },
+      {
+        "id": "d",
+        "text": "Ask for his ID"
       }
     ],
-    "answer": "b",
-    "explain": "Where it appears and what it asks matter most."
+    "answer": "c",
+    "explain": "The secrecy is the clue. A trusted person ends the spell."
   },
   "hints": {
-    "nudge": "Where did this alert appear, and what does it ask you to do?",
-    "glow_order": []
+    "nudge": "Why would a real officer ask you to keep it secret?",
+    "glow_order": [
+      "secret",
+      "stay",
+      "verify",
+      "arrest",
+      "rush",
+      "proof",
+      "crime",
+      "co"
+    ]
   },
   "sources": [
-    "ftc-crypto",
-    "ftc-data-2024",
-    "ic3-2024",
-    "ftc-phishing"
+    "in-pib-alert",
+    "in-1930",
+    "ftc-government"
   ],
-  "checked_on": "2026-10-13",
+  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check where you are",
-      "title": "The alert",
+      "label": "Check the caller",
+      "title": "Officer Raman",
       "rows": [
         {
-          "k": "You opened it in",
-          "v": "The real bank app, yourself",
-          "clue": "inapp"
+          "k": "Called you first?",
+          "v": "Yes",
+          "clue": "num"
         },
         {
-          "k": "Subject",
-          "v": "A simple question",
-          "clue": "subject"
-        }
-      ]
-    },
-    {
-      "id": "link",
-      "icon": "🔗",
-      "label": "Check what it asks",
-      "title": "The question",
-      "rows": [
-        {
-          "k": "It asks",
-          "v": "Yes or No only",
-          "clue": "answer"
+          "k": "Asked you to tell no one",
+          "v": "Yes",
+          "clue": "secret"
         },
         {
-          "k": "Payment",
-          "v": "A specific one they stopped",
-          "clue": "payment"
+          "k": "Asked for money",
+          "v": "Yes, \"safe account\"",
+          "clue": "verify"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Official page",
-      "title": "What your bank says",
+      "label": "Official advice",
+      "title": "What the government says",
       "rows": [
         {
-          "k": "Do they ask for PINs or codes?",
-          "v": "Never",
-          "clue": "nocode"
+          "k": "Criminals pose as police and keep victims on video calls",
+          "v": "Yes, they warn about it",
+          "clue": "stay"
         },
         {
-          "k": "If you say No",
-          "v": "They block the card and send a new one",
-          "clue": "card"
+          "k": "Where to report",
+          "v": "The cyber helpline 1930"
         }
       ]
     }

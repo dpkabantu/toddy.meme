@@ -1,184 +1,308 @@
 {
   "id": "c6-05",
-  "type": "hunt",
+  "type": "duel",
   "chapter": 6,
   "difficulty": 2,
-  "title": "Moving Day",
-  "disguise": null,
+  "title": "The Friendly Trader",
+  "disguise": "influencer",
   "intro": [
-    "Lena sends a voice message on Plenvo, from her usual account.",
-    "After hacked accounts, every friend's message feels suspicious.",
-    "Sniff it. Is anything actually wrong?"
+    "Three weeks later. \"Sophie\" and Toddy chat every day now.",
+    "Today she has a surprise. Talk back, and sniff every message.",
+    "Remember: you can leave the chat any time."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Lena",
-    "text": "🎤 Voice message (0:14)"
+    "from": "Sophie 🌸",
+    "text": "Look what I made this week!! 📈"
   },
   "screen": {
     "app": "chirp",
     "head": {
       "name": [
         {
-          "clue": "name",
-          "text": "Lena"
+          "text": "Sophie 🌸",
+          "id": "duel-name"
         }
       ],
       "sub": [
-        {
-          "clue": "handle",
-          "text": "@lena_draws · friends since 2019"
-        }
+        "chatting for 3 weeks"
       ],
       "avatar": {
-        "glyph": "🦊",
+        "glyph": "🌸",
         "clue": "avatar"
       }
     },
+    "context": "You've chatted every day for three weeks: food, music, her cat.",
     "items": [
       {
         "msg": [
           {
-            "clue": "voice",
-            "text": "🎤 Voice message (0:14): \"Hey Toddy! It's me, Lena…\""
-          }
-        ]
-      },
-      {
-        "msg": [
-          {
-            "clue": "ask",
-            "text": "Can you help me move flats on Saturday? 📦"
-          }
-        ]
-      },
-      {
-        "msg": [
-          {
-            "clue": "pizza",
-            "text": "Pizza's on me! 🍕"
-          },
-          " ",
-          {
-            "clue": "plan",
-            "text": "Like we talked about at lunch last week."
+            "clue": "goodmorning",
+            "text": "Good morning sunshine ☀️"
           }
         ]
       }
     ]
   },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "profit",
+                "text": "📈 [screenshot: +€3,400 this week]"
+              }
+            ]
+          },
+          {
+            "msg": [
+              "My uncle is an analyst. ",
+              {
+                "clue": "insider",
+                "text": "He shares secret signals with family"
+              },
+              ". Want me to teach you?"
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "How does it work?",
+            "next": "n2"
+          },
+          {
+            "text": "I don't invest with people I've only met online.",
+            "next": "n3"
+          },
+          {
+            "text": "Block and report Sophie",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              "Easy! Use ",
+              {
+                "clue": "platform",
+                "text": "brenvoy-trade-pro.app",
+                "link": true
+              },
+              ". ",
+              {
+                "clue": "guaranteed",
+                "text": "It's guaranteed 2% a day"
+              },
+              " 💸"
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "small",
+                "text": "Start small, just €100. I'll guide you step by step."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Guaranteed? Nothing is guaranteed.",
+            "next": "n3"
+          },
+          {
+            "text": "OK, depositing €100",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Block and report Sophie",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n3": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "guilt",
+                "text": "I thought we were friends 🥺"
+              },
+              " ",
+              {
+                "clue": "secret",
+                "text": "Don't tell your family, they won't understand."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Real friends don't push investments. Bye.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll check whether Brenvoy Trade Pro is a licensed firm first",
+            "end": "verify"
+          },
+          {
+            "text": "Fine, I'll try it",
+            "end": "go_ahead"
+          }
+        ]
+      }
+    }
+  },
   "clues": {
-    "voice": {
-      "label": "Her voice",
-      "strength": "harmless",
-      "lens": "A voice message in Lena's own voice.",
-      "why": "Normal for Lena."
+    "profit": {
+      "label": "Profit screenshot",
+      "strength": "strong",
+      "lens": "A screenshot of big profits. Screenshots are easy to fake.",
+      "why": "Showing off wins is the bait in investment scams."
     },
-    "ask": {
-      "label": "Asks for help, not money",
-      "strength": "harmless",
-      "lens": "She asks for help carrying boxes.",
-      "why": "No money, codes or links."
+    "insider": {
+      "label": "Secret insider tips",
+      "strength": "strong",
+      "lens": "\"Secret signals\" from an analyst uncle.",
+      "why": "Nobody shares real secret profits with strangers."
     },
-    "pizza": {
-      "label": "Pizza offer",
-      "strength": "harmless",
-      "lens": "She offers pizza.",
-      "why": "Friendly and normal."
+    "platform": {
+      "label": "Unknown trading site",
+      "strength": "strong",
+      "lens": "A trading site you've never heard of, chosen by her.",
+      "why": "Fake platforms show fake gains so you keep depositing."
     },
-    "plan": {
-      "label": "Matches real life",
-      "strength": "harmless",
-      "lens": "You talked about this in person.",
-      "why": "It matches something only the real Lena knows."
+    "guaranteed": {
+      "label": "Guaranteed returns",
+      "strength": "strong",
+      "lens": "\"Guaranteed 2% a day.\" That's over 1,000% a year.",
+      "why": "Only scammers guarantee profits."
     },
-    "name": {
-      "label": "Lena's account",
-      "strength": "harmless",
-      "lens": "Her usual account.",
-      "why": "Normal."
+    "small": {
+      "label": "Start small",
+      "strength": "strong",
+      "lens": "\"Just €100\" to start.",
+      "why": "Small first deposits build trust before the big ask."
     },
-    "handle": {
-      "label": "Old friendship",
+    "guilt": {
+      "label": "Guilt trip",
+      "strength": "strong",
+      "lens": "She acts hurt when you hesitate.",
+      "why": "Guilt is pressure wearing a friendly face."
+    },
+    "secret": {
+      "label": "Keep it secret",
+      "strength": "strong",
+      "lens": "She wants you to hide it from family.",
+      "why": "Scammers cut you off from people who would warn you."
+    },
+    "goodmorning": {
+      "label": "Sweet good morning",
       "strength": "harmless",
-      "lens": "Friends since 2019.",
-      "why": "Normal."
+      "lens": "A daily sweet message.",
+      "why": "Kind messages are normal between friends. Watch what comes next."
     },
     "avatar": {
-      "label": "Her usual picture",
+      "label": "Flower picture",
       "strength": "harmless",
-      "lens": "Her usual fox avatar.",
-      "why": "Normal."
+      "lens": "A flower emoji.",
+      "why": "Proves nothing alone."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Reply: \"Of course! See you Saturday\""
+      "label": "Invest through Sophie's site",
+      "trap": true
     },
     {
       "id": "verify",
-      "label": "Call her to confirm the time"
+      "label": "Check the firm with the official regulator"
     },
     {
       "id": "block_report",
-      "label": "Report her account as hacked"
+      "label": "Block and report Sophie"
     }
   ],
-  "best_action": "go_ahead",
+  "best_action": "block_report",
   "acceptable_actions": [
     "verify"
   ],
+  "trap": {
+    "title": "Brenvoy Trade Pro · Deposit",
+    "url": "brenvoy-trade-pro.app/deposit",
+    "ask": "Deposit €100 to start earning a guaranteed 2% a day.",
+    "go": "Deposit €100",
+    "back": "Close this page"
+  },
   "outcomes": {
-    "go_ahead": {
-      "scene": "safe",
-      "mirage": null,
-      "stamp": "GENUINE",
-      "line": "Saturday: boxes, stairs, and a lot of pizza. Lena was thrilled.",
-      "toddy": "happy"
-    },
     "block_report": {
-      "scene": "wolf",
-      "mirage": "smug",
-      "stamp": "FALSE ALARM",
-      "line": "Lena's real account got locked for a day. Nothing was wrong.",
-      "mirageSays": "Suspect your friends? Excellent."
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Reported. \"Sophie\" was one of hundreds of fake profiles run by the same group.",
+      "mirageSays": "Three weeks of work, wasted!"
     },
     "verify": {
       "scene": "safe",
-      "mirage": null,
+      "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Lena picked up laughing: \"Yes, 10 am! Bring gloves!\"",
-      "toddy": "happy"
+      "line": "Brenvoy Trade Pro wasn't on any official register. It was on a warning list instead.",
+      "mirageSays": "They looked us up?!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "The site showed big \"profits\" until Toddy tried to withdraw. Then Sophie vanished.",
+      "mirageSays": "Thanks, partner!"
     }
   },
   "what_if": {
-    "block_report": "No money, no codes, no link, and it matched a real conversation. That's just a friend."
+    "go_ahead": "\"Guaranteed 2% a day\" was the moment to stop. No real investment can promise that.",
+    "verify": "Checking the register was smart. Reporting Sophie too stops her reaching the next person."
   },
-  "golden_rule": "A friend asking for help, not money, matching something real, is just a friend.",
+  "golden_rule": "Only scammers guarantee profits. Never invest because someone you met online tells you to.",
   "quick_check": {
-    "q": "Which message from a friend needs checking?",
+    "q": "An online friend says a trading site gives \"guaranteed 2% a day\". What's true?",
     "options": [
       {
         "id": "a",
-        "text": "\"Help me move on Saturday, pizza on me\""
+        "text": "It's fine if you start small"
       },
       {
         "id": "b",
-        "text": "\"Send 200 ZLUSD to this new wallet, can't talk\""
+        "text": "Guaranteed returns are a sure sign of a scam"
+      },
+      {
+        "id": "c",
+        "text": "It's safe because you've chatted for weeks"
       }
     ],
     "answer": "b",
-    "explain": "Money to new details plus \"can't talk\" is the warning sign."
+    "explain": "No real investment can guarantee profits. Weeks of chatting are part of the con."
   },
   "hints": {
-    "nudge": "What is Lena asking for?",
-    "glow_order": []
+    "nudge": "What is she really asking you to do with your money?",
+    "glow_order": [
+      "guaranteed",
+      "platform",
+      "insider",
+      "profit",
+      "secret",
+      "guilt",
+      "small"
+    ]
   },
   "sources": [
-    "cafc-wallet",
-    "ftc-phishing",
-    "ftc-crypto"
+    "ftc-crypto",
+    "chainalysis-2025",
+    "ic3-2024"
   ],
   "checked_on": "2026-10-13",
   "kit": [
@@ -186,58 +310,80 @@
       "id": "profile",
       "icon": "🔍",
       "label": "Check profile",
-      "title": "Lena",
+      "title": "Sophie",
       "rows": [
         {
-          "k": "Account",
-          "v": "Her usual one",
-          "clue": "name"
-        },
-        {
-          "k": "Friends since",
-          "v": "2019",
-          "clue": "handle"
-        },
-        {
-          "k": "Avatar",
-          "v": "Her usual fox",
+          "k": "Picture",
+          "v": "A flower emoji",
           "clue": "avatar"
+        },
+        {
+          "k": "Daily message",
+          "v": "A sweet good morning",
+          "clue": "goodmorning"
+        },
+        {
+          "k": "Real friends",
+          "v": "Do not need to sell you anything"
         }
       ]
     },
     {
       "id": "link",
       "icon": "🔗",
-      "label": "Check the message",
-      "title": "What she says",
+      "label": "Check the platform",
+      "title": "Where she sends you",
       "rows": [
         {
-          "k": "Voice message",
-          "v": "In Lena's own voice",
-          "clue": "voice"
+          "k": "Platform",
+          "v": "A site you have never heard of, chosen by her",
+          "clue": "platform"
         },
         {
-          "k": "She asks",
-          "v": "To help carry boxes",
-          "clue": "ask"
+          "k": "Promise",
+          "v": "Guaranteed 2% a day",
+          "clue": "guaranteed"
         },
         {
-          "k": "She offers",
-          "v": "Pizza",
-          "clue": "pizza"
+          "k": "Start with",
+          "v": "Just €100",
+          "clue": "small"
+        },
+        {
+          "k": "Is it registered?",
+          "v": "Look it up on your regulator's list first"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Check the plan",
-      "title": "Does it fit?",
+      "label": "Check her story",
+      "title": "Proof and pressure",
       "rows": [
         {
-          "k": "You talked about it",
-          "v": "In person",
-          "clue": "plan"
+          "k": "Proof",
+          "v": "A screenshot of big profits",
+          "clue": "profit"
+        },
+        {
+          "k": "Her source",
+          "v": "Secret signals from an analyst uncle",
+          "clue": "insider"
+        },
+        {
+          "k": "If you hesitate",
+          "v": "She acts hurt",
+          "clue": "guilt"
+        },
+        {
+          "k": "Family",
+          "v": "She wants you to hide it",
+          "clue": "secret"
+        },
+        {
+          "k": "Screenshots",
+          "v": "Easy to edit"
         }
       ]
     }
