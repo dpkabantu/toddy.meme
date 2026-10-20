@@ -51,7 +51,7 @@ async function weeklyStart(env, p, body, now, night, sstatus) {
   const m = findMission(body.mission, body.game);
   if (!m) return json(400, { ok: false, error: 'mission_not_found' });
   const state = missionState(sstatus, m, now);
-  if (state === 'locked') return json(409, { ok: false, error: 'mission_locked' });
+  if (state === 'locked') return json(409, { ok: false, error: 'mission_locked', opensAt: missionPublic(sstatus, m, now).opensAt });
   if (m.kind === 'chapter' && !m.cases.includes(body.case)) return json(400, { ok: false, error: 'case_not_in_mission' });
   const claimed = await claimedStages(env, p.id, m), info = missionPublic(sstatus, m, now);
   if (m.stages.every((st) => claimed.has(st.id))) return json(200, { ok: true, runId: null, night, alreadyCounted: true, mission: info });

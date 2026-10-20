@@ -169,6 +169,9 @@ check(/Opening soon/.test(await page.locator('#mg').innerText()) === false, 'Sea
 await page.goto(base + '/games/scam-lab/?mission=scam-lab-ch1&qa');
 await page.waitForFunction(() => window.__lab, null, { timeout: 30000 }); await page.waitForTimeout(800);
 check(!/mission=/.test(page.url()) && /qa/.test(page.url()), 'Scam Lab: the mission link opens the chapter page and tidies the address');
+await page.waitForFunction(() => { const e = document.getElementById('chseason'); return e && !e.hidden; }, null, { timeout: 15000 });
+check(/0 of 6 cases counted/.test(await page.locator('#chseason').innerText()) && /3 cases: \+25/.test(await page.locator('#chseason').innerText()), 'Scam Lab chapter page: a line says "' + (await page.locator('#chseason').innerText()).slice(0, 70) + '..." (Season progress, separate from this device\u2019s dots)');
+await page.evaluate(() => ['c1-01', 'c1-02', 'c1-03', 'c1-04', 'c1-05', 'c1-06'].forEach((id) => window.__lab.store.record(id, 3, 900)));   // like a device that already played all of chapter 1 before the Season
 await page.evaluate(() => window.__lab.caseIntro('c1-03'));
 await page.waitForSelector('#btn-go', { timeout: 30000 }); await page.click('#btn-go');
 for (let i = 0; i < 12 && !(await page.locator('#btn-decide').isVisible()); i++) {   // Milo's intro, the notification and similar steps: press whatever is offered
@@ -185,6 +188,7 @@ await page.waitForSelector('.choice[data-option="' + ch3.quick + '"]', { timeout
 await page.waitForSelector('#btn-result', { timeout: 15000 }); await page.click('#btn-result');
 await page.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 20000 });
 const chLine = await page.locator('#seasonline').innerText();
+check(/Next: Case 4/.test(await page.locator('#btn-next').innerText()), 'Scam Lab: replaying case 3 of a finished chapter offers "Next: Case 4", not another chapter ("' + (await page.locator('#btn-next').innerText()) + '")');
 check(/Case counted for the chapter mission: 1 of 6 cases done/.test(chLine), 'Scam Lab chapter case result says: "' + chLine.slice(0, 80) + '"');
 const chRow = db.prepare("SELECT r.score, r.seed FROM game_runs r WHERE r.mode = 'weekly' AND r.game_id = 'scam-lab' AND r.status = 'accepted'").get();
 const chScore = await page.evaluate(() => Number(document.getElementById('total').firstChild.textContent));

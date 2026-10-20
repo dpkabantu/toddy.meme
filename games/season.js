@@ -16,6 +16,13 @@
     return meP;
   }
   // opts (optional): { mode: 'weekly', mission: id } for a weekly mission. Nothing is sent for guests.
+  function istDate(iso) { try { return new Date(iso).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short', timeZone: 'Asia/Kolkata' }); } catch (e) { return ''; } }
+  // The player's missions from the server (signed in), or null for guests / when the server does not answer.
+  var missionsP = null;
+  function missions() {
+    if (!missionsP) missionsP = signedIn().then(function (yes) { return yes ? fetch('/api/me/points', { credentials: 'same-origin' }).then(function (r) { return r.json(); }).then(function (j) { return j && j.ok ? j.missions : null; }) : null; }).catch(function () { return null; });
+    return missionsP;
+  }
   function start(game, opts) {
     var body = { game: game, night: night() }; Object.keys(opts || {}).forEach(function (k) { body[k] = opts[k]; });
     runs[game] = signedIn().then(function (yes) { return yes ? post('/api/run/start', body) : { ok: false, guest: true }; });
@@ -34,7 +41,6 @@
     });
   }
   var MSG = {
-    mission_locked: 'This mission has not opened yet.',
     clock_off: 'Your device clock looks off, so this run cannot earn Season points.',
     rate: 'Too many runs in a short time. Season points will work again soon.',
     season_closed: 'The Season is not open right now.',
@@ -45,7 +51,8 @@
   // Text for the result screen. Returns { text, link } or null when nothing should be shown.
   function describe(res) {
     if (!res) return null;
-    if (res.ok === false) { if (res.error === 'offline' || res.error === 'not_configured' || res.error === 'sign_in_first' || res.error === 'mission_locked' || res.error === 'mission_not_found' || res.error === 'case_not_in_mission') return null; return { text: MSG[res.error] || 'This run could not be confirmed, so it earned no Season points.' }; }
+    if (res.ok === false && res.error === 'mission_locked') return { text: 'This chapter opens for Season points on ' + istDate(res.opensAt) + ', 6:30 pm India time. Until then, playing it is practice.', link: true };
+    if (res.ok === false) { if (res.error === 'offline' || res.error === 'not_configured' || res.error === 'sign_in_first' || res.error === 'mission_not_found' || res.error === 'case_not_in_mission') return null; return { text: MSG[res.error] || 'This run could not be confirmed, so it earned no Season points.' }; }
     if (res.mission) {
       var label = res.progress ? 'Chapter mission' : 'Weekly Challenge', prog = res.progress ? ' \u00b7 ' + res.progress.cases + ' of ' + res.progress.of + ' cases' : '';
       if (res.counted) { var mi = res.points.items || []; return { text: label + ' points: +' + res.points.total + (res.held ? ' (waiting for review)' : '') + ' \u00b7 ' + mi.map(function (x) { return x.label + ' +' + x.amount; }).join(' \u00b7 ') + prog + '.', link: true }; }
@@ -75,5 +82,5 @@
   function guestHint(el) {
     if (!el) return; signedIn().then(function (yes) { if (yes) return; el.textContent = 'Playing as a guest. '; var a = document.createElement('a'); a.href = '/season/'; a.textContent = 'Sign in on the Season page to earn Season points.'; el.appendChild(a); el.hidden = false; });
   }
-  window.ToddySeason = { night: night, nightDate: nightDate, start: start, finish: finish, describe: describe, show: show, guestHint: guestHint, signedIn: signedIn };
+  window.ToddySeason = { missions: missions, istDate: istDate, night: night, nightDate: nightDate, start: start, finish: finish, describe: describe, show: show, guestHint: guestHint, signedIn: signedIn };
 })();

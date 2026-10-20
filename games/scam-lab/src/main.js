@@ -195,6 +195,7 @@ function chapterPage(ch) {
           h('h2', { text: ch.title }),
           h('p', { text: ch.blurb }),
           dots(ch, up ? ch.cases.indexOf(up) : -1))),
+      h('p', { class: 'small-ink', id: 'chseason', hidden: true }),
       ch.learn ? h('div', { class: 'learn' }, h('b', { text: 'In this chapter you\'ll learn to spot:' }), h('p', { text: ch.learn })) : null,
       h('ol', { class: 'cases big' }, ch.cases.map((id, i) => {
         const c = CASES[id]; const open = unlocked(id); const done = store.played(id); const s = store.stars(id);
@@ -206,6 +207,23 @@ function chapterPage(ch) {
             text: done ? '★'.repeat(s) + '☆'.repeat(3 - s) : state === 'next' ? 'Play' : '🔒' })));
       })),
       h('div', { class: 'row center' }, h('button', { class: 'btn ghost', id: 'btn-back-home', type: 'button', onclick: () => { sfx.tap(); home(); } }, '‹ All chapters'))));
+  seasonLine(ch);
+}
+
+// One line on the chapter page: what this chapter is worth in Season 1, and how many of its cases the server has counted.
+// (The dots above show what is saved on THIS device; the Season counts only cases played while signed in.)
+function seasonLine(ch) {
+  const T = window.ToddySeason; if (!T) return;
+  T.missions().then((ms) => {
+    const el = $('chseason'); if (!el) return;
+    if (ms === null) { T.signedIn().then((yes) => { if (yes) return; el.textContent = 'Season 1: sign in on the Season page to earn Season points for this chapter. '; const a = document.createElement('a'); a.href = '/season/'; a.textContent = 'Season page'; el.appendChild(a); el.hidden = false; }); return; }
+    const m = ms.find((x) => x.id === 'scam-lab-ch' + ch.n); if (!m) return;
+    const n = (m.casesDone || []).length, pts = m.stages.map((st) => `${st.label}: +${st.points}`).join(' · ');
+    el.textContent = m.done ? `Season 1: chapter mission done (${n} of ${m.cases.length} cases counted).`
+      : m.state === 'locked' ? `Season 1: this chapter opens for Season points on ${T.istDate(m.opensAt)}, 6:30 pm India time. Until then it is practice.`
+      : `Season 1: ${n} of ${m.cases.length} cases counted (${pts}${m.state === 'late' ? ', half points because the week is over' : ''}). Cases you played before signing in count again when you replay them.`;
+    el.hidden = false;
+  });
 }
 
 // ---------- case card before every case ----------
@@ -271,7 +289,8 @@ async function showResult({ case: c, score: r, seconds }) {
     const st = streak(store.dailyKeys().map(dayNumber), dayNumber(key));
     streakLine = first ? `🔥 ${st}-day streak · come back tomorrow for a new case` : 'Practice run: today\'s score was already saved.';
   } else store.record(c.id, r.stars, r.total);
-  const nextInCh = w ? nextIn(w.ch) && w.ch.cases.slice(w.i + 1).find((id) => !store.played(id)) || nextIn(w.ch) : null;
+  // next case in this chapter: the next one not yet played, else the next one in order (so replaying case 2 offers case 3, not another chapter)
+  const nextInCh = w ? w.ch.cases.slice(w.i + 1).find((id) => !store.played(id)) || nextIn(w.ch) || (w.i + 1 < w.k ? w.ch.cases[w.i + 1] : null) : null;
   const chJustDone = w && chDone(w.ch) && w.i === w.k - 1;
   const opened = OPEN().filter(chapterOpen).length > wasOpen;
   const up = nextUp();
