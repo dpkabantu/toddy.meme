@@ -333,8 +333,9 @@ function renderTitle() {
   const today = save.daily[dailyNumber()];
   const st = dailyStreak();
   const dailyLive = !seasonM || seasonDaily;   // in a game's launch week the Daily Brew is practice: its Season points start the week after
-  $('daily-status').textContent = !dailyLive ? `Practice now \u00B7 counts for Season from week ${seasonDailyWeek}` : today ? `Today: ${today.score || 0} pts${st.current > 1 ? ` · 🔥 ${st.current}` : ''} · counts for Season` : (st.current ? `Keep your ${st.current}-day streak · counts for Season` : 'New tray today · counts for Season');
-  $('btn-daily').classList.toggle('glow', !today); // gentle glow until today's Daily Brew is played
+  $('daily-status').textContent = !dailyLive ? `\uD83D\uDD12 Opens in week ${seasonDailyWeek} \u00B7 counts for Season` : today ? `Today: ${today.score || 0} pts${st.current > 1 ? ` · 🔥 ${st.current}` : ''} · counts for Season` : (st.current ? `Keep your ${st.current}-day streak · counts for Season` : 'New tray today · counts for Season');
+  $('btn-daily').classList.toggle('locked', !dailyLive); $('btn-daily').setAttribute('aria-disabled', String(!dailyLive));
+  $('btn-daily').classList.toggle('glow', dailyLive && !today); // gentle glow until today's Daily Brew is played
   $('endless-status').textContent = endlessOpen() ? (save.endlessBest ? `Best ${save.endlessBest} · no Season points` : 'Open · no Season points') : `🔒 After Night 1 · ${night1Done()}/20`;
   // while Season 1 runs the home screen is about the Season: Endless Brew and My Brew are tucked away (the code stays for after the Season)
   $('btn-endless').hidden = !!seasonM; $('btn-stats').hidden = !!seasonM; document.querySelector('.menu-row').classList.toggle('three', !!seasonM);
@@ -404,7 +405,7 @@ function renderMap() {
 function say2map(t) { $('night-sub').textContent = `Tray ${t} opens after you clear tray ${t - 1}.`; }
 
 // ---------------- My Brew dashboard ----------------
-function dailyWaiting() { return !save.daily[dailyNumber()]; }
+function dailyWaiting() { return !save.daily[dailyNumber()] && (!seasonM || seasonDaily); }   // not nudged while the Daily Brew is inactive
 function dailyStreak() { return streaks(Object.keys(save.daily).map(Number), dailyNumber()); }
 function renderStats() {
   const st = dailyStreak();
@@ -1355,7 +1356,10 @@ bind('btn-play', () => {
   if (!Object.keys(save.stars).length) { startTray(0, 1); return; } // first time: straight into tray 1
   mapNight = (nextTray() || [lastOpenNight()])[0]; show('map');
 });
-bind('btn-daily', () => { sfx.tick(); startDaily(); });
+bind('btn-daily', () => {
+  if (seasonM && !seasonDaily) { const st = $('daily-status'); st.textContent = `The Daily Brew starts in week ${seasonDailyWeek}. This week, play Season Nights.`; return; }   // inactive in its launch week (owner FINAL)
+  sfx.tick(); startDaily();
+});
 // Season Nights: Moon Brew's Season launch mission. One night opens per day; trays go in order inside a night; 15 points every 5 trays.
 const toSeason = /[?&]play=season(&|$)/.test(location.search);   // opened from the Season page
 let seasonM = null, seasonDaily = true, seasonDailyWeek = 2;
@@ -1527,7 +1531,7 @@ toddy.cv.addEventListener('animationend', (e) => { if (e.animationName === 'hop'
 
 applySettings(); // (sound itself wakes on the first tap)
 if (toSeason) { show('brewset'); const w = document.createElement('p'); w.className = 'stat center'; w.textContent = 'Opening Season Nights\u2026'; $('brewset-body').appendChild(w); } else show('title');
-if (/[?&]play=daily(&|$)/.test(location.search)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } startDaily(); }   // link from the Season page
+if (/[?&]play=daily(&|$)/.test(location.search) && !(seasonM && !seasonDaily)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } startDaily(); }   // link from the Season page
 track('open', { returning: Object.keys(save.stars).length > 0 || Object.keys(save.daily).length > 0 });
 
 // Hooks for the automatic browser tests (tools/smoke.py). Not used by players.
