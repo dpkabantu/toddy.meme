@@ -92,6 +92,16 @@
     }).catch(function () { sayErr('server_error'); });
   });
 
+  // Browsers built into apps (X, Instagram, Facebook, TikTok, LINE, Android WebView) do not share the phone's Google sign-ins.
+  // Telegram's own browser cannot be told apart, and it works, so it gets no hint.
+  var ua = navigator.userAgent || '';
+  if (/Twitter|Instagram|FBAN|FBAV|FB_IAB|TikTok|musical_ly|Bytedance|Line\/|; wv\)/i.test(ua)) $('inapp').hidden = false;
+  $('copylink').addEventListener('click', function () {
+    var url = location.origin + location.pathname, b = $('copylink'), done = function () { b.textContent = 'Link copied'; };
+    var fallback = function () { try { var t = document.createElement('textarea'); t.value = url; document.body.appendChild(t); t.select(); document.execCommand('copy'); document.body.removeChild(t); done(); } catch (e) { b.textContent = url; } };
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(url).then(done, fallback); else fallback();
+  });
+
   load().then(function () {
     var q = new URLSearchParams(location.search), e = q.get('e');
     if (e && ERR[e]) sayErr(e);

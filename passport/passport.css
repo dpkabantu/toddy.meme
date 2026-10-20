@@ -36,3 +36,4 @@ input[type=text]:focus-visible, .btn:focus-visible, .chip:focus-visible, summary
 .more[open] summary { margin-bottom: 8px; }
 .more > * + * { margin-top: 8px; }
 [hidden] { display: none !important; }
+.inapp { display: grid; gap: 10px; justify-items: start; }

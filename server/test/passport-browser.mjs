@@ -84,6 +84,15 @@ await page.goto(base + '/passport/?e=rate'); await page.waitForSelector('#msg:no
 await page.goto(base + '/passport/?e=%3Cb%3Ex'); check(await page.locator('#msg').isHidden(), 'unknown error codes show nothing (no injection)');
 // layout at small and large widths: no sideways scroll
 for (const w of [320, 390, 1280]) { await page.setViewportSize({ width: w, height: 800 }); await page.goto(base + '/passport/'); await page.waitForSelector('#s-out:not([hidden])'); check(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), 'no sideways scroll at ' + w + ' px'); }
+// in-app browser hint: shown for Instagram / X, not for a normal browser
+{ await page.setViewportSize({ width: 390, height: 800 }); await page.goto(base + '/passport/'); await page.waitForSelector('#s-out:not([hidden])');
+  check(await page.locator('#inapp').isHidden(), 'normal browser: no in-app hint');
+  for (const [name, agent] of [['Instagram', 'Mozilla/5.0 (iPhone) Instagram 300.0'], ['X', 'Mozilla/5.0 (iPhone) Twitter for iPhone'], ['Android WebView', 'Mozilla/5.0 (Linux; Android 13; Pixel; wv) AppleWebKit/537.36']]) {
+    const c2 = await browser.newContext({ userAgent: agent }); const p2 = await c2.newPage(); await p2.goto(base + '/passport/'); await p2.waitForSelector('#s-out:not([hidden])');
+    check(await p2.locator('#inapp').isVisible() && /Open in/.test(await p2.locator('#inapp').innerText()), name + ': in-app hint is shown'); 
+    check(await p2.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth), name + ': no sideways scroll with the hint');
+    if (name === 'Instagram') { await c2.grantPermissions(['clipboard-read', 'clipboard-write'], { origin: base }).catch(() => {}); await p2.click('#copylink'); await p2.waitForTimeout(400); check(/copied|^http/i.test(await p2.locator('#copylink').innerText()), 'copy link button answers'); await p2.screenshot({ path: shots + '/pp_inapp.png' }); }
+    await c2.close(); } }
 check(viol.length === 0, 'no Content-Security-Policy violations (' + viol.length + ')'); check(errs.length === 0, 'no page errors ' + errs.join('|'));
 await browser.close(); server.close();
 console.log(bad ? 'PROBLEMS: ' + bad : 'passport page ok'); if (bad) process.exitCode = 1;
