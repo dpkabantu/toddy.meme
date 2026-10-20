@@ -6,6 +6,7 @@ import { readFileSync, readdirSync } from 'node:fs';
 import { fileURLToPath } from 'node:url';
 import path from 'node:path';
 import { handle, EXPECTED_TABLES, EXPECTED_SCHEMA } from '../index.js';
+import { toPaste } from '../make-paste.mjs';
 
 const here = path.dirname(fileURLToPath(import.meta.url));
 const migDir = path.join(here, '..', 'migrations');
@@ -35,6 +36,14 @@ check(s1 && s1.starts_at === null && s1.ends_at === null && s1.status === 'draft
 check(db.prepare('SELECT COUNT(*) c FROM season_games WHERE season_id=?').get('season-1').c === 3, 'Season 1 lists the 3 live games');
 check(db.prepare("SELECT status FROM games WHERE id='night-shift'").get().status === 'parked', 'Night Shift is parked');
 check(db.prepare('SELECT COUNT(*) c FROM players').get().c === 0 && db.prepare('SELECT COUNT(*) c FROM points_ledger').get().c === 0, 'no player or points rows are created by the migration');
+
+// The paste-safe copy for the dashboard Console must build the very same database
+const pasteFile = readFileSync(path.join(here, '..', 'paste', files[0].replace('.sql', '.paste.sql')), 'utf8');
+check(pasteFile === toPaste(sql), 'paste file is up to date with the migration (run: node server/make-paste.mjs)');
+check(!/--/.test(pasteFile) && pasteFile.trim().split('\n').length === 1, 'paste file has no comments and is a single line');
+const dbP = new DatabaseSync(':memory:'); dbP.exec(pasteFile);
+const shape = (d) => JSON.stringify(d.prepare("SELECT type,name,tbl_name FROM sqlite_master WHERE name NOT LIKE 'sqlite_%' ORDER BY type,name").all()) + JSON.stringify(['seasons','games','season_games','schema_migrations'].map((t) => d.prepare('SELECT COUNT(*) c FROM ' + t).get().c));
+check(shape(dbP) === shape(db), 'paste version builds exactly the same tables, indexes and starting rows');
 
 // Rules the data must enforce
 const throws = (f) => { try { f(); return false; } catch (e) { return true; } };
