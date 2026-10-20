@@ -229,6 +229,9 @@ await page.waitForSelector('.nights button[data-night="1"]', { state: 'visible',
 const sn = await page.locator('#brewset-body').innerText();
 check(/7 nights/.test(sn) && /Cinnamon sticks/.test(sn) && /Moon doors/.test(sn) && (await page.locator('.sn-night').count()) === 7, 'Season Nights: the Moon Brew page lists 7 nights, each with what is new');
 await page.screenshot({ path: shots + '/season_nights.png', fullPage: true });
+await page.click('#brewset-back'); await page.waitForURL(/\/season\//, { timeout: 15000 });
+check(true, 'Season Nights: the back arrow returns to the Season page');
+await Promise.all([page.waitForURL(/moon-brew/), page.click('#mg .mrow:has-text("Season Nights") a')]); await page.waitForSelector('.nights button[data-night="1"]', { state: 'visible', timeout: 30000 });
 await page.click('.nights button[data-night="1"]');
 await page.waitForFunction(() => window.__moonbrew && window.__moonbrew.g && window.__moonbrew.g.status === 'playing' && window.__moonbrew.mode.kind === 'brewset', null, { timeout: 30000 });
 await page.waitForTimeout(800);

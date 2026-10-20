@@ -1353,6 +1353,7 @@ bind('btn-play', () => {
 });
 bind('btn-daily', () => { sfx.tick(); startDaily(); });
 // Season Nights: Moon Brew's Season launch mission. One night opens per day; trays go in order inside a night; 15 points every 5 trays.
+const toSeason = /[?&]play=season(&|$)/.test(location.search);   // opened from the Season page
 let seasonM = null;
 function seasonDone() { return new Set(save.season || []); }
 function showBrewSet() {
@@ -1391,10 +1392,10 @@ function showBrewSet() {
   render(seasonDone());
   if (T) T.missions().then((ms) => { const mine = ms && ms.find((x) => x.id === 'moon-brew-season'); if (!mine) return; const d = seasonDone(); (mine.casesDone || []).forEach((id) => d.add(id)); save.season = [...d]; writeSave(); if (current === 'brewset') render(d); });
 }
-bind('brewset-back', () => show('title'));
+// Back goes to where the player came from: the Season page if they opened Season Nights from there, otherwise the Moon Brew home screen.
+bind('brewset-back', () => { if (toSeason) location.href = '/season/'; else show('title'); });
 bind('btn-brewset', () => { sfx.tick(); showBrewSet(); });
 // Coming from the Season page: show a waiting screen straight away instead of flashing the home screen first.
-const toSeason = /[?&]play=season(&|$)/.test(location.search);
 const backToTitle = () => { if (toSeason && current === 'brewset' && !seasonM) show('title'); };
 fetch('/api/season', { credentials: 'same-origin' }).then((r) => r.json()).then((j) => {
   if (!j || !j.ok) return backToTitle();
