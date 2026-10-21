@@ -1,5 +1,5 @@
 // TODDY Trail rough test page: canvas, swipe steering, grey boxes plus approved pictures. No server yet.
-import { NIGHTS, STEPS_PER_SEC, newState, step, score, DX, DY } from './core.js';
+import { NIGHTS, NIGHT_IDS, STEPS_PER_SEC, newState, step, score, cartCell, thiefCell, shutterClosed, DX, DY } from './core.js';
 
 const $ = (id) => document.getElementById(id);
 const cv = $('c'), ctx = cv.getContext('2d');
@@ -67,8 +67,17 @@ function draw(frac) {
   ctx.strokeStyle = 'rgba(201,154,59,.5)'; ctx.lineWidth = 2; ctx.strokeRect(ox, oy, cell * n.w, cell * n.h);
   // tables
   for (const [x, y] of n.tables) { ctx.fillStyle = '#7a4a2a'; ctx.fillRect(ox + x * cell + 2, oy + y * cell + 2, cell - 4, cell - 4); ctx.fillStyle = '#a86a3c'; ctx.fillRect(ox + x * cell + 2, oy + y * cell + 2, cell - 4, cell * 0.4); }
-  // cart
-  if (n.cart) { const c = st.cartI, seq = [...n.cart.path]; for (let i = n.cart.path.length - 2; i >= 1; i--) seq.push(n.cart.path[i]); const [cx2, cy2] = seq[c % seq.length]; ctx.fillStyle = '#c99a3b'; ctx.fillRect(ox + cx2 * cell + 3, oy + cy2 * cell + 5, cell - 6, cell - 10); ctx.fillStyle = '#1a0a05'; ctx.fillRect(ox + cx2 * cell + 3, oy + cy2 * cell + cell - 8, cell - 6, 3); }
+  // puddles, shutters, cart, night thief
+  for (const [x, y] of n.puddles || []) { ctx.beginPath(); ctx.ellipse(ox + x * cell + cell / 2, oy + y * cell + cell * 0.6, cell * 0.42, cell * 0.24, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(110,180,230,.55)'; ctx.fill(); ctx.strokeStyle = 'rgba(190,225,250,.7)'; ctx.lineWidth = 1.5; ctx.stroke(); }
+  for (const sh of n.shutters || []) {
+    const closed = shutterClosed(n, st.t, sh.x, sh.y), x0 = ox + sh.x * cell, y0 = oy + sh.y * cell;
+    if (closed) { ctx.fillStyle = '#7a4a2a'; ctx.fillRect(x0 + 1, y0 + 1, cell - 2, cell - 2); ctx.strokeStyle = '#4a2a16'; ctx.lineWidth = 2; for (let k = 1; k < 4; k++) { ctx.beginPath(); ctx.moveTo(x0 + 2, y0 + (cell * k) / 4); ctx.lineTo(x0 + cell - 2, y0 + (cell * k) / 4); ctx.stroke(); } }
+    else { ctx.strokeStyle = 'rgba(201,154,59,.7)'; ctx.setLineDash([4, 4]); ctx.lineWidth = 2; ctx.strokeRect(x0 + 2, y0 + 2, cell - 4, cell - 4); ctx.setLineDash([]); }
+  }
+  const cart = cartCell(st);
+  if (cart) { ctx.fillStyle = '#c99a3b'; ctx.fillRect(ox + cart[0] * cell + 3, oy + cart[1] * cell + 5, cell - 6, cell - 10); ctx.fillStyle = '#1a0a05'; ctx.fillRect(ox + cart[0] * cell + 3, oy + cart[1] * cell + cell - 8, cell - 6, 3); }
+  const thief = thiefCell(st);
+  if (thief) { const [hx, hy] = cc(thief[0], thief[1]); ctx.beginPath(); ctx.arc(hx, hy, cell * 0.38, 0, Math.PI * 2); ctx.fillStyle = '#2a1f4a'; ctx.fill(); ctx.strokeStyle = st.thiefCool > 0 ? '#6a5aa0' : '#c2463f'; ctx.lineWidth = 2.5; ctx.stroke(); ctx.fillStyle = '#fff4d6'; ctx.beginPath(); ctx.arc(hx - cell * 0.13, hy - cell * 0.05, cell * 0.06, 0, Math.PI * 2); ctx.arc(hx + cell * 0.13, hy - cell * 0.05, cell * 0.06, 0, Math.PI * 2); ctx.fill(); }
   // brew spots
   n.brew.forEach((b, i) => { const [cx, cy] = cc(b.x, b.y); ctx.beginPath(); ctx.arc(cx, cy, cell * 0.46, 0, Math.PI * 2); ctx.fillStyle = st.brewCool[i] > 0 ? 'rgba(201,154,59,.15)' : 'rgba(201,154,59,.38)'; ctx.fill(); drawDrink(b.drink, cx, cy, cell * 0.3); });
   // visitor spots and visitors
@@ -122,14 +131,16 @@ function mk(tag, cls, text) { const e = document.createElement(tag); if (cls) e.
 function showMenu() {
   const o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
   const card = mk('div', 'card'); card.append(mk('h1', '', 'TODDY Trail'), mk('p', '', 'Carry the right drinks past the right visitors. Test version.'));
-  for (const id of [1, 3]) { const b = mk('button', 'btn', 'Night ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); startNight(id); }); card.append(b); }
+  for (const id of NIGHT_IDS) { const b = mk('button', 'btn', 'Night ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); startNight(id); }); card.append(b); }
   o.append(card);
 }
 function showResult() {
   const r = score(st), o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
   const card = mk('div', 'card');
-  card.append(mk('h1', '', st.won ? 'All served!' : 'Lanterns out'), mk('div', 'big', String(r.score)), mk('p', '', 'Served ' + r.served + ' of ' + r.of + ' · ' + r.seconds + ' s · spilled ' + st.spills));
-  const again = mk('button', 'btn', 'Play again'); again.addEventListener('click', () => startNight(nightId));
+  card.append(mk('h1', '', st.won ? 'All served!' : 'Lanterns out'), mk('div', 'big', String(r.score)), mk('p', '', 'Served ' + r.served + ' of ' + r.of + ' · ' + r.seconds + ' s · spilled ' + (st.spills + st.snatched)));
+  const nextId = NIGHT_IDS[NIGHT_IDS.indexOf(nightId) + 1];
+  if (st.won && nextId) { const nx = mk('button', 'btn', 'Night ' + nextId + ' · ' + NIGHTS[nextId].name); nx.addEventListener('click', () => startNight(nextId)); card.append(nx); }
+  const again = mk('button', 'btn' + (st.won && nextId ? ' alt' : ''), 'Play again'); again.addEventListener('click', () => startNight(nightId));
   const other = mk('button', 'btn alt', 'Pick a night'); other.addEventListener('click', showMenu);
   card.append(again, other); o.append(card);
   if (st.won) SND.win();
@@ -152,6 +163,7 @@ function frame(now) {
         if (e.type === 'serve') { SND.serve(); const v = NIGHTS[st.night].visitors[e.visitor]; flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: '♥', color: '#ff8fa3' }); }
         else if (e.type === 'sigh') { SND.sigh(); const v = NIGHTS[st.night].visitors[e.visitor]; flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: '…', color: '#cfc7e8' }); }
         else if (e.type === 'spill' || e.type === 'bump') { SND.spill(); flashes.push({ x: st.x, y: st.y, t0: totalTime, text: 'oops', color: '#ff8f7a' }); }
+        else if (e.type === 'snatch') { SND.spill(); flashes.push({ x: st.x, y: st.y, t0: totalTime, text: 'snatched!', color: '#ff8f7a' }); }
         else if (e.type === 'brew') { SND.brew(); flashes.push({ x: st.x, y: st.y, t0: totalTime, text: '+1', color: '#fff4d6' }); }
       }
       updateHud();
