@@ -15,7 +15,7 @@ const shots = process.argv[2] || '/tmp';
 const blocks = []; let cur = null;
 for (const line of readFileSync(path.join(root, '_headers'), 'utf8').split('\n')) { if (/^\S/.test(line) && !line.startsWith('#')) { cur = { pat: line.trim(), csp: null }; blocks.push(cur); } else if (cur && /Content-Security-Policy:/.test(line)) cur.csp = line.split('Content-Security-Policy:')[1].trim(); }
 const cspFor = (p) => { const hit = blocks.filter((b) => b.csp && (b.pat === '/*' || (b.pat.endsWith('*') && p.startsWith(b.pat.slice(0, -1))))).pop(); return (hit ? hit.csp : '').replace('upgrade-insecure-requests', ''); };
-const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.webp': 'image/webp', '.json': 'application/json' };
+const types = { '.html': 'text/html; charset=utf-8', '.js': 'text/javascript; charset=utf-8', '.css': 'text/css; charset=utf-8', '.webp': 'image/webp', '.json': 'application/json', '.mp4': 'video/mp4' };
 const server = http.createServer((req, res) => {
   const url = new URL(req.url, 'http://' + req.headers.host);
   let p = path.join(root, decodeURIComponent(url.pathname)); if (existsSync(p) && statSync(p).isDirectory()) p = path.join(p, 'index.html');
@@ -24,6 +24,12 @@ const server = http.createServer((req, res) => {
 });
 await new Promise((r) => server.listen(0, r));
 const base = 'http://localhost:' + server.address().port;
+const startFromMenu = async (page, id) => {   // menu -> (choose a night) -> intro card -> Start
+  if (id === 1) await page.locator('#overlay .btn').first().click();
+  else { await page.getByRole('button', { name: 'Choose another night' }).click(); await page.getByRole('button', { name: new RegExp('^Night ' + id + ' ') }).click(); }
+  await page.getByRole('button', { name: new RegExp('^Start Night ' + id) }).click();
+  await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 15000 });
+};
 
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true });
@@ -42,7 +48,7 @@ assert.equal(await page.getByRole('button', { name: /^Night 3 / }).isVisible(), 
 const STEP = 1000 / 4;   // Toddy takes 4 steps a second
 let ok = false;
 for (let attempt = 1; attempt <= 3 && !ok; attempt++) {
-  await page.locator('#overlay .btn').first().click();
+  if (attempt === 1) await startFromMenu(page, 1); else { await page.getByRole('button', { name: 'Play again' }).click(); await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 15000 }); }
   await page.waitForTimeout(600);   // Toddy waits for the first swipe: nothing moves yet
   await page.screenshot({ path: path.join(shots, 'trail-night1-start.png') });
   await page.keyboard.down('ArrowRight');   // first push starts the night (Toddy walks while a key is held)
@@ -54,18 +60,18 @@ for (let attempt = 1; attempt <= 3 && !ok; attempt++) {
   await at(9.5); await page.keyboard.down('ArrowUp');
   await at(12.5); await page.keyboard.down('ArrowRight');
   await page.waitForTimeout(1500); await page.keyboard.up('ArrowRight'); await page.keyboard.up('ArrowUp'); await page.keyboard.up('ArrowLeft');
+  await page.getByText('All served!').waitFor({ timeout: 6000 }).catch(() => {});   // the win dance plays for about 2 s first
   const text = await page.locator('#overlay').innerText().catch(() => '');
   ok = /All served/.test(text);
   console.log('night 1 attempt ' + attempt + ': ' + (ok ? 'all served' : 'not all served (' + (await page.locator('#served').innerText()) + ')'));
-  if (!ok) { await page.getByRole('button', { name: 'Pick a night' }).click().catch(() => {}); }
+  if (!ok) { await page.waitForSelector('#overlay .btn', { timeout: 8000 }).catch(() => {}); }
 }
 await page.screenshot({ path: path.join(shots, 'trail-night1-result.png') });
 assert.ok(ok, 'night 1 route serves all three');
 
 // Night 3, idle: ends by itself with the lanterns out (60 s) -- check the first seconds only, then confirm it is running
 await page.getByRole('button', { name: 'Pick a night' }).click();
-await page.getByRole('button', { name: 'Choose another night' }).click();
-await page.getByRole('button', { name: /^Night 3 / }).click();
+await startFromMenu(page, 3);
 await page.waitForTimeout(2500);
 await page.screenshot({ path: path.join(shots, 'trail-night3.png') });
 assert.match(await page.locator('#served').innerText(), /Served 0 \/ 5/);
@@ -74,8 +80,7 @@ const WANT = { 1: 3, 2: 4, 3: 5, 4: 5, 5: 6, 6: 5, 7: 7 };
 for (const id of [1, 2, 4, 5, 6, 7]) {
   await page.reload({ waitUntil: 'load' });
   await page.waitForSelector('#overlay .btn');
-  await page.getByRole('button', { name: 'Choose another night' }).click();
-  await page.getByRole('button', { name: new RegExp('^Night ' + id + ' ') }).click();
+  await startFromMenu(page, id);
   await page.waitForTimeout(500);
   assert.match(await page.locator('#served').innerText(), new RegExp('Served 0 / ' + WANT[id]));
   await page.keyboard.down('ArrowUp');

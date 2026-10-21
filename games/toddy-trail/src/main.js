@@ -1,16 +1,26 @@
-// TODDY Trail rough test page: canvas, swipe steering, grey boxes plus approved pictures. No server yet.
+// TODDY Trail test page: canvas, hold-and-steer, approved art and animations. No server yet.
+// The rules live in core.js (pure and deterministic). Everything in this file is only drawing and input.
 import { NIGHTS, NIGHT_IDS, STEPS_PER_SEC, newState, step, score, cartCell, thiefCell, shutterClosed, DX, DY } from './core.js';
+import { ANIMS, STILLS, BGS } from './art.js';
 
 const $ = (id) => document.getElementById(id);
 const cv = $('c'), ctx = cv.getContext('2d');
 const STEP_MS = 1000 / STEPS_PER_SEC;
-const IMGS = {};
-const loadImg = (name) => new Promise((res) => { const im = new Image(); im.onload = () => res(); im.onerror = () => res(); im.src = 'assets/' + name + '.webp'; IMGS[name] = im; });
-const VISITOR_FILE = { milo: ['visitor_milo_v02', 'visitor_milo_happy_v01'], pip: ['visitor_pip_v01', 'visitor_pip_happy_v01'], velvet: ['visitor_velvet_v01', 'visitor_velvet_happy_v01'], lumi: ['visitor_lumi_v01', 'visitor_lumi_happy_v01'], biscuit: ['visitor_biscuit_v01', 'visitor_biscuit_happy_v01'] };
+const IMGS = {}, LOADING = {};
+const loadImg = (name) => LOADING[name] || (LOADING[name] = new Promise((res) => { const im = new Image(); im.onload = () => res(); im.onerror = () => res(); im.src = 'assets/' + name + '.webp'; IMGS[name] = im; }));
+const ready = (name) => { const im = IMGS[name]; return im && im.complete && im.naturalWidth ? im : null; };
+const VISITOR_BASE = { milo: 'visitor_milo_v02', pip: 'visitor_pip_v01', velvet: 'visitor_velvet_v01', lumi: 'visitor_lumi_v01', biscuit: 'visitor_biscuit_v01' };
+const DRINK_NAMES = ['moon', 'star', 'crescent', 'sun', 'heart'];
+const animFile = (k) => 'trail_anim_' + k + '_v01', objFile = (k) => 'trail_obj_' + k + '_v01', custFile = (w, p) => 'trail_cust_' + w + '_' + p + '_v01';
+
+// what each night puts on the floor (the obstacle picture and how tall it stands, in cells)
+const OBSTACLE = { 2: ['table', 1.85], 3: ['crates', 1.45], 4: ['barrel', 1.2], 5: ['shelf', 1.35], 6: ['post', 1.3], 7: ['speaker', 1.6] };
 
 let st = null, nightId = 0, turns = [], heldDir = null, lastSent = 4, running = false, waiting = false, last = 0, acc = 0;
-let prevPts = [], curPts = [], flashes = [], soundOn = false, actx = null, bannerTimer = 0, totalTime = 0;
+let prevPts = [], curPts = [], flashes = [], fx = [], soundOn = false, actx = null, bannerTimer = 0, totalTime = 0;
 let W = 0, H = 0, DPR = 1, cell = 30, ox = 0, oy = 0;
+// drawing-only state (never read by the rules)
+let tod = null, lastMoveAt = -9999, sighUntil = [], endAt = 0, thiefPrev = null, thiefFlip = false, thiefSnatchAt = -9999, brewAt = [], shutterAt = {}, shutterWas = {};
 
 // Toddy and his cups. At the start the cups wait in a line behind him (the game only records real steps later).
 const pts = (s) => {
@@ -44,83 +54,177 @@ function resize() {
 }
 window.addEventListener('resize', resize);
 
-// ---- drawing ----
-const DRINK_NAMES = ['moon', 'star', 'crescent', 'sun', 'heart'];
+// ---- small drawing helpers ----
 function drawDrink(d, cx, cy, r) {   // the approved round badge picture; the drawn circle below is only a fallback while it loads
-  const im = IMGS['trail_badge_' + DRINK_NAMES[d] + '_v01'];
-  if (im && im.complete && im.naturalWidth) { ctx.drawImage(im, cx - r * 1.12, cy - r * 1.12, r * 2.24, r * 2.24); return; }
+  const im = ready('trail_badge_' + DRINK_NAMES[d] + '_v01');
+  if (im) { ctx.drawImage(im, cx - r * 1.12, cy - r * 1.12, r * 2.24, r * 2.24); return; }
   drawDrinkFallback(d, cx, cy, r);
 }
 function drawCup(d, cx, cy, h) {   // the approved cup picture, centred on (cx, cy)
-  const im = IMGS['trail_cup_' + DRINK_NAMES[d] + '_v01'];
-  if (!im || !im.complete || !im.naturalWidth) { drawDrinkFallback(d, cx, cy, h * 0.4); return; }
+  const im = ready('trail_cup_' + DRINK_NAMES[d] + '_v01');
+  if (!im) { drawDrinkFallback(d, cx, cy, h * 0.4); return; }
   const w = (im.naturalWidth / im.naturalHeight) * h; ctx.drawImage(im, cx - w / 2, cy - h / 2, w, h);
 }
 function drawDrinkFallback(d, cx, cy, r) {
-  ctx.save();
-  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fillStyle = ['#2F4E9F', '#9A2F55', '#2E7A52'][d] || '#3E1C14'; ctx.fill(); ctx.lineWidth = Math.max(2, r * 0.16); ctx.strokeStyle = '#FFF4D6'; ctx.stroke();
-  const s = r * 0.62;
-  if (d === 0) { ctx.beginPath(); ctx.arc(cx, cy, s, 0, Math.PI * 2); ctx.fillStyle = '#FDE3BD'; ctx.fill(); ctx.beginPath(); ctx.arc(cx - s * 0.3, cy - s * 0.25, s * 0.22, 0, Math.PI * 2); ctx.fillStyle = '#E3C79B'; ctx.fill(); }
-  else if (d === 1) { ctx.beginPath(); for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + (i * Math.PI) / 5, rr = i % 2 ? s * 0.45 : s * 1.1; ctx.lineTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr); } ctx.closePath(); ctx.fillStyle = '#FDAF1E'; ctx.fill(); }
-  else { ctx.beginPath(); ctx.arc(cx, cy, s, 0, Math.PI * 2); ctx.fillStyle = '#EB8936'; ctx.fill(); ctx.beginPath(); ctx.arc(cx + s * 0.45, cy - s * 0.1, s * 0.85, 0, Math.PI * 2); ctx.fillStyle = '#2E7A52'; ctx.fill(); }
-  ctx.restore();
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fillStyle = ['#2F4E9F', '#9A2F55', '#2E7A52', '#C98A2B', '#7A4AA8'][d] || '#3E1C14'; ctx.fill(); ctx.lineWidth = Math.max(2, r * 0.16); ctx.strokeStyle = '#FFF4D6'; ctx.stroke();
 }
 const cc = (x, y) => [ox + x * cell + cell / 2, oy + y * cell + cell / 2];
-function drawImgBottom(im, cx, bottom, h) { if (!im || !im.complete || !im.naturalWidth) return; const w = (im.naturalWidth / im.naturalHeight) * h; ctx.drawImage(im, cx - w / 2, bottom - h, w, h); }
+function drawImgBottom(im, cx, bottom, h) { if (!im) return; const w = (im.naturalWidth / im.naturalHeight) * h; ctx.drawImage(im, cx - w / 2, bottom - h, w, h); }
+// a cut-out picture standing on a cell: centred on the cell, feet at the cell's bottom edge
+function drawStill(key, cx, bottom, hCells, maxWCells) {
+  const im = ready(objFile(key)), m = STILLS[key]; if (!im || !m) return;
+  let h = hCells * cell, w = (m[0] / m[1]) * h; const mw = (maxWCells || 1.25) * cell; if (w > mw) { h *= mw / w; w = mw; }
+  ctx.drawImage(im, cx - w / 2, bottom - h, w, h);
+}
+// one frame of an animation strip; the subject (feet line at a.feet) stands at (cx, bottom) and is subjH tall
+function animIndex(key, t) { const a = ANIMS[key]; const f = Math.floor((t / 1000) * a.fps); return a.loop ? ((f % a.n) + a.n) % a.n : Math.max(0, Math.min(a.n - 1, f)); }
+function drawStrip(file, key, i, cx, bottom, subjH, flip) {
+  const im = ready(file), a = ANIMS[key]; if (!im) return;
+  const k = subjH / a.subj, w = a.w * k, h = a.h * k;
+  ctx.save(); if (flip) { ctx.translate(cx, 0); ctx.scale(-1, 1); ctx.translate(-cx, 0); }
+  ctx.drawImage(im, i * a.w, 0, a.w, a.h, cx - w / 2, bottom - a.feet * k, w, h); ctx.restore();
+}
+function drawCentered(file, key, i, cx, cy, size, alpha) {   // effects: the square strip frame centred on (cx, cy), `size` pixels wide
+  const im = ready(file), a = ANIMS[key]; if (!im) return;
+  if (alpha !== undefined) ctx.globalAlpha = alpha;
+  ctx.drawImage(im, i * a.w, 0, a.w, a.h, cx - size / 2, cy - size / 2, size, size); ctx.globalAlpha = 1;
+}
+
+// ---- Toddy's animation (picture only) ----
+const dirFlip = (d) => d === 3;
+function setTod(key, dir, ms, tag) { tod = { key, flip: dirFlip(dir), t0: totalTime, until: totalTime + ms, tag }; }
+function toddyPicture() {   // which strip and frame to show right now
+  const moving = totalTime - lastMoveAt < STEP_MS * 1.6;
+  if (tod && totalTime < tod.until) {
+    if (tod.tag === 'cancelOnMove' && moving && totalTime - tod.t0 > 220) tod = null;
+    else return { key: tod.key, i: animIndex(tod.key, totalTime - tod.t0), flip: tod.flip };
+  }
+  const d = st.dir;
+  if (moving && st.holding && !st.bumped) { if (d === 2) return { key: 'walk_down', i: animIndex('walk_down', totalTime), flip: false }; if (d === 0) return { key: 'walk_up', i: animIndex('walk_up', totalTime), flip: false }; return { key: 'walk_right', i: animIndex('walk_right', totalTime), flip: d === 3 }; }
+  if (d === 0 && st.t > 0) return { key: 'walk_up', i: 0, flip: false };
+  return { key: 'idle_down', i: animIndex('idle_down', totalTime), flip: false };
+}
+function faceVisitor(v) { const dx = v.bx - st.x, dy = v.by - st.y; return Math.abs(dx) >= Math.abs(dy) ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0); }
+
+// ---- the scene ----
+function drawFloor(n) {
+  const m = BGS[st.night], im = m && ready('trail_bg_n' + st.night + '_v01');
+  if (im) {
+    const sx = (cell * n.w) / m.fw, sy = (cell * n.h) / m.fh;
+    ctx.drawImage(im, ox - m.fx * sx, oy - m.fy * sy, m.w * sx, m.h * sy);
+  } else {   // stand-in floor until that night's picture is approved
+    for (let y = 0; y < n.h; y++) for (let x = 0; x < n.w; x++) { ctx.fillStyle = (x + y) % 2 ? '#2e2258' : '#352a64'; ctx.fillRect(ox + x * cell, oy + y * cell, cell, cell); }
+    ctx.strokeStyle = 'rgba(201,154,59,.5)'; ctx.lineWidth = 2; ctx.strokeRect(ox, oy, cell * n.w, cell * n.h);
+  }
+}
 
 function draw(frac) {
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   ctx.clearRect(0, 0, W, H);
   ctx.fillStyle = '#14102e'; ctx.fillRect(0, 0, W, H);
   if (!st) return;
-  const n = NIGHTS[st.night];
-  for (let y = 0; y < n.h; y++) for (let x = 0; x < n.w; x++) { ctx.fillStyle = (x + y) % 2 ? '#241c4d' : '#201946'; ctx.fillRect(ox + x * cell, oy + y * cell, cell, cell); }
-  ctx.strokeStyle = 'rgba(201,154,59,.5)'; ctx.lineWidth = 2; ctx.strokeRect(ox, oy, cell * n.w, cell * n.h);
-  // tables
-  for (const [x, y] of n.tables) { ctx.fillStyle = '#7a4a2a'; ctx.fillRect(ox + x * cell + 2, oy + y * cell + 2, cell - 4, cell - 4); ctx.fillStyle = '#a86a3c'; ctx.fillRect(ox + x * cell + 2, oy + y * cell + 2, cell - 4, cell * 0.4); }
-  // puddles, shutters, cart, night thief
-  for (const [x, y] of n.puddles || []) { ctx.beginPath(); ctx.ellipse(ox + x * cell + cell / 2, oy + y * cell + cell * 0.6, cell * 0.42, cell * 0.24, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(110,180,230,.55)'; ctx.fill(); ctx.strokeStyle = 'rgba(190,225,250,.7)'; ctx.lineWidth = 1.5; ctx.stroke(); }
-  for (const sh of n.shutters || []) {
-    const closed = shutterClosed(n, st.t, sh.x, sh.y), x0 = ox + sh.x * cell, y0 = oy + sh.y * cell;
-    if (closed) { ctx.fillStyle = '#7a4a2a'; ctx.fillRect(x0 + 1, y0 + 1, cell - 2, cell - 2); ctx.strokeStyle = '#4a2a16'; ctx.lineWidth = 2; for (let k = 1; k < 4; k++) { ctx.beginPath(); ctx.moveTo(x0 + 2, y0 + (cell * k) / 4); ctx.lineTo(x0 + cell - 2, y0 + (cell * k) / 4); ctx.stroke(); } }
-    else { ctx.strokeStyle = 'rgba(201,154,59,.7)'; ctx.setLineDash([4, 4]); ctx.lineWidth = 2; ctx.strokeRect(x0 + 2, y0 + 2, cell - 4, cell - 4); ctx.setLineDash([]); }
-  }
-  const cart = cartCell(st);
-  if (cart) { ctx.fillStyle = '#c99a3b'; ctx.fillRect(ox + cart[0] * cell + 3, oy + cart[1] * cell + 5, cell - 6, cell - 10); ctx.fillStyle = '#1a0a05'; ctx.fillRect(ox + cart[0] * cell + 3, oy + cart[1] * cell + cell - 8, cell - 6, 3); }
-  const thief = thiefCell(st);
-  if (thief) { const [hx, hy] = cc(thief[0], thief[1]); ctx.beginPath(); ctx.arc(hx, hy, cell * 0.38, 0, Math.PI * 2); ctx.fillStyle = '#2a1f4a'; ctx.fill(); ctx.strokeStyle = st.thiefCool > 0 ? '#6a5aa0' : '#c2463f'; ctx.lineWidth = 2.5; ctx.stroke(); ctx.fillStyle = '#fff4d6'; ctx.beginPath(); ctx.arc(hx - cell * 0.13, hy - cell * 0.05, cell * 0.06, 0, Math.PI * 2); ctx.arc(hx + cell * 0.13, hy - cell * 0.05, cell * 0.06, 0, Math.PI * 2); ctx.fill(); }
-  // brew spots
-  n.brew.forEach((b, i) => { const [cx, cy] = cc(b.x, b.y); ctx.beginPath(); ctx.arc(cx, cy, cell * 0.46, 0, Math.PI * 2); ctx.fillStyle = st.brewCool[i] > 0 ? 'rgba(201,154,59,.15)' : 'rgba(201,154,59,.38)'; ctx.fill(); drawDrink(b.drink, cx, cy, cell * 0.3); });
-  // visitor spots and visitors
-  const frontWant = st.cups.length ? st.cups[0] : -1, pulse = 0.5 + 0.5 * Math.sin(totalTime / 220);
+  const n = NIGHTS[st.night], pulse = 0.5 + 0.5 * Math.sin(totalTime / 220);
+  drawFloor(n);
+  // visitor spots (the square in front of each visitor) and brew rings are drawn on the floor
+  const frontWant = st.cups.length ? st.cups[0] : -1;
   let targetIdx = -1, bestD = 1e9;   // the ONE visitor to go to: nearest of those who want the first cup
   n.visitors.forEach((v, i) => { if (!st.served[i] && v.want === frontWant) { const d = Math.abs(v.sx - st.x) + Math.abs(v.sy - st.y); if (d < bestD) { bestD = d; targetIdx = i; } } });
   n.visitors.forEach((v, i) => {
-    const [sx, sy] = cc(v.sx, v.sy), done = st.served[i];
-    ctx.fillStyle = done ? 'rgba(120,200,120,.25)' : 'rgba(253,175,30,.22)'; ctx.fillRect(ox + v.sx * cell + 2, oy + v.sy * cell + 2, cell - 4, cell - 4);
+    const done = st.served[i];
+    ctx.fillStyle = done ? 'rgba(120,200,120,.22)' : 'rgba(253,175,30,.2)'; ctx.fillRect(ox + v.sx * cell + 2, oy + v.sy * cell + 2, cell - 4, cell - 4);
     if (!done && i === targetIdx) { ctx.strokeStyle = 'rgba(255,244,214,' + (0.4 + 0.5 * pulse) + ')'; ctx.lineWidth = 3; ctx.strokeRect(ox + v.sx * cell + 1, oy + v.sy * cell + 1, cell - 2, cell - 2); }
-    const [bx, by] = cc(v.bx, v.by), files = VISITOR_FILE[v.who];
-    ctx.globalAlpha = !done && targetIdx >= 0 && i !== targetIdx ? 0.45 : 1;
-    drawImgBottom(IMGS[files[done ? 1 : 0]], bx, oy + (v.by + 1) * cell - 1, cell * 1.75);
-    if (!done) {
-      const by2 = by - cell * 1.3;
-      ctx.fillStyle = 'rgba(20,16,46,.9)'; ctx.beginPath(); ctx.arc(bx, by2, cell * 0.48, 0, Math.PI * 2); ctx.fill();
-      if (i === targetIdx) { ctx.strokeStyle = 'rgba(255,244,214,' + (0.5 + 0.5 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
-      drawDrink(v.want, bx, by2, cell * 0.46);
-    }
-    ctx.globalAlpha = 1;
   });
+  n.brew.forEach((b, i) => {
+    const [cx, cy] = cc(b.x, b.y), cool = st.brewCool[i] > 0, ring = ready(objFile('ring')), rm = STILLS.ring;
+    if (ring && rm) { const w = cell * 1.0, h = (rm[1] / rm[0]) * w; ctx.globalAlpha = cool ? 0.45 : 1; ctx.drawImage(ring, cx - w / 2, cy + cell * 0.12 - h / 2, w, h); ctx.globalAlpha = 1; }
+    else { ctx.beginPath(); ctx.arc(cx, cy, cell * 0.46, 0, Math.PI * 2); ctx.fillStyle = cool ? 'rgba(201,154,59,.15)' : 'rgba(201,154,59,.38)'; ctx.fill(); }
+  });
+  // puddles lie on the floor and ripple in the rain
+  for (const [x, y] of n.puddles || []) {
+    const [cx, cy] = cc(x, y);
+    if (ready(animFile('puddle_ripple'))) { const size = cell * 1.12; drawCentered(animFile('puddle_ripple'), 'puddle_ripple', animIndex('puddle_ripple', totalTime + x * 311 + y * 97), cx, cy + cell * 0.12, size); }
+    else { ctx.beginPath(); ctx.ellipse(cx, cy + cell * 0.1, cell * 0.42, cell * 0.24, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(110,180,230,.55)'; ctx.fill(); }
+  }
+
+  // everything that stands up is drawn back to front, so Toddy walks behind tall things and in front of the ones behind him
+  const items = [];
+  const bottomOf = (y) => oy + (y + 1) * cell - cell * 0.04;
+  const ob = OBSTACLE[st.night];
+  for (const [x, y] of n.tables) items.push({ y, f: () => {
+    if (ob && ready(objFile(ob[0]))) drawStill(ob[0], cc(x, y)[0], bottomOf(y), ob[1] * (n.tables.length > 12 ? 0.74 : 1));
+    else { ctx.fillStyle = '#7a4a2a'; ctx.fillRect(ox + x * cell + 2, oy + y * cell + 2, cell - 4, cell - 4); ctx.fillStyle = '#a86a3c'; ctx.fillRect(ox + x * cell + 2, oy + y * cell + 2, cell - 4, cell * 0.4); }
+  } });
+  n.brew.forEach((b, i) => items.push({ y: b.y - 0.18, f: () => {
+    const [cx] = cc(b.x, b.y), bottom = oy + b.y * cell + cell * 0.62, playing = totalTime - (brewAt[i] || -9999) < 1500;
+    if (playing && ready(animFile('brew_pour'))) drawStrip(animFile('brew_pour'), 'brew_pour', animIndex('brew_pour', totalTime - brewAt[i]), cx, bottom, cell * 1.35 * (ANIMS.brew_pour.subj / 170), false);
+    else drawStill('station', cx, bottom, 1.35, 1.2);
+    drawDrink(b.drink, cx + cell * 0.46, bottom - cell * 1.2, cell * 0.2);
+  } }));
+  for (let k = 0; k < (n.shutters || []).length; k++) {
+    const sh = n.shutters[k], closed = shutterClosed(n, st.t, sh.x, sh.y), key = sh.x + ',' + sh.y;
+    if (shutterWas[key] !== closed) { shutterWas[key] = closed; shutterAt[key] = totalTime; }
+    items.push({ y: sh.y, f: () => {
+      const [cx] = cc(sh.x, sh.y), bottom = bottomOf(sh.y), p = Math.min(1, (totalTime - (shutterAt[key] || -9999)) / 350);
+      // the shutter slides: closing covers the open picture from the top, opening reveals it
+      const open = ready(objFile('shutter_open')), shut = ready(objFile('shutter_closed')), mm = STILLS.shutter_closed; if (!open || !shut || !mm) return;
+      let h = 1.3 * cell, w = (mm[0] / mm[1]) * h; if (w > cell * 1.1) { h *= (cell * 1.1) / w; w = cell * 1.1; }
+      ctx.drawImage(open, cx - w / 2, bottom - h, w, h);
+      const cover = closed ? p : 1 - p;   // 0..1 how much of the closed picture is shown
+      if (cover > 0) { const ch = h * cover; ctx.drawImage(shut, 0, 0, shut.naturalWidth, shut.naturalHeight * cover, cx - w / 2, bottom - h, w, ch); }
+    } });
+  }
+  const cart = cartCell(st);
+  if (cart) items.push({ y: cart[1], f: () => { const [cx] = cc(cart[0], cart[1]); drawStill('cart', cx, bottomOf(cart[1]), 1.0, 1.75); } });
+  const thief = thiefCell(st);
+  if (thief) {
+    if (thiefPrev && (thiefPrev[0] !== thief[0])) thiefFlip = thief[0] < thiefPrev[0];
+    thiefPrev = thief;
+    items.push({ y: thief[1] + 0.01, f: () => {
+      const [cx] = cc(thief[0], thief[1]), bottom = bottomOf(thief[1]), snatching = totalTime - thiefSnatchAt < 900;
+      ctx.beginPath(); ctx.ellipse(cx, bottom - cell * 0.03, cell * 0.3, cell * 0.08, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fill();
+      if (snatching) drawStrip(animFile('thief_snatch'), 'thief_snatch', animIndex('thief_snatch', totalTime - thiefSnatchAt), cx, bottom, cell * 1.2, thiefFlip);
+      else drawStrip(animFile('thief_sneak'), 'thief_sneak', animIndex('thief_sneak', totalTime), cx, bottom, cell * 1.2, thiefFlip);
+      if (st.thiefCool === 0 && !snatching) { ctx.strokeStyle = 'rgba(255,120,100,' + (0.35 + 0.35 * pulse) + ')'; ctx.lineWidth = 2; ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.arc(cx, bottom - cell * 0.4, cell * 1.0, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); }
+    } });
+  }
+  const timeLeft = (st.limit - st.t) / st.limit;
+  n.visitors.forEach((v, i) => items.push({ y: v.by + 0.01, f: () => {
+    const [bx] = cc(v.bx, v.by), done = st.served[i], bottom = bottomOf(v.by) + cell * 0.04;
+    const base = ready(VISITOR_BASE[v.who]);
+    let im;
+    if (done) im = ready(custFile(v.who, 'receive')) || base;
+    else if (totalTime < (sighUntil[i] || 0)) im = ready(custFile(v.who, 'sigh')) || base;
+    else if (timeLeft < 0.35) im = ready(custFile(v.who, 'impatient')) || base;
+    else im = base;
+    ctx.globalAlpha = !done && targetIdx >= 0 && i !== targetIdx ? 0.72 : 1;
+    drawImgBottom(im, bx, bottom, cell * 1.75);
+    ctx.globalAlpha = 1;
+  } }));
   // Toddy and his line (smoothly between steps)
   const L = (a, b) => a + (b - a) * frac;
   const P = curPts.map((p, i) => { const q = prevPts[i] || p; return { x: L(q.x, p.x), y: L(q.y, p.y) }; });
-  for (let k = P.length - 1; k >= 1; k--) { const [cx, cy] = cc(P[k].x, P[k].y); drawCup(st.cups[k - 1], cx, cy, cell * 0.95); }
-  if (P.length > 1) { const [rx, ry] = cc(P[1].x, P[1].y); ctx.beginPath(); ctx.arc(rx, ry, cell * 0.55, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.55 + 0.4 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }   // the cup that gets served
+  for (let k = P.length - 1; k >= 1; k--) items.push({ y: P[k].y - 0.2, f: () => { const [cx, cy] = cc(P[k].x, P[k].y); drawCup(st.cups[k - 1], cx, cy + cell * 0.05, cell * 0.95); } });
   const [tx, ty] = cc(P[0].x, P[0].y);
-  ctx.beginPath(); ctx.ellipse(tx, ty + cell * 0.38, cell * 0.32, cell * 0.1, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fill();
-  const worried = st.bumped && !st.over;
-  drawImgBottom(IMGS[worried ? 'pctoddy_wave_v01' : 'pctoddy_serve_v01'], tx, ty + cell * 0.6, cell * 1.7);
+  items.push({ y: P[0].y + 0.02, f: () => {
+    ctx.beginPath(); ctx.ellipse(tx, ty + cell * 0.46, cell * 0.34, cell * 0.1, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fill();
+    const tp = toddyPicture(); drawStrip(animFile(tp.key), tp.key, tp.i, tx, ty + cell * 0.5, cell * 1.75, tp.flip);
+  } });
+  items.sort((a, b) => a.y - b.y);
+  for (const it of items) it.f();
+
+  // the cup that gets served next, marked on the line
+  if (P.length > 1) { const [rx, ry] = cc(P[1].x, P[1].y); ctx.beginPath(); ctx.arc(rx, ry, cell * 0.55, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.55 + 0.4 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
+  // speech bubbles: what each waiting visitor wants
+  n.visitors.forEach((v, i) => {
+    if (st.served[i]) return;
+    const [bx, by] = cc(v.bx, v.by), by2 = by - cell * 1.3;
+    ctx.globalAlpha = targetIdx >= 0 && i !== targetIdx ? 0.55 : 1;
+    ctx.fillStyle = 'rgba(20,16,46,.9)'; ctx.beginPath(); ctx.arc(bx, by2, cell * 0.48, 0, Math.PI * 2); ctx.fill();
+    if (i === targetIdx) { ctx.strokeStyle = 'rgba(255,244,214,' + (0.5 + 0.5 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
+    drawDrink(v.want, bx, by2, cell * 0.46); ctx.globalAlpha = 1;
+  });
   // guide: a moving dashed line from Toddy to the visitor who wants his first cup
-  if (st.cups.length) {
+  if (st.cups.length && !st.over) {
     n.visitors.forEach((v, i) => {
       if (i !== targetIdx) return;
       const [gx, gy] = cc(v.sx, v.sy), ang = Math.atan2(gy - ty, gx - tx);
@@ -128,6 +232,14 @@ function draw(frac) {
       ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(gx - Math.cos(ang) * cell * 0.45, gy - Math.sin(ang) * cell * 0.45); ctx.stroke(); ctx.restore();
       ctx.fillStyle = 'rgba(255,230,160,.95)'; ctx.beginPath(); const ax = gx - Math.cos(ang) * cell * 0.3, ay = gy - Math.sin(ang) * cell * 0.3; ctx.moveTo(ax + Math.cos(ang) * 10, ay + Math.sin(ang) * 10); ctx.lineTo(ax + Math.cos(ang + 2.4) * 10, ay + Math.sin(ang + 2.4) * 10); ctx.lineTo(ax + Math.cos(ang - 2.4) * 10, ay + Math.sin(ang - 2.4) * 10); ctx.closePath(); ctx.fill();
     });
+  }
+  // effects: splashes, dust, hearts
+  fx = fx.filter((f) => totalTime - f.t0 < f.ms);
+  for (const f of fx) {
+    const age = totalTime - f.t0, [fx0, fy0] = cc(f.x, f.y), key = f.key, file = f.file;
+    const i = Math.min(ANIMS[key].n - 1, Math.floor((age / 1000) * ANIMS[key].fps));
+    const fade = age > f.ms - 260 ? Math.max(0, (f.ms - age) / 260) : 1;
+    drawCentered(file, key, i, fx0 + (f.dx || 0) * cell, fy0 + (f.dy || 0) * cell - (f.rise ? (age / f.ms) * cell * 0.5 : 0), cell * f.size, fade);
   }
   // "Next cup" chip: the cup right behind Toddy is the one that gets served; the visitor wanting it glows
   { const fc = st.cups.length ? st.cups[0] : -1, cw = 132, ch = 44, cx0 = ox, cy0 = Math.max(70, oy - ch - 10);
@@ -137,21 +249,37 @@ function draw(frac) {
   if (waiting) {
     const a = 0.5 + 0.5 * Math.sin(totalTime / 260);
     ctx.beginPath(); ctx.arc(tx, ty, cell * (0.75 + 0.12 * a), 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.5 + 0.4 * a) + ')'; ctx.lineWidth = 3; ctx.stroke();
-    ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('Touch and drag to walk', W / 2, oy + cell * n.h + 34);
+    ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#1a0a05'; ctx.lineWidth = 5; ctx.strokeText('Touch and drag to walk', W / 2, oy + cell * n.h + 34); ctx.fillText('Touch and drag to walk', W / 2, oy + cell * n.h + 34);
     const dy = -8 * a; ctx.fillText('↑', tx, ty - cell * 0.95 + dy);
   }
-  if (!waiting && st.bumped && !st.over) { ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('Drag to move on', W / 2, oy + cell * n.h + 34); }
+  if (!waiting && st.bumped && !st.over) { ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#1a0a05'; ctx.lineWidth = 5; ctx.strokeText('Drag to move on', W / 2, oy + cell * n.h + 34); ctx.fillText('Drag to move on', W / 2, oy + cell * n.h + 34); }
   // little floating notes
-  flashes = flashes.filter((f) => totalTime - f.t0 < 700);
-  for (const f of flashes) { const a = 1 - (totalTime - f.t0) / 700, [fx, fy] = cc(f.x, f.y); ctx.globalAlpha = a; ctx.fillStyle = f.color; ctx.font = '700 ' + Math.round(cell * 0.5) + 'px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText(f.text, fx, fy - cell * 0.6 - (1 - a) * cell * 0.8); if (f.drink !== undefined) drawDrink(f.drink, fx + cell * 0.5, fy - cell * 0.75 - (1 - a) * cell * 0.8, cell * 0.28); ctx.globalAlpha = 1; }
+  flashes = flashes.filter((f) => totalTime - f.t0 < 900);
+  for (const f of flashes) { const a = 1 - (totalTime - f.t0) / 900, [fx1, fy1] = cc(f.x, f.y); ctx.globalAlpha = a; ctx.font = '700 ' + Math.round(cell * 0.5) + 'px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#1a0a05'; ctx.lineWidth = 4; ctx.strokeText(f.text, fx1, fy1 - cell * 0.9 - (1 - a) * cell * 0.8); ctx.fillStyle = f.color; ctx.fillText(f.text, fx1, fy1 - cell * 0.9 - (1 - a) * cell * 0.8); if (f.drink !== undefined) drawDrink(f.drink, fx1 + cell * 0.5, fy1 - cell * 1.05 - (1 - a) * cell * 0.8, cell * 0.28); ctx.globalAlpha = 1; }
 }
 
 // ---- game flow ----
 function banner(text, ms) { const b = $('banner'); b.textContent = text; b.classList.add('show'); clearTimeout(bannerTimer); bannerTimer = setTimeout(() => b.classList.remove('show'), ms || 2500); }
-function startNight(id) {
-  nightId = id; st = newState(id); turns = []; heldDir = null; lastSent = 4; flashes = []; acc = 0; last = 0;
+const COMMON = [...['idle_down', 'walk_down', 'walk_up', 'walk_right', 'hand_right', 'hand_down', 'bump', 'startled', 'win', 'fx_dust', 'fx_heart'].map(animFile), ...DRINK_NAMES.map((d) => 'trail_anim_fx_splash_' + d + '_v01'),
+  ...Object.values(VISITOR_BASE), ...['milo', 'pip', 'velvet', 'lumi', 'biscuit'].flatMap((w) => ['impatient', 'receive', 'sigh'].map((p) => custFile(w, p))), ...DRINK_NAMES.flatMap((n) => ['trail_badge_' + n + '_v01', 'trail_cup_' + n + '_v01'])];
+function nightFiles(id) {
+  const n = NIGHTS[id], f = ['trail_bg_n' + id + '_v01'];
+  if (OBSTACLE[id] && n.tables.length) f.push(objFile(OBSTACLE[id][0]));
+  if (n.brew.length) f.push(objFile('station'), objFile('ring'), animFile('brew_pour'));
+  if (n.cart) f.push(objFile('cart'));
+  if (n.thief) f.push(animFile('thief_sneak'), animFile('thief_snatch'));
+  if (n.puddles && n.puddles.length) f.push(animFile('puddle_ripple'), animFile('slip'));
+  if (n.shutters && n.shutters.length) f.push(objFile('shutter_open'), objFile('shutter_closed'));
+  return f.filter((x) => !(id === 7 && x === 'trail_bg_n7_v01'));   // night 7's floor picture is still to be redrawn
+}
+async function startNight(id) {
+  nightId = id; running = false;
+  const o = $('overlay'); o.textContent = ''; o.hidden = false; o.append(mk('div', 'card', 'Getting Night ' + id + ' ready…'));
+  await Promise.all(nightFiles(id).map(loadImg));
+  st = newState(id); turns = []; heldDir = null; lastSent = 4; flashes = []; fx = []; acc = 0; last = 0; tod = null; lastMoveAt = -9999; endAt = 0;
+  sighUntil = NIGHTS[id].visitors.map(() => 0); brewAt = []; shutterAt = {}; shutterWas = {}; thiefPrev = null; thiefSnatchAt = -9999;
   prevPts = curPts = pts(st);
-  $('overlay').hidden = true; $('overlay').textContent = '';
+  o.hidden = true; o.textContent = '';
   resize(); updateHud(); running = true; waiting = true;   // Toddy waits for the first swipe
 }
 function updateHud() {
@@ -160,13 +288,23 @@ function updateHud() {
   $('lanternFill').style.transform = 'scaleX(' + Math.max(0, (st.limit - st.t) / st.limit).toFixed(3) + ')';
 }
 function mk(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
+function showIntro(id) {   // a short picture-story card before each night
+  const o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
+  const card = mk('div', 'card'), v = document.createElement('video');
+  v.src = 'assets/trail_intro_n' + id + '_v01.mp4'; v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.preload = 'auto'; v.className = 'intro';
+  const tell = { 1: 'Light the lamp, open the café, and bring everyone their drink.', 2: 'A breezy terrace: tables and parasols are in the way. Brew a new cup at the golden ring.', 3: 'Market night: mind the rolling tea cart.', 4: 'Rain! Puddles are slippery and make Toddy slide one extra step.', 5: 'Quiet library: shutters open and close, so wait for the green light.', 6: 'Moon bridge: Nox the night thief snatches a cup if you pass too close.', 7: 'Street party: everything at once!' };
+  const go = mk('button', 'btn', 'Start Night ' + id); go.addEventListener('click', () => { unlockSound(); startNight(id); });
+  const back = mk('button', 'btn alt', 'Back'); back.addEventListener('click', showMenu);
+  card.append(v, mk('h1', '', 'Night ' + id + ' · ' + NIGHTS[id].name), mk('p', '', tell[id] || ''), go, back); o.append(card);
+  const pl = v.play(); if (pl && pl.catch) pl.catch(() => {});
+}
 function showMenu() {
   const o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
-  const card = mk('div', 'card'); card.append(mk('h1', '', 'TODDY Trail'), mk('p', '', '1 · Swipe to walk'), mk('p', '', '2 · Walk into the visitor who wants your next cup'), mk('p', '', '3 · Serve everyone before the lanterns go out'));
-  const play = mk('button', 'btn', 'Play · Night 1'); play.addEventListener('click', () => { unlockSound(); startNight(1); }); card.append(play);
+  const card = mk('div', 'card'); card.append(mk('h1', '', 'TODDY Trail'), mk('p', '', '1 · Touch and drag to walk'), mk('p', '', '2 · Walk into the visitor who wants your next cup'), mk('p', '', '3 · Serve everyone before the lanterns go out'));
+  const play = mk('button', 'btn', 'Play · Night 1'); play.addEventListener('click', () => { unlockSound(); showIntro(1); }); card.append(play);
   const more = mk('button', 'btn alt', 'Choose another night'), list = mk('div', ''); list.hidden = true;
   more.addEventListener('click', () => { list.hidden = !list.hidden; });
-  for (const id of NIGHT_IDS) { const b = mk('button', 'btn alt', 'Night ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); startNight(id); }); list.append(b); }
+  for (const id of NIGHT_IDS) { const b = mk('button', 'btn alt', 'Night ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); showIntro(id); }); list.append(b); }
   card.append(more, list); o.append(card);
 }
 function showResult() {
@@ -174,40 +312,70 @@ function showResult() {
   const card = mk('div', 'card');
   card.append(mk('h1', '', st.won ? 'All served!' : 'Lanterns out'), mk('div', 'big', String(r.score)), mk('p', '', 'Served ' + r.served + ' of ' + r.of + ' · ' + r.seconds + ' s · spilled ' + (st.spills + st.snatched)));
   const nextId = NIGHT_IDS[NIGHT_IDS.indexOf(nightId) + 1];
-  if (st.won && nextId) { const nx = mk('button', 'btn', 'Night ' + nextId + ' · ' + NIGHTS[nextId].name); nx.addEventListener('click', () => startNight(nextId)); card.append(nx); }
+  if (st.won && nextId) { const nx = mk('button', 'btn', 'Night ' + nextId + ' · ' + NIGHTS[nextId].name); nx.addEventListener('click', () => showIntro(nextId)); card.append(nx); }
   const again = mk('button', 'btn' + (st.won && nextId ? ' alt' : ''), 'Play again'); again.addEventListener('click', () => startNight(nightId));
   const other = mk('button', 'btn alt', 'Pick a night'); other.addEventListener('click', showMenu);
   card.append(again, other); o.append(card);
-  if (st.won) SND.win();
 }
 function unlockSound() { if (soundOn && actx && actx.state === 'suspended') actx.resume(); }
+
+function onEvents(before) {
+  const n = NIGHTS[st.night];
+  for (const e of st.events) {
+    if (e.type === 'serve') {
+      SND.serve(); const v = n.visitors[e.visitor], d = faceVisitor(v);
+      flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: '', color: '#ff8fa3', drink: v.want });
+      fx.push({ file: animFile('fx_heart'), key: 'fx_heart', x: v.bx, y: v.by, dy: -1.55, size: 0.9, t0: totalTime, ms: 1400, rise: true });
+      if (d === 1 || d === 3) setTod('hand_right', d, 1100, 'cancelOnMove'); else if (d === 2) setTod('hand_down', d, 1100, 'cancelOnMove');
+    } else if (e.type === 'sigh') {
+      SND.sigh(); const v = n.visitors[e.visitor]; sighUntil[e.visitor] = totalTime + 1300;
+      flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: 'other drink', color: '#ff8f7a' });
+    } else if (e.type === 'spill' || e.type === 'bump') {
+      SND.spill(); const wx = st.x + DX[st.dir] * 0.55, wy = st.y + DY[st.dir] * 0.55;
+      fx.push({ file: animFile('fx_dust'), key: 'fx_dust', x: wx, y: wy, size: 1.3, t0: totalTime, ms: 800 });
+      if (e.type === 'spill' && before !== undefined) fx.push({ file: 'trail_anim_fx_splash_' + DRINK_NAMES[before] + '_v01', key: 'fx_splash', x: st.x, y: st.y, dy: 0.25, size: 1.45, t0: totalTime, ms: 2000 });
+      flashes.push({ x: st.x, y: st.y, t0: totalTime, text: e.type === 'spill' ? 'bumped! cup lost' : 'bump!', color: '#ff8f7a' });
+      setTod('bump', st.dir, 1600, 'cancelOnMove');
+    } else if (e.type === 'slide') {
+      setTod('slip', st.dir, 800);
+    } else if (e.type === 'snatch') {
+      SND.spill(); thiefSnatchAt = totalTime; flashes.push({ x: st.x, y: st.y, t0: totalTime, text: 'snatched!', color: '#ff8f7a' });
+      if (before !== undefined) fx.push({ file: 'trail_anim_fx_splash_' + DRINK_NAMES[before] + '_v01', key: 'fx_splash', x: st.x, y: st.y, dy: 0.25, size: 1.2, t0: totalTime, ms: 1600 });
+      setTod('startled', st.dir, 1300, 'cancelOnMove');
+    } else if (e.type === 'brew') {
+      SND.brew(); flashes.push({ x: st.x, y: st.y, t0: totalTime, text: '+1', color: '#fff4d6' });
+      const bi = n.brew.findIndex((b) => b.x === st.x && b.y === st.y); if (bi >= 0) brewAt[bi] = totalTime;
+    }
+  }
+}
 
 function frame(now) {
   requestAnimationFrame(frame);
   if (!last) last = now; const dt = Math.min(now - last, 200); last = now; totalTime += dt;
   if (st && running) {
-    if (!waiting) acc += dt;
+    if (!waiting && !st.over) acc += dt;
     while (acc >= STEP_MS && !st.over) {
       acc -= STEP_MS;
       prevPts = curPts;
+      const was = { x: st.x, y: st.y }, lastCup = st.cups.length ? st.cups[st.cups.length - 1] : undefined;
       const want = heldDir === null ? 4 : heldDir;   // finger down = steer that way, finger up = stand still
       if (want !== lastSent) { lastSent = want; turns.push([st.t, want]); step(st, want); } else step(st, null);
+      if (st.x !== was.x || st.y !== was.y) lastMoveAt = totalTime;
       curPts = pts(st);
-      for (const e of st.events) {
-        if (e.type === 'serve') { SND.serve(); const v = NIGHTS[st.night].visitors[e.visitor]; flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: '♥', color: '#ff8fa3', drink: NIGHTS[st.night].visitors[e.visitor].want }); }
-        else if (e.type === 'sigh') { SND.sigh(); const v = NIGHTS[st.night].visitors[e.visitor]; flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: 'other drink', color: '#ff8f7a' }); }
-        else if (e.type === 'spill' || e.type === 'bump') { SND.spill(); flashes.push({ x: st.x, y: st.y, t0: totalTime, text: 'bumped! cup lost', color: '#ff8f7a' }); }
-        else if (e.type === 'snatch') { SND.spill(); flashes.push({ x: st.x, y: st.y, t0: totalTime, text: 'snatched!', color: '#ff8f7a' }); }
-        else if (e.type === 'brew') { SND.brew(); flashes.push({ x: st.x, y: st.y, t0: totalTime, text: '+1', color: '#fff4d6' }); }
-      }
+      onEvents(lastCup);
       updateHud();
     }
-    if (st.over) { updateHud(); draw(1); showResult(); return; }
+    if (st.over && !endAt) {
+      endAt = totalTime; updateHud();
+      if (st.won) { SND.win(); tod = { key: 'win', flip: false, t0: totalTime, until: totalTime + 4000 }; fx.push({ file: animFile('fx_heart'), key: 'fx_heart', x: st.x, y: st.y, dy: -1.8, size: 1.1, t0: totalTime, ms: 1500, rise: true }); }
+      else tod = { key: 'startled', flip: false, t0: totalTime, until: totalTime + 4000 };
+    }
+    if (st.over && endAt && totalTime - endAt > 2100) { draw(1); showResult(); return; }
   }
   draw(Math.min(acc / STEP_MS, 1));
 }
 
-// ---- input: swipe, arrow keys ----
+// ---- input: touch-and-drag steering, arrow keys ----
 let sx = 0, sy = 0, down = false;
 const turnFromDelta = (dx, dy) => (Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0));
 const setHeld = (d) => { if (d !== heldDir) { heldDir = d; if (d !== null) { waiting = false; SND.turn(); } } };
@@ -226,6 +394,6 @@ window.addEventListener('keyup', (e) => { const m = { ArrowUp: 0, ArrowRight: 1,
 $('btnSound').addEventListener('click', () => { soundOn = !soundOn; $('btnSound').setAttribute('aria-pressed', String(soundOn)); $('btnSound').style.opacity = soundOn ? '1' : '.55'; unlockSound(); beep(660, 0.08); });
 $('btnSound').style.opacity = '.55';
 
-Promise.all(['pctoddy_serve_v01', 'pctoddy_wave_v01', ...Object.values(VISITOR_FILE).flat(), ...DRINK_NAMES.flatMap((n) => ['trail_badge_' + n + '_v01', 'trail_cup_' + n + '_v01'])].map(loadImg)).then(() => {
-  resize(); showMenu(); requestAnimationFrame(frame);
-});
+resize(); requestAnimationFrame(frame);
+{ const o = $('overlay'); o.textContent = ''; o.append(mk('div', 'card', 'Loading TODDY Trail…')); }
+Promise.all(COMMON.map(loadImg)).then(() => { resize(); showMenu(); });

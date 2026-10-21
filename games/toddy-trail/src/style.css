@@ -20,3 +20,4 @@ body { overflow: hidden; font-family: var(--display); -webkit-user-select: none;
 .btn { display: block; width: 100%; box-sizing: border-box; margin: 7px 0 0; padding: 10px 14px; border-radius: 14px; border: 2px solid var(--ink); background: var(--gold); color: var(--ink); font: 700 18px var(--display); cursor: pointer; box-shadow: 0 3px 0 var(--ink); }
 .btn.alt { background: transparent; color: var(--cream); border-color: var(--brass); box-shadow: none; }
 .big { font: 700 44px/1 var(--display); color: #fff4d6; margin: 4px 0 10px; }
+.card video.intro { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; margin: 0 0 12px; border-radius: 12px; border: 2px solid var(--brass); background: #000; }
