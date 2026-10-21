@@ -4,7 +4,7 @@ import { h, $, A, fmt } from './ui.js';
 import { sfx, setSound, soundOn, wakeMusic } from './audio.js';
 import { store } from './store.js';
 import { RANKS, rankFor, nextRank, streak } from './engine.js';
-import { dailyCase, dayKey, dayNumber } from './daily.js';
+import { dailyCase, dayKey, dayNumber, setDailySet } from './daily.js';
 import { playCase, tick, useHint, playState } from './play.js';
 import { playRush, rushTick, rushState } from './rush.js';
 import { Toddy, preloadToddy } from './chars.js';
@@ -474,6 +474,7 @@ async function boot() {
   const get = (f) => fetch(`cases/${f}`).then((r) => { if (!r.ok) throw new Error(`${f}: ${r.status}`); return r.json(); });
   try {
     CH = await get('chapters.json'); SOURCES = await get('sources.json');
+    try { setDailySet(await get('daily.json')); } catch (e) { /* the older template Daily cases are used */ }
     await Promise.all(CH.chapters.flatMap((ch) => ch.cases.map(async (id, i, all) => { CASES[id] = await get(`${id}.json`); CASES[id].label = `Ch ${ch.n} · Case ${i + 1} of ${all.length}`; })));
   } catch (e) {
     page(h('div', { class: 'pagecard' }, h('h2', { text: 'The case files didn\'t load' }),

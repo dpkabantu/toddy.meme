@@ -102,6 +102,24 @@ const t1 = performance.now(); moonBrew.verify(night, { log: g.log }); console.lo
   check(JSON.stringify(dailyCase(night)) === JSON.stringify(sc) && (o.template !== sc.template || JSON.stringify(o) !== JSON.stringify(sc)), 'Scam Lab: the same night always gives the same case');
 }
 
+// Scam Lab Daily Quickie: 42 written cases. 42 nights in a row show each one once (31 scams, 11 honest), and each can be cleared with 3 stars.
+{
+  const start = Date.UTC(2027, 0, 19); const seen = new Set(); let honest = 0, three = 0, nobad = true;
+  for (let i = 0; i < 42; i++) {
+    const night = new Date(start + i * 86400000).toISOString().slice(0, 10); const c = dailyCase(night);
+    seen.add(c.template); if (!c.disguise) honest += 1;
+    const marks = {}; strongClues(c).forEach((k) => { marks[k] = 'flag'; });
+    const r = scamLab.verify(night, { marks, decision: c.best_action, seconds: 40 });
+    if (r.ok && r.band === 3) three += 1;
+    const bad = c.actions.map((a) => a.id).find((id) => id !== c.best_action && !(c.acceptable_actions || []).includes(id));
+    if (!bad || !c.outcomes[bad] || !c.outcomes[c.best_action]) nobad = false;
+  }
+  check(seen.size === 42, 'Scam Lab Daily: 42 nights in a row give 42 different written cases');
+  check(honest === 11, 'Scam Lab Daily: 11 of the 42 are honest cases (' + honest + ')');
+  check(three === 42, 'Scam Lab Daily: each of the 42 can be cleared with 3 stars on the server (' + three + ')');
+  check(nobad, 'Scam Lab Daily: every case has an outcome for each decision');
+}
+
 // Scam Lab case list for the server: every case file of the game must be known to the server (so a new case cannot be played unchecked).
 {
   const { readdirSync } = await import('node:fs');

@@ -322,9 +322,15 @@ const STD_ACTIONS = [
   { id: 'block_report', label: 'Block and report it' },
 ];
 
+// The 42 written Daily Quickie cases (cases/daily.json). Once loaded, the date picks one: 42 nights in a row show each case once.
+// Until it is loaded (or if it fails to load) the older template cases below are used.
+let DAILY_SET = null;
+export function setDailySet(list) { DAILY_SET = Array.isArray(list) && list.length ? list : null; }
+
 /** Build the full case for a given day key (YYYY-MM-DD). */
 export function dailyCase(key) {
   const n = dayNumber(key);
+  if (DAILY_SET) { const b = DAILY_SET[((n % DAILY_SET.length) + DAILY_SET.length) % DAILY_SET.length]; return { ...JSON.parse(JSON.stringify(b)), id: `daily-${key}`, template: b.id }; }
   const N = TEMPLATES.length;
   const cycle = Math.floor(n / N);
   // shuffle template order per cycle so neighbours vary but every template appears each cycle

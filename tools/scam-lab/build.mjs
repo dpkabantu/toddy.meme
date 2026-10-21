@@ -6,6 +6,7 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { build } from './author.mjs';
+import { buildDaily, checkDaily } from './daily-author.mjs';
 import { checkCase } from '../../games/scam-lab/src/engine.js';
 
 const here = path.dirname(fileURLToPath(import.meta.url)), root = path.join(here, '..', '..');
@@ -38,6 +39,14 @@ for (const ch of layout.chapters.filter((c) => c.built)) {
   ch._ids = ids;
 }
 
+// The 42 Daily Quickie cases (weeks 3 to 8)
+const dailySpecs = [...(await import('./specs/daily-a.mjs')).default, ...(await import('./specs/daily-b.mjs')).default];
+const dailies = dailySpecs.map((e) => buildDaily(e, TODAY));
+if (dailies.length !== 42) problems.push(`daily: expected 42 cases, found ${dailies.length}`);
+if (new Set(dailies.map((d) => d.id)).size !== dailies.length) problems.push('daily: duplicate ids');
+if (dailies.filter((d) => !d.disguise).length !== 11) problems.push(`daily: expected 11 honest cases, found ${dailies.filter((d) => !d.disguise).length}`);
+for (const d of dailies) { problems.push(...checkDaily(d)); for (const s of d.sources) if (!sources[s]) problems.push(`${d.id}: unknown source ${s}`); written['daily-' + d.id] = d; }
+
 // Safety scan (owner rule: no real names). The list is checked against every word of every case.
 const BANNED = JSON.parse(fs.readFileSync(path.join(here, 'banned-names.json'), 'utf8')).names;
 for (const [id, c] of Object.entries(written)) {
@@ -46,10 +55,11 @@ for (const [id, c] of Object.entries(written)) {
 }
 
 if (problems.length) { console.error('PROBLEMS:\n' + problems.join('\n')); process.exit(1); }
-console.log(`${Object.keys(written).length} cases built and checked`);
+console.log(`${Object.keys(written).length - dailies.length} chapter cases and ${dailies.length} Daily cases built and checked`);
 if (checkOnly) process.exit(0);
 
-for (const [id, c] of Object.entries(written)) fs.writeFileSync(path.join(casesDir, id + '.json'), JSON.stringify(c, null, 2) + '\n');
+for (const [id, c] of Object.entries(written)) if (!id.startsWith('daily-')) fs.writeFileSync(path.join(casesDir, id + '.json'), JSON.stringify(c, null, 2) + '\n');
+fs.writeFileSync(path.join(casesDir, 'daily.json'), JSON.stringify(dailies, null, 2) + '\n');
 const chPath = path.join(casesDir, 'chapters.json'), chj = JSON.parse(fs.readFileSync(chPath, 'utf8'));
 for (const ch of layout.chapters.filter((c) => c.built)) {
   const entry = { n: ch.n, title: ch.title, blurb: ch.blurb, card: ch.card, cases: ch._ids, status: 'open', learn: ch.learn };

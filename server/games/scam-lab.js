@@ -1,9 +1,11 @@
 // Server check for a Scam Lab Daily Quickie: rebuild the night's case from the date, score the player's
 // pinned clues and decision with the game's own scoring code, and turn the stars into a medal.
-import { dailyCase } from '../../games/scam-lab/src/daily.js';
+import { dailyCase, setDailySet } from '../../games/scam-lab/src/daily.js';
+import DAILY from '../../games/scam-lab/cases/daily.json' with { type: 'json' };
 import { scoreDaily, scoreCase, scoreRush } from '../../games/scam-lab/src/engine.js';
 import { CASES } from './scam-lab-cases.js';
 
+setDailySet(DAILY);   // the 42 written Daily Quickie cases, the same list the game loads
 export const MAX_SECONDS = 600;
 
 export function verify(night, payload) {
