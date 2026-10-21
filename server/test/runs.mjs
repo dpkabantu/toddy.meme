@@ -370,30 +370,31 @@ check(db.prepare("SELECT COUNT(*) c FROM game_runs WHERE log_json IS NOT NULL AN
   db.prepare("UPDATE seasons SET status='draft' WHERE id='season-1'").run();
 }
 
-// ---- Full Moon launch mission: Season Nights (7 nights x 20 levels, week 3) ----
+// ---- Full Moon launch mission: Season Nights (7 nights, one game each, week 3) ----
 {
   RULES.startNight = '2027-03-01'; db.prepare("UPDATE seasons SET status='live' WHERE id='season-1'").run();
-  const { playLevel } = await import('./fm-bot.mjs'); const { verifySeasonLevel } = await import('../games/full-moon.js');
-  const cache = new Map(); const solveL = (n, t) => { const k = n + ':' + t; if (!cache.has(k)) cache.set(k, playLevel(FM.seasonLevel(n, t))); return cache.get(k); };
-  const play = async (cookie, n, t, other) => {
-    const st = await post('/api/run/start', { game: 'full-moon', mode: 'weekly', mission: 'full-moon-season', case: 'n' + n + 't' + t, night: nightKey(NOW) }, cookie);
+  const { verifySeasonNight } = await import('../games/full-moon.js'); const { planMission, findMission } = await import('../missions.js');
+  const nightRun = (n, seedShift = 0) => { const L = FM.seasonNight(n), s = FM.newGame(L.seed, L.tw), drops = []; while (!s.over && s.tick < 60000) { if (FM.canDrop(s) && rnd() < 0.7) { const x = Math.floor(FM.FIELD.L + rnd() * (FM.FIELD.R - FM.FIELD.L)); if (FM.drop(s, x)) drops.push([s.tick, x]); } FM.step(s); s.events.length = 0; } return { drops, endTick: s.tick, score: s.score, band: FM.bandFor(s.score, L.tw), seconds: s.tick / 60 }; };
+  const play = async (cookie, n, asNight) => {
+    const st = await post('/api/run/start', { game: 'full-moon', mode: 'weekly', mission: 'full-moon-season', case: 'n' + n, night: nightKey(NOW) }, cookie);
     if (!st.body.runId) return { st };
-    const r = other ? solveL(7, 20) : solveL(n, t); NOW += (r.endTick / 60) * 1000 + 1000;
-    return { st, fin: await post('/api/run/finish', { runId: st.body.runId, drops: r.drops, endTick: r.endTick, score: r.score }, cookie) };
+    const r = nightRun(asNight || n); NOW += r.seconds * 1000 + 1000;
+    return { st, r, fin: await post('/api/run/finish', { runId: st.body.runId, drops: r.drops, endTick: r.endTick, score: r.score }, cookie) };
   };
   NOW = Date.parse('2027-03-15T14:00:00Z'); const f = await mkPlayer('TDY-AAAA0040', 'MoonA');
   const pub = await get('/api/season'); const fm = pub.body.missions.find((m) => m.id === 'full-moon-season');
-  check(fm && fm.game === 'full-moon' && fm.week === 3 && fm.cases.length === 140 && fm.stages.length === 28 && fm.stages.reduce((a, b) => a + b.points, 0) === 420, 'Full Moon has one launch mission: 7 nights x 20 levels, 28 checkpoints, 420 points');
-  let x = await play(f, 2, 1); check(x.st.status === 409 && x.st.body.error === 'mission_locked', 'Full Moon: Season night 2 is locked on day 1');
-  x = await play(f, 1, 2); check(x.st.status === 409 && x.st.body.error === 'tray_order', 'Full Moon: level 2 needs level 1 first');
-  x = await play(f, 1, 1, true); check(x.fin.status === 422, 'Full Moon: a log from another level is refused');
-  for (let t = 1; t <= 4; t++) x = await play(f, 1, t);
-  check(x.fin.body.ok && db.prepare("SELECT COUNT(*) c FROM points_ledger WHERE player_id='TDY-AAAA0040' AND source_type='mission'").get().c === 0, 'Full Moon: 4 levels, no checkpoint yet');
-  x = await play(f, 1, 5); check(x.fin.body.counted && x.fin.body.points.total === 15, 'Full Moon: level 5 pays the first checkpoint (15)');
-  const bad1 = verifySeasonLevel('n1t1', { drops: [], endTick: 600 }); check(!bad1.ok, 'Full Moon: a log that does not reach the goal is refused');
-  check(!verifySeasonLevel('n9t1', { drops: [], endTick: 10 }).ok && !verifySeasonLevel('x', { drops: [], endTick: 10 }).ok, 'Full Moon: made-up level ids are refused');
-  let all = true, fails = []; for (let n = 1; n <= 7; n++) for (let t = 1; t <= 20; t++) { const r = solveL(n, t); const v = verifySeasonLevel('n' + n + 't' + t, { drops: r.drops, endTick: r.endTick, score: r.score }); if (!v.ok) { all = false; fails.push(n + ':' + t); } }
-  check(all, 'all 140 Full Moon Season levels can be cleared and verified by the server' + (fails.length ? ' (failed: ' + fails.join(',') + ')' : ''));
+  check(fm && fm.game === 'full-moon' && fm.week === 3 && fm.cases.length === 7 && fm.stages.length === 28 && fm.stages.reduce((a, b) => a + b.points, 0) === 420, 'Full Moon has one launch mission: 7 nights, 4 medals each, 420 points');
+  let x = await play(f, 2); check(x.st.status === 409 && x.st.body.error === 'mission_locked', 'Full Moon: Season night 2 is locked on day 1');
+  x = await play(f, 1, 2); check(x.fin.status === 422, 'Full Moon: a log from another night is refused');
+  x = await play(f, 1); const got = db.prepare("SELECT amount FROM points_ledger WHERE player_id='TDY-AAAA0040' AND source_type = 'mission'").all();
+  check(x.fin.body.ok && got.length === x.r.band + 1 && got.every((g) => g.amount === 15), 'Full Moon: night 1 pays 15 for each medal reached (band ' + x.r.band + ', ' + got.length + ' medals)');
+  const before = got.length; x = await play(f, 1);
+  check(x.fin.body.ok && db.prepare("SELECT COUNT(*) c FROM points_ledger WHERE player_id='TDY-AAAA0040' AND source_type = 'mission'").get().c <= before + (3 - x.r.band >= 0 ? Math.max(0, x.r.band + 1 - before) : 0), 'Full Moon: playing the night again never pays a medal twice');
+  check(planMission(findMission('full-moon-season', 'full-moon'), new Set(), { band: 3, night: 4, cases: 1, byNight: {} }, 'open', 1000).reduce((a, b) => a + b.amount, 0) === 60, 'Full Moon: a Gold run pays all four medals of its night (60) and nothing for other nights');
+  check(planMission(findMission('full-moon-season', 'full-moon'), new Set(), { band: 3, night: 4, cases: 1, byNight: {} }, 'late', 1000).reduce((a, b) => a + b.amount, 0) === 28, 'Full Moon: late runs pay half (7 each)');
+  let all = true; for (let n = 1; n <= 7; n++) { const r = nightRun(n); const v = verifySeasonNight('n' + n, { drops: r.drops, endTick: r.endTick, score: r.score }); if (!v.ok || v.band !== r.band) all = false; }
+  check(all, 'all 7 Full Moon Season nights can be played to the end and verified by the server');
+  check(!verifySeasonNight('n9', { drops: [], endTick: 10 }).ok && !verifySeasonNight('n1t1', { drops: [], endTick: 10 }).ok && !verifySeasonNight('n1', { drops: [], endTick: 600 }).ok, 'Full Moon: made-up nights and runs that never finish are refused');
   db.prepare("UPDATE seasons SET status='draft' WHERE id='season-1'").run();
 }
 

@@ -95,7 +95,7 @@ export function drop(s, x) {
     s.ticket = null; s.nextTicketDrop = s.drops + s.tw.ticketGap;
   }
   if (!s.ticket && s.drops >= s.nextTicketDrop) {
-    const cap = Math.min(8, Math.max(3, s.maxLevel + 1));
+    const cap = Math.min(8, s.tw.topLevel || 11, Math.max(3, s.maxLevel + 1));
     const lvl = Math.min(cap, 3 + Math.floor(s.tix[s.drops % s.tix.length] * 4));
     s.ticket = { level: lvl, deadline: s.drops + s.tw.ticketSpan };
     s.events.push({ type: 'ticket', level: lvl, deadline: s.ticket.deadline });
@@ -184,10 +184,11 @@ function mergePass(s) {
       const vy = ((a.y - a.py) * ma + (c.y - c.py) * mc) / tot;
       if (s.tick - s.lastMergeTick <= CHAIN_WINDOW) s.chain++; else s.chain = 0;
       s.lastMergeTick = s.tick; s.merges++;
-      if (a.level === MAX_LEVEL) {
-        const pts = (MAX_LEVEL + 1) * MAX_LEVEL / 2;     // 66: a Full Moon pair vanishes
+      const top = s.tw.topLevel || MAX_LEVEL;   // a Season night has fewer pieces: its last piece is the one that vanishes in pairs
+      if (a.level === top) {
+        const pts = (top + 1) * top / 2;     // 66 for the real Full Moon pair
         s.score += pts;
-        s.events.push({ type: 'vanish', x, y, level: MAX_LEVEL, points: pts });
+        s.events.push({ type: 'vanish', x, y, level: top, points: pts });
       } else {
         const lvl = a.level + 1, r = RADII[lvl - 1];
         const pts = lvl * (lvl - 1) / 2;
@@ -219,6 +220,9 @@ function mergePass(s) {
 }
 
 function overCheck(s) {
+  if (s.tw.dropCap && s.drops >= s.tw.dropCap && s.tick > s.nextDropTick + 240) {   // a Season night: the drops are used up and the pieces have settled
+    s.over = true; s.overTick = s.tick; s.events.push({ type: 'gameover' }); return;
+  }
   for (const b of s.bodies) {
     if (s.tick - b.born > GRACE && b.y - b.r < s.tw.closeY) b.over++; else b.over = 0;
     if (b.over >= OVER_TICKS) {
@@ -254,7 +258,7 @@ export function stateHash(s) {
   return h.toString(16) + '/' + s.score;
 }
 
-export function bandsOf(twist) { return (TWISTS[twist] || TWISTS[0]).bands; }
+export function bandsOf(twist) { return twist && typeof twist === 'object' ? twist.bands : (TWISTS[twist] || TWISTS[0]).bands; }
 export function bandFor(score, twist = 0) {   // placeholder thresholds, to be set from real player data
   const b = bandsOf(twist);
   return score >= b[2] ? 3 : score >= b[1] ? 2 : score >= b[0] ? 1 : 0;
@@ -274,53 +278,25 @@ export const TWISTS = [
   { name: 'Grand Finale', blurb: 'Busy Café and Full House together.', weights: WEIGHTS, closeY: 220, lateLevel: 0, lateChance: 0.2, ticketFirst: 3, ticketGap: 2, ticketSpan: 14, ticketMult: 6, bands: [800, 1900, 2700] },
 ];
 
-// ---- Season Nights (the launch mission): 7 nights x 20 levels. Every level has its own goal and its own rules, and each one is a little harder than the last. ----
-// A level is won the moment its goal is met while the crate is still standing. Only numbers change, so the server replays a level exactly like a night.
-export const SEASON = { nights: 7, levels: 20 };
+// ---- Season Nights (the launch mission): 7 nights, one game each. Night 1 has 5 pieces, every night adds one more, night 7 is the whole game with 11. ----
+// Same rules as a normal night (unlimited play until the crate is full, the best run of a night counts). Medals are fixed scores per night, so nobody is compared with anybody.
+export const SEASON = { nights: 7 };
 export const NIGHT_NAMES = ['Warm-Up Night', 'Visitor Night', 'Heavy Bean Night', 'Tight Crate Night', 'Milk Rush Night', 'Rush Hour Night', 'Full Moon Night'];
-export const NIGHT_BLURBS = ['Easy goals and a roomy crate. Learn the feel.', 'Visitors ask for pieces. Serve them.', 'Toddy hands out bigger beans. Think ahead.', 'The dashed line creeps lower. Stay tidy.', 'Milk swirls drop early and often.', 'Short visitor waits and a limited number of drops.', 'Everything at once. Reach for the Full Moon.'];
-const NIGHT_WEIGHTS = [[36, 30, 19, 10, 5], [28, 26, 22, 15, 9], [18, 20, 26, 20, 16], [28, 26, 22, 15, 9], [26, 26, 22, 16, 10], [24, 24, 24, 16, 12], [22, 23, 24, 18, 13]];
-const NIGHT_LATE = [99, 99, 10, 9, 8, 7, 5];
-const lerp = (a, b, t) => a + (b - a) * t;
-const GOAL_KINDS = ['score', 'piece', 'serve'];
-// SEASON_TABLE:START (written by tools/fm-season-tune.mjs: [goal kind 0 score 1 piece 2 serve, goal number, drop cap or 0], level by level)
-const SEASON_TABLE = [
-  [0,90,0],[1,6,0],[0,80,0],[1,6,0],[0,290,0],[1,6,0],[0,190,0],[1,6,0],[0,240,0],[0,290,0],
-  [0,220,0],[1,6,0],[0,260,0],[1,7,0],[0,280,0],[1,8,0],[0,350,0],[1,8,0],[0,230,0],[0,410,0],
-  [0,250,0],[2,3,0],[0,410,0],[1,7,0],[0,550,0],[2,4,0],[0,410,0],[1,8,0],[0,310,0],[0,600,0],
-  [0,440,0],[1,8,0],[0,600,0],[2,5,0],[0,490,0],[1,8,0],[0,560,0],[2,5,0],[0,450,0],[0,670,0],
-  [0,700,0],[2,7,0],[0,680,0],[1,8,0],[0,710,0],[2,5,0],[0,480,0],[1,9,0],[0,850,0],[0,700,0],
-  [0,590,0],[1,8,0],[0,820,0],[2,7,0],[0,1280,0],[1,8,0],[0,670,0],[2,5,0],[0,970,0],[0,1140,0],
-  [0,750,117],[2,8,131],[0,820,119],[1,8,113],[0,1130,143],[2,9,128],[0,580,128],[1,8,89],[0,800,130],[0,920,147],
-  [0,1080,133],[1,8,108],[0,1010,134],[2,10,132],[0,1020,150],[1,8,95],[0,1280,137],[2,11,135],[0,960,140],[0,1370,180],
-  [0,1090,140],[2,7,133],[0,1290,141],[1,10,159],[0,1150,164],[2,12,118],[0,1000,139],[1,10,165],[0,1390,148],[0,1690,171],
-  [0,1350,145],[1,9,98],[0,1150,144],[2,11,149],[0,1310,160],[1,9,133],[0,1440,152],[2,12,109],[0,1840,154],[0,2130,195],
-  [0,1530,153],[2,8,168],[0,1680,153],[1,10,120],[0,1490,180],[2,12,124],[0,1480,157],[1,10,138],[0,1720,159],[0,1370,172],
-  [0,1230,151],[1,10,124],[0,1400,157],[2,9,147],[0,1880,190],[1,9,85],[0,1580,159],[2,11,142],[0,1580,161],[0,1760,169],
-  [0,2330,165],[2,10,130],[0,2050,165],[1,9,62],[0,2450,191],[2,11,136],[0,2530,170],[1,9,60],[0,1840,162],[0,2390,192],
-  [0,2280,169],[1,10,121],[0,2080,169],[2,12,160],[0,1790,156],[1,9,116],[0,1930,160],[2,12,141],[0,1520,131],[0,3190,225]
-];
-// SEASON_TABLE:END
-export function seasonLevel(night, level) {
-  const n = Math.max(1, Math.min(SEASON.nights, night | 0)), l = Math.max(1, Math.min(SEASON.levels, level | 0));
-  const g = (n - 1) * SEASON.levels + (l - 1), t = g / (SEASON.nights * SEASON.levels - 1);   // t: how far through the whole mission (0 to 1)
-  const row = SEASON_TABLE[g], goal = row ? { type: GOAL_KINDS[row[0]], n: row[1] } : { type: 'score', n: 100 };
+export const NIGHT_BLURBS = ['Five pieces only. A roomy crate. Learn the feel.', 'A sixth piece joins. Visitors start asking for pieces.', 'Seven pieces. Toddy hands out bigger beans.', 'Eight pieces and the dashed line creeps lower.', 'Nine pieces. Milk swirls drop early and often.', 'Ten pieces. Visitors come fast and tip big.', 'All eleven pieces. Reach for the Full Moon.'];
+const NIGHT_WEIGHTS = [[40, 32, 20, 8, 0], [36, 30, 20, 10, 4], [26, 26, 24, 15, 9], [28, 26, 22, 15, 9], [26, 26, 22, 16, 10], [24, 24, 24, 16, 12], [28, 26, 22, 15, 9]];
+// SEASON_BANDS:START (written by tools/fm-season-tune.mjs: Bronze, Silver, Gold score for each night)
+const SEASON_BANDS = [[1200, 1350, 1460], [1600, 1830, 1970], [2240, 2680, 2900], [1510, 2900, 3130], [1540, 2620, 3320], [1680, 2780, 3520], [2250, 3470, 3740]];
+// SEASON_BANDS:END
+export function seasonNight(night) {
+  const n = Math.max(1, Math.min(SEASON.nights, night | 0)), t = (n - 1) / (SEASON.nights - 1);
   const tw = {
-    name: NIGHT_NAMES[n - 1], blurb: NIGHT_BLURBS[n - 1], weights: NIGHT_WEIGHTS[n - 1], closeY: Math.round(lerp(205, 250, t)),
-    lateLevel: NIGHT_LATE[n - 1], lateChance: Math.round(lerp(10, 20, t)) / 100,
-    ticketFirst: Math.round(lerp(6, 3, t)), ticketGap: Math.round(lerp(5, 2, t)), ticketSpan: Math.round(lerp(18, 11, t)), ticketMult: 6,
-    bands: [0, 0, 0], goal,
+    name: NIGHT_NAMES[n - 1], blurb: NIGHT_BLURBS[n - 1], topLevel: 4 + n, weights: NIGHT_WEIGHTS[n - 1], closeY: Math.round(215 + 30 * t),
+    lateLevel: n < 3 ? 99 : 3 + n, lateChance: 0.2,
+    ticketFirst: Math.round(6 - 2 * t), ticketGap: Math.round(5 - 3 * t), ticketSpan: Math.round(18 - 6 * t), ticketMult: 6,
+    bands: SEASON_BANDS[n - 1], dropCap: 140 + 15 * (n - 1),   // a night is a fixed number of drops (about 4 to 6 minutes), so every run ends and nobody can sit on the crate for ever
   };
-  if (row && row[2]) tw.dropCap = row[2];   // a limited number of drops from night 4 on
-  return { night: n, level: l, seed: 7000000 + n * 1000 + l * 13, tw, goal };
+  return { night: n, seed: 7100000 + n * 101, tw };
 }
-export function goalMet(s) {
-  const g = s.tw.goal; if (!g) return false;
-  return g.type === 'score' ? s.score >= g.n : g.type === 'piece' ? s.maxLevel >= g.n : g.type === 'serve' ? s.served >= g.n : false;
-}
-// Lost: the crate is full, or the drops ran out and the pieces have settled without the goal.
-export const levelLost = (s) => !goalMet(s) && (s.over || !!(s.tw.dropCap && s.drops >= s.tw.dropCap && s.tick > s.nextDropTick + 240));
-export const goalDone = (s) => goalMet(s) && !s.over;
 
 // whole days since 1970-01-01 for a yyyymmdd integer (integer maths only)
 export function dayNumber(ymd) {

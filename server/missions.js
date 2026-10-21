@@ -12,14 +12,14 @@ function seasonChaptersMission() {
   for (const ch of chs) for (let k = 1; k * s.every <= s.trays; k++) stages.push({ id: 'n' + ch.n + 's' + k, night: ch.n, needCases: k * s.every, points: s.points, label: 'Chapter ' + ch.n + ': ' + k * s.every + ' cases' });
   return { id: 'scam-lab-season', game: 'scam-lab', week: RULES.launchWeek['scam-lab'], kind: 'labset', title: 'Season Chapters', nights: chs.length, trays: s.trays, cases: chs.flatMap((ch) => ch.cases), stages };
 }
-// Full Moon launch mission: Season Nights. Levels 'n<night>t<level>', 7 nights x 20 levels, one night opens per day, levels in order, 15 points at every 5 levels of a night.
+// Full Moon launch mission: Season Nights. Cases 'n<night>' (one game per night, 7 nights). Each night pays 15 points for each medal (Played, Bronze, Silver, Gold) = 60, 420 in all.
 function fullMoonSeasonMission() {
-  const s = RULES.seasonNights, cases = [], stages = [];
+  const s = RULES.seasonNights, cases = [], stages = [], medals = ['Played', 'Bronze', 'Silver', 'Gold'];
   for (let n = 1; n <= s.nights; n++) {
-    for (let t = 1; t <= s.trays; t++) cases.push('n' + n + 't' + t);
-    for (let k = 1; k * s.every <= s.trays; k++) stages.push({ id: 'n' + n + 's' + k, night: n, needCases: k * s.every, points: s.points, label: 'Night ' + n + ': ' + k * s.every + ' levels' });
+    cases.push('n' + n);
+    medals.forEach((name, b) => stages.push({ id: 'n' + n + 's' + (b + 1), night: n, minBand: b, points: s.points, label: 'Night ' + n + ': ' + name }));
   }
-  return { id: 'full-moon-season', game: 'full-moon', week: RULES.launchWeek['full-moon'], kind: 'moonset', title: 'Season Nights', nights: s.nights, trays: s.trays, cases, stages };
+  return { id: 'full-moon-season', game: 'full-moon', week: RULES.launchWeek['full-moon'], kind: 'moonset', title: 'Season Nights', nights: s.nights, trays: 1, cases, stages };
 }
 // Moon Brew launch mission: Season Nights. Cases 'n<night>t<tray>'. A stage pays 15 at every 5 trays of one night.
 function seasonNightsMission() {
@@ -32,8 +32,8 @@ function seasonNightsMission() {
 }
 export const allMissions = () => [...RULES.missions, seasonNightsMission(), seasonChaptersMission(), fullMoonSeasonMission()];
 // Moon Brew trays are 'n<night>t<tray>'; Scam Lab cases are 'c<chapter>-<case>' (chapter = night).
-export const parseTray = (id) => { const m = /^n(\d+)t(\d+)$/.exec(String(id)) || /^c(\d+)-(\d+)$/.exec(String(id)); return m ? { night: Number(m[1]), tray: Number(m[2]) } : null; };
-export const trayId = (m, night, tray) => (m.kind === 'labset' ? 'c' + night + '-' + String(tray).padStart(2, '0') : 'n' + night + 't' + tray);
+export const parseTray = (id) => { const m = /^n(\d+)t(\d+)$/.exec(String(id)) || /^c(\d+)-(\d+)$/.exec(String(id)); if (m) return { night: Number(m[1]), tray: Number(m[2]) }; const k = /^n(\d+)$/.exec(String(id)); return k ? { night: Number(k[1]), tray: 1 } : null; };
+export const trayId = (m, night, tray) => (m.kind === 'labset' ? 'c' + night + '-' + String(tray).padStart(2, '0') : m.kind === 'moonset' ? 'n' + night : 'n' + night + 't' + tray);
 export const isSetMission = (m) => m.kind === 'brewset' || m.kind === 'labset' || m.kind === 'moonset';
 // When Season night n of a launch mission opens: one per day from the mission's first night. Before the Season is live everything is open (rehearsal).
 export function nightOpensMs(m, n) { return missionWindow(RULES.startNight, m.week).opensMs + (n - 1) * 86400000; }
@@ -62,7 +62,7 @@ export function planMission(m, claimed, prog, state, room) {
   const items = []; let left = Math.max(0, room);
   for (const st of m.stages) {
     if (claimed.has(st.id)) continue;
-    const reached = st.night !== undefined ? ((prog.byNight && prog.byNight[st.night]) || 0) >= st.needCases : (st.minBand !== undefined && prog.band >= st.minBand) || (st.needCases !== undefined && prog.cases >= st.needCases);
+    const reached = st.night !== undefined && st.minBand !== undefined ? (prog.night === st.night && prog.band >= st.minBand) : st.night !== undefined ? ((prog.byNight && prog.byNight[st.night]) || 0) >= st.needCases : (st.minBand !== undefined && prog.band >= st.minBand) || (st.needCases !== undefined && prog.cases >= st.needCases);
     if (!reached) continue;
     const full = state === 'open', want = full ? st.points : Math.floor(st.points / 2), a = Math.min(want, left);
     if (a <= 0) continue;

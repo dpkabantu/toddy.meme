@@ -99,7 +99,7 @@ function drop(s, x) {
     s.ticket = null; s.nextTicketDrop = s.drops + s.tw.ticketGap;
   }
   if (!s.ticket && s.drops >= s.nextTicketDrop) {
-    const cap = Math.min(8, Math.max(3, s.maxLevel + 1));
+    const cap = Math.min(8, s.tw.topLevel || 11, Math.max(3, s.maxLevel + 1));
     const lvl = Math.min(cap, 3 + Math.floor(s.tix[s.drops % s.tix.length] * 4));
     s.ticket = { level: lvl, deadline: s.drops + s.tw.ticketSpan };
     s.events.push({ type: 'ticket', level: lvl, deadline: s.ticket.deadline });
@@ -188,10 +188,11 @@ function mergePass(s) {
       const vy = ((a.y - a.py) * ma + (c.y - c.py) * mc) / tot;
       if (s.tick - s.lastMergeTick <= CHAIN_WINDOW) s.chain++; else s.chain = 0;
       s.lastMergeTick = s.tick; s.merges++;
-      if (a.level === MAX_LEVEL) {
-        const pts = (MAX_LEVEL + 1) * MAX_LEVEL / 2;     // 66: a Full Moon pair vanishes
+      const top = s.tw.topLevel || MAX_LEVEL;   // a Season night has fewer pieces: its last piece is the one that vanishes in pairs
+      if (a.level === top) {
+        const pts = (top + 1) * top / 2;     // 66 for the real Full Moon pair
         s.score += pts;
-        s.events.push({ type: 'vanish', x, y, level: MAX_LEVEL, points: pts });
+        s.events.push({ type: 'vanish', x, y, level: top, points: pts });
       } else {
         const lvl = a.level + 1, r = RADII[lvl - 1];
         const pts = lvl * (lvl - 1) / 2;
@@ -223,6 +224,9 @@ function mergePass(s) {
 }
 
 function overCheck(s) {
+  if (s.tw.dropCap && s.drops >= s.tw.dropCap && s.tick > s.nextDropTick + 240) {   // a Season night: the drops are used up and the pieces have settled
+    s.over = true; s.overTick = s.tick; s.events.push({ type: 'gameover' }); return;
+  }
   for (const b of s.bodies) {
     if (s.tick - b.born > GRACE && b.y - b.r < s.tw.closeY) b.over++; else b.over = 0;
     if (b.over >= OVER_TICKS) {
@@ -258,7 +262,7 @@ function stateHash(s) {
   return h.toString(16) + '/' + s.score;
 }
 
-function bandsOf(twist) { return (TWISTS[twist] || TWISTS[0]).bands; }
+function bandsOf(twist) { return twist && typeof twist === 'object' ? twist.bands : (TWISTS[twist] || TWISTS[0]).bands; }
 function bandFor(score, twist = 0) {   // placeholder thresholds, to be set from real player data
   const b = bandsOf(twist);
   return score >= b[2] ? 3 : score >= b[1] ? 2 : score >= b[0] ? 1 : 0;
@@ -278,53 +282,25 @@ const TWISTS = [
   { name: 'Grand Finale', blurb: 'Busy Café and Full House together.', weights: WEIGHTS, closeY: 220, lateLevel: 0, lateChance: 0.2, ticketFirst: 3, ticketGap: 2, ticketSpan: 14, ticketMult: 6, bands: [800, 1900, 2700] },
 ];
 
-// ---- Season Nights (the launch mission): 7 nights x 20 levels. Every level has its own goal and its own rules, and each one is a little harder than the last. ----
-// A level is won the moment its goal is met while the crate is still standing. Only numbers change, so the server replays a level exactly like a night.
-const SEASON = { nights: 7, levels: 20 };
+// ---- Season Nights (the launch mission): 7 nights, one game each. Night 1 has 5 pieces, every night adds one more, night 7 is the whole game with 11. ----
+// Same rules as a normal night (unlimited play until the crate is full, the best run of a night counts). Medals are fixed scores per night, so nobody is compared with anybody.
+const SEASON = { nights: 7 };
 const NIGHT_NAMES = ['Warm-Up Night', 'Visitor Night', 'Heavy Bean Night', 'Tight Crate Night', 'Milk Rush Night', 'Rush Hour Night', 'Full Moon Night'];
-const NIGHT_BLURBS = ['Easy goals and a roomy crate. Learn the feel.', 'Visitors ask for pieces. Serve them.', 'Toddy hands out bigger beans. Think ahead.', 'The dashed line creeps lower. Stay tidy.', 'Milk swirls drop early and often.', 'Short visitor waits and a limited number of drops.', 'Everything at once. Reach for the Full Moon.'];
-const NIGHT_WEIGHTS = [[36, 30, 19, 10, 5], [28, 26, 22, 15, 9], [18, 20, 26, 20, 16], [28, 26, 22, 15, 9], [26, 26, 22, 16, 10], [24, 24, 24, 16, 12], [22, 23, 24, 18, 13]];
-const NIGHT_LATE = [99, 99, 10, 9, 8, 7, 5];
-const lerp = (a, b, t) => a + (b - a) * t;
-const GOAL_KINDS = ['score', 'piece', 'serve'];
-// SEASON_TABLE:START (written by tools/fm-season-tune.mjs: [goal kind 0 score 1 piece 2 serve, goal number, drop cap or 0], level by level)
-const SEASON_TABLE = [
-  [0,90,0],[1,6,0],[0,80,0],[1,6,0],[0,290,0],[1,6,0],[0,190,0],[1,6,0],[0,240,0],[0,290,0],
-  [0,220,0],[1,6,0],[0,260,0],[1,7,0],[0,280,0],[1,8,0],[0,350,0],[1,8,0],[0,230,0],[0,410,0],
-  [0,250,0],[2,3,0],[0,410,0],[1,7,0],[0,550,0],[2,4,0],[0,410,0],[1,8,0],[0,310,0],[0,600,0],
-  [0,440,0],[1,8,0],[0,600,0],[2,5,0],[0,490,0],[1,8,0],[0,560,0],[2,5,0],[0,450,0],[0,670,0],
-  [0,700,0],[2,7,0],[0,680,0],[1,8,0],[0,710,0],[2,5,0],[0,480,0],[1,9,0],[0,850,0],[0,700,0],
-  [0,590,0],[1,8,0],[0,820,0],[2,7,0],[0,1280,0],[1,8,0],[0,670,0],[2,5,0],[0,970,0],[0,1140,0],
-  [0,750,117],[2,8,131],[0,820,119],[1,8,113],[0,1130,143],[2,9,128],[0,580,128],[1,8,89],[0,800,130],[0,920,147],
-  [0,1080,133],[1,8,108],[0,1010,134],[2,10,132],[0,1020,150],[1,8,95],[0,1280,137],[2,11,135],[0,960,140],[0,1370,180],
-  [0,1090,140],[2,7,133],[0,1290,141],[1,10,159],[0,1150,164],[2,12,118],[0,1000,139],[1,10,165],[0,1390,148],[0,1690,171],
-  [0,1350,145],[1,9,98],[0,1150,144],[2,11,149],[0,1310,160],[1,9,133],[0,1440,152],[2,12,109],[0,1840,154],[0,2130,195],
-  [0,1530,153],[2,8,168],[0,1680,153],[1,10,120],[0,1490,180],[2,12,124],[0,1480,157],[1,10,138],[0,1720,159],[0,1370,172],
-  [0,1230,151],[1,10,124],[0,1400,157],[2,9,147],[0,1880,190],[1,9,85],[0,1580,159],[2,11,142],[0,1580,161],[0,1760,169],
-  [0,2330,165],[2,10,130],[0,2050,165],[1,9,62],[0,2450,191],[2,11,136],[0,2530,170],[1,9,60],[0,1840,162],[0,2390,192],
-  [0,2280,169],[1,10,121],[0,2080,169],[2,12,160],[0,1790,156],[1,9,116],[0,1930,160],[2,12,141],[0,1520,131],[0,3190,225]
-];
-// SEASON_TABLE:END
-function seasonLevel(night, level) {
-  const n = Math.max(1, Math.min(SEASON.nights, night | 0)), l = Math.max(1, Math.min(SEASON.levels, level | 0));
-  const g = (n - 1) * SEASON.levels + (l - 1), t = g / (SEASON.nights * SEASON.levels - 1);   // t: how far through the whole mission (0 to 1)
-  const row = SEASON_TABLE[g], goal = row ? { type: GOAL_KINDS[row[0]], n: row[1] } : { type: 'score', n: 100 };
+const NIGHT_BLURBS = ['Five pieces only. A roomy crate. Learn the feel.', 'A sixth piece joins. Visitors start asking for pieces.', 'Seven pieces. Toddy hands out bigger beans.', 'Eight pieces and the dashed line creeps lower.', 'Nine pieces. Milk swirls drop early and often.', 'Ten pieces. Visitors come fast and tip big.', 'All eleven pieces. Reach for the Full Moon.'];
+const NIGHT_WEIGHTS = [[40, 32, 20, 8, 0], [36, 30, 20, 10, 4], [26, 26, 24, 15, 9], [28, 26, 22, 15, 9], [26, 26, 22, 16, 10], [24, 24, 24, 16, 12], [28, 26, 22, 15, 9]];
+// SEASON_BANDS:START (written by tools/fm-season-tune.mjs: Bronze, Silver, Gold score for each night)
+const SEASON_BANDS = [[1200, 1350, 1460], [1600, 1830, 1970], [2240, 2680, 2900], [1510, 2900, 3130], [1540, 2620, 3320], [1680, 2780, 3520], [2250, 3470, 3740]];
+// SEASON_BANDS:END
+function seasonNight(night) {
+  const n = Math.max(1, Math.min(SEASON.nights, night | 0)), t = (n - 1) / (SEASON.nights - 1);
   const tw = {
-    name: NIGHT_NAMES[n - 1], blurb: NIGHT_BLURBS[n - 1], weights: NIGHT_WEIGHTS[n - 1], closeY: Math.round(lerp(205, 250, t)),
-    lateLevel: NIGHT_LATE[n - 1], lateChance: Math.round(lerp(10, 20, t)) / 100,
-    ticketFirst: Math.round(lerp(6, 3, t)), ticketGap: Math.round(lerp(5, 2, t)), ticketSpan: Math.round(lerp(18, 11, t)), ticketMult: 6,
-    bands: [0, 0, 0], goal,
+    name: NIGHT_NAMES[n - 1], blurb: NIGHT_BLURBS[n - 1], topLevel: 4 + n, weights: NIGHT_WEIGHTS[n - 1], closeY: Math.round(215 + 30 * t),
+    lateLevel: n < 3 ? 99 : 3 + n, lateChance: 0.2,
+    ticketFirst: Math.round(6 - 2 * t), ticketGap: Math.round(5 - 3 * t), ticketSpan: Math.round(18 - 6 * t), ticketMult: 6,
+    bands: SEASON_BANDS[n - 1], dropCap: 140 + 15 * (n - 1),   // a night is a fixed number of drops (about 4 to 6 minutes), so every run ends and nobody can sit on the crate for ever
   };
-  if (row && row[2]) tw.dropCap = row[2];   // a limited number of drops from night 4 on
-  return { night: n, level: l, seed: 7000000 + n * 1000 + l * 13, tw, goal };
+  return { night: n, seed: 7100000 + n * 101, tw };
 }
-function goalMet(s) {
-  const g = s.tw.goal; if (!g) return false;
-  return g.type === 'score' ? s.score >= g.n : g.type === 'piece' ? s.maxLevel >= g.n : g.type === 'serve' ? s.served >= g.n : false;
-}
-// Lost: the crate is full, or the drops ran out and the pieces have settled without the goal.
-const levelLost = (s) => !goalMet(s) && (s.over || !!(s.tw.dropCap && s.drops >= s.tw.dropCap && s.tick > s.nextDropTick + 240));
-const goalDone = (s) => goalMet(s) && !s.over;
 
 // whole days since 1970-01-01 for a yyyymmdd integer (integer maths only)
 function dayNumber(ymd) {
@@ -346,7 +322,7 @@ function dateSeed(d = new Date()) {   // UTC date -> integer like 20261019
   return d.getUTCFullYear() * 10000 + (d.getUTCMonth() + 1) * 100 + d.getUTCDate();
 }
 
-return {TICKS_PER_SEC,FIELD,CLOSE_Y,SPAWN_Y,RADII,MAX_LEVEL,DROP_COOLDOWN,WEIGHTS,LATE_LEVEL,LATE_DROP,LATE_CHANCE,TICKET_FIRST,TICKET_SPAN,TICKET_GAP,TICKET_MULT,mulberry32,makeSequence,newGame,heldLevel,nextLevel,canDrop,clampX,drop,step,replay,stateHash,bandsOf,bandFor,BAND_NAMES,TWISTS,SEASON,NIGHT_NAMES,NIGHT_BLURBS,seasonLevel,goalMet,levelLost,goalDone,dayNumber,SEASON_START,twistForDate,dateSeed};
+return {TICKS_PER_SEC,FIELD,CLOSE_Y,SPAWN_Y,RADII,MAX_LEVEL,DROP_COOLDOWN,WEIGHTS,LATE_LEVEL,LATE_DROP,LATE_CHANCE,TICKET_FIRST,TICKET_SPAN,TICKET_GAP,TICKET_MULT,mulberry32,makeSequence,newGame,heldLevel,nextLevel,canDrop,clampX,drop,step,replay,stateHash,bandsOf,bandFor,BAND_NAMES,TWISTS,SEASON,NIGHT_NAMES,NIGHT_BLURBS,seasonNight,dayNumber,SEASON_START,twistForDate,dateSeed};
 })();
 // TODDY Full Moon (working code name: moon-merge): drawing, input and screens. All rules live in core.js.
 
@@ -513,7 +489,7 @@ function store(key, val) {
   return null;
 }
 const twInfo = () => (twist && typeof twist === 'object' ? twist : C.TWISTS[twist] || C.TWISTS[0]);
-const bestKey = () => (kind === 'season' ? 'mm.best.season.' + lvl.night + '.' + lvl.level : kind === 'daily' ? 'mm.best.daily.' + S.seed : kind === 'weekly' ? 'mm.best.weekly.' + S.seed : 'mm.best.free' + (twist ? '.w' + twist : ''));
+const bestKey = () => (kind === 'season' ? 'mm.best.season.' + lvl.night : kind === 'daily' ? 'mm.best.daily.' + S.seed : kind === 'weekly' ? 'mm.best.weekly.' + S.seed : 'mm.best.free' + (twist ? '.w' + twist : ''));
 
 // ---------- layout ----------
 function placeTicket() { /* the bonus row now lives inside the HUD, nothing to place */ }
@@ -679,27 +655,21 @@ function updateTicket() {
   elTicket.hidden = false;
   elTicket.innerHTML = '<img alt="" src="' + ASSET[PIECE_KEYS[t.level - 1]] + '"><span>Make <b>' + withA(PIECE_NAMES[t.level - 1]) + '</b> · ' + (left > 0 ? left + ' drops' : 'last drop') + ' · +' + (t.level * S.tw.ticketMult) + '</span>';
 }
-function goalText(g) { return g.type === 'score' ? 'Reach ' + g.n.toLocaleString('en-US') + ' points' : g.type === 'piece' ? 'Make ' + withA(PIECE_NAMES[g.n - 1]) : 'Serve ' + g.n + ' visitor' + (g.n > 1 ? 's' : ''); }
-function goalLine() {
-  const g = lvl.goal, have = g.type === 'score' ? S.score : g.type === 'piece' ? S.maxLevel : S.served;
-  const left = lvl.tw.dropCap ? Math.max(0, lvl.tw.dropCap - S.drops) : -1;
-  return (g.type === 'piece' ? 'Goal ' + PIECE_NAMES[g.n - 1] : g.type === 'score' ? 'Goal ' + Math.min(have, g.n).toLocaleString('en-US') + '/' + g.n.toLocaleString('en-US') : 'Served ' + Math.min(have, g.n) + '/' + g.n) + (left >= 0 ? ' · ' + left + ' drops' : '');
-}
-let progBuilt = false, progMax = -1;
+let progBuilt = false, progMax = -1, progTop = 0;
 function updateProg() {
   if (!progBuilt) {
     elProg.innerHTML = PIECE_KEYS.map((key, i) => '<img alt="" class="pp' + i + '" src="' + ASSET[key] + '">').join('');
     progBuilt = true;
   }
   const m = S ? S.maxLevel : 0;
-  if (m !== progMax) {
-    progMax = m;
+  const top = S && S.tw.topLevel ? S.tw.topLevel : C.MAX_LEVEL;   // a Season night has fewer pieces
+  if (m !== progMax || top !== progTop) {
+    progMax = m; progTop = top;
     const imgs = elProg.children;
-    for (let i = 0; i < imgs.length; i++) imgs[i].className = 'pp' + i + (i < m ? ' lit' : (i === m ? ' goalp' : ''));
+    for (let i = 0; i < imgs.length; i++) imgs[i].className = 'pp' + i + (i >= top ? ' off' : i < m ? ' lit' : (i === m ? ' goalp' : ''));
   }
-  if (kind === 'season' && lvl && S && (mode === 'play' || mode === 'paused' || mode === 'over')) { elGoal.textContent = goalLine(); return; }
   const score = S ? S.score : 0, band = C.bandFor(score, twist);
-  elGoal.textContent = band < 3 ? C.BAND_NAMES[band + 1] + ' ' + C.bandsOf(twist)[band].toLocaleString('en-US') : 'Gold medal!';
+  elGoal.textContent = (band < 3 ? C.BAND_NAMES[band + 1] + ' ' + C.bandsOf(twist)[band].toLocaleString('en-US') : 'Gold medal!') + (kind === 'season' && S && S.tw.dropCap ? ' · ' + Math.max(0, S.tw.dropCap - S.drops) + ' drops' : '');
 }
 function setScore() { elScore.textContent = S ? S.score.toLocaleString('en-US') : '0'; elBest.textContent = 'Best ' + bestVal.toLocaleString('en-US'); updateProg(); updateTicket(); }
 function setNext() {
@@ -724,23 +694,17 @@ function startRun(k2, seedOverride, twistOverride) {
   dropPoseUntil = -1; pressed = false;
   aimX = (C.FIELD.L + C.FIELD.R) / 2; toddyX = aimX;
   bestVal = parseInt(store(bestKey()) || '0', 10) || 0;
-  elMode.textContent = kind === 'season' ? 'Season · Night ' + lvl.night + ' · Level ' + lvl.level : (kind === 'daily' ? 'Tonight · ' : kind === 'weekly' ? 'Weekly · ' : 'Free · ') + twInfo().name;
+  elMode.textContent = kind === 'season' ? 'Season · Night ' + lvl.night : (kind === 'daily' ? 'Tonight · ' : kind === 'weekly' ? 'Weekly · ' : 'Free · ') + twInfo().name;
   mode = 'play'; overlay.hidden = true;
   if (kind === 'daily' && window.ToddySeason) window.ToddySeason.start('full-moon');
   if (kind === 'weekly' && window.ToddySeason && weeklyMission) window.ToddySeason.start('full-moon', { mode: 'weekly', mission: weeklyMission.id });
-  if (kind === 'season' && window.ToddySeason) window.ToddySeason.start('full-moon', { mode: 'weekly', mission: 'full-moon-season', case: 'n' + lvl.night + 't' + lvl.level });
-  seasonWon = false;
+  if (kind === 'season' && window.ToddySeason) window.ToddySeason.start('full-moon', { mode: 'weekly', mission: 'full-moon-season', case: 'n' + lvl.night });
   setScore(); setNext();
-  if (kind === 'season') banner('Night ' + lvl.night + ' · Level ' + lvl.level + ' · ' + goalText(lvl.goal) + (lvl.tw.dropCap ? ' in ' + lvl.tw.dropCap + ' drops' : ''), 'new', 3400);
+  if (kind === 'season') banner('Night ' + lvl.night + ' · ' + lvl.tw.name + ' · ' + lvl.tw.dropCap + ' drops', 'new', 3000);
   else banner(twInfo().name + ' · ' + twInfo().blurb, 'new', 2600);
 }
 
-function startSeason(n, l) { lvl = C.seasonLevel(n, l); startRun('season', lvl.seed, lvl.tw); }
-let seasonWon = false;
-function seasonEnd(won) {   // the level is decided: stop the crate at once (the server stops its replay at the same tick)
-  mode = 'over'; overAt = performance.now(); seasonWon = won;
-  if (won) { sfx.served(); banner('Goal reached!', 'new', 1500); } else { sfx.over(); banner(S.over ? 'The crate is full' : 'Out of drops', 'warn', 1500); }
-}
+function startSeason(n) { lvl = C.seasonNight(n); startRun('season', lvl.seed, lvl.tw); }
 function dropAt(xArt) {
   if (mode !== 'play' || !S || !C.canDrop(S)) return false;
   const x = Math.round(C.clampX(C.heldLevel(S), xArt));
@@ -767,9 +731,9 @@ function drain() {
       fx.push({ key: 'fx_burst', x: e.x, y: e.y, size: 900, age: 0, dur: 46 });
       fx.push({ key: 'fx_spiral', x: e.x, y: e.y, size: 1200, age: 0, dur: 60 });
       moonrises++;
-      shake = 20; sfx.full(); banner('Moonrise! Two Full Moons +' + e.points, 'new', 2400);
+      shake = 20; sfx.full(); banner(e.level >= 11 ? 'Moonrise! Two Full Moons +' + e.points : 'Two ' + PIECE_NAMES[e.level - 1] + 's vanish! +' + e.points, 'new', 2400);
       pops.push({ x: e.x, y: e.y, text: 'MOONRISE +' + e.points, age: 0, color: '#fce25d', big: 12 });
-    } else if (e.type === 'gameover') { mode = 'over'; overAt = performance.now(); seasonWon = false; sfx.over(); }
+    } else if (e.type === 'gameover') { mode = 'over'; overAt = performance.now(); sfx.over(); }
   }
   S.events.length = 0;
 }
@@ -779,7 +743,6 @@ function tickOnce() {
   aimX = Math.min(C.FIELD.R, Math.max(C.FIELD.L, aimX));
   C.step(S);
   drain();
-  if (kind === 'season' && mode === 'play') { if (C.goalMet(S)) seasonEnd(!S.over); else if (C.levelLost(S)) seasonEnd(false); }
   for (const f of fx) f.age++;
   for (let i = fx.length - 1; i >= 0; i--) if (fx[i].age >= fx[i].dur) fx.splice(i, 1);
   for (const p of pops) p.age++;
@@ -813,16 +776,8 @@ function frame(t) {
 
 function finishRun() {
   lastRun = { seed: S.seed, twist, moonrises, kind, drops: log.slice(), endTick: S.tick, score: S.score, maxLevel: S.maxLevel };
-  if (kind === 'season') {
-    if (seasonWon) {
-      seasonMark(lvl.night, lvl.level);
-      const T = window.ToddySeason; showSeasonOver(true);
-      if (T) T.finish('full-moon', { drops: lastRun.drops, endTick: lastRun.endTick, score: lastRun.score }).then(function (res) { const el = document.getElementById('seasonline'); if (!el) return; if (!res || res.guest) T.guestHint(el); else T.show(el, res); });
-    } else showSeasonOver(false);
-    return;
-  }
   if (kind === 'daily') streakDone();
-  const sentDaily = (kind === 'daily' || kind === 'weekly') && window.ToddySeason;
+  const sentDaily = (kind === 'daily' || kind === 'weekly' || kind === 'season') && window.ToddySeason;
   if (S.score > bestVal) { bestVal = S.score; store(bestKey(), String(bestVal)); }
   setScore();
   showOver();
@@ -843,48 +798,35 @@ function weeklyButton() {
   const stages = m.stages.map((st) => st.label + ' ' + st.points).join(' · '), late = m.state === 'late';
   return '<button class="btn alt" data-act="weekly">Weekly Challenge ' + m.week + '<span class="tag">Season</span><small>Same puzzle all week · ' + C.TWISTS[m.twist].name + ' · ' + stages + ' points' + (late ? ' · this week is over: half points' : ' · half points if finished late') + '</small></button>';
 }
-// ---- Season Nights screens ----
-const SEASON_KEY = 'mm.season.v1';
-function seasonDone() { try { return new Set(JSON.parse(store(SEASON_KEY) || '[]')); } catch (e) { return new Set(); } }
-function seasonMark(n, l) { const d = seasonDone(); d.add('n' + n + 't' + l); store(SEASON_KEY, JSON.stringify(Array.from(d))); }
+// ---- Season Nights screens: 7 nights, one game each; night n has 4+n pieces ----
+const bestOf = (n) => parseInt(store('mm.best.season.' + n) || '0', 10) || 0;
 function nightOpenNow(n) { return !!(seasonM && seasonM.nights && seasonM.nights[n - 1] && seasonM.nights[n - 1].open); }
-function nextLevelOf(n) { const d = seasonDone(); for (let l = 1; l <= C.SEASON.levels; l++) if (!d.has('n' + n + 't' + l)) return l; return 0; }
-function defaultNight() { let pick = 1; for (let n = 1; n <= C.SEASON.nights; n++) if (nightOpenNow(n)) { pick = n; if (nextLevelOf(n)) break; } return pick; }
 function seasonButton() {
   if (!seasonM) return '';
-  const done = seasonDone().size, late = seasonM.state === 'late';
-  return '<button class="btn" data-act="season">Season Nights<span class="tag">Season</span><small>7 nights · 20 levels each, every one harder · up to 420 points' + (late ? ' · half points now' : ' · one night opens per day') + (done ? ' · ' + done + ' of 140 cleared' : '') + '</small></button>';
+  const late = seasonM.state === 'late';
+  return '<button class="btn" data-act="season">Season Nights<span class="tag">Season</span><small>7 nights, one game each · a new piece every night · up to 420 points' + (late ? ' · half points now' : ' · one night opens per day') + '</small></button>';
 }
-function showSeasonMap(n) {
+function openTimeText(n) { try { return new Date(seasonM.nights[n - 1].opensAt).toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' }); } catch (e) { return 'soon'; } }
+function showSeasonMap() {
   if (!seasonM) { showMenu(); return; }
   mode = 'menu'; overlay.hidden = false;
-  const d = seasonDone(), open = nightOpenNow(n), nx = nextLevelOf(n);
-  let tabs = '<div class="nights">';
-  for (let i = 1; i <= C.SEASON.nights; i++) tabs += '<button class="chip' + (i === n ? ' on' : '') + '" data-act="snight" data-n="' + i + '">' + (nightOpenNow(i) ? '' : '\uD83D\uDD12 ') + i + '</button>';
-  tabs += '</div>';
-  let grid = '<div class="lvgrid">';
-  for (let l = 1; l <= C.SEASON.levels; l++) {
-    const isDone = d.has('n' + n + 't' + l), playable = open && (isDone || l === nx);
-    grid += '<button class="lv' + (isDone ? ' done' : '') + (l === nx && open ? ' next' : '') + (l % 5 === 0 ? ' check' : '') + '" data-act="slevel" data-n="' + n + '" data-l="' + l + '"' + (playable ? '' : ' disabled') + '>' + (isDone ? '\u2713' : l) + (l % 5 === 0 ? '<i>+' + (seasonM.state === 'late' ? 7 : 15) + '</i>' : '') + '</button>';
+  let rows = '';
+  for (let n = 1; n <= C.SEASON.nights; n++) {
+    const L = C.seasonNight(n), open = nightOpenNow(n), best = bestOf(n), band = best ? C.bandFor(best, L.tw) : -1;
+    rows += '<button class="nrow' + (open ? '' : ' locked') + '" data-act="snight" data-n="' + n + '"' + (open ? '' : ' disabled') + '><b>' + n + '</b><span><i>' + L.tw.name + '</i><em>' + L.tw.topLevel + ' pieces · ' + (open ? (best ? 'best ' + best.toLocaleString('en-US') + ' · ' + C.BAND_NAMES[band] : 'not played yet') : 'opens ' + openTimeText(n)) + '</em></span></button>';
   }
-  grid += '</div>';
-  const nl = nx ? C.seasonLevel(n, nx) : null;
-  const info = !open ? 'Night ' + n + ' opens ' + (seasonM.nights[n - 1] ? new Date(seasonM.nights[n - 1].opensAt).toLocaleString([], { weekday: 'short', hour: '2-digit', minute: '2-digit' }) : 'soon') + '.' : nl ? 'Next: level ' + nx + ' · ' + goalText(nl.goal) + (nl.tw.dropCap ? ' in ' + nl.tw.dropCap + ' drops' : '') : 'Night ' + n + ' complete!';
-  overlay.innerHTML = '<div class="card"><div class="label">SEASON</div><h2>Season Nights</h2><p class="sub">Night ' + n + ' · ' + C.NIGHT_NAMES[n - 1] + '</p>' + tabs + '<p class="sub">' + C.NIGHT_BLURBS[n - 1] + '</p>' + grid + '<p class="sub">' + info + '</p>' +
-    '<p class="help">Clear levels in order. Every 5 levels of a night pay Season points (15, or half if you are late). You can replay cleared levels, but only the first clear counts. Guests can play too; sign in with a Passport to earn the points.</p>' +
-    (nx && open ? '<button class="btn" data-act="slevel" data-n="' + n + '" data-l="' + nx + '">Play level ' + nx + '</button>' : '') + '<div class="pair"><button class="btn alt" data-act="menu">Menu</button><a class="btn alt" href="/season/">My Season</a></div></div>';
+  overlay.innerHTML = '<div class="card"><div class="label">SEASON</div><h2>Season Nights</h2><p class="sub">Seven nights, one game each. Night 1 has five pieces and every night adds one more, until night 7 has all eleven.</p><div class="nrows">' + rows + '</div>' +
+    '<p class="help">Play a night as many times as you like. Your best run counts. Each medal (Played, Bronze, Silver, Gold) pays 15 Season points once, and half if you are late. Medals are fixed scores, so nobody is compared with anybody else. Guests can play; sign in with a Passport to earn the points.</p>' +
+    '<div class="pair"><button class="btn alt" data-act="menu">Menu</button><a class="btn alt" href="/season/">My Season</a></div></div>';
 }
-function showSeasonOver(won) {
-  overlay.hidden = false;
-  const n = lvl.night, l = lvl.level, left = 5 - (l % 5 || 5), next = l < C.SEASON.levels ? l + 1 : 0;
-  if (won) {
-    overlay.innerHTML = '<div class="card"><h2>' + (l === C.SEASON.levels ? 'Night ' + n + ' complete!' : 'Level ' + l + ' cleared') + '</h2><div class="final">' + S.score.toLocaleString('en-US') + '</div>' +
-      '<p class="sub">Night ' + n + ' · level ' + l + ' of ' + C.SEASON.levels + ' · ' + S.drops + ' drops · ' + lasted() + (l % 5 === 0 ? '' : ' · next points at level ' + (l + left)) + '</p><p class="sub" id="seasonline" hidden></p>' +
-      (next ? '<button class="btn" data-act="slevel" data-n="' + n + '" data-l="' + next + '">Next level</button>' : '') + '<button class="btn alt" data-act="snight" data-n="' + n + '">Levels</button><button class="btn alt" data-act="sretry">Play again</button><div class="pair"><a class="btn alt" href="/">\u2190 TODDY home</a><a class="btn alt" href="/season/">My Season</a></div></div>';
-  } else {
-    overlay.innerHTML = '<div class="card"><h2>' + (S.over ? 'The crate filled up' : 'Out of drops') + '</h2><p class="sub">Night ' + n + ' · level ' + l + '. Goal: ' + goalText(lvl.goal) + (lvl.tw.dropCap ? ' in ' + lvl.tw.dropCap + ' drops' : '') + '. You reached ' + (lvl.goal.type === 'score' ? S.score.toLocaleString('en-US') + ' points' : lvl.goal.type === 'piece' ? 'piece ' + S.maxLevel : S.served + ' served') + '.</p><p class="sub">Tip: keep the middle low and let two of a kind sit side by side.</p>' +
-      '<button class="btn" data-act="sretry">Try again</button><button class="btn alt" data-act="snight" data-n="' + n + '">Levels</button><div class="pair"><a class="btn alt" href="/">\u2190 TODDY home</a><a class="btn alt" href="/season/">My Season</a></div></div>';
-  }
+function showSeasonIntro(n) {
+  const L = C.seasonNight(n), b = L.tw.bands, best = bestOf(n);
+  overlay.hidden = false; mode = 'menu';
+  overlay.innerHTML = '<div class="card"><div class="label">NIGHT ' + n + ' OF 7</div><h2>' + L.tw.name + '</h2><p class="sub">' + L.tw.blurb + '</p>' +
+    '<div class="strip">' + PIECE_KEYS.slice(0, L.tw.topLevel).map((k, i) => '<img alt="" class="ps' + i + '" src="' + ASSET[k] + '">').join('') + '</div>' +
+    (n > 1 ? '<p class="sub">New tonight: <b>' + PIECE_NAMES[L.tw.topLevel - 1] + '</b>. Two of the biggest piece vanish for bonus points.</p>' : '<p class="sub">Two of the biggest piece vanish for bonus points.</p>') +
+    '<p class="sub">You get <b>' + L.tw.dropCap + ' drops</b>. Medals: Bronze <b>' + b[0].toLocaleString('en-US') + '</b> · Silver <b>' + b[1].toLocaleString('en-US') + '</b> · Gold <b>' + b[2].toLocaleString('en-US') + '</b>' + (best ? '<br>Your best: ' + best.toLocaleString('en-US') : '') + '</p>' +
+    '<button class="btn" data-act="splay" data-n="' + n + '">Play night ' + n + '</button><div class="pair"><button class="btn alt" data-act="season">Nights</button><button class="btn alt" data-act="menu">Menu</button></div></div>';
 }
 function showMenu() {
   mode = 'menu';
@@ -964,7 +906,7 @@ function makeShareCard() {
   const tg = g.createLinearGradient(0, 130, 0, 250); tg.addColorStop(0, '#fff1c4'); tg.addColorStop(0.55, '#fdaf1e'); tg.addColorStop(1, '#c9822a');
   g.save(); g.shadowColor = 'rgba(253,175,30,.45)'; g.shadowBlur = 28; g.fillStyle = tg; g.font = '700 ' + tsize + 'px' + SERIF; g.fillText('Full Moon', mid, 232); g.restore();
   g.fillStyle = '#fde3bd'; g.font = 'italic 500 38px' + SERIF;
-  g.fillText((kind === 'daily' ? 'The night of ' + dateLabel() : kind === 'weekly' ? 'The Weekly Challenge' : 'A free-play night') + '  ·  ' + twInfo().name, mid, 290);
+  g.fillText((kind === 'season' ? 'Season Night ' + lvl.night : kind === 'daily' ? 'The night of ' + dateLabel() : kind === 'weekly' ? 'The Weekly Challenge' : 'A free-play night') + '  ·  ' + twInfo().name, mid, 290);
   // ornament line with a small moon in the middle
   const mm = moonMark(70); g.strokeStyle = 'rgba(201,154,59,.6)'; g.lineWidth = 2;
   g.beginPath(); g.moveTo(190, 330); g.lineTo(mid - 52, 330); g.moveTo(mid + 52, 330); g.lineTo(CWD - 190, 330); g.stroke(); g.drawImage(mm, mid - 35, 295, 70, 70);
@@ -1020,7 +962,7 @@ async function showPicture() {
 let shareBlob = null, shareUrl = '';
 const gameLink = () => location.origin + location.pathname;
 function resultText() {
-  return 'TODDY Full Moon · ' + (kind === 'daily' ? 'Tonight ' + dateLabel() : kind === 'weekly' ? 'Weekly Challenge' : 'Free play') + ' · ' + twInfo().name + ' · ' + S.score.toLocaleString('en-US') + ' · ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal · ' + lasted() + (moonrises ? ' · Moonrise ×' + moonrises : '') + ' — can you beat it? ' + gameLink();
+  return 'TODDY Full Moon · ' + (kind === 'season' ? 'Season Night ' + lvl.night : kind === 'daily' ? 'Tonight ' + dateLabel() : kind === 'weekly' ? 'Weekly Challenge' : 'Free play') + ' · ' + twInfo().name + ' · ' + S.score.toLocaleString('en-US') + ' · ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal · ' + lasted() + (moonrises ? ' · Moonrise ×' + moonrises : '') + ' — can you beat it? ' + gameLink();
 }
 function flash(btn, msg) { const t = btn.textContent; btn.textContent = msg; setTimeout(() => { btn.textContent = t; }, 1800); }
 async function doShare(btn) {
@@ -1055,7 +997,7 @@ function showOver() {
     '<div class="card"><h2>Night over</h2><img class="medal" alt="" src="' + ASSET['medal_' + (band + 1)] + '">' +
     '<div class="band">' + nm + '</div><div class="final">' + S.score.toLocaleString('en-US') + '</div>' +
     '<p class="sub">Lasted <b>' + lasted() + '</b> · ' + S.drops + ' drops</p><p class="sub">' + (kind === 'daily' ? "Tonight's best " : 'Best ') + bestVal.toLocaleString('en-US') + ' · highest piece ' + S.maxLevel + ' of 11' + (S.served ? ' · ' + S.served + ' visitor' + (S.served > 1 ? 's' : '') + ' served' : '') + (moonrises ? ' · Moonrise ×' + moonrises : '') + (next ? ' · next medal at ' + next.toLocaleString('en-US') : '') + '</p>' +
-    '' + ((kind === 'daily' || kind === 'weekly') ? '<p class="sub" id="seasonline" hidden></p>' : '') + '<button class="btn" data-act="again">Play again</button><button class="btn share" data-act="pic">Share your night</button><button class="btn alt" data-act="menu">Menu</button><div class="pair"><a class="btn alt" href="/">\u2190 TODDY home</a><a class="btn alt" href="/season/">My Season</a></div><p class="help"><a href="/games/">All games</a></p></div>';
+    '' + ((kind === 'daily' || kind === 'weekly' || kind === 'season') ? '<p class="sub" id="seasonline" hidden></p>' : '') + '<button class="btn" data-act="again">Play again</button><button class="btn share" data-act="pic">Share your night</button><button class="btn alt" data-act="menu">Menu</button><div class="pair"><a class="btn alt" href="/">\u2190 TODDY home</a><a class="btn alt" href="/season/">My Season</a></div><p class="help"><a href="/games/">All games</a></p></div>';
 }
 
 // ---------- full screen (Android and desktop browsers; iPhone Safari has no full screen for web pages) ----------
@@ -1107,7 +1049,7 @@ function toggleSound() { muted = !muted; try { localStorage.setItem('mmMute', mu
 overlay.addEventListener('click', (e) => {
   const b = e.target.closest('button'); if (!b) return;
   const a = b.dataset.act;
-  if (wantFull && (a === 'daily' || a === 'free' || a === 'tw' || a === 'again' || a === 'restart' || a === 'resume' || a === 'slevel' || a === 'sretry')) enterFS();
+  if (wantFull && (a === 'daily' || a === 'free' || a === 'tw' || a === 'again' || a === 'restart' || a === 'resume' || a === 'splay')) enterFS();
   if (a === 'snd') { toggleSound(); b.textContent = 'Sound: ' + (muted ? 'Off' : 'On'); }
   else if (a === 'mus') { musicOn = !musicOn; try { localStorage.setItem('mmMusic', musicOn ? '1' : '0'); } catch (err) { /* none */ } ensureAudio(); syncMusic(); b.textContent = 'Music: ' + (musicOn ? 'On' : 'Off'); }
   else if (a === 'full') { toggleFS(); }
@@ -1116,14 +1058,13 @@ overlay.addEventListener('click', (e) => {
   else if (a === 'daily') startRun('daily');
   else if (a === 'weekly' && weeklyMission) startRun('weekly', weeklyMission.seed, weeklyMission.twist);
   else if (a === 'free') startRun('free');
-  else if (a === 'season') showSeasonMap(defaultNight());
-  else if (a === 'snight') showSeasonMap(parseInt(b.dataset.n, 10));
-  else if (a === 'slevel') startSeason(parseInt(b.dataset.n, 10), parseInt(b.dataset.l, 10));
-  else if (a === 'sretry') startSeason(lvl.night, lvl.level);
+  else if (a === 'season') showSeasonMap();
+  else if (a === 'snight') showSeasonIntro(parseInt(b.dataset.n, 10));
+  else if (a === 'splay') startSeason(parseInt(b.dataset.n, 10));
   else if (a === 'weeks') showWeeks();
   else if (a === 'tw') startRun('free', undefined, parseInt(b.dataset.w, 10));
   else if (a === 'resume') { mode = 'play'; overlay.hidden = true; }
-  else if ((a === 'restart' || a === 'again') && kind === 'season') startSeason(lvl.night, lvl.level);
+  else if ((a === 'restart' || a === 'again') && kind === 'season') startSeason(lvl.night);
   else if (a === 'restart' || a === 'again') startRun(kind, kind === 'weekly' && weeklyMission ? weeklyMission.seed : undefined, twist);
   else if (a === 'menu') showMenu();
   else if (a === 'pic') showPicture();
@@ -1194,13 +1135,13 @@ async function boot() {
   twist = todayTwist(); S = C.newGame(C.dateSeed(nightNow()), twist);     // an idle crate behind the menu
   mode = 'menu'; setScore(); setNext(); showMenu();
   if (/[?&]play=daily(&|$)/.test(location.search)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } startRun('daily'); }   // link from the Season page
-  else if (seasonM && /[?&]play=season(&|$)/.test(location.search)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } showSeasonMap(defaultNight()); }
+  else if (seasonM && /[?&]play=season(&|$)/.test(location.search)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } showSeasonMap(); }
   else if (weeklyMission && /[?&]play=weekly(&|$)/.test(location.search)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } startRun('weekly', weeklyMission.seed, weeklyMission.twist); }
   requestAnimationFrame(frame);
   $('loading').hidden = true;
 }
 window.__mm = { renderSfx, renderMusic, get musicOn() { return musicOn; }, get twist() { return twist; },
-  C, dropAt, startRun, startSeason, showSeasonMap, showMenu, get lvl() { return lvl; }, get S() { return S; }, get log() { return log; }, get lastRun() { return lastRun; },
+  C, dropAt, startRun, startSeason, showSeasonMap, showSeasonIntro, showMenu, get lvl() { return lvl; }, get S() { return S; }, get log() { return log; }, get lastRun() { return lastRun; },
   get mode() { return mode; }, get fx() { return fx; }, get pops() { return pops; }, setAim(x) { aimX = x; }, layoutInfo: () => ({ W, H, k, cw, ch, crateX, crateY, dpr, toddyH }),
 };
 boot().catch((e) => { const l = $('loading'); l.hidden = false; l.textContent = 'Could not load: ' + e.message; console.error(e); });

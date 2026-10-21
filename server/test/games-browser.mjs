@@ -199,35 +199,31 @@ check(/1 of 140 cases/.test(await page.locator('#mg .mrow', { hasText: 'Season C
 // ---- Season Nights (Full Moon launch mission), reached from the Season page ----
 await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])'); await page.evaluate(() => document.querySelectorAll('#mg details').forEach((d) => { d.open = true; }));
 const mtxt = await page.locator('#mg .mrow', { hasText: 'Full Moon' }).innerText();
-check(/Season Nights/.test(mtxt) && /Up to 420 points/.test(mtxt) && /15 points every 5 levels/.test(mtxt) && /7 nights/.test(mtxt), 'Season page: the Full Moon card shows Season Nights (up to 420, 15 every 5 levels, 7 nights)');
+check(/Season Nights/.test(mtxt) && /Up to 420 points/.test(mtxt) && /Played, Bronze, Silver, Gold: 15 points each/.test(mtxt) && /7 nights/.test(mtxt), 'Season page: the Full Moon card shows Season Nights (up to 420, four medals of 15 each night, 7 nights)');
 await page.screenshot({ path: shots + '/season_mission.png', fullPage: true });
 await Promise.all([page.waitForURL(/full-moon/), page.click('#mg .mrow:has-text("Full Moon") a')]);
-await page.waitForSelector('.lvgrid .lv', { state: 'visible', timeout: 30000 });
-check(!/play=season/.test(page.url()) && (await page.locator('.lvgrid .lv').count()) === 20 && (await page.locator('.lvgrid .lv:not([disabled])').count()) === 1 && (await page.locator('.nights .chip').count()) === 7, 'Full Moon: the Season page opens the level map (7 nights, 20 levels, only level 1 playable)');
+await page.waitForSelector('.nrows .nrow', { state: 'visible', timeout: 30000 });
+check(!/play=season/.test(page.url()) && (await page.locator('.nrow').count()) === 7 && (await page.locator('.nrow:not([disabled])').count()) >= 1, 'Full Moon: the Season page opens the list of 7 nights (in test mode every night is open)');
 await page.screenshot({ path: shots + '/fm_season_map.png' });
-await page.click('.lvgrid .lv:not([disabled])');
-await page.waitForFunction(() => window.__mm && window.__mm.mode === 'play' && window.__mm.lvl && window.__mm.lvl.level === 1, null, { timeout: 30000 });
-check(/Level 1/.test(await page.locator('#banner').innerText()) || true, 'Full Moon: level 1 starts');
-let fmWon = false;
-for (let tryNo = 0; tryNo < 4 && !fmWon; tryNo++) {
-  await page.evaluate(() => { let n = 0; window.__drop = setInterval(() => { const m = window.__mm; if (m.mode === 'play' && m.C.canDrop(m.S)) { m.dropAt(m.C.FIELD.L + 30 + ((n * 263) % 700)); n++; } }, 20); });
-  await page.waitForFunction(() => window.__mm.mode !== 'play' && window.__mm.lastRun && window.__mm.lastRun.kind === 'season', null, { timeout: 120000, polling: 300 });
-  await page.evaluate(() => clearInterval(window.__drop));
-  await page.waitForSelector('#overlay .card', { state: 'visible', timeout: 10000 });
-  fmWon = /cleared/.test(await page.locator('#overlay h2').innerText());
-  if (!fmWon) { await page.click('[data-act="sretry"]'); await page.waitForFunction(() => window.__mm.mode === 'play', null, { timeout: 10000 }); }
-}
-check(fmWon, 'Full Moon: level 1 of night 1 can be cleared in the real game (tries: ' + (await page.evaluate(() => window.__mm.lastRun.drops.length)) + ' drops in the last one)');
+await page.click('.nrow:not([disabled])'); await page.waitForSelector('[data-act="splay"]', { state: 'visible' });
+const intro = await page.locator('#overlay .card').innerText();
+check(/5 pieces|Warm-Up/.test(intro) && /140 drops/.test(intro) && /Bronze/.test(intro) && /Gold/.test(intro), 'Full Moon: the night intro lists the drops and the three medal scores');
+await page.screenshot({ path: shots + '/fm_season_intro.png' });
+await page.click('[data-act="splay"]');
+await page.waitForFunction(() => window.__mm && window.__mm.mode === 'play' && window.__mm.lvl && window.__mm.lvl.night === 1, null, { timeout: 30000 });
+check((await page.evaluate(() => window.__mm.S.tw.topLevel)) === 5 && (await page.locator('#prog img:visible').count()) === 5, 'Full Moon: night 1 has only 5 pieces');
+await page.evaluate(() => { window.__drop = setInterval(() => { const m = window.__mm; if (m.mode === 'play' && m.C.canDrop(m.S)) m.dropAt(m.C.FIELD.L + 20 + Math.random() * (m.C.FIELD.R - m.C.FIELD.L - 40)); }, 20); });
+await page.waitForFunction(() => window.__mm.mode !== 'play' && window.__mm.lastRun && window.__mm.lastRun.kind === 'season', null, { timeout: 170000, polling: 500 });
+await page.evaluate(() => clearInterval(window.__drop));
 await page.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 15000 });
 const fLine = await page.locator('#seasonline').innerText();
-check(/Level counted\. Night 1: 1 of 20 levels/.test(fLine), 'Full Moon level result says: "' + fLine.slice(0, 90) + '"');
+check(/Season Nights points: \+\d+/.test(fLine), 'Full Moon night result says: "' + fLine.slice(0, 100) + '"');
 const fRow = db.prepare("SELECT r.score, r.seed FROM game_runs r WHERE r.mode = 'weekly' AND r.game_id = 'full-moon' AND r.status = 'accepted'").get();
 const fScore = await page.evaluate(() => window.__mm.lastRun.score);
-check(fRow && fRow.seed === 'full-moon-season:n1t1' && fRow.score === fScore, 'Full Moon: the server replayed night 1 level 1 and stored the same score (' + fScore + ')');
-check(await page.locator('[data-act="slevel"]').first().isVisible() && await page.locator('a[href="/season/"]').first().isVisible(), 'Full Moon result: Next level and My Season buttons');
-await page.screenshot({ path: shots + '/fm_season_cleared.png' });
-await page.click('[data-act="snight"]'); await page.waitForSelector('.lvgrid .lv.done', { state: 'visible' });
-check((await page.locator('.lvgrid .lv.done').count()) === 1 && (await page.locator('.lvgrid .lv:not([disabled])').count()) === 2, 'Full Moon: the map shows level 1 cleared and level 2 open');
+check(fRow && fRow.seed === 'full-moon-season:n1' && fRow.score === fScore, 'Full Moon: the server replayed Season night 1 and stored the same score (' + fScore + ')');
+await page.screenshot({ path: shots + '/fm_season_over.png' });
+await page.click('[data-act="menu"]'); await page.click('[data-act="season"]'); await page.waitForSelector('.nrow:not([disabled]) em', { state: 'visible' });
+check(/best \d/.test(await page.locator('.nrow').first().innerText()), 'Full Moon: the night list shows your best score for night 1');
 
 // ---- Season Nights (Moon Brew launch mission), reached from the Season page ----
 await page.goto(base + '/season/'); await page.waitForSelector('#missions:not([hidden])');
@@ -282,7 +278,7 @@ for (let i = 0; i < 200; i++) {
 await g.waitForFunction(() => { const e = document.getElementById('seasonline'); return e && !e.hidden && e.textContent.length > 5; }, null, { timeout: 20000 });
 check(/Playing as a guest/.test(await g.locator('#seasonline').innerText()) && (await g.locator('#seasonline a').getAttribute('href')) === '/season/', 'guest: result says "Playing as a guest" with a link to the Season page');
 check(!apiCalls.some((c) => /run\//.test(c)), 'guest: no run was sent to the server (' + apiCalls.join(', ') + ')');
-check(db.prepare("SELECT COUNT(*) c FROM game_runs").get().c === 6, 'guest play left no rows in the database (3 daily runs, 1 Full Moon Season level, 1 chapter case and 1 Moon Brew tray from the signed-in player)');
+check(db.prepare("SELECT COUNT(*) c FROM game_runs").get().c === 6, 'guest play left no rows in the database (3 daily runs, 1 Full Moon Season night, 1 chapter case and 1 Moon Brew tray from the signed-in player)');
 
 check(viol.length === 0, 'no Content-Security-Policy violations in any page (' + viol.length + ') ' + viol.slice(0, 2).join(' | ')); check(errs.length === 0, 'no page errors ' + errs.slice(0, 3).join('|'));
 await browser.close(); server.close();

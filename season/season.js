@@ -48,7 +48,7 @@
 
   function istDate(iso) { try { return new Date(iso).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }); } catch (e) { return ''; } }
   function missionRow(m, my, name) {
-    var done = my && my.done, row = el('div', 'mrow' + (m.state === 'locked' ? ' locked' : '')), info = el('div', 'minfo'), isSet = m.kind === 'brewset' || m.kind === 'labset' || m.kind === 'moonset', cased = m.kind === 'chapter' || isSet, unit = m.kind === 'brewset' ? 'trays' : m.kind === 'moonset' ? 'levels' : 'cases';
+    var done = my && my.done, row = el('div', 'mrow' + (m.state === 'locked' ? ' locked' : '')), info = el('div', 'minfo'), isSet = m.kind === 'brewset' || m.kind === 'labset' || m.kind === 'moonset', cased = m.kind === 'chapter' || isSet, unit = m.kind === 'brewset' ? 'trays' : m.kind === 'moonset' ? 'nights' : 'cases';
     var t = el('b', '', (name || m.game) + ' · ' + m.title); info.appendChild(t);
     var casesDone = my && my.casesDone ? my.casesDone.length : 0;
     var sub = m.state === 'locked' ? 'opens ' + istDate(m.opensAt) : m.state === 'late' ? 'week is over: half points' : 'open until ' + istDate(m.closesAt);
@@ -59,8 +59,8 @@
     if (isSet) {
       var got = my ? my.stages.filter(function (x) { return x.done; }).length : 0, per = m.stages[0].points, max = m.stages.length * per;
       ul.appendChild(el('li', got ? 'got' : '', (got ? '\u2713 ' + got * per + ' of ' : 'Up to ') + max + ' points'));
-      ul.appendChild(el('li', '', per + ' points every 5 ' + unit));
-      ul.appendChild(el('li', '', m.kind === 'labset' ? 'One chapter opens per day' : m.nights.length + ' nights, one opens per day'));
+      ul.appendChild(el('li', '', m.kind === 'moonset' ? 'Played, Bronze, Silver, Gold: ' + per + ' points each, every night' : per + ' points every 5 ' + unit));
+      ul.appendChild(el('li', '', m.kind === 'labset' ? 'One chapter opens per day' : m.kind === 'moonset' ? 'One game a night, a new piece every night · ' + m.nights.length : m.nights.length + ' nights, one opens per day'));
     } else m.stages.forEach(function (st, i) { var got = my && my.stages[i] && my.stages[i].done; ul.appendChild(el('li', got ? 'got' : '', (got ? '✓ ' : '') + st.label + ' +' + st.points)); });
     info.appendChild(ul); row.appendChild(info);
     if (m.state !== 'locked') {

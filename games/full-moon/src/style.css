@@ -107,15 +107,14 @@ a.btn { text-decoration: none; }
 .pair { display: flex; gap: 8px; }
 .pair .btn { flex: 1; font-size: 15px; }
 
-/* Season Nights: night tabs and the 20-level grid */
-.nights { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
-.nights .chip { padding: 6px 11px; min-height: 38px; min-width: 38px; }
-.nights .chip.on { background: var(--gold); color: #1a1030; border-color: var(--gold); }
-.lvgrid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
-.lv { position: relative; font: 700 16px var(--display); color: var(--cream); background: rgba(20,16,46,.7); border: 1.5px solid var(--brass); border-radius: 12px; min-height: 46px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0; }
-.lv i { font: 600 10px var(--body); font-style: normal; color: var(--gold); line-height: 1; }
-.lv.done { background: rgba(253,175,30,.18); color: var(--gold); }
-.lv.next { background: var(--gold); color: #1a1030; border-color: #fff4d6; }
-.lv.next i { color: #1a1030; }
-.lv:disabled { opacity: .4; cursor: default; }
-.lv:focus-visible { outline: 3px solid #fff4d6; outline-offset: 2px; }
+/* Season Nights: the list of 7 nights */
+.nrows { display: flex; flex-direction: column; gap: 6px; }
+.nrow { display: flex; align-items: center; gap: 12px; text-align: left; font: 600 14px var(--body); color: var(--cream); background: rgba(20,16,46,.7); border: 1.5px solid var(--brass); border-radius: 14px; padding: 8px 12px; min-height: 52px; cursor: pointer; }
+.nrow b { flex: none; width: 30px; height: 30px; border-radius: 50%; background: var(--gold); color: #1a1030; display: flex; align-items: center; justify-content: center; font: 700 16px var(--display); }
+.nrow span { display: flex; flex-direction: column; min-width: 0; }
+.nrow i { font: 700 16px/1.1 var(--display); font-style: normal; }
+.nrow em { font: 500 12px/1.3 var(--body); font-style: normal; color: #d8c9a8; }
+.nrow.locked { opacity: .45; cursor: default; }
+.nrow.locked b { background: rgba(255,255,255,.2); color: var(--cream); }
+.nrow:focus-visible { outline: 3px solid #fff4d6; outline-offset: 2px; }
+#prog img.off { display: none; }

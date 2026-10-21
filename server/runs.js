@@ -93,7 +93,7 @@ export async function runFinish(request, env) {
   const [missionId, caseId] = run.gmode === 'weekly' ? String(run.gseed).split(':') : [];
   const mission = run.gmode === 'weekly' ? findMission(missionId, run.game_id) : null;
   if (run.gmode === 'weekly' && !mission) { await reject(env, run, now, 'bad_mission'); return json(422, { ok: false, error: 'bad_log' }); }
-  const v = mission && (mission.kind === 'chapter' || mission.kind === 'labset') ? ADAPTERS[run.game_id].verifyCase(caseId, body) : mission && mission.kind === 'brewset' ? ADAPTERS[run.game_id].verifySeasonTray(caseId, body) : mission && mission.kind === 'moonset' ? ADAPTERS[run.game_id].verifySeasonLevel(caseId, body) : ADAPTERS[run.game_id].verify(run.night_key, body, mission ? { seed: mission.seed, twist: mission.twist } : {});
+  const v = mission && (mission.kind === 'chapter' || mission.kind === 'labset') ? ADAPTERS[run.game_id].verifyCase(caseId, body) : mission && mission.kind === 'brewset' ? ADAPTERS[run.game_id].verifySeasonTray(caseId, body) : mission && mission.kind === 'moonset' ? ADAPTERS[run.game_id].verifySeasonNight(caseId, body) : ADAPTERS[run.game_id].verify(run.night_key, body, mission ? { seed: mission.seed, twist: mission.twist } : {});
   const replayMs = Math.round(performance.now() - t0);
   if (!v.ok) { await reject(env, run, now, v.error); return json(422, { ok: false, error: v.error }); }
   const elapsed = now - run.started_ms;
@@ -165,7 +165,7 @@ async function weeklyFinish(env, p, run, m, v, now, replayMs, plain, counting, c
   if (state === 'locked') { await env.DB.batch(plain); return answer({ counted: false, reason: 'mission_locked', points: { total: 0, items: [] } }); }
   const claimed = await claimedStages(env, p.id, m);
   const tot = await env.DB.prepare("SELECT COALESCE(SUM(amount),0) t FROM points_ledger WHERE player_id = ?1 AND season_id = ?2 AND status IN ('settled','pending')").bind(p.id, RULES.seasonId).first();
-  const plan = planMission(m, claimed, { band: v.band, cases, byNight }, state, RULES.seasonMax - tot.t);
+  const plan = planMission(m, claimed, { band: v.band, cases, byNight, night: tr ? tr.night : undefined }, state, RULES.seasonMax - tot.t);
   // A newly cleared Season Nights tray also counts as playing tonight: the active-night points and the 5/7-night bonuses.
   let extras = [];
   if (isSetMission(m) && !(await finishedCases(env, p.id, m)).has(caseId)) {
