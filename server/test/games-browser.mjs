@@ -207,11 +207,11 @@ check(!/play=season/.test(page.url()) && (await page.locator('.nrow').count()) =
 await page.screenshot({ path: shots + '/fm_season_map.png' });
 await page.click('.nrow:not([disabled])'); await page.waitForSelector('[data-act="splay"]', { state: 'visible' });
 const intro = await page.locator('#overlay .card').innerText();
-check(/5 pieces|Warm-Up/.test(intro) && /140 drops/.test(intro) && /Bronze/.test(intro) && /Gold/.test(intro), 'Full Moon: the night intro lists the drops and the three medal scores');
+check(/6 pieces|Warm-Up/.test(intro) && /140 drops/.test(intro) && /Bronze/.test(intro) && /Gold/.test(intro), 'Full Moon: the night intro lists the drops and the three medal scores');
 await page.screenshot({ path: shots + '/fm_season_intro.png' });
 await page.click('[data-act="splay"]');
 await page.waitForFunction(() => window.__mm && window.__mm.mode === 'play' && window.__mm.lvl && window.__mm.lvl.night === 1, null, { timeout: 30000 });
-check((await page.evaluate(() => window.__mm.S.tw.topLevel)) === 5 && (await page.locator('#prog img:visible').count()) === 5, 'Full Moon: night 1 has only 5 pieces');
+check((await page.evaluate(() => window.__mm.S.tw.topLevel)) === 6 && (await page.locator('#prog img:visible').count()) === 6, 'Full Moon: night 1 has 6 pieces');
 await page.evaluate(() => { window.__drop = setInterval(() => { const m = window.__mm; if (m.mode === 'play' && m.C.canDrop(m.S)) m.dropAt(m.C.FIELD.L + 20 + Math.random() * (m.C.FIELD.R - m.C.FIELD.L - 40)); }, 20); });
 await page.waitForFunction(() => window.__mm.mode !== 'play' && window.__mm.lastRun && window.__mm.lastRun.kind === 'season', null, { timeout: 170000, polling: 500 });
 await page.evaluate(() => clearInterval(window.__drop));

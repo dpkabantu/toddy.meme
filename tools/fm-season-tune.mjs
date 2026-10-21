@@ -40,7 +40,8 @@ const rows = [], rep = [];
 for (let n = 1; n <= C.SEASON.nights; n++) {
   const L = C.seasonNight(n), r = randomRuns(L, 80), q = (p) => r[Math.min(r.length - 1, Math.floor(p * r.length))], bot = botRun(L);
   const p50 = q(0.5), p90 = q(0.9);
-  const bronze = r10(Math.max(p50 * 0.95, bot.score * 0.3)), silver = r10(Math.max(p90 * 1.02, bot.score * 0.75, bronze + 50)), gold = r10(Math.max(p90 * 1.1, bot.score * 0.95, silver + 50));
+  const hard = bot.over && bot.drops < L.tw.dropCap, ks = hard ? 0.6 : 0.75, kg = hard ? 0.8 : 0.95;   // where even the bot fills the crate, the targets are kept a little lower
+  const bronze = r10(Math.max(p50 * 0.95, bot.score * 0.3)), silver = r10(Math.max(p90 * 1.02, bot.score * ks, bronze + 50)), gold = r10(Math.max(p90 * 1.1, bot.score * kg, silver + 50));
   rows.push([bronze, silver, gold]);
   rep.push(`Night ${n} (${L.tw.topLevel} pieces, ${L.tw.dropCap} drops): random p10 ${q(0.1)} p50 ${p50} p90 ${p90} max ${r[r.length - 1]} | bot ${bot.score} (${bot.drops} drops, crate ${bot.over && bot.drops < L.tw.dropCap ? 'filled' : 'ok'}) -> Bronze ${bronze} Silver ${silver} Gold ${gold}`);
 }

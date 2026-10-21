@@ -20,11 +20,11 @@ const nights = Array.from({ length: 7 }, (_, i) => ({ night: i + 1, opensAt: '20
 await page.route('**/api/season', (r) => r.fulfill({ json: { ok: true, seasonWeek: 3, season: { status: 'live' }, games: [{ id: 'full-moon', dailyFromWeek: 4 }], missions: [{ id: 'full-moon-season', game: 'full-moon', kind: 'moonset', state: 'open', week: 3, nights, cases: [], stages: [] }] } }));
 await page.route('https://fonts.g*apis.com/**', (r) => r.abort()); await page.route('https://fonts.gstatic.com/**', (r) => r.abort());
 await page.goto(base + '/games/full-moon/'); await page.waitForSelector('.card .strip', { timeout: 30000 });
-check((await page.locator('.strip .lock').count()) === 6 && (await page.locator('.strip img').count()) === 5, 'menu strip: 5 pieces shown, 6 secret');
+check((await page.locator('.strip .lock').count()) === 5 && (await page.locator('.strip img').count()) === 6, 'menu strip: 6 pieces shown, 5 secret');
 const menu = await page.locator('.card').innerText();
 check(/Opens in week 4/.test(menu) && (await page.locator('[data-act="daily"]').count()) === 0 && !/Weekly twists/.test(menu), 'daily is paused in week 3 (no play button) and the twists list is hidden');
-await page.click('[data-act="pieces"]'); check(/secret/.test(await page.locator('.card').innerText()) && (await page.locator('.strip .lock').count()) === 6, 'Pieces screen keeps the rest secret');
+await page.click('[data-act="pieces"]'); check(/secret/.test(await page.locator('.card').innerText()) && (await page.locator('.strip .lock').count()) === 5, 'Pieces screen keeps the rest secret');
 await page.click('[data-act="back"], [data-act="menu"]').catch(() => {}); await page.waitForSelector('[data-act="free"]');
 await page.click('[data-act="free"]'); await page.waitForFunction(() => window.__mm.mode === 'play');
-check((await page.evaluate(() => window.__mm.S.tw.topLevel)) === 5 && (await page.locator('#prog img:visible').count()) === 5, 'Practice uses only the 5 unlocked pieces');
+check((await page.evaluate(() => window.__mm.S.tw.topLevel)) === 6 && (await page.locator('#prog img:visible').count()) === 6, 'Practice uses only the 6 unlocked pieces');
 await browser.close(); server.close(); console.log(bad ? 'PROBLEMS: ' + bad : 'secret pieces ok'); if (bad) process.exitCode = 1;

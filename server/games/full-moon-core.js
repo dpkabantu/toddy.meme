@@ -278,22 +278,23 @@ export const TWISTS = [
   { name: 'Grand Finale', blurb: 'Busy Café and Full House together.', weights: WEIGHTS, closeY: 220, lateLevel: 0, lateChance: 0.2, ticketFirst: 3, ticketGap: 2, ticketSpan: 14, ticketMult: 6, bands: [800, 1900, 2700] },
 ];
 
-// ---- Season Nights (the launch mission): 7 nights, one game each. Night 1 has 5 pieces, every night adds one more, night 7 is the whole game with 11. ----
+// ---- Season Nights (the launch mission): 7 nights, one game each. Night 1 has 6 pieces, every night adds one more, night 6 reveals all 11, night 7 is the hard finale. Each night also brings one new rule. ----
 // Same rules as a normal night (unlimited play until the crate is full, the best run of a night counts). Medals are fixed scores per night, so nobody is compared with anybody.
 export const SEASON = { nights: 7 };
 export const NIGHT_NAMES = ['Warm-Up Night', 'Visitor Night', 'Heavy Bean Night', 'Tight Crate Night', 'Milk Rush Night', 'Rush Hour Night', 'Full Moon Night'];
-export const NIGHT_BLURBS = ['Five pieces only. A roomy crate. Learn the feel.', 'A sixth piece joins. Visitors start asking for pieces.', 'Seven pieces. Toddy hands out bigger beans.', 'Eight pieces and the dashed line creeps lower.', 'Nine pieces. Milk swirls drop early and often.', 'Ten pieces. Visitors come fast and tip big.', 'All eleven pieces. Reach for the Full Moon.'];
-const NIGHT_WEIGHTS = [[40, 32, 20, 8, 0], [36, 30, 20, 10, 4], [26, 26, 24, 15, 9], [28, 26, 22, 15, 9], [26, 26, 22, 16, 10], [24, 24, 24, 16, 12], [28, 26, 22, 15, 9]];
+export const NIGHT_BLURBS = ['Six pieces and a roomy crate. A few polite visitors. Learn the feel.', 'A seventh piece joins, and visitors come more often and leave sooner.', 'Eight pieces. Toddy hands out bigger beans, so think ahead.', 'Nine pieces, and the dashed line creeps lower. Stay tidy.', 'Ten pieces. Milk swirls drop early and often.', 'All eleven pieces appear tonight. Visitors rush in and tip big.', 'No new piece, but everything at once. Reach for the Full Moon.'];
+const N_WEIGHTS = [[36, 30, 20, 10, 4], [32, 28, 21, 12, 7], [18, 22, 26, 20, 14], [28, 26, 22, 15, 9], [26, 26, 22, 16, 10], [26, 26, 22, 16, 10], [24, 24, 24, 16, 12]];
+// One new rule a night: [visitor first drop, gap, wait (drops), tip multiplier, dashed line, swirl piece after this piece, swirl chance]
+const N_RULES = [[8, 6, 14, 6, 215, 99, 0.2], [5, 3, 11, 8, 220, 99, 0.2], [6, 4, 12, 8, 225, 99, 0.2], [6, 4, 12, 8, 250, 99, 0.2], [6, 4, 12, 8, 230, 4, 0.22], [4, 2, 8, 10, 236, 7, 0.2], [4, 2, 8, 10, 244, 8, 0.2]];
 // SEASON_BANDS:START (written by tools/fm-season-tune.mjs: Bronze, Silver, Gold score for each night)
-const SEASON_BANDS = [[1200, 1350, 1460], [1600, 1830, 1970], [2240, 2680, 2900], [1510, 2900, 3130], [1540, 2620, 3320], [1680, 2780, 3520], [2250, 3470, 3740]];
+const SEASON_BANDS = [[1360, 1550, 1670], [2080, 2410, 2590], [2460, 3040, 3280], [2130, 2770, 2980], [870, 1580, 1700], [1420, 1970, 2140], [1640, 2450, 2970]];
 // SEASON_BANDS:END
 export function seasonNight(night) {
-  const n = Math.max(1, Math.min(SEASON.nights, night | 0)), t = (n - 1) / (SEASON.nights - 1);
+  const n = Math.max(1, Math.min(SEASON.nights, night | 0)), r = N_RULES[n - 1];
   const tw = {
-    name: NIGHT_NAMES[n - 1], blurb: NIGHT_BLURBS[n - 1], topLevel: 4 + n, weights: NIGHT_WEIGHTS[n - 1], closeY: Math.round(215 + 30 * t),
-    lateLevel: n < 3 ? 99 : 3 + n, lateChance: 0.2,
-    ticketFirst: Math.round(6 - 2 * t), ticketGap: Math.round(5 - 3 * t), ticketSpan: Math.round(18 - 6 * t), ticketMult: 6,
-    bands: SEASON_BANDS[n - 1], dropCap: 140 + 15 * (n - 1),   // a night is a fixed number of drops (about 4 to 6 minutes), so every run ends and nobody can sit on the crate for ever
+    name: NIGHT_NAMES[n - 1], blurb: NIGHT_BLURBS[n - 1], topLevel: Math.min(11, 5 + n), weights: N_WEIGHTS[n - 1], closeY: r[4],
+    lateLevel: r[5], lateChance: r[6], ticketFirst: r[0], ticketGap: r[1], ticketSpan: r[2], ticketMult: r[3],
+    bands: SEASON_BANDS[n - 1], dropCap: 140 + 15 * (n - 1),   // a night is a fixed number of drops (about 4 to 6 minutes), so every run ends
   };
   return { night: n, seed: 7100000 + n * 101, tw };
 }
