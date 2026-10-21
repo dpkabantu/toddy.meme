@@ -426,8 +426,8 @@ function onEvents(before) {
 }
 
 function stick() {   // the thumb pad: a ring where the finger went down and a knob under the finger
-  const r0 = cv.getBoundingClientRect(), ax = sx - r0.left, ay = sy - r0.top; let kx = fingerX - r0.left - ax, ky = fingerY - r0.top - ay; const d = Math.hypot(kx, ky) || 1, m = Math.min(d, 46); kx = ax + (kx / d) * m; ky = ay + (ky / d) * m;
-  ctx.save(); ctx.globalAlpha = 0.5; ctx.lineWidth = 3; ctx.strokeStyle = '#fff4d6'; ctx.beginPath(); ctx.arc(ax, ay, 46, 0, Math.PI * 2); ctx.stroke();
+  const r0 = cv.getBoundingClientRect(), ax = sx - r0.left, ay = sy - r0.top; let kx = fingerX - r0.left - ax, ky = fingerY - r0.top - ay; const d = Math.hypot(kx, ky) || 1, m = Math.min(d, 34); kx = ax + (kx / d) * m; ky = ay + (ky / d) * m;
+  ctx.save(); ctx.globalAlpha = 0.5; ctx.lineWidth = 3; ctx.strokeStyle = '#fff4d6'; ctx.beginPath(); ctx.arc(ax, ay, 34, 0, Math.PI * 2); ctx.stroke();
   ctx.globalAlpha = 0.45; ctx.fillStyle = '#fdaf1e'; ctx.beginPath(); ctx.arc(kx, ky, 20, 0, Math.PI * 2); ctx.fill(); ctx.restore();
 }
 function frame(now) {
@@ -465,15 +465,15 @@ const turnFromDelta = (dx, dy, prev) => {   // dominant axis wins, but the curre
   const useX = prev === null || prev === undefined ? ax > ay : horiz ? !(ay > ax * 1.35) : ax > ay * 1.35;
   return useX ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0);
 };
-const setHeld = (d) => { if (d !== heldDir) { heldDir = d; if (d !== null) { pendingTurn = d; waiting = false; SND.turn(); } } };
+const setHeld = (d) => { if (d !== heldDir) { heldDir = d; if (d !== null) { pendingTurn = d; acc = Math.max(acc, STEP_MS * (totalTime - lastMoveAt < STEP_MS * 1.6 ? 0.6 : 1));   /* answer the touch at once: standing still steps now, walking turns within ~40% of a step */ waiting = false; SND.turn(); } } };
 cv.addEventListener('pointerdown', (e) => { if (down) return; padId = e.pointerId; down = true; sx = fingerX = e.clientX; sy = fingerY = e.clientY; unlockSound(); try { cv.setPointerCapture(e.pointerId); } catch (_) {} });
 // Hold and steer: put a finger down and drag; Toddy walks the way you drag and stops when you lift. The anchor follows the finger so changing direction is quick.
 cv.addEventListener('pointermove', (e) => {
   if (!down || !running || e.pointerId !== padId) return;
   fingerX = e.clientX; fingerY = e.clientY;
   const dx = e.clientX - sx, dy = e.clientY - sy, d = Math.hypot(dx, dy);
-  if (d >= 14) setHeld(turnFromDelta(dx, dy, heldDir));
-  if (d > 46) { sx = e.clientX - (dx / d) * 46; sy = e.clientY - (dy / d) * 46; }
+  if (d >= 9) setHeld(turnFromDelta(dx, dy, heldDir));
+  if (d > 34) { sx = e.clientX - (dx / d) * 34; sy = e.clientY - (dy / d) * 34; }
 });
 const up = (e) => { if (e && e.pointerId !== padId) return; down = false; padId = null; setHeld(null); };
 cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up); cv.addEventListener('contextmenu', (e) => e.preventDefault());
