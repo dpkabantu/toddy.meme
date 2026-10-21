@@ -23,7 +23,7 @@ const RHYTHMS = [[0, 3, 6, 8, 11, 14], [0, 2, 4, 7, 8, 10, 12, 15], [0, 4, 6, 8,
 function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6d2b79f5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 
 export function createMusic() {
-  let ctx = null, master = null, bus = null, revIn = null, dlyIn = null, noiseBuf = null, timer = 0;
+  let sfxBus = null, ctx = null, master = null, bus = null, revIn = null, dlyIn = null, noiseBuf = null, timer = 0;
   let enabled = true, theme = null, themeKey = null, level = 0, targetLevel = 0, tempoMul = 1, nextTime = 0, step = 0, bar = 0, rand = rng(1), melody = [], rainNode = null, playing = false;
 
   function ensure() {
@@ -124,12 +124,29 @@ export function createMusic() {
   }
 
   return {
+    sfx(kind) {   // short game sounds, louder than the music so they stand out; same context as the music
+      if (!enabled) return; const c = ensure(); if (!c) return; if (c.state === 'suspended') c.resume().catch(() => {});
+      if (!sfxBus) { sfxBus = c.createGain(); sfxBus.gain.value = 1; sfxBus.connect(master); }
+      const t = c.currentTime + 0.01;
+      const tone = (type, f0, f1, dur, vol) => { const o = c.createOscillator(); o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + dur); const g = c.createGain(); g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.001, t + dur); o.connect(g); g.connect(sfxBus); o.start(t); o.stop(t + dur + 0.02); };
+      const hiss = (type, f0, f1, dur, vol, delay) => { const s = c.createBufferSource(); s.buffer = noiseBuf; const f = c.createBiquadFilter(); f.type = type; f.frequency.setValueAtTime(f0, t + (delay || 0)); f.frequency.exponentialRampToValueAtTime(f1, t + (delay || 0) + dur); f.Q.value = 1.2; const g = c.createGain(); g.gain.setValueAtTime(vol, t + (delay || 0)); g.gain.exponentialRampToValueAtTime(0.001, t + (delay || 0) + dur); s.connect(f); f.connect(g); g.connect(sfxBus); g.connect(revIn); s.start(t + (delay || 0), Math.random()); s.stop(t + (delay || 0) + dur + 0.02); };
+      const chime = (m, d, v) => { const o = c.createOscillator(); o.type = 'sine'; o.frequency.value = mtof(m); const g = c.createGain(); g.gain.setValueAtTime(0.0001, t + d); g.gain.linearRampToValueAtTime(v, t + d + 0.01); g.gain.exponentialRampToValueAtTime(0.001, t + d + 0.5); o.connect(g); g.connect(sfxBus); g.connect(revIn); o.start(t + d); o.stop(t + d + 0.55); };
+      if (kind === 'spill') { hiss('bandpass', 2600, 500, 0.45, 0.5); hiss('lowpass', 1400, 300, 0.3, 0.4, 0.05); tone('sine', 420, 120, 0.3, 0.25); }   // splash + glug
+      else if (kind === 'bump') { tone('sine', 150, 40, 0.22, 0.9); hiss('lowpass', 900, 200, 0.14, 0.5); }   // dull thud
+      else if (kind === 'slide') { hiss('highpass', 1500, 5000, 0.5, 0.3); tone('triangle', 500, 900, 0.3, 0.08); }   // slippery swoosh
+      else if (kind === 'snatch') { tone('sawtooth', 700, 120, 0.4, 0.25); hiss('bandpass', 3000, 800, 0.25, 0.3); }
+      else if (kind === 'serve') { chime(79, 0, 0.3); chime(84, 0.09, 0.3); chime(91, 0.18, 0.28); }
+      else if (kind === 'brew') { chime(88, 0, 0.22); hiss('bandpass', 3500, 2500, 0.2, 0.15); }
+      else if (kind === 'sigh') { tone('triangle', 330, 180, 0.4, 0.2); }
+      else if (kind === 'turn') { tone('sine', 520, 520, 0.03, 0.04); }
+      else if (kind === 'win') { [72, 76, 79, 84].forEach((n, i) => chime(n, i * 0.12, 0.3)); }
+    },
     ctx() { return ensure(); },
     resume() { const c = ensure(); if (c && c.state === 'suspended') c.resume().catch(() => {}); },
     setEnabled(on) {
       enabled = on; if (!ctx) return;
-      if (!on) { bus.gain.cancelScheduledValues(ctx.currentTime); bus.gain.linearRampToValueAtTime(0.0001, ctx.currentTime + 0.25); }
-      else if (playing) { bus.gain.cancelScheduledValues(ctx.currentTime); bus.gain.linearRampToValueAtTime(0.6, ctx.currentTime + 0.4); }
+      if (!on) { if (sfxBus) sfxBus.gain.value = 0.0001; bus.gain.cancelScheduledValues(ctx.currentTime); bus.gain.linearRampToValueAtTime(0.0001, ctx.currentTime + 0.25); }
+      else { if (sfxBus) sfxBus.gain.value = 1; if (playing) bus.gain.cancelScheduledValues(ctx.currentTime); bus.gain.linearRampToValueAtTime(0.6, ctx.currentTime + 0.4); }
     },
     isEnabled() { return enabled; },
     play(key) {   // key: 'menu' or a night number

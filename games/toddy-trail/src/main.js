@@ -44,7 +44,7 @@ function beep(freq, dur, type, vol) {
     o.start(t); o.stop(t + dur);
   } catch (e) { /* sound is optional */ }
 }
-const SND = { serve: () => { beep(523, 0.12); setTimeout(() => beep(784, 0.18), 90); }, sigh: () => beep(196, 0.22, 'triangle'), spill: () => beep(130, 0.25, 'sawtooth', 0.06), brew: () => beep(659, 0.1), turn: () => beep(440, 0.04, 'sine', 0.03), win: () => { beep(523, 0.15); setTimeout(() => beep(659, 0.15), 130); setTimeout(() => beep(784, 0.3), 260); } };
+const SND = Object.fromEntries(['serve', 'sigh', 'spill', 'brew', 'turn', 'win', 'bump', 'slide', 'snatch'].map((k) => [k, () => { if (soundOn && musicGo) music.sfx(k); }]));
 
 // ---- layout ----
 function resize() {
@@ -353,15 +353,15 @@ function onEvents(before) {
       SND.sigh(); const v = n.visitors[e.visitor]; sighUntil[e.visitor] = totalTime + 1300;
       flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: 'other drink', color: '#ff8f7a' });
     } else if (e.type === 'spill' || e.type === 'bump') {
-      SND.spill(); const wx = st.x + DX[st.dir] * 0.55, wy = st.y + DY[st.dir] * 0.55;
+      if (e.type === 'spill') SND.spill(); SND.bump(); const wx = st.x + DX[st.dir] * 0.55, wy = st.y + DY[st.dir] * 0.55;
       fx.push({ file: animFile('fx_dust'), key: 'fx_dust', x: wx, y: wy, size: 1.3, t0: totalTime, ms: 800 });
       if (e.type === 'spill' && before !== undefined) fx.push({ file: 'trail_anim_fx_splash_' + DRINK_NAMES[before] + '_v01', key: 'fx_splash', x: st.x, y: st.y, dy: 0.25, size: 1.45, t0: totalTime, ms: 2000 });
       flashes.push({ x: st.x, y: st.y, t0: totalTime, text: e.type === 'spill' ? 'bumped! cup lost' : 'bump!', color: '#ff8f7a' });
       setTod('bump', st.dir, 1600, 'cancelOnMove');
     } else if (e.type === 'slide') {
-      setTod('slip', st.dir, 800);
+      SND.slide(); setTod('slip', st.dir, 800);
     } else if (e.type === 'snatch') {
-      SND.spill(); thiefSnatchAt = totalTime; flashes.push({ x: st.x, y: st.y, t0: totalTime, text: 'snatched!', color: '#ff8f7a' });
+      SND.snatch(); SND.spill(); thiefSnatchAt = totalTime; flashes.push({ x: st.x, y: st.y, t0: totalTime, text: 'snatched!', color: '#ff8f7a' });
       if (before !== undefined) fx.push({ file: 'trail_anim_fx_splash_' + DRINK_NAMES[before] + '_v01', key: 'fx_splash', x: st.x, y: st.y, dy: 0.25, size: 1.2, t0: totalTime, ms: 1600 });
       setTod('startled', st.dir, 1300, 'cancelOnMove');
     } else if (e.type === 'brew') {
