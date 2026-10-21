@@ -30,7 +30,7 @@
       if (live && g.ready && wk < g.dailyFromWeek) {   // owner FINAL: a game's daily counts from the week after its launch week
         top.appendChild(el('span', 'state', wk === g.launchWeek ? 'Launch mission this week · Daily challenge opens in week ' + g.dailyFromWeek : 'Joins Season 1 in week ' + g.launchWeek));
         card.appendChild(top);
-        var b = el('a', 'btn' + (wk === g.launchWeek ? '' : ' alt')); b.href = '/games/' + g.id + '/' + (wk === g.launchWeek && g.id === 'moon-brew' ? '?play=season' : ''); b.textContent = wk === g.launchWeek ? 'Open the launch mission' : 'Play ' + g.title + ' (practice only)';
+        var b = el('a', 'btn' + (wk === g.launchWeek ? '' : ' alt')); b.href = '/games/' + g.id + '/' + (wk === g.launchWeek && (g.id === 'moon-brew' || g.id === 'full-moon') ? '?play=season' : ''); b.textContent = wk === g.launchWeek ? 'Open the launch mission' : 'Play ' + g.title + ' (practice only)';
         card.appendChild(b); box.appendChild(card); return;
       }
       var state = !g.ready ? 'Joins the Season soon' : done ? 'Done tonight: ' + m.tonightBand + ' medal' : P ? 'Not played tonight' : 'Same challenge for everyone';
@@ -48,7 +48,7 @@
 
   function istDate(iso) { try { return new Date(iso).toLocaleDateString(undefined, { weekday: 'short', day: 'numeric', month: 'short' }); } catch (e) { return ''; } }
   function missionRow(m, my, name) {
-    var done = my && my.done, row = el('div', 'mrow' + (m.state === 'locked' ? ' locked' : '')), info = el('div', 'minfo'), isSet = m.kind === 'brewset' || m.kind === 'labset', cased = m.kind === 'chapter' || isSet, unit = m.kind === 'brewset' ? 'trays' : 'cases';
+    var done = my && my.done, row = el('div', 'mrow' + (m.state === 'locked' ? ' locked' : '')), info = el('div', 'minfo'), isSet = m.kind === 'brewset' || m.kind === 'labset' || m.kind === 'moonset', cased = m.kind === 'chapter' || isSet, unit = m.kind === 'brewset' ? 'trays' : m.kind === 'moonset' ? 'levels' : 'cases';
     var t = el('b', '', (name || m.game) + ' · ' + m.title); info.appendChild(t);
     var casesDone = my && my.casesDone ? my.casesDone.length : 0;
     var sub = m.state === 'locked' ? 'opens ' + istDate(m.opensAt) : m.state === 'late' ? 'week is over: half points' : 'open until ' + istDate(m.closesAt);
@@ -64,7 +64,7 @@
     } else m.stages.forEach(function (st, i) { var got = my && my.stages[i] && my.stages[i].done; ul.appendChild(el('li', got ? 'got' : '', (got ? '✓ ' : '') + st.label + ' +' + st.points)); });
     info.appendChild(ul); row.appendChild(info);
     if (m.state !== 'locked') {
-      var a = el('a', 'btn sm' + (done ? ' alt' : '')); a.href = '/games/' + m.game + '/' + (m.kind === 'chapter' || m.kind === 'labset' ? '?mission=' + m.id : m.kind === 'brewset' ? '?play=season' : '?play=weekly&mission=' + m.id);
+      var a = el('a', 'btn sm' + (done ? ' alt' : '')); a.href = '/games/' + m.game + '/' + (m.kind === 'chapter' || m.kind === 'labset' ? '?mission=' + m.id : m.kind === 'brewset' || m.kind === 'moonset' ? '?play=season' : '?play=weekly&mission=' + m.id);
       a.textContent = done ? 'Play again' : cased ? 'Open' : 'Play'; a.setAttribute('aria-label', (done ? 'Play again: ' : cased ? 'Open ' : 'Play ') + (name || m.game) + ' ' + m.title);
       row.appendChild(a);
     }

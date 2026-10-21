@@ -18,8 +18,7 @@ export const RULES = {
   launchWeek: { 'moon-brew': 1, 'scam-lab': 2, 'full-moon': 3 },
   // Moon Brew launch mission: 7 Season nights x 20 trays, one night opens per day, trays in order, 15 points every 5 trays (owner FINAL).
   seasonNights: { nights: 7, trays: 20, every: 5, points: 15 },
-  // Full Moon (week 3) launch mission is a PLACEHOLDER until the owner finalizes it. Scam Lab (week 2) uses seasonNights too: one chapter per night, 20 cases each.
-  fullMoonWeekly: { week: 3, silverBand: 2, silverPoints: 40, goldPoints: 10 },
+  // Scam Lab (week 2) and Full Moon (week 3) use seasonNights too: Scam Lab one chapter per night (20 cases), Full Moon one night of 20 levels per night.
   missions: [],
   games: ['moon-brew', 'full-moon', 'scam-lab'],
   seasonId: 'season-1',

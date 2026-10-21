@@ -12,11 +12,14 @@ function seasonChaptersMission() {
   for (const ch of chs) for (let k = 1; k * s.every <= s.trays; k++) stages.push({ id: 'n' + ch.n + 's' + k, night: ch.n, needCases: k * s.every, points: s.points, label: 'Chapter ' + ch.n + ': ' + k * s.every + ' cases' });
   return { id: 'scam-lab-season', game: 'scam-lab', week: RULES.launchWeek['scam-lab'], kind: 'labset', title: 'Season Chapters', nights: chs.length, trays: s.trays, cases: chs.flatMap((ch) => ch.cases), stages };
 }
-// Full Moon launch mission (placeholder): one fixed puzzle with that week's twist.
-function fullMoonMissions() {
-  const f = RULES.fullMoonWeekly, w = f.week;
-  return [{ id: 'full-moon-w' + w, game: 'full-moon', week: w, kind: 'weekly-puzzle', title: 'Weekly Challenge', seed: 900000 + w * 100, twist: w - 1,
-    stages: [{ id: 'silver', minBand: f.silverBand, points: f.silverPoints, label: 'Silver' }, { id: 'gold', minBand: 3, points: f.goldPoints, label: 'Gold' }] }];
+// Full Moon launch mission: Season Nights. Levels 'n<night>t<level>', 7 nights x 20 levels, one night opens per day, levels in order, 15 points at every 5 levels of a night.
+function fullMoonSeasonMission() {
+  const s = RULES.seasonNights, cases = [], stages = [];
+  for (let n = 1; n <= s.nights; n++) {
+    for (let t = 1; t <= s.trays; t++) cases.push('n' + n + 't' + t);
+    for (let k = 1; k * s.every <= s.trays; k++) stages.push({ id: 'n' + n + 's' + k, night: n, needCases: k * s.every, points: s.points, label: 'Night ' + n + ': ' + k * s.every + ' levels' });
+  }
+  return { id: 'full-moon-season', game: 'full-moon', week: RULES.launchWeek['full-moon'], kind: 'moonset', title: 'Season Nights', nights: s.nights, trays: s.trays, cases, stages };
 }
 // Moon Brew launch mission: Season Nights. Cases 'n<night>t<tray>'. A stage pays 15 at every 5 trays of one night.
 function seasonNightsMission() {
@@ -27,11 +30,11 @@ function seasonNightsMission() {
   }
   return { id: 'moon-brew-season', game: 'moon-brew', week: RULES.launchWeek['moon-brew'], kind: 'brewset', title: 'Season Nights', nights: s.nights, trays: s.trays, cases, stages };
 }
-export const allMissions = () => [...RULES.missions, seasonNightsMission(), seasonChaptersMission(), ...fullMoonMissions()];
+export const allMissions = () => [...RULES.missions, seasonNightsMission(), seasonChaptersMission(), fullMoonSeasonMission()];
 // Moon Brew trays are 'n<night>t<tray>'; Scam Lab cases are 'c<chapter>-<case>' (chapter = night).
 export const parseTray = (id) => { const m = /^n(\d+)t(\d+)$/.exec(String(id)) || /^c(\d+)-(\d+)$/.exec(String(id)); return m ? { night: Number(m[1]), tray: Number(m[2]) } : null; };
 export const trayId = (m, night, tray) => (m.kind === 'labset' ? 'c' + night + '-' + String(tray).padStart(2, '0') : 'n' + night + 't' + tray);
-export const isSetMission = (m) => m.kind === 'brewset' || m.kind === 'labset';
+export const isSetMission = (m) => m.kind === 'brewset' || m.kind === 'labset' || m.kind === 'moonset';
 // When Season night n of a launch mission opens: one per day from the mission's first night. Before the Season is live everything is open (rehearsal).
 export function nightOpensMs(m, n) { return missionWindow(RULES.startNight, m.week).opensMs + (n - 1) * 86400000; }
 export function nightOpen(seasonStatus, m, n, now) { return seasonStatus !== 'live' || now >= nightOpensMs(m, n); }

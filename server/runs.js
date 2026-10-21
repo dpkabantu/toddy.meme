@@ -93,7 +93,7 @@ export async function runFinish(request, env) {
   const [missionId, caseId] = run.gmode === 'weekly' ? String(run.gseed).split(':') : [];
   const mission = run.gmode === 'weekly' ? findMission(missionId, run.game_id) : null;
   if (run.gmode === 'weekly' && !mission) { await reject(env, run, now, 'bad_mission'); return json(422, { ok: false, error: 'bad_log' }); }
-  const v = mission && (mission.kind === 'chapter' || mission.kind === 'labset') ? ADAPTERS[run.game_id].verifyCase(caseId, body) : mission && mission.kind === 'brewset' ? ADAPTERS[run.game_id].verifySeasonTray(caseId, body) : ADAPTERS[run.game_id].verify(run.night_key, body, mission ? { seed: mission.seed, twist: mission.twist } : {});
+  const v = mission && (mission.kind === 'chapter' || mission.kind === 'labset') ? ADAPTERS[run.game_id].verifyCase(caseId, body) : mission && mission.kind === 'brewset' ? ADAPTERS[run.game_id].verifySeasonTray(caseId, body) : mission && mission.kind === 'moonset' ? ADAPTERS[run.game_id].verifySeasonLevel(caseId, body) : ADAPTERS[run.game_id].verify(run.night_key, body, mission ? { seed: mission.seed, twist: mission.twist } : {});
   const replayMs = Math.round(performance.now() - t0);
   if (!v.ok) { await reject(env, run, now, v.error); return json(422, { ok: false, error: v.error }); }
   const elapsed = now - run.started_ms;

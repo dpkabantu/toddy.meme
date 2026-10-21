@@ -34,7 +34,7 @@ export async function ruleVersionId(env) {
 }
 
 // A night counts as played when a run was counted, or a Season Nights tray was cleared (week 1 has no Daily Brew).
-export const PLAYED = "(counted = 1 OR run_id IN (SELECT id FROM game_runs WHERE mode = 'weekly' AND status = 'accepted' AND (seed LIKE 'moon-brew-season:%' OR seed LIKE 'scam-lab-season:%')))";
+export const PLAYED = "(counted = 1 OR run_id IN (SELECT id FROM game_runs WHERE mode = 'weekly' AND status = 'accepted' AND (seed LIKE 'moon-brew-season:%' OR seed LIKE 'scam-lab-season:%' OR seed LIKE 'full-moon-season:%')))";
 
 // Facts the plan needs, read from the database (everything before the run being counted).
 export async function weekFacts(env, playerId, game, week, night) {

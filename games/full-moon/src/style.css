@@ -106,3 +106,16 @@ a.chip { text-decoration: none; }
 a.btn { text-decoration: none; }
 .pair { display: flex; gap: 8px; }
 .pair .btn { flex: 1; font-size: 15px; }
+
+/* Season Nights: night tabs and the 20-level grid */
+.nights { display: flex; justify-content: center; gap: 6px; flex-wrap: wrap; }
+.nights .chip { padding: 6px 11px; min-height: 38px; min-width: 38px; }
+.nights .chip.on { background: var(--gold); color: #1a1030; border-color: var(--gold); }
+.lvgrid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; }
+.lv { position: relative; font: 700 16px var(--display); color: var(--cream); background: rgba(20,16,46,.7); border: 1.5px solid var(--brass); border-radius: 12px; min-height: 46px; cursor: pointer; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0; }
+.lv i { font: 600 10px var(--body); font-style: normal; color: var(--gold); line-height: 1; }
+.lv.done { background: rgba(253,175,30,.18); color: var(--gold); }
+.lv.next { background: var(--gold); color: #1a1030; border-color: #fff4d6; }
+.lv.next i { color: #1a1030; }
+.lv:disabled { opacity: .4; cursor: default; }
+.lv:focus-visible { outline: 3px solid #fff4d6; outline-offset: 2px; }
