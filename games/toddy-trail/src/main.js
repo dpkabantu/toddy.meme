@@ -2,6 +2,9 @@
 // The rules live in core.js (pure and deterministic). Everything in this file is only drawing and input.
 import { NIGHTS, NIGHT_IDS, STEPS_PER_SEC, newState, step, score, cartCell, thiefCell, shutterClosed, DX, DY } from './core.js';
 import { ANIMS, STILLS, BGS } from './art.js';
+import { createMusic } from './music.js';
+const music = createMusic();
+let musicGo = false;   // music starts only after the first tap (phones block sound before that)
 
 const $ = (id) => document.getElementById(id);
 const cv = $('c'), ctx = cv.getContext('2d');
@@ -17,7 +20,7 @@ const animFile = (k) => 'trail_anim_' + k + '_v01', objFile = (k) => 'trail_obj_
 const OBSTACLE = { 2: ['table', 1.85], 3: ['crates', 1.45], 4: ['barrel', 1.2], 5: ['shelf', 1.35], 6: ['post', 1.3], 7: ['speaker', 1.6] };
 
 let st = null, nightId = 0, turns = [], heldDir = null, lastSent = 4, running = false, waiting = false, last = 0, acc = 0;
-let prevPts = [], curPts = [], flashes = [], fx = [], soundOn = false, actx = null, bannerTimer = 0, totalTime = 0;
+let prevPts = [], curPts = [], flashes = [], fx = [], soundOn = true, actx = null, bannerTimer = 0, totalTime = 0;
 let W = 0, H = 0, DPR = 1, cell = 30, ox = 0, oy = 0;
 // drawing-only state (never read by the rules)
 let servedAt = [], tod = null, lastMoveAt = -9999, sighUntil = [], endAt = 0, thiefPrev = null, thiefFlip = false, thiefSnatchAt = -9999, brewAt = [], shutterAt = {}, shutterWas = {};
@@ -294,11 +297,12 @@ async function startNight(id) {
   sighUntil = NIGHTS[id].visitors.map(() => 0); servedAt = NIGHTS[id].visitors.map(() => 0); brewAt = []; shutterAt = {}; shutterWas = {}; thiefPrev = null; thiefSnatchAt = -9999;
   prevPts = curPts = pts(st);
   o.hidden = true; o.textContent = '';
-  resize(); updateHud(); running = true; waiting = true;   // Toddy waits for the first swipe
+  music.play(id); resize(); updateHud(); running = true; waiting = true;   // Toddy waits for the first swipe
 }
 function updateHud() {
   const n = NIGHTS[st.night], c = st.served.filter(Boolean).length;
   $('served').textContent = 'Served ' + c + ' / ' + n.visitors.length;
+  { const f = (st.limit - st.t) / st.limit; music.setLevel(st.won || st.over ? 0 : f < 0.25 ? 2 : f < 0.5 ? 1 : 0); }
   $('lanternFill').style.transform = 'scaleX(' + Math.max(0, (st.limit - st.t) / st.limit).toFixed(3) + ')';
 }
 function mk(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
@@ -313,6 +317,7 @@ function showIntro(id) {   // a short picture-story card before each night
   const pl = v.play(); if (pl && pl.catch) pl.catch(() => {});
 }
 function showMenu() {
+  menuMusic();
   const o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
   const card = mk('div', 'card'); card.append(mk('h1', '', 'TODDY Trail'), mk('p', '', '1 · Touch and drag to walk'), mk('p', '', '2 · Walk into the visitor who wants your next cup'), mk('p', '', '3 · Serve everyone before the lanterns go out'));
   const play = mk('button', 'btn', 'Play · Night 1'); play.addEventListener('click', () => { unlockSound(); showIntro(1); }); card.append(play);
@@ -323,6 +328,7 @@ function showMenu() {
 }
 function showResult() {
   const r = score(st), o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
+  music.stinger(st.won);
   const card = mk('div', 'card');
   card.append(mk('h1', '', st.won ? 'All served!' : 'Lanterns out'), mk('div', 'big', String(r.score)), mk('p', '', 'Served ' + r.served + ' of ' + r.of + ' · ' + r.seconds + ' s · spilled ' + (st.spills + st.snatched)));
   const nextId = NIGHT_IDS[NIGHT_IDS.indexOf(nightId) + 1];
@@ -331,7 +337,8 @@ function showResult() {
   const other = mk('button', 'btn alt', 'Pick a night'); other.addEventListener('click', showMenu);
   card.append(again, other); o.append(card);
 }
-function unlockSound() { if (soundOn && actx && actx.state === 'suspended') actx.resume(); }
+function unlockSound() { musicGo = true; music.resume(); if (soundOn && actx && actx.state === 'suspended') actx.resume(); }
+function menuMusic() { if (musicGo) music.play('menu'); }
 
 function onEvents(before) {
   const n = NIGHTS[st.night];
@@ -406,8 +413,7 @@ const up = () => { down = false; setHeld(null); };
 cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
 window.addEventListener('keydown', (e) => { const m = { ArrowUp: 0, ArrowRight: 1, ArrowDown: 2, ArrowLeft: 3, w: 0, d: 1, s: 2, a: 3 }[e.key]; if (m !== undefined && running) { e.preventDefault(); setHeld(m); } });
 window.addEventListener('keyup', (e) => { const m = { ArrowUp: 0, ArrowRight: 1, ArrowDown: 2, ArrowLeft: 3, w: 0, d: 1, s: 2, a: 3 }[e.key]; if (m !== undefined && m === heldDir) setHeld(null); });
-$('btnSound').addEventListener('click', () => { soundOn = !soundOn; $('btnSound').setAttribute('aria-pressed', String(soundOn)); $('btnSound').style.opacity = soundOn ? '1' : '.55'; unlockSound(); beep(660, 0.08); });
-$('btnSound').style.opacity = '.55';
+$('btnSound').addEventListener('click', () => { soundOn = !soundOn; music.setEnabled(soundOn); $('btnSound').setAttribute('aria-pressed', String(soundOn)); $('btnSound').style.opacity = soundOn ? '1' : '.55'; unlockSound(); beep(660, 0.08); });
 
 resize(); requestAnimationFrame(frame);
 { const o = $('overlay'); o.textContent = ''; o.append(mk('div', 'card', 'Loading TODDY Trail…')); }
