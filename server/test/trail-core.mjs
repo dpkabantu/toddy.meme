@@ -35,7 +35,7 @@ function bot(nightId, targets) {
     if (ti < targets.length) {
       const [tx, ty] = targets[ti].cell;
       let first = path(tx, ty, true); if (first === null) first = path(tx, ty, false);
-      if (first !== null && (first !== st.dir || st.bumped)) turn = first;
+      if (first !== null && (first !== st.dir || st.bumped || !st.holding)) turn = first;
     }
     if (turn !== null) turns.push([st.t, turn]);
     step(st, turn);
@@ -71,7 +71,7 @@ assert.ok(replay(1, [[10, 1], [5, 2]]).bad, 'steps going backwards are refused')
 // Rules spot checks
 {
   const st = newState(1);
-  for (let i = 0; i < 40 && !st.over; i++) step(st, null);   // walks straight up into the top wall: one stumble, then stands still, no more spills
+  step(st, 0); for (let i = 0; i < 40 && !st.over; i++) step(st, null);   // holding up: walks straight up into the top wall: one stumble, then stands still, no more spills
   assert.equal(st.spills, 1); assert.equal(st.cups.length, 2); assert.ok(st.bumped);
   const t0 = st.t; step(st, null); assert.equal(st.cups.length, 2); assert.equal(st.t, t0 + 1);
 }
@@ -83,19 +83,19 @@ assert.ok(replay(1, [[10, 1], [5, 2]]).bad, 'steps going backwards are refused')
   assert.ok(through.st.y < 7 && through.st.spills === 0, 'crossed the shutter after it opened');
 }
 { // walking into a visitor hands over the right cup; a wrong cup costs nothing but the visitor sighs
-  const st = newState(1); st.x = 7; st.y = 8; st.dir = 2; st.hist = [];   // milo's body is (7,9), he wants drink 0 and Toddy's first cup is 0
+  const st = newState(1); st.x = 7; st.y = 8; st.dir = 2; st.holding = true; st.hist = [];   // milo's body is (7,9), he wants drink 0 and Toddy's first cup is 0
   step(st, null); assert.ok(st.served[0] && st.cups.length === 2 && st.spills === 0, 'right cup handed over');
-  const w = newState(1); w.x = 1; w.y = 5; w.dir = 2; w.hist = []; w.cups = [0, 0, 0];       // pip's body is (1,6), he wants drink 1, Toddy's first cup is 0
+  const w = newState(1); w.x = 1; w.y = 5; w.dir = 2; w.holding = true; w.hist = []; w.cups = [0, 0, 0];       // pip's body is (1,6), he wants drink 1, Toddy's first cup is 0
   step(w, null); assert.ok(!w.served[1] && w.cups.length === 3 && w.spills === 0 && w.wrong === 1, 'wrong cup: nothing lost');
 }
 { // turning right around is allowed (the cups just follow); after handing a cup over, any swipe moves Toddy on
-  const st = newState(1); step(st, null); step(st, 2);
+  const st = newState(1); step(st, 0); step(st, 2);
   assert.equal(st.dir, 2); assert.equal(st.spills, 0, 'a U-turn costs nothing');
-  const h = newState(1); h.x = 7; h.y = 8; h.dir = 2; h.hist = []; step(h, null);   // hands milo his cup and stops
+  const h = newState(1); h.x = 7; h.y = 8; h.dir = 2; h.holding = true; h.hist = []; step(h, null);   // hands milo his cup and stops
   assert.ok(h.bumped); step(h, 3); assert.ok(!h.bumped && h.x === 6, 'a swipe left moves on');
 }
 { // a puddle slides one extra step
-  const st = newState(4); st.x = 4; st.y = 4; st.dir = 0; st.hist = []; st.cups = [];   // (4,3) is a puddle; (4,2) is free
+  const st = newState(4); st.x = 4; st.y = 4; st.dir = 0; st.holding = true; st.hist = []; st.cups = [];   // (4,3) is a puddle; (4,2) is free
   step(st, null); assert.equal(st.y, 2, 'slid from (4,4) over the puddle at (4,3) to (4,2)');
 }
 console.log('trail core: all checks passed');

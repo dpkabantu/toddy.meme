@@ -8,7 +8,7 @@ const IMGS = {};
 const loadImg = (name) => new Promise((res) => { const im = new Image(); im.onload = () => res(); im.onerror = () => res(); im.src = 'assets/' + name + '.webp'; IMGS[name] = im; });
 const VISITOR_FILE = { milo: ['visitor_milo_v02', 'visitor_milo_happy_v01'], pip: ['visitor_pip_v01', 'visitor_pip_happy_v01'], velvet: ['visitor_velvet_v01', 'visitor_velvet_happy_v01'], lumi: ['visitor_lumi_v01', 'visitor_lumi_happy_v01'], biscuit: ['visitor_biscuit_v01', 'visitor_biscuit_happy_v01'] };
 
-let st = null, nightId = 0, turns = [], pendingTurn = null, running = false, waiting = false, last = 0, acc = 0;
+let st = null, nightId = 0, turns = [], heldDir = null, lastSent = 4, running = false, waiting = false, last = 0, acc = 0;
 let prevPts = [], curPts = [], flashes = [], soundOn = false, actx = null, bannerTimer = 0, totalTime = 0;
 let W = 0, H = 0, DPR = 1, cell = 30, ox = 0, oy = 0;
 
@@ -126,10 +126,10 @@ function draw(frac) {
   if (waiting) {
     const a = 0.5 + 0.5 * Math.sin(totalTime / 260);
     ctx.beginPath(); ctx.arc(tx, ty, cell * (0.75 + 0.12 * a), 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.5 + 0.4 * a) + ')'; ctx.lineWidth = 3; ctx.stroke();
-    ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('Swipe to start', W / 2, oy + cell * n.h + 34);
+    ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('Touch and drag to walk', W / 2, oy + cell * n.h + 34);
     const dy = -8 * a; ctx.fillText('↑', tx, ty - cell * 0.95 + dy);
   }
-  if (!waiting && st.bumped && !st.over) { ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('Swipe to move on', W / 2, oy + cell * n.h + 34); }
+  if (!waiting && st.bumped && !st.over) { ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('Drag to move on', W / 2, oy + cell * n.h + 34); }
   // little floating notes
   flashes = flashes.filter((f) => totalTime - f.t0 < 700);
   for (const f of flashes) { const a = 1 - (totalTime - f.t0) / 700, [fx, fy] = cc(f.x, f.y); ctx.globalAlpha = a; ctx.fillStyle = f.color; ctx.font = '700 ' + Math.round(cell * 0.5) + 'px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText(f.text, fx, fy - cell * 0.6 - (1 - a) * cell * 0.8); if (f.drink !== undefined) drawDrink(f.drink, fx + cell * 0.5, fy - cell * 0.75 - (1 - a) * cell * 0.8, cell * 0.28); ctx.globalAlpha = 1; }
@@ -138,7 +138,7 @@ function draw(frac) {
 // ---- game flow ----
 function banner(text, ms) { const b = $('banner'); b.textContent = text; b.classList.add('show'); clearTimeout(bannerTimer); bannerTimer = setTimeout(() => b.classList.remove('show'), ms || 2500); }
 function startNight(id) {
-  nightId = id; st = newState(id); turns = []; pendingTurn = null; flashes = []; acc = 0; last = 0;
+  nightId = id; st = newState(id); turns = []; heldDir = null; lastSent = 4; flashes = []; acc = 0; last = 0;
   prevPts = curPts = pts(st);
   $('overlay').hidden = true; $('overlay').textContent = '';
   resize(); updateHud(); running = true; waiting = true;   // Toddy waits for the first swipe
@@ -179,9 +179,8 @@ function frame(now) {
     while (acc >= STEP_MS && !st.over) {
       acc -= STEP_MS;
       prevPts = curPts;
-      const turn = pendingTurn; pendingTurn = null;
-      if (turn !== null) turns.push([st.t, turn]);
-      step(st, turn);
+      const want = heldDir === null ? 4 : heldDir;   // finger down = steer that way, finger up = stand still
+      if (want !== lastSent) { lastSent = want; turns.push([st.t, want]); step(st, want); } else step(st, null);
       curPts = pts(st);
       for (const e of st.events) {
         if (e.type === 'serve') { SND.serve(); const v = NIGHTS[st.night].visitors[e.visitor]; flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: '♥', color: '#ff8fa3', drink: NIGHTS[st.night].visitors[e.visitor].want }); }
@@ -200,12 +199,19 @@ function frame(now) {
 // ---- input: swipe, arrow keys ----
 let sx = 0, sy = 0, down = false;
 const turnFromDelta = (dx, dy) => (Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0));
-const queueTurn = (d) => { pendingTurn = d; waiting = false; SND.turn(); };
-cv.addEventListener('pointerdown', (e) => { down = true; sx = e.clientX; sy = e.clientY; unlockSound(); });
-cv.addEventListener('pointermove', (e) => { if (!down || !running) return; const dx = e.clientX - sx, dy = e.clientY - sy; if (Math.hypot(dx, dy) >= 18) { queueTurn(turnFromDelta(dx, dy)); sx = e.clientX; sy = e.clientY; } });
-const up = () => { down = false; };
+const setHeld = (d) => { if (d !== heldDir) { heldDir = d; if (d !== null) { waiting = false; SND.turn(); } } };
+cv.addEventListener('pointerdown', (e) => { down = true; sx = e.clientX; sy = e.clientY; unlockSound(); try { cv.setPointerCapture(e.pointerId); } catch (_) {} });
+// Hold and steer: put a finger down and drag; Toddy walks the way you drag and stops when you lift. The anchor follows the finger so changing direction is quick.
+cv.addEventListener('pointermove', (e) => {
+  if (!down || !running) return;
+  const dx = e.clientX - sx, dy = e.clientY - sy, d = Math.hypot(dx, dy);
+  if (d >= 14) setHeld(turnFromDelta(dx, dy));
+  if (d > 46) { sx = e.clientX - (dx / d) * 46; sy = e.clientY - (dy / d) * 46; }
+});
+const up = () => { down = false; setHeld(null); };
 cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
-window.addEventListener('keydown', (e) => { const m = { ArrowUp: 0, ArrowRight: 1, ArrowDown: 2, ArrowLeft: 3, w: 0, d: 1, s: 2, a: 3 }[e.key]; if (m !== undefined && running) { e.preventDefault(); queueTurn(m); } });
+window.addEventListener('keydown', (e) => { const m = { ArrowUp: 0, ArrowRight: 1, ArrowDown: 2, ArrowLeft: 3, w: 0, d: 1, s: 2, a: 3 }[e.key]; if (m !== undefined && running) { e.preventDefault(); setHeld(m); } });
+window.addEventListener('keyup', (e) => { const m = { ArrowUp: 0, ArrowRight: 1, ArrowDown: 2, ArrowLeft: 3, w: 0, d: 1, s: 2, a: 3 }[e.key]; if (m !== undefined && m === heldDir) setHeld(null); });
 $('btnSound').addEventListener('click', () => { soundOn = !soundOn; $('btnSound').setAttribute('aria-pressed', String(soundOn)); $('btnSound').style.opacity = soundOn ? '1' : '.55'; unlockSound(); beep(660, 0.08); });
 $('btnSound').style.opacity = '.55';
 

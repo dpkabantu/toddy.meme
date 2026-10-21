@@ -39,21 +39,21 @@ assert.equal(await page.locator('#overlay .btn').count(), 9);   // Play night 1,
 assert.equal(await page.getByRole('button', { name: /^Night 3 / }).isVisible(), false);
 
 // Night 1: timed route (step k happens at (k+1)/3 s, so a turn for step n is pressed at n+0.5). Start (4,9): right 2, up 3, left 4, up 3, right 4
-const STEP = 1000 / 3;   // Toddy takes 3 steps a second
+const STEP = 1000 / 4;   // Toddy takes 4 steps a second
 let ok = false;
 for (let attempt = 1; attempt <= 3 && !ok; attempt++) {
   await page.locator('#overlay .btn').first().click();
   await page.waitForTimeout(600);   // Toddy waits for the first swipe: nothing moves yet
   await page.screenshot({ path: path.join(shots, 'trail-night1-start.png') });
-  await page.keyboard.press('ArrowRight');   // first swipe starts the night
+  await page.keyboard.down('ArrowRight');   // first push starts the night (Toddy walks while a key is held)
   const t0 = Date.now();
   const at = (n) => page.waitForTimeout(Math.max(0, t0 + n * STEP - Date.now()));
-  await at(2.5); await page.keyboard.press('ArrowUp');
-  await at(5.5); await page.keyboard.press('ArrowLeft');
+  await at(2.5); await page.keyboard.down('ArrowUp');
+  await at(5.5); await page.keyboard.down('ArrowLeft');
   await at(7); await page.screenshot({ path: path.join(shots, 'trail-night1-mid.png') });
-  await at(9.5); await page.keyboard.press('ArrowUp');
-  await at(12.5); await page.keyboard.press('ArrowRight');
-  await page.waitForTimeout(1500);
+  await at(9.5); await page.keyboard.down('ArrowUp');
+  await at(12.5); await page.keyboard.down('ArrowRight');
+  await page.waitForTimeout(1500); await page.keyboard.up('ArrowRight'); await page.keyboard.up('ArrowUp'); await page.keyboard.up('ArrowLeft');
   const text = await page.locator('#overlay').innerText().catch(() => '');
   ok = /All served/.test(text);
   console.log('night 1 attempt ' + attempt + ': ' + (ok ? 'all served' : 'not all served (' + (await page.locator('#served').innerText()) + ')'));
@@ -78,8 +78,8 @@ for (const id of [1, 2, 4, 5, 6, 7]) {
   await page.getByRole('button', { name: new RegExp('^Night ' + id + ' ') }).click();
   await page.waitForTimeout(500);
   assert.match(await page.locator('#served').innerText(), new RegExp('Served 0 / ' + WANT[id]));
-  await page.keyboard.press('ArrowUp');
-  await page.waitForTimeout(1200);
+  await page.keyboard.down('ArrowUp');
+  await page.waitForTimeout(1200); await page.keyboard.up('ArrowUp');
   await page.screenshot({ path: path.join(shots, 'trail-night' + id + '.png') });
 }
 

@@ -2,7 +2,7 @@
 // The phone and (later) the Worker run this same file, so a log of turns replays to the same score.
 // ROUGH PROTOTYPE: all 7 nights as grey-box levels. Numbers are starting estimates.
 
-export const STEPS_PER_SEC = 3;     // Toddy walks 3 cells a second (the page uses this for timing); was 6, felt far too fast
+export const STEPS_PER_SEC = 4;     // Toddy walks 3 cells a second (the page uses this for timing); was 6, felt far too fast
 export const MAX_LINE = 6;          // most cups Toddy can carry
 export const BREW_COOLDOWN = 40;    // steps before a brew spot hands out another cup
 export const THIEF_COOLDOWN = 15;   // steps before the night thief can snatch again
@@ -120,7 +120,7 @@ export function newState(nightId) {
   if (!n) throw new Error('unknown night');
   return {
     night: nightId, t: 0, limit: n.seconds * STEPS_PER_SEC,
-    x: n.start.x, y: n.start.y, dir: n.start.dir, bumped: false, soft: false,
+    x: n.start.x, y: n.start.y, dir: n.start.dir, holding: false, bumped: false, soft: false,
     cups: n.cups.slice(), hist: [], served: n.visitors.map(() => false), brewCool: n.brew.map(() => 0),
     cartI: 0, thiefI: 0, thiefCool: 0, wrong: 0, spills: 0, bumps: 0, snatched: 0, over: false, won: false, events: [],
   };
@@ -162,8 +162,11 @@ export function step(st, turn) {
   if (st.over) return;
   const n = NIGHTS[st.night];
   st.events = [];
-  if (turn !== null && turn !== undefined && turn >= 0 && turn <= 3) {
-    if (turn !== st.dir || (st.bumped && st.soft)) { st.bumped = false; st.soft = false; st.dir = turn; }   // any new swipe ends a stop; turning right around is always allowed
+  // Hold and steer: turn 0-3 = finger down and steering that way (Toddy walks); turn 4 = finger lifted (Toddy stands still).
+  if (turn === 4) { st.holding = false; st.bumped = false; st.soft = false; }
+  else if (turn !== null && turn !== undefined && turn >= 0 && turn <= 3) {
+    if (turn !== st.dir || !st.holding || (st.bumped && st.soft)) { st.bumped = false; st.soft = false; }   // a new push ends a stop; turning right around is always allowed
+    st.dir = turn; st.holding = true;
   }
   // the cart rolls on (it waits if Toddy or his line is in the way)
   if (n.cart && st.t % n.cart.every === n.cart.every - 1) {
@@ -176,7 +179,7 @@ export function step(st, turn) {
   if (n.thief && st.t % n.thief.every === n.thief.every - 1) st.thiefI = (st.thiefI + 1) % seqOf(st.night, 'thief').length;
   if (st.thiefCool > 0) st.thiefCool--;
   for (let i = 0; i < st.brewCool.length; i++) if (st.brewCool[i] > 0) st.brewCool[i]--;
-  if (!st.bumped) {
+  if (st.holding && !st.bumped) {
     const nx = st.x + DX[st.dir], ny = st.y + DY[st.dir];
     if (shutterClosed(n, st.t, nx, ny)) { /* Toddy waits at the shutter; nothing is lost */ }
     else if (n.visitors.some((v) => v.bx === nx && v.by === ny)) {   // walking into a visitor hands them a cup, like stepping on their square
