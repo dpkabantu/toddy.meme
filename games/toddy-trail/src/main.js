@@ -8,11 +8,16 @@ const IMGS = {};
 const loadImg = (name) => new Promise((res) => { const im = new Image(); im.onload = () => res(); im.onerror = () => res(); im.src = 'assets/' + name + '.webp'; IMGS[name] = im; });
 const VISITOR_FILE = { milo: ['visitor_milo_v02', 'visitor_milo_happy_v01'], pip: ['visitor_pip_v01', 'visitor_pip_happy_v01'], velvet: ['visitor_velvet_v01', 'visitor_velvet_happy_v01'], lumi: ['visitor_lumi_v01', 'visitor_lumi_happy_v01'], biscuit: ['visitor_biscuit_v01', 'visitor_biscuit_happy_v01'] };
 
-let st = null, nightId = 0, turns = [], pendingTurn = null, running = false, last = 0, acc = 0;
+let st = null, nightId = 0, turns = [], pendingTurn = null, running = false, waiting = false, last = 0, acc = 0;
 let prevPts = [], curPts = [], flashes = [], soundOn = false, actx = null, bannerTimer = 0, totalTime = 0;
 let W = 0, H = 0, DPR = 1, cell = 30, ox = 0, oy = 0;
 
-const pts = (s) => [{ x: s.x, y: s.y }, ...s.hist.slice(0, s.cups.length)];
+// Toddy and his cups. At the start the cups wait in a line behind him (the game only records real steps later).
+const pts = (s) => {
+  const n = NIGHTS[s.night], list = [{ x: s.x, y: s.y }, ...s.hist.slice(0, s.cups.length)];
+  while (list.length < s.cups.length + 1) { const l = list[list.length - 1]; list.push({ x: l.x - DX[n.start.dir], y: l.y - DY[n.start.dir] }); }
+  return list;
+};
 
 // ---- sound (tiny, made in code) ----
 function beep(freq, dur, type, vol) {
@@ -84,6 +89,17 @@ function draw(frac) {
   ctx.beginPath(); ctx.ellipse(tx, ty + cell * 0.38, cell * 0.32, cell * 0.1, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fill();
   const worried = st.bumped && !st.over;
   drawImgBottom(IMGS[worried ? 'pctoddy_wave_v01' : 'pctoddy_serve_v01'], tx, ty + cell * 0.55, cell * 1.35);
+  // "Next cup" chip: the cup right behind Toddy is the one that gets served; the visitor wanting it glows
+  { const fc = st.cups.length ? st.cups[0] : -1, cw = 132, ch = 44, cx0 = ox, cy0 = Math.max(70, oy - ch - 10);
+    ctx.fillStyle = 'rgba(20,16,46,.9)'; ctx.fillRect(cx0, cy0, cw, ch); ctx.strokeStyle = '#C99A3B'; ctx.lineWidth = 2; ctx.strokeRect(cx0, cy0, cw, ch);
+    ctx.fillStyle = '#FDE3BD'; ctx.font = '600 15px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'left'; ctx.fillText(fc >= 0 ? 'Next cup' : 'No cups!', cx0 + 10, cy0 + 28);
+    if (fc >= 0) drawDrink(fc, cx0 + cw - 26, cy0 + ch / 2, 16); }
+  if (waiting) {
+    const a = 0.5 + 0.5 * Math.sin(totalTime / 260);
+    ctx.beginPath(); ctx.arc(tx, ty, cell * (0.75 + 0.12 * a), 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.5 + 0.4 * a) + ')'; ctx.lineWidth = 3; ctx.stroke();
+    ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('Swipe to start', W / 2, oy + cell * n.h + 34);
+    const dy = -8 * a; ctx.fillText('↑', tx, ty - cell * 0.95 + dy);
+  }
   // little floating notes
   flashes = flashes.filter((f) => totalTime - f.t0 < 700);
   for (const f of flashes) { const a = 1 - (totalTime - f.t0) / 700, [fx, fy] = cc(f.x, f.y); ctx.globalAlpha = a; ctx.fillStyle = f.color; ctx.font = '700 ' + Math.round(cell * 0.5) + 'px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText(f.text, fx, fy - cell * 0.6 - (1 - a) * cell * 0.8); ctx.globalAlpha = 1; }
@@ -95,8 +111,7 @@ function startNight(id) {
   nightId = id; st = newState(id); turns = []; pendingTurn = null; flashes = []; acc = 0; last = 0;
   prevPts = curPts = pts(st);
   $('overlay').hidden = true; $('overlay').textContent = '';
-  resize(); updateHud(); running = true;
-  banner(id === 1 ? 'Swipe to walk. Match the first cup.' : 'Brew spots give new cups. Mind the cart.', 3500);
+  resize(); updateHud(); running = true; waiting = true;   // Toddy waits for the first swipe
 }
 function updateHud() {
   const n = NIGHTS[st.night], c = st.served.filter(Boolean).length;
@@ -125,7 +140,7 @@ function frame(now) {
   requestAnimationFrame(frame);
   if (!last) last = now; const dt = Math.min(now - last, 200); last = now; totalTime += dt;
   if (st && running) {
-    acc += dt;
+    if (!waiting) acc += dt;
     while (acc >= STEP_MS && !st.over) {
       acc -= STEP_MS;
       prevPts = curPts;
@@ -149,7 +164,7 @@ function frame(now) {
 // ---- input: swipe, arrow keys ----
 let sx = 0, sy = 0, down = false;
 const turnFromDelta = (dx, dy) => (Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0));
-const queueTurn = (d) => { pendingTurn = d; SND.turn(); };
+const queueTurn = (d) => { pendingTurn = d; waiting = false; SND.turn(); };
 cv.addEventListener('pointerdown', (e) => { down = true; sx = e.clientX; sy = e.clientY; unlockSound(); });
 cv.addEventListener('pointermove', (e) => { if (!down || !running) return; const dx = e.clientX - sx, dy = e.clientY - sy; if (Math.hypot(dx, dy) >= 18) { queueTurn(turnFromDelta(dx, dy)); sx = e.clientX; sy = e.clientY; } });
 const up = () => { down = false; };

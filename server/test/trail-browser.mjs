@@ -37,19 +37,21 @@ await page.waitForSelector('#overlay .btn');
 await page.screenshot({ path: path.join(shots, 'trail-menu.png') });
 assert.equal(await page.locator('#overlay .btn').count(), 2);
 
-// Night 1: timed route (step k happens at (k+1)/6 s, so a turn for step n is pressed at n+0.5): up 2, right 2, up 3, left 4, up 3, right 4
+// Night 1: timed route (step k happens at (k+1)/6 s, so a turn for step n is pressed at n+0.5). Start (4,9): right 2, up 3, left 4, up 3, right 4
 const STEP = 1000 / 6;
 let ok = false;
 for (let attempt = 1; attempt <= 3 && !ok; attempt++) {
   await page.locator('#overlay .btn').first().click();
+  await page.waitForTimeout(600);   // Toddy waits for the first swipe: nothing moves yet
+  await page.screenshot({ path: path.join(shots, 'trail-night1-start.png') });
+  await page.keyboard.press('ArrowRight');   // first swipe starts the night
   const t0 = Date.now();
   const at = (n) => page.waitForTimeout(Math.max(0, t0 + n * STEP - Date.now()));
-  await at(2.5); await page.keyboard.press('ArrowRight');
-  await at(4.5); await page.keyboard.press('ArrowUp');
-  await at(7.5); await page.keyboard.press('ArrowLeft');
-  await at(9); await page.screenshot({ path: path.join(shots, 'trail-night1-mid.png') });
-  await at(11.5); await page.keyboard.press('ArrowUp');
-  await at(14.5); await page.keyboard.press('ArrowRight');
+  await at(2.5); await page.keyboard.press('ArrowUp');
+  await at(5.5); await page.keyboard.press('ArrowLeft');
+  await at(7); await page.screenshot({ path: path.join(shots, 'trail-night1-mid.png') });
+  await at(9.5); await page.keyboard.press('ArrowUp');
+  await at(12.5); await page.keyboard.press('ArrowRight');
   await page.waitForTimeout(1500);
   const text = await page.locator('#overlay').innerText().catch(() => '');
   ok = /All served/.test(text);

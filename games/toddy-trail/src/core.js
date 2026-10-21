@@ -14,7 +14,7 @@ export const DRINKS = ['moon', 'star', 'crescent'];
 export const NIGHTS = {
   1: {
     id: 1, name: 'Café floor', w: 9, h: 13, seconds: 45,
-    start: { x: 4, y: 11, dir: 0 }, cups: [0, 1, 2], tables: [], brew: [], cart: null,
+    start: { x: 4, y: 9, dir: 0 }, cups: [0, 1, 2], tables: [], brew: [], cart: null,
     visitors: [
       { who: 'milo', sx: 6, sy: 9, bx: 7, by: 9, want: 0 },
       { who: 'pip', sx: 2, sy: 6, bx: 1, by: 6, want: 1 },
@@ -23,7 +23,7 @@ export const NIGHTS = {
   },
   3: {
     id: 3, name: 'Market lane', w: 9, h: 13, seconds: 60,
-    start: { x: 4, y: 11, dir: 0 }, cups: [0, 1, 2],
+    start: { x: 4, y: 9, dir: 0 }, cups: [0, 1, 2],
     tables: [[3, 4], [4, 4], [5, 4], [2, 9], [3, 9], [5, 2], [6, 2]],
     brew: [{ x: 1, y: 11, drink: 1 }, { x: 7, y: 5, drink: 0 }],
     cart: { path: [[2, 7], [3, 7], [4, 7], [5, 7], [6, 7]], every: 2 },   // rolls to and fro, one cell every 2 steps
