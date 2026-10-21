@@ -489,7 +489,7 @@ function store(key, val) {
   return null;
 }
 const twInfo = () => (twist && typeof twist === 'object' ? twist : C.TWISTS[twist] || C.TWISTS[0]);
-const bestKey = () => (kind === 'season' ? 'mm.best.season.' + lvl.night : kind === 'daily' ? 'mm.best.daily.' + S.seed : kind === 'weekly' ? 'mm.best.weekly.' + S.seed : 'mm.best.free' + (twist ? '.w' + twist : ''));
+const bestKey = () => (kind === 'season' ? 'mm.best.season.' + lvl.night : kind === 'daily' ? 'mm.best.daily.' + S.seed : kind === 'weekly' ? 'mm.best.weekly.' + S.seed : 'mm.best.free' + (twist ? '.w' + (typeof twist === 'object' ? 'p' + twist.topLevel : twist) : ''));
 
 // ---------- layout ----------
 function placeTicket() { /* the bonus row now lives inside the HUD, nothing to place */ }
@@ -788,9 +788,20 @@ function finishRun() {
 }
 
 // ---------- screens ----------
+// While the Season launch week runs, the pieces of nights that have not opened yet stay secret (shown as dark "?" shapes).
+function unlockedTop() {
+  if (!seasonM || !seasonM.nights) return 11;
+  let hi = 0; seasonM.nights.forEach((x, i) => { if (x.open) hi = i + 1; });
+  return Math.min(11, 4 + hi);
+}
+function practiceTwist() {
+  const top = unlockedTop(); if (top >= 11) return undefined;
+  return Object.assign({}, C.seasonNight(Math.max(1, top - 4)).tw, { dropCap: 0, bands: C.TWISTS[0].bands, name: 'Practice', blurb: 'Only the pieces you have unlocked so far.' });
+}
 function strip() {
-  let h = '<div class="strip" aria-label="The 11 pieces, smallest to largest">';
-  for (let i = 0; i < 11; i++) h += '<img alt="" class="ps' + i + '" src="' + ASSET[PIECE_KEYS[i]] + '">';
+  const top = unlockedTop();
+  let h = '<div class="strip" aria-label="The pieces, smallest to largest">';
+  for (let i = 0; i < 11; i++) h += i < top ? '<img alt="" class="ps' + i + '" src="' + ASSET[PIECE_KEYS[i]] + '">' : '<span class="lock ps' + i + '" aria-label="Secret piece">?</span>';
   return h + '</div>';
 }
 function weeklyButton() {
@@ -833,12 +844,12 @@ function showMenu() {
   overlay.hidden = false;
   overlay.innerHTML =
     '<div class="card"><div class="label">TODDY</div><h1>Full Moon</h1><p class="sub">Two the same make the next one. Reach Toddy’s Full Moon.</p>' + strip() +
-    '<button class="btn" data-act="daily">Tonight’s challenge<span class="tag">Season</span><small>' + dateLabel() + ' · ' + C.TWISTS[todayTwist()].name + ' · same for everyone' + (seasonM && !seasonDaily ? ' · practice this week: Season points start in week ' + seasonDailyWeek : ' · counts for Season points') + (streakNow() > 0 ? ' · ' + streakNow() + '-night streak' : '') + '</small></button>' +
+    (seasonM && !seasonDaily ? '<button class="btn alt" disabled>Tonight’s challenge<small>Opens in week ' + seasonDailyWeek + ' · this week play Season Nights</small></button>' : '<button class="btn" data-act="daily">Tonight’s challenge<span class="tag">Season</span><small>' + dateLabel() + ' · ' + C.TWISTS[todayTwist()].name + ' · same for everyone' + ' · counts for Season points' + (streakNow() > 0 ? ' · ' + streakNow() + '-night streak' : '') + '</small></button>') +
     seasonButton() +
     weeklyButton() +
     '<button class="btn alt" data-act="free">Practice<small>Free play · does not count for Season</small></button>' +
     settingsRow() +
-    '<div class="links"><button class="chip" data-act="how">How to play</button><button class="chip" data-act="weeks">Weekly twists</button><button class="chip" data-act="pieces">Pieces</button><button class="chip" data-act="about">About</button><button class="chip" data-act="sharegame">Share game</button></div>' +
+    '<div class="links"><button class="chip" data-act="how">How to play</button>' + (unlockedTop() < 11 ? '' : '<button class="chip" data-act="weeks">Weekly twists</button>') + '<button class="chip" data-act="pieces">Pieces</button><button class="chip" data-act="about">About</button><button class="chip" data-act="sharegame">Share game</button></div>' +
     '<div class="links"><a class="chip" href="/games/">All games</a><a class="chip" href="/season/">My Season</a></div>' +
     '<p class="help">A calm puzzle. Every piece is made up and the game never asks for real details. As a guest, everything stays on this device. If you sign in with a Passport, tonight\u2019s night result is sent to be checked for Season points.</p></div>';
 }
@@ -854,7 +865,7 @@ function showInfo(kindName) {
   const back = '<button class="btn" data-act="menu">Back</button>';
   let body;
   if (kindName === 'how') body = '<h2>How to play</h2><ol class="steps"><li><b>Aim.</b> Touch and drag. Toddy follows your finger.</li><li><b>Drop.</b> Lift your finger to let go.</li><li><b>Goal.</b> The row of pieces under your score shows what you have made. The dashed one is the next to make.</li><li><b>Merge.</b> Two the same touching become the next piece. Quick chains score extra.</li><li><b>Visitors.</b> Now and then a visitor asks for one piece. Make it (merge two of the piece before it) within the drops shown and you get bonus points. You can ignore it.</li><li><b>Weekly twist.</b> Every week of the season changes one small rule, like busier visitors or a lower line. The menu names tonight’s twist.</li><li><b>Moonrise.</b> Two Full Moons touching vanish for 66 points and clear lots of room.</li><li><b>Stay under the line.</b> If a piece rests above the dashed line for 2 seconds, the night ends.</li></ol><p class="help">Tip: keep big pieces in a corner and build down from there.</p>';
-  else if (kindName === 'pieces') body = '<h2>The 11 pieces</h2>' + strip() + '<p class="sub">Sugar, ice, three beans, milk swirl, moon cup, gold mug, teal moon, violet moon, then Toddy’s Full Moon. Toddy hands out the first five, and after your first violet moon, sometimes a milk swirl.</p><p class="help">Medals: Played, Bronze, Silver, Gold. Scores are never added across games.</p>';
+  else if (kindName === 'pieces') body = '<h2>The ' + (unlockedTop() < 11 ? '' : '11 ') + 'pieces</h2>' + strip() + (unlockedTop() < 11 ? '<p class="sub">Toddy hands out the first five. A new piece joins every Season night, and the rest stay a secret until their night opens.</p>' : '<p class="sub">Sugar, ice, three beans, milk swirl, moon cup, gold mug, teal moon, violet moon, then Toddy’s Full Moon. Toddy hands out the first five, and after your first violet moon, sometimes a milk swirl.</p>') + '<p class="help">Medals: Played, Bronze, Silver, Gold. Scores are never added across games.</p>';
   else body = '<h2>About</h2><p class="sub">Full Moon is a one-finger puzzle from the TODDY games. Tonight’s night gives everyone the same drops, so scores are fair. Free play is random practice.</p><p class="help">Preview build. Play is as a guest, no wallet or sign-in. Education and fun only.</p>';
   overlay.innerHTML = '<div class="card">' + body + back + '</div>';
 }
@@ -1057,7 +1068,7 @@ overlay.addEventListener('click', (e) => {
   else if (a === 'pause') { mode = 'play'; showPause(); }
   else if (a === 'daily') startRun('daily');
   else if (a === 'weekly' && weeklyMission) startRun('weekly', weeklyMission.seed, weeklyMission.twist);
-  else if (a === 'free') startRun('free');
+  else if (a === 'free') startRun('free', undefined, practiceTwist());
   else if (a === 'season') showSeasonMap();
   else if (a === 'snight') showSeasonIntro(parseInt(b.dataset.n, 10));
   else if (a === 'splay') startSeason(parseInt(b.dataset.n, 10));
@@ -1134,7 +1145,7 @@ async function boot() {
   } catch (e) { /* no Season server: the button simply does not show */ }
   twist = todayTwist(); S = C.newGame(C.dateSeed(nightNow()), twist);     // an idle crate behind the menu
   mode = 'menu'; setScore(); setNext(); showMenu();
-  if (/[?&]play=daily(&|$)/.test(location.search)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } startRun('daily'); }   // link from the Season page
+  if (/[?&]play=daily(&|$)/.test(location.search) && !(seasonM && !seasonDaily)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } startRun('daily'); }   // link from the Season page
   else if (seasonM && /[?&]play=season(&|$)/.test(location.search)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } showSeasonMap(); }
   else if (weeklyMission && /[?&]play=weekly(&|$)/.test(location.search)) { try { history.replaceState(null, '', location.pathname); } catch (e) { /* none */ } startRun('weekly', weeklyMission.seed, weeklyMission.twist); }
   requestAnimationFrame(frame);

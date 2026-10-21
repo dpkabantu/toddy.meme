@@ -118,3 +118,4 @@ a.btn { text-decoration: none; }
 .nrow.locked b { background: rgba(255,255,255,.2); color: var(--cream); }
 .nrow:focus-visible { outline: 3px solid #fff4d6; outline-offset: 2px; }
 #prog img.off { display: none; }
+.strip .lock { aspect-ratio: 1; border-radius: 50%; background: rgba(255,255,255,.08); border: 1px dashed rgba(253,227,189,.35); color: #8d80b3; font: 700 10px/1 var(--display); display: inline-flex; align-items: center; justify-content: center; flex: 0 0 auto; }
