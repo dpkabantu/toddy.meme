@@ -65,7 +65,7 @@
       "n": 3,
       "title": "Bad Apps, Links & Wallet Traps",
       "blurb": "Fake apps, QR codes, codes and wallet pop-ups: tricks that take over your phone.",
-      "card": "chapter_7",
+      "card": "chapter_3_v01",
       "built": true,
       "learn": "app files in chats, fake fines and KYC, QR stickers, remote-access support, wallet signatures and when an update is honest.",
       "cases": [
@@ -95,7 +95,7 @@
       "n": 4,
       "title": "Fear & Panic",
       "blurb": "Fake police, customs, tax and bank calls: scams that make you panic.",
-      "card": "chapter_6",
+      "card": "chapter_4_v01",
       "built": true,
       "learn": "digital arrest and parcel calls, fake tax and legal threats, blackmail texts, panic messages, and when a notice is honest.",
       "cases": [
@@ -185,7 +185,7 @@
       "n": 7,
       "title": "Money Traps",
       "blurb": "Fake investments, tips, brokers and tokens: promises of fast, safe profit.",
-      "card": "chapter_4",
+      "card": "chapter_7_v01",
       "built": true,
       "learn": "stock-tip groups, fake brokers and platforms, guaranteed-profit promises, pump and rug-pull tokens, and what a plain honest investment looks like.",
       "cases": [
