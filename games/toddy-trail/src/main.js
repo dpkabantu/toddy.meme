@@ -121,7 +121,7 @@ function draw(frac) {
   // "Next cup" chip: the cup right behind Toddy is the one that gets served; the visitor wanting it glows
   { const fc = st.cups.length ? st.cups[0] : -1, cw = 132, ch = 44, cx0 = ox, cy0 = Math.max(70, oy - ch - 10);
     ctx.fillStyle = 'rgba(20,16,46,.9)'; ctx.fillRect(cx0, cy0, cw, ch); ctx.strokeStyle = '#C99A3B'; ctx.lineWidth = 2; ctx.strokeRect(cx0, cy0, cw, ch);
-    ctx.fillStyle = '#FDE3BD'; ctx.font = '600 15px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'left'; ctx.fillText(fc >= 0 ? 'Next cup' : 'No cups!', cx0 + 10, cy0 + 28);
+    ctx.fillStyle = '#FDE3BD'; ctx.font = '600 15px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'left'; ctx.fillText(fc >= 0 ? 'Give this' : 'No cups left', cx0 + 10, cy0 + 28);
     if (fc >= 0) drawDrink(fc, cx0 + cw - 26, cy0 + ch / 2, 16); }
   if (waiting) {
     const a = 0.5 + 0.5 * Math.sin(totalTime / 260);
@@ -185,8 +185,8 @@ function frame(now) {
       curPts = pts(st);
       for (const e of st.events) {
         if (e.type === 'serve') { SND.serve(); const v = NIGHTS[st.night].visitors[e.visitor]; flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: '♥', color: '#ff8fa3' }); }
-        else if (e.type === 'sigh') { SND.sigh(); const v = NIGHTS[st.night].visitors[e.visitor]; flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: 'wrong cup', color: '#ff8f7a' }); }
-        else if (e.type === 'spill' || e.type === 'bump') { SND.spill(); flashes.push({ x: st.x, y: st.y, t0: totalTime, text: 'oops', color: '#ff8f7a' }); }
+        else if (e.type === 'sigh') { SND.sigh(); const v = NIGHTS[st.night].visitors[e.visitor]; flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: 'other drink', color: '#ff8f7a' }); }
+        else if (e.type === 'spill' || e.type === 'bump') { SND.spill(); flashes.push({ x: st.x, y: st.y, t0: totalTime, text: 'bumped! cup lost', color: '#ff8f7a' }); }
         else if (e.type === 'snatch') { SND.spill(); flashes.push({ x: st.x, y: st.y, t0: totalTime, text: 'snatched!', color: '#ff8f7a' }); }
         else if (e.type === 'brew') { SND.brew(); flashes.push({ x: st.x, y: st.y, t0: totalTime, text: '+1', color: '#fff4d6' }); }
       }
