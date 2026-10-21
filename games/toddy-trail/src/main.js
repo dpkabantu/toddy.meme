@@ -425,6 +425,11 @@ function onEvents(before) {
   }
 }
 
+function stick() {   // the thumb pad: a ring where the finger went down and a knob under the finger
+  const r0 = cv.getBoundingClientRect(), ax = sx - r0.left, ay = sy - r0.top; let kx = fingerX - r0.left - ax, ky = fingerY - r0.top - ay; const d = Math.hypot(kx, ky) || 1, m = Math.min(d, 46); kx = ax + (kx / d) * m; ky = ay + (ky / d) * m;
+  ctx.save(); ctx.globalAlpha = 0.5; ctx.lineWidth = 3; ctx.strokeStyle = '#fff4d6'; ctx.beginPath(); ctx.arc(ax, ay, 46, 0, Math.PI * 2); ctx.stroke();
+  ctx.globalAlpha = 0.45; ctx.fillStyle = '#fdaf1e'; ctx.beginPath(); ctx.arc(kx, ky, 20, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+}
 function frame(now) {
   requestAnimationFrame(frame);
   if (!last) last = now; const dt = Math.min(now - last, 200); last = now; totalTime += dt;
@@ -434,7 +439,7 @@ function frame(now) {
       acc -= STEP_MS;
       prevPts = curPts;
       const was = { x: st.x, y: st.y }, lastCup = st.cups.length ? st.cups[st.cups.length - 1] : undefined;
-      const want = heldDir === null ? 4 : heldDir;   // finger down = steer that way, finger up = stand still
+      const want = heldDir !== null ? heldDir : pendingTurn !== null ? pendingTurn : 4; pendingTurn = null;   // finger down = steer that way, finger up = stand still
       if (want !== lastSent) { lastSent = want; turns.push([st.t, want]); step(st, want); } else step(st, null);
       if (st.x !== was.x || st.y !== was.y) lastMoveAt = totalTime;
       curPts = pts(st);
@@ -449,22 +454,43 @@ function frame(now) {
     if (st.over && endAt && totalTime - endAt > 2100) { draw(1); showResult(); return; }
   }
   draw(Math.min(acc / STEP_MS, 1));
+  if (down && running) stick();
 }
 
 // ---- input: touch-and-drag steering, arrow keys ----
 let sx = 0, sy = 0, down = false;
-const turnFromDelta = (dx, dy) => (Math.abs(dx) > Math.abs(dy) ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0));
-const setHeld = (d) => { if (d !== heldDir) { heldDir = d; if (d !== null) { waiting = false; SND.turn(); } } };
-cv.addEventListener('pointerdown', (e) => { down = true; sx = e.clientX; sy = e.clientY; unlockSound(); try { cv.setPointerCapture(e.pointerId); } catch (_) {} });
+let pendingTurn = null, padId = null, fingerX = 0, fingerY = 0;   // pendingTurn: a quick tap between two steps is still remembered until the next step
+const turnFromDelta = (dx, dy, prev) => {   // dominant axis wins, but the current axis is kept until the other one is clearly stronger (no flicker near the diagonal)
+  const ax = Math.abs(dx), ay = Math.abs(dy), horiz = prev === 1 || prev === 3;
+  const useX = prev === null || prev === undefined ? ax > ay : horiz ? !(ay > ax * 1.35) : ax > ay * 1.35;
+  return useX ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0);
+};
+const setHeld = (d) => { if (d !== heldDir) { heldDir = d; if (d !== null) { pendingTurn = d; waiting = false; SND.turn(); } } };
+cv.addEventListener('pointerdown', (e) => { if (down) return; padId = e.pointerId; down = true; sx = fingerX = e.clientX; sy = fingerY = e.clientY; unlockSound(); try { cv.setPointerCapture(e.pointerId); } catch (_) {} });
 // Hold and steer: put a finger down and drag; Toddy walks the way you drag and stops when you lift. The anchor follows the finger so changing direction is quick.
 cv.addEventListener('pointermove', (e) => {
-  if (!down || !running) return;
+  if (!down || !running || e.pointerId !== padId) return;
+  fingerX = e.clientX; fingerY = e.clientY;
   const dx = e.clientX - sx, dy = e.clientY - sy, d = Math.hypot(dx, dy);
-  if (d >= 14) setHeld(turnFromDelta(dx, dy));
+  if (d >= 14) setHeld(turnFromDelta(dx, dy, heldDir));
   if (d > 46) { sx = e.clientX - (dx / d) * 46; sy = e.clientY - (dy / d) * 46; }
 });
-const up = () => { down = false; setHeld(null); };
-cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up);
+const up = (e) => { if (e && e.pointerId !== padId) return; down = false; padId = null; setHeld(null); };
+cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up); cv.addEventListener('contextmenu', (e) => e.preventDefault());
+// full screen on and off (Android Chrome and desktop; iPhone Safari does not allow it, so the button hides itself there)
+const fsEl = document.documentElement, fsOn = () => document.fullscreenElement || document.webkitFullscreenElement;
+const fsCan = !!(fsEl.requestFullscreen || fsEl.webkitRequestFullscreen);
+function fsRefresh() { const b = $('btnFull'); b.textContent = fsOn() ? '✕' : '⛶'; b.setAttribute('aria-label', fsOn() ? 'Exit full screen' : 'Full screen'); b.setAttribute('aria-pressed', String(!!fsOn())); setTimeout(resize, 120); }
+$('btnFull').hidden = !fsCan;
+$('btnFull').addEventListener('click', async () => {
+  unlockSound();
+  try {
+    if (fsOn()) { await (document.exitFullscreen || document.webkitExitFullscreen).call(document); try { screen.orientation.unlock(); } catch (_) { /* optional */ } }
+    else { await (fsEl.requestFullscreen || fsEl.webkitRequestFullscreen).call(fsEl); try { await screen.orientation.lock('portrait'); } catch (_) { /* optional */ } }
+  } catch (_) { /* the browser said no */ }
+  fsRefresh();
+});
+document.addEventListener('fullscreenchange', fsRefresh); document.addEventListener('webkitfullscreenchange', fsRefresh);
 window.addEventListener('keydown', (e) => { const m = { ArrowUp: 0, ArrowRight: 1, ArrowDown: 2, ArrowLeft: 3, w: 0, d: 1, s: 2, a: 3 }[e.key]; if (m !== undefined && running) { e.preventDefault(); setHeld(m); } });
 window.addEventListener('keyup', (e) => { const m = { ArrowUp: 0, ArrowRight: 1, ArrowDown: 2, ArrowLeft: 3, w: 0, d: 1, s: 2, a: 3 }[e.key]; if (m !== undefined && m === heldDir) setHeld(null); });
 $('btnSound').addEventListener('click', () => { soundOn = !soundOn; music.setEnabled(soundOn); $('btnSound').setAttribute('aria-pressed', String(soundOn)); $('btnSound').style.opacity = soundOn ? '1' : '.55'; unlockSound(); beep(660, 0.08); });
