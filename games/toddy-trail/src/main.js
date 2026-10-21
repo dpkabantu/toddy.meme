@@ -20,7 +20,7 @@ let st = null, nightId = 0, turns = [], heldDir = null, lastSent = 4, running = 
 let prevPts = [], curPts = [], flashes = [], fx = [], soundOn = false, actx = null, bannerTimer = 0, totalTime = 0;
 let W = 0, H = 0, DPR = 1, cell = 30, ox = 0, oy = 0;
 // drawing-only state (never read by the rules)
-let tod = null, lastMoveAt = -9999, sighUntil = [], endAt = 0, thiefPrev = null, thiefFlip = false, thiefSnatchAt = -9999, brewAt = [], shutterAt = {}, shutterWas = {};
+let servedAt = [], tod = null, lastMoveAt = -9999, sighUntil = [], endAt = 0, thiefPrev = null, thiefFlip = false, thiefSnatchAt = -9999, brewAt = [], shutterAt = {}, shutterWas = {};
 
 // Toddy and his cups. At the start the cups wait in a line behind him (the game only records real steps later).
 const pts = (s) => {
@@ -192,7 +192,7 @@ function draw(frac) {
     const [bx] = cc(v.bx, v.by), done = st.served[i], bottom = bottomOf(v.by) + cell * 0.04;
     const base = ready(VISITOR_BASE[v.who]);
     let im;
-    if (done) im = ready(custFile(v.who, 'receive')) || base;
+    if (done) im = totalTime - (servedAt[i] || -9999) >= 640 ? (ready(custFile(v.who, 'receive')) || base) : base;
     else if (totalTime < (sighUntil[i] || 0)) im = ready(custFile(v.who, 'sigh')) || base;
     else if (timeLeft < 0.35) im = ready(custFile(v.who, 'impatient')) || base;
     else im = base;
@@ -236,7 +236,18 @@ function draw(frac) {
   // effects: splashes, dust, hearts
   fx = fx.filter((f) => totalTime - f.t0 < f.ms);
   for (const f of fx) {
-    const age = totalTime - f.t0, [fx0, fy0] = cc(f.x, f.y), key = f.key, file = f.file;
+    const age = totalTime - f.t0;
+    if (age < 0) continue;
+    if (f.kind === 'cup') {   // the served cup: held in Toddy's paws for a moment, then carried over to the customer
+      const hold = 260, fly = Math.max(0, Math.min(1, (age - hold) / 380)), ease = fly * fly * (3 - 2 * fly);
+      const [ax, ay] = cc(f.x, f.y), [bx2, by2] = cc(f.tx, f.ty);
+      const sx0 = ax + (f.tx - f.x) * cell * 0.3, sy0 = ay + (f.ty - f.y) * cell * 0.3 - cell * 0.05;
+      const ex = bx2 + (f.x - f.tx) * cell * 0.1, ey = by2 - cell * 0.35;
+      const x = sx0 + (ex - sx0) * ease, y = sy0 + (ey - sy0) * ease - Math.sin(ease * Math.PI) * cell * 0.35;
+      ctx.globalAlpha = age > f.ms - 200 ? Math.max(0, (f.ms - age) / 200) : 1;
+      drawCup(f.drink, x, y, cell * 0.8); ctx.globalAlpha = 1; continue;
+    }
+    const [fx0, fy0] = cc(f.x, f.y), key = f.key, file = f.file;
     const i = Math.min(ANIMS[key].n - 1, Math.floor((age / 1000) * ANIMS[key].fps));
     const fade = age > f.ms - 260 ? Math.max(0, (f.ms - age) / 260) : 1;
     drawCentered(file, key, i, fx0 + (f.dx || 0) * cell, fy0 + (f.dy || 0) * cell - (f.rise ? (age / f.ms) * cell * 0.5 : 0), cell * f.size, fade);
@@ -277,7 +288,7 @@ async function startNight(id) {
   const o = $('overlay'); o.textContent = ''; o.hidden = false; o.append(mk('div', 'card', 'Getting Night ' + id + ' ready…'));
   await Promise.all(nightFiles(id).map(loadImg));
   st = newState(id); turns = []; heldDir = null; lastSent = 4; flashes = []; fx = []; acc = 0; last = 0; tod = null; lastMoveAt = -9999; endAt = 0;
-  sighUntil = NIGHTS[id].visitors.map(() => 0); brewAt = []; shutterAt = {}; shutterWas = {}; thiefPrev = null; thiefSnatchAt = -9999;
+  sighUntil = NIGHTS[id].visitors.map(() => 0); servedAt = NIGHTS[id].visitors.map(() => 0); brewAt = []; shutterAt = {}; shutterWas = {}; thiefPrev = null; thiefSnatchAt = -9999;
   prevPts = curPts = pts(st);
   o.hidden = true; o.textContent = '';
   resize(); updateHud(); running = true; waiting = true;   // Toddy waits for the first swipe
@@ -323,9 +334,10 @@ function onEvents(before) {
   const n = NIGHTS[st.night];
   for (const e of st.events) {
     if (e.type === 'serve') {
-      SND.serve(); const v = n.visitors[e.visitor], d = faceVisitor(v);
+      SND.serve(); const v = n.visitors[e.visitor], d = faceVisitor(v); servedAt[e.visitor] = totalTime;
       flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: '', color: '#ff8fa3', drink: v.want });
-      fx.push({ file: animFile('fx_heart'), key: 'fx_heart', x: v.bx, y: v.by, dy: -1.55, size: 0.9, t0: totalTime, ms: 1400, rise: true });
+      fx.push({ kind: 'cup', drink: v.want, x: st.x, y: st.y, tx: v.bx, ty: v.by, t0: totalTime, ms: 800 });
+      fx.push({ file: animFile('fx_heart'), key: 'fx_heart', x: v.bx, y: v.by, dy: -1.55, size: 0.9, t0: totalTime + 640, ms: 1400, rise: true });
       if (d === 1 || d === 3) setTod('hand_right', d, 1100, 'cancelOnMove'); else if (d === 2) setTod('hand_down', d, 1100, 'cancelOnMove');
     } else if (e.type === 'sigh') {
       SND.sigh(); const v = n.visitors[e.visitor]; sighUntil[e.visitor] = totalTime + 1300;
