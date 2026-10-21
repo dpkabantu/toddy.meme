@@ -104,6 +104,8 @@ function toddyPicture() {   // which strip and frame to show right now
   if (d === 0 && st.t > 0) return { key: 'walk_up', i: 0, flip: false };
   return { key: 'idle_down', i: animIndex('idle_down', totalTime), flip: false };
 }
+// where the cup sits in Toddy's paws (feet at ty + cell/2): in front of his chest, a little toward the side he faces
+function pawPos(tx, ty, key, flip) { const side = key === 'walk_right' || key.startsWith('hand_right') ? (flip ? -1 : 1) : 0; return [tx + side * cell * 0.3, ty + cell * 0.5 - cell * 0.62]; }
 function faceVisitor(v) { const dx = v.bx - st.x, dy = v.by - st.y; return Math.abs(dx) >= Math.abs(dy) ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0); }
 
 // ---- the scene ----
@@ -199,21 +201,22 @@ function draw(frac) {
     ctx.globalAlpha = !done && targetIdx >= 0 && i !== targetIdx ? 0.72 : 1;
     drawImgBottom(im, bx, bottom, cell * 1.75);
     ctx.globalAlpha = 1;
+    if (done && totalTime - (servedAt[i] || -9999) >= 640) { const dx = Math.sign(st.x - v.bx) || 0; drawCup(v.want, bx + dx * cell * 0.1, bottom - cell * 0.62, cell * 0.6); }
   } }));
   // Toddy and his line (smoothly between steps)
   const L = (a, b) => a + (b - a) * frac;
   const P = curPts.map((p, i) => { const q = prevPts[i] || p; return { x: L(q.x, p.x), y: L(q.y, p.y) }; });
-  for (let k = P.length - 1; k >= 1; k--) items.push({ y: P[k].y - 0.2, f: () => { const [cx, cy] = cc(P[k].x, P[k].y); drawCup(st.cups[k - 1], cx, cy + cell * 0.05, cell * 0.95); } });
+  for (let k = st.cups.length - 1; k >= 1; k--) items.push({ y: P[k].y - 0.2, f: () => { const [cx, cy] = cc(P[k].x, P[k].y); drawCup(st.cups[k], cx, cy + cell * 0.05, cell * 0.95); } });
   const [tx, ty] = cc(P[0].x, P[0].y);
   items.push({ y: P[0].y + 0.02, f: () => {
     ctx.beginPath(); ctx.ellipse(tx, ty + cell * 0.46, cell * 0.34, cell * 0.1, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fill();
     const tp = toddyPicture(); drawStrip(animFile(tp.key), tp.key, tp.i, tx, ty + cell * 0.5, cell * 1.75, tp.flip);
+    const handing = fx.some((f) => f.kind === 'cup' && totalTime - f.t0 < 650);   // while a cup is being handed over, that cup is drawn by the effect
+    if (st.cups.length && !handing && !st.over && !(tp.key === 'walk_up' || (tp.key === 'bump' || tp.key === 'slip' || tp.key === 'startled'))) { const [hx, hy] = pawPos(tx, ty, tp.key, tp.flip); drawCup(st.cups[0], hx, hy, cell * 0.62); ctx.beginPath(); ctx.arc(hx, hy, cell * 0.42, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.55 + 0.4 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
   } });
   items.sort((a, b) => a.y - b.y);
   for (const it of items) it.f();
 
-  // the cup that gets served next, marked on the line
-  if (P.length > 1) { const [rx, ry] = cc(P[1].x, P[1].y); ctx.beginPath(); ctx.arc(rx, ry, cell * 0.55, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.55 + 0.4 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
   // speech bubbles: what each waiting visitor wants
   n.visitors.forEach((v, i) => {
     if (st.served[i]) return;
@@ -240,12 +243,12 @@ function draw(frac) {
     if (age < 0) continue;
     if (f.kind === 'cup') {   // the served cup: held in Toddy's paws for a moment, then carried over to the customer
       const hold = 260, fly = Math.max(0, Math.min(1, (age - hold) / 380)), ease = fly * fly * (3 - 2 * fly);
-      const [ax, ay] = cc(f.x, f.y), [bx2, by2] = cc(f.tx, f.ty);
-      const sx0 = ax + (f.tx - f.x) * cell * 0.3, sy0 = ay + (f.ty - f.y) * cell * 0.3 - cell * 0.05;
-      const ex = bx2 + (f.x - f.tx) * cell * 0.1, ey = by2 - cell * 0.35;
+      const [ax, ay] = cc(f.x, f.y), sdx = Math.sign(f.tx - f.x);
+      const sx0 = ax + sdx * cell * 0.3, sy0 = ay + cell * 0.5 - cell * 0.62;
+      const ex = ox + (f.tx + 0.5) * cell + Math.sign(f.x - f.tx) * cell * 0.1, ey = oy + (f.ty + 1) * cell + cell * 0.04 - cell * 0.62;
       const x = sx0 + (ex - sx0) * ease, y = sy0 + (ey - sy0) * ease - Math.sin(ease * Math.PI) * cell * 0.35;
-      ctx.globalAlpha = age > f.ms - 200 ? Math.max(0, (f.ms - age) / 200) : 1;
-      drawCup(f.drink, x, y, cell * 0.8); ctx.globalAlpha = 1; continue;
+      ctx.globalAlpha = 1;
+      drawCup(f.drink, x, y, cell * (0.62 - 0.02 * ease)); ctx.globalAlpha = 1; continue;
     }
     const [fx0, fy0] = cc(f.x, f.y), key = f.key, file = f.file;
     const i = Math.min(ANIMS[key].n - 1, Math.floor((age / 1000) * ANIMS[key].fps));
