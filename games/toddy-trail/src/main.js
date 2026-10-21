@@ -82,18 +82,22 @@ function draw(frac) {
   n.brew.forEach((b, i) => { const [cx, cy] = cc(b.x, b.y); ctx.beginPath(); ctx.arc(cx, cy, cell * 0.46, 0, Math.PI * 2); ctx.fillStyle = st.brewCool[i] > 0 ? 'rgba(201,154,59,.15)' : 'rgba(201,154,59,.38)'; ctx.fill(); drawDrink(b.drink, cx, cy, cell * 0.3); });
   // visitor spots and visitors
   const frontWant = st.cups.length ? st.cups[0] : -1, pulse = 0.5 + 0.5 * Math.sin(totalTime / 220);
+  let targetIdx = -1, bestD = 1e9;   // the ONE visitor to go to: nearest of those who want the first cup
+  n.visitors.forEach((v, i) => { if (!st.served[i] && v.want === frontWant) { const d = Math.abs(v.sx - st.x) + Math.abs(v.sy - st.y); if (d < bestD) { bestD = d; targetIdx = i; } } });
   n.visitors.forEach((v, i) => {
     const [sx, sy] = cc(v.sx, v.sy), done = st.served[i];
     ctx.fillStyle = done ? 'rgba(120,200,120,.25)' : 'rgba(253,175,30,.22)'; ctx.fillRect(ox + v.sx * cell + 2, oy + v.sy * cell + 2, cell - 4, cell - 4);
-    if (!done && v.want === frontWant) { ctx.strokeStyle = 'rgba(255,244,214,' + (0.4 + 0.5 * pulse) + ')'; ctx.lineWidth = 3; ctx.strokeRect(ox + v.sx * cell + 1, oy + v.sy * cell + 1, cell - 2, cell - 2); }
+    if (!done && i === targetIdx) { ctx.strokeStyle = 'rgba(255,244,214,' + (0.4 + 0.5 * pulse) + ')'; ctx.lineWidth = 3; ctx.strokeRect(ox + v.sx * cell + 1, oy + v.sy * cell + 1, cell - 2, cell - 2); }
     const [bx, by] = cc(v.bx, v.by), files = VISITOR_FILE[v.who];
+    ctx.globalAlpha = !done && targetIdx >= 0 && i !== targetIdx ? 0.45 : 1;
     drawImgBottom(IMGS[files[done ? 1 : 0]], bx, oy + (v.by + 1) * cell - 1, cell * 1.75);
     if (!done) {
       const by2 = by - cell * 1.3;
       ctx.fillStyle = 'rgba(20,16,46,.9)'; ctx.beginPath(); ctx.arc(bx, by2, cell * 0.48, 0, Math.PI * 2); ctx.fill();
-      if (v.want === frontWant) { ctx.strokeStyle = 'rgba(255,244,214,' + (0.5 + 0.5 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
+      if (i === targetIdx) { ctx.strokeStyle = 'rgba(255,244,214,' + (0.5 + 0.5 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
       drawDrink(v.want, bx, by2, cell * 0.38);
     }
+    ctx.globalAlpha = 1;
   });
   // Toddy and his line (smoothly between steps)
   const L = (a, b) => a + (b - a) * frac;
@@ -107,7 +111,7 @@ function draw(frac) {
   // guide: a moving dashed line from Toddy to the visitor who wants his first cup
   if (st.cups.length) {
     n.visitors.forEach((v, i) => {
-      if (st.served[i] || v.want !== st.cups[0]) return;
+      if (i !== targetIdx) return;
       const [gx, gy] = cc(v.sx, v.sy), ang = Math.atan2(gy - ty, gx - tx);
       ctx.save(); ctx.setLineDash([9, 9]); ctx.lineDashOffset = -totalTime / 40; ctx.strokeStyle = 'rgba(255,230,160,.8)'; ctx.lineWidth = 3.5;
       ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(gx - Math.cos(ang) * cell * 0.45, gy - Math.sin(ang) * cell * 0.45); ctx.stroke(); ctx.restore();
@@ -125,6 +129,7 @@ function draw(frac) {
     ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('Swipe to start', W / 2, oy + cell * n.h + 34);
     const dy = -8 * a; ctx.fillText('↑', tx, ty - cell * 0.95 + dy);
   }
+  if (!waiting && st.bumped && !st.over) { ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('Swipe to move on', W / 2, oy + cell * n.h + 34); }
   // little floating notes
   flashes = flashes.filter((f) => totalTime - f.t0 < 700);
   for (const f of flashes) { const a = 1 - (totalTime - f.t0) / 700, [fx, fy] = cc(f.x, f.y); ctx.globalAlpha = a; ctx.fillStyle = f.color; ctx.font = '700 ' + Math.round(cell * 0.5) + 'px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText(f.text, fx, fy - cell * 0.6 - (1 - a) * cell * 0.8); ctx.globalAlpha = 1; }
@@ -146,9 +151,12 @@ function updateHud() {
 function mk(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
 function showMenu() {
   const o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
-  const card = mk('div', 'card'); card.append(mk('h1', '', 'TODDY Trail'), mk('p', '', '1 · Swipe to walk'), mk('p', '', '2 · Match the cup to a visitor'), mk('p', '', '3 · Step on the glowing square'));
-  for (const id of NIGHT_IDS) { const b = mk('button', 'btn', 'Night ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); startNight(id); }); card.append(b); }
-  o.append(card);
+  const card = mk('div', 'card'); card.append(mk('h1', '', 'TODDY Trail'), mk('p', '', '1 · Swipe to walk'), mk('p', '', '2 · Walk into the visitor who wants your next cup'), mk('p', '', '3 · Serve everyone before the lanterns go out'));
+  const play = mk('button', 'btn', 'Play · Night 1'); play.addEventListener('click', () => { unlockSound(); startNight(1); }); card.append(play);
+  const more = mk('button', 'btn alt', 'Choose another night'), list = mk('div', ''); list.hidden = true;
+  more.addEventListener('click', () => { list.hidden = !list.hidden; });
+  for (const id of NIGHT_IDS) { const b = mk('button', 'btn alt', 'Night ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); startNight(id); }); list.append(b); }
+  card.append(more, list); o.append(card);
 }
 function showResult() {
   const r = score(st), o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;

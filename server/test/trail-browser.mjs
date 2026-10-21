@@ -35,7 +35,8 @@ page.on('request', (r) => { if (!r.url().startsWith(base) && !/fonts\.(googleapi
 await page.goto(base + '/games/toddy-trail/', { waitUntil: 'load' });
 await page.waitForSelector('#overlay .btn');
 await page.screenshot({ path: path.join(shots, 'trail-menu.png') });
-assert.equal(await page.locator('#overlay .btn').count(), 7);
+assert.equal(await page.locator('#overlay .btn').count(), 9);   // Play night 1, Choose another night, and the 7 nights (hidden until asked)
+assert.equal(await page.getByRole('button', { name: /^Night 3 / }).isVisible(), false);
 
 // Night 1: timed route (step k happens at (k+1)/3 s, so a turn for step n is pressed at n+0.5). Start (4,9): right 2, up 3, left 4, up 3, right 4
 const STEP = 1000 / 3;   // Toddy takes 3 steps a second
@@ -63,7 +64,8 @@ assert.ok(ok, 'night 1 route serves all three');
 
 // Night 3, idle: ends by itself with the lanterns out (60 s) -- check the first seconds only, then confirm it is running
 await page.getByRole('button', { name: 'Pick a night' }).click();
-await page.locator('#overlay .btn').nth(2).click();
+await page.getByRole('button', { name: 'Choose another night' }).click();
+await page.getByRole('button', { name: /^Night 3 / }).click();
 await page.waitForTimeout(2500);
 await page.screenshot({ path: path.join(shots, 'trail-night3.png') });
 assert.match(await page.locator('#served').innerText(), /Served 0 \/ 5/);
@@ -72,7 +74,8 @@ const WANT = { 1: 3, 2: 4, 3: 5, 4: 5, 5: 6, 6: 5, 7: 7 };
 for (const id of [1, 2, 4, 5, 6, 7]) {
   await page.reload({ waitUntil: 'load' });
   await page.waitForSelector('#overlay .btn');
-  await page.locator('#overlay .btn').nth(id - 1).click();
+  await page.getByRole('button', { name: 'Choose another night' }).click();
+  await page.getByRole('button', { name: new RegExp('^Night ' + id + ' ') }).click();
   await page.waitForTimeout(500);
   assert.match(await page.locator('#served').innerText(), new RegExp('Served 0 / ' + WANT[id]));
   await page.keyboard.press('ArrowUp');

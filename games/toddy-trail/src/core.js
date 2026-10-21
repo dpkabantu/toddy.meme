@@ -96,7 +96,7 @@ export const NIGHTS = {
     shutters: [{ x: 4, y: 6, on: 5, off: 9, phase: 3 }],
     cart: { path: [[2, 11], [3, 11], [4, 11], [5, 11], [6, 11]], every: 2 },
     puddles: [[2, 3], [6, 3]],
-    thief: { path: [[2, 2], [3, 2], [4, 2], [5, 2], [6, 2]], every: 3 },
+    thief: { path: [[3, 1], [4, 1], [5, 1]], every: 3 },   // patrols the top middle: the bridge exit and the side visitors are out of his reach
     brew: [{ x: 1, y: 10, drink: 1 }, { x: 7, y: 10, drink: 0 }, { x: 1, y: 4, drink: 2 }, { x: 7, y: 4, drink: 0 }],
     visitors: [
       { who: 'milo', sx: 7, sy: 9, bx: 8, by: 9, want: 0 },
@@ -120,7 +120,7 @@ export function newState(nightId) {
   if (!n) throw new Error('unknown night');
   return {
     night: nightId, t: 0, limit: n.seconds * STEPS_PER_SEC,
-    x: n.start.x, y: n.start.y, dir: n.start.dir, bumped: false,
+    x: n.start.x, y: n.start.y, dir: n.start.dir, bumped: false, soft: false,
     cups: n.cups.slice(), hist: [], served: n.visitors.map(() => false), brewCool: n.brew.map(() => 0),
     cartI: 0, thiefI: 0, thiefCool: 0, wrong: 0, spills: 0, bumps: 0, snatched: 0, over: false, won: false, events: [],
   };
@@ -131,14 +131,12 @@ export const thiefCell = (st) => { const n = NIGHTS[st.night]; if (!n.thief) ret
 export const shutterClosed = (n, t, x, y) => { if (!n.shutters) return false; for (const s of n.shutters) if (s.x === x && s.y === y && ((t + s.phase) % (s.on + s.off)) < s.on) return true; return false; };
 const isPuddle = (n, x, y) => !!n.puddles && n.puddles.some(([a, b]) => a === x && b === y);
 
-// Is cell (x,y) free for Toddy to step on? (the tail cell of his line frees up as he moves). Closed shutters are handled separately.
+// Is cell (x,y) free for Toddy to step on? The cups just follow him and never block him. Closed shutters are handled separately.
 function blocked(st, n, x, y) {
   if (x < 0 || y < 0 || x >= n.w || y >= n.h) return true;
   for (const [tx, ty] of n.tables) if (tx === x && ty === y) return true;
   for (const v of n.visitors) if (v.bx === x && v.by === y) return true;
   const c = cartCell(st); if (c && c[0] === x && c[1] === y) return true;
-  const len = st.cups.length;
-  for (let k = 0; k < len - 1; k++) if (st.hist[k] && st.hist[k].x === x && st.hist[k].y === y) return true;   // own line (not the tail)
   return false;
 }
 
@@ -165,8 +163,7 @@ export function step(st, turn) {
   const n = NIGHTS[st.night];
   st.events = [];
   if (turn !== null && turn !== undefined && turn >= 0 && turn <= 3) {
-    const opposite = (turn + 2) % 4 === st.dir;
-    if (!(opposite && st.cups.length > 0) && turn !== st.dir) { st.bumped = false; st.dir = turn; }   // a new direction ends a stumble
+    if (turn !== st.dir || (st.bumped && st.soft)) { st.bumped = false; st.soft = false; st.dir = turn; }   // any new swipe ends a stop; turning right around is always allowed
   }
   // the cart rolls on (it waits if Toddy or his line is in the way)
   if (n.cart && st.t % n.cart.every === n.cart.every - 1) {
@@ -188,10 +185,10 @@ export function step(st, turn) {
         if (st.cups.length > 0 && st.cups[0] === v.want) { st.cups.shift(); st.served[vi] = true; st.events.push({ type: 'serve', visitor: vi }); }
         else { st.wrong++; st.events.push({ type: 'sigh', visitor: vi }); }
       }
-      st.bumped = true;   // Toddy stops until the next swipe; nothing is lost
+      st.bumped = true; st.soft = true;   // Toddy stops until the next swipe (any swipe); nothing is lost
     }
     else if (blocked(st, n, nx, ny)) {
-      st.bumped = true; st.bumps++;
+      st.bumped = true; st.soft = false; st.bumps++;
       if (st.cups.length > 0) { st.cups.pop(); st.spills++; st.events.push({ type: 'spill' }); } else st.events.push({ type: 'bump' });
     } else {
       moveTo(st, n, nx, ny);

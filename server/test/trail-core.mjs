@@ -11,8 +11,7 @@ function bot(nightId, targets) {
     if (x < 0 || y < 0 || x >= n.w || y >= n.h) return true;
     if (n.tables.some(([a, b]) => a === x && b === y)) return true;
     if (n.visitors.some((v) => v.bx === x && v.by === y)) return true;
-    const c = cartCell(s); if (c && c[0] === x && c[1] === y) return true;
-    for (let k = 0; k < s.cups.length - 1; k++) if (s.hist[k] && s.hist[k].x === x && s.hist[k].y === y) return true;
+    const c = cartCell(s); if (c && ((c[0] === x && c[1] === y) || (avoidThief && c[1] === y && Math.abs(c[0] - x) <= 1))) return true;   // careful: also keep a cell away from the cart, which rolls sideways
     const th = thiefCell(s); if (avoidThief && th && s.thiefCool === 0 && Math.abs(th[0] - x) + Math.abs(th[1] - y) <= 1) return true;
     return false;
   };
@@ -36,9 +35,6 @@ function bot(nightId, targets) {
     if (ti < targets.length) {
       const [tx, ty] = targets[ti].cell;
       let first = path(tx, ty, true); if (first === null) first = path(tx, ty, false);
-      if (first !== null && st.cups.length > 0 && first === (st.dir + 2) % 4) {   // a U-turn is ignored while carrying cups: turn sideways first, like a person
-        for (const d of [(st.dir + 1) % 4, (st.dir + 3) % 4]) if (!blockedFor(st, st.x + DX[d], st.y + DY[d], true)) { first = d; break; }
-      }
       if (first !== null && (first !== st.dir || st.bumped)) turn = first;
     }
     if (turn !== null) turns.push([st.t, turn]);
@@ -91,6 +87,12 @@ assert.ok(replay(1, [[10, 1], [5, 2]]).bad, 'steps going backwards are refused')
   step(st, null); assert.ok(st.served[0] && st.cups.length === 2 && st.spills === 0, 'right cup handed over');
   const w = newState(1); w.x = 1; w.y = 5; w.dir = 2; w.hist = [];       // pip's body is (1,6), he wants drink 1, Toddy's first cup is 0
   step(w, null); assert.ok(!w.served[1] && w.cups.length === 3 && w.spills === 0 && w.wrong === 1, 'wrong cup: nothing lost');
+}
+{ // turning right around is allowed (the cups just follow); after handing a cup over, any swipe moves Toddy on
+  const st = newState(1); step(st, null); step(st, 2);
+  assert.equal(st.dir, 2); assert.equal(st.spills, 0, 'a U-turn costs nothing');
+  const h = newState(1); h.x = 7; h.y = 8; h.dir = 2; h.hist = []; step(h, null);   // hands milo his cup and stops
+  assert.ok(h.bumped); step(h, 3); assert.ok(!h.bumped && h.x === 6, 'a swipe left moves on');
 }
 { // a puddle slides one extra step
   const st = newState(4); st.x = 4; st.y = 4; st.dir = 0; st.hist = []; st.cups = [];   // (4,3) is a puddle; (4,2) is free
