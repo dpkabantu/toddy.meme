@@ -22,6 +22,7 @@ const animFile = (k) => 'trail_anim_' + k + '_v01', objFile = (k) => 'trail_obj_
 const OBSTACLE = { 2: ['table', 1.85], 3: ['crates', 1.45], 4: ['barrel', 1.2], 5: ['shelf', 1.35], 6: ['post', 1.3], 7: ['speaker', 1.6] };
 
 let st = null, nightId = 0, turns = [], heldDir = null, lastSent = 4, running = false, waiting = false, last = 0, acc = 0;
+let prevMov = false, prevDirV = -1, jiggleAt = -9999, confettiAt = -99999;   // picture-only: body squash, cup wobble, win confetti
 let prevPts = [], curPts = [], flashes = [], fx = [], soundOn = true, actx = null, bannerTimer = 0, totalTime = 0;
 let W = 0, H = 0, DPR = 1, cell = 30, ox = 0, oy = 0;
 // drawing-only state (never read by the rules)
@@ -132,6 +133,36 @@ function drawFloor(n) {
   }
 }
 
+const wrap = (v, m) => ((v % m) + m) % m;
+function ambient(n) {   // floating dust in the lamplight, a soft warm flicker, and rain on Night 4 (pictures only)
+  const W = cell * n.w, H = cell * n.h;
+  ctx.save(); ctx.beginPath(); ctx.rect(ox, oy, W, H); ctx.clip();
+  ctx.globalCompositeOperation = 'lighter';
+  const g = ctx.createRadialGradient(ox + W / 2, oy, 0, ox + W / 2, oy, W * 1.1); const fl = 0.05 + 0.02 * Math.sin(totalTime / 700) + 0.012 * Math.sin(totalTime / 130);
+  g.addColorStop(0, 'rgba(255,190,100,' + fl + ')'); g.addColorStop(1, 'rgba(255,190,100,0)'); ctx.fillStyle = g; ctx.fillRect(ox, oy, W, H);
+  ctx.globalCompositeOperation = 'source-over';
+  const rain = st.night === 4;
+  for (let k = 0; k < (rain ? 8 : 22); k++) {
+    const px = ox + wrap((k * 0.618) * W + Math.sin(totalTime / 2600 + k) * cell * 0.3 + totalTime * 0.012 * (1 + (k % 3) * 0.4), W), py = oy + wrap((k * 0.7548) * H - totalTime * 0.01 * (1 + (k % 4) * 0.3), H);
+    ctx.fillStyle = 'rgba(255,232,180,' + (0.22 + 0.18 * Math.sin(totalTime / 900 + k * 1.7)) + ')'; ctx.beginPath(); ctx.arc(px, py, cell * (0.018 + 0.012 * (k % 3)), 0, Math.PI * 2); ctx.fill();
+  }
+  if (rain) {
+    ctx.strokeStyle = 'rgba(190,215,255,.32)'; ctx.lineWidth = Math.max(1, cell * 0.02); ctx.beginPath();
+    for (let k = 0; k < 70; k++) { const px = ox + wrap(k * 0.381966 * W * 3 + totalTime * 0.05, W + cell) - cell * 0.5, py = oy + wrap(k * 0.7071 * H * 5 + totalTime * 0.7 * (0.8 + (k % 5) * 0.1), H + cell) - cell * 0.5; ctx.moveTo(px, py); ctx.lineTo(px - cell * 0.08, py + cell * 0.38); }
+    ctx.stroke();
+    ctx.lineWidth = Math.max(1, cell * 0.018);
+    for (let k = 0; k < 9; k++) { const ph = wrap(totalTime / 900 + k * 0.37, 1), px = ox + wrap(k * 0.618 * W * 7, W), py = oy + wrap(k * 0.4142 * H * 11, H); ctx.strokeStyle = 'rgba(200,225,255,' + 0.3 * (1 - ph) + ')'; ctx.beginPath(); ctx.ellipse(px, py, cell * 0.32 * ph, cell * 0.12 * ph, 0, 0, Math.PI * 2); ctx.stroke(); }
+  }
+  ctx.restore();
+  if (totalTime - confettiAt < 3800) {   // win confetti
+    const cols = ['#FDAF1E', '#E04F7B', '#4FB3A0', '#6C8CFF', '#FFF4D6', '#B07CFF'];
+    for (let k = 0; k < 70; k++) {
+      const age = totalTime - confettiAt - (k % 14) * 90; if (age < 0) continue;
+      const x = ox + wrap(k * 0.618 * W * 3, W) + Math.sin(age / 400 + k) * cell * 0.4, y = oy - cell * 0.4 + age * (H / 2600) * (0.75 + (k % 5) * 0.12);
+      ctx.save(); ctx.translate(x, y); ctx.rotate(age / 220 + k); ctx.globalAlpha = Math.min(1, (3800 - age) / 500); ctx.fillStyle = cols[k % 6]; ctx.fillRect(-cell * 0.06, -cell * 0.03 * (1 + Math.sin(age / 90 + k)), cell * 0.12, cell * 0.06); ctx.restore();
+    }
+  }
+}
 function draw(frac) {
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   ctx.clearRect(0, 0, W, H);
@@ -204,6 +235,8 @@ function draw(frac) {
   const timeLeft = (st.limit - st.t) / st.limit;
   n.visitors.forEach((v, i) => items.push({ y: v.by + 0.01, f: () => {
     const [bx] = cc(v.bx, v.by), done = st.served[i], bottom = bottomOf(v.by) + cell * 0.04;
+    const since = done ? totalTime - (servedAt[i] || -9999) - 640 : -1, lift = since > 0 && since < 520 ? Math.sin((since / 520) * Math.PI) * cell * 0.17 : 0;
+    ctx.save(); ctx.translate(0, -lift);
     const base = ready(VISITOR_BASE[v.who]);
     let im;
     if (done) im = totalTime - (servedAt[i] || -9999) >= 640 ? (ready(custFile(v.who, 'receive')) || base) : base;
@@ -214,6 +247,11 @@ function draw(frac) {
     drawImgBottom(im, bx, bottom, cell * 1.75);
     ctx.globalAlpha = 1;
     if (done && totalTime - (servedAt[i] || -9999) >= 640) { const dx = Math.sign(st.x - v.bx) || 0; drawCup(v.want, bx + dx * cell * 0.1, bottom - cell * 0.62, cell * 0.6); steam(bx + dx * cell * 0.1, bottom - cell * 0.62, cell * 0.6); }
+    if (since > 0 && since < 900) {   // little sparkles of delight
+      for (let q = 0; q < 5; q++) { const a = q * 1.26 + 0.4, p = since / 900, rr = cell * (0.45 + 0.5 * p), px = bx + Math.cos(a) * rr, py = bottom - cell * 1.0 + Math.sin(a) * rr * 0.8, sz = cell * 0.09 * (1 - p);
+        ctx.fillStyle = 'rgba(255,232,150,' + (1 - p) + ')'; ctx.beginPath(); ctx.moveTo(px, py - sz * 2); ctx.lineTo(px + sz * 0.5, py - sz * 0.5); ctx.lineTo(px + sz * 2, py); ctx.lineTo(px + sz * 0.5, py + sz * 0.5); ctx.lineTo(px, py + sz * 2); ctx.lineTo(px - sz * 0.5, py + sz * 0.5); ctx.lineTo(px - sz * 2, py); ctx.lineTo(px - sz * 0.5, py - sz * 0.5); ctx.closePath(); ctx.fill(); }
+    }
+    ctx.restore();
   } }));
   // Toddy and his line (smoothly between steps)
   const L = (a, b) => a + (b - a) * frac;
@@ -222,13 +260,18 @@ function draw(frac) {
   const [tx, ty] = cc(P[0].x, P[0].y);
   items.push({ y: P[0].y + 0.02, f: () => {
     ctx.beginPath(); ctx.ellipse(tx, ty + cell * 0.46, cell * 0.34, cell * 0.1, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fill();
-    const tp = toddyPicture(); drawStrip(animFile(tp.key), tp.key, tp.i, tx, ty + cell * 0.5, cell * 1.75, tp.flip);
+    const tp = toddyPicture();
+    const mv = totalTime - lastMoveAt < STEP_MS * 1.6; if (mv !== prevMov || st.dir !== prevDirV) { jiggleAt = totalTime; prevMov = mv; prevDirV = st.dir; }
+    const jt = Math.max(0, totalTime - jiggleAt) / 1000, jd = Math.exp(-jt * 7), kk = jd * Math.sin(jt * 28), feet = ty + cell * 0.5;
+    ctx.save(); ctx.translate(tx, feet); ctx.scale(1 + 0.04 * kk, 1 - 0.05 * kk); ctx.translate(-tx, -feet);
+    drawStrip(animFile(tp.key), tp.key, tp.i, tx, feet, cell * 1.75, tp.flip); ctx.restore();
     const handing = fx.some((f) => f.kind === 'cup' && totalTime - f.t0 < 650);   // while a cup is being handed over, that cup is drawn by the effect
-    if (st.cups.length && !handing && !st.over && !(tp.key === 'walk_up' || (tp.key === 'bump' || tp.key === 'slip' || tp.key === 'startled'))) { const [hx, hy] = pawPos(tx, ty, tp.key, tp.flip); drawCup(st.cups[0], hx, hy, cell * 0.62); steam(hx, hy, cell * 0.62); ctx.beginPath(); ctx.arc(hx, hy, cell * 0.42, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.55 + 0.4 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
+    if (st.cups.length && !handing && !st.over && !(tp.key === 'walk_up' || (tp.key === 'bump' || tp.key === 'slip' || tp.key === 'startled'))) { const [hx, hy] = pawPos(tx, ty, tp.key, tp.flip); const pv = hy + cell * 0.3; ctx.save(); ctx.translate(hx, pv); ctx.rotate(0.2 * jd * Math.sin(jt * 22) * (mv ? 0.6 : 1)); ctx.translate(-hx, -pv); drawCup(st.cups[0], hx, hy, cell * 0.62); ctx.restore(); steam(hx, hy, cell * 0.62); ctx.beginPath(); ctx.arc(hx, hy, cell * 0.42, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.55 + 0.4 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
   } });
   items.sort((a, b) => a.y - b.y);
   for (const it of items) it.f();
 
+  ambient(n);
   // speech bubbles: what each waiting visitor wants
   n.visitors.forEach((v, i) => {
     if (st.served[i]) return;
@@ -302,7 +345,7 @@ async function startNight(id) {
   nightId = id; running = false;
   const o = $('overlay'); o.textContent = ''; o.hidden = false; o.append(mk('div', 'card', 'Getting Night ' + id + ' ready…'));
   await Promise.all(nightFiles(id).map(loadImg));
-  st = newState(id); turns = []; heldDir = null; lastSent = 4; flashes = []; fx = []; acc = 0; last = 0; tod = null; lastMoveAt = -9999; endAt = 0;
+  st = newState(id); turns = []; heldDir = null; lastSent = 4; flashes = []; fx = []; acc = 0; last = 0; tod = null; lastMoveAt = -9999; endAt = 0; confettiAt = -99999; jiggleAt = -9999;
   sighUntil = NIGHTS[id].visitors.map(() => 0); servedAt = NIGHTS[id].visitors.map(() => 0); brewAt = []; shutterAt = {}; shutterWas = {}; thiefPrev = null; thiefSnatchAt = -9999;
   prevPts = curPts = pts(st);
   o.hidden = true; o.textContent = '';
@@ -400,7 +443,7 @@ function frame(now) {
     }
     if (st.over && !endAt) {
       endAt = totalTime; updateHud();
-      if (st.won) { SND.win(); tod = { key: 'win', flip: false, t0: totalTime, until: totalTime + 4000 }; fx.push({ file: animFile('fx_heart'), key: 'fx_heart', x: st.x, y: st.y, dy: -1.8, size: 1.1, t0: totalTime, ms: 1500, rise: true }); }
+      if (st.won) { SND.win(); confettiAt = totalTime; tod = { key: 'win', flip: false, t0: totalTime, until: totalTime + 4000 }; fx.push({ file: animFile('fx_heart'), key: 'fx_heart', x: st.x, y: st.y, dy: -1.8, size: 1.1, t0: totalTime, ms: 1500, rise: true }); }
       else tod = { key: 'startled', flip: false, t0: totalTime, until: totalTime + 4000 };
     }
     if (st.over && endAt && totalTime - endAt > 2100) { draw(1); showResult(); return; }
