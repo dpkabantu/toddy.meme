@@ -19,11 +19,11 @@ const START = { x: 4, y: 9, dir: 0 };   // the three starting cups wait in a lin
 // Visitor: body cell (blocked, drawn) and spot cell (the tile in front; step on it to serve), the drink it wants.
 export const NIGHTS = {
   1: {
-    id: 1, name: 'Café floor', w: 9, h: 13, seconds: 45, start: START, cups: [0, 0, 0], tables: [], brew: [],
-    visitors: [   // night 1: everyone wants the same drink, so there is nothing to match
+    id: 1, name: 'Café floor', w: 9, h: 13, seconds: 45, start: START, cups: [0, 1, 2], tables: [], brew: [],
+    visitors: [   // night 1: three different drinks, one visitor each, in the order Toddy meets them
       { who: 'milo', sx: 6, sy: 9, bx: 7, by: 9, want: 0 },
-      { who: 'pip', sx: 2, sy: 6, bx: 1, by: 6, want: 0 },
-      { who: 'velvet', sx: 6, sy: 3, bx: 7, by: 3, want: 0 },
+      { who: 'pip', sx: 2, sy: 6, bx: 1, by: 6, want: 1 },
+      { who: 'velvet', sx: 6, sy: 3, bx: 7, by: 3, want: 2 },
     ],
   },
   2: {

@@ -47,11 +47,11 @@ window.addEventListener('resize', resize);
 // ---- drawing ----
 function drawDrink(d, cx, cy, r) {
   ctx.save();
-  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fillStyle = '#3E1C14'; ctx.fill(); ctx.lineWidth = Math.max(1.5, r * 0.14); ctx.strokeStyle = '#C99A3B'; ctx.stroke();
+  ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fillStyle = ['#2F4E9F', '#9A2F55', '#2E7A52'][d] || '#3E1C14'; ctx.fill(); ctx.lineWidth = Math.max(2, r * 0.16); ctx.strokeStyle = '#FFF4D6'; ctx.stroke();
   const s = r * 0.62;
   if (d === 0) { ctx.beginPath(); ctx.arc(cx, cy, s, 0, Math.PI * 2); ctx.fillStyle = '#FDE3BD'; ctx.fill(); ctx.beginPath(); ctx.arc(cx - s * 0.3, cy - s * 0.25, s * 0.22, 0, Math.PI * 2); ctx.fillStyle = '#E3C79B'; ctx.fill(); }
   else if (d === 1) { ctx.beginPath(); for (let i = 0; i < 10; i++) { const a = -Math.PI / 2 + (i * Math.PI) / 5, rr = i % 2 ? s * 0.45 : s * 1.1; ctx.lineTo(cx + Math.cos(a) * rr, cy + Math.sin(a) * rr); } ctx.closePath(); ctx.fillStyle = '#FDAF1E'; ctx.fill(); }
-  else { ctx.beginPath(); ctx.arc(cx, cy, s, 0, Math.PI * 2); ctx.fillStyle = '#EB8936'; ctx.fill(); ctx.beginPath(); ctx.arc(cx + s * 0.45, cy - s * 0.1, s * 0.85, 0, Math.PI * 2); ctx.fillStyle = '#3E1C14'; ctx.fill(); }
+  else { ctx.beginPath(); ctx.arc(cx, cy, s, 0, Math.PI * 2); ctx.fillStyle = '#EB8936'; ctx.fill(); ctx.beginPath(); ctx.arc(cx + s * 0.45, cy - s * 0.1, s * 0.85, 0, Math.PI * 2); ctx.fillStyle = '#2E7A52'; ctx.fill(); }
   ctx.restore();
 }
 const cc = (x, y) => [ox + x * cell + cell / 2, oy + y * cell + cell / 2];
@@ -95,7 +95,7 @@ function draw(frac) {
       const by2 = by - cell * 1.3;
       ctx.fillStyle = 'rgba(20,16,46,.9)'; ctx.beginPath(); ctx.arc(bx, by2, cell * 0.48, 0, Math.PI * 2); ctx.fill();
       if (i === targetIdx) { ctx.strokeStyle = 'rgba(255,244,214,' + (0.5 + 0.5 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
-      drawDrink(v.want, bx, by2, cell * 0.38);
+      drawDrink(v.want, bx, by2, cell * 0.46);
     }
     ctx.globalAlpha = 1;
   });
@@ -132,7 +132,7 @@ function draw(frac) {
   if (!waiting && st.bumped && !st.over) { ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText('Swipe to move on', W / 2, oy + cell * n.h + 34); }
   // little floating notes
   flashes = flashes.filter((f) => totalTime - f.t0 < 700);
-  for (const f of flashes) { const a = 1 - (totalTime - f.t0) / 700, [fx, fy] = cc(f.x, f.y); ctx.globalAlpha = a; ctx.fillStyle = f.color; ctx.font = '700 ' + Math.round(cell * 0.5) + 'px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText(f.text, fx, fy - cell * 0.6 - (1 - a) * cell * 0.8); ctx.globalAlpha = 1; }
+  for (const f of flashes) { const a = 1 - (totalTime - f.t0) / 700, [fx, fy] = cc(f.x, f.y); ctx.globalAlpha = a; ctx.fillStyle = f.color; ctx.font = '700 ' + Math.round(cell * 0.5) + 'px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.fillText(f.text, fx, fy - cell * 0.6 - (1 - a) * cell * 0.8); if (f.drink !== undefined) drawDrink(f.drink, fx + cell * 0.5, fy - cell * 0.75 - (1 - a) * cell * 0.8, cell * 0.28); ctx.globalAlpha = 1; }
 }
 
 // ---- game flow ----
@@ -184,7 +184,7 @@ function frame(now) {
       step(st, turn);
       curPts = pts(st);
       for (const e of st.events) {
-        if (e.type === 'serve') { SND.serve(); const v = NIGHTS[st.night].visitors[e.visitor]; flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: '♥', color: '#ff8fa3' }); }
+        if (e.type === 'serve') { SND.serve(); const v = NIGHTS[st.night].visitors[e.visitor]; flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: '♥', color: '#ff8fa3', drink: NIGHTS[st.night].visitors[e.visitor].want }); }
         else if (e.type === 'sigh') { SND.sigh(); const v = NIGHTS[st.night].visitors[e.visitor]; flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: 'other drink', color: '#ff8f7a' }); }
         else if (e.type === 'spill' || e.type === 'bump') { SND.spill(); flashes.push({ x: st.x, y: st.y, t0: totalTime, text: 'bumped! cup lost', color: '#ff8f7a' }); }
         else if (e.type === 'snatch') { SND.spill(); flashes.push({ x: st.x, y: st.y, t0: totalTime, text: 'snatched!', color: '#ff8f7a' }); }
