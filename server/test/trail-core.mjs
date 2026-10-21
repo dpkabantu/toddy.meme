@@ -86,6 +86,12 @@ assert.ok(replay(1, [[10, 1], [5, 2]]).bad, 'steps going backwards are refused')
   const through = replay(5, [[0, 0]], 10);
   assert.ok(through.st.y < 7 && through.st.spills === 0, 'crossed the shutter after it opened');
 }
+{ // walking into a visitor hands over the right cup; a wrong cup costs nothing but the visitor sighs
+  const st = newState(1); st.x = 7; st.y = 8; st.dir = 2; st.hist = [];   // milo's body is (7,9), he wants drink 0 and Toddy's first cup is 0
+  step(st, null); assert.ok(st.served[0] && st.cups.length === 2 && st.spills === 0, 'right cup handed over');
+  const w = newState(1); w.x = 1; w.y = 5; w.dir = 2; w.hist = [];       // pip's body is (1,6), he wants drink 1, Toddy's first cup is 0
+  step(w, null); assert.ok(!w.served[1] && w.cups.length === 3 && w.spills === 0 && w.wrong === 1, 'wrong cup: nothing lost');
+}
 { // a puddle slides one extra step
   const st = newState(4); st.x = 4; st.y = 4; st.dir = 0; st.hist = []; st.cups = [];   // (4,3) is a puddle; (4,2) is free
   step(st, null); assert.equal(st.y, 2, 'slid from (4,4) over the puddle at (4,3) to (4,2)');

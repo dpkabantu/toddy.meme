@@ -182,6 +182,14 @@ export function step(st, turn) {
   if (!st.bumped) {
     const nx = st.x + DX[st.dir], ny = st.y + DY[st.dir];
     if (shutterClosed(n, st.t, nx, ny)) { /* Toddy waits at the shutter; nothing is lost */ }
+    else if (n.visitors.some((v) => v.bx === nx && v.by === ny)) {   // walking into a visitor hands them a cup, like stepping on their square
+      const vi = n.visitors.findIndex((v) => v.bx === nx && v.by === ny), v = n.visitors[vi];
+      if (!st.served[vi]) {
+        if (st.cups.length > 0 && st.cups[0] === v.want) { st.cups.shift(); st.served[vi] = true; st.events.push({ type: 'serve', visitor: vi }); }
+        else { st.wrong++; st.events.push({ type: 'sigh', visitor: vi }); }
+      }
+      st.bumped = true;   // Toddy stops until the next swipe; nothing is lost
+    }
     else if (blocked(st, n, nx, ny)) {
       st.bumped = true; st.bumps++;
       if (st.cups.length > 0) { st.cups.pop(); st.spills++; st.events.push({ type: 'spill' }); } else st.events.push({ type: 'bump' });

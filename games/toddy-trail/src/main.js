@@ -177,7 +177,7 @@ function frame(now) {
       curPts = pts(st);
       for (const e of st.events) {
         if (e.type === 'serve') { SND.serve(); const v = NIGHTS[st.night].visitors[e.visitor]; flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: '♥', color: '#ff8fa3' }); }
-        else if (e.type === 'sigh') { SND.sigh(); const v = NIGHTS[st.night].visitors[e.visitor]; flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: '…', color: '#cfc7e8' }); }
+        else if (e.type === 'sigh') { SND.sigh(); const v = NIGHTS[st.night].visitors[e.visitor]; flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: 'wrong cup', color: '#ff8f7a' }); }
         else if (e.type === 'spill' || e.type === 'bump') { SND.spill(); flashes.push({ x: st.x, y: st.y, t0: totalTime, text: 'oops', color: '#ff8f7a' }); }
         else if (e.type === 'snatch') { SND.spill(); flashes.push({ x: st.x, y: st.y, t0: totalTime, text: 'snatched!', color: '#ff8f7a' }); }
         else if (e.type === 'brew') { SND.brew(); flashes.push({ x: st.x, y: st.y, t0: totalTime, text: '+1', color: '#fff4d6' }); }
