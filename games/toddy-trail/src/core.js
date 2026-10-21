@@ -2,7 +2,7 @@
 // The phone and (later) the Worker run this same file, so a log of turns replays to the same score.
 // ROUGH PROTOTYPE: all 7 nights as grey-box levels. Numbers are starting estimates.
 
-export const STEPS_PER_SEC = 6;     // Toddy walks 6 cells a second (the page uses this for timing)
+export const STEPS_PER_SEC = 3;     // Toddy walks 3 cells a second (the page uses this for timing); was 6, felt far too fast
 export const MAX_LINE = 6;          // most cups Toddy can carry
 export const BREW_COOLDOWN = 40;    // steps before a brew spot hands out another cup
 export const THIEF_COOLDOWN = 15;   // steps before the night thief can snatch again

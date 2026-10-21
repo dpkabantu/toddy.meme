@@ -37,8 +37,8 @@ await page.waitForSelector('#overlay .btn');
 await page.screenshot({ path: path.join(shots, 'trail-menu.png') });
 assert.equal(await page.locator('#overlay .btn').count(), 7);
 
-// Night 1: timed route (step k happens at (k+1)/6 s, so a turn for step n is pressed at n+0.5). Start (4,9): right 2, up 3, left 4, up 3, right 4
-const STEP = 1000 / 6;
+// Night 1: timed route (step k happens at (k+1)/3 s, so a turn for step n is pressed at n+0.5). Start (4,9): right 2, up 3, left 4, up 3, right 4
+const STEP = 1000 / 3;   // Toddy takes 3 steps a second
 let ok = false;
 for (let attempt = 1; attempt <= 3 && !ok; attempt++) {
   await page.locator('#overlay .btn').first().click();
