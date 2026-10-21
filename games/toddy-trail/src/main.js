@@ -45,7 +45,18 @@ function resize() {
 window.addEventListener('resize', resize);
 
 // ---- drawing ----
-function drawDrink(d, cx, cy, r) {
+const DRINK_NAMES = ['moon', 'star', 'crescent', 'sun', 'heart'];
+function drawDrink(d, cx, cy, r) {   // the approved round badge picture; the drawn circle below is only a fallback while it loads
+  const im = IMGS['trail_badge_' + DRINK_NAMES[d] + '_v01'];
+  if (im && im.complete && im.naturalWidth) { ctx.drawImage(im, cx - r * 1.12, cy - r * 1.12, r * 2.24, r * 2.24); return; }
+  drawDrinkFallback(d, cx, cy, r);
+}
+function drawCup(d, cx, cy, h) {   // the approved cup picture, centred on (cx, cy)
+  const im = IMGS['trail_cup_' + DRINK_NAMES[d] + '_v01'];
+  if (!im || !im.complete || !im.naturalWidth) { drawDrinkFallback(d, cx, cy, h * 0.4); return; }
+  const w = (im.naturalWidth / im.naturalHeight) * h; ctx.drawImage(im, cx - w / 2, cy - h / 2, w, h);
+}
+function drawDrinkFallback(d, cx, cy, r) {
   ctx.save();
   ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fillStyle = ['#2F4E9F', '#9A2F55', '#2E7A52'][d] || '#3E1C14'; ctx.fill(); ctx.lineWidth = Math.max(2, r * 0.16); ctx.strokeStyle = '#FFF4D6'; ctx.stroke();
   const s = r * 0.62;
@@ -102,7 +113,7 @@ function draw(frac) {
   // Toddy and his line (smoothly between steps)
   const L = (a, b) => a + (b - a) * frac;
   const P = curPts.map((p, i) => { const q = prevPts[i] || p; return { x: L(q.x, p.x), y: L(q.y, p.y) }; });
-  for (let k = P.length - 1; k >= 1; k--) { const [cx, cy] = cc(P[k].x, P[k].y); drawDrink(st.cups[k - 1], cx, cy, cell * 0.42); }
+  for (let k = P.length - 1; k >= 1; k--) { const [cx, cy] = cc(P[k].x, P[k].y); drawCup(st.cups[k - 1], cx, cy, cell * 0.95); }
   if (P.length > 1) { const [rx, ry] = cc(P[1].x, P[1].y); ctx.beginPath(); ctx.arc(rx, ry, cell * 0.55, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.55 + 0.4 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }   // the cup that gets served
   const [tx, ty] = cc(P[0].x, P[0].y);
   ctx.beginPath(); ctx.ellipse(tx, ty + cell * 0.38, cell * 0.32, cell * 0.1, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fill();
@@ -215,6 +226,6 @@ window.addEventListener('keyup', (e) => { const m = { ArrowUp: 0, ArrowRight: 1,
 $('btnSound').addEventListener('click', () => { soundOn = !soundOn; $('btnSound').setAttribute('aria-pressed', String(soundOn)); $('btnSound').style.opacity = soundOn ? '1' : '.55'; unlockSound(); beep(660, 0.08); });
 $('btnSound').style.opacity = '.55';
 
-Promise.all(['pctoddy_serve_v01', 'pctoddy_wave_v01', ...Object.values(VISITOR_FILE).flat()].map(loadImg)).then(() => {
+Promise.all(['pctoddy_serve_v01', 'pctoddy_wave_v01', ...Object.values(VISITOR_FILE).flat(), ...DRINK_NAMES.flatMap((n) => ['trail_badge_' + n + '_v01', 'trail_cup_' + n + '_v01'])].map(loadImg)).then(() => {
   resize(); showMenu(); requestAnimationFrame(frame);
 });
