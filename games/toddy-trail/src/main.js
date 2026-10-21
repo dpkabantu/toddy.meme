@@ -8,7 +8,9 @@ let musicGo = false;   // music starts only after the first tap (phones block so
 
 const $ = (id) => document.getElementById(id);
 const cv = $('c'), ctx = cv.getContext('2d');
-const STEP_MS = 1000 / STEPS_PER_SEC;
+const SPEEDS = { Relaxed: 2.6, Normal: STEPS_PER_SEC, Quick: 5 };   // how fast Toddy walks (cells per second); the rules count steps, so scores stay fair
+let speedName = 'Relaxed'; try { const v = localStorage.getItem('trailSpeed'); if (SPEEDS[v]) speedName = v; } catch (_) { /* storage optional */ }
+let STEP_MS = 1000 / SPEEDS[speedName];
 const IMGS = {}, LOADING = {};
 const loadImg = (name) => LOADING[name] || (LOADING[name] = new Promise((res) => { const im = new Image(); im.onload = () => res(); im.onerror = () => res(); im.src = 'assets/' + name + '.webp'; IMGS[name] = im; }));
 const ready = (name) => { const im = IMGS[name]; return im && im.complete && im.naturalWidth ? im : null; };
@@ -62,6 +64,13 @@ function drawDrink(d, cx, cy, r) {   // the approved round badge picture; the dr
   const im = ready('trail_badge_' + DRINK_NAMES[d] + '_v01');
   if (im) { ctx.drawImage(im, cx - r * 1.12, cy - r * 1.12, r * 2.24, r * 2.24); return; }
   drawDrinkFallback(d, cx, cy, r);
+}
+function steam(cx, cy, h) {   // soft wisps rising from a hot cup
+  for (let k = 0; k < 3; k++) {
+    const p = (totalTime / 1700 + k / 3) % 1, x = cx + Math.sin(p * 7 + k * 2.1) * h * 0.14, y = cy - h * 0.42 - p * h * 0.95;
+    ctx.globalAlpha = 0.42 * Math.sin(p * Math.PI); ctx.fillStyle = '#fff4e6'; ctx.beginPath(); ctx.arc(x, y, h * (0.07 + 0.1 * p), 0, Math.PI * 2); ctx.fill();
+  }
+  ctx.globalAlpha = 1;
 }
 function drawCup(d, cx, cy, h) {   // the approved cup picture, centred on (cx, cy)
   const im = ready('trail_cup_' + DRINK_NAMES[d] + '_v01');
@@ -204,7 +213,7 @@ function draw(frac) {
     ctx.globalAlpha = !done && targetIdx >= 0 && i !== targetIdx ? 0.72 : 1;
     drawImgBottom(im, bx, bottom, cell * 1.75);
     ctx.globalAlpha = 1;
-    if (done && totalTime - (servedAt[i] || -9999) >= 640) { const dx = Math.sign(st.x - v.bx) || 0; drawCup(v.want, bx + dx * cell * 0.1, bottom - cell * 0.62, cell * 0.6); }
+    if (done && totalTime - (servedAt[i] || -9999) >= 640) { const dx = Math.sign(st.x - v.bx) || 0; drawCup(v.want, bx + dx * cell * 0.1, bottom - cell * 0.62, cell * 0.6); steam(bx + dx * cell * 0.1, bottom - cell * 0.62, cell * 0.6); }
   } }));
   // Toddy and his line (smoothly between steps)
   const L = (a, b) => a + (b - a) * frac;
@@ -215,7 +224,7 @@ function draw(frac) {
     ctx.beginPath(); ctx.ellipse(tx, ty + cell * 0.46, cell * 0.34, cell * 0.1, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fill();
     const tp = toddyPicture(); drawStrip(animFile(tp.key), tp.key, tp.i, tx, ty + cell * 0.5, cell * 1.75, tp.flip);
     const handing = fx.some((f) => f.kind === 'cup' && totalTime - f.t0 < 650);   // while a cup is being handed over, that cup is drawn by the effect
-    if (st.cups.length && !handing && !st.over && !(tp.key === 'walk_up' || (tp.key === 'bump' || tp.key === 'slip' || tp.key === 'startled'))) { const [hx, hy] = pawPos(tx, ty, tp.key, tp.flip); drawCup(st.cups[0], hx, hy, cell * 0.62); ctx.beginPath(); ctx.arc(hx, hy, cell * 0.42, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.55 + 0.4 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
+    if (st.cups.length && !handing && !st.over && !(tp.key === 'walk_up' || (tp.key === 'bump' || tp.key === 'slip' || tp.key === 'startled'))) { const [hx, hy] = pawPos(tx, ty, tp.key, tp.flip); drawCup(st.cups[0], hx, hy, cell * 0.62); steam(hx, hy, cell * 0.62); ctx.beginPath(); ctx.arc(hx, hy, cell * 0.42, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.55 + 0.4 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
   } });
   items.sort((a, b) => a.y - b.y);
   for (const it of items) it.f();
@@ -320,7 +329,9 @@ function showMenu() {
   menuMusic();
   const o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
   const card = mk('div', 'card'); card.append(mk('h1', '', 'TODDY Trail'), mk('p', '', '1 · Touch and drag to walk'), mk('p', '', '2 · Walk into the visitor who wants your next cup'), mk('p', '', '3 · Serve everyone before the lanterns go out'));
-  const play = mk('button', 'btn', 'Play · Night 1'); play.addEventListener('click', () => { unlockSound(); showIntro(1); }); card.append(play);
+  const spd = mk('button', 'btn alt', 'Walking speed: ' + speedName);
+  spd.addEventListener('click', () => { const names = Object.keys(SPEEDS); speedName = names[(names.indexOf(speedName) + 1) % names.length]; STEP_MS = 1000 / SPEEDS[speedName]; try { localStorage.setItem('trailSpeed', speedName); } catch (_) { /* optional */ } spd.textContent = 'Walking speed: ' + speedName; });
+  const play = mk('button', 'btn', 'Play · Night 1'); play.addEventListener('click', () => { unlockSound(); showIntro(1); }); card.append(play, spd);
   const more = mk('button', 'btn alt', 'Choose another night'), list = mk('div', ''); list.hidden = true;
   more.addEventListener('click', () => { list.hidden = !list.hidden; });
   for (const id of NIGHT_IDS) { const b = mk('button', 'btn alt', 'Night ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); showIntro(id); }); list.append(b); }

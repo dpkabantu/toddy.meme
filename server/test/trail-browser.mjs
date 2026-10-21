@@ -38,10 +38,11 @@ page.on('console', (m) => { if (['error', 'warning'].includes(m.type()) && !/fon
 page.on('pageerror', (e) => problems.push('pageerror: ' + e.message));
 page.on('request', (r) => { if (!r.url().startsWith(base) && !/fonts\.(googleapis|gstatic)/.test(r.url())) outside.push(r.url()); });
 
+await page.addInitScript(() => { try { localStorage.setItem('trailSpeed', 'Normal'); } catch (_) {} });
 await page.goto(base + '/games/toddy-trail/', { waitUntil: 'load' });
 await page.waitForSelector('#overlay .btn');
 await page.screenshot({ path: path.join(shots, 'trail-menu.png') });
-assert.equal(await page.locator('#overlay .btn').count(), 9);   // Play night 1, Choose another night, and the 7 nights (hidden until asked)
+assert.equal(await page.locator('#overlay .btn').count(), 10);   // Play night 1, walking speed, Choose another night, and the 7 nights (hidden until asked)
 assert.equal(await page.getByRole('button', { name: /^Night 3 / }).isVisible(), false);
 
 // Night 1: timed route (step k happens at (k+1)/3 s, so a turn for step n is pressed at n+0.5). Start (4,9): right 2, up 3, left 4, up 3, right 4
