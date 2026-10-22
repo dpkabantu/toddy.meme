@@ -23,8 +23,23 @@ const RHYTHMS = [[0, 3, 6, 8, 11, 14], [0, 2, 4, 7, 8, 10, 12, 15], [0, 4, 6, 8,
 function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6d2b79f5) >>> 0; let t = a; t = Math.imul(t ^ (t >>> 15), t | 1); t ^= t + Math.imul(t ^ (t >>> 7), t | 61); return ((t ^ (t >>> 14)) >>> 0) / 4294967296; }; }
 
 export function createMusic() {
-  let sfxBus = null, ctx = null, master = null, bus = null, revIn = null, dlyIn = null, noiseBuf = null, timer = 0;
+  let sfxBus = null, ctx = null, master = null, bus = null, revIn = null, dlyIn = null, noiseBuf = null, impBuf = null, timer = 0;
   let enabled = true, theme = null, themeKey = null, level = 0, targetLevel = 0, tempoMul = 1, nextTime = 0, step = 0, bar = 0, rand = rng(1), melody = [], rainNode = null, playing = false;
+
+  // one audio chain (bus + hall + echo) per theme: when the theme changes the old chain is faded out and dropped, so two themes never ring together
+  function buildChain() {
+    bus = ctx.createGain(); bus.gain.value = 0.0; bus.connect(master);
+    // a soft hall made from decaying noise
+        const conv = ctx.createConvolver(); conv.buffer = impBuf; revIn = ctx.createGain(); revIn.gain.value = 0.55; revIn.connect(conv); const revOut = ctx.createGain(); revOut.gain.value = 0.5; conv.connect(revOut); revOut.connect(bus);
+    // a gentle echo for the melody
+    const dly = ctx.createDelay(1.0); dly.delayTime.value = 0.375; const fb = ctx.createGain(); fb.gain.value = 0.3; const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2400;
+    dlyIn = ctx.createGain(); dlyIn.gain.value = 0.4; dlyIn.connect(dly); dly.connect(lp); lp.connect(fb); fb.connect(dly); lp.connect(revIn); lp.connect(bus);
+  }
+  function retireChain() {
+    if (!bus) return; const ob = bus, od = dlyIn, orv = revIn, t = ctx.currentTime;
+    ob.gain.cancelScheduledValues(t); ob.gain.setValueAtTime(Math.max(ob.gain.value, 0.0001), t); ob.gain.linearRampToValueAtTime(0.0001, t + 0.3);
+    setTimeout(() => { try { ob.disconnect(); od.disconnect(); orv.disconnect(); } catch (_) { /* gone */ } }, 3500);
+  }
 
   function ensure() {
     if (ctx) return ctx;
@@ -32,14 +47,9 @@ export function createMusic() {
     ctx = new AC();
     const comp = ctx.createDynamicsCompressor(); comp.threshold.value = -16; comp.ratio.value = 4; comp.attack.value = 0.01; comp.release.value = 0.2;
     master = ctx.createGain(); master.gain.value = 0.9; master.connect(comp); comp.connect(ctx.destination);
-    bus = ctx.createGain(); bus.gain.value = 0.0; bus.connect(master);
-    // a soft hall made from decaying noise
-    const len = Math.floor(ctx.sampleRate * 2.4), imp = ctx.createBuffer(2, len, ctx.sampleRate);
-    for (let c = 0; c < 2; c++) { const d = imp.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
-    const conv = ctx.createConvolver(); conv.buffer = imp; revIn = ctx.createGain(); revIn.gain.value = 0.55; revIn.connect(conv); const revOut = ctx.createGain(); revOut.gain.value = 0.5; conv.connect(revOut); revOut.connect(bus);
-    // a gentle echo for the melody
-    const dly = ctx.createDelay(1.0); dly.delayTime.value = 0.375; const fb = ctx.createGain(); fb.gain.value = 0.3; const lp = ctx.createBiquadFilter(); lp.type = 'lowpass'; lp.frequency.value = 2400;
-    dlyIn = ctx.createGain(); dlyIn.gain.value = 0.4; dlyIn.connect(dly); dly.connect(lp); lp.connect(fb); fb.connect(dly); lp.connect(revIn); lp.connect(bus);
+    const len = Math.floor(ctx.sampleRate * 2.4); impBuf = ctx.createBuffer(2, len, ctx.sampleRate);
+    for (let c = 0; c < 2; c++) { const d = impBuf.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
+    buildChain();
     const nlen = ctx.sampleRate * 2; noiseBuf = ctx.createBuffer(1, nlen, ctx.sampleRate); const nd = noiseBuf.getChannelData(0); for (let i = 0; i < nlen; i++) nd[i] = Math.random() * 2 - 1;
     document.addEventListener('visibilitychange', () => { if (!ctx) return; if (document.hidden) ctx.suspend().catch(() => {}); else if (enabled && playing) ctx.resume().catch(() => {}); });
     return ctx;
@@ -152,6 +162,7 @@ export function createMusic() {
     play(key) {   // key: 'menu' or a night number
       const c = ensure(); if (!c) return; this.resume();
       if (playing && themeKey === key) return;
+      retireChain(); buildChain(); bus.gain.value = 0.0001;
       themeKey = key; theme = THEMES[key] || THEMES.menu; rand = rng(7000 + (typeof key === 'number' ? key * 131 : 5)); planMelody();
       level = targetLevel = 0; tempoMul = 1; step = 0; bar = 0; nextTime = c.currentTime + 0.12; playing = true; stopRain();
       bus.gain.cancelScheduledValues(c.currentTime); bus.gain.setValueAtTime(Math.max(bus.gain.value, 0.0001), c.currentTime); bus.gain.linearRampToValueAtTime(enabled ? 0.6 : 0.0001, c.currentTime + 1.2);
@@ -160,7 +171,7 @@ export function createMusic() {
     setLevel(l) { targetLevel = Math.max(0, Math.min(2, l)); },
     stop(fade) { if (!ctx || !playing) return; playing = false; themeKey = null; clearInterval(timer); stopRain(); bus.gain.cancelScheduledValues(ctx.currentTime); bus.gain.linearRampToValueAtTime(0.0001, ctx.currentTime + (fade || 0.6)); },
     stinger(won) {   // a short phrase when the night ends
-      if (!ctx || !enabled) return; this.stop(0.25); const t = ctx.currentTime + 0.3, th = theme || THEMES[1];
+      if (!ctx || !enabled) return; this.stop(0.25); retireChain(); buildChain(); const t = ctx.currentTime + 0.3, th = theme || THEMES[1];
       bus.gain.cancelScheduledValues(ctx.currentTime); bus.gain.setValueAtTime(0.6, ctx.currentTime);
       const base = th.chords[0][0] + 12;
       if (won) { [0, 4, 7, 11, 16].forEach((s, i) => bell(mtof(base + 12 + s), t + i * 0.13, 0.9, 0.12, true)); pad([base, base + 4, base + 7, base + 11], t, 1.6, 0.07); }
