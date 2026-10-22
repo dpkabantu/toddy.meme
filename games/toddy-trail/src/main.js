@@ -454,7 +454,6 @@ function frame(now) {
     if (st.over && endAt && totalTime - endAt > 2100) { draw(1); showResult(); return; }
   }
   draw(Math.min(acc / STEP_MS, 1));
-  if (down && running) stick();
 }
 
 // ---- input: touch-and-drag steering, arrow keys ----
