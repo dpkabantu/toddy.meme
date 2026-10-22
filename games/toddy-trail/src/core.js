@@ -139,6 +139,9 @@ const pingPong = (path) => { const s = path.slice(); for (let i = path.length - 
 const seqs = {};
 const seqOf = (nightId, key) => { const k = nightId + key; if (!seqs[k]) seqs[k] = pingPong(NIGHTS[nightId][key].path); return seqs[k]; };
 
+// Endless levels are built at run time: register one under an id (never one of the story nights) before newState(id).
+export function registerLevel(id, def) { NIGHTS[id] = def; delete seqs[id + 'cart']; delete seqs[id + 'thief']; }
+
 export function newState(nightId) {
   const n = NIGHTS[nightId];
   if (!n) throw new Error('unknown night');

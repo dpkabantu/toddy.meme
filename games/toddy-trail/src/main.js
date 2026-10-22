@@ -1,8 +1,9 @@
 // TODDY Trail test page: canvas, hold-and-steer, approved art and animations. No server yet.
 // The rules live in core.js (pure and deterministic). Everything in this file is only drawing and input.
-import { NIGHTS, NIGHT_IDS, SAMPLE_IDS, STEPS_PER_SEC, newState, step, score, cartCell, thiefCell, shutterClosed, DX, DY } from './core.js';
+import { NIGHTS, NIGHT_IDS, SAMPLE_IDS, registerLevel, STEPS_PER_SEC, newState, step, score, cartCell, thiefCell, shutterClosed, DX, DY } from './core.js';
 import { ANIMS, STILLS, BGS } from './art.js';
 import { createMusic } from './music.js';
+import { ENDLESS } from './endless-config.js';
 const music = createMusic();
 let musicGo = false;   // music starts only after the first tap (phones block sound before that)
 
@@ -19,10 +20,14 @@ const DRINK_NAMES = ['moon', 'star', 'crescent', 'sun', 'heart'];
 const animFile = (k) => 'trail_anim_' + k + '_v01', objFile = (k) => 'trail_obj_' + k + '_v01', custFile = (w, p) => 'trail_cust_' + w + '_' + p + '_v01';
 
 // what each night puts on the floor (the obstacle picture and how tall it stands, in cells)
+const ENDLESS_ID = 1000;
+let endless = null;   // { n, recipe } while an endless run is on
 const ART_OF = { 20: 7 };   // sample levels borrow a story night's background, music and obstacle pictures
 const artOf = (id) => ART_OF[id] || id;
-const nm = (id) => (SAMPLE_IDS.includes(id) ? 'Level ' : 'Night ') + id;
-const OBSTACLE = { 2: ['table', 1.85], 3: ['crates', 1.45], 4: ['barrel', 1.2], 5: ['shelf', 1.35], 6: ['post', 1.3], 7: ['speaker', 1.6] };
+const nm = (id) => (id === ENDLESS_ID && endless ? 'Level ' + endless.n : (SAMPLE_IDS.includes(id) ? 'Level ' : 'Night ') + id);
+const MUSIC_OF = { 101: 2, 102: 3, 103: 6, 104: 5, 105: 6, 1: 'menu' };   // endless floors borrow a story night's music
+const obstacleOf = (id) => OBSTACLE[artOf(id)] || OBSTACLE[2];
+const OBSTACLE = { 101: ['planter', 1.45], 102: ['suitcases', 1.75], 103: ['rope', 1.3], 104: ['snowman', 1.55], 105: ['telescope', 1.7], 2: ['table', 1.85], 3: ['crates', 1.45], 4: ['barrel', 1.2], 5: ['shelf', 1.35], 6: ['post', 1.3], 7: ['speaker', 1.6] };
 
 let st = null, nightId = 0, turns = [], heldDir = null, lastSent = 4, running = false, waiting = false, last = 0, acc = 0;
 let prevMov = false, prevDirV = -1, jiggleAt = -9999, confettiAt = -99999;   // picture-only: body squash, cup wobble, win confetti
@@ -211,7 +216,7 @@ function draw(frac) {
   // everything that stands up is drawn back to front, so Toddy walks behind tall things and in front of the ones behind him
   const items = [];
   const bottomOf = (y) => oy + (y + 1) * cell - cell * 0.04;
-  const ob = OBSTACLE[artOf(st.night)];
+  const ob = obstacleOf(st.night);
   for (const [x, y] of n.tables) items.push({ y, f: () => {
     if (ob && ready(objFile(ob[0]))) drawStill(ob[0], cc(x, y)[0], bottomOf(y), ob[1] * (n.tables.length > 12 ? 0.74 : 1));
     else { ctx.fillStyle = '#7a4a2a'; ctx.fillRect(ox + x * cell + 2, oy + y * cell + 2, cell - 4, cell - 4); ctx.fillStyle = '#a86a3c'; ctx.fillRect(ox + x * cell + 2, oy + y * cell + 2, cell - 4, cell * 0.4); }
@@ -366,7 +371,7 @@ const COMMON = [...['idle_down', 'walk_down', 'walk_up', 'walk_right', 'hand_rig
   ...Object.values(VISITOR_BASE), ...['milo', 'pip', 'velvet', 'lumi', 'biscuit'].flatMap((w) => ['impatient', 'receive', 'sigh'].map((p) => custFile(w, p))), ...DRINK_NAMES.flatMap((n) => ['trail_badge_' + n + '_v01', 'trail_cup_' + n + '_v01'])];
 function nightFiles(id) {
   const n = NIGHTS[id], f = ['trail_bg_n' + artOf(id) + '_v01'];
-  if (OBSTACLE[artOf(id)] && n.tables.length) f.push(objFile(OBSTACLE[artOf(id)][0]));
+  if (n.tables.length) f.push(objFile(obstacleOf(id)[0]));
   if (n.brew.length) f.push(objFile('station'), objFile('ring'), animFile('brew_pour'));
   if (n.cart) f.push(objFile('cart'));
   if (n.thief) f.push(animFile('thief_sneak'), animFile('thief_snatch'));
@@ -383,11 +388,19 @@ async function startNight(id) {
   sighUntil = NIGHTS[id].visitors.map(() => 0); servedAt = NIGHTS[id].visitors.map(() => 0); brewAt = []; shutterAt = {}; shutterWas = {}; thiefPrev = null; thiefSnatchAt = -9999;
   prevPts = curPts = pts(st);
   o.hidden = true; o.textContent = '';
-  music.play(artOf(id)); resize(); updateHud(); running = true; waiting = true;   // Toddy waits for the first swipe
+  music.play(MUSIC_OF[artOf(id)] || artOf(id)); resize(); updateHud(); running = true; waiting = true;   // Toddy waits for the first swipe
+}
+async function startEndless(n) {
+  const o = $('overlay'); o.textContent = ''; o.hidden = false; o.append(mk('div', 'card', 'Building level ' + n + '…'));
+  let lvl;
+  try { const E = await import('./endless.js'); lvl = E.makeLevel(n, await E.loadPool(), ENDLESS); }
+  catch (e) { o.textContent = ''; o.append(mk('div', 'card', 'Endless mode could not load. Please try again.')); setTimeout(showMenu, 1800); return; }
+  endless = { n, recipe: lvl.recipe }; registerLevel(ENDLESS_ID, lvl.def); ART_OF[ENDLESS_ID] = lvl.theme;
+  await startNight(ENDLESS_ID);
 }
 function updateHud() {
   const n = NIGHTS[st.night], c = st.served.filter(Boolean).length;
-  $('served').textContent = 'Served ' + c + ' / ' + n.visitors.length;
+  $('served').textContent = (st.night === ENDLESS_ID && endless ? 'Lv ' + endless.n + ' · ' : '') + 'Served ' + c + ' / ' + n.visitors.length;
   { const f = (st.limit - st.t) / st.limit; music.setLevel(st.won || st.over ? 0 : f < 0.25 ? 2 : f < 0.5 ? 1 : 0); }
   $('lanternFill').style.transform = 'scaleX(' + Math.max(0, (st.limit - st.t) / st.limit).toFixed(3) + ')';
 }
@@ -405,7 +418,7 @@ function showIntro(id) {   // a short picture-story card before each night
   if (!noVideo) { const pl = v.play(); if (pl && pl.catch) pl.catch(() => {}); }
 }
 function showMenu() {
-  menuMusic();
+  endless = null; menuMusic();
   const o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
   const card = mk('div', 'card'); card.append(mk('h1', '', 'TODDY Trail'), mk('p', '', '1 · Touch and drag to walk'), mk('p', '', '2 · Walk into the visitor who wants your next cup'), mk('p', '', '3 · Serve everyone before the lanterns go out'));
   const spd = mk('button', 'btn alt', 'Walking speed: ' + speedName);
@@ -415,6 +428,7 @@ function showMenu() {
   more.addEventListener('click', () => { list.hidden = !list.hidden; });
   for (const id of NIGHT_IDS) { const b = mk('button', 'btn alt', 'Night ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); showIntro(id); }); list.append(b); }
   for (const id of SAMPLE_IDS) { const b = mk('button', 'btn alt', 'Sample · Level ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); showIntro(id); }); list.append(b); }
+  { const b = mk('button', 'btn alt', 'Endless mode · preview'); b.addEventListener('click', () => { unlockSound(); endless = null; startEndless(ENDLESS.startLevel); }); list.append(b); }
   card.append(more, list); o.append(card);
 }
 function showResult() {
@@ -422,6 +436,14 @@ function showResult() {
   music.stinger(st.won);
   const card = mk('div', 'card');
   card.append(mk('h1', '', st.won ? 'All served!' : 'Lanterns out'), mk('div', 'big', String(r.score)), mk('p', '', 'Served ' + r.served + ' of ' + r.of + ' · ' + r.seconds + ' s · spilled ' + (st.spills + st.snatched)));
+  if (nightId === ENDLESS_ID && endless) {   // endless mode: the rules come from endless-config.js
+    const n = endless.n, pass = !!ENDLESS.passed(st, n);
+    card.firstChild.textContent = pass ? 'Level ' + n + ' cleared!' : 'Lanterns out';
+    if (pass) { const nx = mk('button', 'btn', 'Level ' + (n + 1)); nx.addEventListener('click', () => startEndless(n + 1)); card.append(nx); }
+    else if (ENDLESS.onFail === 'retry') { const rt = mk('button', 'btn', 'Try again · new layout'); rt.addEventListener('click', () => startEndless(n)); card.append(rt); }
+    const back = mk('button', 'btn alt', 'Back to menu'); back.addEventListener('click', showMenu);
+    card.append(back); o.append(card); return;
+  }
   const nextId = NIGHT_IDS.includes(nightId) ? NIGHT_IDS[NIGHT_IDS.indexOf(nightId) + 1] : undefined;
   if (st.won && nextId) { const nx = mk('button', 'btn', 'Night ' + nextId + ' · ' + NIGHTS[nextId].name); nx.addEventListener('click', () => showIntro(nextId)); card.append(nx); }
   const again = mk('button', 'btn' + (st.won && nextId ? ' alt' : ''), 'Play again'); again.addEventListener('click', () => startNight(nightId));
