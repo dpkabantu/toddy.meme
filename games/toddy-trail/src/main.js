@@ -73,6 +73,20 @@ function steam(cx, cy, h) {   // soft wisps rising from a hot cup
   }
   ctx.globalAlpha = 1;
 }
+// where the real cup is while a visitor sips (fraction of the visitor's height above the feet; seconds into the sip clip). Measured from the approved sip clips.
+const VTRACK = {
+  milo: [[0, 0.36], [0.5, 0.36], [0.75, 0.48], [1.0, 0.57], [2.5, 0.57], [2.85, 0.4], [3.0, 0.36]],
+  pip: [[0, 0.34], [0.5, 0.36], [0.75, 0.44], [1.0, 0.47], [2.5, 0.48], [2.8, 0.38], [3.0, 0.34]],
+  velvet: [[0, 0.34], [0.5, 0.36], [1.0, 0.42], [1.5, 0.46], [1.75, 0.5], [2.5, 0.5], [2.8, 0.4], [3.0, 0.36]],
+  lumi: [[0, 0.34], [0.5, 0.38], [0.75, 0.46], [1.0, 0.5], [2.5, 0.52], [2.8, 0.4], [3.0, 0.35]],
+  biscuit: [[0, 0.3], [0.5, 0.32], [0.8, 0.38], [1.1, 0.43], [2.5, 0.44], [2.85, 0.36], [3.1, 0.3]],
+};
+const belly = (who) => (VTRACK[who] || VTRACK.milo)[0][1];
+function sipFrac(who, t) {
+  const k = VTRACK[who] || VTRACK.milo; if (t <= k[0][0]) return k[0][1];
+  for (let i = 1; i < k.length; i++) if (t <= k[i][0]) { const u = (t - k[i - 1][0]) / (k[i][0] - k[i - 1][0]), e = u * u * (3 - 2 * u); return k[i - 1][1] + (k[i][1] - k[i - 1][1]) * e; }
+  return k[k.length - 1][1];
+}
 function drawCup(d, cx, cy, h) {   // the approved cup picture, centred on (cx, cy)
   const im = ready('trail_cup_' + DRINK_NAMES[d] + '_v01');
   if (!im) { drawDrinkFallback(d, cx, cy, h * 0.4); return; }
@@ -235,18 +249,33 @@ function draw(frac) {
   const timeLeft = (st.limit - st.t) / st.limit;
   n.visitors.forEach((v, i) => items.push({ y: v.by + 0.01, f: () => {
     const [bx] = cc(v.bx, v.by), done = st.served[i], bottom = bottomOf(v.by) + cell * 0.04;
-    const since = done ? totalTime - (servedAt[i] || -9999) - 640 : -1, lift = since > 0 && since < 520 ? Math.sin((since / 520) * Math.PI) * cell * 0.17 : 0;
+    const T = done ? totalTime - (servedAt[i] || -9999) : -1, since = T - 640;   // since: ms after the cup reached the visitor
+    const iK = 'v_' + v.who + '_idle', sK = 'v_' + v.who + '_sip', hK = 'v_' + v.who + '_hop';
+    const haveV = ready(animFile(iK)) && ready(animFile(sK)) && ready(animFile(hK)), subjH = cell * 1.75;
+    const lift = !haveV && since > 0 && since < 520 ? Math.sin((since / 520) * Math.PI) * cell * 0.17 : 0;
     ctx.save(); ctx.translate(0, -lift);
     const base = ready(VISITOR_BASE[v.who]);
-    let im;
-    if (done) im = totalTime - (servedAt[i] || -9999) >= 640 ? (ready(custFile(v.who, 'receive')) || base) : base;
-    else if (totalTime < (sighUntil[i] || 0)) im = ready(custFile(v.who, 'sigh')) || base;
-    else if (timeLeft < 0.35) im = ready(custFile(v.who, 'impatient')) || base;
-    else im = base;
+    let im, cupY = null, cupH = cell * 0.6;   // cupY: where the held cup is drawn (null: no cup yet)
     ctx.globalAlpha = !done && targetIdx >= 0 && i !== targetIdx ? 0.72 : 1;
-    drawImgBottom(im, bx, bottom, cell * 1.75);
+    const hopMs = haveV ? (ANIMS[hK].n / ANIMS[hK].fps) * 1000 : 0, sipMs = haveV ? (ANIMS[sK].n / ANIMS[sK].fps) * 1000 : 0;
+    if (!done) {
+      if (totalTime < (sighUntil[i] || 0)) im = ready(custFile(v.who, 'sigh')) || base;
+      else if (timeLeft < 0.35) im = ready(custFile(v.who, 'impatient')) || base;
+      else if (haveV) { drawStrip(animFile(iK), iK, animIndex(iK, totalTime + i * 1370), bx, bottom, subjH); }
+      else im = base;
+    } else if (!haveV) {
+      im = since >= 0 ? (ready(custFile(v.who, 'receive')) || base) : base; if (since >= 0) cupY = bottom - cell * 0.62;
+    } else if (since < 0) drawStrip(animFile(iK), iK, animIndex(iK, totalTime + i * 1370), bx, bottom, subjH);
+    else if (since < hopMs) {   // a little hop of joy, the cup rides in the paws
+      const fi = animIndex(hK, since), lf = (ANIMS[hK].lift && ANIMS[hK].lift[fi]) || 0;
+      drawStrip(animFile(hK), hK, fi, bx, bottom, subjH); cupY = bottom - subjH * (belly(v.who) + lf);
+    } else if (since < hopMs + sipMs) {   // the sip: the real cup goes up to the mouth and back
+      const ts = since - hopMs; drawStrip(animFile(sK), sK, animIndex(sK, ts), bx, bottom, subjH);
+      const fr = sipFrac(v.who, ts / 1000); cupY = bottom - subjH * fr; cupH = cell * (0.6 - 0.1 * Math.max(0, (fr - belly(v.who)) / 0.18));
+    } else { drawStrip(animFile(iK), iK, animIndex(iK, totalTime + i * 1370), bx, bottom, subjH); cupY = bottom - subjH * belly(v.who); }
+    if (im) drawImgBottom(im, bx, bottom, subjH);
     ctx.globalAlpha = 1;
-    if (done && totalTime - (servedAt[i] || -9999) >= 640) { const dx = Math.sign(st.x - v.bx) || 0; drawCup(v.want, bx + dx * cell * 0.1, bottom - cell * 0.62, cell * 0.6); steam(bx + dx * cell * 0.1, bottom - cell * 0.62, cell * 0.6); }
+    if (cupY !== null) { const dx = haveV ? 0 : Math.sign(st.x - v.bx) * 0.1; drawCup(v.want, bx + dx * cell, cupY, cupH); steam(bx + dx * cell, cupY, cupH); }
     if (since > 0 && since < 900) {   // little sparkles of delight
       for (let q = 0; q < 5; q++) { const a = q * 1.26 + 0.4, p = since / 900, rr = cell * (0.45 + 0.5 * p), px = bx + Math.cos(a) * rr, py = bottom - cell * 1.0 + Math.sin(a) * rr * 0.8, sz = cell * 0.09 * (1 - p);
         ctx.fillStyle = 'rgba(255,232,150,' + (1 - p) + ')'; ctx.beginPath(); ctx.moveTo(px, py - sz * 2); ctx.lineTo(px + sz * 0.5, py - sz * 0.5); ctx.lineTo(px + sz * 2, py); ctx.lineTo(px + sz * 0.5, py + sz * 0.5); ctx.lineTo(px, py + sz * 2); ctx.lineTo(px - sz * 0.5, py + sz * 0.5); ctx.lineTo(px - sz * 2, py); ctx.lineTo(px - sz * 0.5, py - sz * 0.5); ctx.closePath(); ctx.fill(); }
@@ -297,9 +326,10 @@ function draw(frac) {
     const age = totalTime - f.t0;
     if (age < 0) continue;
     if (f.kind === 'cup') {   // the served cup: held in Toddy's paws for a moment, then carried over to the customer
-      const hold = 260, fly = Math.max(0, Math.min(1, (age - hold) / 380)), ease = fly * fly * (3 - 2 * fly);
-      const [ax, ay] = cc(f.x, f.y), sdx = Math.sign(f.tx - f.x);
-      const sx0 = ax + sdx * cell * 0.3, sy0 = ay + cell * 0.5 - cell * 0.62;
+      const up = f.ty < f.y && Math.abs(f.ty - f.y) > Math.abs(f.tx - f.x);   // visitor above Toddy: he reaches up with both arms
+      const hold = up ? 480 : 260, fly = Math.max(0, Math.min(1, (age - hold) / 380)), ease = fly * fly * (3 - 2 * fly);
+      const [ax, ay] = cc(f.x, f.y), sdx = up ? 0 : Math.sign(f.tx - f.x);
+      const sx0 = ax + sdx * cell * 0.3, sy0 = ay + cell * 0.5 - cell * 0.62 - (up ? cell * 0.95 * Math.min(1, age / 420) : 0);
       const ex = ox + (f.tx + 0.5) * cell + Math.sign(f.x - f.tx) * cell * 0.1, ey = oy + (f.ty + 1) * cell + cell * 0.04 - cell * 0.62;
       const x = sx0 + (ex - sx0) * ease, y = sy0 + (ey - sy0) * ease - Math.sin(ease * Math.PI) * cell * 0.35;
       ctx.globalAlpha = 1;
@@ -329,7 +359,7 @@ function draw(frac) {
 
 // ---- game flow ----
 function banner(text, ms) { const b = $('banner'); b.textContent = text; b.classList.add('show'); clearTimeout(bannerTimer); bannerTimer = setTimeout(() => b.classList.remove('show'), ms || 2500); }
-const COMMON = [...['idle_down', 'walk_down', 'walk_up', 'walk_right', 'hand_right', 'hand_down', 'bump', 'startled', 'win', 'fx_dust', 'fx_heart'].map(animFile), ...DRINK_NAMES.map((d) => 'trail_anim_fx_splash_' + d + '_v01'),
+const COMMON = [...['idle_down', 'walk_down', 'walk_up', 'walk_right', 'hand_right', 'hand_down', 'hand_up', 'bump', 'startled', 'win', 'fx_dust', 'fx_heart'].map(animFile), ...DRINK_NAMES.map((d) => 'trail_anim_fx_splash_' + d + '_v01'),
   ...Object.values(VISITOR_BASE), ...['milo', 'pip', 'velvet', 'lumi', 'biscuit'].flatMap((w) => ['impatient', 'receive', 'sigh'].map((p) => custFile(w, p))), ...DRINK_NAMES.flatMap((n) => ['trail_badge_' + n + '_v01', 'trail_cup_' + n + '_v01'])];
 function nightFiles(id) {
   const n = NIGHTS[id], f = ['trail_bg_n' + id + '_v01'];
@@ -339,7 +369,8 @@ function nightFiles(id) {
   if (n.thief) f.push(animFile('thief_sneak'), animFile('thief_snatch'));
   if (n.puddles && n.puddles.length) f.push(animFile('puddle_ripple'), animFile('slip'));
   if (n.shutters && n.shutters.length) f.push(objFile('shutter_open'), objFile('shutter_closed'));
-  return f.filter((x) => !(id === 7 && x === 'trail_bg_n7_v01'));   // night 7's floor picture is still to be redrawn
+  for (const w of new Set(n.visitors.map((v) => v.who))) f.push(animFile('v_' + w + '_idle'), animFile('v_' + w + '_sip'), animFile('v_' + w + '_hop'));
+  return f;
 }
 async function startNight(id) {
   nightId = id; running = false;
@@ -404,7 +435,7 @@ function onEvents(before) {
       flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: '', color: '#ff8fa3', drink: v.want });
       fx.push({ kind: 'cup', drink: v.want, x: st.x, y: st.y, tx: v.bx, ty: v.by, t0: totalTime, ms: 800 });
       fx.push({ file: animFile('fx_heart'), key: 'fx_heart', x: v.bx, y: v.by, dy: -1.55, size: 0.9, t0: totalTime + 640, ms: 1400, rise: true });
-      if (d === 1 || d === 3) setTod('hand_right', d, 1100, 'cancelOnMove'); else if (d === 2) setTod('hand_down', d, 1100, 'cancelOnMove');
+      if (d === 1 || d === 3) setTod('hand_right', d, 1100, 'cancelOnMove'); else if (d === 2) setTod('hand_down', d, 1100, 'cancelOnMove'); else setTod('hand_up', d, 1300, 'cancelOnMove');
     } else if (e.type === 'sigh') {
       SND.sigh(); const v = n.visitors[e.visitor]; sighUntil[e.visitor] = totalTime + 1300;
       flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: 'other drink', color: '#ff8f7a' });
