@@ -42,7 +42,7 @@ await page.addInitScript(() => { try { localStorage.setItem('trailSpeed', 'Norma
 await page.goto(base + '/games/toddy-trail/', { waitUntil: 'load' });
 await page.waitForSelector('#overlay .btn');
 await page.screenshot({ path: path.join(shots, 'trail-menu.png') });
-assert.equal(await page.locator('#overlay .btn').count(), 12);   // Play night 1, walking speed, Choose another night, the 7 nights, the Level 20 sample and endless mode (hidden until asked)
+assert.equal(await page.locator('#overlay .btn').count(), 13);   // Play night 1, walking speed, controls, Choose another night, the 7 nights, the Level 20 sample and endless mode (hidden until asked)
 assert.equal(await page.getByRole('button', { name: /^Night 3 / }).isVisible(), false);
 
 // Night 1: timed route (step k happens at (k+1)/3 s, so a turn for step n is pressed at n+0.5). Start (4,9): right 2, up 3, left 4, up 3, right 4
@@ -122,6 +122,19 @@ for (let run = 1; run <= 2; run++) {
   await page.waitForTimeout(500);
   assert.match(await page.locator('#served').innerText(), /^Lv 31 · Served 0 \/ [89]$/);
   await page.screenshot({ path: path.join(shots, 'trail-endless-lv31.png') });
+}
+
+// Tap to go: touching a spot sends Toddy there by himself. Night 1 has Milo's spot at (6,9), Pip's at (2,6), Velvet's at (6,3): three taps serve all three.
+{
+  await page.reload({ waitUntil: 'load' }); await page.waitForSelector('#overlay .btn');
+  await startFromMenu(page, 1); await page.waitForTimeout(400);
+  const geo = await page.evaluate(() => { const r = document.getElementById('c').getBoundingClientRect(); const W = r.width, H = r.height, top = 64, pad = 8, cell = Math.floor(Math.min((W - pad * 2) / 9, (H - top - pad * 2) / 13)); return { left: r.left, top: r.top, cell, ox: Math.floor((W - cell * 9) / 2), oy: top + Math.floor((H - top - cell * 13) / 2) }; });
+  const tapCell = (cx, cy) => page.touchscreen.tap(geo.left + geo.ox + (cx + 0.5) * geo.cell, geo.top + geo.oy + (cy + 0.5) * geo.cell);
+  const served = (k) => page.waitForFunction((k) => new RegExp('Served ' + k + ' /').test(document.getElementById('served').textContent), k, { timeout: 9000 });
+  await tapCell(6, 9); await served(1);
+  await tapCell(2, 6); await served(2);
+  await tapCell(6, 3); await served(3);
+  await page.screenshot({ path: path.join(shots, 'trail-tap-night1.png') });
 }
 
 assert.deepEqual(problems, [], 'console problems: ' + problems.join(' | '));

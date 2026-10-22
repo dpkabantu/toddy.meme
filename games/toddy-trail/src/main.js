@@ -356,10 +356,14 @@ function draw(frac) {
   if (waiting) {
     const a = 0.5 + 0.5 * Math.sin(totalTime / 260);
     ctx.beginPath(); ctx.arc(tx, ty, cell * (0.75 + 0.12 * a), 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.5 + 0.4 * a) + ')'; ctx.lineWidth = 3; ctx.stroke();
-    ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#1a0a05'; ctx.lineWidth = 5; ctx.strokeText('Touch and drag to walk', W / 2, oy + cell * n.h + 34); ctx.fillText('Touch and drag to walk', W / 2, oy + cell * n.h + 34);
-    const dy = -8 * a; ctx.fillText('↑', tx, ty - cell * 0.95 + dy);
+    ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#1a0a05'; ctx.lineWidth = 5; const hint = controlMode === 'tap' ? 'Tap where Toddy should go' : 'Touch and drag to walk'; ctx.strokeText(hint, W / 2, oy + cell * n.h + 34); ctx.fillText(hint, W / 2, oy + cell * n.h + 34);
+    const dy = -8 * a; if (controlMode !== 'tap') ctx.fillText('↑', tx, ty - cell * 0.95 + dy);
   }
-  if (!waiting && st.bumped && !st.over) { ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#1a0a05'; ctx.lineWidth = 5; ctx.strokeText('Drag to move on', W / 2, oy + cell * n.h + 34); ctx.fillText('Drag to move on', W / 2, oy + cell * n.h + 34); }
+  if (!waiting && st.bumped && !st.over && !target) { ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#1a0a05'; ctx.lineWidth = 5; const msg = controlMode === 'tap' ? 'Tap to move on' : 'Drag to move on'; ctx.strokeText(msg, W / 2, oy + cell * n.h + 34); ctx.fillText(msg, W / 2, oy + cell * n.h + 34); }
+  if (target && !st.over) {   // a soft pulsing ring where Toddy is heading
+    const [gx, gy] = cc(target.x, target.y), a = 0.5 + 0.5 * Math.sin(totalTime / 200);
+    ctx.beginPath(); ctx.ellipse(gx, gy + cell * 0.18, cell * (0.3 + 0.05 * a), cell * (0.16 + 0.03 * a), 0, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.55 + 0.35 * a) + ')'; ctx.lineWidth = 3; ctx.stroke();
+  }
   // little floating notes
   flashes = flashes.filter((f) => totalTime - f.t0 < 900);
   for (const f of flashes) { const a = 1 - (totalTime - f.t0) / 900, [fx1, fy1] = cc(f.x, f.y); ctx.globalAlpha = a; ctx.font = '700 ' + Math.round(cell * 0.5) + 'px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#1a0a05'; ctx.lineWidth = 4; ctx.strokeText(f.text, fx1, fy1 - cell * 0.9 - (1 - a) * cell * 0.8); ctx.fillStyle = f.color; ctx.fillText(f.text, fx1, fy1 - cell * 0.9 - (1 - a) * cell * 0.8); if (f.drink !== undefined) drawDrink(f.drink, fx1 + cell * 0.5, fy1 - cell * 1.05 - (1 - a) * cell * 0.8, cell * 0.28); ctx.globalAlpha = 1; }
@@ -384,7 +388,7 @@ async function startNight(id) {
   nightId = id; running = false;
   const o = $('overlay'); o.textContent = ''; o.hidden = false; o.append(mk('div', 'card', 'Getting ' + nm(id) + ' ready…'));
   await Promise.all(nightFiles(id).map(loadImg));
-  st = newState(id); turns = []; heldDir = null; lastSent = 4; flashes = []; fx = []; acc = 0; last = 0; tod = null; lastMoveAt = -9999; endAt = 0; confettiAt = -99999; jiggleAt = -9999;
+  st = newState(id); turns = []; heldDir = null; target = null; lastSent = 4; flashes = []; fx = []; acc = 0; last = 0; tod = null; lastMoveAt = -9999; endAt = 0; confettiAt = -99999; jiggleAt = -9999;
   sighUntil = NIGHTS[id].visitors.map(() => 0); servedAt = NIGHTS[id].visitors.map(() => 0); brewAt = []; shutterAt = {}; shutterWas = {}; thiefPrev = null; thiefSnatchAt = -9999;
   prevPts = curPts = pts(st);
   o.hidden = true; o.textContent = '';
@@ -420,10 +424,12 @@ function showIntro(id) {   // a short picture-story card before each night
 function showMenu() {
   endless = null; menuMusic();
   const o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
-  const card = mk('div', 'card'); card.append(mk('h1', '', 'TODDY Trail'), mk('p', '', '1 · Touch and drag to walk'), mk('p', '', '2 · Walk into the visitor who wants your next cup'), mk('p', '', '3 · Serve everyone before the lanterns go out'));
+  const card = mk('div', 'card'); card.append(mk('h1', '', 'TODDY Trail'), mk('p', '', controlMode === 'tap' ? '1 · Tap where Toddy should go' : '1 · Touch and drag to walk'), mk('p', '', '2 · Walk into the visitor who wants your next cup'), mk('p', '', '3 · Serve everyone before the lanterns go out'));
   const spd = mk('button', 'btn alt', 'Walking speed: ' + speedName);
   spd.addEventListener('click', () => { const names = Object.keys(SPEEDS); speedName = names[(names.indexOf(speedName) + 1) % names.length]; STEP_MS = 1000 / SPEEDS[speedName]; try { localStorage.setItem('trailSpeed', speedName); } catch (_) { /* optional */ } spd.textContent = 'Walking speed: ' + speedName; });
-  const play = mk('button', 'btn', 'Play · Night 1'); play.addEventListener('click', () => { unlockSound(); showIntro(1); }); card.append(play, spd);
+  const ctl = mk('button', 'btn alt', 'Controls: ' + (controlMode === 'tap' ? 'Tap to go' : 'Drag to steer'));
+  ctl.addEventListener('click', () => { controlMode = controlMode === 'tap' ? 'steer' : 'tap'; try { localStorage.setItem('trailControl', controlMode); } catch (_) { /* optional */ } ctl.textContent = 'Controls: ' + (controlMode === 'tap' ? 'Tap to go' : 'Drag to steer'); card.firstChild.nextSibling.textContent = controlMode === 'tap' ? '1 · Tap where Toddy should go' : '1 · Touch and drag to walk'; });
+  const play = mk('button', 'btn', 'Play · Night 1'); play.addEventListener('click', () => { unlockSound(); showIntro(1); }); card.append(play, spd, ctl);
   const more = mk('button', 'btn alt', 'Choose another night'), list = mk('div', ''); list.hidden = true;
   more.addEventListener('click', () => { list.hidden = !list.hidden; });
   for (const id of NIGHT_IDS) { const b = mk('button', 'btn alt', 'Night ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); showIntro(id); }); list.append(b); }
@@ -498,7 +504,10 @@ function frame(now) {
       acc -= STEP_MS;
       prevPts = curPts;
       const was = { x: st.x, y: st.y }, lastCup = st.cups.length ? st.cups[st.cups.length - 1] : undefined;
-      const want = heldDir !== null ? heldDir : pendingTurn !== null ? pendingTurn : 4; pendingTurn = null;   // finger down = steer that way, finger up = stand still
+      let want;
+      if (heldDir !== null) { want = heldDir; target = null; pendingTurn = null; }   // arrow keys (and steer mode): finger down = steer that way
+      else if (controlMode === 'tap') { const d = planDir(); want = d < 0 ? 4 : d; pendingTurn = null; if (st.bumped && !st.soft) lastSent = -1; }
+      else { want = pendingTurn !== null ? pendingTurn : 4; pendingTurn = null; }   // finger up = stand still
       if (want !== lastSent) { lastSent = want; turns.push([st.t, want]); step(st, want); } else step(st, null);
       if (st.x !== was.x || st.y !== was.y) lastMoveAt = totalTime;
       curPts = pts(st);
@@ -515,6 +524,52 @@ function frame(now) {
   draw(Math.min(acc / STEP_MS, 1));
 }
 
+// ---- tap to go: touch a spot and Toddy walks there by himself, around obstacles ----
+let controlMode = (() => { try { return localStorage.getItem('trailControl') === 'steer' ? 'steer' : 'tap'; } catch (_) { return 'tap'; } })();
+let target = null;   // the cell Toddy is walking to
+// Cheapest way to the target (Dijkstra over the 9x13 cells). It models puddles (a slide of one extra cell), avoids walls, visitors' bodies, the cart,
+// the thief, and visitors who would be served the wrong cup on the way. Returns the first direction (0..3), or -1 when there is nothing to do.
+function planDir() {
+  if (!target || !st) return -1;
+  const n = NIGHTS[st.night], K = (x, y) => y * n.w + x, N = n.w * n.h;
+  const body = new Set(n.visitors.map((v) => K(v.bx, v.by))), tab = new Set(n.tables.map(([x, y]) => K(x, y))), pud = new Set((n.puddles || []).map(([x, y]) => K(x, y)));
+  const cart = cartCell(st), thief = thiefCell(st), spot = new Map();
+  n.visitors.forEach((v, i) => { if (!st.served[i]) spot.set(K(v.sx, v.sy), 6); });
+  const ok = (x, y) => x >= 0 && y >= 0 && x < n.w && y < n.h && !body.has(K(x, y)) && !tab.has(K(x, y)) && !(cart && cart[0] === x && cart[1] === y);
+  const cost = (x, y) => {
+    let c = 1; const sp = spot.get(K(x, y)); if (sp && !(x === target.x && y === target.y)) c += sp;
+    if (shutterClosed(n, st.t, x, y)) c += 2;
+    if (cart && cart[1] === y && Math.abs(cart[0] - x) <= 1) c += 5;
+    if (thief && st.thiefCool === 0 && st.cups.length && Math.abs(thief[0] - x) + Math.abs(thief[1] - y) <= 1) c += 6;
+    return c;
+  };
+  const dist = new Array(N).fill(Infinity), first = new Array(N).fill(-1), done = new Array(N).fill(false), s0 = K(st.x, st.y); dist[s0] = 0;
+  for (;;) {
+    let u = -1; for (let i = 0; i < N; i++) if (!done[i] && dist[i] < Infinity && (u < 0 || dist[i] < dist[u])) u = i;
+    if (u < 0) break; done[u] = true;
+    const ux = u % n.w, uy = (u - ux) / n.w;
+    for (let d = 0; d < 4; d++) {
+      const nx = ux + DX[d], ny = uy + DY[d]; if (!ok(nx, ny)) continue;
+      let lx = nx, ly = ny, c = cost(nx, ny);
+      if (pud.has(K(nx, ny))) { const ex = nx + DX[d], ey = ny + DY[d]; if (ok(ex, ey) && !shutterClosed(n, st.t, ex, ey)) { lx = ex; ly = ey; c += cost(ex, ey); } }
+      const v = K(lx, ly); if (dist[u] + c < dist[v]) { dist[v] = dist[u] + c; first[v] = u === s0 ? d : first[u]; }
+    }
+  }
+  // the touched cell if Toddy can reach it, otherwise the reachable cell nearest to it
+  let best = -1, bs = Infinity;
+  for (let i = 0; i < N; i++) { if (dist[i] === Infinity) continue; const x = i % n.w, y = (i - x) / n.w, sc = (Math.abs(x - target.x) + Math.abs(y - target.y)) * 100 + dist[i]; if (sc < bs) { bs = sc; best = i; } }
+  if (best < 0 || best === s0) { target = null; return -1; }
+  return first[best];
+}
+function setTarget(clientX, clientY) {
+  const r = cv.getBoundingClientRect(), n = NIGHTS[st.night];
+  let x = Math.floor((clientX - r.left - ox) / cell), y = Math.floor((clientY - r.top - oy) / cell);
+  x = Math.max(0, Math.min(n.w - 1, x)); y = Math.max(0, Math.min(n.h - 1, y));
+  const vi = n.visitors.findIndex((v) => v.bx === x && v.by === y);   // touching a visitor means "bring them their cup": go to the spot in front of them
+  if (vi >= 0) { x = n.visitors[vi].sx; y = n.visitors[vi].sy; }
+  if (!target || target.x !== x || target.y !== y) { target = { x, y }; waiting = false; acc = Math.max(acc, STEP_MS * (totalTime - lastMoveAt < STEP_MS * 1.6 ? 0.6 : 1)); SND.turn(); }
+}
+
 // ---- input: touch-and-drag steering, arrow keys ----
 let sx = 0, sy = 0, down = false;
 let pendingTurn = null, padId = null, fingerX = 0, fingerY = 0;   // pendingTurn: a quick tap between two steps is still remembered until the next step
@@ -524,16 +579,17 @@ const turnFromDelta = (dx, dy, prev) => {   // dominant axis wins, but the curre
   return useX ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0);
 };
 const setHeld = (d) => { if (d !== heldDir) { heldDir = d; if (d !== null) { pendingTurn = d; acc = Math.max(acc, STEP_MS * (totalTime - lastMoveAt < STEP_MS * 1.6 ? 0.6 : 1));   /* answer the touch at once: standing still steps now, walking turns within ~40% of a step */ waiting = false; SND.turn(); } } };
-cv.addEventListener('pointerdown', (e) => { if (down) return; padId = e.pointerId; down = true; sx = fingerX = e.clientX; sy = fingerY = e.clientY; unlockSound(); try { cv.setPointerCapture(e.pointerId); } catch (_) {} });
+cv.addEventListener('pointerdown', (e) => { if (down) return; padId = e.pointerId; down = true; sx = fingerX = e.clientX; sy = fingerY = e.clientY; unlockSound(); try { cv.setPointerCapture(e.pointerId); } catch (_) {} if (controlMode === 'tap' && running && st && !st.over) setTarget(e.clientX, e.clientY); });
 // Hold and steer: put a finger down and drag; Toddy walks the way you drag and stops when you lift. The anchor follows the finger so changing direction is quick.
 cv.addEventListener('pointermove', (e) => {
   if (!down || !running || e.pointerId !== padId) return;
   fingerX = e.clientX; fingerY = e.clientY;
+  if (controlMode === 'tap') { if (!st.over) setTarget(e.clientX, e.clientY); return; }   // keep the target under the finger while it moves
   const dx = e.clientX - sx, dy = e.clientY - sy, d = Math.hypot(dx, dy);
   if (d >= 9) setHeld(turnFromDelta(dx, dy, heldDir));
   if (d > 34) { sx = e.clientX - (dx / d) * 34; sy = e.clientY - (dy / d) * 34; }
 });
-const up = (e) => { if (e && e.pointerId !== padId) return; down = false; padId = null; setHeld(null); };
+const up = (e) => { if (e && e.pointerId !== padId) return; down = false; padId = null; if (controlMode !== 'tap') setHeld(null); };   // tap mode: lifting the finger does NOT stop Toddy, he keeps walking to the spot
 cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up); cv.addEventListener('contextmenu', (e) => e.preventDefault());
 // full screen on and off (Android Chrome and desktop; iPhone Safari does not allow it, so the button hides itself there)
 const fsEl = document.documentElement, fsOn = () => document.fullscreenElement || document.webkitFullscreenElement;
