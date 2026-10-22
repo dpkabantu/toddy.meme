@@ -1,7 +1,7 @@
 // Toddy Trail core: on every night a bot can serve every visitor, the same log replays to the same score, bad logs are refused.
 // Run: node --no-warnings server/test/trail-core.mjs
 import assert from 'node:assert/strict';
-import { NIGHTS, NIGHT_IDS, newState, step, score, replay, cartCell, thiefCell, shutterClosed, DX, DY } from '../../games/toddy-trail/src/core.js';
+import { NIGHTS, NIGHT_IDS, SAMPLE_IDS, newState, step, score, replay, cartCell, thiefCell, shutterClosed, DX, DY } from '../../games/toddy-trail/src/core.js';
 
 // Greedy bot: for each target in order, take the first step of a shortest path. It avoids walls, its own line, the cart and (if it can) the thief.
 function bot(nightId, targets) {
@@ -97,5 +97,11 @@ assert.ok(replay(1, [[10, 1], [5, 2]]).bad, 'steps going backwards are refused')
 { // a puddle slides one extra step
   const st = newState(4); st.x = 4; st.y = 4; st.dir = 0; st.holding = true; st.hist = []; st.cups = [];   // (4,3) is a puddle; (4,2) is free
   step(st, null); assert.equal(st.y, 2, 'slid from (4,4) over the puddle at (4,3) to (4,2)');
+}
+{ // sample level 20: kept out of the story nights, and a searched solution (found by a beam search over real steps) wins it in 19 s of 45
+  assert.ok(!NIGHT_IDS.includes(20) && SAMPLE_IDS.includes(20) && NIGHTS[20].seconds === 45);
+  const sol = [[0,1],[2,2],[3,0],[4,3],[8,2],[9,1],[15,2],[17,0],[21,3],[24,0],[26,3],[29,0],[30,1],[33,0],[35,3],[36,0],[38,3],[39,2],[41,0],[44,1],[47,2],[50,1],[51,2],[53,1],[56,2],[57,0],[58,1],[59,0],[60,2],[61,3],[67,2],[68,0],[69,1],[71,0],[73,1],[75,0]];
+  const r = replay(20, sol); assert.ok(!r.bad && r.st.won && r.st.spills === 0 && r.st.snatched === 0, 'level 20 is winnable');
+  assert.ok(!replay(20, []).st.won, 'level 20 is not won by standing still');
 }
 console.log('trail core: all checks passed');

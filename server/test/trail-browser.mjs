@@ -42,7 +42,7 @@ await page.addInitScript(() => { try { localStorage.setItem('trailSpeed', 'Norma
 await page.goto(base + '/games/toddy-trail/', { waitUntil: 'load' });
 await page.waitForSelector('#overlay .btn');
 await page.screenshot({ path: path.join(shots, 'trail-menu.png') });
-assert.equal(await page.locator('#overlay .btn').count(), 10);   // Play night 1, walking speed, Choose another night, and the 7 nights (hidden until asked)
+assert.equal(await page.locator('#overlay .btn').count(), 11);   // Play night 1, walking speed, Choose another night, the 7 nights and the Level 20 sample (hidden until asked)
 assert.equal(await page.getByRole('button', { name: /^Night 3 / }).isVisible(), false);
 
 // Night 1: timed route (step k happens at (k+1)/3 s, so a turn for step n is pressed at n+0.5). Start (4,9): right 2, up 3, left 4, up 3, right 4
@@ -87,6 +87,18 @@ for (const id of [1, 2, 4, 5, 6, 7]) {
   await page.keyboard.down('ArrowUp');
   await page.waitForTimeout(1200); await page.keyboard.up('ArrowUp');
   await page.screenshot({ path: path.join(shots, 'trail-night' + id + '.png') });
+}
+
+// Level 20 sample: opens from the menu list, starts, shows 0 / 9 served, and never leaks into the story nights' "next night" flow
+{
+  await page.reload({ waitUntil: 'load' }); await page.waitForSelector('#overlay .btn');
+  await page.getByRole('button', { name: 'Choose another night' }).click();
+  await page.getByRole('button', { name: /^Sample · Level 20/ }).click();
+  await page.getByRole('button', { name: /^Start Level 20/ }).click();
+  await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 15000 });
+  await page.waitForTimeout(500);
+  assert.match(await page.locator('#served').innerText(), /Served 0 \/ 9/);
+  await page.screenshot({ path: path.join(shots, 'trail-level20.png') });
 }
 
 assert.deepEqual(problems, [], 'console problems: ' + problems.join(' | '));

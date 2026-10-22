@@ -111,6 +111,30 @@ export const NIGHTS = {
 };
 export const NIGHT_IDS = Object.keys(NIGHTS).map(Number);
 
+// SAMPLE levels: not part of the Nights 1-7 story (they are not in NIGHT_IDS, so the menu list and "next night" never reach them).
+// Level 20 is a hard preview of what the endless levels could feel like: two shutters, a rolling cart, puddles, a patrolling thief, nine visitors.
+NIGHTS[20] = {
+  id: 20, name: 'Midnight rush', w: 9, h: 13, seconds: 45, start: START, cups: [0, 1, 2],
+  tables: [[1, 7], [2, 7], [3, 7], [5, 7], [6, 7], [7, 7], [1, 4], [2, 4], [3, 4], [5, 4], [6, 4], [7, 4]],
+  shutters: [{ x: 4, y: 7, on: 4, off: 6, phase: 0 }, { x: 4, y: 4, on: 5, off: 5, phase: 4 }],
+  cart: { path: [[1, 8], [2, 8], [3, 8], [4, 8], [5, 8], [6, 8], [7, 8]], every: 2 },
+  puddles: [[2, 9], [6, 9], [3, 3], [5, 3]],
+  thief: { path: [[2, 2], [3, 2], [4, 2], [5, 2], [6, 2]], every: 3 },
+  brew: [{ x: 2, y: 10, drink: 1 }, { x: 6, y: 10, drink: 0 }, { x: 2, y: 6, drink: 2 }, { x: 6, y: 5, drink: 0 }, { x: 6, y: 3, drink: 1 }, { x: 2, y: 3, drink: 1 }],
+  visitors: [
+    { who: 'milo', sx: 7, sy: 10, bx: 8, by: 10, want: 0 },
+    { who: 'pip', sx: 1, sy: 10, bx: 0, by: 10, want: 1 },
+    { who: 'velvet', sx: 7, sy: 12, bx: 8, by: 12, want: 2 },
+    { who: 'lumi', sx: 1, sy: 5, bx: 0, by: 5, want: 1 },
+    { who: 'biscuit', sx: 7, sy: 6, bx: 8, by: 6, want: 0 },
+    { who: 'velvet', sx: 1, sy: 1, bx: 0, by: 1, want: 0 },
+    { who: 'milo', sx: 7, sy: 1, bx: 8, by: 1, want: 2 },
+    { who: 'pip', sx: 4, sy: 1, bx: 4, by: 0, want: 1 },
+    { who: 'biscuit', sx: 1, sy: 3, bx: 0, by: 3, want: 2 },
+  ],
+};
+export const SAMPLE_IDS = [20];
+
 const pingPong = (path) => { const s = path.slice(); for (let i = path.length - 2; i >= 1; i--) s.push(path[i]); return s; };   // a b c d e d c b
 const seqs = {};
 const seqOf = (nightId, key) => { const k = nightId + key; if (!seqs[k]) seqs[k] = pingPong(NIGHTS[nightId][key].path); return seqs[k]; };

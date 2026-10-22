@@ -1,6 +1,6 @@
 // TODDY Trail test page: canvas, hold-and-steer, approved art and animations. No server yet.
 // The rules live in core.js (pure and deterministic). Everything in this file is only drawing and input.
-import { NIGHTS, NIGHT_IDS, STEPS_PER_SEC, newState, step, score, cartCell, thiefCell, shutterClosed, DX, DY } from './core.js';
+import { NIGHTS, NIGHT_IDS, SAMPLE_IDS, STEPS_PER_SEC, newState, step, score, cartCell, thiefCell, shutterClosed, DX, DY } from './core.js';
 import { ANIMS, STILLS, BGS } from './art.js';
 import { createMusic } from './music.js';
 const music = createMusic();
@@ -19,6 +19,9 @@ const DRINK_NAMES = ['moon', 'star', 'crescent', 'sun', 'heart'];
 const animFile = (k) => 'trail_anim_' + k + '_v01', objFile = (k) => 'trail_obj_' + k + '_v01', custFile = (w, p) => 'trail_cust_' + w + '_' + p + '_v01';
 
 // what each night puts on the floor (the obstacle picture and how tall it stands, in cells)
+const ART_OF = { 20: 7 };   // sample levels borrow a story night's background, music and obstacle pictures
+const artOf = (id) => ART_OF[id] || id;
+const nm = (id) => (SAMPLE_IDS.includes(id) ? 'Level ' : 'Night ') + id;
 const OBSTACLE = { 2: ['table', 1.85], 3: ['crates', 1.45], 4: ['barrel', 1.2], 5: ['shelf', 1.35], 6: ['post', 1.3], 7: ['speaker', 1.6] };
 
 let st = null, nightId = 0, turns = [], heldDir = null, lastSent = 4, running = false, waiting = false, last = 0, acc = 0;
@@ -137,7 +140,7 @@ function faceVisitor(v) { const dx = v.bx - st.x, dy = v.by - st.y; return Math.
 
 // ---- the scene ----
 function drawFloor(n) {
-  const m = BGS[st.night], im = m && ready('trail_bg_n' + st.night + '_v01');
+  const m = BGS[artOf(st.night)], im = m && ready('trail_bg_n' + artOf(st.night) + '_v01');
   if (im) {
     const sx = (cell * n.w) / m.fw, sy = (cell * n.h) / m.fh;
     ctx.drawImage(im, ox - m.fx * sx, oy - m.fy * sy, m.w * sx, m.h * sy);
@@ -208,7 +211,7 @@ function draw(frac) {
   // everything that stands up is drawn back to front, so Toddy walks behind tall things and in front of the ones behind him
   const items = [];
   const bottomOf = (y) => oy + (y + 1) * cell - cell * 0.04;
-  const ob = OBSTACLE[st.night];
+  const ob = OBSTACLE[artOf(st.night)];
   for (const [x, y] of n.tables) items.push({ y, f: () => {
     if (ob && ready(objFile(ob[0]))) drawStill(ob[0], cc(x, y)[0], bottomOf(y), ob[1] * (n.tables.length > 12 ? 0.74 : 1));
     else { ctx.fillStyle = '#7a4a2a'; ctx.fillRect(ox + x * cell + 2, oy + y * cell + 2, cell - 4, cell - 4); ctx.fillStyle = '#a86a3c'; ctx.fillRect(ox + x * cell + 2, oy + y * cell + 2, cell - 4, cell * 0.4); }
@@ -362,8 +365,8 @@ function banner(text, ms) { const b = $('banner'); b.textContent = text; b.class
 const COMMON = [...['idle_down', 'walk_down', 'walk_up', 'walk_right', 'hand_right', 'hand_down', 'hand_up', 'bump', 'startled', 'win', 'fx_dust', 'fx_heart'].map(animFile), ...DRINK_NAMES.map((d) => 'trail_anim_fx_splash_' + d + '_v01'),
   ...Object.values(VISITOR_BASE), ...['milo', 'pip', 'velvet', 'lumi', 'biscuit'].flatMap((w) => ['impatient', 'receive', 'sigh'].map((p) => custFile(w, p))), ...DRINK_NAMES.flatMap((n) => ['trail_badge_' + n + '_v01', 'trail_cup_' + n + '_v01'])];
 function nightFiles(id) {
-  const n = NIGHTS[id], f = ['trail_bg_n' + id + '_v01'];
-  if (OBSTACLE[id] && n.tables.length) f.push(objFile(OBSTACLE[id][0]));
+  const n = NIGHTS[id], f = ['trail_bg_n' + artOf(id) + '_v01'];
+  if (OBSTACLE[artOf(id)] && n.tables.length) f.push(objFile(OBSTACLE[artOf(id)][0]));
   if (n.brew.length) f.push(objFile('station'), objFile('ring'), animFile('brew_pour'));
   if (n.cart) f.push(objFile('cart'));
   if (n.thief) f.push(animFile('thief_sneak'), animFile('thief_snatch'));
@@ -374,13 +377,13 @@ function nightFiles(id) {
 }
 async function startNight(id) {
   nightId = id; running = false;
-  const o = $('overlay'); o.textContent = ''; o.hidden = false; o.append(mk('div', 'card', 'Getting Night ' + id + ' ready…'));
+  const o = $('overlay'); o.textContent = ''; o.hidden = false; o.append(mk('div', 'card', 'Getting ' + nm(id) + ' ready…'));
   await Promise.all(nightFiles(id).map(loadImg));
   st = newState(id); turns = []; heldDir = null; lastSent = 4; flashes = []; fx = []; acc = 0; last = 0; tod = null; lastMoveAt = -9999; endAt = 0; confettiAt = -99999; jiggleAt = -9999;
   sighUntil = NIGHTS[id].visitors.map(() => 0); servedAt = NIGHTS[id].visitors.map(() => 0); brewAt = []; shutterAt = {}; shutterWas = {}; thiefPrev = null; thiefSnatchAt = -9999;
   prevPts = curPts = pts(st);
   o.hidden = true; o.textContent = '';
-  music.play(id); resize(); updateHud(); running = true; waiting = true;   // Toddy waits for the first swipe
+  music.play(artOf(id)); resize(); updateHud(); running = true; waiting = true;   // Toddy waits for the first swipe
 }
 function updateHud() {
   const n = NIGHTS[st.night], c = st.served.filter(Boolean).length;
@@ -389,16 +392,16 @@ function updateHud() {
   $('lanternFill').style.transform = 'scaleX(' + Math.max(0, (st.limit - st.t) / st.limit).toFixed(3) + ')';
 }
 function mk(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
-const NO_INTRO_VIDEO = new Set([]);   // nights whose intro clip is hidden until redone
+const NO_INTRO_VIDEO = new Set([20]);   // nights whose intro clip is hidden until redone
 function showIntro(id) {   // a short picture-story card before each night
   const o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
   const card = mk('div', 'card'), v = document.createElement('video');
   const noVideo = NO_INTRO_VIDEO.has(id);
   if (!noVideo) v.src = 'assets/trail_intro_n' + id + '_v01.mp4'; v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.preload = 'auto'; v.className = 'intro';
-  const tell = { 1: 'Light the lamp, open the café, and bring everyone their drink.', 2: 'A breezy terrace: tables and parasols are in the way. Brew a new cup at the golden ring.', 3: 'Market night: mind the rolling tea cart.', 4: 'Rain! Puddles are slippery and make Toddy slide one extra step.', 5: 'Quiet library: shutters open and close, so wait for the green light.', 6: 'Moon bridge: Nox the night thief snatches a cup if you pass too close.', 7: 'Street party: everything at once!' };
-  const go = mk('button', 'btn', 'Start Night ' + id); go.addEventListener('click', () => { unlockSound(); startNight(id); });
+  const tell = { 20: 'A hard sample: two shutters, a rolling cart, puddles, a thief on patrol and nine visitors. Only 45 seconds. Not part of the story nights.', 1: 'Light the lamp, open the café, and bring everyone their drink.', 2: 'A breezy terrace: tables and parasols are in the way. Brew a new cup at the golden ring.', 3: 'Market night: mind the rolling tea cart.', 4: 'Rain! Puddles are slippery and make Toddy slide one extra step.', 5: 'Quiet library: shutters open and close, so wait for the green light.', 6: 'Moon bridge: Nox the night thief snatches a cup if you pass too close.', 7: 'Street party: everything at once!' };
+  const go = mk('button', 'btn', 'Start ' + nm(id)); go.addEventListener('click', () => { unlockSound(); startNight(id); });
   const back = mk('button', 'btn alt', 'Back'); back.addEventListener('click', showMenu);
-  if (!noVideo) card.append(v); card.append(mk('h1', '', 'Night ' + id + ' · ' + NIGHTS[id].name), mk('p', '', tell[id] || ''), go, back); o.append(card);
+  if (!noVideo) card.append(v); card.append(mk('h1', '', nm(id) + ' · ' + NIGHTS[id].name), mk('p', '', tell[id] || ''), go, back); o.append(card);
   if (!noVideo) { const pl = v.play(); if (pl && pl.catch) pl.catch(() => {}); }
 }
 function showMenu() {
@@ -411,6 +414,7 @@ function showMenu() {
   const more = mk('button', 'btn alt', 'Choose another night'), list = mk('div', ''); list.hidden = true;
   more.addEventListener('click', () => { list.hidden = !list.hidden; });
   for (const id of NIGHT_IDS) { const b = mk('button', 'btn alt', 'Night ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); showIntro(id); }); list.append(b); }
+  for (const id of SAMPLE_IDS) { const b = mk('button', 'btn alt', 'Sample · Level ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); showIntro(id); }); list.append(b); }
   card.append(more, list); o.append(card);
 }
 function showResult() {
@@ -418,7 +422,7 @@ function showResult() {
   music.stinger(st.won);
   const card = mk('div', 'card');
   card.append(mk('h1', '', st.won ? 'All served!' : 'Lanterns out'), mk('div', 'big', String(r.score)), mk('p', '', 'Served ' + r.served + ' of ' + r.of + ' · ' + r.seconds + ' s · spilled ' + (st.spills + st.snatched)));
-  const nextId = NIGHT_IDS[NIGHT_IDS.indexOf(nightId) + 1];
+  const nextId = NIGHT_IDS.includes(nightId) ? NIGHT_IDS[NIGHT_IDS.indexOf(nightId) + 1] : undefined;
   if (st.won && nextId) { const nx = mk('button', 'btn', 'Night ' + nextId + ' · ' + NIGHTS[nextId].name); nx.addEventListener('click', () => showIntro(nextId)); card.append(nx); }
   const again = mk('button', 'btn' + (st.won && nextId ? ' alt' : ''), 'Play again'); again.addEventListener('click', () => startNight(nightId));
   const other = mk('button', 'btn alt', 'Pick a night'); other.addEventListener('click', showMenu);
