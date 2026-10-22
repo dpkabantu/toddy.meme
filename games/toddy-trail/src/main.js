@@ -358,15 +358,17 @@ function updateHud() {
   $('lanternFill').style.transform = 'scaleX(' + Math.max(0, (st.limit - st.t) / st.limit).toFixed(3) + ')';
 }
 function mk(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
+const NO_INTRO_VIDEO = new Set([6]);
 function showIntro(id) {   // a short picture-story card before each night
   const o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
   const card = mk('div', 'card'), v = document.createElement('video');
-  v.src = 'assets/trail_intro_n' + id + '_v01.mp4'; v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.preload = 'auto'; v.className = 'intro';
+  const noVideo = NO_INTRO_VIDEO.has(id);   // Night 6's clip shows Toddy without his crown: hidden until it is redone
+  if (!noVideo) v.src = 'assets/trail_intro_n' + id + '_v01.mp4'; v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.preload = 'auto'; v.className = 'intro';
   const tell = { 1: 'Light the lamp, open the café, and bring everyone their drink.', 2: 'A breezy terrace: tables and parasols are in the way. Brew a new cup at the golden ring.', 3: 'Market night: mind the rolling tea cart.', 4: 'Rain! Puddles are slippery and make Toddy slide one extra step.', 5: 'Quiet library: shutters open and close, so wait for the green light.', 6: 'Moon bridge: Nox the night thief snatches a cup if you pass too close.', 7: 'Street party: everything at once!' };
   const go = mk('button', 'btn', 'Start Night ' + id); go.addEventListener('click', () => { unlockSound(); startNight(id); });
   const back = mk('button', 'btn alt', 'Back'); back.addEventListener('click', showMenu);
-  card.append(v, mk('h1', '', 'Night ' + id + ' · ' + NIGHTS[id].name), mk('p', '', tell[id] || ''), go, back); o.append(card);
-  const pl = v.play(); if (pl && pl.catch) pl.catch(() => {});
+  if (!noVideo) card.append(v); card.append(mk('h1', '', 'Night ' + id + ' · ' + NIGHTS[id].name), mk('p', '', tell[id] || ''), go, back); o.append(card);
+  if (!noVideo) { const pl = v.play(); if (pl && pl.catch) pl.catch(() => {}); }
 }
 function showMenu() {
   menuMusic();
