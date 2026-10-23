@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-<title>TODDY Free Walk (sample)</title>
+<title>TODDY Free Walk (endless sample)</title>
 <meta name="robots" content="noindex">
 <meta name="theme-color" content="#14102e">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -16,11 +16,12 @@
 <div id="app">
   <canvas id="c" aria-label="TODDY Free Walk play area"></canvas>
   <div id="hud">
-    <div id="served">Served 0 / 3</div>
+    <div id="served">Level 1</div>
     <div id="lantern" aria-label="Lanterns: time left"><div id="lanternFill"></div></div>
     <button id="btnFull" class="ibtn" aria-label="Full screen" aria-pressed="false">⛶</button>
     <button id="btnSound" class="ibtn" aria-label="Sound on" aria-pressed="true">♪</button>
   </div>
+  <div id="banner" role="status" aria-live="polite"></div>
   <div id="overlay"></div>
 </div>
 </body>

@@ -1,7 +1,9 @@
-// TODDY Free Walk (SAMPLE): Trail's Toddy, cups, visitors and objects on a plain floor where Toddy walks in ANY direction toward your touch.
-// The rules live in free-core.js. This file is only drawing and input. Pictures and music are reused, read only, from ../toddy-trail.
-import { LEVEL, FOOT, V, REACH, newState, step, score, linePoints, clampPoint } from './free-core.js';
-import { ANIMS, STILLS } from '../../toddy-trail/src/art.js';
+// TODDY Free Walk (SAMPLE): an endless run. Trail's Toddy, cups, visitors and objects; Toddy walks in ANY direction toward your touch.
+// Rules: free-core.js. Random levels (proved winnable by a bot): free-gen.js. This file is only drawing, input and the run (levels, lives, best).
+// Pictures and music are reused, read only, from ../toddy-trail.
+import { FOOT, V, REACH, LEVEL1, newState, step, score, linePoints, clampPoint, cartPos, thiefPos, gateClosed } from './free-core.js';
+import { makeLevel, HURDLE_H, WHO } from './free-gen.js';
+import { ANIMS, STILLS, BGS } from '../../toddy-trail/src/art.js';
 import { createMusic } from '../../toddy-trail/src/music.js';
 
 const ASSETS = '../toddy-trail/assets/';
@@ -17,36 +19,45 @@ const tickMs = () => 1000 / (SPEEDS[speedName] / V);
 const IMGS = {}, LOADING = {};
 const loadImg = (name) => LOADING[name] || (LOADING[name] = new Promise((res) => { const im = new Image(); im.onload = () => res(); im.onerror = () => res(); im.src = ASSETS + name + '.webp'; IMGS[name] = im; }));
 const ready = (name) => { const im = IMGS[name]; return im && im.complete && im.naturalWidth ? im : null; };
-const WHO = ['milo', 'pip', 'velvet'];
-const VISITOR_BASE = { milo: 'visitor_milo_v02', pip: 'visitor_pip_v01', velvet: 'visitor_velvet_v01' };
+const GW = 9, GH = 13, LIVES = 3;
+const VISITOR_BASE = { milo: 'visitor_milo_v02', pip: 'visitor_pip_v01', velvet: 'visitor_velvet_v01', lumi: 'visitor_lumi_v01', biscuit: 'visitor_biscuit_v01' };
+const MUSIC_OF = { 101: 2, 102: 3, 103: 6, 104: 5, 105: 6, 0: 'menu', 1: 'menu' };   // same borrowing as Trail's endless floors
 const DRINK_NAMES = ['moon', 'star', 'crescent'];
 const animFile = (k) => 'trail_anim_' + k + '_v01', objFile = (k) => 'trail_obj_' + k + '_v01', custFile = (w, p) => 'trail_cust_' + w + '_' + p + '_v01';
-const HURDLE_H = { barrel: 1.2, crates: 1.45, table: 1.85 };   // how tall each hurdle picture stands, in cells (same as Trail)
-const FILES = [
-  ...['idle_down', 'walk_down', 'walk_up', 'walk_right', 'hand_right', 'hand_down', 'hand_up', 'bump', 'startled', 'win', 'fx_dust', 'fx_heart', 'brew_pour'].map(animFile),
+const FILES = [   // what every level needs
+  ...['idle_down', 'walk_down', 'walk_up', 'walk_right', 'hand_right', 'hand_down', 'hand_up', 'bump', 'startled', 'slip', 'win', 'fx_dust', 'fx_heart', 'brew_pour'].map(animFile),
   ...DRINK_NAMES.flatMap((d) => ['trail_anim_fx_splash_' + d + '_v01', 'trail_badge_' + d + '_v01', 'trail_cup_' + d + '_v01']),
-  ...Object.values(VISITOR_BASE), ...WHO.flatMap((w) => ['impatient', 'receive', 'sigh'].map((p) => custFile(w, p))),
-  ...WHO.flatMap((w) => ['idle', 'sip', 'hop'].map((p) => animFile('v_' + w + '_' + p))),
-  ...[...new Set(LEVEL.hurdles.map((h) => h.kind))].map(objFile), objFile('station'), objFile('ring'),
+  objFile('station'), objFile('ring'),
 ];
+function levelFiles(L) {   // only the pictures this level shows
+  const who = [...new Set(L.visitors.map((v) => v.who))], f = [];
+  for (const w of who) f.push(VISITOR_BASE[w], ...['impatient', 'receive', 'sigh'].map((p) => custFile(w, p)), ...['idle', 'sip', 'hop'].map((p) => animFile('v_' + w + '_' + p)));
+  for (const k of new Set(L.hurdles.map((h) => h.kind))) f.push(objFile(k));
+  if (L.theme > 0) f.push('trail_bg_n' + L.theme + '_v01');
+  if (L.cart) f.push(objFile('cart'));
+  if (L.thief) f.push(animFile('thief_sneak'), animFile('thief_snatch'));
+  if (L.puddles.length) f.push(animFile('puddle_ripple'));
+  if (L.shutters.length) f.push(objFile('shutter_open'), objFile('shutter_closed'));
+  return f;
+}
 
 // ---- state ----
-let st = null, running = false, waiting = false, last = 0, acc = 0, totalTime = 0, soundOn = true, pending = null, down = false, padId = null;
+let lv = LEVEL1, run = null, st = null, running = false, waiting = false, last = 0, acc = 0, totalTime = 0, soundOn = true, pending = null, down = false, padId = null;
 let target = null;   // where Toddy is walking to, for the ring on the floor
 let prevPts = [], curPts = [], flashes = [], fx = [], tod = null, lastMoveAt = -9999, endAt = 0, confettiAt = -99999;
-let servedAt = [], sighUntil = [], brewAt = [], face = 'down';   // drawing-only state (never read by the rules)
+let servedAt = [], sighUntil = [], brewAt = [], face = 'down', thiefPrev = null, thiefFlip = false, thiefSnatchAt = -9999, shutterAt = {}, shutterWas = {};   // drawing-only state (never read by the rules)
 let prevMov = false, prevFace = '', jiggleAt = -9999;
 let W = 0, H = 0, DPR = 1, cell = 30, ox = 0, oy = 0;
-const SND = Object.fromEntries(['serve', 'sigh', 'spill', 'brew', 'turn', 'win', 'bump'].map((k) => [k, () => { if (soundOn && musicGo) music.sfx(k); }]));
+const SND = Object.fromEntries(['serve', 'sigh', 'spill', 'brew', 'turn', 'win', 'bump', 'slide', 'snatch'].map((k) => [k, () => { if (soundOn && musicGo) music.sfx(k); }]));
 
 // ---- layout: floor positions are in cells; (x, y) is a footprint centre and feet are drawn FOOT lower ----
 function resize() {
   DPR = Math.min(window.devicePixelRatio || 1, 2);
   const r = cv.getBoundingClientRect(); W = r.width; H = r.height;
   cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
-  const n = LEVEL, top = 64, pad = 8;
-  cell = Math.floor(Math.min((W - pad * 2) / n.w, (H - top - pad * 2) / n.h));
-  ox = Math.floor((W - cell * n.w) / 2); oy = top + Math.floor((H - top - cell * n.h) / 2);
+  const top = 64, pad = 8;
+  cell = Math.floor(Math.min((W - pad * 2) / GW, (H - top - pad * 2) / GH));
+  ox = Math.floor((W - cell * GW) / 2); oy = top + Math.floor((H - top - cell * GH) / 2);
 }
 window.addEventListener('resize', resize);
 const px = (x) => ox + x * cell, pyFloor = (y) => oy + y * cell, pyFeet = (y) => oy + (y + FOOT) * cell;
@@ -76,6 +87,8 @@ const VTRACK = {
   milo: [[0, 0.36], [0.5, 0.36], [0.75, 0.48], [1.0, 0.57], [2.5, 0.57], [2.85, 0.4], [3.0, 0.36]],
   pip: [[0, 0.34], [0.5, 0.36], [0.75, 0.44], [1.0, 0.47], [2.5, 0.48], [2.8, 0.38], [3.0, 0.34]],
   velvet: [[0, 0.34], [0.5, 0.36], [1.0, 0.42], [1.5, 0.46], [1.75, 0.5], [2.5, 0.5], [2.8, 0.4], [3.0, 0.36]],
+  lumi: [[0, 0.34], [0.5, 0.38], [0.75, 0.46], [1.0, 0.5], [2.5, 0.52], [2.8, 0.4], [3.0, 0.35]],
+  biscuit: [[0, 0.3], [0.5, 0.32], [0.8, 0.38], [1.1, 0.43], [2.5, 0.44], [2.85, 0.36], [3.1, 0.3]],
 };
 const belly = (who) => VTRACK[who][0][1];
 function sipFrac(who, t) {
@@ -129,16 +142,38 @@ function toddyPicture() {
 function pawPos(tx, feet, key, flip) { const side = key === 'walk_right' || key.startsWith('hand_right') ? (flip ? -1 : 1) : 0; return [tx + side * cell * 0.3, feet - cell * 0.62]; }
 
 // ---- the scene ----
-function drawFloor() {   // a plain floor: flat colour and a thin brass edge, nothing else
-  ctx.fillStyle = '#2e2558'; ctx.fillRect(ox, oy, cell * LEVEL.w, cell * LEVEL.h);
-  ctx.strokeStyle = 'rgba(201,154,59,.55)'; ctx.lineWidth = 2; ctx.strokeRect(ox, oy, cell * LEVEL.w, cell * LEVEL.h);
+function drawFloor() {   // the level's background picture (level 1: a plain floor, flat colour and a thin brass edge)
+  const m = lv.theme > 0 && BGS[lv.theme], im = m && ready('trail_bg_n' + lv.theme + '_v01');
+  if (im) { const sx = (cell * GW) / m.fw, sy = (cell * GH) / m.fh; ctx.drawImage(im, ox - m.fx * sx, oy - m.fy * sy, m.w * sx, m.h * sy); return; }
+  ctx.fillStyle = '#2e2558'; ctx.fillRect(ox, oy, cell * GW, cell * GH);
+  ctx.strokeStyle = 'rgba(201,154,59,.55)'; ctx.lineWidth = 2; ctx.strokeRect(ox, oy, cell * GW, cell * GH);
+}
+const wrap = (v, m) => ((v % m) + m) % m;
+function ambient() {   // floating dust in the lamplight and a soft warm flicker; rain on the rainy floor (pictures only)
+  if (lv.theme === 0) return;
+  const W2 = cell * GW, H2 = cell * GH, rain = lv.theme === 4;
+  ctx.save(); ctx.beginPath(); ctx.rect(ox, oy, W2, H2); ctx.clip();
+  ctx.globalCompositeOperation = 'lighter';
+  const g = ctx.createRadialGradient(ox + W2 / 2, oy, 0, ox + W2 / 2, oy, W2 * 1.1), fl = 0.05 + 0.02 * Math.sin(totalTime / 700) + 0.012 * Math.sin(totalTime / 130);
+  g.addColorStop(0, 'rgba(255,190,100,' + fl + ')'); g.addColorStop(1, 'rgba(255,190,100,0)'); ctx.fillStyle = g; ctx.fillRect(ox, oy, W2, H2);
+  ctx.globalCompositeOperation = 'source-over';
+  for (let k = 0; k < (rain ? 8 : 22); k++) {
+    const x = ox + wrap(k * 0.618 * W2 + Math.sin(totalTime / 2600 + k) * cell * 0.3 + totalTime * 0.012 * (1 + (k % 3) * 0.4), W2), y = oy + wrap(k * 0.7548 * H2 - totalTime * 0.01 * (1 + (k % 4) * 0.3), H2);
+    ctx.fillStyle = 'rgba(255,232,180,' + (0.22 + 0.18 * Math.sin(totalTime / 900 + k * 1.7)) + ')'; ctx.beginPath(); ctx.arc(x, y, cell * (0.018 + 0.012 * (k % 3)), 0, Math.PI * 2); ctx.fill();
+  }
+  if (rain) {
+    ctx.strokeStyle = 'rgba(190,215,255,.32)'; ctx.lineWidth = Math.max(1, cell * 0.02); ctx.beginPath();
+    for (let k = 0; k < 70; k++) { const x = ox + wrap(k * 0.381966 * W2 * 3 + totalTime * 0.05, W2 + cell) - cell * 0.5, y = oy + wrap(k * 0.7071 * H2 * 5 + totalTime * 0.7 * (0.8 + (k % 5) * 0.1), H2 + cell) - cell * 0.5; ctx.moveTo(x, y); ctx.lineTo(x - cell * 0.08, y + cell * 0.38); }
+    ctx.stroke();
+  }
+  ctx.restore();
 }
 function draw(frac) {
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   ctx.clearRect(0, 0, W, H); ctx.fillStyle = '#14102e'; ctx.fillRect(0, 0, W, H);
   if (!st) return;
-  const n = LEVEL, pulse = 0.5 + 0.5 * Math.sin(totalTime / 220);
-  drawFloor();
+  const n = lv, pulse = 0.5 + 0.5 * Math.sin(totalTime / 220);
+  drawFloor(); ambient();
   const frontWant = st.cups.length ? st.cups[0] : -1;
   let targetIdx = -1, bestD = 1e9;   // the ONE visitor to go to: the nearest of those who want the first cup
   n.visitors.forEach((v, i) => { if (!st.served[i] && v.want === frontWant) { const d = Math.hypot(v.x - st.x, v.y - st.y); if (d < bestD) { bestD = d; targetIdx = i; } } });
@@ -147,6 +182,10 @@ function draw(frac) {
     ctx.fillStyle = st.served[i] ? 'rgba(120,200,120,.16)' : 'rgba(253,175,30,.16)'; ctx.fill();
     if (!st.served[i] && i === targetIdx) { ctx.strokeStyle = 'rgba(255,244,214,' + (0.4 + 0.5 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
   });
+  for (const p of n.puddles) {   // puddles lie on the floor and ripple
+    if (ready(animFile('puddle_ripple'))) drawCentered(animFile('puddle_ripple'), 'puddle_ripple', animIndex('puddle_ripple', totalTime + p.x * 311 + p.y * 97), px(p.x), pyFloor(p.y) + cell * 0.12, cell * 1.12);
+    else { ctx.beginPath(); ctx.ellipse(px(p.x), pyFloor(p.y) + cell * 0.1, cell * 0.5, cell * 0.28, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(120,170,230,.45)'; ctx.fill(); }
+  }
   n.brew.forEach((b, i) => {
     const ring = ready(objFile('ring')), rm = STILLS.ring, cool = st.brewCool[i] > 0;
     if (ring && rm) { const w = cell * 1.0, h = (rm[1] / rm[0]) * w; ctx.globalAlpha = cool ? 0.45 : 1; ctx.drawImage(ring, px(b.x) - w / 2, pyFloor(b.y) + cell * 0.12 - h / 2, w, h); ctx.globalAlpha = 1; }
@@ -165,6 +204,34 @@ function draw(frac) {
     if (playing && ready(animFile('brew_pour'))) drawStrip(animFile('brew_pour'), 'brew_pour', animIndex('brew_pour', totalTime - brewAt[i]), px(b.x), bottom, cell * 1.35 * (ANIMS.brew_pour.subj / 170), false);
     else drawStill('station', px(b.x), bottom, 1.35, 1.2);
   } }));
+  n.shutters.forEach((sh, k) => {   // a gate that opens and closes; wide, so two shutter pictures stand side by side
+    const closed = gateClosed(n, st.t, k), key = String(k);
+    if (shutterWas[key] !== closed) { shutterWas[key] = closed; shutterAt[key] = totalTime; }
+    items.push({ y: sh.y, f: () => {
+      const open = ready(objFile('shutter_open')), shut = ready(objFile('shutter_closed')), mm = STILLS.shutter_closed, bottom = pyFeet(sh.y), p = Math.min(1, (totalTime - (shutterAt[key] || -9999)) / 350);
+      if (!open || !shut || !mm) return;
+      const w = cell * 0.98, h = Math.min(cell * 1.35, (mm[1] / mm[0]) * w), cover = closed ? p : 1 - p;
+      for (const dx of [-0.49, 0.49]) {
+        const cx = px(sh.x + dx);
+        ctx.drawImage(open, cx - w / 2, bottom - h, w, h);
+        if (cover > 0) ctx.drawImage(shut, 0, 0, shut.naturalWidth, shut.naturalHeight * cover, cx - w / 2, bottom - h, w, h * cover);
+      }
+    } });
+  });
+  const cartA = cartPos(st), cart = cartA && { x: cartA[0], y: cartA[1] };
+  if (cart) items.push({ y: cart.y, f: () => drawStill('cart', px(cart.x), pyFeet(cart.y), 1.0, 1.75) });
+  const thiefA = thiefPos(st), thief = thiefA && { x: thiefA[0], y: thiefA[1] };
+  if (thief) {
+    if (thiefPrev && thief.x !== thiefPrev.x) thiefFlip = thief.x < thiefPrev.x;
+    thiefPrev = thief;
+    items.push({ y: thief.y + 0.01, f: () => {
+      const cx = px(thief.x), bottom = pyFeet(thief.y), snatching = totalTime - thiefSnatchAt < 900;
+      ctx.beginPath(); ctx.ellipse(cx, bottom - cell * 0.04, cell * 0.32, cell * 0.09, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fill();
+      if (snatching) drawStrip(animFile('thief_snatch'), 'thief_snatch', animIndex('thief_snatch', totalTime - thiefSnatchAt), cx, bottom, cell * 1.2, thiefFlip);
+      else drawStrip(animFile('thief_sneak'), 'thief_sneak', animIndex('thief_sneak', totalTime), cx, bottom, cell * 1.2, thiefFlip);
+      if (st.thiefCool === 0 && !snatching) { ctx.strokeStyle = 'rgba(255,120,100,' + (0.35 + 0.35 * pulse) + ')'; ctx.lineWidth = 2; ctx.setLineDash([5, 5]); ctx.beginPath(); ctx.arc(cx, bottom - cell * 0.4, cell * 1.0, 0, Math.PI * 2); ctx.stroke(); ctx.setLineDash([]); }
+    } });
+  }
   const timeLeft = (st.limit - st.t) / st.limit;
   n.visitors.forEach((v, i) => items.push({ y: v.y + 0.01, f: () => {
     const bx = px(v.x), done = st.served[i], bottom = pyFeet(v.y) + cell * 0.04;
@@ -211,7 +278,7 @@ function draw(frac) {
     ctx.save(); ctx.translate(tx, feet); ctx.scale(1 + 0.04 * kk, 1 - 0.05 * kk); ctx.translate(-tx, -feet);
     drawStrip(animFile(tp.key), tp.key, tp.i, tx, feet, cell * 1.75, tp.flip); ctx.restore();
     const handing = fx.some((f) => f.kind === 'cup' && totalTime - f.t0 < 650);   // while a cup is being handed over, that cup is drawn by the effect
-    if (st.cups.length && !handing && !st.over && !(tp.key === 'walk_up' || tp.key === 'bump' || tp.key === 'startled')) {
+    if (st.cups.length && !handing && !st.over && !(tp.key === 'walk_up' || tp.key === 'bump' || tp.key === 'slip' || tp.key === 'startled')) {
       const [hx, hy] = pawPos(tx, feet, tp.key, tp.flip), pv = hy + cell * 0.3;
       ctx.save(); ctx.translate(hx, pv); ctx.rotate(0.2 * jd * Math.sin(jt * 22) * (mv ? 0.6 : 1)); ctx.translate(-hx, -pv); drawCup(st.cups[0], hx, hy, cell * 0.62); ctx.restore(); steam(hx, hy, cell * 0.62);
       ctx.beginPath(); ctx.arc(hx, hy, cell * 0.42, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.55 + 0.4 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke();
@@ -259,7 +326,7 @@ function draw(frac) {
     ctx.fillStyle = 'rgba(20,16,46,.9)'; ctx.fillRect(cx0, cy0, cw, ch); ctx.strokeStyle = '#C99A3B'; ctx.lineWidth = 2; ctx.strokeRect(cx0, cy0, cw, ch);
     ctx.fillStyle = '#FDE3BD'; ctx.font = '600 15px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'left'; ctx.fillText(frontWant >= 0 ? 'Give this' : 'No cups left', cx0 + 10, cy0 + 28);
     if (frontWant >= 0) drawDrink(frontWant, cx0 + cw - 26, cy0 + ch / 2, 16); }
-  const hintY = Math.min(oy + cell * n.h + 34, H - 14);   // under the floor, or just above the bottom edge on a short window
+  const hintY = Math.min(oy + cell * GH + 34, H - 14);   // under the floor, or just above the bottom edge on a short window
   if (waiting) {
     const a = 0.5 + 0.5 * Math.sin(totalTime / 260);
     ctx.beginPath(); ctx.arc(tx, feet - cell * 0.5, cell * (0.75 + 0.12 * a), 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.5 + 0.4 * a) + ')'; ctx.lineWidth = 3; ctx.stroke();
@@ -270,7 +337,7 @@ function draw(frac) {
     ctx.beginPath(); ctx.ellipse(px(target.x), pyFeet(target.y) + cell * 0.02, cell * (0.3 + 0.05 * a), cell * (0.16 + 0.03 * a), 0, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.55 + 0.35 * a) + ')'; ctx.lineWidth = 3; ctx.stroke();
   }
   if (totalTime - confettiAt < 3800) {   // win confetti
-    const cols = ['#FDAF1E', '#E04F7B', '#4FB3A0', '#6C8CFF', '#FFF4D6', '#B07CFF'], wrap = (v, m) => ((v % m) + m) % m, FW = cell * n.w, FH = cell * n.h;
+    const cols = ['#FDAF1E', '#E04F7B', '#4FB3A0', '#6C8CFF', '#FFF4D6', '#B07CFF'], wrap = (v, m) => ((v % m) + m) % m, FW = cell * GW, FH = cell * GH;
     for (let k = 0; k < 70; k++) {
       const age = totalTime - confettiAt - (k % 14) * 90; if (age < 0) continue;
       const x = ox + wrap(k * 0.618 * FW * 3, FW) + Math.sin(age / 400 + k) * cell * 0.4, y = oy - cell * 0.4 + age * (FH / 2600) * (0.75 + (k % 5) * 0.12);
@@ -289,29 +356,48 @@ function draw(frac) {
 
 // ---- game flow ----
 function mk(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
+const hearts = (k) => '♥'.repeat(k) + '♡'.repeat(Math.max(0, LIVES - k));
 function updateHud() {
   const c = st.served.filter(Boolean).length;
-  $('served').textContent = 'Served ' + c + ' / ' + LEVEL.visitors.length;
+  $('served').textContent = 'Level ' + run.n + ' · ' + hearts(run.lives) + ' · ' + c + '/' + lv.visitors.length;
   const f = (st.limit - st.t) / st.limit; music.setLevel(st.won || st.over ? 0 : f < 0.25 ? 2 : f < 0.5 ? 1 : 0);
   $('lanternFill').style.transform = 'scaleX(' + Math.max(0, f).toFixed(3) + ')';
 }
-function startRound() {
+// ---- the run: endless levels, three lives, best level and score kept on this phone ----
+const qs = new URLSearchParams(location.search);
+const best = { level: 0, score: 0 };
+try { const b = JSON.parse(localStorage.getItem('freeWalkBest') || '{}'); best.level = b.level | 0; best.score = b.score | 0; } catch (_) { /* storage optional */ }
+const saveBest = () => { try { localStorage.setItem('freeWalkBest', JSON.stringify(best)); } catch (_) { /* optional */ } };
+const HINTS = { puddle: 'Puddles are slippery', cart: 'Mind the rolling cart', gate: 'Wait for the gate to open', thief: 'A thief is about: watch your cups' };
+let seen = {}; try { seen = JSON.parse(localStorage.getItem('freeWalkSeen') || '{}') || {}; } catch (_) { /* optional */ }
+let bannerTimer = 0;
+function banner(text) { const b = $('banner'); if (!b) return; b.textContent = text; b.classList.add('show'); clearTimeout(bannerTimer); bannerTimer = setTimeout(() => b.classList.remove('show'), 3200); }
+function newRun() {
+  const seed = qs.get('seed') ? Number(qs.get('seed')) >>> 0 : crypto.getRandomValues(new Uint32Array(1))[0];
+  run = { n: Math.max(1, Number(qs.get('level')) | 0 || 1), seed, tries: 0, lives: LIVES, total: 0, prevTheme: -1 };
+}
+function startLevel() {
   running = false;
   const o = $('overlay'); o.textContent = ''; o.hidden = false; o.append(mk('div', 'card', 'Getting the floor ready…'));
-  Promise.all(FILES.map(loadImg)).then(() => {
-    st = newState(); pending = null; down = false; target = null; flashes = []; fx = []; acc = 0; last = 0; tod = null; lastMoveAt = -9999; endAt = 0; confettiAt = -99999; jiggleAt = -9999; face = 'up';
-    sighUntil = LEVEL.visitors.map(() => 0); servedAt = LEVEL.visitors.map(() => 0); brewAt = [];
+  const made = makeLevel(run.n, (run.seed + run.tries * 7919) >>> 0, run.prevTheme);
+  lv = made.level; lv.theme = lv.theme | 0;
+  Promise.all([...FILES, ...levelFiles(lv)].map(loadImg)).then(() => {
+    st = newState(lv); pending = null; down = false; target = null; flashes = []; fx = []; acc = 0; last = 0; tod = null; lastMoveAt = -9999; endAt = 0; confettiAt = -99999; jiggleAt = -9999; face = 'up';
+    sighUntil = lv.visitors.map(() => 0); servedAt = lv.visitors.map(() => 0); brewAt = []; shutterAt = {}; shutterWas = {}; thiefPrev = null; thiefSnatchAt = -9999;
     prevPts = curPts = linePoints(st);
     o.hidden = true; o.textContent = '';
-    music.play('menu'); resize(); updateHud(); running = true; waiting = true;   // Toddy waits for the first touch
+    music.play(MUSIC_OF[lv.theme] || lv.theme); resize(); updateHud(); running = true; waiting = true;   // Toddy waits for the first touch
+    const fresh = [['puddle', lv.puddles.length], ['cart', lv.cart], ['gate', lv.shutters.length], ['thief', lv.thief]].find(([k, on]) => on && !seen[k]);
+    if (fresh) { seen[fresh[0]] = 1; try { localStorage.setItem('freeWalkSeen', JSON.stringify(seen)); } catch (_) { /* optional */ } banner(HINTS[fresh[0]]); }
   });
 }
 function showMenu() {
   if (musicGo) music.play('menu');
   const o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
   const card = mk('div', 'card');
-  card.append(mk('h1', '', 'TODDY Free Walk'), mk('p', '', 'Sample · plain floor'), mk('p', '', '1 · Touch where Toddy should go'), mk('p', '', '2 · Bring each visitor their drink'), mk('p', '', '3 · Hurdles spill a cup'));
-  const play = mk('button', 'btn', 'Play'); play.addEventListener('click', () => { unlockSound(); startRound(); });
+  card.append(mk('h1', '', 'TODDY Free Walk'), mk('p', '', 'Sample · endless'), mk('p', '', '1 · Touch where Toddy should go'), mk('p', '', '2 · Bring each visitor their drink'), mk('p', '', '3 · Three lives. Every level is harder.'));
+  if (best.level) card.append(mk('p', '', 'Best: level ' + best.level + ' · ' + best.score + ' points'));
+  const play = mk('button', 'btn', 'Play'); play.addEventListener('click', () => { unlockSound(); newRun(); startLevel(); });
   const spd = mk('button', 'btn alt', 'Walking speed: ' + speedName);
   spd.addEventListener('click', () => { const names = Object.keys(SPEEDS); speedName = names[(names.indexOf(speedName) + 1) % names.length]; try { localStorage.setItem('freeWalkSpeed', speedName); } catch (_) { /* optional */ } spd.textContent = 'Walking speed: ' + speedName; });
   card.append(play, spd); o.append(card);
@@ -320,15 +406,27 @@ function showResult() {
   const r = score(st), o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
   music.stinger(st.won);
   const card = mk('div', 'card');
-  card.append(mk('h1', '', st.won ? 'All served!' : 'Lanterns out'), mk('div', 'big', String(r.score)), mk('p', '', 'Served ' + r.served + ' of ' + r.of + ' · ' + r.seconds + ' s · spilled ' + st.spills));
-  const again = mk('button', 'btn', 'Play again'); again.addEventListener('click', startRound);
+  if (st.won) {
+    run.total += r.score; if (run.n > best.level || (run.n === best.level && run.total > best.score)) { best.level = run.n; best.score = Math.max(best.score, run.total); saveBest(); }
+    card.append(mk('h1', '', 'Level ' + run.n + ' done!'), mk('div', 'big', String(r.score)), mk('p', '', 'Total ' + run.total + ' · ' + hearts(run.lives)));
+    const next = mk('button', 'btn', 'Next level'); next.addEventListener('click', () => { run.prevTheme = lv.theme; run.n++; run.tries = 0; startLevel(); });
+    card.append(next);
+  } else if (run.lives > 1) {
+    run.lives--; run.tries++;
+    card.append(mk('h1', '', 'Lanterns out'), mk('p', '', 'Served ' + r.served + ' of ' + r.of), mk('p', '', hearts(run.lives) + ' left'));
+    const again = mk('button', 'btn', 'Try level ' + run.n + ' again'); again.addEventListener('click', startLevel); card.append(again);
+  } else {
+    run.lives = 0; if (run.total > best.score && run.n - 1 >= best.level) { best.score = run.total; best.level = Math.max(best.level, run.n - 1); saveBest(); }
+    card.append(mk('h1', '', 'Game over'), mk('div', 'big', String(run.total)), mk('p', '', 'Reached level ' + run.n + ' · best level ' + best.level));
+    const again = mk('button', 'btn', 'New game'); again.addEventListener('click', () => { newRun(); startLevel(); }); card.append(again);
+  }
   const menu = mk('button', 'btn alt', 'Menu'); menu.addEventListener('click', showMenu);
-  card.append(again, menu); o.append(card);
+  card.append(menu); o.append(card);
 }
 function unlockSound() { musicGo = true; music.resume(); }
 
 function onEvents() {
-  const n = LEVEL;
+  const n = lv;
   for (const e of st.events) {
     if (e.type === 'serve') {
       SND.serve(); const v = n.visitors[e.visitor], f = faceToward(v.x - st.x, v.y - st.y); servedAt[e.visitor] = totalTime;
@@ -345,6 +443,12 @@ function onEvents() {
       if (e.type === 'spill') fx.push({ file: 'trail_anim_fx_splash_' + DRINK_NAMES[e.drink] + '_v01', key: 'fx_splash', x: st.x, y: st.y, dy: 0.25, size: 1.45, t0: totalTime, ms: 2000 });
       flashes.push({ x: st.x, y: st.y, t0: totalTime, text: e.type === 'spill' ? 'bumped! cup lost' : 'bump!', color: '#ff8f7a' });
       setTod('bump', face, 1600, 'cancelOnMove');
+    } else if (e.type === 'slide') {
+      SND.slide(); setTod('slip', face, 800);
+    } else if (e.type === 'snatch') {
+      SND.snatch(); SND.spill(); thiefSnatchAt = totalTime; flashes.push({ x: st.x, y: st.y, t0: totalTime, text: 'snatched!', color: '#ff8f7a' });
+      fx.push({ file: 'trail_anim_fx_splash_' + DRINK_NAMES[e.drink] + '_v01', key: 'fx_splash', x: st.x, y: st.y, dy: 0.25, size: 1.2, t0: totalTime, ms: 1600 });
+      setTod('startled', face, 1300, 'cancelOnMove');
     } else if (e.type === 'brew') {
       SND.brew(); flashes.push({ x: st.x, y: st.y, t0: totalTime, text: '+1', color: '#fff4d6' }); brewAt[e.station] = totalTime;
     }
@@ -406,6 +510,7 @@ $('btnFull').addEventListener('click', async () => {
 document.addEventListener('fullscreenchange', fsRefresh); document.addEventListener('webkitfullscreenchange', fsRefresh);
 $('btnSound').addEventListener('click', () => { soundOn = !soundOn; music.setEnabled(soundOn); $('btnSound').setAttribute('aria-pressed', String(soundOn)); $('btnSound').style.opacity = soundOn ? '1' : '.55'; unlockSound(); });
 
+if (qs.has('debug')) window.__fw = { get st() { return st; }, get lv() { return lv; }, get run() { return run; }, get cell() { return cell; }, get ox() { return ox; }, get oy() { return oy; } };   // test hook, only with ?debug
 resize(); requestAnimationFrame(frame);
 { const o = $('overlay'); o.textContent = ''; o.append(mk('div', 'card', 'Loading TODDY Free Walk…')); }
 Promise.all(FILES.map(loadImg)).then(() => { resize(); showMenu(); });
