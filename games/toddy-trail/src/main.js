@@ -322,25 +322,20 @@ function draw(frac) {
   for (const it of items) it.f();
 
   ambient(n);
-  // speech bubbles: what each waiting visitor wants
+  // speech bubbles: what each waiting visitor wants. The NEAREST visitor who wants Toddy's first cup glows and bobs (no guide line any more).
   n.visitors.forEach((v, i) => {
     if (st.served[i]) return;
-    const [bx, by] = cc(v.bx, v.by), by2 = by - cell * 1.3;
-    ctx.globalAlpha = targetIdx >= 0 && i !== targetIdx ? 0.55 : 1;
-    ctx.fillStyle = 'rgba(20,16,46,.9)'; ctx.beginPath(); ctx.arc(bx, by2, cell * 0.48, 0, Math.PI * 2); ctx.fill();
-    if (i === targetIdx) { ctx.strokeStyle = 'rgba(255,244,214,' + (0.5 + 0.5 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
-    drawDrink(v.want, bx, by2, cell * 0.46); ctx.globalAlpha = 1;
+    const [bx, by] = cc(v.bx, v.by), isT = i === targetIdx, bob = isT ? Math.sin(totalTime / 260) * cell * 0.05 : 0, by2 = by - cell * 1.3 - bob, rr = cell * 0.48 * (isT ? 1.08 + 0.1 * pulse : 1);
+    ctx.globalAlpha = targetIdx >= 0 && !isT ? 0.5 : 1;
+    if (isT) {   // soft golden glow behind the badge
+      const g = ctx.createRadialGradient(bx, by2, rr * 0.4, bx, by2, rr * (1.7 + 0.35 * pulse));
+      g.addColorStop(0, 'rgba(255,214,110,' + (0.75 + 0.2 * pulse) + ')'); g.addColorStop(1, 'rgba(255,214,110,0)');
+      ctx.fillStyle = g; ctx.beginPath(); ctx.arc(bx, by2, rr * (1.7 + 0.35 * pulse), 0, Math.PI * 2); ctx.fill();
+    }
+    ctx.fillStyle = 'rgba(20,16,46,.9)'; ctx.beginPath(); ctx.arc(bx, by2, rr, 0, Math.PI * 2); ctx.fill();
+    if (isT) { ctx.strokeStyle = 'rgba(255,226,140,' + (0.7 + 0.3 * pulse) + ')'; ctx.lineWidth = 4; ctx.stroke(); }
+    drawDrink(v.want, bx, by2, rr * 0.96); ctx.globalAlpha = 1;
   });
-  // guide: a moving dashed line from Toddy to the visitor who wants his first cup
-  if (st.cups.length && !st.over) {
-    n.visitors.forEach((v, i) => {
-      if (i !== targetIdx) return;
-      const [gx, gy] = cc(v.sx, v.sy), ang = Math.atan2(gy - ty, gx - tx);
-      ctx.save(); ctx.setLineDash([9, 9]); ctx.lineDashOffset = -totalTime / 40; ctx.strokeStyle = 'rgba(255,230,160,.8)'; ctx.lineWidth = 3.5;
-      ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(gx - Math.cos(ang) * cell * 0.45, gy - Math.sin(ang) * cell * 0.45); ctx.stroke(); ctx.restore();
-      ctx.fillStyle = 'rgba(255,230,160,.95)'; ctx.beginPath(); const ax = gx - Math.cos(ang) * cell * 0.3, ay = gy - Math.sin(ang) * cell * 0.3; ctx.moveTo(ax + Math.cos(ang) * 10, ay + Math.sin(ang) * 10); ctx.lineTo(ax + Math.cos(ang + 2.4) * 10, ay + Math.sin(ang + 2.4) * 10); ctx.lineTo(ax + Math.cos(ang - 2.4) * 10, ay + Math.sin(ang - 2.4) * 10); ctx.closePath(); ctx.fill();
-    });
-  }
   // effects: splashes, dust, hearts
   fx = fx.filter((f) => totalTime - f.t0 < f.ms);
   for (const f of fx) {
