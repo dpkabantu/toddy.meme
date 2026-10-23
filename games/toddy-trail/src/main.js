@@ -15,7 +15,9 @@ let STEP_MS = 1000 / SPEEDS[speedName];
 const IMGS = {}, LOADING = {};
 const loadImg = (name) => LOADING[name] || (LOADING[name] = new Promise((res) => { const im = new Image(); im.onload = () => res(); im.onerror = () => res(); im.src = 'assets/' + name + '.webp'; IMGS[name] = im; }));
 const ready = (name) => { const im = IMGS[name]; return im && im.complete && im.naturalWidth ? im : null; };
-const VISITOR_BASE = { milo: 'visitor_milo_v02', pip: 'visitor_pip_v01', velvet: 'visitor_velvet_v01', lumi: 'visitor_lumi_v01', biscuit: 'visitor_biscuit_v01' };
+const VISITOR_BASE = { milo: 'visitor_milo_v02', pip: 'visitor_pip_v01', velvet: 'visitor_velvet_v01', lumi: 'visitor_lumi_v01', biscuit: 'visitor_biscuit_v01', drizzle: 'visitor_drizzle_v01', pebble: 'visitor_pebble_v01', bao: 'visitor_bao_v01' };
+// which extra pictures exist per visitor (the newer visitors are still getting their set; only listed files are ever requested)
+const CUST = { milo: ['impatient', 'receive', 'sigh'], pip: ['impatient', 'receive', 'sigh'], velvet: ['impatient', 'receive', 'sigh'], lumi: ['impatient', 'receive', 'sigh'], biscuit: ['impatient', 'receive', 'sigh'], drizzle: ['receive'], pebble: ['receive'], bao: ['receive'] };
 const DRINK_NAMES = ['moon', 'star', 'crescent', 'sun', 'heart'];
 const animFile = (k) => 'trail_anim_' + k + '_v01', objFile = (k) => 'trail_obj_' + k + '_v01', custFile = (w, p) => 'trail_cust_' + w + '_' + p + '_v01';
 
@@ -88,6 +90,9 @@ const VTRACK = {
   velvet: [[0, 0.34], [0.5, 0.36], [1.0, 0.42], [1.5, 0.46], [1.75, 0.5], [2.5, 0.5], [2.8, 0.4], [3.0, 0.36]],
   lumi: [[0, 0.34], [0.5, 0.38], [0.75, 0.46], [1.0, 0.5], [2.5, 0.52], [2.8, 0.4], [3.0, 0.35]],
   biscuit: [[0, 0.3], [0.5, 0.32], [0.8, 0.38], [1.1, 0.43], [2.5, 0.44], [2.85, 0.36], [3.1, 0.3]],
+  drizzle: [[0, 0.33], [0.75, 0.35], [1.25, 0.44], [1.6, 0.5], [3.0, 0.5], [3.4, 0.4], [3.75, 0.34]],
+  pebble: [[0, 0.33], [1, 0.33]],
+  bao: [[0, 0.33], [1, 0.33]],
 };
 const belly = (who) => (VTRACK[who] || VTRACK.milo)[0][1];
 function sipFrac(who, t) {
@@ -259,7 +264,7 @@ function draw(frac) {
     const [bx] = cc(v.bx, v.by), done = st.served[i], bottom = bottomOf(v.by) + cell * 0.04;
     const T = done ? totalTime - (servedAt[i] || -9999) : -1, since = T - 640;   // since: ms after the cup reached the visitor
     const iK = 'v_' + v.who + '_idle', sK = 'v_' + v.who + '_sip', hK = 'v_' + v.who + '_hop';
-    const haveV = ready(animFile(iK)) && ready(animFile(sK)) && ready(animFile(hK)), subjH = cell * 1.75;
+    const haveI = ready(animFile(iK)), haveV = haveI && ready(animFile(sK)) && ready(animFile(hK)), subjH = cell * 1.75;
     const lift = !haveV && since > 0 && since < 520 ? Math.sin((since / 520) * Math.PI) * cell * 0.17 : 0;
     ctx.save(); ctx.translate(0, -lift);
     const base = ready(VISITOR_BASE[v.who]);
@@ -269,10 +274,11 @@ function draw(frac) {
     if (!done) {
       if (totalTime < (sighUntil[i] || 0)) im = ready(custFile(v.who, 'sigh')) || base;
       else if (timeLeft < 0.35) im = ready(custFile(v.who, 'impatient')) || base;
-      else if (haveV) { drawStrip(animFile(iK), iK, animIndex(iK, totalTime + i * 1370), bx, bottom, subjH); }
+      else if (haveI) { drawStrip(animFile(iK), iK, animIndex(iK, totalTime + i * 1370), bx, bottom, subjH); }
       else im = base;
-    } else if (!haveV) {
-      im = since >= 0 ? (ready(custFile(v.who, 'receive')) || base) : base; if (since >= 0) cupY = bottom - cell * 0.62;
+    } else if (!haveV) {   // no sip/hop clips yet: idle until the cup arrives, then the receiving picture with a small lift
+      if (haveI && since < 0) drawStrip(animFile(iK), iK, animIndex(iK, totalTime + i * 1370), bx, bottom, subjH);
+      else im = since >= 0 ? (ready(custFile(v.who, 'receive')) || base) : base; if (since >= 0) cupY = bottom - cell * 0.62;
     } else if (since < 0) drawStrip(animFile(iK), iK, animIndex(iK, totalTime + i * 1370), bx, bottom, subjH);
     else if (since < hopMs) {   // a little hop of joy, the cup rides in the paws
       const fi = animIndex(hK, since), lf = (ANIMS[hK].lift && ANIMS[hK].lift[fi]) || 0;
@@ -372,7 +378,7 @@ function draw(frac) {
 // ---- game flow ----
 function banner(text, ms) { const b = $('banner'); b.textContent = text; b.classList.add('show'); clearTimeout(bannerTimer); bannerTimer = setTimeout(() => b.classList.remove('show'), ms || 2500); }
 const COMMON = [...['idle_down', 'walk_down', 'walk_up', 'walk_right', 'hand_right', 'hand_down', 'hand_up', 'bump', 'startled', 'win', 'fx_dust', 'fx_heart'].map(animFile), ...DRINK_NAMES.map((d) => 'trail_anim_fx_splash_' + d + '_v01'),
-  ...Object.values(VISITOR_BASE), ...['milo', 'pip', 'velvet', 'lumi', 'biscuit'].flatMap((w) => ['impatient', 'receive', 'sigh'].map((p) => custFile(w, p))), ...DRINK_NAMES.flatMap((n) => ['trail_badge_' + n + '_v01', 'trail_cup_' + n + '_v01'])];
+  ...Object.values(VISITOR_BASE), ...Object.entries(CUST).flatMap(([w, ps]) => ps.map((p) => custFile(w, p))), ...DRINK_NAMES.flatMap((n) => ['trail_badge_' + n + '_v01', 'trail_cup_' + n + '_v01'])];
 function nightFiles(id) {
   const n = NIGHTS[id], f = ['trail_bg_n' + artOf(id) + '_v01'];
   if (n.tables.length) f.push(objFile(obstacleOf(id)[0]));
@@ -381,7 +387,7 @@ function nightFiles(id) {
   if (n.thief) f.push(animFile('thief_sneak'), animFile('thief_snatch'));
   if (n.puddles && n.puddles.length) f.push(animFile('puddle_ripple'), animFile('slip'));
   if (n.shutters && n.shutters.length) f.push(objFile('shutter_open'), objFile('shutter_closed'));
-  for (const w of new Set(n.visitors.map((v) => v.who))) f.push(animFile('v_' + w + '_idle'), animFile('v_' + w + '_sip'), animFile('v_' + w + '_hop'));
+  for (const w of new Set(n.visitors.map((v) => v.who))) for (const k of ['idle', 'sip', 'hop']) if (ANIMS['v_' + w + '_' + k]) f.push(animFile('v_' + w + '_' + k));
   return f;
 }
 async function startNight(id) {

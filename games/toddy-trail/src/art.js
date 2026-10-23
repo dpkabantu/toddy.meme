@@ -493,6 +493,73 @@ export const ANIMS = {
   "loop": false,
   "subj": 140,
   "feet": 178
+ },
+ "v_drizzle_idle": {
+  "n": 28,
+  "fps": 8,
+  "w": 224,
+  "h": 224,
+  "loop": true,
+  "subj": 150,
+  "feet": 212
+ },
+ "v_drizzle_sip": {
+  "n": 32,
+  "fps": 8,
+  "w": 224,
+  "h": 224,
+  "loop": false,
+  "subj": 150,
+  "feet": 212
+ },
+ "v_drizzle_hop": {
+  "n": 20,
+  "fps": 12,
+  "w": 224,
+  "h": 224,
+  "loop": false,
+  "subj": 150,
+  "feet": 212,
+  "lift": [
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0.021,
+   0.078,
+   0.11,
+   0.11,
+   0.082,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0,
+   0
+  ]
+ },
+ "v_pebble_idle": {
+  "n": 29,
+  "fps": 8,
+  "w": 224,
+  "h": 224,
+  "loop": true,
+  "subj": 150,
+  "feet": 212
+ },
+ "v_bao_idle": {
+  "n": 26,
+  "fps": 8,
+  "w": 224,
+  "h": 224,
+  "loop": true,
+  "subj": 150,
+  "feet": 212
  }
 };
 export const STILLS = {"table":[143,300],"crates":[195,300],"barrel":[249,300],"shelf":[261,300],"post":[222,300],"speaker":[206,300],"thief":[239,300],"cart":[261,200],"puddle":[400,200],"shutter_closed":[250,300],"shutter_open":[250,300],"station":[224,300],"ring":[289,200],"planter":[282,300],"suitcases":[235,300],"rope":[351,300],"snowman":[208,300],"telescope":[228,300]};   // [width, height] of each cut-out picture
