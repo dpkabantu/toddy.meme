@@ -131,8 +131,10 @@ for (let run = 1; run <= 2; run++) {
   const geo = await page.evaluate(() => { const r = document.getElementById('c').getBoundingClientRect(); const W = r.width, H = r.height, top = 64, pad = 8, cell = Math.floor(Math.min((W - pad * 2) / 9, (H - top - pad * 2) / 13)); return { left: r.left, top: r.top, cell, ox: Math.floor((W - cell * 9) / 2), oy: top + Math.floor((H - top - cell * 13) / 2) }; });
   const tapCell = (cx, cy) => page.touchscreen.tap(geo.left + geo.ox + (cx + 0.5) * geo.cell, geo.top + geo.oy + (cy + 0.5) * geo.cell);
   const served = (k) => page.waitForFunction((k) => new RegExp('Served ' + k + ' /').test(document.getElementById('served').textContent), k, { timeout: 9000 });
-  await tapCell(6, 9); await served(1);   // straight along his row
-  await tapCell(2, 6); await served(2);   // diagonal touch: along the row, then up the column
+  await tapCell(6, 6); await page.waitForTimeout(1500);   // diagonal touch from (4,9): a staircase to (6,6)
+  assert.match(await page.locator('#served').innerText(), /Served 0 \//);
+  await tapCell(6, 9); await served(1);   // straight down to Milo's spot
+  await tapCell(2, 6); await served(2);   // diagonal touch (4 across, 3 up)
   await tapCell(6, 3); await served(3);
   await page.screenshot({ path: path.join(shots, 'trail-tap-night1.png') });
 }

@@ -528,21 +528,30 @@ function frame(now) {
 // ---- tap to go: touch a spot and Toddy walks there by himself, around obstacles ----
 let controlMode = (() => { try { return localStorage.getItem('trailControl') === 'steer' ? 'steer' : 'tap'; } catch (_) { return 'tap'; } })();
 let target = null;   // the cell Toddy is walking to
-// Touch anywhere: Toddy walks along his row first, then along the column (an L shape, no clever detours), with the normal game rules:
-// a table, wall, cart or visitor in the way is a bump and he stops (touch again to go on); a puddle still slides him.
+// Tap to go in ANY direction: Toddy walks the straight line from where he stands to the touched cell. The grid only allows up/down/left/right steps,
+// so a diagonal is a staircase that hugs the line (across, up, across, up ...), never "all across, then all up". The normal game rules apply the whole way:
+// a table, wall, cart or visitor in the way is a bump (he stops, touch again to go on), a puddle still slides him.
 function planDir() {
   if (!target || !st) return -1;
   const dx = target.x - st.x, dy = target.y - st.y;
-  if (dx === 0 && dy === 0) { target = null; return -1; }   // arrived
-  if (dx !== 0) return dx > 0 ? 1 : 3;
-  return dy > 0 ? 2 : 0;
+  if (dx === 0 && dy === 0) { target = null; return -1; }
+  if (++target.steps > (Math.abs(target.x - target.sx) + Math.abs(target.y - target.sy)) * 2 + 4) { target = null; return -1; }   // slides pushed him around too long: give up
+  const cand = [];
+  if (dx !== 0) cand.push({ d: dx > 0 ? 1 : 3, x: st.x + Math.sign(dx), y: st.y });
+  if (dy !== 0) cand.push({ d: dy > 0 ? 2 : 0, x: st.x, y: st.y + Math.sign(dy) });
+  if (cand.length === 1) return cand[0].d;
+  const lx = target.x - target.sx, ly = target.y - target.sy;   // the ideal line: pick the step that stays closest to it
+  const off = (c) => Math.abs(lx * (c.y - target.sy) - ly * (c.x - target.sx));
+  const horizFirst = Math.abs(dx) >= Math.abs(dy);   // on a tie, step along the longer side first
+  cand.sort((p, q) => off(p) - off(q) || ((p.d % 2 === 1) === horizFirst ? -1 : 1));
+  return cand[0].d;
 }
 function setTarget(clientX, clientY) {
   const r = cv.getBoundingClientRect(), n = NIGHTS[st.night];
   let x = Math.floor((clientX - r.left - ox) / cell), y = Math.floor((clientY - r.top - oy) / cell);
   x = Math.max(0, Math.min(n.w - 1, x)); y = Math.max(0, Math.min(n.h - 1, y));
   if (x === st.x && y === st.y) return;
-  if (!target || target.x !== x || target.y !== y) { target = { x, y }; waiting = false; acc = Math.max(acc, STEP_MS * (totalTime - lastMoveAt < STEP_MS * 1.6 ? 0.6 : 1)); SND.turn(); }
+  if (!target || target.x !== x || target.y !== y) { target = { x, y, sx: st.x, sy: st.y, steps: 0 }; waiting = false; acc = Math.max(acc, STEP_MS * (totalTime - lastMoveAt < STEP_MS * 1.6 ? 0.6 : 1)); SND.turn(); }
 }
 
 // ---- input: touch-and-drag steering, arrow keys ----
