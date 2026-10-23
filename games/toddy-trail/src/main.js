@@ -356,11 +356,10 @@ function draw(frac) {
   if (waiting) {
     const a = 0.5 + 0.5 * Math.sin(totalTime / 260);
     ctx.beginPath(); ctx.arc(tx, ty, cell * (0.75 + 0.12 * a), 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.5 + 0.4 * a) + ')'; ctx.lineWidth = 3; ctx.stroke();
-    ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#1a0a05'; ctx.lineWidth = 5; const hint = controlMode === 'tap' ? 'Tap straight left, right, up or down' : 'Touch and drag to walk'; ctx.strokeText(hint, W / 2, oy + cell * n.h + 34); ctx.fillText(hint, W / 2, oy + cell * n.h + 34);
+    ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#1a0a05'; ctx.lineWidth = 5; const hint = controlMode === 'tap' ? 'Tap where Toddy should go' : 'Touch and drag to walk'; ctx.strokeText(hint, W / 2, oy + cell * n.h + 34); ctx.fillText(hint, W / 2, oy + cell * n.h + 34);
     const dy = -8 * a; if (controlMode !== 'tap') ctx.fillText('↑', tx, ty - cell * 0.95 + dy);
   }
-  if (!waiting && st.bumped && !st.over && !target) { ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#1a0a05'; ctx.lineWidth = 5; const msg = controlMode === 'tap' ? 'Tap straight to move on' : 'Drag to move on'; ctx.strokeText(msg, W / 2, oy + cell * n.h + 34); ctx.fillText(msg, W / 2, oy + cell * n.h + 34); }
-  if (totalTime - lineHintAt < 1400 && !st.over) { ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#1a0a05'; ctx.lineWidth = 5; ctx.strokeText('Tap in a straight line from Toddy', W / 2, oy + cell * n.h + 62); ctx.fillText('Tap in a straight line from Toddy', W / 2, oy + cell * n.h + 62); }
+  if (!waiting && st.bumped && !st.over && !target) { ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#1a0a05'; ctx.lineWidth = 5; const msg = controlMode === 'tap' ? 'Tap to move on' : 'Drag to move on'; ctx.strokeText(msg, W / 2, oy + cell * n.h + 34); ctx.fillText(msg, W / 2, oy + cell * n.h + 34); }
   if (target && !st.over) {   // a soft pulsing ring where Toddy is heading
     const [gx, gy] = cc(target.x, target.y), a = 0.5 + 0.5 * Math.sin(totalTime / 200);
     ctx.beginPath(); ctx.ellipse(gx, gy + cell * 0.18, cell * (0.3 + 0.05 * a), cell * (0.16 + 0.03 * a), 0, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.55 + 0.35 * a) + ')'; ctx.lineWidth = 3; ctx.stroke();
@@ -425,11 +424,11 @@ function showIntro(id) {   // a short picture-story card before each night
 function showMenu() {
   endless = null; menuMusic();
   const o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
-  const card = mk('div', 'card'); card.append(mk('h1', '', 'TODDY Trail'), mk('p', '', controlMode === 'tap' ? '1 · Tap straight left, right, up or down' : '1 · Touch and drag to walk'), mk('p', '', '2 · Walk into the visitor who wants your next cup'), mk('p', '', '3 · Serve everyone before the lanterns go out'));
+  const card = mk('div', 'card'); card.append(mk('h1', '', 'TODDY Trail'), mk('p', '', controlMode === 'tap' ? '1 · Tap where Toddy should go' : '1 · Touch and drag to walk'), mk('p', '', '2 · Walk into the visitor who wants your next cup'), mk('p', '', '3 · Serve everyone before the lanterns go out'));
   const spd = mk('button', 'btn alt', 'Walking speed: ' + speedName);
   spd.addEventListener('click', () => { const names = Object.keys(SPEEDS); speedName = names[(names.indexOf(speedName) + 1) % names.length]; STEP_MS = 1000 / SPEEDS[speedName]; try { localStorage.setItem('trailSpeed', speedName); } catch (_) { /* optional */ } spd.textContent = 'Walking speed: ' + speedName; });
   const ctl = mk('button', 'btn alt', 'Controls: ' + (controlMode === 'tap' ? 'Tap to go' : 'Drag to steer'));
-  ctl.addEventListener('click', () => { controlMode = controlMode === 'tap' ? 'steer' : 'tap'; try { localStorage.setItem('trailControl', controlMode); } catch (_) { /* optional */ } ctl.textContent = 'Controls: ' + (controlMode === 'tap' ? 'Tap to go' : 'Drag to steer'); card.firstChild.nextSibling.textContent = controlMode === 'tap' ? '1 · Tap straight left, right, up or down' : '1 · Touch and drag to walk'; });
+  ctl.addEventListener('click', () => { controlMode = controlMode === 'tap' ? 'steer' : 'tap'; try { localStorage.setItem('trailControl', controlMode); } catch (_) { /* optional */ } ctl.textContent = 'Controls: ' + (controlMode === 'tap' ? 'Tap to go' : 'Drag to steer'); card.firstChild.nextSibling.textContent = controlMode === 'tap' ? '1 · Tap where Toddy should go' : '1 · Touch and drag to walk'; });
   const play = mk('button', 'btn', 'Play · Night 1'); play.addEventListener('click', () => { unlockSound(); showIntro(1); }); card.append(play, spd, ctl);
   const more = mk('button', 'btn alt', 'Choose another night'), list = mk('div', ''); list.hidden = true;
   more.addEventListener('click', () => { list.hidden = !list.hidden; });
@@ -529,20 +528,19 @@ function frame(now) {
 // ---- tap to go: touch a spot and Toddy walks there by himself, around obstacles ----
 let controlMode = (() => { try { return localStorage.getItem('trailControl') === 'steer' ? 'steer' : 'tap'; } catch (_) { return 'tap'; } })();
 let target = null;   // the cell Toddy is walking to
-// Straight lines only: a touch counts when it is in the SAME ROW or the SAME COLUMN as Toddy. He walks that line step by step with the normal game rules
-// (a table, wall, cart or visitor in the way is a bump, a puddle still slides him). Touches that are not in line are ignored.
-let lineHintAt = -9999;   // when the "tap in a straight line" hint was last shown
+// Touch anywhere: Toddy walks along his row first, then along the column (an L shape, no clever detours), with the normal game rules:
+// a table, wall, cart or visitor in the way is a bump and he stops (touch again to go on); a puddle still slides him.
 function planDir() {
   if (!target || !st) return -1;
   const dx = target.x - st.x, dy = target.y - st.y;
-  if ((dx !== 0 && dy !== 0) || (dx === 0 && dy === 0)) { target = null; return -1; }   // arrived, or a slide took him off the line
-  return dx > 0 ? 1 : dx < 0 ? 3 : dy > 0 ? 2 : 0;
+  if (dx === 0 && dy === 0) { target = null; return -1; }   // arrived
+  if (dx !== 0) return dx > 0 ? 1 : 3;
+  return dy > 0 ? 2 : 0;
 }
 function setTarget(clientX, clientY) {
   const r = cv.getBoundingClientRect(), n = NIGHTS[st.night];
   let x = Math.floor((clientX - r.left - ox) / cell), y = Math.floor((clientY - r.top - oy) / cell);
   x = Math.max(0, Math.min(n.w - 1, x)); y = Math.max(0, Math.min(n.h - 1, y));
-  if (x !== st.x && y !== st.y) { lineHintAt = totalTime; return; }   // not straight: ignore
   if (x === st.x && y === st.y) return;
   if (!target || target.x !== x || target.y !== y) { target = { x, y }; waiting = false; acc = Math.max(acc, STEP_MS * (totalTime - lastMoveAt < STEP_MS * 1.6 ? 0.6 : 1)); SND.turn(); }
 }

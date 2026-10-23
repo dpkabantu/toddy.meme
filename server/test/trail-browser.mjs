@@ -124,20 +124,16 @@ for (let run = 1; run <= 2; run++) {
   await page.screenshot({ path: path.join(shots, 'trail-endless-lv31.png') });
 }
 
-// Tap to go (straight lines only): a touch in Toddy's row or column sends him along it; a diagonal touch is ignored. Night 1: Milo's spot (6,9), Pip's (2,6), Velvet's (6,3).
+// Tap to go: a touch anywhere sends Toddy along his row, then up or down the column (game rules apply on the way). Night 1: Milo's spot (6,9), Pip's (2,6), Velvet's (6,3).
 {
   await page.reload({ waitUntil: 'load' }); await page.waitForSelector('#overlay .btn');
   await startFromMenu(page, 1); await page.waitForTimeout(400);
   const geo = await page.evaluate(() => { const r = document.getElementById('c').getBoundingClientRect(); const W = r.width, H = r.height, top = 64, pad = 8, cell = Math.floor(Math.min((W - pad * 2) / 9, (H - top - pad * 2) / 13)); return { left: r.left, top: r.top, cell, ox: Math.floor((W - cell * 9) / 2), oy: top + Math.floor((H - top - cell * 13) / 2) }; });
   const tapCell = (cx, cy) => page.touchscreen.tap(geo.left + geo.ox + (cx + 0.5) * geo.cell, geo.top + geo.oy + (cy + 0.5) * geo.cell);
   const served = (k) => page.waitForFunction((k) => new RegExp('Served ' + k + ' /').test(document.getElementById('served').textContent), k, { timeout: 9000 });
-  await tapCell(6, 6); await page.waitForTimeout(900);   // a diagonal touch (not in Toddy's row or column) is ignored: nothing happens
-  assert.match(await page.locator('#served').innerText(), /Served 0 \//);
-  await tapCell(6, 9); await served(1);                    // straight right along his row
-  await tapCell(6, 6); await page.waitForTimeout(1200);   // straight up
-  await tapCell(2, 6); await served(2);                    // straight left
-  await tapCell(2, 3); await page.waitForTimeout(1200);   // straight up
-  await tapCell(6, 3); await served(3);                    // straight right
+  await tapCell(6, 9); await served(1);   // straight along his row
+  await tapCell(2, 6); await served(2);   // diagonal touch: along the row, then up the column
+  await tapCell(6, 3); await served(3);
   await page.screenshot({ path: path.join(shots, 'trail-tap-night1.png') });
 }
 
