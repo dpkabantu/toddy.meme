@@ -1,5 +1,5 @@
-window.MM_ASSETS = {"bg":"assets/bg_v01.webp","crate":"assets/crate_v01.webp","fx_burst":"assets/fx_burst_v01.webp","fx_ring":"assets/fx_ring_v01.webp","fx_spiral":"assets/fx_spiral_v01.webp","medal_1":"assets/medal_1_v01.webp","medal_2":"assets/medal_2_v01.webp","medal_3":"assets/medal_3_v01.webp","medal_4":"assets/medal_4_v01.webp","p01":"assets/p01_sugar_v01.webp","p02":"assets/p02_ice_v01.webp","p03":"assets/p03_bean_light_v01.webp","p04":"assets/p04_bean_medium_v01.webp","p05":"assets/p05_bean_dark_v01.webp","p06":"assets/p06_milk_v01.webp","p07":"assets/p07_cup_v01.webp","p08":"assets/p08_mug_v01.webp","p09":"assets/p09_portal_teal_v01.webp","p10":"assets/p10_portal_violet_v01.webp","p11":"assets/p11_moon_v01.webp","sky_cres":"assets/sky_cres_v01.webp","sky_full":"assets/sky_full_v01.webp","toddy_drop":"assets/toddy_drop_v01.webp","toddy_hold":"assets/toddy_hold_v01.webp"};
-window.MM_META = {"pieces":[{"level":1,"name":"sugar","file":"p01_sugar.webp","w":78,"h":82,"ax":39.099999999999994,"ay":40.7853448275862,"body":78.19999999999999,"r":34,"rotates":true},{"level":2,"name":"ice","file":"p02_ice.webp","w":101,"h":100,"ax":50.599999999999994,"ay":49.90206896551723,"body":101.19999999999999,"r":44,"rotates":true},{"level":3,"name":"bean_light","file":"p03_bean_light.webp","w":155,"h":105,"ax":77.62499999999999,"ay":52.69191648822269,"body":124.19999999999999,"r":54,"rotates":true},{"level":4,"name":"bean_medium","file":"p04_bean_medium.webp","w":184,"h":125,"ax":91.99999999999999,"ay":62.316239316239304,"body":147.2,"r":64,"rotates":true},{"level":5,"name":"bean_dark","file":"p05_bean_dark.webp","w":218,"h":148,"ax":109.24999999999999,"ay":73.84275053304903,"body":174.79999999999998,"r":76,"rotates":true},{"level":6,"name":"milk","file":"p06_milk.webp","w":207,"h":202,"ax":103.5,"ay":100.89804469273743,"body":207.0,"r":90,"rotates":true},{"level":7,"name":"cup","file":"p07_cup.webp","w":288,"h":241,"ax":120.75,"ay":120.30875299760193,"body":241.5,"r":105,"rotates":true},{"level":8,"name":"mug","file":"p08_mug.webp","w":379,"h":326,"ax":166.84324324324322,"ay":195.49309309309308,"body":280.59999999999997,"r":122,"rotates":false},{"level":9,"name":"portal_teal","file":"p09_portal_teal.webp","w":327,"h":327,"ax":163.29999999999995,"ay":163.6198824681684,"body":326.5999999999999,"r":142,"rotates":true},{"level":10,"name":"portal_violet","file":"p10_portal_violet.webp","w":373,"h":373,"ax":186.29999999999998,"ay":186.66493633692457,"body":372.59999999999997,"r":162,"rotates":true},{"level":11,"name":"moon","file":"p11_moon.webp","w":438,"h":572,"ax":214.6954873632945,"ay":359.3924363233304,"body":427.79999999999995,"r":186,"rotates":false}],"bg":{"w":941,"h":1672,"win":[501,91,845,430]},"crate":{"w":1086,"h":1448},"toddy":{"toddy_hold":{"w":373,"h":420},"toddy_drop":{"w":373,"h":420},"anchor_x":221.78217821782175,"paws_y_hold":258.16831683168317,"paws_y_drop":272.029702970297}};
+window.MM_ASSETS = {"bg":"assets/bg_v01.webp","crate":"assets/crate_v01.webp","fx_burst":"assets/fx_burst_v01.webp","fx_ring":"assets/fx_ring_v01.webp","fx_spiral":"assets/fx_spiral_v01.webp","medal_1":"assets/medal_1_v01.webp","medal_2":"assets/medal_2_v01.webp","medal_3":"assets/medal_3_v01.webp","medal_4":"assets/medal_4_v01.webp","p01":"assets/p01_sugar_v02.webp","p02":"assets/p02_ice_v02.webp","p03":"assets/p03_bean_light_v02.webp","p04":"assets/p04_bean_medium_v02.webp","p05":"assets/p05_bean_dark_v02.webp","p06":"assets/p06_milk_v02.webp","p07":"assets/p07_cup_v02.webp","p08":"assets/p08_mug_v02.webp","p09":"assets/p09_portal_teal_v02.webp","p10":"assets/p10_portal_violet_v02.webp","p11":"assets/p11_moon_v02.webp","sky_cres":"assets/sky_cres_v01.webp","sky_full":"assets/sky_full_v01.webp","toddy_drop":"assets/toddy_drop_v02.webp","toddy_hold":"assets/toddy_hold_v02.webp"};
+window.MM_META = {"pieces":[{"level":1,"name":"sugar","file":"p01_sugar_v02.webp","w":78,"h":84.9,"ax":39.0,"ay":42.4,"body":78.0,"r":34,"rotates":true},{"level":2,"name":"ice","file":"p02_ice_v02.webp","w":101,"h":111.7,"ax":50.5,"ay":55.8,"body":101.0,"r":44,"rotates":true},{"level":3,"name":"bean_light","file":"p03_bean_light_v02.webp","w":155,"h":125,"ax":77.5,"ay":62.5,"body":136.4,"r":54,"rotates":true},{"level":4,"name":"bean_medium","file":"p04_bean_medium_v02.webp","w":184,"h":146,"ax":92.0,"ay":73.0,"body":161.9,"r":64,"rotates":true},{"level":5,"name":"bean_dark","file":"p05_bean_dark_v02.webp","w":218,"h":175,"ax":109.0,"ay":87.5,"body":191.8,"r":76,"rotates":true},{"level":6,"name":"milk","file":"p06_milk_v02.webp","w":207,"h":207.5,"ax":103.5,"ay":103.7,"body":207.0,"r":90,"rotates":true},{"level":7,"name":"cup","file":"p07_cup_v02.webp","w":274.0,"h":241.5,"ax":120.8,"ay":120.8,"body":241.5,"r":105,"rotates":true},{"level":8,"name":"mug","file":"p08_mug_v02.webp","w":390.1,"h":267.2,"ax":140.3,"ay":133.6,"body":280.6,"r":122,"rotates":false},{"level":9,"name":"portal_teal","file":"p09_portal_teal_v02.webp","w":327,"h":336.6,"ax":163.5,"ay":168.3,"body":331.8,"r":142,"rotates":true},{"level":10,"name":"portal_violet","file":"p10_portal_violet_v02.webp","w":373,"h":391.8,"ax":186.5,"ay":195.9,"body":382.4,"r":162,"rotates":true},{"level":11,"name":"moon","file":"p11_moon_v02.webp","w":427.8,"h":578.6,"ax":213.9,"ay":364.7,"body":427.8,"r":186,"rotates":false}],"bg":{"w":941,"h":1672,"win":[501,91,845,430]},"crate":{"w":1086,"h":1448},"toddy":{"toddy_hold":{"w":374.1,"h":420},"toddy_drop":{"w":374.1,"h":420},"anchor_x":224.5,"paws_y_hold":258.2,"paws_y_drop":270}};
 (function () {
 const C = (function(){
 // Moon Merge rules. PURE and DETERMINISTIC: no Math.random, no Date, no trig,
@@ -653,7 +653,8 @@ function dateLabel() {
   return d.getUTCDate() + ' ' + m[d.getUTCMonth()];
 }
 
-function todayTwist() { return C.twistForDate(C.dateSeed(new Date())); }
+const WEEKLY_TWISTS = false;   // Season feature, kept for later: off, so every night is the normal game
+function todayTwist() { return WEEKLY_TWISTS ? C.twistForDate(C.dateSeed(new Date())) : 0; }
 function startRun(k2, seedOverride, twistOverride) {
   kind = k2;
   const seed = seedOverride !== undefined ? seedOverride : (kind === 'daily' ? C.dateSeed(new Date()) : (Math.random() * 2147483647) | 0);
@@ -662,10 +663,10 @@ function startRun(k2, seedOverride, twistOverride) {
   dropPoseUntil = -1; pressed = false;
   aimX = (C.FIELD.L + C.FIELD.R) / 2; toddyX = aimX;
   bestVal = parseInt(store(bestKey()) || '0', 10) || 0;
-  elMode.textContent = (kind === 'daily' ? 'Tonight · ' : 'Free · ') + C.TWISTS[twist].name;
+  elMode.textContent = (kind === 'daily' ? 'Daily night' : 'Play') + (WEEKLY_TWISTS ? ' · ' + C.TWISTS[twist].name : '');
   mode = 'play'; overlay.hidden = true;
   setScore(); setNext();
-  banner(C.TWISTS[twist].name + ' · ' + C.TWISTS[twist].blurb, 'new', 2600);
+  if (WEEKLY_TWISTS) banner(C.TWISTS[twist].name + ' · ' + C.TWISTS[twist].blurb, 'new', 2600);
 }
 
 function dropAt(xArt) {
@@ -756,10 +757,10 @@ function showMenu() {
   overlay.hidden = false;
   overlay.innerHTML =
     '<div class="card"><div class="label">TODDY</div><h1>Full Moon</h1><p class="sub">Two the same make the next one. Reach Toddy’s Full Moon.</p>' + strip() +
-    '<button class="btn" data-act="daily">Tonight’s night<small>' + dateLabel() + ' · ' + C.TWISTS[todayTwist()].name + ' · same drops for everyone' + (streakNow() > 0 ? ' · ' + streakNow() + '-night streak' : '') + '</small></button>' +
-    '<button class="btn alt" data-act="free">Free play</button>' +
+    '<button class="btn" data-act="free">Play</button>' +
+    '<button class="btn alt" data-act="daily">Daily night<small>' + dateLabel() + (WEEKLY_TWISTS ? ' · ' + C.TWISTS[todayTwist()].name : '') + ' · same drops for everyone' + (streakNow() > 0 ? ' · ' + streakNow() + '-night streak' : '') + '</small></button>' +
     settingsRow() +
-    '<div class="links"><button class="chip" data-act="how">How to play</button><button class="chip" data-act="weeks">Weekly twists</button><button class="chip" data-act="pieces">Pieces</button><button class="chip" data-act="about">About</button><button class="chip" data-act="sharegame">Share game</button></div>' +
+    '<div class="links"><button class="chip" data-act="how">How to play</button>' + (WEEKLY_TWISTS ? '<button class="chip" data-act="weeks">Weekly twists</button>' : '') + '<button class="chip" data-act="pieces">Pieces</button><button class="chip" data-act="about">About</button><button class="chip" data-act="sharegame">Share game</button></div>' +
     '<p class="help">A calm puzzle. Every piece is made up, nothing leaves this device, and the game never asks for real details.</p></div>';
 }
 function showWeeks() {
@@ -773,9 +774,9 @@ function showInfo(kindName) {
   mode = 'menu'; overlay.hidden = false;
   const back = '<button class="btn" data-act="menu">Back</button>';
   let body;
-  if (kindName === 'how') body = '<h2>How to play</h2><ol class="steps"><li><b>Aim.</b> Touch and drag. Toddy follows your finger.</li><li><b>Drop.</b> Lift your finger to let go.</li><li><b>Goal.</b> The row of pieces under your score shows what you have made. The dashed one is the next to make.</li><li><b>Merge.</b> Two the same touching become the next piece. Quick chains score extra.</li><li><b>Visitors.</b> Now and then a visitor asks for one piece. Make it (merge two of the piece before it) within the drops shown and you get bonus points. You can ignore it.</li><li><b>Weekly twist.</b> Every week of the season changes one small rule, like busier visitors or a lower line. The menu names tonight’s twist.</li><li><b>Moonrise.</b> Two Full Moons touching vanish for 66 points and clear lots of room.</li><li><b>Stay under the line.</b> If a piece rests above the dashed line for 2 seconds, the night ends.</li></ol><p class="help">Tip: keep big pieces in a corner and build down from there.</p>';
+  if (kindName === 'how') body = '<h2>How to play</h2><ol class="steps"><li><b>Aim.</b> Touch and drag. Toddy follows your finger.</li><li><b>Drop.</b> Lift your finger to let go.</li><li><b>Goal.</b> The row of pieces under your score shows what you have made. The dashed one is the next to make.</li><li><b>Merge.</b> Two the same touching become the next piece. Quick chains score extra.</li><li><b>Visitors.</b> Now and then a visitor asks for one piece. Make it (merge two of the piece before it) within the drops shown and you get bonus points. You can ignore it.</li><li><b>Moonrise.</b> Two Full Moons touching vanish for 66 points and clear lots of room.</li><li><b>Stay under the line.</b> If a piece rests above the dashed line for 2 seconds, the night ends.</li></ol><p class="help">Tip: keep big pieces in a corner and build down from there.</p>';
   else if (kindName === 'pieces') body = '<h2>The 11 pieces</h2>' + strip() + '<p class="sub">Sugar, ice, three beans, milk swirl, moon cup, gold mug, teal moon, violet moon, then Toddy’s Full Moon. Toddy hands out the first five, and after your first violet moon, sometimes a milk swirl.</p><p class="help">Medals: Played, Bronze, Silver, Gold. Scores are never added across games.</p>';
-  else body = '<h2>About</h2><p class="sub">Full Moon is a one-finger puzzle from the TODDY games. Tonight’s night gives everyone the same drops, so scores are fair. Free play is random practice.</p><p class="help">Preview build. Play is as a guest, no wallet or sign-in. Education and fun only.</p>';
+  else body = '<h2>About</h2><p class="sub">Full Moon is a one-finger puzzle from the TODDY games. Play starts a new random game. Daily night gives everyone the same drops that day.</p><p class="help">Preview build. Play is as a guest, no wallet or sign-in. Education and fun only.</p>';
   overlay.innerHTML = '<div class="card">' + body + back + '</div>';
 }
 function showPause() {
@@ -826,7 +827,7 @@ function makeShareCard() {
   const tg = g.createLinearGradient(0, 130, 0, 250); tg.addColorStop(0, '#fff1c4'); tg.addColorStop(0.55, '#fdaf1e'); tg.addColorStop(1, '#c9822a');
   g.save(); g.shadowColor = 'rgba(253,175,30,.45)'; g.shadowBlur = 28; g.fillStyle = tg; g.font = '700 ' + tsize + 'px' + SERIF; g.fillText('Full Moon', mid, 232); g.restore();
   g.fillStyle = '#fde3bd'; g.font = 'italic 500 38px' + SERIF;
-  g.fillText((kind === 'daily' ? 'The night of ' + dateLabel() : 'A free-play night') + '  ·  ' + C.TWISTS[twist].name, mid, 290);
+  g.fillText((kind === 'daily' ? 'The night of ' + dateLabel() : 'A Full Moon night') + (WEEKLY_TWISTS ? '  ·  ' + C.TWISTS[twist].name : ''), mid, 290);
   // ornament line with a small moon in the middle
   const mm = moonMark(70); g.strokeStyle = 'rgba(201,154,59,.6)'; g.lineWidth = 2;
   g.beginPath(); g.moveTo(190, 330); g.lineTo(mid - 52, 330); g.moveTo(mid + 52, 330); g.lineTo(CWD - 190, 330); g.stroke(); g.drawImage(mm, mid - 35, 295, 70, 70);
@@ -882,7 +883,7 @@ async function showPicture() {
 let shareBlob = null, shareUrl = '';
 const gameLink = () => location.origin + location.pathname;
 function resultText() {
-  return 'TODDY Full Moon · ' + (kind === 'daily' ? 'Tonight ' + dateLabel() : 'Free play') + ' · ' + C.TWISTS[twist].name + ' · ' + S.score.toLocaleString('en-US') + ' · ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal · ' + lasted() + (moonrises ? ' · Moonrise ×' + moonrises : '') + ' — can you beat it? ' + gameLink();
+  return 'TODDY Full Moon · ' + (kind === 'daily' ? 'Daily night ' + dateLabel() : 'Play') + (WEEKLY_TWISTS ? ' · ' + C.TWISTS[twist].name : '') + ' · ' + S.score.toLocaleString('en-US') + ' · ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal · ' + lasted() + (moonrises ? ' · Moonrise ×' + moonrises : '') + ' — can you beat it? ' + gameLink();
 }
 function flash(btn, msg) { const t = btn.textContent; btn.textContent = msg; setTimeout(() => { btn.textContent = t; }, 1800); }
 async function doShare(btn) {
@@ -916,7 +917,7 @@ function showOver() {
   overlay.innerHTML =
     '<div class="card"><h2>Night over</h2><img class="medal" alt="" src="' + ASSET['medal_' + (band + 1)] + '">' +
     '<div class="band">' + nm + '</div><div class="final">' + S.score.toLocaleString('en-US') + '</div>' +
-    '<p class="sub">Lasted <b>' + lasted() + '</b> · ' + S.drops + ' drops</p><p class="sub">' + (kind === 'daily' ? "Tonight's best " : 'Best ') + bestVal.toLocaleString('en-US') + ' · highest piece ' + S.maxLevel + ' of 11' + (S.served ? ' · ' + S.served + ' visitor' + (S.served > 1 ? 's' : '') + ' served' : '') + (moonrises ? ' · Moonrise ×' + moonrises : '') + (next ? ' · next medal at ' + next.toLocaleString('en-US') : '') + '</p>' +
+    '<p class="sub">Lasted <b>' + lasted() + '</b> · ' + S.drops + ' drops</p><p class="sub">' + (kind === 'daily' ? "Today's best " : 'Best ') + bestVal.toLocaleString('en-US') + ' · highest piece ' + S.maxLevel + ' of 11' + (S.served ? ' · ' + S.served + ' visitor' + (S.served > 1 ? 's' : '') + ' served' : '') + (moonrises ? ' · Moonrise ×' + moonrises : '') + (next ? ' · next medal at ' + next.toLocaleString('en-US') : '') + '</p>' +
     '<button class="btn" data-act="again">Play again</button><button class="btn share" data-act="pic">Share your night</button><button class="btn alt" data-act="menu">Menu</button></div>';
 }
 
