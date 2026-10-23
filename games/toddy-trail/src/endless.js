@@ -3,7 +3,7 @@
 // cannot change winnability: mirror left/right, swap the three drinks around, new faces for the visitors and a random floor,
 // so a player cannot learn the order of levels. The recipe of every level is returned so a run can be rebuilt exactly.
 const W = 9;
-const WHO = ['milo', 'pip', 'velvet', 'lumi', 'biscuit', 'drizzle', 'pebble', 'bao', 'nova', 'maple', 'cosmo', 'fizz', 'tilly'];
+const WHO = ['milo', 'pip', 'velvet', 'lumi', 'biscuit', 'drizzle', 'pebble', 'bao', 'nova', 'maple', 'cosmo', 'fizz', 'tilly', 'pearl'];
 let poolPromise = null;
 export function loadPool() { return poolPromise || (poolPromise = import('./endless-pool.js').then((m) => m.POOL)); }
 

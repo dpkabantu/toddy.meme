@@ -17,7 +17,7 @@ const loadImg = (name) => LOADING[name] || (LOADING[name] = new Promise((res) =>
 const ready = (name) => { const im = IMGS[name]; return im && im.complete && im.naturalWidth ? im : null; };
 const VISITOR_BASE = { milo: 'visitor_milo_v02', pip: 'visitor_pip_v01', velvet: 'visitor_velvet_v01', lumi: 'visitor_lumi_v01', biscuit: 'visitor_biscuit_v01', drizzle: 'visitor_drizzle_v01', pebble: 'visitor_pebble_v01', bao: 'visitor_bao_v01', nova: 'visitor_nova_v01', maple: 'visitor_maple_v01', cosmo: 'visitor_cosmo_v01' };
 // which extra pictures exist per visitor (the newer visitors are still getting their set; only listed files are ever requested)
-const CUST = { milo: ['impatient', 'receive', 'sigh'], pip: ['impatient', 'receive', 'sigh'], velvet: ['impatient', 'receive', 'sigh'], lumi: ['impatient', 'receive', 'sigh'], biscuit: ['impatient', 'receive', 'sigh'], drizzle: ['receive'], pebble: ['receive'], bao: ['receive'], nova: ['impatient', 'receive'], maple: ['impatient', 'receive', 'sigh'], cosmo: ['impatient', 'receive'], fizz: ['receive'], tilly: ['receive'] };
+const CUST = { milo: ['impatient', 'receive', 'sigh'], pip: ['impatient', 'receive', 'sigh'], velvet: ['impatient', 'receive', 'sigh'], lumi: ['impatient', 'receive', 'sigh'], biscuit: ['impatient', 'receive', 'sigh'], drizzle: ['receive'], pebble: ['receive'], bao: ['receive'], nova: ['impatient', 'receive'], maple: ['impatient', 'receive', 'sigh'], cosmo: ['impatient', 'receive'], fizz: ['receive'], tilly: ['receive'], pearl: ['impatient', 'receive'] };
 const DRINK_NAMES = ['moon', 'star', 'crescent', 'sun', 'heart'];
 const animFile = (k) => 'trail_anim_' + k + '_v01', objFile = (k) => 'trail_obj_' + k + '_v01', custFile = (w, p) => 'trail_cust_' + w + '_' + p + '_v01';
 
@@ -98,6 +98,7 @@ const VTRACK = {
   cosmo: [[0, 0.33], [1, 0.33]],
   fizz: [[0, 0.33], [1, 0.33]],
   tilly: [[0, 0.33], [1, 0.33]],
+  pearl: [[0, 0.33], [0.5, 0.35], [1.0, 0.44], [1.5, 0.5], [2.2, 0.5], [2.6, 0.42], [3.0, 0.34], [4, 0.33]],
 };
 const belly = (who) => (VTRACK[who] || VTRACK.milo)[0][1];
 function sipFrac(who, t) {
