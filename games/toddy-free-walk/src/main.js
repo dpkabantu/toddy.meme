@@ -371,16 +371,30 @@ const saveBest = () => { try { localStorage.setItem('freeWalkBest', JSON.stringi
 const HINTS = { puddle: 'Puddles are slippery', cart: 'Mind the rolling cart', gate: 'Wait for the gate to open', thief: 'A thief is about: watch your cups' };
 let seen = {}; try { seen = JSON.parse(localStorage.getItem('freeWalkSeen') || '{}') || {}; } catch (_) { /* optional */ }
 let bannerTimer = 0;
+const INTRO_NAME = { 1: 'Café floor', 2: 'Terrace', 3: 'Night market', 4: 'Rainy alley', 5: 'Library nook', 6: 'Moon bridge', 7: 'Street party' };   // the 7 floors that have an intro clip
 function banner(text) { const b = $('banner'); if (!b) return; b.textContent = text; b.classList.add('show'); clearTimeout(bannerTimer); bannerTimer = setTimeout(() => b.classList.remove('show'), 3200); }
 function newRun() {
   const seed = qs.get('seed') ? Number(qs.get('seed')) >>> 0 : crypto.getRandomValues(new Uint32Array(1))[0];
-  run = { n: Math.max(1, Number(qs.get('level')) | 0 || 1), seed, tries: 0, lives: LIVES, total: 0, prevTheme: -1 };
+  run = { n: Math.max(1, Number(qs.get('level')) | 0 || 1), seed, tries: 0, lives: LIVES, total: 0, prevTheme: -1, shown: {} };
 }
 function startLevel() {
   running = false;
   const o = $('overlay'); o.textContent = ''; o.hidden = false; o.append(mk('div', 'card', 'Getting the floor ready…'));
   const made = makeLevel(run.n, (run.seed + run.tries * 7919) >>> 0, run.prevTheme);
   lv = made.level; lv.theme = lv.theme | 0;
+  if (INTRO_NAME[lv.theme] && !run.shown[lv.theme]) { run.shown[lv.theme] = 1; showIntro(); return; }   // first time this floor shows up in the run: its short clip from Trail
+  loadAndGo();
+}
+function showIntro() {
+  const o = $('overlay'); o.textContent = ''; o.hidden = false;
+  const card = mk('div', 'card'), v = document.createElement('video');
+  v.src = ASSETS + 'trail_intro_n' + lv.theme + '_v01.mp4'; v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.preload = 'auto'; v.className = 'intro';
+  const go = mk('button', 'btn', 'Go'); go.addEventListener('click', () => { unlockSound(); loadAndGo(); });
+  card.append(v, mk('h1', '', 'Level ' + run.n), mk('p', '', INTRO_NAME[lv.theme]), go); o.append(card);
+  const pl = v.play(); if (pl && pl.catch) pl.catch(() => { /* the picture alone is fine */ });
+}
+function loadAndGo() {
+  const o = $('overlay'); o.textContent = ''; o.hidden = false; o.append(mk('div', 'card', 'Getting the floor ready…'));
   Promise.all([...FILES, ...levelFiles(lv)].map(loadImg)).then(() => {
     st = newState(lv); pending = null; down = false; target = null; flashes = []; fx = []; acc = 0; last = 0; tod = null; lastMoveAt = -9999; endAt = 0; confettiAt = -99999; jiggleAt = -9999; face = 'up';
     sighUntil = lv.visitors.map(() => 0); servedAt = lv.visitors.map(() => 0); brewAt = []; shutterAt = {}; shutterWas = {}; thiefPrev = null; thiefSnatchAt = -9999;
@@ -395,7 +409,8 @@ function showMenu() {
   if (musicGo) music.play('menu');
   const o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
   const card = mk('div', 'card');
-  card.append(mk('h1', '', 'TODDY Free Walk'), mk('p', '', 'Sample · endless'), mk('p', '', '1 · Touch where Toddy should go'), mk('p', '', '2 · Bring each visitor their drink'), mk('p', '', '3 · Three lives. Every level is harder.'));
+  const wave = document.createElement('img'); wave.src = ASSETS + 'pctoddy_wave_v01.webp'; wave.alt = 'Toddy waving'; wave.className = 'menuToddy';   // Trail's own picture, unchanged
+  card.append(wave, mk('h1', '', 'TODDY Free Walk'), mk('p', '', 'Sample · endless'), mk('p', '', '1 · Touch where Toddy should go'), mk('p', '', '2 · Bring each visitor their drink'), mk('p', '', '3 · Three lives. Every level is harder.'));
   if (best.level) card.append(mk('p', '', 'Best: level ' + best.level + ' · ' + best.score + ' points'));
   const play = mk('button', 'btn', 'Play'); play.addEventListener('click', () => { unlockSound(); newRun(); startLevel(); });
   const spd = mk('button', 'btn alt', 'Walking speed: ' + speedName);
