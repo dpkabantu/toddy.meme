@@ -653,7 +653,8 @@ function dateLabel() {
   return d.getUTCDate() + ' ' + m[d.getUTCMonth()];
 }
 
-function todayTwist() { return C.twistForDate(C.dateSeed(new Date())); }
+const WEEKLY_TWISTS = false;   // Season feature, kept for later: off, so every night is the normal game
+function todayTwist() { return WEEKLY_TWISTS ? C.twistForDate(C.dateSeed(new Date())) : 0; }
 function startRun(k2, seedOverride, twistOverride) {
   kind = k2;
   const seed = seedOverride !== undefined ? seedOverride : (kind === 'daily' ? C.dateSeed(new Date()) : (Math.random() * 2147483647) | 0);
@@ -662,10 +663,10 @@ function startRun(k2, seedOverride, twistOverride) {
   dropPoseUntil = -1; pressed = false;
   aimX = (C.FIELD.L + C.FIELD.R) / 2; toddyX = aimX;
   bestVal = parseInt(store(bestKey()) || '0', 10) || 0;
-  elMode.textContent = (kind === 'daily' ? 'Tonight · ' : 'Free · ') + C.TWISTS[twist].name;
+  elMode.textContent = (kind === 'daily' ? 'Tonight' : 'Free play') + (WEEKLY_TWISTS ? ' · ' + C.TWISTS[twist].name : '');
   mode = 'play'; overlay.hidden = true;
   setScore(); setNext();
-  banner(C.TWISTS[twist].name + ' · ' + C.TWISTS[twist].blurb, 'new', 2600);
+  if (WEEKLY_TWISTS) banner(C.TWISTS[twist].name + ' · ' + C.TWISTS[twist].blurb, 'new', 2600);
 }
 
 function dropAt(xArt) {
@@ -756,10 +757,10 @@ function showMenu() {
   overlay.hidden = false;
   overlay.innerHTML =
     '<div class="card"><div class="label">TODDY</div><h1>Full Moon</h1><p class="sub">Two the same make the next one. Reach Toddy’s Full Moon.</p>' + strip() +
-    '<button class="btn" data-act="daily">Tonight’s night<small>' + dateLabel() + ' · ' + C.TWISTS[todayTwist()].name + ' · same drops for everyone' + (streakNow() > 0 ? ' · ' + streakNow() + '-night streak' : '') + '</small></button>' +
+    '<button class="btn" data-act="daily">Tonight’s night<small>' + dateLabel() + (WEEKLY_TWISTS ? ' · ' + C.TWISTS[todayTwist()].name : '') + ' · same drops for everyone' + (streakNow() > 0 ? ' · ' + streakNow() + '-night streak' : '') + '</small></button>' +
     '<button class="btn alt" data-act="free">Free play</button>' +
     settingsRow() +
-    '<div class="links"><button class="chip" data-act="how">How to play</button><button class="chip" data-act="weeks">Weekly twists</button><button class="chip" data-act="pieces">Pieces</button><button class="chip" data-act="about">About</button><button class="chip" data-act="sharegame">Share game</button></div>' +
+    '<div class="links"><button class="chip" data-act="how">How to play</button>' + (WEEKLY_TWISTS ? '<button class="chip" data-act="weeks">Weekly twists</button>' : '') + '<button class="chip" data-act="pieces">Pieces</button><button class="chip" data-act="about">About</button><button class="chip" data-act="sharegame">Share game</button></div>' +
     '<p class="help">A calm puzzle. Every piece is made up, nothing leaves this device, and the game never asks for real details.</p></div>';
 }
 function showWeeks() {
@@ -773,7 +774,7 @@ function showInfo(kindName) {
   mode = 'menu'; overlay.hidden = false;
   const back = '<button class="btn" data-act="menu">Back</button>';
   let body;
-  if (kindName === 'how') body = '<h2>How to play</h2><ol class="steps"><li><b>Aim.</b> Touch and drag. Toddy follows your finger.</li><li><b>Drop.</b> Lift your finger to let go.</li><li><b>Goal.</b> The row of pieces under your score shows what you have made. The dashed one is the next to make.</li><li><b>Merge.</b> Two the same touching become the next piece. Quick chains score extra.</li><li><b>Visitors.</b> Now and then a visitor asks for one piece. Make it (merge two of the piece before it) within the drops shown and you get bonus points. You can ignore it.</li><li><b>Weekly twist.</b> Every week of the season changes one small rule, like busier visitors or a lower line. The menu names tonight’s twist.</li><li><b>Moonrise.</b> Two Full Moons touching vanish for 66 points and clear lots of room.</li><li><b>Stay under the line.</b> If a piece rests above the dashed line for 2 seconds, the night ends.</li></ol><p class="help">Tip: keep big pieces in a corner and build down from there.</p>';
+  if (kindName === 'how') body = '<h2>How to play</h2><ol class="steps"><li><b>Aim.</b> Touch and drag. Toddy follows your finger.</li><li><b>Drop.</b> Lift your finger to let go.</li><li><b>Goal.</b> The row of pieces under your score shows what you have made. The dashed one is the next to make.</li><li><b>Merge.</b> Two the same touching become the next piece. Quick chains score extra.</li><li><b>Visitors.</b> Now and then a visitor asks for one piece. Make it (merge two of the piece before it) within the drops shown and you get bonus points. You can ignore it.</li><li><b>Moonrise.</b> Two Full Moons touching vanish for 66 points and clear lots of room.</li><li><b>Stay under the line.</b> If a piece rests above the dashed line for 2 seconds, the night ends.</li></ol><p class="help">Tip: keep big pieces in a corner and build down from there.</p>';
   else if (kindName === 'pieces') body = '<h2>The 11 pieces</h2>' + strip() + '<p class="sub">Sugar, ice, three beans, milk swirl, moon cup, gold mug, teal moon, violet moon, then Toddy’s Full Moon. Toddy hands out the first five, and after your first violet moon, sometimes a milk swirl.</p><p class="help">Medals: Played, Bronze, Silver, Gold. Scores are never added across games.</p>';
   else body = '<h2>About</h2><p class="sub">Full Moon is a one-finger puzzle from the TODDY games. Tonight’s night gives everyone the same drops, so scores are fair. Free play is random practice.</p><p class="help">Preview build. Play is as a guest, no wallet or sign-in. Education and fun only.</p>';
   overlay.innerHTML = '<div class="card">' + body + back + '</div>';
@@ -826,7 +827,7 @@ function makeShareCard() {
   const tg = g.createLinearGradient(0, 130, 0, 250); tg.addColorStop(0, '#fff1c4'); tg.addColorStop(0.55, '#fdaf1e'); tg.addColorStop(1, '#c9822a');
   g.save(); g.shadowColor = 'rgba(253,175,30,.45)'; g.shadowBlur = 28; g.fillStyle = tg; g.font = '700 ' + tsize + 'px' + SERIF; g.fillText('Full Moon', mid, 232); g.restore();
   g.fillStyle = '#fde3bd'; g.font = 'italic 500 38px' + SERIF;
-  g.fillText((kind === 'daily' ? 'The night of ' + dateLabel() : 'A free-play night') + '  ·  ' + C.TWISTS[twist].name, mid, 290);
+  g.fillText((kind === 'daily' ? 'The night of ' + dateLabel() : 'A free-play night') + (WEEKLY_TWISTS ? '  ·  ' + C.TWISTS[twist].name : ''), mid, 290);
   // ornament line with a small moon in the middle
   const mm = moonMark(70); g.strokeStyle = 'rgba(201,154,59,.6)'; g.lineWidth = 2;
   g.beginPath(); g.moveTo(190, 330); g.lineTo(mid - 52, 330); g.moveTo(mid + 52, 330); g.lineTo(CWD - 190, 330); g.stroke(); g.drawImage(mm, mid - 35, 295, 70, 70);
@@ -882,7 +883,7 @@ async function showPicture() {
 let shareBlob = null, shareUrl = '';
 const gameLink = () => location.origin + location.pathname;
 function resultText() {
-  return 'TODDY Full Moon · ' + (kind === 'daily' ? 'Tonight ' + dateLabel() : 'Free play') + ' · ' + C.TWISTS[twist].name + ' · ' + S.score.toLocaleString('en-US') + ' · ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal · ' + lasted() + (moonrises ? ' · Moonrise ×' + moonrises : '') + ' — can you beat it? ' + gameLink();
+  return 'TODDY Full Moon · ' + (kind === 'daily' ? 'Tonight ' + dateLabel() : 'Free play') + (WEEKLY_TWISTS ? ' · ' + C.TWISTS[twist].name : '') + ' · ' + S.score.toLocaleString('en-US') + ' · ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal · ' + lasted() + (moonrises ? ' · Moonrise ×' + moonrises : '') + ' — can you beat it? ' + gameLink();
 }
 function flash(btn, msg) { const t = btn.textContent; btn.textContent = msg; setTimeout(() => { btn.textContent = t; }, 1800); }
 async function doShare(btn) {
