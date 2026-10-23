@@ -451,7 +451,7 @@ function showMenu() {
   more.addEventListener('click', () => { list.hidden = !list.hidden; });
   for (const id of NIGHT_IDS) { const b = mk('button', 'btn alt', 'Night ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); showIntro(id); }); list.append(b); }
   for (const id of SAMPLE_IDS) { const b = mk('button', 'btn alt', 'Sample · Level ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); showIntro(id); }); list.append(b); }
-  { const b = mk('button', 'btn alt', 'Endless mode · preview'); b.addEventListener('click', () => { unlockSound(); endless = null; startEndless(ENDLESS.startLevel); }); list.append(b); }
+  for (const d of ENDLESS.difficulties) { const b = mk('button', 'btn alt', 'Endless · ' + d.name); b.addEventListener('click', () => { unlockSound(); endless = null; startEndless(d.level); }); list.append(b); }
   card.append(more, list); o.append(card);
 }
 function showResult() {
@@ -468,7 +468,7 @@ function showResult() {
     card.append(mk('p', '', hearts(lives) + ' · Run score ' + total + (perfect && pass ? ' (includes +' + ENDLESS.perfectBonus + ' Perfect bonus)' : '')), mk('p', '', 'Best: level ' + bestNow.level + ' · ' + bestNow.score + ' points'));
     if (pass) { const nx = mk('button', 'btn', 'Level ' + (n + 1) + (ENDLESS.special(n + 1) === 'boss' ? ' · Boss' : ENDLESS.special(n + 1) === 'breather' ? ' · Easy' : '')); nx.addEventListener('click', () => startEndless(n + 1, { lives, runScore: total })); card.append(nx); }
     else if (lives > 0) { const rt = mk('button', 'btn', 'Try again · new layout'); rt.addEventListener('click', () => startEndless(n, { lives, runScore: total })); card.append(rt); }
-    else { const nr = mk('button', 'btn', 'New run'); nr.addEventListener('click', () => { endless = null; startEndless(ENDLESS.startLevel); }); card.append(nr); }
+    else { const nr = mk('button', 'btn', 'New run'); nr.addEventListener('click', () => { endless = null; showMenu(); }); card.append(nr); }
     const back = mk('button', 'btn alt', 'Back to menu'); back.addEventListener('click', showMenu);
     card.append(back); o.append(card); return;
   }

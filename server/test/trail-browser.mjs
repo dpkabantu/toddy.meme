@@ -42,7 +42,7 @@ await page.addInitScript(() => { try { localStorage.setItem('trailSpeed', 'Norma
 await page.goto(base + '/games/toddy-trail/', { waitUntil: 'load' });
 await page.waitForSelector('#overlay .btn');
 await page.screenshot({ path: path.join(shots, 'trail-menu.png') });
-assert.equal(await page.locator('#overlay .btn').count(), 13);   // Play night 1, walking speed, controls, Choose another night, the 7 nights, the Level 20 sample and endless mode (hidden until asked)
+assert.equal(await page.locator('#overlay .btn').count(), 17);   // Play night 1, walking speed, controls, Choose another night, the 7 nights, the Level 20 sample and the five endless difficulties (hidden until asked)
 assert.equal(await page.getByRole('button', { name: /^Night 3 / }).isVisible(), false);
 
 // Night 1: timed route (step k happens at (k+1)/3 s, so a turn for step n is pressed at n+0.5). Start (4,9): right 2, up 3, left 4, up 3, right 4
@@ -105,23 +105,22 @@ for (const id of [1, 2, 4, 5, 6, 7]) {
 for (let run = 1; run <= 2; run++) {
   await page.reload({ waitUntil: 'load' }); await page.waitForSelector('#overlay .btn');
   await page.getByRole('button', { name: 'Choose another night' }).click();
-  await page.getByRole('button', { name: /^Endless mode/ }).click();
+  await page.getByRole('button', { name: /^Endless · Easy/ }).click();
   await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 20000 });
   await page.waitForTimeout(500);
   assert.match(await page.locator('#served').innerText(), /^Lv 1 · ♥♥♥ · Served 0 \/ \d+/);
   await page.screenshot({ path: path.join(shots, 'trail-endless' + run + '.png') });
 }
 
-// A hard endless level (level 31 draws from the hardest band): many obstacles, more visitors
-{
+// Every endless difficulty button starts at its own level; the hardest bands bring many obstacles and more visitors
+for (const [name, lv] of [['Medium', 13], ['Hard', 19], ['Very hard', 26], ['Highly difficult', 31]]) {
   await page.reload({ waitUntil: 'load' }); await page.waitForSelector('#overlay .btn');
-  await page.evaluate(async () => { const m = await import('/games/toddy-trail/src/endless-config.js'); m.ENDLESS.startLevel = 31; });
   await page.getByRole('button', { name: 'Choose another night' }).click();
-  await page.getByRole('button', { name: /^Endless mode/ }).click();
+  await page.getByRole('button', { name: new RegExp('^Endless · ' + name) }).click();
   await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 20000 });
   await page.waitForTimeout(500);
-  assert.match(await page.locator('#served').innerText(), /^Lv 31 · ♥♥♥ · Served 0 \/ [89]$/);
-  await page.screenshot({ path: path.join(shots, 'trail-endless-lv31.png') });
+  assert.match(await page.locator('#served').innerText(), new RegExp('^Lv ' + lv + ' · ♥♥♥ · Served 0 / \\d+'));
+  await page.screenshot({ path: path.join(shots, 'trail-endless-' + name.replace(' ', '-').toLowerCase() + '.png') });
 }
 
 // Endless run rules: a level with a short clock and nobody served loses a heart (3 -> 2), the card says so, and Try again keeps the hearts
@@ -129,7 +128,7 @@ for (let run = 1; run <= 2; run++) {
   await page.reload({ waitUntil: 'load' }); await page.waitForSelector('#overlay .btn');
   await page.evaluate(async () => { const m = await import('/games/toddy-trail/src/endless-config.js'); m.ENDLESS.minSeconds = 3; m.ENDLESS.timeFactor = () => 0.01; });
   await page.getByRole('button', { name: 'Choose another night' }).click();
-  await page.getByRole('button', { name: /^Endless mode/ }).click();
+  await page.getByRole('button', { name: /^Endless · Easy/ }).click();
   await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 20000 });
   await page.keyboard.down('ArrowUp'); await page.waitForTimeout(300); await page.keyboard.up('ArrowUp');
   await page.getByText('lost a heart').waitFor({ timeout: 15000 });

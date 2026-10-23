@@ -7,6 +7,8 @@ const special = (n) => (n % 10 === 0 ? 'boss' : n % 10 === 5 ? 'breather' : null
 export const ENDLESS = {
   lives: 3, passShare: 0.6, perfectBonus: 200, special,
   startLevel: 1,
+  // Where each difficulty button starts (the run then climbs from there: level n draws from band floor((n-1)/6)).
+  difficulties: [{ name: 'Easy', level: 1 }, { name: 'Medium', level: 13 }, { name: 'Hard', level: 19 }, { name: 'Very hard', level: 26 }, { name: 'Highly difficult', level: 31 }],
 
   // Which difficulty band (0 = easiest .. 5 = hardest in the pool) a level number draws from.
   tierFor: (n) => { const t = Math.min(5, Math.floor((n - 1) / 6)), k = special(n); return k === 'boss' ? Math.min(5, t + 1) : k === 'breather' ? Math.max(0, t - 1) : t; },
