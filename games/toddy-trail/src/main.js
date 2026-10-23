@@ -15,9 +15,9 @@ let STEP_MS = 1000 / SPEEDS[speedName];
 const IMGS = {}, LOADING = {};
 const loadImg = (name) => LOADING[name] || (LOADING[name] = new Promise((res) => { const im = new Image(); im.onload = () => res(); im.onerror = () => res(); im.src = 'assets/' + name + '.webp'; IMGS[name] = im; }));
 const ready = (name) => { const im = IMGS[name]; return im && im.complete && im.naturalWidth ? im : null; };
-const VISITOR_BASE = { milo: 'visitor_milo_v02', pip: 'visitor_pip_v01', velvet: 'visitor_velvet_v01', lumi: 'visitor_lumi_v01', biscuit: 'visitor_biscuit_v01', drizzle: 'visitor_drizzle_v01', pebble: 'visitor_pebble_v01', bao: 'visitor_bao_v01' };
+const VISITOR_BASE = { milo: 'visitor_milo_v02', pip: 'visitor_pip_v01', velvet: 'visitor_velvet_v01', lumi: 'visitor_lumi_v01', biscuit: 'visitor_biscuit_v01', drizzle: 'visitor_drizzle_v01', pebble: 'visitor_pebble_v01', bao: 'visitor_bao_v01', nova: 'visitor_nova_v01', maple: 'visitor_maple_v01', cosmo: 'visitor_cosmo_v01' };
 // which extra pictures exist per visitor (the newer visitors are still getting their set; only listed files are ever requested)
-const CUST = { milo: ['impatient', 'receive', 'sigh'], pip: ['impatient', 'receive', 'sigh'], velvet: ['impatient', 'receive', 'sigh'], lumi: ['impatient', 'receive', 'sigh'], biscuit: ['impatient', 'receive', 'sigh'], drizzle: ['receive'], pebble: ['receive'], bao: ['receive'] };
+const CUST = { milo: ['impatient', 'receive', 'sigh'], pip: ['impatient', 'receive', 'sigh'], velvet: ['impatient', 'receive', 'sigh'], lumi: ['impatient', 'receive', 'sigh'], biscuit: ['impatient', 'receive', 'sigh'], drizzle: ['receive'], pebble: ['receive'], bao: ['receive'], nova: ['impatient', 'receive'], maple: ['impatient', 'receive', 'sigh'], cosmo: ['impatient', 'receive'], fizz: ['receive'] };
 const DRINK_NAMES = ['moon', 'star', 'crescent', 'sun', 'heart'];
 const animFile = (k) => 'trail_anim_' + k + '_v01', objFile = (k) => 'trail_obj_' + k + '_v01', custFile = (w, p) => 'trail_cust_' + w + '_' + p + '_v01';
 
@@ -93,6 +93,10 @@ const VTRACK = {
   drizzle: [[0, 0.33], [0.75, 0.35], [1.25, 0.44], [1.6, 0.5], [3.0, 0.5], [3.4, 0.4], [3.75, 0.34]],
   pebble: [[0, 0.33], [1, 0.33]],
   bao: [[0, 0.33], [1, 0.33]],
+  maple: [[0, 0.32], [0.6, 0.34], [1.3, 0.44], [1.8, 0.48], [2.9, 0.48], [3.3, 0.38], [3.8, 0.32]],
+  nova: [[0, 0.33], [1, 0.33]],
+  cosmo: [[0, 0.33], [1, 0.33]],
+  fizz: [[0, 0.33], [1, 0.33]],
 };
 const belly = (who) => (VTRACK[who] || VTRACK.milo)[0][1];
 function sipFrac(who, t) {
@@ -264,16 +268,16 @@ function draw(frac) {
     const [bx] = cc(v.bx, v.by), done = st.served[i], bottom = bottomOf(v.by) + cell * 0.04;
     const T = done ? totalTime - (servedAt[i] || -9999) : -1, since = T - 640;   // since: ms after the cup reached the visitor
     const iK = 'v_' + v.who + '_idle', sK = 'v_' + v.who + '_sip', hK = 'v_' + v.who + '_hop';
-    const haveI = ready(animFile(iK)), haveV = haveI && ready(animFile(sK)) && ready(animFile(hK)), subjH = cell * 1.75;
+    const haveI = ready(animFile(iK)), haveV = haveI && ready(animFile(hK)), haveS = haveV && ready(animFile(sK)), subjH = cell * 1.75;
     const lift = !haveV && since > 0 && since < 520 ? Math.sin((since / 520) * Math.PI) * cell * 0.17 : 0;
     ctx.save(); ctx.translate(0, -lift);
     const base = ready(VISITOR_BASE[v.who]);
     let im, cupY = null, cupH = cell * 0.6;   // cupY: where the held cup is drawn (null: no cup yet)
     ctx.globalAlpha = !done && targetIdx >= 0 && i !== targetIdx ? 0.72 : 1;
-    const hopMs = haveV ? (ANIMS[hK].n / ANIMS[hK].fps) * 1000 : 0, sipMs = haveV ? (ANIMS[sK].n / ANIMS[sK].fps) * 1000 : 0;
+    const hopMs = haveV ? (ANIMS[hK].n / ANIMS[hK].fps) * 1000 : 0, sipMs = haveS ? (ANIMS[sK].n / ANIMS[sK].fps) * 1000 : 0;
     if (!done) {
-      if (totalTime < (sighUntil[i] || 0)) im = ready(custFile(v.who, 'sigh')) || base;
-      else if (timeLeft < 0.35) im = ready(custFile(v.who, 'impatient')) || base;
+      const pic = totalTime < (sighUntil[i] || 0) ? ready(custFile(v.who, 'sigh')) : timeLeft < 0.35 ? ready(custFile(v.who, 'impatient')) : null;
+      if (pic) im = pic;
       else if (haveI) { drawStrip(animFile(iK), iK, animIndex(iK, totalTime + i * 1370), bx, bottom, subjH); }
       else im = base;
     } else if (!haveV) {   // no sip/hop clips yet: idle until the cup arrives, then the receiving picture with a small lift
