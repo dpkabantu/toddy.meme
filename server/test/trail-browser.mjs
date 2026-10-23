@@ -42,7 +42,7 @@ await page.addInitScript(() => { try { localStorage.setItem('trailSpeed', 'Norma
 await page.goto(base + '/games/toddy-trail/', { waitUntil: 'load' });
 await page.waitForSelector('#overlay .btn');
 await page.screenshot({ path: path.join(shots, 'trail-menu.png') });
-assert.equal(await page.locator('#overlay .btn').count(), 17);   // Play night 1, walking speed, controls, Choose another night, the 7 nights, the Level 20 sample and the five endless difficulties (hidden until asked)
+assert.equal(await page.locator('#overlay .btn').count(), 18);   // Play night 1, walking speed, controls, Choose another night, the 7 nights, the Level 20 sample and the five endless difficulties (hidden until asked)
 assert.equal(await page.getByRole('button', { name: /^Night 3 / }).isVisible(), false);
 
 // Night 1: timed route (step k happens at (k+1)/3 s, so a turn for step n is pressed at n+0.5). Start (4,9): right 2, up 3, left 4, up 3, right 4
@@ -121,6 +121,19 @@ for (const [name, lv] of [['Medium', 13], ['Hard', 19], ['Very hard', 26], ['Hig
   await page.waitForTimeout(500);
   assert.match(await page.locator('#served').innerText(), new RegExp('^Lv ' + lv + ' · ♥♥♥ · Served 0 / \\d+'));
   await page.screenshot({ path: path.join(shots, 'trail-endless-' + name.replace(' ', '-').toLowerCase() + '.png') });
+}
+
+// Diagonal trial: starts at level 13 with real diagonal steps and the Diag label
+{
+  await page.reload({ waitUntil: 'load' }); await page.waitForSelector('#overlay .btn');
+  await page.getByRole('button', { name: 'Choose another night' }).click();
+  await page.getByRole('button', { name: /^Diagonal trial/ }).click();
+  await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 20000 });
+  await page.waitForTimeout(500);
+  assert.match(await page.locator('#served').innerText(), /^Diag Lv 13 · ♥♥♥ · Served 0 \/ \d+/);
+  const geo = await page.evaluate(() => { const r = document.getElementById('c').getBoundingClientRect(); return { left: r.left, top: r.top, w: r.width, h: r.height }; });
+  await page.touchscreen.tap(geo.left + geo.w * 0.2, geo.top + geo.h * 0.35); await page.waitForTimeout(1200);
+  await page.screenshot({ path: path.join(shots, 'trail-diagonal-trial.png') });
 }
 
 // Endless run rules: a level with a short clock and nobody served loses a heart (3 -> 2), the card says so, and Try again keeps the hearts

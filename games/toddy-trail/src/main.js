@@ -1,6 +1,6 @@
 // TODDY Trail test page: canvas, hold-and-steer, approved art and animations. No server yet.
 // The rules live in core.js (pure and deterministic). Everything in this file is only drawing and input.
-import { NIGHTS, NIGHT_IDS, SAMPLE_IDS, registerLevel, STEPS_PER_SEC, newState, step, score, cartCell, thiefCell, shutterClosed, DX, DY } from './core.js';
+import { NIGHTS, NIGHT_IDS, SAMPLE_IDS, registerLevel, STEPS_PER_SEC, newState, step, score, cartCell, thiefCell, shutterClosed, cellBlocked, DX, DY } from './core.js';
 import { ANIMS, STILLS, BGS } from './art.js';
 import { createMusic } from './music.js';
 import { ENDLESS } from './endless-config.js';
@@ -138,7 +138,7 @@ function drawCentered(file, key, i, cx, cy, size, alpha) {   // effects: the squ
 }
 
 // ---- Toddy's animation (picture only) ----
-const dirFlip = (d) => d === 3;
+const dirFlip = (d) => d === 3 || d === 7 || d === 8;
 function setTod(key, dir, ms, tag) { tod = { key, flip: dirFlip(dir), t0: totalTime, until: totalTime + ms, tag }; }
 function toddyPicture() {   // which strip and frame to show right now
   const moving = totalTime - lastMoveAt < STEP_MS * 1.6;
@@ -146,7 +146,7 @@ function toddyPicture() {   // which strip and frame to show right now
     if (tod.tag === 'cancelOnMove' && moving && totalTime - tod.t0 > 220) tod = null;
     else return { key: tod.key, i: animIndex(tod.key, totalTime - tod.t0), flip: tod.flip };
   }
-  const d = st.dir;
+  const d = st.dir >= 5 ? (DX[st.dir] > 0 ? 1 : 3) : st.dir;   // diagonal steps use the side-walk
   if (moving && st.holding && !st.bumped) { if (d === 2) return { key: 'walk_down', i: animIndex('walk_down', totalTime), flip: false }; if (d === 0) return { key: 'walk_up', i: animIndex('walk_up', totalTime), flip: false }; return { key: 'walk_right', i: animIndex('walk_right', totalTime), flip: d === 3 }; }
   if (d === 0 && st.t > 0) return { key: 'walk_up', i: 0, flip: false };
   return { key: 'idle_down', i: animIndex('idle_down', totalTime), flip: false };
@@ -415,12 +415,12 @@ async function startEndless(n, run) {
   let lvl;
   try { const E = await import('./endless.js'); lvl = E.makeLevel(n, await E.loadPool(), ENDLESS); }
   catch (e) { o.textContent = ''; o.append(mk('div', 'card', 'Endless mode could not load. Please try again.')); setTimeout(showMenu, 1800); return; }
-  endless = { n, recipe: lvl.recipe, lives: run ? run.lives : ENDLESS.lives, runScore: run ? run.runScore : 0, kind: ENDLESS.special(n) }; registerLevel(ENDLESS_ID, lvl.def); ART_OF[ENDLESS_ID] = lvl.theme;
+  endless = { n, recipe: lvl.recipe, lives: run ? run.lives : ENDLESS.lives, runScore: run ? run.runScore : 0, kind: ENDLESS.special(n), diag: !!(run && run.diag) }; lvl.def.diag = endless.diag; registerLevel(ENDLESS_ID, lvl.def); ART_OF[ENDLESS_ID] = lvl.theme;
   await startNight(ENDLESS_ID);
 }
 function updateHud() {
   const n = NIGHTS[st.night], c = st.served.filter(Boolean).length;
-  $('served').textContent = (st.night === ENDLESS_ID && endless ? 'Lv ' + endless.n + (endless.kind === 'boss' ? ' Boss' : endless.kind === 'breather' ? ' Easy' : '') + ' · ' + hearts(endless.lives) + ' · ' : '') + 'Served ' + c + ' / ' + n.visitors.length;
+  $('served').textContent = (st.night === ENDLESS_ID && endless ? (endless.diag ? 'Diag ' : '') + 'Lv ' + endless.n + (endless.kind === 'boss' ? ' Boss' : endless.kind === 'breather' ? ' Easy' : '') + ' · ' + hearts(endless.lives) + ' · ' : '') + 'Served ' + c + ' / ' + n.visitors.length;
   $('served').style.fontSize = st.night === ENDLESS_ID && endless ? '0.8em' : '';
   { const f = (st.limit - st.t) / st.limit; music.setLevel(st.won || st.over ? 0 : f < 0.25 ? 2 : f < 0.5 ? 1 : 0); }
   $('lanternFill').style.transform = 'scaleX(' + Math.max(0, (st.limit - st.t) / st.limit).toFixed(3) + ')';
@@ -451,6 +451,7 @@ function showMenu() {
   more.addEventListener('click', () => { list.hidden = !list.hidden; });
   for (const id of NIGHT_IDS) { const b = mk('button', 'btn alt', 'Night ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); showIntro(id); }); list.append(b); }
   for (const id of SAMPLE_IDS) { const b = mk('button', 'btn alt', 'Sample · Level ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); showIntro(id); }); list.append(b); }
+  { const b = mk('button', 'btn alt', 'Diagonal trial · Medium'); b.addEventListener('click', () => { unlockSound(); endless = null; controlMode = 'tap'; startEndless(13, { lives: ENDLESS.lives, runScore: 0, diag: true }); }); list.append(b); }
   for (const d of ENDLESS.difficulties) { const b = mk('button', 'btn alt', 'Endless · ' + d.name); b.addEventListener('click', () => { unlockSound(); endless = null; startEndless(d.level); }); list.append(b); }
   card.append(more, list); o.append(card);
 }
@@ -466,8 +467,8 @@ function showResult() {
     const bestNow = saveEndlessBest(pass ? n : n - 1, total);
     card.firstChild.textContent = pass ? (perfect ? 'Level ' + n + ' · Perfect!' : 'Level ' + n + ' cleared!') : (lives > 0 ? 'Lanterns out · lost a heart' : 'Run over');
     card.append(mk('p', '', hearts(lives) + ' · Run score ' + total + (perfect && pass ? ' (includes +' + ENDLESS.perfectBonus + ' Perfect bonus)' : '')), mk('p', '', 'Best: level ' + bestNow.level + ' · ' + bestNow.score + ' points'));
-    if (pass) { const nx = mk('button', 'btn', 'Level ' + (n + 1) + (ENDLESS.special(n + 1) === 'boss' ? ' · Boss' : ENDLESS.special(n + 1) === 'breather' ? ' · Easy' : '')); nx.addEventListener('click', () => startEndless(n + 1, { lives, runScore: total })); card.append(nx); }
-    else if (lives > 0) { const rt = mk('button', 'btn', 'Try again · new layout'); rt.addEventListener('click', () => startEndless(n, { lives, runScore: total })); card.append(rt); }
+    if (pass) { const nx = mk('button', 'btn', 'Level ' + (n + 1) + (ENDLESS.special(n + 1) === 'boss' ? ' · Boss' : ENDLESS.special(n + 1) === 'breather' ? ' · Easy' : '')); nx.addEventListener('click', () => startEndless(n + 1, { lives, runScore: total, diag: endless.diag })); card.append(nx); }
+    else if (lives > 0) { const rt = mk('button', 'btn', 'Try again · new layout'); rt.addEventListener('click', () => startEndless(n, { lives, runScore: total, diag: endless.diag })); card.append(rt); }
     else { const nr = mk('button', 'btn', 'New run'); nr.addEventListener('click', () => { endless = null; showMenu(); }); card.append(nr); }
     const back = mk('button', 'btn alt', 'Back to menu'); back.addEventListener('click', showMenu);
     card.append(back); o.append(card); return;
@@ -558,6 +559,10 @@ function planDir() {
   const dx = target.x - st.x, dy = target.y - st.y;
   if (dx === 0 && dy === 0) { target = null; return -1; }
   if (++target.steps > (Math.abs(target.x - target.sx) + Math.abs(target.y - target.sy)) * 2 + 4) { target = null; return -1; }   // slides pushed him around too long: give up
+  if (NIGHTS[st.night].diag && dx !== 0 && dy !== 0) {   // diagonal trial: step diagonally while the corners are free, else fall back to the straight steps
+    const ax = Math.sign(dx), ay = Math.sign(dy);
+    if (!cellBlocked(st, st.x + ax, st.y + ay) && !cellBlocked(st, st.x + ax, st.y) && !cellBlocked(st, st.x, st.y + ay)) return dx > 0 ? (dy > 0 ? 6 : 5) : (dy > 0 ? 7 : 8);
+  }
   const cand = [];
   if (dx !== 0) cand.push({ d: dx > 0 ? 1 : 3, x: st.x + Math.sign(dx), y: st.y });
   if (dy !== 0) cand.push({ d: dy > 0 ? 2 : 0, x: st.x, y: st.y + Math.sign(dy) });

@@ -6,8 +6,8 @@ export const STEPS_PER_SEC = 4;     // Toddy walks 3 cells a second (the page us
 export const MAX_LINE = 6;          // most cups Toddy can carry
 export const BREW_COOLDOWN = 40;    // steps before a brew spot hands out another cup
 export const THIEF_COOLDOWN = 15;   // steps before the night thief can snatch again
-export const DX = [0, 1, 0, -1];    // directions: 0 up, 1 right, 2 down, 3 left
-export const DY = [-1, 0, 1, 0];
+export const DX = [0, 1, 0, -1, 0, 1, 1, -1, -1];    // directions: 0 up, 1 right, 2 down, 3 left. 5 to 8 are the diagonals (up-right, down-right, down-left, up-left), used only by levels with diag: true
+export const DY = [-1, 0, 1, 0, 0, -1, 1, 1, -1];
 export const DRINKS = ['moon', 'star', 'crescent'];
 
 const rect = (x0, y0, x1, y1) => { const r = []; for (let y = y0; y <= y1; y++) for (let x = x0; x <= x1; x++) r.push([x, y]); return r; };
@@ -153,6 +153,7 @@ export function newState(nightId) {
   };
 }
 
+export const cellBlocked = (st, x, y) => blocked(st, NIGHTS[st.night], x, y);
 export const cartCell = (st) => { const n = NIGHTS[st.night]; if (!n.cart) return null; const s = seqOf(st.night, 'cart'); return s[st.cartI % s.length]; };
 export const thiefCell = (st) => { const n = NIGHTS[st.night]; if (!n.thief) return null; const s = seqOf(st.night, 'thief'); return s[st.thiefI % s.length]; };
 export const shutterClosed = (n, t, x, y) => { if (!n.shutters) return false; for (const s of n.shutters) if (s.x === x && s.y === y && ((t + s.phase) % (s.on + s.off)) < s.on) return true; return false; };
@@ -191,7 +192,7 @@ export function step(st, turn) {
   st.events = [];
   // Hold and steer: turn 0-3 = finger down and steering that way (Toddy walks); turn 4 = finger lifted (Toddy stands still).
   if (turn === 4) { st.holding = false; st.bumped = false; st.soft = false; }
-  else if (turn !== null && turn !== undefined && turn >= 0 && turn <= 3) {
+  else if (turn !== null && turn !== undefined && ((turn >= 0 && turn <= 3) || (n.diag && turn >= 5 && turn <= 8))) {
     if (turn !== st.dir || !st.holding || (st.bumped && st.soft)) { st.bumped = false; st.soft = false; }   // a new push ends a stop; turning right around is always allowed
     st.dir = turn; st.holding = true;
   }
@@ -216,6 +217,9 @@ export function step(st, turn) {
         else { st.wrong++; st.events.push({ type: 'sigh', visitor: vi }); }
       }
       st.bumped = true; st.soft = true;   // Toddy stops until the next swipe (any swipe); nothing is lost
+    }
+    else if (st.dir >= 5 && (blocked(st, n, st.x + DX[st.dir], st.y) || blocked(st, n, st.x, st.y + DY[st.dir]))) {
+      st.bumped = true; st.soft = true;   // diagonal trial: no cutting a corner past a table or wall; Toddy just stops, nothing is lost
     }
     else if (blocked(st, n, nx, ny)) {
       st.bumped = true; st.soft = false; st.bumps++;
