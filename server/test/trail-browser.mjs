@@ -108,7 +108,7 @@ for (let run = 1; run <= 2; run++) {
   await page.getByRole('button', { name: /^Endless mode/ }).click();
   await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 20000 });
   await page.waitForTimeout(500);
-  assert.match(await page.locator('#served').innerText(), /^Lv 1 · Served 0 \/ \d+/);
+  assert.match(await page.locator('#served').innerText(), /^Lv 1 · ♥♥♥ · Served 0 \/ \d+/);
   await page.screenshot({ path: path.join(shots, 'trail-endless' + run + '.png') });
 }
 
@@ -120,8 +120,24 @@ for (let run = 1; run <= 2; run++) {
   await page.getByRole('button', { name: /^Endless mode/ }).click();
   await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 20000 });
   await page.waitForTimeout(500);
-  assert.match(await page.locator('#served').innerText(), /^Lv 31 · Served 0 \/ [89]$/);
+  assert.match(await page.locator('#served').innerText(), /^Lv 31 · ♥♥♥ · Served 0 \/ [89]$/);
   await page.screenshot({ path: path.join(shots, 'trail-endless-lv31.png') });
+}
+
+// Endless run rules: a level with a short clock and nobody served loses a heart (3 -> 2), the card says so, and Try again keeps the hearts
+{
+  await page.reload({ waitUntil: 'load' }); await page.waitForSelector('#overlay .btn');
+  await page.evaluate(async () => { const m = await import('/games/toddy-trail/src/endless-config.js'); m.ENDLESS.minSeconds = 3; m.ENDLESS.timeFactor = () => 0.01; });
+  await page.getByRole('button', { name: 'Choose another night' }).click();
+  await page.getByRole('button', { name: /^Endless mode/ }).click();
+  await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 20000 });
+  await page.keyboard.down('ArrowUp'); await page.waitForTimeout(300); await page.keyboard.up('ArrowUp');
+  await page.getByText('lost a heart').waitFor({ timeout: 15000 });
+  assert.match(await page.locator('#overlay').innerText(), /♥♥♡/);
+  await page.getByRole('button', { name: /^Try again/ }).click();
+  await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 20000 });
+  assert.match(await page.locator('#served').innerText(), /^Lv 1 · ♥♥♡ · /);
+  await page.screenshot({ path: path.join(shots, 'trail-endless-hearts.png') });
 }
 
 // Tap to go: a touch anywhere sends Toddy along his row, then up or down the column (game rules apply on the way). Night 1: Milo's spot (6,9), Pip's (2,6), Velvet's (6,3).

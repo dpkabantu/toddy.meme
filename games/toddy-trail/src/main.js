@@ -407,17 +407,21 @@ async function startNight(id) {
   o.hidden = true; o.textContent = '';
   music.play(MUSIC_OF[artOf(id)] || artOf(id)); resize(); updateHud(); running = true; waiting = true;   // Toddy waits for the first swipe
 }
-async function startEndless(n) {
+const endlessBest = () => { try { return JSON.parse(localStorage.getItem('trailEndlessBest')) || { level: 0, score: 0 }; } catch (_) { return { level: 0, score: 0 }; } };
+function saveEndlessBest(level, score) { const b = endlessBest(), nb = { level: Math.max(b.level, level), score: Math.max(b.score, score) }; try { localStorage.setItem('trailEndlessBest', JSON.stringify(nb)); } catch (_) { /* optional */ } return nb; }
+const hearts = (k) => '♥'.repeat(Math.max(0, k)) + '♡'.repeat(Math.max(0, ENDLESS.lives - k));
+async function startEndless(n, run) {
   const o = $('overlay'); o.textContent = ''; o.hidden = false; o.append(mk('div', 'card', 'Building level ' + n + '…'));
   let lvl;
   try { const E = await import('./endless.js'); lvl = E.makeLevel(n, await E.loadPool(), ENDLESS); }
   catch (e) { o.textContent = ''; o.append(mk('div', 'card', 'Endless mode could not load. Please try again.')); setTimeout(showMenu, 1800); return; }
-  endless = { n, recipe: lvl.recipe }; registerLevel(ENDLESS_ID, lvl.def); ART_OF[ENDLESS_ID] = lvl.theme;
+  endless = { n, recipe: lvl.recipe, lives: run ? run.lives : ENDLESS.lives, runScore: run ? run.runScore : 0, kind: ENDLESS.special(n) }; registerLevel(ENDLESS_ID, lvl.def); ART_OF[ENDLESS_ID] = lvl.theme;
   await startNight(ENDLESS_ID);
 }
 function updateHud() {
   const n = NIGHTS[st.night], c = st.served.filter(Boolean).length;
-  $('served').textContent = (st.night === ENDLESS_ID && endless ? 'Lv ' + endless.n + ' · ' : '') + 'Served ' + c + ' / ' + n.visitors.length;
+  $('served').textContent = (st.night === ENDLESS_ID && endless ? 'Lv ' + endless.n + (endless.kind === 'boss' ? ' Boss' : endless.kind === 'breather' ? ' Easy' : '') + ' · ' + hearts(endless.lives) + ' · ' : '') + 'Served ' + c + ' / ' + n.visitors.length;
+  $('served').style.fontSize = st.night === ENDLESS_ID && endless ? '0.8em' : '';
   { const f = (st.limit - st.t) / st.limit; music.setLevel(st.won || st.over ? 0 : f < 0.25 ? 2 : f < 0.5 ? 1 : 0); }
   $('lanternFill').style.transform = 'scaleX(' + Math.max(0, (st.limit - st.t) / st.limit).toFixed(3) + ')';
 }
@@ -456,10 +460,15 @@ function showResult() {
   const card = mk('div', 'card');
   card.append(mk('h1', '', st.won ? 'All served!' : 'Lanterns out'), mk('div', 'big', String(r.score)), mk('p', '', 'Served ' + r.served + ' of ' + r.of + ' · ' + r.seconds + ' s · spilled ' + (st.spills + st.snatched)));
   if (nightId === ENDLESS_ID && endless) {   // endless mode: the rules come from endless-config.js
-    const n = endless.n, pass = !!ENDLESS.passed(st, n);
-    card.firstChild.textContent = pass ? 'Level ' + n + ' cleared!' : 'Lanterns out';
-    if (pass) { const nx = mk('button', 'btn', 'Level ' + (n + 1)); nx.addEventListener('click', () => startEndless(n + 1)); card.append(nx); }
-    else if (ENDLESS.onFail === 'retry') { const rt = mk('button', 'btn', 'Try again · new layout'); rt.addEventListener('click', () => startEndless(n)); card.append(rt); }
+    const n = endless.n, pass = !!ENDLESS.passed(st, n), perfect = st.won, k = endless.kind;
+    let lives = endless.lives, total = endless.runScore;
+    if (pass) { total += r.score + (perfect ? ENDLESS.perfectBonus : 0); if (k === 'boss') lives = Math.min(ENDLESS.lives, lives + 1); } else lives -= 1;
+    const bestNow = saveEndlessBest(pass ? n : n - 1, total);
+    card.firstChild.textContent = pass ? (perfect ? 'Level ' + n + ' · Perfect!' : 'Level ' + n + ' cleared!') : (lives > 0 ? 'Lanterns out · lost a heart' : 'Run over');
+    card.append(mk('p', '', hearts(lives) + ' · Run score ' + total + (perfect && pass ? ' (includes +' + ENDLESS.perfectBonus + ' Perfect bonus)' : '')), mk('p', '', 'Best: level ' + bestNow.level + ' · ' + bestNow.score + ' points'));
+    if (pass) { const nx = mk('button', 'btn', 'Level ' + (n + 1) + (ENDLESS.special(n + 1) === 'boss' ? ' · Boss' : ENDLESS.special(n + 1) === 'breather' ? ' · Easy' : '')); nx.addEventListener('click', () => startEndless(n + 1, { lives, runScore: total })); card.append(nx); }
+    else if (lives > 0) { const rt = mk('button', 'btn', 'Try again · new layout'); rt.addEventListener('click', () => startEndless(n, { lives, runScore: total })); card.append(rt); }
+    else { const nr = mk('button', 'btn', 'New run'); nr.addEventListener('click', () => { endless = null; startEndless(ENDLESS.startLevel); }); card.append(nr); }
     const back = mk('button', 'btn alt', 'Back to menu'); back.addEventListener('click', showMenu);
     card.append(back); o.append(card); return;
   }

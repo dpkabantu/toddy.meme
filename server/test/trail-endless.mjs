@@ -41,4 +41,10 @@ for (const t of tiers) {
   const r = solve(l.def, { width: t <= 2 ? 1500 : 14000, maxSeconds: 90, maxMs: 170000 });
   assert.ok(r.won, 'transformed tier ' + t + ' level is winnable'); checked++;
 }
+// Run rules: breather at 5, 15; boss at 10, 20 (one band harder, tighter clock); pass mark 60%
+assert.equal(ENDLESS.special(5), 'breather'); assert.equal(ENDLESS.special(10), 'boss'); assert.equal(ENDLESS.special(7), null);
+assert.ok(ENDLESS.tierFor(10) === Math.min(5, Math.floor(9 / 6) + 1)); assert.ok(ENDLESS.tierFor(5) === Math.max(0, Math.floor(4 / 6) - 1));
+assert.ok(ENDLESS.timeFactor(5) > ENDLESS.timeFactor(4) && ENDLESS.timeFactor(10) < ENDLESS.timeFactor(9));
+assert.equal(ENDLESS.passed({ served: [true, true, true, false, false] }), true);   // 3 of 5 = 60%
+assert.equal(ENDLESS.passed({ served: [true, true, false, false, false] }), false);
 console.log('endless: all checks passed (' + checked + ' transformed levels re-solved)');
