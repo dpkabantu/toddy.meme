@@ -1436,6 +1436,14 @@ toddy.cv.addEventListener('animationend', (e) => { if (e.animationName === 'hop'
 
 applySettings(); // (sound itself wakes on the first tap)
 show('title');
+// Test-site shortcut: .../moon-brew/?tray=6-3 opens Night 6, tray 3 at once. Works only on the Cloudflare preview and on localhost, never on toddy.meme.
+{
+  const m = /^\?tray=(\d{1,3})-(\d{1,2})$/.exec(location.search), h = location.hostname;
+  if (m && (h.endsWith('.workers.dev') || h === 'localhost' || h === '127.0.0.1')) {
+    const n = Math.max(1, +m[1]) - 1, t = Math.min(TRAYS_PER_NIGHT, Math.max(1, +m[2]));
+    save.intros = {}; mapNight = n; startTray(n, t); show('play');
+  }
+}
 track('open', { returning: Object.keys(save.stars).length > 0 || Object.keys(save.daily).length > 0 });
 
 // Hooks for the automatic browser tests (tools/smoke.py). Not used by players.
