@@ -302,7 +302,11 @@ const TITLES = {
 const SPECIAL_LINES = {
   'n4-3': 'Pip: "Cinnamon sticks. Nothing rolls through those."',
   'n5-3': 'Lumi: "A spinner bean! It turns when you grind."',
+  'n6-3': 'Velvet: "Chocolate! Grind four beans. It melts."',
   'n7-3': 'Inkwell: "Moon doors. In one, out the other."',
+  'n9-3': 'Pip: "Spoon gates. One way only, please."',
+  'n11-3': 'Velvet: "Caramel turns beans the other way."',
+  'n13-3': 'Biscuit: "Honey! Sticky. Tap again to free it."',
 };
 
 const nightCache = {};
@@ -341,7 +345,11 @@ export const INTROS = {
   'n3-1': { on: 'milk', line: 'Milk turns a bean to its right.' },
   'n4-3': { on: 'wall', line: 'Cinnamon sticks stay put. Roll around them.' },
   'n5-3': { on: 'spin', line: 'Spinner beans turn every time you grind.' },
+  'n6-3': { on: 'choc', line: 'Chocolate melts after four beans.' },
   'n7-3': { on: 'portal', line: 'Moon doors: in one, out the twin.' },
+  'n9-3': { on: 'gate', line: 'Spoon gates: pass only the spoon way.' },
+  'n11-3': { on: 'caramel', line: 'Caramel turns beans the other way.' },
+  'n13-3': { on: 'honey', line: 'Honey sticks. Tap again to free it.' },
 };
 
 const SHAPES = ['rect', 'circle', 'diamond', 'heart', 'rect', 'face', 'moon', 'circle', 'cup', 'diamond'];
@@ -371,7 +379,7 @@ export function trayConfig(n, t) {
   if (n >= 3) { tight = Math.min(0.95, +(tight + 0.005 * L).toFixed(3)); ticket = Math.min(8, ticket + Math.floor(L / 3)); pick = Math.min(22, pick + (L >= 4 ? 2 : 0)); }
 
   // the pieces on the tray
-  let sleepy = 0, ice = 0, iceAt = 3, pairs = 0, swirls = 0, walls = 0, spin = 0, portals = 0;
+  let sleepy = 0, ice = 0, iceAt = 3, pairs = 0, swirls = 0, walls = 0, spin = 0, portals = 0, choc = 0, gates = 0, caramel = 0, honey = 0;
   if (n === 0 && t >= 8) sleepy = Math.min(3, 1 + Math.floor((t - 8) / 4));
   if (n === 0 && t === 4) sleepy = 1; // a small surprise in tray 4
   if (n >= 1) { ice = Math.min(3, 1 + Math.floor(t / 7)); iceAt = 3 + Math.floor(t / 8); sleepy = t > 4 ? 1 + Math.floor(t / 10) : 0; }
@@ -383,6 +391,10 @@ export function trayConfig(n, t) {
     walls = t < 3 ? 0 : Math.min(8, 1 + Math.floor((t - 3) / 5) + Math.floor(L / 2)); // cinnamon: Night 4
     spin = L >= 2 && t >= 3 ? 1 : 0;                                                  // spinner bean: Night 5
     portals = L >= 4 && t >= 3 ? (L >= 6 && t >= 10 ? 2 : 1) : 0;                    // moon doors: Night 7
+    choc = L >= 3 && t >= 3 ? Math.min(t < 8 ? 1 : 2, 1 + Math.floor((L - 3) / 5) + (t >= 12 ? 1 : 0)) : 0;     // chocolate block: Night 6
+    gates = L >= 6 && t >= 3 ? Math.min(t < 8 ? 1 : 2, 1 + Math.floor((L - 6) / 4) + (t >= 12 ? 1 : 0)) : 0;    // spoon gate: Night 9
+    caramel = L >= 8 && t >= 3 ? Math.min(t < 8 ? 1 : 2, 1 + Math.floor((L - 8) / 4) + (t >= 12 ? 1 : 0)) : 0;  // caramel swirl: Night 11
+    honey = L >= 10 && t >= 3 ? Math.min(t < 8 ? 1 : 2, 1 + Math.floor((L - 10) / 4) + (t >= 12 ? 1 : 0)) : 0;  // honey drop: Night 13
   }
 
   // shape and size: the smallest tray that holds the beans (and the pieces) comfortably
@@ -390,7 +402,7 @@ export function trayConfig(n, t) {
   if (band === 'easy') shape = t % 2 ? 'rect' : 'circle';
   if (band === 'finale') shape = nightInfo(n).finale;
   const beans = beansFor(n, t);
-  const pieceCells = swirls + walls + portals * 2;
+  const pieceCells = swirls + walls + portals * 2 + choc + gates + caramel;
   const roomy = (sh, size) => cellCount(sh, size) * 0.9 - pieceCells >= beans;
   let size = 4;
   const small = (sh) => sh === 'moon' || sh === 'face' || sh === 'heart' || sh === 'star' || sh === 'cup';
@@ -406,7 +418,7 @@ export function trayConfig(n, t) {
   if (shape === 'cup' && size < 7) shape = 'rect';
   if (small(shape) && size < 7) shape = 'circle';
 
-  const cfg = { w: size, h: size, shape, fill: 0.9, beans, tight, ticket, pick, seed: n === 0 && t === 1 ? 1005 : (n + 1) * 1000 + t, sleepy, ice, iceAt, pairs, swirls, walls, spin, portals, band };
+  const cfg = { w: size, h: size, shape, fill: 0.9, beans, tight, ticket, pick, seed: n === 0 && t === 1 ? 1005 : (n + 1) * 1000 + t, sleepy, ice, iceAt, pairs, swirls, walls, spin, portals, choc, gates, caramel, honey, band };
   if (n === 0 && t === 1) { cfg.fill = 0.3; cfg.tight = 0.2; cfg.pick = 1; delete cfg.beans; }
   return cfg;
 }
@@ -446,7 +458,9 @@ export function endlessConfig(runSeed, k, pieces = {}) {
     ice: k >= 3 ? Math.min(3, 1 + Math.floor(k / 6)) : 0, iceAt: 3, pairs: k >= 4 ? Math.min(3, 1 + Math.floor(k / 6)) : 0,
     swirls: k >= 5 ? Math.min(3, 1 + Math.floor((k - 5) / 4)) : 0, seed: (runSeed + k * 7717) >>> 0, band: 'endless',
     // special pieces only once the player has met them in the story (Night 4, 5, 7)
-    walls: pieces.walls && k >= 6 ? Math.min(5, 1 + Math.floor((k - 6) / 4)) : 0, spin: pieces.spin && k >= 8 ? 1 : 0, portals: pieces.portals && k >= 10 ? 1 : 0 };
+    walls: pieces.walls && k >= 6 ? Math.min(5, 1 + Math.floor((k - 6) / 4)) : 0, spin: pieces.spin && k >= 8 ? 1 : 0, portals: pieces.portals && k >= 10 ? 1 : 0,
+    choc: pieces.choc && k >= 7 ? Math.min(2, 1 + Math.floor((k - 7) / 6)) : 0, gates: pieces.gates && k >= 9 ? 1 : 0,
+    caramel: pieces.caramel && k >= 11 ? 1 : 0, honey: pieces.honey && k >= 12 ? 1 : 0 };
 }
 
 export const ENDLESS_LINES = [

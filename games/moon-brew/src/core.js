@@ -82,13 +82,20 @@ function inPoly(x, y, p) {
 // Follows a bean from (x,y) heading d. Milk swirls turn it 90° clockwise. env (optional) holds the fixed pieces:
 //   walls   - Set of "x,y" cells that stay forever (cinnamon sticks): a bean cannot pass
 //   portals - Map "x,y" -> "x,y" of its twin (moon doors): a bean that enters one comes out of the twin, same direction
+//   gates   - Map "x,y" -> direction (spoon gates): a bean may only pass travelling that way
+//   caramel - Set of "x,y" cells that turn a rolling bean a quarter COUNTER-clockwise (milk turns it clockwise)
+//   choc    - Map "x,y" -> n (chocolate blocks): a wall until n beans have been ground (env.rolled), then gone
+//   honey   - Set of "x,y" cells that stop a rolling bean on the spot: it needs one more tap to carry on
 // Returns { block: {x,y} } if something is in the way, { loop: true } if it would circle forever,
 // otherwise { cells: [{x,y,d}], exit: {x,y,d} } with every cell it passes and where it leaves the tray.
+// A bean that meets honey gets { cells, exit: null, stop: {x,y,d} }: it ends its roll on the honey cell.
 // A portal shows up in cells twice: the door it entered (portal: 'in') and the twin it left by (portal: 'out').
 export function trace(w, h, swirls, occupied, x, y, d, env) {
   const cells = [];
   const seen = new Set();
   const walls = env && env.walls, portals = env && env.portals;
+  const gates = env && env.gates, caramel = env && env.caramel, choc = env && env.choc, honey = env && env.honey;
+  const rolled = (env && env.rolled) || 0;
   let cx = x + DX[d], cy = y + DY[d];
   let steps = 0;
   while (cx >= 0 && cy >= 0 && cx < w && cy < h) {
@@ -96,13 +103,22 @@ export function trace(w, h, swirls, occupied, x, y, d, env) {
     const k = key(cx, cy);
     if (walls && walls.has(k)) return { block: { x: cx, y: cy } };
     if (occupied(cx, cy)) return { block: { x: cx, y: cy } };
+    if (choc && choc.has(k) && rolled < choc.get(k)) return { block: { x: cx, y: cy }, choc: true };
+    if (gates && gates.has(k) && gates.get(k) !== d) return { block: { x: cx, y: cy }, gate: true };
     if (swirls.has(k)) {
       d = (d + 1) % 4;
       const s = cx + ',' + cy + ',' + d;
       if (seen.has(s)) return { loop: true };
       seen.add(s);
     }
+    if (caramel && caramel.has(k)) {
+      d = (d + 3) % 4;
+      const s = 'c' + cx + ',' + cy + ',' + d;
+      if (seen.has(s)) return { loop: true };
+      seen.add(s);
+    }
     cells.push({ x: cx, y: cy, d });
+    if (honey && honey.has(k)) return { cells, exit: null, stop: { x: cx, y: cy, d } };
     if (portals && portals.has(k)) {
       const s = 'p' + k + ',' + d;
       if (seen.has(s)) return { loop: true };
@@ -182,7 +198,21 @@ function build(cfg, seed) {
     portals.set(key(a[0], a[1]), key(b[0], b[1])); portals.set(key(b[0], b[1]), key(a[0], a[1]));
     portalList.push([key(a[0], a[1]), key(b[0], b[1]), p]);
   }
-  const env = { walls, portals };
+  // spoon gates (one way) and caramel swirls (turn the other way): inside the tray, never crowded
+  const near4 = (x, y) => taken.has(key(x, y)) || [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => taken.has(key(x + dx, y + dy)));
+  const gates = new Map(); // "x,y" -> the one direction a bean may pass
+  const caramel = new Set();
+  for (const [x, y] of all) {
+    if (gates.size >= (cfg.gates || 0)) break;
+    if (x === 0 || y === 0 || x === w - 1 || y === h - 1 || near4(x, y)) continue;
+    gates.set(key(x, y), Math.floor(R() * 4)); taken.add(key(x, y));
+  }
+  for (const [x, y] of all) {
+    if (caramel.size >= (cfg.caramel || 0)) break;
+    if (x === 0 || y === 0 || x === w - 1 || y === h - 1 || near4(x, y)) continue;
+    caramel.add(key(x, y)); taken.add(key(x, y));
+  }
+  const env = { walls, portals, gates, caramel };
 
   const free = new Set(all.filter(([x, y]) => !taken.has(key(x, y))).map(([x, y]) => key(x, y)));
   const target = cfg.beans ? Math.max(2, Math.min(cfg.beans, free.size)) : Math.max(2, Math.round(free.size * (cfg.fill || 0.6)));
@@ -250,12 +280,14 @@ function build(cfg, seed) {
   const order = units.slice().reverse();
   const beans = [];
   const solution = [];
+  const cellsOf = []; // the cells each bean rolls through when the solution reaches it
   for (const u of order) {
     const roast = Math.floor(R() * 3);
     const ids = [];
     for (const b of u) {
       const id = beans.length;
       beans.push({ id, x: b.x, y: b.y, dir: b.dir, roast, sleepy: false, ice: 0, pair: -1 });
+      cellsOf[id] = b.cells;
       ids.push(id);
     }
     if (ids.length === 2) { beans[ids[0]].pair = ids[1]; beans[ids[1]].pair = ids[0]; }
@@ -267,6 +299,34 @@ function build(cfg, seed) {
   pickSome(singles.filter(b => b.id >= iceAt), cfg.ice || 0, R).forEach(b => { b.ice = iceAt; });
   // sleepy beans are always medium roast (that is how the sleepy bean art is painted)
   pickSome(singles.filter(b => !b.ice), cfg.sleepy || 0, R).forEach(b => { b.sleepy = true; b.roast = 1; });
+  // honey (Night 13+): sits on a cell that only ONE bean ever rolls through. That bean stops there and needs one more tap.
+  // Nothing else crosses the honey, so a stuck bean can never block another one (the tray cannot get stuck).
+  const beanCells = new Set(beans.map(b => key(b.x, b.y)));
+  const used = new Set(taken);
+  const honeyCells = [];
+  if (cfg.honey) {
+    for (const b of shuffle(singles.filter(x => !x.ice && !x.sleepy), R)) {
+      if (honeyCells.length >= cfg.honey) break;
+      const opts = (cellsOf[b.id] || []).map((c, i) => ({ k: key(c.x, c.y), i })).filter(o => cover.get(o.k) === 1 && !used.has(o.k) && !beanCells.has(o.k));
+      const pref = opts.filter(o => o.i >= 1);
+      const pool = pref.length ? pref : opts;
+      if (!pool.length) continue;
+      const o = pool[Math.floor(R() * pool.length)];
+      b.honey = true; used.add(o.k); honeyCells.push(o.k);
+    }
+  }
+  // chocolate blocks (Night 6+): sit on a cell that only beans ground AFTER the first `chocAt` ever roll through, so by the
+  // time a bean needs the cell, enough beans have been ground and the chocolate has melted. Early beans never meet it.
+  const chocAt = cfg.chocAt || 4;
+  const chocCells = [];
+  if (cfg.choc) {
+    const early = new Set();
+    for (const b of beans) if (b.id < chocAt) for (const c of cellsOf[b.id] || []) early.add(key(c.x, c.y));
+    const late = new Set();
+    for (const b of beans) if (b.id >= chocAt) for (const c of cellsOf[b.id] || []) { const k = key(c.x, c.y); if (!early.has(k) && !used.has(k) && !beanCells.has(k)) late.add(k); }
+    for (const k of shuffle([...late], R)) { if (chocCells.length >= cfg.choc) break; chocCells.push(k); used.add(k); }
+  }
+  const chocSet = new Set(chocCells), honeySet = new Set(honeyCells);
   // spinner bean (Night 5+): turns a quarter clockwise every time a bean is ground. It is only chosen where all four
   // straight lines to the edge are clear of walls, milk and doors, so it can never be shut in. Its starting direction
   // is worked back from the way it must point when the solution reaches it.
@@ -274,11 +334,11 @@ function build(cfg, seed) {
     const rayFree = (b) => {
       for (let d = 0; d < 4; d++) for (let cx = b.x + DX[d], cy = b.y + DY[d]; cx >= 0 && cy >= 0 && cx < w && cy < h; cx += DX[d], cy += DY[d]) {
         const k = key(cx, cy);
-        if (walls.has(k) || swirls.has(k) || portals.has(k)) return false;
+        if (walls.has(k) || swirls.has(k) || portals.has(k) || gates.has(k) || caramel.has(k) || chocSet.has(k) || honeySet.has(k)) return false;
       }
       return true;
     };
-    pickSome(singles.filter(b => !b.ice && !b.sleepy && b.id >= 1 && rayFree(b)), cfg.spin, R).forEach(b => {
+    pickSome(singles.filter(b => !b.ice && !b.sleepy && !b.honey && b.id >= 1 && rayFree(b)), cfg.spin, R).forEach(b => {
       const idx = solution.findIndex(ids => ids[0] === b.id);
       b.spin = true; b.roast = 1;
       b.dir = (((b.dir - idx) % 4) + 4) % 4;
@@ -289,6 +349,7 @@ function build(cfg, seed) {
 
   return {
     w, h, shape: cfg.shape, mask, swirls: [...swirls], walls: [...walls], portals: portalList, beans, ticket, solution, target, seed: cfg.seed,
+    gates: [...gates], caramel: [...caramel], choc: chocCells.map(k => [k, chocAt]), honey: honeyCells,
   };
 }
 function shuffle(a, R) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(R() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
@@ -297,7 +358,7 @@ function pickSome(arr, n, R) { return shuffle(arr.slice(), R).slice(0, n); }
 // A frozen tray (from src/trays.js) back to a full level object.
 export function fromFrozen(f) {
   return {
-    w: f.w, h: f.h, shape: f.shape, mask: makeMask(f.shape, f.w, f.h), swirls: f.swirls, walls: f.walls || [], portals: f.portals || [],
+    w: f.w, h: f.h, shape: f.shape, mask: makeMask(f.shape, f.w, f.h), swirls: f.swirls, walls: f.walls || [], portals: f.portals || [], gates: f.gates || [], caramel: f.caramel || [], choc: f.choc || [], honey: f.honey || [],
     ticket: f.ticket, solution: f.solution,
     beans: f.beans.map(([x, y, dir, roast, sleepy, ice, pair, spin], id) => ({ id, x, y, dir, roast, sleepy: !!sleepy, ice, pair, spin: !!spin })),
   };
@@ -312,6 +373,12 @@ export function newGame(level) {
     swirls: new Set(level.swirls),
     walls: new Set(level.walls || []),
     portals,
+    gates: new Map(level.gates || []),
+    caramel: new Set(level.caramel || []),
+    choc: new Map(level.choc || []),
+    honey: new Set(level.honey || []), // honey cells that still hold a bean (or wait for one)
+    stuck: new Set(),                  // ids of beans stuck in honey right now
+    melted: [],
     beans: level.beans.map(b => ({ ...b, awake: !b.sleepy, gone: false })),
     bumps: 0, rolled: 0, removedRoasts: [], perfect: true, status: 'playing', log: [],
   };
@@ -322,7 +389,7 @@ export function unitOf(g, b) { return b.pair >= 0 ? [b, g.beans[b.pair]] : [b]; 
 export function traceBean(g, b, ignore) {
   const skip = new Set(ignore.map(o => key(o.x, o.y)));
   const occ = (x, y) => !skip.has(key(x, y)) && !!beanAt(g, x, y);
-  return trace(g.level.w, g.level.h, g.swirls, occ, b.x, b.y, b.dir, { walls: g.walls, portals: g.portals });
+  return trace(g.level.w, g.level.h, g.swirls, occ, b.x, b.y, b.dir, { walls: g.walls, portals: g.portals, gates: g.gates, caramel: g.caramel, choc: g.choc, honey: g.honey, rolled: g.rolled });
 }
 export function canRoll(g, b) {
   if (b.gone || !b.awake || frozen(g, b)) return false;
@@ -357,9 +424,17 @@ function doTap(g, b) {
   if (bad >= 0) {
     g.bumps++;
     if (g.bumps >= MAX_BUMPS) g.status = 'burnt';
-    return { type: 'bump', bean: unit[bad], unit, block: traces[bad].block || null, loop: !!traces[bad].loop };
+    return { type: 'bump', bean: unit[bad], unit, block: traces[bad].block || null, loop: !!traces[bad].loop, gate: !!traces[bad].gate, choc: !!traces[bad].choc };
   }
+  if (unit.length === 1 && traces[0].stop) { // honey: the bean ends its roll on the honey cell and waits for one more tap
+    const from = { x: b.x, y: b.y, dir: b.dir };
+    b.x = traces[0].stop.x; b.y = traces[0].stop.y; b.dir = traces[0].stop.d;
+    g.stuck.add(b.id);
+    return { type: 'stick', bean: b, trace: traces[0], from };
+  }
+  const freed = [];
   for (const x of unit) {
+    if (g.stuck.has(x.id)) { g.stuck.delete(x.id); g.honey.delete(key(x.x, x.y)); freed.push(key(x.x, x.y)); }
     x.gone = true;
     g.rolled++;
     const i = g.removedRoasts.length;
@@ -370,7 +445,8 @@ function doTap(g, b) {
   const spun = [];
   for (const x of g.beans) if (x.spin && !x.gone) { x.dir = (x.dir + 1) % 4; spun.push(x); }
   if (g.beans.every(x => x.gone)) g.status = 'won';
-  return { type: 'roll', unit, traces, spun };
+  const melted = [...g.choc].filter(([, n]) => n <= g.rolled && n > g.rolled - unit.length).map(([k]) => k); // chocolate that melted just now
+  return { type: 'roll', unit, traces, spun, freed, melted };
 }
 export function stars(g) {
   if (g.status !== 'won') return 0;
@@ -406,7 +482,8 @@ export function measure(level) {
       if (g.beans.some(b => b.spin && !b.gone) && rescue++ < 4) { spin(1); continue; }
       return { free0, layers: -1 };
     }
-    now.forEach(b => { b.gone = true; });
+    now.forEach(b => { b.gone = true; g.stuck.delete(b.id); });
+    g.rolled += now.length;
     layers++;
     spin(new Set(now.map(b => (b.pair >= 0 ? Math.min(b.id, b.pair) : b.id))).size % 4);
   }
@@ -423,6 +500,7 @@ export function difficulty(level) {
   const d = n * 0.9 + layers * 3.5 + (1 - m.free0 / n) * 12
     + count(b => b.sleepy) * 1.5 + count(b => b.ice) * 3 + count(b => b.pair >= 0 && b.pair > b.id) * 2.5
     + level.swirls.length * 2 + (level.walls || []).length * 1.5 + (level.portals || []).length * 4 + count(b => b.spin) * 4
+    + (level.gates || []).length * 1.5 + (level.caramel || []).length * 2 + (level.choc || []).length * 3 + (level.honey || []).length * 3
     + level.ticket.length * 0.8;
   return Math.round(d * 10) / 10;
 }

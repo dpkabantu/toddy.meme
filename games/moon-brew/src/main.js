@@ -4,7 +4,7 @@ import { TRAYS } from './trays.js';
 import { INTROS, TRAYS_PER_NIGHT, trayLevelConfig, dailyConfig, dailyNumber, endlessConfig, ENDLESS_LINES, nightInfo, VISITORS, VISITOR_ORDER, TIER_NAMES, trayTier, tierOf } from './levels.js';
 import { buildPostcard } from './postcard.js';
 
-const BUILD = '1.0.0-rc12';
+const BUILD = '1.0.0-rc13';
 const ASSET = 'assets/';
 const $ = (id) => document.getElementById(id);
 const systemCalm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -76,12 +76,12 @@ function img(name) {
   return images[name];
 }
 const ready = (im) => im && im.complete && im.naturalWidth > 0;
-const BEAN_IMG = ['bean_light_v01.webp', 'bean_medium_v01.webp', 'bean_dark_v01.webp'];
+const BEAN_IMG = ['bean_light_v02.webp', 'bean_medium_v02.webp', 'bean_dark_v02.webp'];
 const ROAST_NAME = ['light', 'medium', 'dark'];
 const VISITOR = Object.fromEntries(VISITOR_ORDER.map(v => [v, [v === 'milo' ? 'visitor_milo_v02.webp' : `visitor_${v}_v01.webp`, VISITORS[v].name]]));
 // Reaction poses (approved 2026-10-15): "happy" after a cleared tray, "wow" for 3 stars.
 const VISITOR_POSE = (v, pose) => `visitor_${v}_${pose}_v01.webp`;
-[...BEAN_IMG, 'bean_sleepy_v01.webp', 'ice_v01.webp', 'sugar_v01.webp', 'milk_v01.webp'].forEach(img);
+[...BEAN_IMG, 'bean_sleepy_v02.webp', 'ice_v02.webp', 'sugar_v02.webp', 'milk_v02.webp'].forEach(img);
 
 // ---------------- Toddy's expressions (Night Shift flipbooks) ----------------
 const toddy = { clips: null, name: 'happy', t0: 0, playing: false, cv: null, ctx: null };
@@ -291,6 +291,8 @@ const sfx = {
   star: (i) => tone([784, 988, 1175][i] || 1175, 0.18, 'triangle', 0.07),
   lost: () => tone(220, 0.16, 'sine', 0.05, 180),
   spin: () => { tone(520, 0.09, 'triangle', 0.05, 780); tone(780, 0.09, 'triangle', 0.04, 520, 0.09); },
+  stick: () => { tone(220, 0.16, 'sine', 0.07, 110); noise(0.12, 500, 0.07, 0.02); },
+  melt: () => { tone(880, 0.1, 'triangle', 0.05, 1320); noise(0.2, 2200, 0.05, 0.02); tone(660, 0.16, 'sine', 0.04, 440, 0.1); },
   portal: () => { tone(300, 0.18, 'sine', 0.06, 900); tone(900, 0.2, 'sine', 0.045, 450, 0.2); },
 };
 function setSound(on) {
@@ -482,7 +484,7 @@ function renderAlbum() {
 let mode = null;     // { kind: 'story', n, t } | { kind: 'daily', num } | { kind: 'endless', seed, k, score }
 let level = null, g = null;
 let anims = [];
-let hintBean = null, cursor = null;
+let hintBean = null, cursor = null, melts = [];
 let startedAt = 0;
 let finishTimer = 0;
 
@@ -490,7 +492,7 @@ function startTray(n, t) { mode = { kind: 'story', n, t }; const f = TRAYS[trayK
 function startDaily() { const cfg = dailyConfig(); mode = { kind: 'daily', num: cfg.daily, visitor: cfg.visitor }; load(cfg); }
 function startEndless(cont) {
   // pieces the player has already met in the story may show up here too (nothing unexplained)
-  if (!cont) mode = { kind: 'endless', seed: (Date.now() % 1e9) >>> 0, k: 0, score: 0, pieces: { walls: nightOpen(3), spin: nightOpen(4), portals: nightOpen(6) } };
+  if (!cont) mode = { kind: 'endless', seed: (Date.now() % 1e9) >>> 0, k: 0, score: 0, pieces: { walls: nightOpen(3), spin: nightOpen(4), portals: nightOpen(6), choc: nightOpen(5), gates: nightOpen(8), caramel: nightOpen(10), honey: nightOpen(12) } };
   load(endlessConfig(mode.seed, mode.k, mode.pieces));
 }
 
@@ -506,7 +508,7 @@ function load(cfg, ready) {
   clearTimeout(finishTimer);
   level = ready || generate(cfg);
   g = newGame(level);
-  anims = []; hintBean = null; cursor = null;
+  anims = []; melts = []; hintBean = null; cursor = null;
   startedAt = performance.now();
   resetIdle();
   $('overlay').hidden = true;
@@ -534,11 +536,15 @@ function load(cfg, ready) {
   const bubble = $('vis-line').closest('.bubble');
   bubble.classList.remove('faded'); clearTimeout(bubbleTimer);
   bubbleTimer = setTimeout(() => bubble.classList.add('faded'), 4500);
-  [VISITOR_POSE(vis, 'happy'), VISITOR_POSE(vis, 'wow'), 'cup_v01.webp'].forEach(img); // ready for the serve
+  [VISITOR_POSE(vis, 'happy'), VISITOR_POSE(vis, 'wow'), 'cup_v02.webp'].forEach(img); // ready for the serve
   // the special pieces load only when this tray has them
-  if ((level.walls || []).length) img('cinnamon_v01.webp');
-  if ((level.portals || []).length) { img('portal_violet_v01.webp'); img('portal_teal_v01.webp'); }
-  if (level.beans.some(b => b.spin)) img('bean_spinner_v01.webp');
+  if ((level.walls || []).length) img('cinnamon_v02.webp');
+  if ((level.portals || []).length) { img('portal_violet_v02.webp'); img('portal_teal_v02.webp'); }
+  if ((level.choc || []).length) img('chocolate_v01.webp');
+  if ((level.gates || []).length) img('spoon_gate_v01.webp');
+  if ((level.caramel || []).length) img('caramel_v01.webp');
+  if ((level.honey || []).length) img('honey_v01.webp');
+  if (level.beans.some(b => b.spin)) img('bean_spinner_v02.webp');
   say('');
   // first-time coaching: ring the bean that matters, one short line
   coach = null;
@@ -571,6 +577,10 @@ function startCoach(k) {
   } else if (c.on === 'wall') { const k = (level.walls || [])[0]; if (k) { const [x, y] = k.split(',').map(Number); target = { x, y, gone: false }; } }
   else if (c.on === 'spin') target = g.beans.find(b => b.spin);
   else if (c.on === 'portal') { const pr = (level.portals || [])[0]; if (pr) { const [x, y] = pr[0].split(',').map(Number); target = { x, y, gone: false }; } }
+  else if (c.on === 'choc') { const k = ((level.choc || [])[0] || [])[0]; if (k) { const [x, y] = k.split(',').map(Number); target = { x, y, gone: false }; } }
+  else if (c.on === 'gate') { const k = ((level.gates || [])[0] || [])[0]; if (k) { const [x, y] = k.split(',').map(Number); target = { x, y, gone: false }; } }
+  else if (c.on === 'caramel') { const k = (level.caramel || [])[0]; if (k) { const [x, y] = k.split(',').map(Number); target = { x, y, gone: false }; } }
+  else if (c.on === 'honey') { const k = (level.honey || [])[0]; if (k) { const [x, y] = k.split(',').map(Number); target = { x, y, gone: false }; } }
   if (!target) return; // the piece is not on this tray: nothing to point at
   coach = { key: k, target, line: c.line, t0: performance.now() };
   say(c.line);
@@ -703,7 +713,7 @@ function draw(now) {
     rr(ox + x * cell + 2, oy + y * cell + cell * 0.55, cell - 4, cell * 0.43, cell * 0.18); ctx.fill();
   }
   // milk swirls
-  const milk = img('milk_v01.webp');
+  const milk = img('milk_v02.webp');
   for (const k of level.swirls) {
     const [x, y] = k.split(',').map(Number);
     if (ready(milk)) drawFit(milk, cxp(x), cyp(y), cell * 0.92, 0, 1);
@@ -712,7 +722,7 @@ function draw(now) {
     ctx.beginPath(); ctx.arc(0, 0, cell * 0.1, Math.PI, Math.PI * 2.2); ctx.stroke(); ctx.restore();
   }
   // cinnamon sticks: they never move, nothing rolls through them
-  const cin = img('cinnamon_v01.webp');
+  const cin = img('cinnamon_v02.webp');
   for (const k of level.walls || []) {
     const [x, y] = k.split(',').map(Number);
     ctx.fillStyle = 'rgba(90,40,14,.32)'; rr(ox + x * cell + 2, oy + y * cell + 2, cell - 4, cell - 4, cell * 0.2); ctx.fill();
@@ -720,7 +730,7 @@ function draw(now) {
   }
   // moon doors: a bean that goes in comes out of the twin (same number on both), still rolling the same way
   (level.portals || []).forEach(([a, b, ci]) => {
-    const pim = img(ci % 2 ? 'portal_teal_v01.webp' : 'portal_violet_v01.webp');
+    const pim = img(ci % 2 ? 'portal_teal_v02.webp' : 'portal_violet_v02.webp');
     for (const k of [a, b]) {
       const [x, y] = k.split(',').map(Number);
       if (ready(pim)) drawFit(pim, cxp(x), cyp(y), cell * 0.92, 0, 1);
@@ -729,6 +739,40 @@ function draw(now) {
       ctx.fillText(String(ci + 1), cxp(x) + cell * 0.3, cyp(y) + cell * 0.31); ctx.restore();
     }
   });
+  // honey drops: a bean that rolls over one sticks and needs one more tap
+  for (const k of g.honey) {
+    const [x, y] = k.split(',').map(Number);
+    const him = img('honey_v01.webp');
+    if (ready(him)) drawFit(him, cxp(x), cyp(y), cell * 0.9, 0, 1);
+  }
+  // caramel swirls turn beans the other way (counter-clockwise), spoon gates let beans pass one way only
+  for (const k of level.caramel || []) {
+    const [x, y] = k.split(',').map(Number);
+    const cim = img('caramel_v01.webp');
+    if (ready(cim)) drawFit(cim, cxp(x), cyp(y), cell * 0.92, 0, 1);
+    ctx.save(); ctx.translate(cxp(x) - cell * 0.3, cyp(y) - cell * 0.3);
+    ctx.strokeStyle = '#7a4a22'; ctx.lineWidth = Math.max(1.5, cell * 0.05); ctx.lineCap = 'round';
+    ctx.beginPath(); ctx.arc(0, 0, cell * 0.1, Math.PI * 1.8, Math.PI * 0.8, true); ctx.stroke(); ctx.restore();
+  }
+  for (const [k, d] of level.gates || []) {
+    const [x, y] = k.split(',').map(Number);
+    const gim = img('spoon_gate_v01.webp');
+    if (ready(gim)) drawFit(gim, cxp(x), cyp(y), cell * 0.94, ANG[d], 1);
+  }
+  // chocolate blocks stay until enough beans have been ground, with the number still to go on the corner
+  const cho = img('chocolate_v01.webp');
+  for (const [k, n] of level.choc || []) {
+    const [x, y] = k.split(',').map(Number);
+    const left = n - g.rolled, m = melts.find(q => q.k === k), mt = m ? Math.min(1, (now - m.t0) / m.dur) : 1;
+    if (left <= 0 && mt >= 1) continue;
+    const gone = left <= 0 ? mt : 0;
+    if (ready(cho)) drawFit(cho, cxp(x), cyp(y), cell * 0.94 * (1 - 0.25 * gone), 0, 1 - gone);
+    if (left > 0) {
+      ctx.save(); ctx.fillStyle = '#17112a'; ctx.beginPath(); ctx.arc(cxp(x) + cell * 0.3, cyp(y) + cell * 0.3, cell * 0.17, 0, Math.PI * 2); ctx.fill();
+      ctx.fillStyle = '#fce25d'; ctx.font = `900 ${Math.round(cell * 0.22)}px ui-rounded, system-ui, sans-serif`; ctx.textAlign = 'center'; ctx.textBaseline = 'middle';
+      ctx.fillText(String(left), cxp(x) + cell * 0.3, cyp(y) + cell * 0.31); ctx.restore();
+    }
+  }
   // beans (static first, moving on top)
   const moving = new Map(anims.map(a => [a.bean, a]));
   const drawn = [];
@@ -764,7 +808,7 @@ function draw(now) {
         const u = (t - PRE) / (1 - PRE);
         const p = along(a.pts, u * u * (3 - 2 * u) * 0.35 + u * 0.65);
         const door = p.near < cell * 0.5 ? 0.25 + 0.75 * p.near / (cell * 0.5) : 1; // small as it slips through a moon door
-        drawBean(b, p.x, p.y, p.ang, u > 0.8 ? (1 - u) / 0.2 : 1, door);
+        drawBean(b, p.x, p.y, p.ang, u > 0.8 && !a.stop ? (1 - u) / 0.2 : 1, door);
       }
     } else if (a.kind === 'bump') {
       // knock forward, bounce back past the start, settle
@@ -780,7 +824,7 @@ function draw(now) {
     }
   }
   // sugar cubes on top of the links
-  const sugar = img('sugar_v01.webp');
+  const sugar = img('sugar_v02.webp');
   for (const [b, a] of drawn) {
     if (b.pair > b.id || b.pair < 0 || a) continue;
     const p = g.beans[b.pair]; if (p.gone || moving.get(p)) continue;
@@ -814,7 +858,8 @@ function draw(now) {
     ctx.beginPath(); ctx.arc(cxp(b.x), cyp(b.y), cell * 0.5, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
   }
   anims = anims.filter(a => now - a.t0 < a.dur);
-  if (anims.length || again) requestAnimationFrame(draw);
+  melts = melts.filter(m => now - m.t0 < m.dur);
+  if (anims.length || melts.length || again) requestAnimationFrame(draw);
 }
 
 function drawFit(im, x, y, size, ang, alpha) {
@@ -826,7 +871,7 @@ function drawFit(im, x, y, size, ang, alpha) {
 
 function drawBean(b, x, y, ang, alpha, scale) {
   const sleepy = !b.awake;
-  const im = img(sleepy ? 'bean_sleepy_v01.webp' : b.spin ? 'bean_spinner_v01.webp' : BEAN_IMG[b.roast]);
+  const im = img(sleepy ? 'bean_sleepy_v02.webp' : b.spin ? 'bean_spinner_v02.webp' : BEAN_IMG[b.roast]);
   const len = cell * 0.84 * scale;
   ctx.save();
   ctx.globalAlpha = alpha;
@@ -853,7 +898,7 @@ function drawBean(b, x, y, ang, alpha, scale) {
   ctx.restore();
   if (b === markBean) { const m = img('mark_v01.svg'); if (ready(m)) drawFit(m, x, y, cell * 0.36, 0, alpha); }
   if (b.ice > 0 && frozen(g, b) && !b.gone) {
-    const ice = img('ice_v01.webp');
+    const ice = img('ice_v02.webp');
     if (ready(ice)) drawFit(ice, x, y, cell * 0.9, 0, 0.55 * alpha);
     const left = b.ice - g.rolled;
     ctx.save();
@@ -874,7 +919,8 @@ function rollPoints(b, tr) {
     else if (c.d !== d) { pts.push({ x: cxp(c.x), y: cyp(c.y), d: c.d }); d = c.d; }
   }
   const e = tr.exit;
-  pts.push({ x: cxp(e.x) + DX[e.d] * cell * 0.8, y: cyp(e.y) + DY[e.d] * cell * 0.8, d: e.d });
+  if (e) pts.push({ x: cxp(e.x) + DX[e.d] * cell * 0.8, y: cyp(e.y) + DY[e.d] * cell * 0.8, d: e.d });
+  else pts.push({ x: cxp(tr.stop.x), y: cyp(tr.stop.y), d: tr.stop.d }); // honey: it ends on the honey
   let total = 0;
   pts.jumps = [];
   for (let i = 1; i < pts.length; i++) {
@@ -945,9 +991,19 @@ function act(b) {
     pulse($('cracks'));
     if (g.status === 'burnt') { say('Burnt! Three bumps.'); toddyPlay('worried'); }
     else if (!save.intros.bump) { save.intros.bump = 1; writeSave(); say('Blocked! Three bumps burns the brew.'); toddyPlay('surprised'); }
+    else if (ev.gate) { say('Spoon gates pass one way only.'); toddyPlay('surprised'); }
+    else if (ev.choc) { const q = (level.choc || []).find(([k]) => k === ev.block.x + ',' + ev.block.y); say(`Chocolate blocks it. Grind ${q ? q[1] - g.rolled : 'more'} more.`); toddyPlay('surprised'); }
     else if (ev.block && (level.walls || []).includes(ev.block.x + ',' + ev.block.y)) { say(`Cinnamon blocks it. Bump! ${MAX_BUMPS - g.bumps} left.`); toddyPlay('surprised'); }
     else { say(ev.loop ? 'It goes round in circles. Bump!' : `Bump! ${MAX_BUMPS - g.bumps} left.`); toddyPlay('surprised'); }
+  } else if (ev.type === 'stick') {
+    const pts = rollPoints(ev.from, ev.trace);
+    anims.push({ bean: b, kind: 'roll', stop: true, t0: now, dur: calm() ? 1 : 240 + pts.total / cell * 55, pts });
+    sfx.roll(); setTimeout(sfx.stick, calm() ? 0 : 240 + pts.total / cell * 55 * 0.85);
+    if (coach) endCoach();
+    say('Sticky! Tap again to free it.'); toddyPlay('surprised');
   } else if (ev.type === 'roll') {
+    for (const k of ev.melted || []) melts.push({ k, t0: now, dur: calm() ? 1 : 520 });
+    if (ev.melted && ev.melted.length) setTimeout(sfx.melt, calm() ? 0 : 300);
     ev.unit.forEach((u, i) => {
       const pts = rollPoints(u, ev.traces[i]);
       anims.push({ bean: u, kind: 'roll', t0: now, dur: calm() ? 1 : 240 + pts.total / cell * 55, pts });
@@ -1015,7 +1071,7 @@ function serveHtml(small) {
     [g.bumps ? (g.bumps === 1 ? '1 bump' : `${g.bumps} bumps`) : 'No bumps', g.bumps === 0],
     [level.ticket.length ? (g.perfect ? 'In order' : 'Order slipped') : 'Bonus', g.perfect],
   ];
-  return `<div class="serve${small ? ' small' : ''}"><img class="serve-cup" src="${ASSET}cup_v01.webp" alt=""><img class="serve-vis" src="${ASSET}${pose}" alt="${VISITOR[v][1]} enjoys the coffee"></div>
+  return `<div class="serve${small ? ' small' : ''}"><img class="serve-cup" src="${ASSET}cup_v02.webp" alt=""><img class="serve-vis" src="${ASSET}${pose}" alt="${VISITOR[v][1]} enjoys the coffee"></div>
     <div class="goals-big" aria-label="${stars(g)} of 3 stars">${parts.map(([t, ok], i) => `<span class="gbig d${i + 1}${ok ? '' : ' lost'}"><b>&#9733;</b><small>${t}</small></span>`).join('')}</div>`;
 }
 // The Night as a path of 20 dots (the last one is the postcard moon): shows the journey without words.
@@ -1134,7 +1190,7 @@ function finish(again) {
   const showDailyTip = () => {
     save.intros.daily = 1; writeSave();
     track('tip', { tip: 'daily' });
-    card(`<p class="eyebrow">New</p><img class="tip-img" src="${ASSET}cup_v01.webp" alt=""><h3>Daily Brew</h3>
+    card(`<p class="eyebrow">New</p><img class="tip-img" src="${ASSET}cup_v02.webp" alt=""><h3>Daily Brew</h3>
       <p>A new puzzle every day, same for everyone. Share your score!</p>
       <div class="btns"><button class="btn ghost" id="o-later" type="button">Later</button><button class="btn primary" id="o-try" type="button">Try it now</button></div>`);
     bind('o-try', () => { track('daily_nudge', { from: 'tip' }); startDaily(); });
@@ -1380,6 +1436,14 @@ toddy.cv.addEventListener('animationend', (e) => { if (e.animationName === 'hop'
 
 applySettings(); // (sound itself wakes on the first tap)
 show('title');
+// Test-site shortcut: .../moon-brew/?tray=6-3 opens Night 6, tray 3 at once. Works only on the Cloudflare preview and on localhost, never on toddy.meme.
+{
+  const m = /^\?tray=(\d{1,3})-(\d{1,2})$/.exec(location.search), h = location.hostname;
+  if (m && (h.endsWith('.workers.dev') || h === 'localhost' || h === '127.0.0.1')) {
+    const n = Math.max(1, +m[1]) - 1, t = Math.min(TRAYS_PER_NIGHT, Math.max(1, +m[2]));
+    save.intros = {}; mapNight = n; startTray(n, t); show('play');
+  }
+}
 track('open', { returning: Object.keys(save.stars).length > 0 || Object.keys(save.daily).length > 0 });
 
 // Hooks for the automatic browser tests (tools/smoke.py). Not used by players.
