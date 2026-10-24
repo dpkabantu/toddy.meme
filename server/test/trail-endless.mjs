@@ -41,6 +41,18 @@ for (const t of tiers) {
   const r = solve(l.def, { width: t <= 2 ? 1500 : 14000, maxSeconds: 90, maxMs: 170000 });
   assert.ok(r.won, 'transformed tier ' + t + ' level is winnable'); checked++;
 }
+// Diagonal pool: every level is flagged diag, uses 3 to 7 drinks (more in the harder tiers), and transformed levels still win
+{
+  const { POOL: DP } = await import('../../games/toddy-trail/src/endless-diag-pool.js');
+  assert.ok(DP.length >= 60, 'diagonal pool has levels'); const ndOf = { 0: 3, 1: 3, 2: 4, 3: 5, 4: 6, 5: 7 };
+  for (const l of DP) { assert.equal(l.diag, true); assert.equal(l.nd, ndOf[l.tier]); const used = new Set([...l.cups, ...l.brew.map((b) => b.drink), ...l.visitors.map((v) => v.want)]); assert.ok(Math.max(...used) < l.nd, 'drink ids stay below nd'); }
+  for (const t of [0, 3, 5]) {
+    const l = makeLevel(t * 6 + 1, DP, { ...ENDLESS, artDrinks: 7 }, seeded(900 + t));
+    assert.equal(l.def.diag, true);
+    const r = solve(l.def, { width: t <= 2 ? 1500 : 12000, maxSeconds: 90, maxMs: 170000 }); assert.ok(r.won, 'transformed diagonal tier ' + t + ' wins');
+  }
+  console.log('diagonal pool ok: ' + DP.length + ' levels');
+}
 // Run rules: breather at 5, 15; boss at 10, 20 (one band harder, tighter clock); pass mark 60%
 assert.equal(ENDLESS.special(5), 'breather'); assert.equal(ENDLESS.special(10), 'boss'); assert.equal(ENDLESS.special(7), null);
 assert.ok(ENDLESS.tierFor(10) === Math.min(5, Math.floor(9 / 6) + 1)); assert.ok(ENDLESS.tierFor(5) === Math.max(0, Math.floor(4 / 6) - 1));

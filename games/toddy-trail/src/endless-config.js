@@ -8,6 +8,8 @@ export const ENDLESS = {
   lives: 3, passShare: 0.6, perfectBonus: 200, special,
   startLevel: 1,
   // Where each difficulty button starts (the run then climbs from there: level n draws from band floor((n-1)/6)).
+  artDrinks: 7,   // drink pictures available (5 painted + 2 temporary recolours until real art arrives)
+  // The same five difficulties for the diagonal levels (drinks per level: 3, 4, 5, 6, 7). Straight-step levels use at most 5 pictures.
   difficulties: [{ name: 'Easy', level: 1 }, { name: 'Medium', level: 13 }, { name: 'Hard', level: 19 }, { name: 'Very hard', level: 26 }, { name: 'Highly difficult', level: 31 }],
 
   // Which difficulty band (0 = easiest .. 5 = hardest in the pool) a level number draws from.

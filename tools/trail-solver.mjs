@@ -15,7 +15,7 @@ export function solve(def, { width = 1500, maxSeconds = 90, id = 9999, maxMs = 6
   for (let t = 0; t < limit; t++) {
     if (Date.now() - t0 > maxMs) break;
     const seen = new Map();
-    for (const { s, log } of layer) for (const a of [null, 0, 1, 2, 3, 4]) {
+    for (const { s, log } of layer) for (const a of (def.diag ? [null, 0, 1, 2, 3, 4, 5, 6, 7, 8] : [null, 0, 1, 2, 3, 4])) {
       if (a === 4 && !s.holding) continue;
       const c = clone(s); step(c, a);
       if (c.snatched > 0 && c.served.filter(Boolean).length < c.served.length) { /* allowed but penalised by val */ }

@@ -4,8 +4,8 @@
 // so a player cannot learn the order of levels. The recipe of every level is returned so a run can be rebuilt exactly.
 const W = 9;
 const WHO = ['milo', 'pip', 'velvet', 'lumi', 'biscuit', 'drizzle', 'pebble', 'bao', 'nova', 'maple', 'cosmo', 'fizz', 'tilly', 'pearl', 'gus'];
-let poolPromise = null;
-export function loadPool() { return poolPromise || (poolPromise = import('./endless-pool.js').then((m) => m.POOL)); }
+const pools = {};   // the straight-step pool and the diagonal pool are loaded only when asked for
+export function loadPool(diag) { const k = diag ? 'diag' : 'straight'; return pools[k] || (pools[k] = (diag ? import('./endless-diag-pool.js') : import('./endless-pool.js')).then((m) => m.POOL)); }
 
 const shuffle = (rnd, arr) => { const a = arr.slice(); for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(rnd() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
 
@@ -18,7 +18,7 @@ export function makeLevel(n, pool, cfg, rnd = cryptoRnd, force = {}) {
   if (!cand.length) { const tiers = [...new Set(pool.map((l) => l.tier))].sort((a, b) => a - b); const t = tiers.reduce((b, x) => (Math.abs(x - tier) < Math.abs(b - tier) ? x : b), tiers[0]); cand = pool.filter((l) => l.tier === t); }
   const idx = force.index !== undefined ? force.index : Math.floor(rnd() * cand.length), base = cand[idx];
   const mirror = force.mirror !== undefined ? force.mirror : rnd() < 0.5;
-  const perm = force.perm || shuffle(rnd, [0, 1, 2]);              // drink d becomes perm[d]
+  const perm = force.perm || shuffle(rnd, Array.from({ length: cfg.artDrinks || 5 }, (_, k) => k));   // drink d becomes perm[d]; any of the available drink pictures can be used
   const theme = force.theme || cfg.themes[Math.floor(rnd() * cfg.themes.length)];
   const mx = (x) => (mirror ? W - 1 - x : x);
   const pt = ([x, y]) => [mx(x), y];
@@ -29,6 +29,7 @@ export function makeLevel(n, pool, cfg, rnd = cryptoRnd, force = {}) {
     brew: base.brew.map((b) => ({ x: mx(b.x), y: b.y, drink: perm[b.drink] })),
     visitors: base.visitors.map((v) => ({ who: WHO[Math.floor(rnd() * WHO.length)], sx: mx(v.sx), sy: v.sy, bx: mx(v.bx), by: v.by, want: perm[v.want] })),
   };
+  if (base.diag) def.diag = true;
   if (base.shutters) def.shutters = base.shutters.map((s) => ({ ...s, x: mx(s.x) }));
   if (base.cart) def.cart = { ...base.cart, path: base.cart.path.map(pt) };
   if (base.thief) def.thief = { ...base.thief, path: base.thief.path.map(pt) };

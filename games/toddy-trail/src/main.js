@@ -18,7 +18,7 @@ const ready = (name) => { const im = IMGS[name]; return im && im.complete && im.
 const VISITOR_BASE = { milo: 'visitor_milo_v02', pip: 'visitor_pip_v01', velvet: 'visitor_velvet_v01', lumi: 'visitor_lumi_v01', biscuit: 'visitor_biscuit_v01', drizzle: 'visitor_drizzle_v01', pebble: 'visitor_pebble_v01', bao: 'visitor_bao_v01', nova: 'visitor_nova_v01', maple: 'visitor_maple_v01', cosmo: 'visitor_cosmo_v01' };
 // which extra pictures exist per visitor (the newer visitors are still getting their set; only listed files are ever requested)
 const CUST = { milo: ['impatient', 'receive', 'sigh'], pip: ['impatient', 'receive', 'sigh'], velvet: ['impatient', 'receive', 'sigh'], lumi: ['impatient', 'receive', 'sigh'], biscuit: ['impatient', 'receive', 'sigh'], drizzle: ['receive'], pebble: ['receive'], bao: ['receive'], nova: ['impatient', 'receive'], maple: ['impatient', 'receive', 'sigh'], cosmo: ['impatient', 'receive'], fizz: ['receive'], tilly: ['receive'], pearl: ['impatient', 'receive'], gus: ['receive'] };
-const DRINK_NAMES = ['moon', 'star', 'crescent', 'sun', 'heart'];
+const DRINK_NAMES = ['moon', 'star', 'crescent', 'sun', 'heart', 'tealstar', 'limesun'];   // the last two are temporary recolours until real art arrives
 const animFile = (k) => 'trail_anim_' + k + '_v01', objFile = (k) => 'trail_obj_' + k + '_v01', custFile = (w, p) => 'trail_cust_' + w + '_' + p + '_v01';
 
 // what each night puts on the floor (the obstacle picture and how tall it stands, in cells)
@@ -422,7 +422,7 @@ const hearts = (k) => '♥'.repeat(Math.max(0, k)) + '♡'.repeat(Math.max(0, EN
 async function startEndless(n, run) {
   const o = $('overlay'); o.textContent = ''; o.hidden = false; o.append(mk('div', 'card', 'Building level ' + n + '…'));
   let lvl;
-  try { const E = await import('./endless.js'); lvl = E.makeLevel(n, await E.loadPool(), ENDLESS); }
+  try { const E = await import('./endless.js'); const diag = !!(run && run.diag); lvl = E.makeLevel(n, await E.loadPool(diag), diag ? ENDLESS : { ...ENDLESS, artDrinks: 5 }); }
   catch (e) { o.textContent = ''; o.append(mk('div', 'card', 'Endless mode could not load. Please try again.')); setTimeout(showMenu, 1800); return; }
   endless = { n, recipe: lvl.recipe, lives: run ? run.lives : ENDLESS.lives, runScore: run ? run.runScore : 0, kind: ENDLESS.special(n), diag: !!(run && run.diag) }; lvl.def.diag = endless.diag; registerLevel(ENDLESS_ID, lvl.def); ART_OF[ENDLESS_ID] = lvl.theme;
   await startNight(ENDLESS_ID);
@@ -462,7 +462,7 @@ function showMenu() {
   more.addEventListener('click', () => { list.hidden = !list.hidden; });
   for (const id of NIGHT_IDS) { const b = mk('button', 'btn alt', 'Night ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); showIntro(id); }); list.append(b); }
   for (const id of SAMPLE_IDS) { const b = mk('button', 'btn alt', 'Sample · Level ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); showIntro(id); }); list.append(b); }
-  { const b = mk('button', 'btn alt', 'Diagonal trial · Medium'); b.addEventListener('click', () => { unlockSound(); endless = null; controlMode = 'tap'; startEndless(13, { lives: ENDLESS.lives, runScore: 0, diag: true }); }); list.append(b); }
+  for (const d of ENDLESS.difficulties) { const b = mk('button', 'btn alt', 'Diagonal · ' + d.name); b.addEventListener('click', () => { unlockSound(); endless = null; controlMode = 'tap'; startEndless(d.level, { lives: ENDLESS.lives, runScore: 0, diag: true }); }); list.append(b); }
   for (const d of ENDLESS.difficulties) { const b = mk('button', 'btn alt', 'Endless · ' + d.name); b.addEventListener('click', () => { unlockSound(); endless = null; startEndless(d.level); }); list.append(b); }
   card.append(more, list); o.append(card);
 }

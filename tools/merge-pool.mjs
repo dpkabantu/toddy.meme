@@ -2,7 +2,7 @@
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';
-const out = path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'games', 'toddy-trail', 'src', 'endless-pool.js');
+const out = process.env.POOL_OUT || path.join(path.dirname(fileURLToPath(import.meta.url)), '..', 'games', 'toddy-trail', 'src', 'endless-pool.js');
 const pool = [], seen = new Set();
 for (const f of process.argv.slice(2)) {
   const line = fs.readFileSync(f, 'utf8').split('\n').find((l) => l.startsWith('export const POOL = '));
