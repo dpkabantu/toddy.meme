@@ -27,6 +27,19 @@ const GRAVITY = 0.55, DAMP = 0.9985, ITER = 8, MAX_V = 36;
 const STIFF = 0.85, FRICTION = 0.25, CONTACT_DAMP = 0.985, FLOOR_DAMP = 0.9;
 const GRACE = 60, OVER_TICKS = 120, CHAIN_WINDOW = 45;
 
+// Moonbeam: a band of moonlight drifts across the crate; a merge made inside it scores double.
+// Its position depends only on the tick and the seed, so a replay sees exactly the same beam.
+const BEAM_W = 230;            // width of the beam, in art units (the crate field is 795 wide)
+const BEAM_PERIOD = 960;       // ticks for one trip there and back (16 s)
+const BEAM_MULT = 2;
+function beamX(s) {
+  const half = BEAM_PERIOD / 2, ph = (s.tick + s.beamPhase) % BEAM_PERIOD;
+  const q = (ph < half ? ph : BEAM_PERIOD - ph) / half;           // 0..1..0
+  const e = q * q * (3 - 2 * q);                                  // slows down at the edges
+  const lo = FIELD.L + BEAM_W / 2, hi = FIELD.R - BEAM_W / 2;
+  return lo + (hi - lo) * e;
+}
+
 function mulberry32(a) {
   return function () {
     a |= 0; a = (a + 0x6D2B79F5) | 0;
@@ -67,7 +80,7 @@ function newGame(seed, twist = 0) {
   return {
     seed, twist: TWISTS[twist] ? twist : 0, tw, tick: 0, bodies: [], nextId: 1, seq: makeSequence(seed, 4000, tw.weights), late: lateRolls(seed), tix: ticketRolls(seed), seqIndex: 0,
     ticket: null, nextTicketDrop: tw.ticketFirst, served: 0,
-    score: 0, chain: 0, lastMergeTick: -1000, nextDropTick: 0,
+    score: 0, chain: 0, lastMergeTick: -1000, nextDropTick: 0, beamPhase: (seed >>> 0) % BEAM_PERIOD,
     over: false, overTick: -1, events: [], drops: 0, maxLevel: 0, merges: 0,
   };
 }
@@ -170,6 +183,7 @@ function step(s) {
 function mergePass(s) {
   const B = s.bodies, n = B.length;
   const used = new Array(n).fill(false);
+  const bx = beamX(s);
   const born = [];
   for (let i = 0; i < n; i++) {
     if (used[i]) continue;
@@ -187,15 +201,17 @@ function mergePass(s) {
       const vy = ((a.y - a.py) * ma + (c.y - c.py) * mc) / tot;
       if (s.tick - s.lastMergeTick <= CHAIN_WINDOW) s.chain++; else s.chain = 0;
       s.lastMergeTick = s.tick; s.merges++;
+      const inBeam = Math.abs(x - bx) <= BEAM_W / 2, mult = inBeam ? BEAM_MULT : 1;
       if (a.level === MAX_LEVEL) {
-        const pts = (MAX_LEVEL + 1) * MAX_LEVEL / 2;     // 66: a Full Moon pair vanishes
+        const pts = (MAX_LEVEL + 1) * MAX_LEVEL / 2 * mult;     // 66 (132 in the beam): a Full Moon pair vanishes
         s.score += pts;
-        s.events.push({ type: 'vanish', x, y, level: MAX_LEVEL, points: pts });
+        s.events.push({ type: 'vanish', x, y, level: MAX_LEVEL, points: pts, beam: inBeam });
       } else {
         const lvl = a.level + 1, r = RADII[lvl - 1];
         const pts = lvl * (lvl - 1) / 2;
         const bonus = Math.floor(pts * (s.chain > 4 ? 4 : s.chain) / 4);
-        s.score += pts + bonus;
+        const got = (pts + bonus) * mult;
+        s.score += got;
         if (s.ticket && s.ticket.level === lvl) {
           const tb = lvl * s.tw.ticketMult;
           s.score += tb; s.served++;
@@ -208,7 +224,7 @@ function mergePass(s) {
           id: s.nextId++, level: lvl, r, x: nx, y: ny, px: nx - vx, py: ny - vy,
           ox: nx, born: s.tick, over: 0, contact: false, ang: a.ang, merged: true,
         });
-        s.events.push({ type: 'merge', x: nx, y: ny, level: lvl, points: pts + bonus, chain: s.chain });
+        s.events.push({ type: 'merge', x: nx, y: ny, level: lvl, points: got, chain: s.chain, beam: inBeam });
       }
       break;
     }
@@ -267,7 +283,7 @@ const BAND_NAMES = ['Played', 'Bronze', 'Silver', 'Gold'];
 // ---- weekly twists: only numbers change, so the server replay checks them the same way ----
 // bands are Bronze/Silver/Gold scores for that twist (placeholders from bot sampling, see test/test_core.mjs)
 const TWISTS = [
-  { name: 'Opening Night', blurb: 'The normal café night. A good week to learn.', weights: WEIGHTS, closeY: 220, lateLevel: 10, lateChance: 0.2, ticketFirst: 5, ticketGap: 4, ticketSpan: 14, ticketMult: 6, bands: [1500, 3500, 5000] },
+  { name: 'Opening Night', blurb: 'The normal café night. A good week to learn.', weights: WEIGHTS, closeY: 220, lateLevel: 10, lateChance: 0.2, ticketFirst: 5, ticketGap: 4, ticketSpan: 14, ticketMult: 6, bands: [2100, 4900, 7000] },
   { name: 'Busy Café', blurb: 'Visitors ask twice as often.', weights: WEIGHTS, closeY: 220, lateLevel: 10, lateChance: 0.2, ticketFirst: 3, ticketGap: 2, ticketSpan: 14, ticketMult: 6, bands: [1500, 3600, 5100] },
   { name: 'Bean Night', blurb: 'Toddy hands out bigger beans, fewer sugar cubes.', weights: [14, 16, 26, 24, 20], closeY: 220, lateLevel: 10, lateChance: 0.2, ticketFirst: 5, ticketGap: 4, ticketSpan: 14, ticketMult: 6, bands: [1300, 3000, 4300] },
   { name: 'Sweet Night', blurb: 'Mostly sugar and ice. Easy to build, slow to climb.', weights: [40, 34, 14, 8, 4], closeY: 220, lateLevel: 10, lateChance: 0.2, ticketFirst: 5, ticketGap: 4, ticketSpan: 14, ticketMult: 6, bands: [1900, 4300, 6200] },
@@ -297,7 +313,7 @@ function dateSeed(d = new Date()) {   // UTC date -> integer like 20261019
   return d.getUTCFullYear() * 10000 + (d.getUTCMonth() + 1) * 100 + d.getUTCDate();
 }
 
-return {TICKS_PER_SEC,FIELD,CLOSE_Y,SPAWN_Y,RADII,MAX_LEVEL,DROP_COOLDOWN,WEIGHTS,LATE_LEVEL,LATE_DROP,LATE_CHANCE,TICKET_FIRST,TICKET_SPAN,TICKET_GAP,TICKET_MULT,mulberry32,makeSequence,newGame,heldLevel,nextLevel,canDrop,clampX,drop,step,replay,stateHash,bandsOf,bandFor,BAND_NAMES,TWISTS,dayNumber,SEASON_START,twistForDate,dateSeed};
+return {TICKS_PER_SEC,FIELD,CLOSE_Y,SPAWN_Y,RADII,MAX_LEVEL,DROP_COOLDOWN,WEIGHTS,LATE_LEVEL,LATE_DROP,LATE_CHANCE,TICKET_FIRST,TICKET_SPAN,TICKET_GAP,TICKET_MULT,mulberry32,makeSequence,newGame,heldLevel,nextLevel,canDrop,clampX,drop,step,replay,stateHash,bandsOf,bandFor,BAND_NAMES,TWISTS,dayNumber,SEASON_START,twistForDate,dateSeed,beamX,BEAM_W,BEAM_PERIOD,BEAM_MULT};
 })();
 // TODDY Full Moon (working code name: moon-merge): drawing, input and screens. All rules live in core.js.
 
@@ -328,7 +344,7 @@ let W = 0, H = 0, dpr = 1, k = 1, crateX = 0, crateY = 0, cw = 0, ch = 0, toddyH
 let bgS = 1, bgX = 0, panelCv = null;
 const REDUCE = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 let bestVal = 0;
-let bannerUntil = 0, shake = 0, lastMax = 0, moonrises = 0;
+let bannerUntil = 0, shake = 0, lastMax = 0, moonrises = 0, beamFlash = 0;
 // ---- sound: tiny synth, starts after the first touch, can be muted ----
 let AC = null, muted = false;
 try { muted = localStorage.getItem('mmMute') === '1'; } catch (e) { /* none */ }   // sound is on unless the player turned it off
@@ -525,6 +541,41 @@ function coverRect(img, x, y, w, h) {   // draw img to cover a rectangle
   ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
 }
 
+function drawBeam(now) {   // the moonbeam: a soft band of light with a few drifting specks
+  if (!S) return;
+  const cx = C.beamX(S), hw = C.BEAM_W / 2;
+  const x0 = sx(cx - hw), x1 = sx(cx + hw), y0 = sy(C.FIELD.TOP), y1 = sy(C.FIELD.FLOOR);
+  const flash = beamFlash / 14;
+  ctx.save();
+  ctx.globalCompositeOperation = 'lighter';
+  const g = ctx.createLinearGradient(x0, 0, x1, 0);
+  const a = 0.27 + 0.25 * flash;
+  g.addColorStop(0, 'rgba(255,228,150,0)');
+  g.addColorStop(0.22, 'rgba(255,232,160,' + (a * 0.6).toFixed(3) + ')');
+  g.addColorStop(0.5, 'rgba(255,240,180,' + a.toFixed(3) + ')');
+  g.addColorStop(0.78, 'rgba(255,232,160,' + (a * 0.6).toFixed(3) + ')');
+  g.addColorStop(1, 'rgba(255,228,150,0)');
+  ctx.fillStyle = g; ctx.fillRect(x0, y0, x1 - x0, y1 - y0);
+  const top = ctx.createRadialGradient(sx(cx), y0, 0, sx(cx), y0, (x1 - x0) * 0.9);
+  top.addColorStop(0, 'rgba(255,240,190,0.4)'); top.addColorStop(1, 'rgba(255,240,190,0)');
+  ctx.fillStyle = top; ctx.fillRect(x0 - 20, y0, x1 - x0 + 40, (x1 - x0) * 1.1);
+  if (!REDUCE) {
+    ctx.fillStyle = 'rgba(255,244,200,0.55)';
+    for (let i = 0; i < 7; i++) {
+      const mx = sx(cx) + Math.sin(now / 1100 + i * 2.3) * (x1 - x0) * 0.32;
+      const my = y0 + (((now / 55 + i * 151) % 1000) / 1000) * (y1 - y0);
+      ctx.beginPath(); ctx.arc(mx, my, 1.6 + (i % 3) * 0.5, 0, 6.2832); ctx.fill();
+    }
+  }
+  ctx.restore();
+  ctx.save();
+  ctx.font = '700 ' + Math.max(20, Math.round(30 * k * 1.6)) + 'px Fredoka, ui-rounded, system-ui, sans-serif';
+  ctx.textAlign = 'center'; ctx.lineWidth = 4; ctx.strokeStyle = 'rgba(26,10,5,0.8)'; ctx.fillStyle = 'rgba(255,226,140,' + (0.85 + 0.15 * flash).toFixed(2) + ')';
+  const ty = sy(S.tw.closeY) + 34 * k * 1.6;
+  ctx.strokeText('×2', sx(cx), ty); ctx.fillText('×2', sx(cx), ty);
+  ctx.restore();
+}
+
 function render(now) {
   const sh = shake > 0 && !REDUCE ? shake * 0.6 : 0;
   ctx.setTransform(dpr, 0, 0, dpr, Math.sin(now / 17) * sh * dpr, Math.cos(now / 23) * sh * dpr);
@@ -567,6 +618,7 @@ function render(now) {
       drawPiece(b.level, b.x, b.y, b.ang, scale);
     }
   }
+  drawBeam(now);
   // effects
   for (const f of fx) {
     const p = f.age / f.dur, img = IMG[f.key];
@@ -667,6 +719,9 @@ function startRun(k2, seedOverride, twistOverride) {
   mode = 'play'; overlay.hidden = true;
   setScore(); setNext();
   if (WEEKLY_TWISTS) banner(C.TWISTS[twist].name + ' · ' + C.TWISTS[twist].blurb, 'new', 2600);
+  const hintSeen = parseInt(store('mm.beamHint') || '0', 10) || 0;
+  if (hintSeen < 3) { banner('Merge in the moonlight for ×2', 'new', 3200); store('mm.beamHint', String(hintSeen + 1)); }
+  beamFlash = 0;
 }
 
 function dropAt(xArt) {
@@ -690,11 +745,12 @@ function drain() {
       if (e.level > lastMax) { lastMax = e.level; if (e.level >= 3) { banner('New piece: ' + PIECE_NAMES[e.level - 1] + '!', 'new', 1700); sfx.fresh(e.level); } else sfx.merge(e.level, e.chain); }
       else { if (e.chain >= 1) banner('Chain ×' + (e.chain + 1), 'chain', 900); sfx.merge(e.level, e.chain); }
       fx.push({ key: big ? 'fx_burst' : mid ? 'fx_spiral' : 'fx_ring', x: e.x, y: e.y, size: C.RADII[e.level - 1] * (big ? 4.2 : 3.4), age: 0, dur: big ? 34 : 24 });
-      pops.push({ x: e.x, y: e.y - C.RADII[e.level - 1] * 0.4, text: '+' + e.points, age: 0, color: e.chain > 0 ? '#fce25d' : '#fff4d6', big: e.level });
+      if (e.beam) beamFlash = 14;
+      pops.push({ x: e.x, y: e.y - C.RADII[e.level - 1] * 0.4, text: (e.beam ? '×2 ' : '') + '+' + e.points, age: 0, color: e.beam ? '#ffe08a' : e.chain > 0 ? '#fce25d' : '#fff4d6', big: e.level });
     } else if (e.type === 'vanish') {
       fx.push({ key: 'fx_burst', x: e.x, y: e.y, size: 900, age: 0, dur: 46 });
       fx.push({ key: 'fx_spiral', x: e.x, y: e.y, size: 1200, age: 0, dur: 60 });
-      moonrises++;
+      moonrises++; if (e.beam) beamFlash = 14;
       shake = 20; sfx.full(); banner('Moonrise! Two Full Moons +' + e.points, 'new', 2400);
       pops.push({ x: e.x, y: e.y, text: 'MOONRISE +' + e.points, age: 0, color: '#fce25d', big: 12 });
     } else if (e.type === 'gameover') { mode = 'over'; overAt = performance.now(); sfx.over(); }
@@ -715,6 +771,7 @@ function tickOnce() {
   if (dg > 20 && dg % 30 === 0 && !S.over) sfx.warn();
   if (dg > 20 && !S.over) banner('Too high! ' + Math.max(0, (120 - dg) / 60).toFixed(1) + 's', 'warn', 250);
   if (shake > 0) shake--;
+  if (beamFlash > 0) beamFlash--;
   setScore(); setNext();
 }
 
@@ -774,7 +831,7 @@ function showInfo(kindName) {
   mode = 'menu'; overlay.hidden = false;
   const back = '<button class="btn" data-act="menu">Back</button>';
   let body;
-  if (kindName === 'how') body = '<h2>How to play</h2><ol class="steps"><li><b>Aim.</b> Touch and drag. Toddy follows your finger.</li><li><b>Drop.</b> Lift your finger to let go.</li><li><b>Goal.</b> The row of pieces under your score shows what you have made. The dashed one is the next to make.</li><li><b>Merge.</b> Two the same touching become the next piece. Quick chains score extra.</li><li><b>Visitors.</b> Now and then a visitor asks for one piece. Make it (merge two of the piece before it) within the drops shown and you get bonus points. You can ignore it.</li><li><b>Moonrise.</b> Two Full Moons touching vanish for 66 points and clear lots of room.</li><li><b>Stay under the line.</b> If a piece rests above the dashed line for 2 seconds, the night ends.</li></ol><p class="help">Tip: keep big pieces in a corner and build down from there.</p>';
+  if (kindName === 'how') body = '<h2>How to play</h2><ol class="steps"><li><b>Aim.</b> Touch and drag. Toddy follows your finger.</li><li><b>Drop.</b> Lift your finger to let go.</li><li><b>Goal.</b> The row of pieces under your score shows what you have made. The dashed one is the next to make.</li><li><b>Merge.</b> Two the same touching become the next piece. Quick chains score extra.</li><li><b>Moonbeam.</b> A beam of moonlight drifts across the crate. Merges inside it score double.</li><li><b>Visitors.</b> Now and then a visitor asks for one piece. Make it (merge two of the piece before it) within the drops shown and you get bonus points. You can ignore it.</li><li><b>Moonrise.</b> Two Full Moons touching vanish for 66 points and clear lots of room.</li><li><b>Stay under the line.</b> If a piece rests above the dashed line for 2 seconds, the night ends.</li></ol><p class="help">Tip: keep big pieces in a corner and build down from there.</p>';
   else if (kindName === 'pieces') body = '<h2>The 11 pieces</h2>' + strip() + '<p class="sub">Sugar, ice, three beans, milk swirl, moon cup, gold mug, teal moon, violet moon, then Toddy’s Full Moon. Toddy hands out the first five, and after your first violet moon, sometimes a milk swirl.</p><p class="help">Medals: Played, Bronze, Silver, Gold. Scores are never added across games.</p>';
   else body = '<h2>About</h2><p class="sub">Full Moon is a one-finger puzzle from the TODDY games. Play starts a new random game. Daily night gives everyone the same drops that day.</p><p class="help">Preview build. Play is as a guest, no wallet or sign-in. Education and fun only.</p>';
   overlay.innerHTML = '<div class="card">' + body + back + '</div>';
