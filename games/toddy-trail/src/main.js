@@ -157,6 +157,15 @@ function faceVisitor(v) { const dx = v.bx - st.x, dy = v.by - st.y; return Math.
 
 // ---- the scene ----
 function drawFloor(n) {
+  if (floorIdx >= 0) {
+    const [, c1, c2] = PLAIN[floorIdx];
+    for (let y = 0; y < n.h; y++) for (let x = 0; x < n.w; x++) { ctx.fillStyle = (x + y) % 2 ? c1 : c2; ctx.fillRect(ox + x * cell, oy + y * cell, cell, cell); }
+    ctx.strokeStyle = 'rgba(255,255,255,.07)'; ctx.lineWidth = 1; ctx.beginPath();
+    for (let x = 0; x <= n.w; x++) { ctx.moveTo(ox + x * cell, oy); ctx.lineTo(ox + x * cell, oy + n.h * cell); }
+    for (let y = 0; y <= n.h; y++) { ctx.moveTo(ox, oy + y * cell); ctx.lineTo(ox + n.w * cell, oy + y * cell); }
+    ctx.stroke(); ctx.strokeStyle = 'rgba(255,236,190,.55)'; ctx.lineWidth = 3; ctx.strokeRect(ox, oy, cell * n.w, cell * n.h);
+    return;
+  }
   const m = BGS[artOf(st.night)], im = m && ready('trail_bg_n' + artOf(st.night) + '_v01');
   if (im) {
     const sx = (cell * n.w) / m.fw, sy = (cell * n.h) / m.fh;
@@ -167,6 +176,10 @@ function drawFloor(n) {
   }
 }
 
+// Plain floors: a calm two-tone tile in one colour instead of the painted scene. Mid-tones only, chosen so every visitor, the crates, tables and the gold glow stay readable.
+const PLAIN = [['Teal', '#2f6f73', '#2a6568'], ['Plum', '#5b3a6e', '#533466'], ['Slate', '#3f5b7a', '#3a5471'], ['Forest', '#35684a', '#306043'], ['Grey', '#6b6670', '#625d68'], ['Indigo', '#4a4a8c', '#444485']];
+let floorIdx = (() => { try { const v = parseInt(localStorage.getItem('trailFloor'), 10); return v >= 0 && v < PLAIN.length ? v : -1; } catch (_) { return -1; } })();   // -1 = the painted scene
+const floorLabel = () => 'Floor: ' + (floorIdx < 0 ? 'Painted scene' : 'Plain ' + PLAIN[floorIdx][0]);
 const wrap = (v, m) => ((v % m) + m) % m;
 function ambient(n) {   // floating dust in the lamplight, a soft warm flicker, and rain on Night 4 (pictures only)
   const W = cell * n.w, H = cell * n.h;
@@ -273,6 +286,7 @@ function draw(frac) {
     const iK = 'v_' + v.who + '_idle', sK = 'v_' + v.who + '_sip', hK = 'v_' + v.who + '_hop';
     const haveI = ready(animFile(iK)), haveV = haveI && ready(animFile(hK)), haveS = haveV && ready(animFile(sK)), subjH = cell * 1.75;
     const lift = !haveV && since > 0 && since < 520 ? Math.sin((since / 520) * Math.PI) * cell * 0.17 : 0;
+    if (floorIdx >= 0) { ctx.beginPath(); ctx.ellipse(bx, bottom - cell * 0.03, cell * 0.34, cell * 0.09, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fill(); }   // a soft contact shadow keeps every visitor separate from the plain colour
     ctx.save(); ctx.translate(0, -lift);
     const base = ready(VISITOR_BASE[v.who]);
     let im, cupY = null, cupH = cell * 0.6;   // cupY: where the held cup is drawn (null: no cup yet)
@@ -441,7 +455,9 @@ function showMenu() {
   spd.addEventListener('click', () => { const names = Object.keys(SPEEDS); speedName = names[(names.indexOf(speedName) + 1) % names.length]; STEP_MS = 1000 / SPEEDS[speedName]; try { localStorage.setItem('trailSpeed', speedName); } catch (_) { /* optional */ } spd.textContent = 'Walking speed: ' + speedName; });
   const ctl = mk('button', 'btn alt', 'Controls: ' + (controlMode === 'tap' ? 'Tap to go' : 'Drag to steer'));
   ctl.addEventListener('click', () => { controlMode = controlMode === 'tap' ? 'steer' : 'tap'; try { localStorage.setItem('trailControl', controlMode); } catch (_) { /* optional */ } ctl.textContent = 'Controls: ' + (controlMode === 'tap' ? 'Tap to go' : 'Drag to steer'); card.firstChild.nextSibling.textContent = controlMode === 'tap' ? '1 · Tap where Toddy should go' : '1 · Touch and drag to walk'; });
-  const play = mk('button', 'btn', 'Play · Night 1'); play.addEventListener('click', () => { unlockSound(); showIntro(1); }); card.append(play, spd, ctl);
+  const flr = mk('button', 'btn alt', floorLabel());
+  flr.addEventListener('click', () => { floorIdx = floorIdx + 1 >= PLAIN.length ? -1 : floorIdx + 1; try { localStorage.setItem('trailFloor', String(floorIdx)); } catch (_) { /* optional */ } flr.textContent = floorLabel(); });
+  const play = mk('button', 'btn', 'Play · Night 1'); play.addEventListener('click', () => { unlockSound(); showIntro(1); }); card.append(play, spd, ctl, flr);
   const more = mk('button', 'btn alt', 'Choose another night'), list = mk('div', ''); list.hidden = true;
   more.addEventListener('click', () => { list.hidden = !list.hidden; });
   for (const id of NIGHT_IDS) { const b = mk('button', 'btn alt', 'Night ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); showIntro(id); }); list.append(b); }
