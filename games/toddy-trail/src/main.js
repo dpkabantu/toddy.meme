@@ -15,10 +15,10 @@ let STEP_MS = 1000 / SPEEDS[speedName];
 const IMGS = {}, LOADING = {};
 const loadImg = (name) => LOADING[name] || (LOADING[name] = new Promise((res) => { const im = new Image(); im.onload = () => res(); im.onerror = () => res(); im.src = 'assets/' + name + '.webp'; IMGS[name] = im; }));
 const ready = (name) => { const im = IMGS[name]; return im && im.complete && im.naturalWidth ? im : null; };
-const VISITOR_BASE = { milo: 'visitor_milo_v02', pip: 'visitor_pip_v01', velvet: 'visitor_velvet_v01', lumi: 'visitor_lumi_v01', biscuit: 'visitor_biscuit_v01', drizzle: 'visitor_drizzle_v01', pebble: 'visitor_pebble_v01', bao: 'visitor_bao_v01', nova: 'visitor_nova_v01', maple: 'visitor_maple_v01', cosmo: 'visitor_cosmo_v01' };
+const VISITOR_BASE = { milo: 'visitor_milo_v02', pip: 'visitor_pip_v01', velvet: 'visitor_velvet_v01', lumi: 'visitor_lumi_v01', biscuit: 'visitor_biscuit_v01', drizzle: 'visitor_drizzle_v01', pebble: 'visitor_pebble_v01', bao: 'visitor_bao_v01', nova: 'visitor_nova_v01', maple: 'visitor_maple_v01', cosmo: 'visitor_cosmo_v01', fizz: 'visitor_fizz_v01', tilly: 'visitor_tilly_v01', pearl: 'visitor_pearl_v01', gus: 'visitor_gus_v01' };
 // which extra pictures exist per visitor (the newer visitors are still getting their set; only listed files are ever requested)
-const CUST = { milo: ['impatient', 'receive', 'sigh'], pip: ['impatient', 'receive', 'sigh'], velvet: ['impatient', 'receive', 'sigh'], lumi: ['impatient', 'receive', 'sigh'], biscuit: ['impatient', 'receive', 'sigh'], drizzle: ['receive'], pebble: ['receive'], bao: ['receive'], nova: ['impatient', 'receive'], maple: ['impatient', 'receive', 'sigh'], cosmo: ['impatient', 'receive'], fizz: ['receive'], tilly: ['receive'], pearl: ['impatient', 'receive'], gus: ['receive'] };
-const DRINK_NAMES = ['moon', 'star', 'crescent', 'sun', 'heart', 'tealstar', 'limesun'];   // the last two are temporary recolours until real art arrives
+const CUST = { milo: ['impatient', 'receive', 'sigh'], pip: ['impatient', 'receive', 'sigh'], velvet: ['impatient', 'receive', 'sigh'], lumi: ['impatient', 'receive', 'sigh'], biscuit: ['impatient', 'receive', 'sigh'], drizzle: ['impatient', 'receive', 'sigh'], pebble: ['impatient', 'receive', 'sigh'], bao: ['impatient', 'receive', 'sigh'], nova: ['impatient', 'receive', 'sigh'], maple: ['impatient', 'receive', 'sigh'], cosmo: ['impatient', 'receive', 'sigh'], fizz: ['impatient', 'receive', 'sigh'], tilly: ['impatient', 'receive', 'sigh'], pearl: ['impatient', 'receive', 'sigh'], gus: ['impatient', 'receive', 'sigh'] };
+const DRINK_NAMES = ['moon', 'star', 'crescent', 'sun', 'heart', 'snow', 'bolt'];   // drinks 6 and 7 (Very hard and Highly difficult)
 const animFile = (k) => 'trail_anim_' + k + '_v01', objFile = (k) => 'trail_obj_' + k + '_v01', custFile = (w, p) => 'trail_cust_' + w + '_' + p + '_v01';
 
 // what each night puts on the floor (the obstacle picture and how tall it stands, in cells)
@@ -92,11 +92,11 @@ const VTRACK = {
   biscuit: [[0, 0.3], [0.5, 0.32], [0.8, 0.38], [1.1, 0.43], [2.5, 0.44], [2.85, 0.36], [3.1, 0.3]],
   drizzle: [[0, 0.33], [0.75, 0.35], [1.25, 0.44], [1.6, 0.5], [3.0, 0.5], [3.4, 0.4], [3.75, 0.34]],
   pebble: [[0, 0.33], [1, 0.33]],
-  bao: [[0, 0.33], [1, 0.33]],
+  bao: [[0, 0.33], [0.5, 0.34], [1.2, 0.45], [1.6, 0.5], [2.6, 0.5], [3.2, 0.4], [3.6, 0.34]],
   maple: [[0, 0.32], [0.6, 0.34], [1.3, 0.44], [1.8, 0.48], [2.9, 0.48], [3.3, 0.38], [3.8, 0.32]],
-  nova: [[0, 0.33], [1, 0.33]],
-  cosmo: [[0, 0.33], [1, 0.33]],
-  fizz: [[0, 0.33], [1, 0.33]],
+  nova: [[0, 0.33], [0.5, 0.34], [1.2, 0.45], [1.6, 0.5], [2.6, 0.5], [3.2, 0.4], [3.6, 0.34]],
+  cosmo: [[0, 0.33], [0.5, 0.34], [1.2, 0.45], [1.6, 0.5], [2.6, 0.5], [3.2, 0.4], [3.6, 0.34]],
+  fizz: [[0, 0.33], [0.5, 0.34], [1.2, 0.45], [1.6, 0.5], [2.6, 0.5], [3.2, 0.4], [3.6, 0.34]],
   tilly: [[0, 0.33], [1, 0.33]],
   gus: [[0, 0.33], [1, 0.33]],
   pearl: [[0, 0.33], [0.5, 0.35], [1.0, 0.44], [1.5, 0.5], [2.2, 0.5], [2.6, 0.42], [3.0, 0.34], [4, 0.33]],
