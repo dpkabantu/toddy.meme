@@ -44,9 +44,9 @@ for (const t of tiers) {
 // Diagonal pool: every level is flagged diag, uses 3 to 7 drinks (more in the harder tiers), and transformed levels still win
 {
   const { POOL: DP } = await import('../../games/toddy-trail/src/endless-diag-pool.js');
-  assert.ok(DP.length >= 30, 'diagonal pool has levels'); const ndOf = { 0: 3, 1: 3, 2: 4, 3: 5, 4: 6, 5: 7 };
+  assert.ok(DP.length >= 50, 'diagonal pool has levels'); const ndOf = { 0: 3, 1: 3, 2: 4, 3: 5, 4: 6, 5: 7 };
   for (const l of DP) { assert.equal(l.diag, true); assert.equal(l.nd, ndOf[l.tier]); const used = new Set([...l.cups, ...l.brew.map((b) => b.drink), ...l.visitors.map((v) => v.want)]); assert.ok(Math.max(...used) < l.nd, 'drink ids stay below nd'); }
-  for (const t of [2, 3]) {
+  for (const t of [0, 3, 5]) {
     const l = makeLevel(t * 6 + 1, DP, { ...ENDLESS, artDrinks: 7 }, seeded(900 + t));
     assert.equal(l.def.diag, true);
     const r = solve(l.def, { width: t <= 2 ? 1500 : 12000, maxSeconds: 90, maxMs: 170000 }); assert.ok(r.won, 'transformed diagonal tier ' + t + ' wins');
