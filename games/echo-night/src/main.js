@@ -100,7 +100,9 @@ function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.
 function btn(text, fn, alt) { const b = el('button', 'btn' + (alt ? ' alt' : ''), text); b.type = 'button'; b.addEventListener('click', () => { audio(); fn(); }); return b; }
 
 function computeGuide() {
-  if (!sim || screen !== 'play' || night.id > 2) return null;
+  if (!sim || screen !== 'play') return null;
+  if (sim.visitors.some(v => v.state === 'left') && sim.visitors.every(v => v.state === 'served' || v.state === 'left')) return { btn: 'end', text: 'Guests left. Press End loop' };
+  if (night.id > 3 || (night.id === 3 && logs.length > 0)) return null;
   const live = sim.toddys[sim.toddys.length - 1], loop = logs.length, id = night.id, st = stationary(live);
   const carry = () => { const v = sim.visitors.findIndex(q => q.state === 'waiting'); return v >= 0 ? { spot: sim.visitors[v].node, text: 'Carry it to a guest' } : null; };
   if (id === 1) {
@@ -228,7 +230,7 @@ function render(ms) {
     draws.push({ y: feet, f: () => {
       const sc = 0.95;
       if (v.state === 'left') { ctx.save(); ctx.globalAlpha = 0.5; const im = IMG['imp_' + v.who]; ctx.drawImage(im, x - im.width * 0.4, feet - im.height * 0.8, im.width * 0.8, im.height * 0.8); ctx.restore();
-        ctx.fillStyle = '#ff5a5a'; ctx.font = 'bold 56px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('✕', x, feet - 150); return; }
+        ctx.fillStyle = '#ff5a5a'; ctx.font = 'bold 40px sans-serif'; ctx.textAlign = 'center'; ctx.fillText('left', x, feet - 150); return; }
       const va = visAnim[i];
       let img = IMG['v_' + v.who + '_idle'], def = VIS, frame = stripFrame(VIS, v.who + '_idle', ms, 0);
       if (v.state === 'served') {
@@ -291,7 +293,7 @@ function handleEvents() {
   for (const e of sim.events) {
     if (e.type === 'cup') { sfx.cup();  const p = toddyPos(sim.toddys[e.who]); tAnim[e.who] = { name: 'happy', t0: clockMs }; fx.push({ kind: 'dust', x: p.x, y: p.y - 60, t0: clockMs }); }
     if (e.type === 'serve') { sfx.serve(); visAnim[e.v] = { t0: clockMs }; tAnim[e.who] = { name: 'happy', t0: clockMs }; const n = NODES[sim.visitors[e.v].node]; fx.push({ kind: 'heart', x: n.x, y: n.y - 200, t0: clockMs }); }
-    if (e.type === 'left') sfx.left();
+    if (e.type === 'left') { sfx.left(); }
   }
   sim.events.length = 0;
 }
@@ -310,7 +312,7 @@ function frame(now) {
     updateHud();
     guide = computeGuide();
     const gt = guide ? guide.text : '';
-    if (night.id <= 2 && gt !== bannerText) showBanner(gt, 0);
+    if ((night.id <= 2 || gt) && gt !== bannerText && (guide || bannerText)) showBanner(gt, 0);
     $('btnEnd').classList.toggle('pulse', !!(guide && guide.btn === 'end'));
     if (sim.status !== 'running') { setTimeout(endLoop, sim.status === 'won' ? 1100 : 500); screen = 'ending'; }
   }
