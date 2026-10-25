@@ -304,6 +304,7 @@ function frame(now) {
   if (bannerT && clockMs > bannerT) { showBanner(''); bannerT = 0; }
   if (screen === 'play' && sim && sim.status === 'running') {
     acc += dt;
+    if (!sim.started) { acc = 0; if (pendingTap >= 0) { step(sim, pendingTap); pendingTap = -1; handleEvents(); } }
     const per = 1000 / TPS; let n = 0;
     while (acc >= per && n < 6 && sim.status === 'running') {
       step(sim, pendingTap); pendingTap = -1; acc -= per; n++;

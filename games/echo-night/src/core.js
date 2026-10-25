@@ -44,14 +44,14 @@ function pathNodes(a, b) { // nodes after a, up to and including b
 // The nights. visitors: node, arrive tick, patience ticks (leaves at arrive + patience if not served).
 export const NIGHTS = [
   { id: 1, title: 'First cup', levers: [L1], hold: 45, length: 900, visitors: [
-    { who: 'milo', node: VA, arrive: 30, patience: 240 },
-    { who: 'pip', node: VB, arrive: 60, patience: 200 } ] },
+    { who: 'milo', node: VA, arrive: 30, patience: 255 },
+    { who: 'pip', node: VB, arrive: 60, patience: 225 } ] },
   { id: 2, title: 'Two hands', levers: [L1, L2], hold: 40, length: 900, visitors: [
-    { who: 'lumi', node: VA, arrive: 30, patience: 330 },
-    { who: 'milo', node: VB, arrive: 60, patience: 330 } ] },
+    { who: 'lumi', node: VA, arrive: 30, patience: 420 },
+    { who: 'milo', node: VB, arrive: 60, patience: 420 } ] },
   { id: 3, title: 'Full house', levers: [L1, L2], hold: 40, length: 1200, visitors: [
     { who: 'pip', node: VA, arrive: 30, patience: 300 },
-    { who: 'lumi', node: VB, arrive: 30, patience: 220 },
+    { who: 'lumi', node: VB, arrive: 30, patience: 240 },
     { who: 'milo', node: VC, arrive: 300, patience: 300 } ] },
 ];
 
@@ -60,7 +60,7 @@ export function newLoop(night, ghostLogs) {
   const toddys = [];
   for (let i = 0; i <= n; i++) toddys.push({ node: J, to: -1, p: 0, route: [], carrying: false });
   return {
-    night, tick: 0, ghostLogs, nextTap: ghostLogs.map(() => 0), liveLog: [],
+    night, tick: 0, started: false, ghostLogs, nextTap: ghostLogs.map(() => 0), liveLog: [],
     toddys, progress: 0, cups: 0, status: 'running', endTick: -1,
     visitors: night.visitors.map(v => ({ node: v.node, arrive: v.arrive, patience: v.patience, who: v.who, state: 'away', servedAt: -1 })),
     events: [], // {t, type, ...} for sound and effects; cleared by the client
@@ -84,6 +84,8 @@ function stationary(td) { return td.to === -1 && td.route.length === 0; }
 // Advance one tick. liveSpot: spot index tapped by the player this tick, or -1.
 export function step(s, liveSpot) {
   if (s.status !== 'running') return s;
+  // The loop clock starts at the player's first tap, so thinking time costs nothing.
+  if (!s.started) { if (liveSpot < 0) return s; s.started = true; }
   const t = s.tick;
   const live = s.toddys.length - 1;
   // 1. taps (ghosts first, then live)
