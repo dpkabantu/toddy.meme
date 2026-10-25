@@ -44,8 +44,8 @@ function pathNodes(a, b) { // nodes after a, up to and including b
 // The nights. visitors: node, arrive tick, patience ticks (leaves at arrive + patience if not served).
 export const NIGHTS = [
   { id: 1, title: 'First cup', levers: [L1], hold: 45, length: 900, visitors: [
-    { who: 'milo', node: VA, arrive: 30, patience: 255 },
-    { who: 'pip', node: VB, arrive: 60, patience: 225 } ] },
+    { who: 'milo', node: VA, arrive: 30, patience: 300 },
+    { who: 'pip', node: VB, arrive: 60, patience: 450 } ] },
   { id: 2, title: 'Two hands', levers: [L1, L2], hold: 40, length: 900, visitors: [
     { who: 'lumi', node: VA, arrive: 30, patience: 420 },
     { who: 'milo', node: VB, arrive: 60, patience: 420 } ] },
@@ -160,7 +160,7 @@ export function verifyNight(night, logs) {
 }
 
 // Stars from loops used: par = the fewest loops the designer's solution needs.
-export const PAR = { 1: 2, 2: 2, 3: 3 };
+export const PAR = { 1: 1, 2: 2, 3: 3 };
 export function starsFor(nightId, loops) { const par = PAR[nightId]; return loops <= par ? 3 : loops <= par + 1 ? 2 : 1; }
 
 // Bot used by tests: drives the live toddy by a plan (list of spots) while ghosts replay.

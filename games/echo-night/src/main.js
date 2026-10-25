@@ -108,7 +108,7 @@ function computeGuide() {
   if (id === 1) {
     if (!firstTapDone) return { spot: L1, text: loop === 0 ? 'Tap the machine' : 'Your echo is back. Tap the machine' };
     if (live.carrying) return carry();
-    if (loop === 0 && servedCount(sim) >= 1) return { btn: 'end', text: 'Too slow for guest 2. End loop' };
+    if (servedCount(sim) >= 1 && servedCount(sim) < sim.visitors.length && !(st && live.node === L1)) return { spot: L1, text: 'One cup, one guest. Back to the machine' };
     if (st && live.node === L1 && !live.carrying) return { text: 'Wait for the cup' };
     return null;
   }
@@ -132,7 +132,7 @@ function endLoop() {
     const loops = logs.length + 1, stars = starsFor(night.id, loops);
     screen = 'won'; sfx.won();
     c.append(el('h1', '', 'Night cleared'), el('div', 'stars', '★'.repeat(stars) + '☆'.repeat(3 - stars)),
-      el('p', '', `Team of ${loops} (you + ${loops - 1} echo${loops > 2 ? 'es' : ''}) · ${(sim.endTick / TPS).toFixed(1)} s`));
+      el('p', '', (loops === 1 ? 'You, alone' : `Team of ${loops} (you + ${loops - 1} echo${loops > 2 ? 'es' : ''})`) + ` · ${(sim.endTick / TPS).toFixed(1)} s`));
     if (stars < 3) c.append(el('p', '', `Clear it with a team of ${PAR[night.id]} for 3 stars`));
     if (nextN) c.append(btn(`Next: Night ${nextN.id}`, () => { night = nextN; logs = []; startLoop(); }));
     c.append(btn('Play this night again', () => { logs = []; startLoop(); }, true), btn('Menu', menu, true));

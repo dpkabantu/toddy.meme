@@ -10,13 +10,13 @@ function solve(night, plans) {
 }
 const N = id => NIGHTS.find(n => n.id === id);
 
-// Night 1: needs two Toddys. Loop 1 serves one visitor, loop 2 (with a ghost) serves both.
+// Night 1: the basics, winnable alone (machine, cup, guest, back to the machine, second guest).
 {
-  const logs = solve(N(1), [[L1, VA], [L1, VB]]);
+  const logs = solve(N(1), [[L1, VA, L1, VB]]);
   const r = verifyNight(N(1), logs);
-  ok(r.ok && r.loops === 2, 'night 1 solved in 2 loops: ' + JSON.stringify(r));
-  const l1 = runLoop(N(1), [], logs[0]);
-  ok(l1.status === 'timeup' && servedCount(l1) === 1, 'night 1 loop 1 alone serves 1 of 2');
+  ok(r.ok && r.loops === 1, 'night 1 solved alone in 1 loop: ' + JSON.stringify(r));
+  const lazy = recordPlan(N(1), [], [L1, VA], true).state;
+  ok(servedCount(lazy) === 1, 'night 1: one cup serves only one guest (a second trip is needed)');
 }
 // Night 2: loop 1 holds the second lever, loop 2 brews and serves
 {
@@ -44,7 +44,7 @@ function plans(maxLen, spots) {
   const rec = (cur) => { if (cur.length >= maxLen) return; for (const sp of spots) { const n = cur.concat(sp); out.push(n); rec(n); } };
   rec([]); return out;
 }
-for (const id of [1, 2, 3]) {
+for (const id of [2, 3]) {
   const spots = [L1, L2, VA, VB, VC];
   let win = null; const all = plans(6, spots).filter(p => p.length);
   for (const p of all) { const r = recordPlan(N(id), [], p, true).state; if (r.status === 'won') { win = p; break; } }
