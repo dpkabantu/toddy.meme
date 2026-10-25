@@ -30,6 +30,7 @@ export function makeLevel(n, pool, cfg, rnd = cryptoRnd, force = {}) {
     visitors: base.visitors.map((v) => ({ who: WHO[Math.floor(rnd() * WHO.length)], sx: mx(v.sx), sy: v.sy, bx: mx(v.bx), by: v.by, want: perm[v.want] })),
   };
   if (base.diag) def.diag = true;
+  if (base.fresh) def.fresh = base.fresh;   // cups go cold after this many steps (4 steps = 1 second)
   if (base.shutters) def.shutters = base.shutters.map((s) => ({ ...s, x: mx(s.x) }));
   if (base.cart) def.cart = { ...base.cart, path: base.cart.path.map(pt) };
   if (base.thief) def.thief = { ...base.thief, path: base.thief.path.map(pt) };

@@ -147,6 +147,7 @@ export function createMusic() {
       else if (kind === 'snatch') { tone('sawtooth', 700, 120, 0.4, 0.25); hiss('bandpass', 3000, 800, 0.25, 0.3); }
       else if (kind === 'serve') { chime(79, 0, 0.3); chime(84, 0.09, 0.3); chime(91, 0.18, 0.28); }
       else if (kind === 'brew') { chime(88, 0, 0.22); hiss('bandpass', 3500, 2500, 0.2, 0.15); }
+      else if (kind === 'thunder') { hiss('lowpass', 420, 70, 1.8, 0.5); hiss('lowpass', 900, 90, 1.2, 0.3, 0.12); tone('sine', 60, 38, 1.4, 0.22); }   // a long low rumble
       else if (kind === 'sigh') { tone('triangle', 330, 180, 0.4, 0.2); }
       else if (kind === 'turn') { tone('sine', 520, 520, 0.03, 0.04); }
       else if (kind === 'win') { [72, 76, 79, 84].forEach((n, i) => chime(n, i * 0.12, 0.3)); }

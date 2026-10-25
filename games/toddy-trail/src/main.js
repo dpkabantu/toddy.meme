@@ -1,6 +1,6 @@
 // TODDY Trail test page: canvas, hold-and-steer, approved art and animations. No server yet.
 // The rules live in core.js (pure and deterministic). Everything in this file is only drawing and input.
-import { NIGHTS, NIGHT_IDS, SAMPLE_IDS, registerLevel, STEPS_PER_SEC, newState, step, score, cartCell, thiefCell, shutterClosed, cellBlocked, DX, DY } from './core.js';
+import { NIGHTS, NIGHT_IDS, SAMPLE_IDS, registerLevel, STEPS_PER_SEC, newState, step, score, cartCell, thiefCell, shutterClosed, cellBlocked, warmth, DX, DY } from './core.js';
 import { ANIMS, STILLS, BGS } from './art.js';
 import { createMusic } from './music.js';
 import { ENDLESS } from './endless-config.js';
@@ -57,7 +57,7 @@ function beep(freq, dur, type, vol) {
     o.start(t); o.stop(t + dur);
   } catch (e) { /* sound is optional */ }
 }
-const SND = Object.fromEntries(['serve', 'sigh', 'spill', 'brew', 'turn', 'win', 'bump', 'slide', 'snatch'].map((k) => [k, () => { if (soundOn && musicGo) music.sfx(k); }]));
+const SND = Object.fromEntries(['serve', 'sigh', 'spill', 'brew', 'turn', 'win', 'bump', 'slide', 'snatch', 'thunder'].map((k) => [k, () => { if (soundOn && musicGo) music.sfx(k); }]));
 
 // ---- layout ----
 function resize() {
@@ -77,10 +77,11 @@ function drawDrink(d, cx, cy, r) {   // the approved round badge picture; the dr
   if (im) { ctx.drawImage(im, cx - r * 1.12, cy - r * 1.12, r * 2.24, r * 2.24); return; }
   drawDrinkFallback(d, cx, cy, r);
 }
-function steam(cx, cy, h) {   // soft wisps rising from a hot cup
+function steam(cx, cy, h, power) {   // soft wisps rising from a hot cup (power 0..1: a cooling cup steams less, a cold one not at all)
+  const pw = power === undefined ? 1 : power; if (pw <= 0.05) return;
   for (let k = 0; k < 3; k++) {
     const p = (totalTime / 1700 + k / 3) % 1, x = cx + Math.sin(p * 7 + k * 2.1) * h * 0.14, y = cy - h * 0.42 - p * h * 0.95;
-    ctx.globalAlpha = 0.42 * Math.sin(p * Math.PI); ctx.fillStyle = '#fff4e6'; ctx.beginPath(); ctx.arc(x, y, h * (0.07 + 0.1 * p), 0, Math.PI * 2); ctx.fill();
+    ctx.globalAlpha = 0.42 * pw * Math.sin(p * Math.PI); ctx.fillStyle = '#fff4e6'; ctx.beginPath(); ctx.arc(x, y, h * (0.07 + 0.1 * p), 0, Math.PI * 2); ctx.fill();
   }
   ctx.globalAlpha = 1;
 }
@@ -108,10 +109,17 @@ function sipFrac(who, t) {
   for (let i = 1; i < k.length; i++) if (t <= k[i][0]) { const u = (t - k[i - 1][0]) / (k[i][0] - k[i - 1][0]), e = u * u * (3 - 2 * u); return k[i - 1][1] + (k[i][1] - k[i - 1][1]) * e; }
   return k[k.length - 1][1];
 }
-function drawCup(d, cx, cy, h) {   // the approved cup picture, centred on (cx, cy)
+let tintCv = null;
+function drawCup(d, cx, cy, h, warm) {   // the approved cup picture, centred on (cx, cy); warm < 0.5 tints it a cold blue
   const im = ready('trail_cup_' + DRINK_NAMES[d] + '_v01');
   if (!im) { drawDrinkFallback(d, cx, cy, h * 0.4); return; }
-  const w = (im.naturalWidth / im.naturalHeight) * h; ctx.drawImage(im, cx - w / 2, cy - h / 2, w, h);
+  const w = (im.naturalWidth / im.naturalHeight) * h;
+  if (warm === undefined || warm >= 0.5) { ctx.drawImage(im, cx - w / 2, cy - h / 2, w, h); return; }
+  if (!tintCv) tintCv = document.createElement('canvas');
+  const cw = Math.ceil(w), ch = Math.ceil(h); if (tintCv.width !== cw || tintCv.height !== ch) { tintCv.width = cw; tintCv.height = ch; }
+  const t = tintCv.getContext('2d'); t.clearRect(0, 0, cw, ch); t.globalCompositeOperation = 'source-over'; t.drawImage(im, 0, 0, cw, ch);
+  t.globalCompositeOperation = 'source-atop'; t.fillStyle = 'rgba(110,160,230,' + (0.62 * (1 - warm / 0.5)).toFixed(3) + ')'; t.fillRect(0, 0, cw, ch);
+  ctx.drawImage(tintCv, cx - w / 2, cy - h / 2, w, h);
 }
 function drawDrinkFallback(d, cx, cy, r) {
   ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fillStyle = ['#2F4E9F', '#9A2F55', '#2E7A52', '#C98A2B', '#7A4AA8'][d] || '#3E1C14'; ctx.fill(); ctx.lineWidth = Math.max(2, r * 0.16); ctx.strokeStyle = '#FFF4D6'; ctx.stroke();
@@ -180,6 +188,13 @@ function drawFloor(n) {
 
 // Plain floors: a calm two-tone tile in one colour instead of the painted scene. Mid-tones only, chosen so every visitor, the crates, tables and the gold glow stay readable.
 const PLAIN = [['Teal', '#2f6f73', '#2a6568'], ['Plum', '#5b3a6e', '#533466'], ['Slate', '#3f5b7a', '#3a5471'], ['Forest', '#35684a', '#306043'], ['Grey', '#6b6670', '#625d68'], ['Indigo', '#4a4a8c', '#444485']];
+let weather = 'none';   // 'none' | 'rain' | 'storm' (storm adds lightning and thunder)
+let stormFx = (() => { try { return localStorage.getItem('trailStorm') !== 'off'; } catch (_) { return true; } })();   // the owner-facing off switch for lightning flashes and thunder
+const REDUCE_MOTION = (() => { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
+const stormLabel = () => 'Lightning and thunder: ' + (stormFx && !REDUCE_MOTION ? 'On' : 'Off');
+const weatherFor = (n, kind) => (kind === 'boss' ? 'storm' : n % 3 === 1 ? 'rain' : n % 3 === 2 ? 'storm' : 'none');
+const hash01 = (k) => { const x = Math.sin(k * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
+let thunderK = -1;
 let floorIdx = (() => { try { const v = parseInt(localStorage.getItem('trailFloor'), 10); return v >= 0 && v < PLAIN.length ? v : -1; } catch (_) { return -1; } })();   // -1 = the painted scene
 const floorLabel = () => 'Floor: ' + (floorIdx < 0 ? 'Painted scene' : 'Plain ' + PLAIN[floorIdx][0]);
 const wrap = (v, m) => ((v % m) + m) % m;
@@ -190,17 +205,30 @@ function ambient(n) {   // floating dust in the lamplight, a soft warm flicker, 
   const g = ctx.createRadialGradient(ox + W / 2, oy, 0, ox + W / 2, oy, W * 1.1); const fl = 0.05 + 0.02 * Math.sin(totalTime / 700) + 0.012 * Math.sin(totalTime / 130);
   g.addColorStop(0, 'rgba(255,190,100,' + fl + ')'); g.addColorStop(1, 'rgba(255,190,100,0)'); ctx.fillStyle = g; ctx.fillRect(ox, oy, W, H);
   ctx.globalCompositeOperation = 'source-over';
-  const rain = st.night === 4;
+  const rain = weather !== 'none', storm = weather === 'storm';
   for (let k = 0; k < (rain ? 8 : 22); k++) {
     const px = ox + wrap((k * 0.618) * W + Math.sin(totalTime / 2600 + k) * cell * 0.3 + totalTime * 0.012 * (1 + (k % 3) * 0.4), W), py = oy + wrap((k * 0.7548) * H - totalTime * 0.01 * (1 + (k % 4) * 0.3), H);
     ctx.fillStyle = 'rgba(255,232,180,' + (0.22 + 0.18 * Math.sin(totalTime / 900 + k * 1.7)) + ')'; ctx.beginPath(); ctx.arc(px, py, cell * (0.018 + 0.012 * (k % 3)), 0, Math.PI * 2); ctx.fill();
   }
   if (rain) {
     ctx.strokeStyle = 'rgba(190,215,255,.32)'; ctx.lineWidth = Math.max(1, cell * 0.02); ctx.beginPath();
-    for (let k = 0; k < 70; k++) { const px = ox + wrap(k * 0.381966 * W * 3 + totalTime * 0.05, W + cell) - cell * 0.5, py = oy + wrap(k * 0.7071 * H * 5 + totalTime * 0.7 * (0.8 + (k % 5) * 0.1), H + cell) - cell * 0.5; ctx.moveTo(px, py); ctx.lineTo(px - cell * 0.08, py + cell * 0.38); }
+    for (let k = 0; k < (storm ? 130 : 70); k++) { const px = ox + wrap(k * 0.381966 * W * 3 + totalTime * (storm ? 0.09 : 0.05), W + cell) - cell * 0.5, py = oy + wrap(k * 0.7071 * H * 5 + totalTime * (storm ? 0.95 : 0.7) * (0.8 + (k % 5) * 0.1), H + cell) - cell * 0.5; ctx.moveTo(px, py); ctx.lineTo(px - cell * (storm ? 0.16 : 0.08), py + cell * (storm ? 0.46 : 0.38)); }
     ctx.stroke();
     ctx.lineWidth = Math.max(1, cell * 0.018);
     for (let k = 0; k < 9; k++) { const ph = wrap(totalTime / 900 + k * 0.37, 1), px = ox + wrap(k * 0.618 * W * 7, W), py = oy + wrap(k * 0.4142 * H * 11, H); ctx.strokeStyle = 'rgba(200,225,255,' + 0.3 * (1 - ph) + ')'; ctx.beginPath(); ctx.ellipse(px, py, cell * 0.32 * ph, cell * 0.12 * ph, 0, 0, Math.PI * 2); ctx.stroke(); }
+  }
+  if (storm && stormFx && !REDUCE_MOTION && running && !st.over) {   // lightning: one soft double flash and a jagged bolt every 9 to 13 s (never more than 3 flashes a second), thunder a moment later
+    const P = 9000, k = Math.floor(totalTime / P), dt = totalTime - (k * P + 2500 + hash01(k) * 3500);
+    if (dt >= 0 && dt < 420) {
+      const a = 0.2 * (Math.max(0, 1 - dt / 110) + 0.7 * Math.max(0, 1 - Math.abs(dt - 200) / 110));
+      ctx.fillStyle = 'rgba(205,225,255,' + a.toFixed(3) + ')'; ctx.fillRect(ox, oy, W, H);
+      if (dt < 300) {
+        let bx = ox + (0.15 + 0.7 * hash01(k + 5)) * W, by = oy; ctx.strokeStyle = 'rgba(240,246,255,' + (0.85 * (1 - dt / 300)).toFixed(3) + ')'; ctx.lineWidth = Math.max(2, cell * 0.07); ctx.lineJoin = 'round'; ctx.beginPath(); ctx.moveTo(bx, by);
+        for (let j = 1; j <= 7; j++) { bx += (hash01(k * 9 + j) - 0.5) * cell * 1.4; by = oy + (j / 7) * H * 0.5; ctx.lineTo(bx, by); }
+        ctx.stroke();
+      }
+    }
+    if (dt >= 350 && k !== thunderK) { thunderK = k; SND.thunder(); }
   }
   ctx.restore();
   if (totalTime - confettiAt < 3800) {   // win confetti
@@ -322,7 +350,7 @@ function draw(frac) {
   // Toddy and his line (smoothly between steps)
   const L = (a, b) => a + (b - a) * frac;
   const P = curPts.map((p, i) => { const q = prevPts[i] || p; return { x: L(q.x, p.x), y: L(q.y, p.y) }; });
-  for (let k = st.cups.length - 1; k >= 1; k--) items.push({ y: P[k].y - 0.2, f: () => { const [cx, cy] = cc(P[k].x, P[k].y); drawCup(st.cups[k], cx, cy + cell * 0.05, cell * 0.95); } });
+  for (let k = st.cups.length - 1; k >= 1; k--) items.push({ y: P[k].y - 0.2, f: () => { const [cx, cy] = cc(P[k].x, P[k].y); drawCup(st.cups[k], cx, cy + cell * 0.05, cell * 0.95, warmth(st, k)); } });
   const [tx, ty] = cc(P[0].x, P[0].y);
   items.push({ y: P[0].y + 0.02, f: () => {
     ctx.beginPath(); ctx.ellipse(tx, ty + cell * 0.46, cell * 0.34, cell * 0.1, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0,0,0,.35)'; ctx.fill();
@@ -332,7 +360,7 @@ function draw(frac) {
     ctx.save(); ctx.translate(tx, feet); ctx.scale(1 + 0.04 * kk, 1 - 0.05 * kk); ctx.translate(-tx, -feet);
     drawStrip(animFile(tp.key), tp.key, tp.i, tx, feet, cell * 1.75, tp.flip); ctx.restore();
     const handing = fx.some((f) => f.kind === 'cup' && totalTime - f.t0 < 650);   // while a cup is being handed over, that cup is drawn by the effect
-    if (st.cups.length && !handing && !st.over && !(tp.key === 'walk_up' || (tp.key === 'bump' || tp.key === 'slip' || tp.key === 'startled'))) { const [hx, hy] = pawPos(tx, ty, tp.key, tp.flip); const pv = hy + cell * 0.3; ctx.save(); ctx.translate(hx, pv); ctx.rotate(0.2 * jd * Math.sin(jt * 22) * (mv ? 0.6 : 1)); ctx.translate(-hx, -pv); drawCup(st.cups[0], hx, hy, cell * 0.62); ctx.restore(); steam(hx, hy, cell * 0.62); ctx.beginPath(); ctx.arc(hx, hy, cell * 0.42, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.55 + 0.4 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
+    if (st.cups.length && !handing && !st.over && !(tp.key === 'walk_up' || (tp.key === 'bump' || tp.key === 'slip' || tp.key === 'startled'))) { const [hx, hy] = pawPos(tx, ty, tp.key, tp.flip); const pv = hy + cell * 0.3; ctx.save(); ctx.translate(hx, pv); ctx.rotate(0.2 * jd * Math.sin(jt * 22) * (mv ? 0.6 : 1)); ctx.translate(-hx, -pv); drawCup(st.cups[0], hx, hy, cell * 0.62, warmth(st, 0)); ctx.restore(); steam(hx, hy, cell * 0.62, Math.min(1, (warmth(st, 0) - 0.3) / 0.4)); ctx.beginPath(); ctx.arc(hx, hy, cell * 0.42, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.55 + 0.4 * pulse) + ')'; ctx.lineWidth = 3; ctx.stroke(); }
   } });
   items.sort((a, b) => a.y - b.y);
   for (const it of items) it.f();
@@ -416,7 +444,9 @@ async function startNight(id) {
   sighUntil = NIGHTS[id].visitors.map(() => 0); servedAt = NIGHTS[id].visitors.map(() => 0); brewAt = []; shutterAt = {}; shutterWas = {}; thiefPrev = null; thiefSnatchAt = -9999;
   prevPts = curPts = pts(st);
   o.hidden = true; o.textContent = '';
-  music.play(MUSIC_OF[artOf(id)] || artOf(id)); resize(); updateHud(); running = true; waiting = true;   // Toddy waits for the first swipe
+  weather = id === 4 ? 'storm' : id === ENDLESS_ID && endless ? weatherFor(endless.n, endless.kind) : 'none'; thunderK = -1;
+  music.play(MUSIC_OF[artOf(id)] || artOf(id)); resize(); updateHud(); running = true; waiting = true;
+  if (NIGHTS[id].fresh) banner('Cups cool down! Serve them while they steam.', 3400);   // Toddy waits for the first swipe
 }
 const endlessBest = () => { try { return JSON.parse(localStorage.getItem('trailEndlessBest')) || { level: 0, score: 0 }; } catch (_) { return { level: 0, score: 0 }; } };
 function saveEndlessBest(level, score) { const b = endlessBest(), nb = { level: Math.max(b.level, level), score: Math.max(b.score, score) }; try { localStorage.setItem('trailEndlessBest', JSON.stringify(nb)); } catch (_) { /* optional */ } return nb; }
@@ -459,7 +489,9 @@ function showMenu() {
   ctl.addEventListener('click', () => { controlMode = controlMode === 'tap' ? 'steer' : 'tap'; try { localStorage.setItem('trailControl', controlMode); } catch (_) { /* optional */ } ctl.textContent = 'Controls: ' + (controlMode === 'tap' ? 'Tap to go' : 'Drag to steer'); card.firstChild.nextSibling.textContent = controlMode === 'tap' ? '1 · Tap where Toddy should go' : '1 · Touch and drag to walk'; });
   const flr = mk('button', 'btn alt', floorLabel());
   flr.addEventListener('click', () => { floorIdx = floorIdx + 1 >= PLAIN.length ? -1 : floorIdx + 1; try { localStorage.setItem('trailFloor', String(floorIdx)); } catch (_) { /* optional */ } flr.textContent = floorLabel(); });
-  const play = mk('button', 'btn', 'Play · Night 1'); play.addEventListener('click', () => { unlockSound(); showIntro(1); }); card.append(play, spd, ctl, flr);
+  const play = mk('button', 'btn', 'Play · Night 1'); play.addEventListener('click', () => { unlockSound(); showIntro(1); }); const wth = mk('button', 'btn alt', stormLabel());
+  wth.addEventListener('click', () => { stormFx = !stormFx; try { localStorage.setItem('trailStorm', stormFx ? 'on' : 'off'); } catch (_) { /* optional */ } wth.textContent = stormLabel(); });
+  card.append(play, spd, ctl, flr, wth);
   const more = mk('button', 'btn alt', 'Choose another night'), list = mk('div', ''); list.hidden = true;
   more.addEventListener('click', () => { list.hidden = !list.hidden; });
   for (const id of NIGHT_IDS) { const b = mk('button', 'btn alt', 'Night ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); showIntro(id); }); list.append(b); }
@@ -507,6 +539,11 @@ function onEvents(before) {
     } else if (e.type === 'sigh') {
       SND.sigh(); const v = n.visitors[e.visitor]; sighUntil[e.visitor] = totalTime + 1300;
       flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: 'other drink', color: '#ff8f7a' });
+    } else if (e.type === 'cold') {
+      SND.sigh(); const v = n.visitors[e.visitor]; sighUntil[e.visitor] = totalTime + 1300;
+      flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: 'cold cup!', color: '#9ec4ff' });
+      fx.push({ file: 'trail_anim_fx_splash_' + DRINK_NAMES[e.drink] + '_v01', key: 'fx_splash', x: st.x, y: st.y, dy: 0.25, size: 1.2, t0: totalTime, ms: 1600 });
+      banner('That cup went cold. Brew a fresh one!', 2600);
     } else if (e.type === 'spill' || e.type === 'bump') {
       if (e.type === 'spill') SND.spill(); SND.bump(); const wx = st.x + DX[st.dir] * 0.55, wy = st.y + DY[st.dir] * 0.55;
       fx.push({ file: animFile('fx_dust'), key: 'fx_dust', x: wx, y: wy, size: 1.3, t0: totalTime, ms: 800 });

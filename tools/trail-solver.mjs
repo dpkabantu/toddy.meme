@@ -2,9 +2,9 @@
 // Used offline by tools/gen-endless.mjs to prove every generated level can be won, and to measure its best time.
 import { newState, step, registerLevel, NIGHTS } from '../games/toddy-trail/src/core.js';
 
-const clone = (s) => ({ ...s, cups: s.cups.slice(), hist: s.hist.map((h) => ({ x: h.x, y: h.y })), served: s.served.slice(), brewCool: s.brewCool.slice(), events: [] });
-const key = (s) => [s.x, s.y, s.dir, s.holding ? 1 : 0, s.bumped ? 1 : 0, s.soft ? 1 : 0, s.cups.join(''), s.served.map(Number).join(''), s.brewCool.map((c) => Math.ceil(c / 5)).join(','), s.cartI, s.thiefI, s.thiefCool > 0 ? 1 : 0, s.hist.slice(0, 2).map((h) => h.x + '.' + h.y).join(':')].join('|');
-const val = (s) => s.served.filter(Boolean).length * 1000 - (s.spills + s.snatched + s.wrong) * 150 + s.cups.length * 30 - s.bumps * 20;
+const clone = (s) => ({ ...s, cups: s.cups.slice(), ages: s.ages.slice(), hist: s.hist.map((h) => ({ x: h.x, y: h.y })), served: s.served.slice(), brewCool: s.brewCool.slice(), events: [] });
+const key = (s) => [s.x, s.y, s.dir, s.holding ? 1 : 0, s.bumped ? 1 : 0, s.soft ? 1 : 0, s.cups.join(''), s.ages.map((a) => Math.min(Math.ceil(a / 4), 60)).join('.'), s.served.map(Number).join(''), s.brewCool.map((c) => Math.ceil(c / 5)).join(','), s.cartI, s.thiefI, s.thiefCool > 0 ? 1 : 0, s.hist.slice(0, 2).map((h) => h.x + '.' + h.y).join(':')].join('|');
+const val = (s) => s.served.filter(Boolean).length * 1000 - (s.spills + s.snatched + s.wrong + s.cold) * 150 + s.cups.length * 30 - s.bumps * 20;
 
 // def: a level definition (same shape as NIGHTS entries). Returns { won, steps, log, served } where steps is the step count of the first win found.
 export function solve(def, { width = 1500, maxSeconds = 90, id = 9999, maxMs = 60000 } = {}) {
@@ -24,7 +24,7 @@ export function solve(def, { width = 1500, maxSeconds = 90, id = 9999, maxMs = 6
     }
     layer = [...seen.values()].sort((a, b) => b.v - a.v).slice(0, width);
     const w = layer.find((e) => e.s.won);
-    if (w) { delete NIGHTS[id]; return { won: true, steps: w.s.t, log: w.log, spills: w.s.spills, snatched: w.s.snatched, wrong: w.s.wrong }; }
+    if (w) { delete NIGHTS[id]; return { won: true, steps: w.s.t, log: w.log, spills: w.s.spills, snatched: w.s.snatched, wrong: w.s.wrong, cold: w.s.cold }; }
   }
   const b = layer[0].s; delete NIGHTS[id];
   return { won: false, steps: limit, log: [], served: b.served.filter(Boolean).length };

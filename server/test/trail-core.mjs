@@ -104,6 +104,15 @@ assert.ok(replay(1, [[10, 1], [5, 2]]).bad, 'steps going backwards are refused')
   const r = replay(20, sol); assert.ok(!r.bad && r.st.won && r.st.spills === 0 && r.st.snatched === 0, 'level 20 is winnable');
   assert.ok(!replay(20, []).st.won, 'level 20 is not won by standing still');
 }
+// Cups go cold: with fresh set, a cup older than that many steps is refused and poured away; a hot cup still serves; levels without fresh never cool
+{
+  const mk = (fresh) => ({ id: 2001, name: 'cold', w: 9, h: 13, start: { x: 4, y: 9, dir: 0 }, cups: [0], seconds: 30, tables: [], brew: [], visitors: [{ who: 'milo', sx: 4, sy: 5, bx: 4, by: 4, want: 0 }], ...(fresh ? { fresh } : {}) });
+  const run = (def) => { registerLevel(2001, def); const st = newState(2001); for (let i = 0; i < 30 && !st.over; i++) step(st, i === 0 ? 0 : null); return st; };
+  let st = run(mk(40)); assert.ok(st.won && st.cold === 0, 'a hot cup serves');
+  st = run(mk(3)); assert.ok(!st.served[0] && st.cold === 1 && st.cups.length === 0, 'a cold cup is refused and poured away');
+  st = run(mk(0)); assert.ok(st.won && st.cold === 0, 'no fresh: cups never cool');
+  console.log('cold cups ok');
+}
 // Diagonal trial: only levels with diag: true accept diagonal turns; a diagonal step moves one cell each way and refuses to cut a corner
 {
   const mkLevel = (diag, tables) => ({ id: 2000, name: 'diag', w: 9, h: 13, start: { x: 4, y: 9, dir: 0 }, cups: [0], seconds: 30, tables, brew: [], visitors: [{ who: 'milo', sx: 7, sy: 2, bx: 8, by: 2, want: 0 }], diag });

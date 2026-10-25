@@ -42,7 +42,7 @@ await page.addInitScript(() => { try { localStorage.setItem('trailSpeed', 'Norma
 await page.goto(base + '/games/toddy-trail/', { waitUntil: 'load' });
 await page.waitForSelector('#overlay .btn');
 await page.screenshot({ path: path.join(shots, 'trail-menu.png') });
-assert.equal(await page.locator('#overlay .btn').count(), 23);   // Play night 1, walking speed, controls, Choose another night, the 7 nights, the Level 20 sample and the five endless difficulties and the five diagonal ones (hidden until asked)
+assert.equal(await page.locator('#overlay .btn').count(), 24);   // Play night 1, walking speed, controls, floor, weather, Choose another night, the 7 nights, the Level 20 sample and the five endless difficulties and the five diagonal ones (hidden until asked)
 assert.equal(await page.getByRole('button', { name: /^Night 3 / }).isVisible(), false);
 
 // Night 1: timed route (step k happens at (k+1)/3 s, so a turn for step n is pressed at n+0.5). Start (4,9): right 2, up 3, left 4, up 3, right 4
