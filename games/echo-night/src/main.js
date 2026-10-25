@@ -50,7 +50,7 @@ let acc = 0, last = 0, pendingTap = -1, clockMs = 0;
 let fx = [];               // {kind, x, y, t0}
 let tAnim = [];            // per toddy override {name, t0}
 let visAnim = [];          // per visitor {name, t0}
-let bannerT = 0;
+let bannerT = 0, guide = null;
 const GHOST_TINTS = ['rgba(120,170,255,.55)', 'rgba(200,140,255,.55)', 'rgba(110,225,190,.55)', 'rgba(255,205,120,.55)', 'rgba(255,140,170,.55)'];
 
 const HINTS = {
@@ -59,7 +59,8 @@ const HINTS = {
   3: ['Three guests. Build a team', ''],
 };
 
-function showBanner(text, ms = 2600) { const b = $('banner'); if (!text) { b.classList.remove('show'); return; } b.textContent = text; b.classList.add('show'); bannerT = clockMs + ms; }
+let bannerText = '';
+function showBanner(text, ms = 2600) { const b = $('banner'); bannerText = text || ''; if (!text) { b.classList.remove('show'); bannerT = 0; return; } b.textContent = text; b.classList.add('show'); bannerT = ms > 0 ? clockMs + ms : 0; }
 
 function startLoop() {
   sim = newLoop(night, logs); acc = 0; pendingTap = -1; fx = []; firstTapDone = false;
@@ -67,16 +68,14 @@ function startLoop() {
   screen = 'play'; $('overlay').classList.remove('show'); $('hud').hidden = false; $('bar').hidden = false;
   $('btnEnd').hidden = true;
   updateHud();
-  const h = (HINTS[night.id] || [])[Math.min(logs.length, 1)] || '';
-  if (logs.length >= 1 && night.id === 3 && logs.length === 1) showBanner('One helper so far. Add another!');
-  else if (logs.length >= 2 && night.id === 3) showBanner('Two helpers. Last Toddy: you!');
-  else showBanner(h, 4200);
+  guide = null; $('btnEnd').classList.remove('pulse'); showBanner('');
+  if (night.id === 3) showBanner(logs.length === 0 ? 'Serve all three guests' : logs.length === 1 ? 'One echo so far. Add another!' : 'Two echoes. Last Toddy: you!', 4200);
   if (logs.length) sfx.ghost();
 }
 
 function updateHud() {
   $('title').textContent = `Night ${night.id} · Loop ${logs.length + 1}`;
-  $('helpers').textContent = `Toddys ${logs.length + 1}`;
+  $('helpers').textContent = `Team ${logs.length + 1}`;
   $('served').textContent = `Served ${servedCount(sim)} / ${sim.visitors.length}`;
   $('timerFill').style.transform = `scaleX(${Math.max(0, 1 - sim.tick / night.length)})`;
 }
@@ -87,11 +86,40 @@ function menu() {
   const c = el('div', 'card');
   c.append(el('h1', '', 'Echo Night'), el('p', '', 'Toddy relives the night. Your past runs come back to help.'));
   for (const n of NIGHTS) c.append(btn(`Night ${n.id} · ${n.title}`, () => { night = n; logs = []; startLoop(); }));
+  c.append(btn('How it works', howTo, true));
   const note = el('p', '', 'Private feel test. Existing art, rough on purpose.'); note.className = 'small'; c.append(note);
   o.append(c); o.classList.add('show');
 }
+function howTo() {
+  const o = $('overlay'); o.replaceChildren(); const c = el('div', 'card');
+  c.append(el('h1', '', 'How it works'));
+  for (const t of ['Guests wait for a cup. The ring shows how long.', 'Tap the machine, wait for the cup, then tap a guest.', 'When the loop ends, your run comes back as an echo that repeats you.', 'Serve everyone with the smallest team.']) { const p = el('p', '', t); p.className = 'how'; c.append(p); }
+  c.append(btn('Back', menu)); o.append(c);
+}
 function el(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
 function btn(text, fn, alt) { const b = el('button', 'btn' + (alt ? ' alt' : ''), text); b.type = 'button'; b.addEventListener('click', () => { audio(); fn(); }); return b; }
+
+function computeGuide() {
+  if (!sim || screen !== 'play' || night.id > 2) return null;
+  const live = sim.toddys[sim.toddys.length - 1], loop = logs.length, id = night.id, st = stationary(live);
+  const carry = () => { const v = sim.visitors.findIndex(q => q.state === 'waiting'); return v >= 0 ? { spot: sim.visitors[v].node, text: 'Carry it to a guest' } : null; };
+  if (id === 1) {
+    if (!firstTapDone) return { spot: L1, text: loop === 0 ? 'Tap the machine' : 'Your echo is back. Tap the machine' };
+    if (live.carrying) return carry();
+    if (loop === 0 && servedCount(sim) >= 1) return { btn: 'end', text: 'Too slow for guest 2. End loop' };
+    if (st && live.node === L1 && !live.carrying) return { text: 'Wait for the cup' };
+    return null;
+  }
+  if (loop === 0) {
+    if (!firstTapDone) return { spot: L2, text: 'Two hands needed. Tap this lever' };
+    if (st && live.node === L2) return { btn: 'end', text: 'Hold it. Press End loop' };
+    return null;
+  }
+  if (!firstTapDone) return { spot: L1, text: 'Echo holds one lever. Tap the other' };
+  if (live.carrying) return carry();
+  if (st && live.node === L1) return { text: 'Wait for the cup' };
+  return null;
+}
 
 function endLoop() {
   const won = sim.status === 'won';
@@ -102,14 +130,14 @@ function endLoop() {
     const loops = logs.length + 1, stars = starsFor(night.id, loops);
     screen = 'won'; sfx.won();
     c.append(el('h1', '', 'Night cleared'), el('div', 'stars', '★'.repeat(stars) + '☆'.repeat(3 - stars)),
-      el('p', '', `${loops} Toddy${loops > 1 ? 's' : ''} · ${(sim.endTick / TPS).toFixed(1)} s`));
-    if (stars < 3) c.append(el('p', '', `Try with ${PAR[night.id]} Toddys for 3 stars`));
+      el('p', '', `Team of ${loops} (you + ${loops - 1} echo${loops > 2 ? 'es' : ''}) · ${(sim.endTick / TPS).toFixed(1)} s`));
+    if (stars < 3) c.append(el('p', '', `Clear it with a team of ${PAR[night.id]} for 3 stars`));
     if (nextN) c.append(btn(`Next: Night ${nextN.id}`, () => { night = nextN; logs = []; startLoop(); }));
     c.append(btn('Play this night again', () => { logs = []; startLoop(); }, true), btn('Menu', menu, true));
   } else {
     screen = 'between';
-    c.append(el('h1', '', "Loop over"), el('p', '', `${servedCount(sim)} of ${sim.visitors.length} served.`));
-    c.append(btn('Add a helper and loop again', () => { logs = logs.concat([sim.liveLog.slice()]); startLoop(); }),
+    c.append(el('h1', '', "Loop over"), el('p', '', `${servedCount(sim)} of ${sim.visitors.length} served. Your run will come back as an echo and repeat itself.`));
+    c.append(btn('Add the echo and play again', () => { logs = logs.concat([sim.liveLog.slice()]); startLoop(); }),
       btn('Redo this loop', startLoop, true), btn('Start the night over', () => { logs = []; startLoop(); }, true));
   }
   o.append(c); o.classList.add('show'); $('btnEnd').hidden = true;
@@ -235,10 +263,21 @@ function render(ms) {
         ctx.drawImage(off, -96 * sc, 0, 192 * sc, 192 * sc); ctx.restore();
       } else drawStrip(ctx, img, TODDY, frame, p.x, p.y, sc, fa.flip);
       if (td.carrying) { const ox = fa.flip ? -26 : 26; ctx.save(); if (ghost) ctx.globalAlpha = 0.8; ctx.drawImage(IMG.cup, p.x + ox - 20, p.y - 118, 40, 63); ctx.restore(); }
-      if (!ghost) { ctx.save(); ctx.fillStyle = '#FDAF1E'; ctx.beginPath(); ctx.moveTo(p.x, p.y - 190); ctx.lineTo(p.x - 11, p.y - 208); ctx.lineTo(p.x + 11, p.y - 208); ctx.fill(); ctx.restore(); }
+      ctx.save(); ctx.textAlign = 'center'; ctx.font = 'bold 24px sans-serif';
+      const label = ghost ? 'echo' : 'YOU', ty = p.y - 196;
+      ctx.fillStyle = ghost ? 'rgba(20,16,46,.75)' : '#FDAF1E'; const tw = ctx.measureText(label).width + 20;
+      ctx.beginPath(); ctx.roundRect(p.x - tw / 2, ty - 22, tw, 30, 15); ctx.fill();
+      ctx.fillStyle = ghost ? '#cfe0ff' : '#14102e'; ctx.fillText(label, p.x, ty); ctx.restore();
     } });
   });
   draws.sort((a, b) => a.y - b.y).forEach(d => d.f());
+  if (guide && guide.spot >= 0 && screen === 'play') {
+    const n = NODES[guide.spot], bob = Math.sin(ms / 220) * 10;
+    ctx.save(); ctx.globalAlpha = 0.55 + 0.35 * Math.sin(ms / 220); ctx.lineWidth = 8; ctx.strokeStyle = '#FDAF1E';
+    ctx.beginPath(); ctx.ellipse(n.x, n.y + 24, 86 + bob, 34 + bob / 3, 0, 0, Math.PI * 2); ctx.stroke(); ctx.restore();
+    ctx.save(); ctx.fillStyle = '#FDAF1E'; ctx.strokeStyle = '#14102e'; ctx.lineWidth = 5; ctx.beginPath();
+    const ay = n.y - 215 + bob; ctx.moveTo(n.x, ay + 40); ctx.lineTo(n.x - 28, ay); ctx.lineTo(n.x + 28, ay); ctx.closePath(); ctx.stroke(); ctx.fill(); ctx.restore();
+  }
   // effects
   fx = fx.filter(e => ms - e.t0 < 900);
   for (const e of fx) {
@@ -250,7 +289,7 @@ function render(ms) {
 // ---------- loop ----------
 function handleEvents() {
   for (const e of sim.events) {
-    if (e.type === 'cup') { sfx.cup(); if (night.id === 1 && logs.length === 0 && sim.cups === 1) showBanner('Tap a table', 3500); const p = toddyPos(sim.toddys[e.who]); tAnim[e.who] = { name: 'happy', t0: clockMs }; fx.push({ kind: 'dust', x: p.x, y: p.y - 60, t0: clockMs }); }
+    if (e.type === 'cup') { sfx.cup();  const p = toddyPos(sim.toddys[e.who]); tAnim[e.who] = { name: 'happy', t0: clockMs }; fx.push({ kind: 'dust', x: p.x, y: p.y - 60, t0: clockMs }); }
     if (e.type === 'serve') { sfx.serve(); visAnim[e.v] = { t0: clockMs }; tAnim[e.who] = { name: 'happy', t0: clockMs }; const n = NODES[sim.visitors[e.v].node]; fx.push({ kind: 'heart', x: n.x, y: n.y - 200, t0: clockMs }); }
     if (e.type === 'left') sfx.left();
   }
@@ -269,6 +308,10 @@ function frame(now) {
       handleEvents();
     }
     updateHud();
+    guide = computeGuide();
+    const gt = guide ? guide.text : '';
+    if (night.id <= 2 && gt !== bannerText) showBanner(gt, 0);
+    $('btnEnd').classList.toggle('pulse', !!(guide && guide.btn === 'end'));
     if (sim.status !== 'running') { setTimeout(endLoop, sim.status === 'won' ? 1100 : 500); screen = 'ending'; }
   }
   render(now);

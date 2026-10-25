@@ -23,3 +23,7 @@ html, body { margin:0; height:100%; background:#0d0a1f; color:var(--cream); font
 .btn.alt { background:transparent; color:var(--cream); border:1px solid rgba(253,175,30,.6); font-weight:700; }
 .btn:active { transform:scale(.97); }
 [hidden] { display:none !important; }
+
+.card p.how { text-align:left; margin:8px 0; }
+.sbtn.pulse { animation: pulse .8s ease-in-out infinite; border-color:#FDAF1E; background:#FDAF1E; color:#14102e; }
+@keyframes pulse { 0%,100% { box-shadow:0 0 0 0 rgba(253,175,30,.9); } 50% { box-shadow:0 0 0 12px rgba(253,175,30,0); } }
