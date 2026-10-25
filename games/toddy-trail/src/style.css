@@ -21,3 +21,8 @@ body { overflow: hidden; font-family: var(--display); -webkit-user-select: none;
 .btn.alt { background: transparent; color: var(--cream); border-color: var(--brass); box-shadow: none; }
 .big { font: 700 44px/1 var(--display); color: #fff4d6; margin: 4px 0 10px; }
 .card video.intro { display: block; width: 100%; aspect-ratio: 16 / 9; object-fit: cover; margin: 0 0 12px; border-radius: 12px; border: 2px solid var(--brass); background: #000; }
+
+/* Desktop only (a mouse and a wide window): let the play area grow with the window height. Phones and tablets keep the layout above untouched. */
+@media (hover: hover) and (pointer: fine) and (min-width: 900px) and (min-height: 700px) {
+  #app { max-width: min(100vw, calc(100vh * 0.8)); }
+}
