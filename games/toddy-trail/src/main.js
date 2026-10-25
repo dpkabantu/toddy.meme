@@ -65,8 +65,9 @@ function resize() {
   const r = cv.getBoundingClientRect(); W = r.width; H = r.height;
   cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
   const n = NIGHTS[nightId || 1], top = 64, pad = 8;
-  cell = Math.floor(Math.min((W - pad * 2) / n.w, (H - top - pad * 2) / n.h));
-  ox = Math.floor((W - cell * n.w) / 2); oy = top + Math.floor((H - top - cell * n.h) / 2);
+  // a margin around the floor (0.5 cell each side, 0.6 above) so visitors on the walls are never cut off by the screen edge
+  cell = Math.floor(Math.min((W - pad * 2) / (n.w + 1), (H - top - pad * 2) / (n.h + 0.6)));
+  ox = Math.floor((W - cell * n.w) / 2); oy = top + Math.floor(0.6 * cell + (H - top - cell * (n.h + 0.6)) / 2);
 }
 window.addEventListener('resize', resize);
 
@@ -116,6 +117,7 @@ function drawDrinkFallback(d, cx, cy, r) {
   ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fillStyle = ['#2F4E9F', '#9A2F55', '#2E7A52', '#C98A2B', '#7A4AA8'][d] || '#3E1C14'; ctx.fill(); ctx.lineWidth = Math.max(2, r * 0.16); ctx.strokeStyle = '#FFF4D6'; ctx.stroke();
 }
 const cc = (x, y) => [ox + x * cell + cell / 2, oy + y * cell + cell / 2];
+const vcx = (v) => cc(v.bx, v.by)[0] + (v.bx === 0 ? 0.2 : v.bx === NIGHTS[nightId || 1].w - 1 ? -0.2 : 0) * cell;   // wall visitors stand a little inside the floor
 function drawImgBottom(im, cx, bottom, h) { if (!im) return; const w = (im.naturalWidth / im.naturalHeight) * h; ctx.drawImage(im, cx - w / 2, bottom - h, w, h); }
 // a cut-out picture standing on a cell: centred on the cell, feet at the cell's bottom edge
 function drawStill(key, cx, bottom, hCells, maxWCells) {
@@ -281,7 +283,7 @@ function draw(frac) {
   }
   const timeLeft = (st.limit - st.t) / st.limit;
   n.visitors.forEach((v, i) => items.push({ y: v.by + 0.01, f: () => {
-    const [bx] = cc(v.bx, v.by), done = st.served[i], bottom = bottomOf(v.by) + cell * 0.04;
+    const bx = vcx(v), done = st.served[i], bottom = bottomOf(v.by) + cell * 0.04;
     const T = done ? totalTime - (servedAt[i] || -9999) : -1, since = T - 640;   // since: ms after the cup reached the visitor
     const iK = 'v_' + v.who + '_idle', sK = 'v_' + v.who + '_sip', hK = 'v_' + v.who + '_hop';
     const haveI = ready(animFile(iK)), haveV = haveI && ready(animFile(hK)), haveS = haveV && ready(animFile(sK)), subjH = cell * 1.75;
@@ -339,7 +341,7 @@ function draw(frac) {
   // speech bubbles: what each waiting visitor wants. The NEAREST visitor who wants Toddy's first cup glows and bobs (no guide line any more).
   n.visitors.forEach((v, i) => {
     if (st.served[i]) return;
-    const [bx, by] = cc(v.bx, v.by), isT = i === targetIdx, bob = isT ? Math.sin(totalTime / 260) * cell * 0.05 : 0, by2 = by - cell * 1.3 - bob, rr = cell * 0.48 * (isT ? 1.08 + 0.1 * pulse : 1);
+    const bx = vcx(v), by = cc(v.bx, v.by)[1], isT = i === targetIdx, bob = isT ? Math.sin(totalTime / 260) * cell * 0.05 : 0, by2 = by - cell * 1.3 - bob, rr = cell * 0.48 * (isT ? 1.08 + 0.1 * pulse : 1);
     ctx.globalAlpha = targetIdx >= 0 && !isT ? 0.5 : 1;
     if (isT) {   // soft golden glow behind the badge
       const g = ctx.createRadialGradient(bx, by2, rr * 0.4, bx, by2, rr * (1.7 + 0.35 * pulse));
