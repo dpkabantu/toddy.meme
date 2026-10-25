@@ -170,7 +170,7 @@ window.addEventListener('resize', resize);
 
 // ---------- drawing ----------
 function stripFrame(def, name, ms, t0) {
-  const a = def.anims[name], f = Math.floor((ms - t0) / 1000 * a.fps);
+  const a = def.anims[name], f = Math.floor((ms - t0) / 1000 * a.fps * (name.startsWith('walk') ? 1.5 : 1));
   return a.loop ? ((f % a.n) + a.n) % a.n : Math.min(a.n - 1, Math.max(0, f));
 }
 function drawStrip(g, img, def, frame, x, feetY, scale, flip) {

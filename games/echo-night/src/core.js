@@ -15,7 +15,7 @@ export const NODES = [
 ];
 export const J = 0, L1 = 1, L2 = 2, VA = 3, VB = 4, VC = 5, P = 6;
 const EDGES = [[J, L1], [J, L2], [J, VA], [J, VB], [J, VC], [VC, P], [VA, VC], [VB, VC]];
-const SPEED_PX_PER_TICK = 5; // 150 px per second
+const SPEED_PX_PER_TICK = 9; // 270 px per second (was 150: too slow to feel fair)
 
 // Edge lengths in ticks (integer).
 const LEN = Array.from({ length: NODES.length }, () => Array(NODES.length).fill(0));
@@ -43,16 +43,16 @@ function pathNodes(a, b) { // nodes after a, up to and including b
 
 // The nights. visitors: node, arrive tick, patience ticks (leaves at arrive + patience if not served).
 export const NIGHTS = [
-  { id: 1, title: 'First cup', levers: [L1], hold: 75, length: 900, visitors: [
-    { who: 'milo', node: VA, arrive: 60, patience: 360 },
-    { who: 'pip', node: VB, arrive: 90, patience: 330 } ] },
-  { id: 2, title: 'Two hands', levers: [L1, L2], hold: 60, length: 900, visitors: [
-    { who: 'lumi', node: VA, arrive: 60, patience: 420 },
-    { who: 'milo', node: VB, arrive: 90, patience: 480 } ] },
-  { id: 3, title: 'Full house', levers: [L1, L2], hold: 60, length: 1200, visitors: [
-    { who: 'pip', node: VA, arrive: 60, patience: 300 },
-    { who: 'lumi', node: VB, arrive: 60, patience: 300 },
-    { who: 'milo', node: VC, arrive: 400, patience: 300 } ] },
+  { id: 1, title: 'First cup', levers: [L1], hold: 45, length: 900, visitors: [
+    { who: 'milo', node: VA, arrive: 30, patience: 240 },
+    { who: 'pip', node: VB, arrive: 60, patience: 200 } ] },
+  { id: 2, title: 'Two hands', levers: [L1, L2], hold: 40, length: 900, visitors: [
+    { who: 'lumi', node: VA, arrive: 30, patience: 330 },
+    { who: 'milo', node: VB, arrive: 60, patience: 330 } ] },
+  { id: 3, title: 'Full house', levers: [L1, L2], hold: 40, length: 1200, visitors: [
+    { who: 'pip', node: VA, arrive: 30, patience: 300 },
+    { who: 'lumi', node: VB, arrive: 30, patience: 220 },
+    { who: 'milo', node: VC, arrive: 300, patience: 300 } ] },
 ];
 
 export function newLoop(night, ghostLogs) {
