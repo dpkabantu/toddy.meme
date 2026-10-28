@@ -323,6 +323,7 @@ let S = null, mode = 'boot', kind = 'daily', log = [], lastRun = null, twist = 0
 let aimX = (C.FIELD.L + C.FIELD.R) / 2, toddyX = aimX, pressed = false;
 let dropPoseUntil = -1, overAt = 0, shownNext = 0;
 const fx = [], pops = [];
+let burst = null, burstAge = 0;   // 'Moon Burst': cosmetic explosion of the full crate after game over (never touches the rules)
 const keys = { left: false, right: false };
 let W = 0, H = 0, dpr = 1, k = 1, crateX = 0, crateY = 0, cw = 0, ch = 0, toddyH = 150;
 let bgS = 1, bgX = 0, panelCv = null;
@@ -382,6 +383,8 @@ const sfx = {
   ticket: guard(() => { clink(1318, 0.9, 0.08); clink(1046, 1.1, 0.08, 0.2); }),
   served: guard(() => { clink(1568, 0.6, 0.09); voice(220, 1.1, 0.05, 0.02); voice(262, 1.1, 0.05, 0.02); voice(330, 1.1, 0.05, 0.02); }),
   warn: guard(() => voice(110, 0.22, 0.22, 0, 85)),
+  boom: guard(() => { knock(0.9); voice(80, 0.9, 0.28, 0, 38); voice(160, 0.5, 0.12, 0, 60); [1318, 1760, 2093].forEach((f, i) => clink(f, 0.9, 0.05, 0.05 + i * 0.07)); }),
+  burstPop: guard((i) => { clink(NOTES[Math.min(10, 4 + i)] * 2, 0.5, 0.05); }),
   over: guard(() => { mallet(659, 1.0, 0.08); mallet(523, 1.0, 0.08, 0.28); mallet(392, 1.2, 0.08, 0.56); mallet(294, 1.6, 0.08, 0.9); voice(110, 2.0, 0.05, 0.9, 98); }),
   full: guard(() => { [880, 1109, 1319, 1760].forEach((f, i) => clink(f, 1.1, 0.08, i * 0.1)); [220, 262, 330, 440].forEach((f) => voice(f, 1.8, 0.04, 0.05)); }),
 };
@@ -561,11 +564,16 @@ function render(now) {
       ctx.restore();
     }
     // pieces in the crate
-    for (const b of S.bodies) {
-      let scale = 1;
+    S.bodies.forEach((b, i) => {
+      let scale = 1, bx = b.x, by = b.y;
       if (b.merged) { const age = S.tick - b.born; if (age < 16) { const q = 1 - age / 16; scale = 1 + 0.3 * q * q; } }
-      drawPiece(b.level, b.x, b.y, b.ang, scale);
-    }
+      if (burst && S.over) {
+        const p = burst.parts[i];
+        if (p && burstAge >= p.delay) return;              // already flying: drawn in front of the crate below
+        if (!REDUCE) { bx += Math.sin(now / 21 + i) * 3; by += Math.cos(now / 17 + i * 2) * 3; }   // shaking before it lets go
+      }
+      drawPiece(b.level, bx, by, b.ang, scale);
+    });
   }
   // effects
   for (const f of fx) {
@@ -576,6 +584,17 @@ function render(now) {
     ctx.restore();
   }
   ctx.drawImage(IMG.crate, crateX, crateY, cw, ch);
+  if (burst && S && S.over) {   // flying pieces, in front of the crate, then a soft flash
+    for (const p of burst.parts) {
+      if (burstAge < p.delay) continue;
+      const q = burstPos(p), life = BURST_FRAMES - p.delay - 4;
+      const f = Math.min(1, q.t / Math.max(1, life));
+      const scale = REDUCE ? 1 : (f < 0.25 ? 1 + f * 1.2 : 1.3 - (f - 0.25) * 1.2);
+      drawPiece(p.level, q.x, q.y, q.ang, Math.max(0.2, scale), Math.max(0, 1 - Math.pow(f, 2.2)));
+    }
+    const fl = Math.max(0, 1 - burstAge / 16) * 0.65;
+    if (fl > 0 && !REDUCE) { ctx.save(); ctx.globalAlpha = fl; ctx.fillStyle = '#fff4d6'; ctx.fillRect(0, 0, W, H); ctx.restore(); }
+  }
   // score pops
   for (const p of pops) {
     const q = p.age / 50;
@@ -607,7 +626,8 @@ function drawToddy() {
   const sc = toddyH / info.h;
   const paws = (dropping ? T.paws_y_drop : T.paws_y_hold) * sc;
   const pawsY = sy(C.SPAWN_Y) - cw * 0.012;
-  const x = sx(toddyX) - T.anchor_x * sc, y = pawsY - paws;
+  const duck = burst && S && S.over && !REDUCE ? Math.sin(Math.min(1, burstAge / 45) * Math.PI) * toddyH * 0.16 : 0;   // Toddy ducks while the crate bursts
+  const x = sx(toddyX) - T.anchor_x * sc, y = pawsY - paws + duck;
   ctx.drawImage(IMG[key], x, y, info.w * sc, toddyH);
 }
 
@@ -656,7 +676,7 @@ function dateLabel() {
 const WEEKLY_TWISTS = false;   // Season feature, kept for later: off, so every night is the normal game
 function todayTwist() { return WEEKLY_TWISTS ? C.twistForDate(C.dateSeed(new Date())) : 0; }
 function startRun(k2, seedOverride, twistOverride) {
-  kind = k2;
+  kind = k2; burst = null; burstAge = 0;
   const seed = seedOverride !== undefined ? seedOverride : (kind === 'daily' ? C.dateSeed(new Date()) : (Math.random() * 2147483647) | 0);
   twist = kind === 'daily' && twistOverride === undefined ? todayTwist() : (twistOverride || 0);
   S = C.newGame(seed, twist); lastMax = 0; moonrises = 0; shake = 0; ticketKey = '~'; log = []; fx.length = 0; pops.length = 0; shownNext = 0;
@@ -677,6 +697,40 @@ function dropAt(xArt) {
   return false;
 }
 
+const BURST_FRAMES = 100;   // about 1.7 s at 60 ticks a second
+function startBurst() {
+  const B = S.bodies;
+  burstAge = 0; burst = null;
+  if (!B.length) { sfx.over(); return; }
+  let cx = 0, cy = 0; for (const b of B) { cx += b.x; cy += b.y; } cx /= B.length; cy /= B.length;
+  const order = B.map((b, i) => i).sort((a, b) => B[a].y - B[b].y);   // top of the pile goes first
+  const parts = new Array(B.length);
+  order.forEach((i, rank) => {
+    const b = B[i], rnd = () => Math.random() * 2 - 1;
+    parts[i] = { delay: REDUCE ? 0 : Math.floor(rank * Math.min(1, 26 / B.length) * (26 / Math.max(1, Math.min(26, B.length - 1)))) , rank,
+      x0: b.x, y0: b.y, ang0: b.ang || 0, level: b.level,
+      vx: REDUCE ? 0 : (b.x - cx) * 0.045 + rnd() * 5, vy: REDUCE ? 0 : -(9 + Math.random() * 9) - (b.y < cy ? 3 : 0), va: rnd() * 0.25 };
+  });
+  burst = { parts, cx, cy, n: B.length };
+  fx.push({ key: 'fx_burst', x: cx, y: cy, size: 1300, age: 0, dur: 50 });
+  fx.push({ key: 'fx_spiral', x: cx, y: cy, size: 1500, age: 0, dur: 64 });
+  shake = 26; sfx.boom();
+}
+function burstPos(p) {   // where a released piece is, art units (pure function of its age)
+  const t = burstAge - p.delay, g = 0.5;
+  return { x: p.x0 + p.vx * t, y: p.y0 + p.vy * t + 0.5 * g * t * t, ang: p.ang0 + p.va * t, t };
+}
+function burstStep() {   // one tick: spawn the pop effect of every piece that lets go now
+  if (!burst) return;
+  burstAge++;
+  const popEvery = Math.max(1, Math.ceil(burst.n / 8));
+  for (const p of burst.parts) {
+    if (p.delay === burstAge) {
+      fx.push({ key: 'fx_ring', x: p.x0, y: p.y0, size: C.RADII[p.level - 1] * 3.6, age: 0, dur: 26 });
+      if (p.rank % popEvery === 0) sfx.burstPop(Math.min(6, Math.floor(p.rank / popEvery)));
+    }
+  }
+}
 function drain() {
   for (const e of S.events) {
     if (e.type === 'drop') { dropPoseUntil = S.tick + 16; sfx.drop(); }
@@ -697,7 +751,7 @@ function drain() {
       moonrises++;
       shake = 20; sfx.full(); banner('Moonrise! Two Full Moons +' + e.points, 'new', 2400);
       pops.push({ x: e.x, y: e.y, text: 'MOONRISE +' + e.points, age: 0, color: '#fce25d', big: 12 });
-    } else if (e.type === 'gameover') { mode = 'over'; overAt = performance.now(); sfx.over(); }
+    } else if (e.type === 'gameover') { mode = 'over'; overAt = performance.now(); startBurst(); }
   }
   S.events.length = 0;
 }
@@ -713,6 +767,7 @@ function tickOnce() {
   for (let i = pops.length - 1; i >= 0; i--) if (pops[i].age >= 50) pops.splice(i, 1);
   let dg = 0; for (const b of S.bodies) if (b.over > dg) dg = b.over;
   if (dg > 20 && dg % 30 === 0 && !S.over) sfx.warn();
+  if (dg > 20 && !S.over && !REDUCE) shake = Math.max(shake, 2 + Math.min(4, Math.floor(dg / 30)));   // the pile trembles while the time runs out
   if (dg > 20 && !S.over) banner('Too high! ' + Math.max(0, (120 - dg) / 60).toFixed(1) + 's', 'warn', 250);
   if (shake > 0) shake--;
   setScore(); setNext();
@@ -728,10 +783,10 @@ function frame(t) {
     while (acc >= 1000 / 60 && n < 5) { tickOnce(); acc -= 1000 / 60; n++; }
     if (n === 5) acc = 0;
   } else if (S && mode === 'over') {   // let the last effects play out
-    acc += dt; while (acc >= 1000 / 60) { acc -= 1000 / 60; for (const f of fx) f.age++; for (const p of pops) p.age++; }
+    acc += dt; while (acc >= 1000 / 60) { acc -= 1000 / 60; for (const f of fx) f.age++; for (const p of pops) p.age++; burstStep(); if (shake > 0) shake--; }
     for (let i = fx.length - 1; i >= 0; i--) if (fx[i].age >= fx[i].dur) fx.splice(i, 1);
     for (let i = pops.length - 1; i >= 0; i--) if (pops[i].age >= 50) pops.splice(i, 1);
-    if (performance.now() - overAt > 1100 && overlay.hidden) finishRun();
+    if (performance.now() - overAt > (burst ? (REDUCE ? 700 : 1750) : 1100) && overlay.hidden) finishRun();
   }
   if (bannerUntil && performance.now() > bannerUntil) { bannerUntil = 0; elBanner.className = ''; }
   toddyX += (Math.min(C.FIELD.R, Math.max(C.FIELD.L, aimX)) - toddyX) * 0.3;
