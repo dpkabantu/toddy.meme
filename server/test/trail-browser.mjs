@@ -39,7 +39,7 @@ const shot = (n) => page.screenshot({ path: path.join(shots, 'trail-' + n + '.pn
 const home = async () => { await page.goto(base + '/games/toddy-trail/', { waitUntil: 'load' }); await page.waitForSelector('#overlay .btn'); };
 const hidden = () => page.locator('#overlay').waitFor({ state: 'hidden', timeout: 20000 });
 const cardText = () => page.locator('#overlay').innerText();
-const geoOf = async (def) => page.evaluate((def) => { const r = document.getElementById('c').getBoundingClientRect(); const W = r.width, H = r.height, top = 64, pad = 8, cell = Math.floor(Math.min((W - pad * 2) / (def.w + 1), (H - top - pad * 2) / (def.h + 0.6))); return { left: r.left, top: r.top, cell, ox: Math.floor((W - cell * def.w) / 2), oy: top + Math.floor(0.6 * cell + (H - top - cell * (def.h + 0.6)) / 2) }; }, def);
+const geoOf = async (def) => page.evaluate((def) => { const r = document.getElementById('c').getBoundingClientRect(); const W = r.width, H = r.height, top = 64, pad = 8, cell = Math.floor(Math.min((W - pad * 2) / (def.w + 0.3), (H - top - pad * 2) / (def.h + 0.4))); return { left: r.left, top: r.top, cell, ox: Math.floor((W - cell * def.w) / 2), oy: top + Math.floor(0.4 * cell + (H - top - cell * (def.h + 0.4)) / 2) }; }, def);
 const served = (k) => page.waitForFunction((k) => new RegExp('Served ' + k + ' /').test(document.getElementById('served').textContent), k, { timeout: 15000 });
 // plays a level by tapping: for each cup in the line, tap the spot of the visitor who wants it, until they are served
 async function playByTaps(def) {

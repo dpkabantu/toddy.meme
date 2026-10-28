@@ -61,9 +61,9 @@ function resize() {
   const r = cv.getBoundingClientRect(); W = r.width; H = r.height;
   cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
   const n = st ? NIGHTS[st.night] : { w: 9, h: 13 }, top = 64, pad = 8;
-  // a margin around the floor (0.5 cell each side, 0.6 above) so visitors on the walls are never cut off by the screen edge
-  cell = Math.floor(Math.min((W - pad * 2) / (n.w + 1), (H - top - pad * 2) / (n.h + 0.6)));
-  ox = Math.floor((W - cell * n.w) / 2); oy = top + Math.floor(0.6 * cell + (H - top - cell * (n.h + 0.6)) / 2);
+  // a small margin around the floor; the room itself has one empty block all round so visitors are never cut off
+  cell = Math.floor(Math.min((W - pad * 2) / (n.w + 0.3), (H - top - pad * 2) / (n.h + 0.4)));
+  ox = Math.floor((W - cell * n.w) / 2); oy = top + Math.floor(0.4 * cell + (H - top - cell * (n.h + 0.4)) / 2);
 }
 window.addEventListener('resize', resize);
 

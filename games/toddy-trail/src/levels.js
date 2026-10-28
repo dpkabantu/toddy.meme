@@ -93,6 +93,13 @@ export function buildLevel(all, L, opts = {}) {
   if (base.cart) def.cart = { ...base.cart, path: base.cart.path.map(pt) };
   if (base.thief) def.thief = { ...base.thief, path: base.thief.path.map(pt) };
   if (base.puddles) def.puddles = base.puddles.map(pt);
+  // one empty block of floor around the room (left, right and above), so nobody stands on the very edge and every visitor's art is fully visible
+  const sh = ([x, y]) => [x + 1, y + 1];
+  def.w += 2; def.h += 1; def.start.x += 1; def.start.y += 1;
+  def.tables = def.tables.map(sh); def.brew.forEach((b) => { b.x += 1; b.y += 1; });
+  def.visitors.forEach((v) => { v.bx += 1; v.by += 1; v.sx += 1; v.sy += 1; });
+  if (def.shutters) def.shutters.forEach((q) => { q.x += 1; q.y += 1; });
+  if (def.cart) def.cart.path = def.cart.path.map(sh); if (def.thief) def.thief.path = def.thief.path.map(sh); if (def.puddles) def.puddles = def.puddles.map(sh);
   return { def, meta: { L, night, pos: posInNight(L), boss: isBoss(L), floor, ob, weather, music, idx, best: base.best, skillBest: base.skillBest, skill: Math.ceil(skillSteps(base)), limit: def.seconds * STEPS_PER_SEC, margin: marginFor(L), diffScore: base.score, visitors: def.visitors.length, hazards: base.hz } };
 }
 

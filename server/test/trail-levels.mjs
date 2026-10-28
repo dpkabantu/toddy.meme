@@ -84,3 +84,6 @@ for (const L of [1, 14, 31, 58, 74]) {
   console.log('  level ' + L + ': solver wins in ' + res.steps + ' steps, limit ' + meta.limit + ' (' + (meta.limit / res.steps).toFixed(1) + 'x)'); checked++;
 }
 console.log('levels: all checks passed (' + checked + ' levels re-solved)');
+// ---- 7. nobody stands on the edge of the room: one empty block all round (left, right, above) ----
+for (let L = 1; L <= 150; L++) { const { def } = LV.buildLevel(ALL, L); assert.equal(def.w, 11); assert.equal(def.h, 14); for (const v of def.visitors) { assert.ok(v.bx >= 1 && v.bx <= def.w - 2 && v.by >= 1, 'level ' + L + ': visitor body is one block in from the edge'); assert.ok(v.sx >= 1 && v.sx <= def.w - 2); } }
+console.log('edge space ok');
