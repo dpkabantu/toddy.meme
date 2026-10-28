@@ -15,6 +15,7 @@ const THEMES = {
   4: { bpm: 80, chords: [[48, 'maj9'], [57, 'm9'], [50, 'm9'], [55, 'sus']], scale: PENT_MAJ, lead: 64, sound: 'rhodes', swing: 0.1, rain: true },
   5: { bpm: 72, chords: [[55, 'maj7'], [52, 'm7'], [48, 'maj7'], [50, 'six']], scale: PENT_MAJ, lead: 67, sound: 'harp', swing: 0 },
   6: { bpm: 90, chords: [[50, 'm'], [58, 'maj'], [55, 'm'], [57, 'm']], scale: PENT_MIN, lead: 62, sound: 'bell', swing: 0 },
+  boss: { bpm: 128, chords: [[45, 'm'], [53, 'maj'], [48, 'maj'], [55, 'm']], scale: PENT_MIN, lead: 64, sound: 'pluck', swing: 0, drive: true },
   7: { bpm: 122, chords: [[48, 'maj'], [55, 'maj'], [57, 'm'], [53, 'maj']], scale: PENT_MAJ, lead: 72, sound: 'pluck', swing: 0, drive: true },
 };
 // which beats the melody may use (16 steps per bar): a few rhythm shapes
@@ -24,7 +25,7 @@ function rng(seed) { let a = seed >>> 0; return () => { a = (a + 0x6d2b79f5) >>>
 
 export function createMusic() {
   let sfxBus = null, ctx = null, master = null, bus = null, revIn = null, dlyIn = null, noiseBuf = null, impBuf = null, timer = 0;
-  let enabled = true, theme = null, themeKey = null, level = 0, targetLevel = 0, tempoMul = 1, nextTime = 0, step = 0, bar = 0, rand = rng(1), melody = [], rainNode = null, playing = false;
+  let enabled = true, musicOn = true, tapN = 0, tapAt = 0, theme = null, themeKey = null, level = 0, targetLevel = 0, tempoMul = 1, nextTime = 0, step = 0, bar = 0, rand = rng(1), melody = [], rainNode = null, playing = false;
 
   // one audio chain (bus + hall + echo) per theme: when the theme changes the old chain is faded out and dropped, so two themes never ring together
   function buildChain() {
@@ -51,7 +52,7 @@ export function createMusic() {
     for (let c = 0; c < 2; c++) { const d = impBuf.getChannelData(c); for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 2.6); }
     buildChain();
     const nlen = ctx.sampleRate * 2; noiseBuf = ctx.createBuffer(1, nlen, ctx.sampleRate); const nd = noiseBuf.getChannelData(0); for (let i = 0; i < nlen; i++) nd[i] = Math.random() * 2 - 1;
-    document.addEventListener('visibilitychange', () => { if (!ctx) return; if (document.hidden) ctx.suspend().catch(() => {}); else if (enabled && playing) ctx.resume().catch(() => {}); });
+    document.addEventListener('visibilitychange', () => { if (!ctx) return; if (document.hidden) ctx.suspend().catch(() => {}); else if (playing) ctx.resume().catch(() => {}); });
     return ctx;
   }
 
@@ -134,7 +135,7 @@ export function createMusic() {
   }
 
   return {
-    sfx(kind) {   // short game sounds, louder than the music so they stand out; same context as the music
+    sfx(kind, arg) {   // short game sounds, louder than the music so they stand out; same context as the music
       if (!enabled) return; const c = ensure(); if (!c) return; if (c.state === 'suspended') c.resume().catch(() => {});
       if (!sfxBus) { sfxBus = c.createGain(); sfxBus.gain.value = 1; sfxBus.connect(master); }
       const t = c.currentTime + 0.01;
@@ -150,14 +151,22 @@ export function createMusic() {
       else if (kind === 'thunder') { hiss('lowpass', 420, 70, 1.8, 0.5); hiss('lowpass', 900, 90, 1.2, 0.3, 0.12); tone('sine', 60, 38, 1.4, 0.22); }   // a long low rumble
       else if (kind === 'sigh') { tone('triangle', 330, 180, 0.4, 0.2); }
       else if (kind === 'turn') { tone('sine', 520, 520, 0.03, 0.04); }
+      else if (kind === 'tap') {   // tap music: each tap in a quick run plays the next note of the night's scale, so tapping around plays a little tune
+        const now = performance.now(); tapN = now - tapAt > 1400 ? 0 : tapN + 1; tapAt = now; const sc = (theme || THEMES.menu).scale, k = tapN % 10;
+        chime(72 + sc[k % 5] + 12 * Math.floor(k / 5), 0, 0.13);
+      }
+      else if (kind === 'click') { tone('sine', 700, 520, 0.05, 0.05); }   // soft button click
+      else if (kind === 'star') { chime(84 + (arg || 0) * 4, 0, 0.25); chime(91 + (arg || 0) * 4, 0.08, 0.2); }
       else if (kind === 'win') { [72, 76, 79, 84].forEach((n, i) => chime(n, i * 0.12, 0.3)); }
     },
     ctx() { return ensure(); },
     resume() { const c = ensure(); if (c && c.state === 'suspended') c.resume().catch(() => {}); },
-    setEnabled(on) {
-      enabled = on; if (!ctx) return;
-      if (!on) { if (sfxBus) sfxBus.gain.value = 0.0001; bus.gain.cancelScheduledValues(ctx.currentTime); bus.gain.linearRampToValueAtTime(0.0001, ctx.currentTime + 0.25); }
-      else { if (sfxBus) sfxBus.gain.value = 1; if (playing) bus.gain.cancelScheduledValues(ctx.currentTime); bus.gain.linearRampToValueAtTime(0.6, ctx.currentTime + 0.4); }
+    setEnabled(on) {   // sound effects (taps, serve chimes, thunder ...)
+      enabled = on; if (sfxBus) sfxBus.gain.value = on ? 1 : 0.0001;
+    },
+    setMusic(on) {   // the background music only
+      musicOn = on; if (!ctx || !bus) return;
+      bus.gain.cancelScheduledValues(ctx.currentTime); bus.gain.setValueAtTime(Math.max(bus.gain.value, 0.0001), ctx.currentTime); bus.gain.linearRampToValueAtTime(on ? 0.6 : 0.0001, ctx.currentTime + 0.3);
     },
     isEnabled() { return enabled; },
     play(key) {   // key: 'menu' or a night number
@@ -166,13 +175,13 @@ export function createMusic() {
       retireChain(); buildChain(); bus.gain.value = 0.0001;
       themeKey = key; theme = THEMES[key] || THEMES.menu; rand = rng(7000 + (typeof key === 'number' ? key * 131 : 5)); planMelody();
       level = targetLevel = 0; tempoMul = 1; step = 0; bar = 0; nextTime = c.currentTime + 0.12; playing = true; stopRain();
-      bus.gain.cancelScheduledValues(c.currentTime); bus.gain.setValueAtTime(Math.max(bus.gain.value, 0.0001), c.currentTime); bus.gain.linearRampToValueAtTime(enabled ? 0.6 : 0.0001, c.currentTime + 1.2);
+      bus.gain.cancelScheduledValues(c.currentTime); bus.gain.setValueAtTime(Math.max(bus.gain.value, 0.0001), c.currentTime); bus.gain.linearRampToValueAtTime(musicOn ? 0.6 : 0.0001, c.currentTime + 1.2);
       clearInterval(timer); timer = setInterval(tick, 30); tick();
     },
     setLevel(l) { targetLevel = Math.max(0, Math.min(2, l)); },
     stop(fade) { if (!ctx || !playing) return; playing = false; themeKey = null; clearInterval(timer); stopRain(); bus.gain.cancelScheduledValues(ctx.currentTime); bus.gain.linearRampToValueAtTime(0.0001, ctx.currentTime + (fade || 0.6)); },
     stinger(won) {   // a short phrase when the night ends
-      if (!ctx || !enabled) return; this.stop(0.25); retireChain(); buildChain(); const t = ctx.currentTime + 0.3, th = theme || THEMES[1];
+      if (!ctx || !musicOn) return; this.stop(0.25); retireChain(); buildChain(); const t = ctx.currentTime + 0.3, th = theme || THEMES[1];
       bus.gain.cancelScheduledValues(ctx.currentTime); bus.gain.setValueAtTime(0.6, ctx.currentTime);
       const base = th.chords[0][0] + 12;
       if (won) { [0, 4, 7, 11, 16].forEach((s, i) => bell(mtof(base + 12 + s), t + i * 0.13, 0.9, 0.12, true)); pad([base, base + 4, base + 7, base + 11], t, 1.6, 0.07); }

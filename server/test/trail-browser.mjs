@@ -1,5 +1,6 @@
-// Toddy Trail in a real browser, under the site's real CSP: page loads with no console errors, menu works,
-// a timed key route serves all 3 visitors on night 1, an idle night 3 ends with the lanterns out, no network calls leave the site.
+// Toddy Trail in a real browser, under the site's real CSP: page loads with no console errors, every screen opens and has a Back button,
+// level 1 is won by tapping (stars, saved progress, unlocking), pause, settings, plain floors, Daily Run, boss and endless levels open,
+// an idle level ends with the lanterns out and 0 stars, no network calls leave the site.
 // Needs Playwright, so it is run by hand:  node --no-warnings server/test/trail-browser.mjs [screenshot-folder]
 import http from 'node:http';
 import { readFileSync, existsSync, statSync } from 'node:fs';
@@ -24,13 +25,8 @@ const server = http.createServer((req, res) => {
 });
 await new Promise((r) => server.listen(0, r));
 const base = 'http://localhost:' + server.address().port;
-const startFromMenu = async (page, id) => {   // menu -> (choose a night) -> intro card -> Start
-  if (id === 1) await page.locator('#overlay .btn').first().click();
-  else { await page.getByRole('button', { name: 'Choose another night' }).click(); await page.getByRole('button', { name: new RegExp('^Night ' + id + ' ') }).click(); }
-  await page.getByRole('button', { name: new RegExp('^Start Night ' + id) }).click();
-  await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 15000 });
-};
-
+const { loadAll, buildLevel } = await import('../../games/toddy-trail/src/levels.js');
+const ALL = await loadAll();
 const browser = await chromium.launch();
 const page = await browser.newPage({ viewport: { width: 390, height: 844 }, hasTouch: true });
 const problems = [], outside = [];
@@ -38,148 +34,104 @@ page.on('console', (m) => { if (['error', 'warning'].includes(m.type()) && !/fon
 page.on('pageerror', (e) => problems.push('pageerror: ' + e.message));
 page.on('request', (r) => { if (!r.url().startsWith(base) && !/fonts\.(googleapis|gstatic)/.test(r.url())) outside.push(r.url()); });
 
-await page.addInitScript(() => { try { localStorage.setItem('trailSpeed', 'Normal'); } catch (_) {} });
-await page.goto(base + '/games/toddy-trail/', { waitUntil: 'load' });
-await page.waitForSelector('#overlay .btn');
-await page.screenshot({ path: path.join(shots, 'trail-menu.png') });
-assert.equal(await page.locator('#overlay .btn').count(), 24);   // Play night 1, walking speed, controls, floor, weather, Choose another night, the 7 nights, the Level 20 sample and the five endless difficulties and the five diagonal ones (hidden until asked)
-assert.equal(await page.getByRole('button', { name: /^Night 3 / }).isVisible(), false);
-
-// Night 1: timed route (step k happens at (k+1)/3 s, so a turn for step n is pressed at n+0.5). Start (4,9): right 2, up 3, left 4, up 3, right 4
-const STEP = 1000 / 4;   // Toddy takes 4 steps a second
-let ok = false;
-for (let attempt = 1; attempt <= 3 && !ok; attempt++) {
-  if (attempt === 1) await startFromMenu(page, 1); else { await page.getByRole('button', { name: 'Play again' }).click(); await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 15000 }); }
-  await page.waitForTimeout(600);   // Toddy waits for the first swipe: nothing moves yet
-  await page.screenshot({ path: path.join(shots, 'trail-night1-start.png') });
-  await page.keyboard.down('ArrowRight');   // first push starts the night (Toddy walks while a key is held)
-  const t0 = Date.now();
-  const at = (n) => page.waitForTimeout(Math.max(0, t0 + n * STEP - Date.now()));
-  await at(2.5); await page.keyboard.down('ArrowUp');
-  await at(5.5); await page.keyboard.down('ArrowLeft');
-  await at(7); await page.screenshot({ path: path.join(shots, 'trail-night1-mid.png') });
-  await at(9.5); await page.keyboard.down('ArrowUp');
-  await at(12.5); await page.keyboard.down('ArrowRight');
-  await page.waitForTimeout(1500); await page.keyboard.up('ArrowRight'); await page.keyboard.up('ArrowUp'); await page.keyboard.up('ArrowLeft');
-  await page.getByText('All served!').waitFor({ timeout: 6000 }).catch(() => {});   // the win dance plays for about 2 s first
-  const text = await page.locator('#overlay').innerText().catch(() => '');
-  ok = /All served/.test(text);
-  console.log('night 1 attempt ' + attempt + ': ' + (ok ? 'all served' : 'not all served (' + (await page.locator('#served').innerText()) + ')'));
-  if (!ok) { await page.waitForSelector('#overlay .btn', { timeout: 8000 }).catch(() => {}); }
-}
-await page.screenshot({ path: path.join(shots, 'trail-night1-result.png') });
-assert.ok(ok, 'night 1 route serves all three');
-
-// Night 3, idle: ends by itself with the lanterns out (60 s) -- check the first seconds only, then confirm it is running
-await page.getByRole('button', { name: 'Pick a night' }).click();
-await startFromMenu(page, 3);
-await page.waitForTimeout(2500);
-await page.screenshot({ path: path.join(shots, 'trail-night3.png') });
-assert.match(await page.locator('#served').innerText(), /Served 0 \/ 5/);
-// Every night opens and shows its own number of visitors (screenshots for a look)
-const WANT = { 1: 3, 2: 4, 3: 5, 4: 5, 5: 6, 6: 5, 7: 7 };
-for (const id of [1, 2, 4, 5, 6, 7]) {
-  await page.reload({ waitUntil: 'load' });
-  await page.waitForSelector('#overlay .btn');
-  await startFromMenu(page, id);
-  await page.waitForTimeout(500);
-  assert.match(await page.locator('#served').innerText(), new RegExp('Served 0 / ' + WANT[id]));
-  await page.keyboard.down('ArrowUp');
-  await page.waitForTimeout(1200); await page.keyboard.up('ArrowUp');
-  await page.screenshot({ path: path.join(shots, 'trail-night' + id + '.png') });
+const btn = (name) => page.getByRole('button', { name });
+const shot = (n) => page.screenshot({ path: path.join(shots, 'trail-' + n + '.png') });
+const home = async () => { await page.goto(base + '/games/toddy-trail/', { waitUntil: 'load' }); await page.waitForSelector('#overlay .btn'); };
+const hidden = () => page.locator('#overlay').waitFor({ state: 'hidden', timeout: 20000 });
+const cardText = () => page.locator('#overlay').innerText();
+const geoOf = async (def) => page.evaluate((def) => { const r = document.getElementById('c').getBoundingClientRect(); const W = r.width, H = r.height, top = 64, pad = 8, cell = Math.floor(Math.min((W - pad * 2) / (def.w + 1), (H - top - pad * 2) / (def.h + 0.6))); return { left: r.left, top: r.top, cell, ox: Math.floor((W - cell * def.w) / 2), oy: top + Math.floor(0.6 * cell + (H - top - cell * (def.h + 0.6)) / 2) }; }, def);
+const served = (k) => page.waitForFunction((k) => new RegExp('Served ' + k + ' /').test(document.getElementById('served').textContent), k, { timeout: 15000 });
+// plays a level by tapping: for each cup in the line, tap the spot of the visitor who wants it, until they are served
+async function playByTaps(def) {
+  const g = await geoOf(def); let k = 0;
+  for (const want of def.cups) {
+    const v = def.visitors.find((x, i) => x.want === want && !x._done); if (!v) continue; v._done = true; k++;
+    for (let tries = 0; tries < 12; tries++) {
+      await page.touchscreen.tap(g.left + g.ox + (v.sx + 0.5) * g.cell, g.top + g.oy + (v.sy + 0.5) * g.cell);
+      const ok = await served(k).then(() => true).catch(() => false); if (ok) break;
+    }
+  }
 }
 
-// Level 20 sample: opens from the menu list, starts, shows 0 / 9 served, and never leaks into the story nights' "next night" flow
-{
-  await page.reload({ waitUntil: 'load' }); await page.waitForSelector('#overlay .btn');
-  await page.getByRole('button', { name: 'Choose another night' }).click();
-  await page.getByRole('button', { name: /^Sample · Level 20/ }).click();
-  await page.getByRole('button', { name: /^Start Level 20/ }).click();
-  await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 15000 });
-  await page.waitForTimeout(500);
-  assert.match(await page.locator('#served').innerText(), /Served 0 \/ 9/);
-  await page.screenshot({ path: path.join(shots, 'trail-level20.png') });
+// ---- Home and every side page has its Back button ----
+await page.addInitScript(() => { try { if (!sessionStorage.getItem('fresh')) { localStorage.clear(); sessionStorage.setItem('fresh', '1'); } } catch (_) {} });
+await home(); await shot('home');
+for (const name of ['Play', 'Nights & levels', 'Daily Run', 'How to play', 'Settings', 'About', 'Exit to Games']) assert.ok(await btn(new RegExp('^' + name)).first().isVisible(), 'home has ' + name);
+for (const [name, title] of [['How to play', 'How to play'], ['About', 'About'], ['Settings', 'Settings'], ['Daily Run', 'Daily Run'], ['Nights & levels', 'Nights']]) {
+  await btn(new RegExp('^' + name)).first().click(); assert.match(await cardText(), new RegExp(title)); await shot('page-' + title.toLowerCase().replace(/ /g, '-'));
+  await btn(/^‹ /).first().click(); assert.match(await cardText(), /TODDY Trail/, 'Back from ' + name + ' goes Home');
 }
+// Nights: only Night 1 is open at the start; levels: level 1 open, level 2 locked
+await btn(/^Nights & levels/).click();
+assert.equal(await btn(/^Night 1 /).isDisabled(), false); assert.equal(await btn(/Night 2 /).isDisabled(), true);
+await btn(/^Night 1 /).click(); await shot('levels');
+assert.equal(await page.locator('.lv:not(.locked)').count(), 1);
+await btn(/^‹ Nights/).click(); await btn(/^‹ Home/).click();
 
-// Endless mode: opens from the menu list, builds a random level, shows the level counter, and the page stays free of console errors
-for (let run = 1; run <= 2; run++) {
-  await page.reload({ waitUntil: 'load' }); await page.waitForSelector('#overlay .btn');
-  await page.getByRole('button', { name: 'Choose another night' }).click();
-  await page.getByRole('button', { name: /^Endless · Easy/ }).click();
-  await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 20000 });
-  await page.waitForTimeout(500);
-  assert.match(await page.locator('#served').innerText(), /^Lv 1 · ♥♥♥ · Served 0 \/ \d+/);
-  await page.screenshot({ path: path.join(shots, 'trail-endless' + run + '.png') });
-}
+// ---- Settings change things ----
+await btn(/^Settings/).click();
+const spd = btn(/^Walking speed/); assert.equal(await spd.innerText(), 'Walking speed: Quick');
+await spd.click(); assert.equal(await spd.innerText(), 'Walking speed: Relaxed'); await spd.click(); await spd.click(); assert.equal(await spd.innerText(), 'Walking speed: Quick');
+await btn(/^Music/).click(); assert.equal(await btn(/^Music/).innerText(), 'Music: Off'); await btn(/^Music/).click();
+await btn(/^Sound effects/).click(); assert.equal(await btn(/^Sound effects/).innerText(), 'Sound effects: Off'); await btn(/^Sound effects/).click();
+await btn(/^Floors/).click(); assert.equal(await btn(/^Floors/).innerText(), 'Floors: Painted only'); await btn(/^Floors/).click(); assert.equal(await btn(/^Floors/).innerText(), 'Floors: Plain only');
+await btn(/^‹ Back/).click();
 
-// Every endless difficulty button starts at its own level; the hardest bands bring many obstacles and more visitors
-for (const [name, lv] of [['Medium', 13], ['Hard', 19], ['Very hard', 26], ['Highly difficult', 31]]) {
-  await page.reload({ waitUntil: 'load' }); await page.waitForSelector('#overlay .btn');
-  await page.getByRole('button', { name: 'Choose another night' }).click();
-  await page.getByRole('button', { name: new RegExp('^Endless · ' + name) }).click();
-  await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 20000 });
-  await page.waitForTimeout(500);
-  assert.match(await page.locator('#served').innerText(), new RegExp('^Lv ' + lv + ' · ♥♥♥ · Served 0 / \\d+'));
-  await page.screenshot({ path: path.join(shots, 'trail-endless-' + name.replace(' ', '-').toLowerCase() + '.png') });
-}
+// ---- Level 1: intro story, tap to win, stars saved ----
+await btn(/^Play · Night 1 · Level 1/).click();
+assert.match(await cardText(), /Night 1 · Opening Night/); await btn(/^Start/).click(); await hidden();
+assert.match(await page.locator('#served').innerText(), /Served 0 \/ 3/); assert.match(await page.locator('#lvl').innerText(), /Night 1 · Level 1/);
+await page.waitForTimeout(400); await shot('level1-plain');
+const L1 = buildLevel(ALL, 1, { floorMode: 'plain' }).def;
+await playByTaps(JSON.parse(JSON.stringify(L1)));
+await page.getByText(/Perfect!|All served!|Level cleared/).waitFor({ timeout: 15000 }); await shot('result');
+assert.match(await cardText(), /★/); assert.ok(await btn(/^Next level/).isVisible()); assert.ok(await btn(/^Retry/).isVisible()); assert.ok(await btn(/^‹ Night 1 levels/).isVisible());
+const stars = (await page.locator('.bigstars').innerText()).split('★').length - 1; assert.ok(stars >= 1, 'at least one star');
+// saved: reload, Home says Continue at level 2, level 2 unlocked, level 3 locked
+await home(); assert.ok(await btn(/^Continue · Night 1 · Level 2/).isVisible());
+await btn(/^Nights & levels/).click(); await btn(/^Night 1 /).click(); assert.equal(await page.locator('.lv:not(.locked)').count(), 2);
+await btn(/^‹ Nights/).click(); await btn(/^‹ Home/).click();
 
-// Floor option: the menu button cycles painted scene -> six plain colours and a plain-floor level still runs
-{
-  await page.reload({ waitUntil: 'load' }); await page.waitForSelector('#overlay .btn');
-  const fl = page.getByRole('button', { name: /^Floor: / });
-  assert.equal(await fl.innerText(), 'Floor: Painted scene');
-  await fl.click(); assert.equal(await fl.innerText(), 'Floor: Plain Teal');
-  await startFromMenu(page, 1); await page.waitForTimeout(500);
-  await page.screenshot({ path: path.join(shots, 'trail-plain-floor.png') });
-  await page.reload({ waitUntil: 'load' }); await page.waitForSelector('#overlay .btn');
-  const fl2 = page.getByRole('button', { name: /^Floor: / });
-  for (let k = 0; k < 6; k++) await fl2.click();   // Teal -> ... -> back to the painted scene
-  assert.equal(await fl2.innerText(), 'Floor: Painted scene');
-}
+// ---- Pause menu and its Back/Resume buttons ----
+await btn(/^Continue/).click(); await hidden(); await page.waitForTimeout(300);
+await page.locator('#btnPause').click(); assert.ok(await btn(/^Resume/).isVisible()); assert.ok(await btn(/^Restart level/).isVisible()); assert.ok(await btn(/^Leave to levels/).isVisible()); await shot('pause');
+await btn(/^Settings/).click(); await btn(/^‹ Back/).click(); assert.ok(await btn(/^Resume/).isVisible(), 'Back from Settings returns to Pause');
+await btn(/^Resume/).click(); await hidden();
+await page.keyboard.press('Escape'); assert.ok(await btn(/^Resume/).isVisible()); await btn(/^Leave to levels/).click(); assert.match(await cardText(), /Night 1/);
 
-// Diagonal Medium: starts at level 13 with real diagonal steps and the Diag label
-{
-  await page.reload({ waitUntil: 'load' }); await page.waitForSelector('#overlay .btn');
-  await page.getByRole('button', { name: 'Choose another night' }).click();
-  await page.getByRole('button', { name: /^Diagonal · Medium/ }).click();
-  await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 20000 });
-  await page.waitForTimeout(500);
-  assert.match(await page.locator('#served').innerText(), /^Diag Lv 13 · ♥♥♥ · Served 0 \/ \d+/);
-  const geo = await page.evaluate(() => { const r = document.getElementById('c').getBoundingClientRect(); return { left: r.left, top: r.top, w: r.width, h: r.height }; });
-  await page.touchscreen.tap(geo.left + geo.w * 0.2, geo.top + geo.h * 0.35); await page.waitForTimeout(1200);
-  await page.screenshot({ path: path.join(shots, 'trail-diagonal-trial.png') });
-}
+// ---- Idle level ends with the lanterns out and 0 stars (level 2 gives 3 visitors and at least 25 s) ----
+await btn(/^‹ Nights/).click(); await btn(/^‹ Home/).click();
+await btn(/^Continue/).click(); await hidden();
+{ const box = await page.locator('#c').boundingBox(); await page.touchscreen.tap(box.x + box.width / 2, box.y + box.height * 0.75); }   // the clock starts with the first tap
+await page.getByText('Lanterns out').waitFor({ timeout: 90000 }); assert.match(await cardText(), /Serve at least/); await shot('result-fail');
+await btn(/^Retry/).click(); await hidden();
 
-// Endless run rules: a level with a short clock and nobody served loses a heart (3 -> 2), the card says so, and Try again keeps the hearts
-{
-  await page.reload({ waitUntil: 'load' }); await page.waitForSelector('#overlay .btn');
-  await page.evaluate(async () => { const m = await import('/games/toddy-trail/src/endless-config.js'); m.ENDLESS.minSeconds = 3; m.ENDLESS.timeFactor = () => 0.01; });
-  await page.getByRole('button', { name: 'Choose another night' }).click();
-  await page.getByRole('button', { name: /^Endless · Easy/ }).click();
-  await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 20000 });
-  await page.keyboard.down('ArrowUp'); await page.waitForTimeout(300); await page.keyboard.up('ArrowUp');
-  await page.getByText('lost a heart').waitFor({ timeout: 15000 });
-  assert.match(await page.locator('#overlay').innerText(), /♥♥♡/);
-  await page.getByRole('button', { name: /^Try again/ }).click();
-  await page.locator('#overlay').waitFor({ state: 'hidden', timeout: 20000 });
-  assert.match(await page.locator('#served').innerText(), /^Lv 1 · ♥♥♡ · /);
-  await page.screenshot({ path: path.join(shots, 'trail-endless-hearts.png') });
-}
+// ---- Unlock everything (testing switch): boss level, the 7th night and the endless nights open ----
+await page.evaluate(() => { const k = 'trailV2', p = JSON.parse(localStorage.getItem(k)); p.settings.unlockAll = true; localStorage.setItem(k, JSON.stringify(p)); });
+await home(); await btn(/^Nights & levels/).click();
+assert.equal(await btn(/^Night 7 /).isDisabled(), false); assert.equal(await btn(/^Endless Nights/).isDisabled(), false);
+await btn(/^Night 4 /).click(); await page.locator('.lv.boss').click();
+await hidden(); await page.waitForTimeout(500); assert.match(await page.locator('#lvl').innerText(), /Night 4 · Level 10 · Boss/); await shot('boss');
+await page.locator('#btnPause').click(); await btn(/^Leave to levels/).click(); await btn(/^Night 5 ›/).click(); await btn(/^Night 6 ›/).click(); await btn(/^Night 7 ›/).click(); await btn(/^Night 8 ›/).click();
+assert.match(await cardText(), /Endless Night 8/); await page.locator('.lv').first().click(); await page.getByRole('button', { name: /^Start/ }).click({ timeout: 2000 }).catch(() => {}); await hidden();
+assert.match(await page.locator('#lvl').innerText(), /Night 8 · Level 1/); await page.waitForTimeout(500); await shot('endless-night8');
 
-// Tap to go: a touch anywhere sends Toddy along his row, then up or down the column (game rules apply on the way). Night 1: Milo's spot (6,9), Pip's (2,6), Velvet's (6,3).
-{
-  await page.reload({ waitUntil: 'load' }); await page.waitForSelector('#overlay .btn');
-  await startFromMenu(page, 1); await page.waitForTimeout(400);
-  const geo = await page.evaluate(() => { const r = document.getElementById('c').getBoundingClientRect(); const W = r.width, H = r.height, top = 64, pad = 8, cell = Math.floor(Math.min((W - pad * 2) / 9, (H - top - pad * 2) / 13)); return { left: r.left, top: r.top, cell, ox: Math.floor((W - cell * 9) / 2), oy: top + Math.floor((H - top - cell * 13) / 2) }; });
-  const tapCell = (cx, cy) => page.touchscreen.tap(geo.left + geo.ox + (cx + 0.5) * geo.cell, geo.top + geo.oy + (cy + 0.5) * geo.cell);
-  const served = (k) => page.waitForFunction((k) => new RegExp('Served ' + k + ' /').test(document.getElementById('served').textContent), k, { timeout: 9000 });
-  await tapCell(6, 6); await page.waitForTimeout(1500);   // diagonal touch from (4,9): a staircase to (6,6)
-  assert.match(await page.locator('#served').innerText(), /Served 0 \//);
-  await tapCell(6, 9); await served(1);   // straight down to Milo's spot
-  await tapCell(2, 6); await served(2);   // diagonal touch (4 across, 3 up)
-  await tapCell(6, 3); await served(3);
-  await page.screenshot({ path: path.join(shots, 'trail-tap-night1.png') });
+// ---- Daily Run: three levels and three goals ----
+await home(); await btn(/^Daily Run/).click(); assert.equal(await page.locator('.goal').count(), 3); await shot('daily');
+await btn(/^Level 1 of 3/).click(); await hidden(); assert.match(await page.locator('#lvl').innerText(), /Daily Run · 1 of 3/); await page.waitForTimeout(500); await shot('daily-level');
+await page.locator('#btnPause').click(); await btn(/^Leave to Daily Run/).click(); assert.match(await cardText(), /Today's goals/);
+await btn(/^‹ Home/).click();
+
+// ---- Weather off still plays; a bunch of random levels open without errors ----
+await btn(/^Settings/).click(); await btn(/^Weather/).click(); await btn(/^Weather/).click(); assert.equal(await btn(/^Weather/).innerText(), 'Weather: Off'); await btn(/^Weather/).click(); await btn(/^‹ Back/).click();
+for (const L of [15, 33, 52, 66]) {
+  await btn(/^Nights & levels/).click(); await btn(new RegExp('^Night ' + (Math.floor((L - 1) / 10) + 1) + ' ')).click();
+  await page.locator('.lv').nth((L - 1) % 10).click(); await page.getByRole('button', { name: /^Start/ }).click({ timeout: 1500 }).catch(() => {}); await hidden();
+  await page.waitForTimeout(600); await shot('level-' + L);
+  await page.locator('#btnPause').click(); await btn(/^Home/).click();
 }
+// the Full screen button exists in the game bar
+assert.equal(await page.locator('#btnFull').count(), 1);
 
 assert.deepEqual(problems, [], 'console problems: ' + problems.join(' | '));
 assert.deepEqual(outside, [], 'requests leaving the site: ' + outside.join(' | '));

@@ -4,7 +4,7 @@
 //
 //   node --no-warnings tools/gen-endless.mjs [--per-tier 12] [--tiers 0,1,2,3,4,5] [--seed 1] [--out path]
 //
-// Nothing here decides game RULES (pass mark, time limit, breathers): those live in games/toddy-trail/src/endless-config.js.
+// Nothing here decides game RULES (pass mark, time limit, breathers): those live in games/toddy-trail/src/levels.js.
 import fs from 'node:fs';
 import path from 'node:path';
 import { fileURLToPath } from 'node:url';

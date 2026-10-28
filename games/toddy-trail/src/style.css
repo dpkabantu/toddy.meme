@@ -6,7 +6,9 @@ body { overflow: hidden; font-family: var(--display); -webkit-user-select: none;
 #app { position: relative; height: 100%; max-width: 520px; margin: 0 auto; overflow: hidden; background: var(--night); }
 #c { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
 #hud { position: absolute; top: 0; left: 0; right: 0; display: flex; align-items: center; gap: 10px; box-sizing: border-box; padding: max(8px, env(safe-area-inset-top, 0px)) 12px 8px; background: linear-gradient(to bottom, rgba(14,10,36,.92), rgba(14,10,36,.75)); border-bottom: 1.5px solid rgba(201,154,59,.55); z-index: 2; pointer-events: none; }
-#served { font: 700 22px/1 var(--display); color: #fff4d6; text-shadow: 0 2px 0 var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
+#hudL { display: flex; flex-direction: column; gap: 3px; min-width: 0; }
+#lvl { font: 600 11px/1 var(--display); color: var(--cream); opacity: .85; white-space: nowrap; letter-spacing: .02em; }
+#served { font: 700 20px/1 var(--display); color: #fff4d6; text-shadow: 0 2px 0 var(--ink); white-space: nowrap; font-variant-numeric: tabular-nums; }
 #lantern { flex: 1; height: 14px; border-radius: 8px; background: rgba(0,0,0,.45); border: 2px solid var(--brass); overflow: hidden; }
 #lanternFill { height: 100%; width: 100%; background: linear-gradient(to right, #ffc56b, #fdaf1e); transform-origin: left center; }
 .ibtn { pointer-events: auto; width: 36px; height: 36px; border-radius: 11px; border: 2px solid var(--brass); background: rgba(20,16,46,.82); color: var(--cream); font: 700 17px var(--display); cursor: pointer; padding: 0; flex: none; }
@@ -26,3 +28,30 @@ body { overflow: hidden; font-family: var(--display); -webkit-user-select: none;
 @media (hover: hover) and (pointer: fine) and (min-width: 900px) and (min-height: 700px) {
   #app { max-width: min(100vw, calc(100vh * 0.8)); }
 }
+
+/* menus */
+.card p.sub { font-size: 14px; opacity: .85; margin-bottom: 10px; }
+.card p.chips { font-weight: 600; color: var(--gold); }
+.card p.good { color: #9be3a4; font-weight: 700; }
+.card p.tip { font-size: 12px; opacity: .7; }
+.card h2 { margin: 12px 0 6px; font: 700 17px var(--display); color: #fff4d6; text-align: left; }
+.card.left { text-align: left; }
+.card.left h1 { text-align: center; }
+ol.how { margin: 0 0 8px; padding-left: 20px; font: 500 14.5px/1.35 var(--display); color: var(--cream); }
+ol.how li { margin-bottom: 7px; }
+.btn.back { margin-top: 12px; }
+.btn:disabled, .btn.locked { opacity: .45; cursor: default; box-shadow: none; }
+.btn.danger { border-color: #c0675b; color: #ffb8aa; }
+.bigstars .off { opacity: .28; }
+.bigstars { font: 700 40px/1 var(--display); color: var(--gold); letter-spacing: .08em; margin: 6px 0 2px; text-shadow: 0 2px 0 var(--ink); }
+.lvgrid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 7px; margin: 10px 0 4px; }
+.lv { position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; min-height: 58px; border-radius: 12px; border: 2px solid var(--brass); background: rgba(255,255,255,.04); color: var(--cream); font: 700 18px/1 var(--display); cursor: pointer; padding: 4px 0; }
+.lv .st { font-size: 10px; letter-spacing: 1px; color: var(--gold); min-height: 10px; }
+.lv.boss { border-color: var(--gold); background: rgba(253,175,30,.12); }
+.lv .tag { position: absolute; top: -8px; right: -4px; background: var(--gold); color: var(--ink); font: 700 9px var(--display); padding: 2px 5px; border-radius: 6px; }
+.lv.locked, .lv:disabled { opacity: .4; cursor: default; }
+.row2 { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.row2 .btn { font-size: 15px; padding: 9px 6px; }
+.goal { display: flex; justify-content: space-between; gap: 10px; padding: 8px 10px; margin-bottom: 6px; border: 1px solid rgba(201,154,59,.5); border-radius: 10px; font: 500 14px/1.25 var(--display); text-align: left; }
+.goal.done { background: rgba(110,200,130,.14); border-color: #6ec882; }
+.goal b { color: var(--gold); flex: none; }

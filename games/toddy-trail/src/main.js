@@ -1,39 +1,35 @@
-// TODDY Trail test page: canvas, hold-and-steer, approved art and animations. No server yet.
-// The rules live in core.js (pure and deterministic). Everything in this file is only drawing and input.
-import { NIGHTS, NIGHT_IDS, SAMPLE_IDS, registerLevel, STEPS_PER_SEC, newState, step, score, cartCell, thiefCell, shutterClosed, cellBlocked, DX, DY } from './core.js';
+// TODDY Trail: canvas, tap-to-go, approved art and animations, nights and levels, stars, Daily Run. No server yet.
+// The rules live in core.js (pure and deterministic). Level choice, timing and looks live in levels.js. Everything in this file is only drawing and input.
+import { NIGHTS, registerLevel, STEPS_PER_SEC, newState, step, score, cartCell, thiefCell, shutterClosed, cellBlocked, DX, DY } from './core.js';
 import { ANIMS, STILLS, BGS } from './art.js';
 import { createMusic } from './music.js';
-import { ENDLESS } from './endless-config.js';
+import { LEVEL_ID, loadAll, buildLevel, starsFor, nightOf, posInNight, isBoss } from './levels.js';
+import { drawPlainFloor } from './floors.js';
+import * as P from './progress.js';
+import { createScreens } from './screens.js';
 const music = createMusic();
 let musicGo = false;   // music starts only after the first tap (phones block sound before that)
+let muted = false;     // the speaker button in the game bar mutes everything for now
 
 const $ = (id) => document.getElementById(id);
 const cv = $('c'), ctx = cv.getContext('2d');
-const SPEEDS = { Relaxed: 2.6, Normal: STEPS_PER_SEC, Quick: 5 };   // how fast Toddy walks (cells per second); the rules count steps, so scores stay fair
-let speedName = 'Relaxed'; try { const v = localStorage.getItem('trailSpeed'); if (SPEEDS[v]) speedName = v; } catch (_) { /* storage optional */ }
-let STEP_MS = 1000 / SPEEDS[speedName];
+const SPEEDS = { Relaxed: 2.6, Normal: STEPS_PER_SEC, Quick: 5 };   // how fast Toddy walks (cells per second); the rules count steps, so scores and time limits stay fair at every speed
+let STEP_MS = 1000 / SPEEDS[P.settings().speed];
+const sfxOk = () => P.settings().sfx && !muted;
 const IMGS = {}, LOADING = {};
 const loadImg = (name) => LOADING[name] || (LOADING[name] = new Promise((res) => { const im = new Image(); im.onload = () => res(); im.onerror = () => res(); im.src = 'assets/' + name + '.webp'; IMGS[name] = im; }));
 const ready = (name) => { const im = IMGS[name]; return im && im.complete && im.naturalWidth ? im : null; };
 const VISITOR_BASE = { milo: 'visitor_milo_v02', pip: 'visitor_pip_v01', velvet: 'visitor_velvet_v01', lumi: 'visitor_lumi_v01', biscuit: 'visitor_biscuit_v01', drizzle: 'visitor_drizzle_v01', pebble: 'visitor_pebble_v01', bao: 'visitor_bao_v01', nova: 'visitor_nova_v01', maple: 'visitor_maple_v01', cosmo: 'visitor_cosmo_v01', fizz: 'visitor_fizz_v01', tilly: 'visitor_tilly_v01', pearl: 'visitor_pearl_v01', gus: 'visitor_gus_v01' };
 // which extra pictures exist per visitor (the newer visitors are still getting their set; only listed files are ever requested)
 const CUST = { milo: ['impatient', 'receive', 'sigh'], pip: ['impatient', 'receive', 'sigh'], velvet: ['impatient', 'receive', 'sigh'], lumi: ['impatient', 'receive', 'sigh'], biscuit: ['impatient', 'receive', 'sigh'], drizzle: ['impatient', 'receive', 'sigh'], pebble: ['impatient', 'receive', 'sigh'], bao: ['impatient', 'receive', 'sigh'], nova: ['impatient', 'receive', 'sigh'], maple: ['impatient', 'receive', 'sigh'], cosmo: ['impatient', 'receive', 'sigh'], fizz: ['impatient', 'receive', 'sigh'], tilly: ['impatient', 'receive', 'sigh'], pearl: ['impatient', 'receive', 'sigh'], gus: ['impatient', 'receive', 'sigh'] };
-const DRINK_NAMES = ['moon', 'star', 'crescent', 'sun', 'heart', 'snow', 'bolt'];   // drinks 6 and 7 (Very hard and Highly difficult)
+const DRINK_NAMES = ['moon', 'star', 'crescent', 'sun', 'heart', 'snow', 'bolt'];   // drinks 6 and 7 appear in the harder levels
 const animFile = (k) => 'trail_anim_' + k + '_v01', objFile = (k) => 'trail_obj_' + k + '_v01', custFile = (w, p) => 'trail_cust_' + w + '_' + p + '_v01';
 
-// what each night puts on the floor (the obstacle picture and how tall it stands, in cells)
-const ENDLESS_ID = 1000;
-let endless = null;   // { n, recipe } while an endless run is on
-const ART_OF = { 20: 7 };   // sample levels borrow a story night's background, music and obstacle pictures
-const artOf = (id) => ART_OF[id] || id;
-const nm = (id) => (id === ENDLESS_ID && endless ? 'Level ' + endless.n : (SAMPLE_IDS.includes(id) ? 'Level ' : 'Night ') + id);
-const MUSIC_OF = { 101: 2, 102: 3, 103: 6, 104: 5, 105: 6, 1: 'menu' };   // endless floors borrow a story night's music
-const obstacleOf = (id) => OBSTACLE[artOf(id)] || OBSTACLE[2];
-const OBSTACLE = { 101: ['planter', 1.45], 102: ['suitcases', 1.75], 103: ['rope', 1.3], 104: ['snowman', 1.55], 105: ['telescope', 1.7], 2: ['table', 1.85], 3: ['crates', 1.45], 4: ['barrel', 1.2], 5: ['shelf', 1.35], 6: ['post', 1.3], 7: ['speaker', 1.6] };
-
-let st = null, nightId = 0, turns = [], heldDir = null, lastSent = 4, running = false, waiting = false, last = 0, acc = 0;
+// the level being played: { L, daily (0..2 or null), meta } (meta: floor, obstacle, weather, music, time limit ...)
+let cur = null;
+let st = null, turns = [], heldDir = null, lastSent = 4, running = false, waiting = false, last = 0, acc = 0;
 let prevMov = false, prevDirV = -1, jiggleAt = -9999, confettiAt = -99999;   // picture-only: body squash, cup wobble, win confetti
-let prevPts = [], curPts = [], flashes = [], fx = [], soundOn = true, actx = null, bannerTimer = 0, totalTime = 0;
+let prevPts = [], curPts = [], flashes = [], fx = [], actx = null, bannerTimer = 0, totalTime = 0;
 let W = 0, H = 0, DPR = 1, cell = 30, ox = 0, oy = 0;
 // drawing-only state (never read by the rules)
 let servedAt = [], tod = null, lastMoveAt = -9999, sighUntil = [], endAt = 0, thiefPrev = null, thiefFlip = false, thiefSnatchAt = -9999, brewAt = [], shutterAt = {}, shutterWas = {};
@@ -47,7 +43,7 @@ const pts = (s) => {
 
 // ---- sound (tiny, made in code) ----
 function beep(freq, dur, type, vol) {
-  if (!soundOn) return;
+  if (!sfxOk()) return;
   try {
     actx = actx || new (window.AudioContext || window.webkitAudioContext)();
     const o = actx.createOscillator(), g = actx.createGain();
@@ -57,14 +53,14 @@ function beep(freq, dur, type, vol) {
     o.start(t); o.stop(t + dur);
   } catch (e) { /* sound is optional */ }
 }
-const SND = Object.fromEntries(['serve', 'sigh', 'spill', 'brew', 'turn', 'win', 'bump', 'slide', 'snatch', 'thunder'].map((k) => [k, () => { if (soundOn && musicGo) music.sfx(k); }]));
+const SND = Object.fromEntries(['serve', 'sigh', 'spill', 'brew', 'tap', 'win', 'bump', 'slide', 'snatch', 'thunder', 'click'].map((k) => [k, () => { if (sfxOk() && musicGo) music.sfx(k); }]));
 
 // ---- layout ----
 function resize() {
   DPR = Math.min(window.devicePixelRatio || 1, 2);
   const r = cv.getBoundingClientRect(); W = r.width; H = r.height;
   cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
-  const n = NIGHTS[nightId || 1], top = 64, pad = 8;
+  const n = st ? NIGHTS[st.night] : { w: 9, h: 13 }, top = 64, pad = 8;
   // a margin around the floor (0.5 cell each side, 0.6 above) so visitors on the walls are never cut off by the screen edge
   cell = Math.floor(Math.min((W - pad * 2) / (n.w + 1), (H - top - pad * 2) / (n.h + 0.6)));
   ox = Math.floor((W - cell * n.w) / 2); oy = top + Math.floor(0.6 * cell + (H - top - cell * (n.h + 0.6)) / 2);
@@ -118,7 +114,7 @@ function drawDrinkFallback(d, cx, cy, r) {
   ctx.beginPath(); ctx.arc(cx, cy, r, 0, Math.PI * 2); ctx.fillStyle = ['#2F4E9F', '#9A2F55', '#2E7A52', '#C98A2B', '#7A4AA8'][d] || '#3E1C14'; ctx.fill(); ctx.lineWidth = Math.max(2, r * 0.16); ctx.strokeStyle = '#FFF4D6'; ctx.stroke();
 }
 const cc = (x, y) => [ox + x * cell + cell / 2, oy + y * cell + cell / 2];
-const vcx = (v) => cc(v.bx, v.by)[0] + (v.bx === 0 ? 0.2 : v.bx === NIGHTS[nightId || 1].w - 1 ? -0.2 : 0) * cell;   // wall visitors stand a little inside the floor
+const vcx = (v) => cc(v.bx, v.by)[0] + (v.bx === 0 ? 0.2 : v.bx === NIGHTS[st.night].w - 1 ? -0.2 : 0) * cell;   // wall visitors stand a little inside the floor
 function drawImgBottom(im, cx, bottom, h) { if (!im) return; const w = (im.naturalWidth / im.naturalHeight) * h; ctx.drawImage(im, cx - w / 2, bottom - h, w, h); }
 // a cut-out picture standing on a cell: centred on the cell, feet at the cell's bottom edge
 function drawStill(key, cx, bottom, hCells, maxWCells) {
@@ -160,36 +156,23 @@ function faceVisitor(v) { const dx = v.bx - st.x, dy = v.by - st.y; return Math.
 
 // ---- the scene ----
 function drawFloor(n) {
-  if (floorIdx >= 0) {
-    const [, c1, c2] = PLAIN[floorIdx];
-    for (let y = 0; y < n.h; y++) for (let x = 0; x < n.w; x++) { ctx.fillStyle = (x + y) % 2 ? c1 : c2; ctx.fillRect(ox + x * cell, oy + y * cell, cell, cell); }
-    ctx.strokeStyle = 'rgba(255,255,255,.07)'; ctx.lineWidth = 1; ctx.beginPath();
-    for (let x = 0; x <= n.w; x++) { ctx.moveTo(ox + x * cell, oy); ctx.lineTo(ox + x * cell, oy + n.h * cell); }
-    for (let y = 0; y <= n.h; y++) { ctx.moveTo(ox, oy + y * cell); ctx.lineTo(ox + n.w * cell, oy + y * cell); }
-    ctx.stroke(); ctx.strokeStyle = 'rgba(255,236,190,.55)'; ctx.lineWidth = 3; ctx.strokeRect(ox, oy, cell * n.w, cell * n.h);
-    return;
-  }
-  const m = BGS[artOf(st.night)], im = m && ready('trail_bg_n' + artOf(st.night) + '_v01');
+  const f = cur.meta.floor;
+  if (f.kind === 'plain') { drawPlainFloor(ctx, ox, oy, cell, n.w, n.h, f); return; }
+  const m = BGS[f.id], im = m && ready('trail_bg_n' + f.id + '_v01');
   if (im) {
     const sx = (cell * n.w) / m.fw, sy = (cell * n.h) / m.fh;
     ctx.drawImage(im, ox - m.fx * sx, oy - m.fy * sy, m.w * sx, m.h * sy);
-  } else {   // stand-in floor until that night's picture is approved
+  } else {   // stand-in floor until the picture has loaded
     for (let y = 0; y < n.h; y++) for (let x = 0; x < n.w; x++) { ctx.fillStyle = (x + y) % 2 ? '#2e2258' : '#352a64'; ctx.fillRect(ox + x * cell, oy + y * cell, cell, cell); }
     ctx.strokeStyle = 'rgba(201,154,59,.5)'; ctx.lineWidth = 2; ctx.strokeRect(ox, oy, cell * n.w, cell * n.h);
   }
 }
 
-// Plain floors: a calm two-tone tile in one colour instead of the painted scene. Mid-tones only, chosen so every visitor, the crates, tables and the gold glow stay readable.
-const PLAIN = [['Teal', '#2f6f73', '#2a6568'], ['Plum', '#5b3a6e', '#533466'], ['Slate', '#3f5b7a', '#3a5471'], ['Forest', '#35684a', '#306043'], ['Grey', '#6b6670', '#625d68'], ['Indigo', '#4a4a8c', '#444485']];
-let weather = 'none';   // 'none' | 'rain' | 'storm' (storm adds lightning and thunder)
-let stormFx = (() => { try { return localStorage.getItem('trailStorm') !== 'off'; } catch (_) { return true; } })();   // the owner-facing off switch for lightning flashes and thunder
+// Weather is picture-and-sound only and never touches the rules. Settings: Full (rain, wind, lightning, thunder), Calm (rain and wind only), Off.
 const REDUCE_MOTION = (() => { try { return window.matchMedia('(prefers-reduced-motion: reduce)').matches; } catch (_) { return false; } })();
-const stormLabel = () => 'Lightning and thunder: ' + (stormFx && !REDUCE_MOTION ? 'On' : 'Off');
-const weatherFor = (n, kind) => (kind === 'boss' ? 'storm' : n % 3 === 1 ? 'rain' : n % 3 === 2 ? 'storm' : 'none');
+const wmode = () => P.settings().weather;
 const hash01 = (k) => { const x = Math.sin(k * 127.1 + 311.7) * 43758.5453; return x - Math.floor(x); };
 let thunderK = -1;
-let floorIdx = (() => { try { const v = parseInt(localStorage.getItem('trailFloor'), 10); return v >= 0 && v < PLAIN.length ? v : -1; } catch (_) { return -1; } })();   // -1 = the painted scene
-const floorLabel = () => 'Floor: ' + (floorIdx < 0 ? 'Painted scene' : 'Plain ' + PLAIN[floorIdx][0]);
 const wrap = (v, m) => ((v % m) + m) % m;
 function ambient(n) {   // floating dust in the lamplight, a soft warm flicker, and rain on Night 4 (pictures only)
   const W = cell * n.w, H = cell * n.h;
@@ -198,7 +181,7 @@ function ambient(n) {   // floating dust in the lamplight, a soft warm flicker, 
   const g = ctx.createRadialGradient(ox + W / 2, oy, 0, ox + W / 2, oy, W * 1.1); const fl = 0.05 + 0.02 * Math.sin(totalTime / 700) + 0.012 * Math.sin(totalTime / 130);
   g.addColorStop(0, 'rgba(255,190,100,' + fl + ')'); g.addColorStop(1, 'rgba(255,190,100,0)'); ctx.fillStyle = g; ctx.fillRect(ox, oy, W, H);
   ctx.globalCompositeOperation = 'source-over';
-  const rain = weather !== 'none', storm = weather === 'storm';
+  const wx = cur.meta.weather, wm = wmode(), rain = wx.rain && wm !== 'off', storm = wx.storm && wm === 'full', wind = wx.wind && wm !== 'off';
   for (let k = 0; k < (rain ? 8 : 22); k++) {
     const px = ox + wrap((k * 0.618) * W + Math.sin(totalTime / 2600 + k) * cell * 0.3 + totalTime * 0.012 * (1 + (k % 3) * 0.4), W), py = oy + wrap((k * 0.7548) * H - totalTime * 0.01 * (1 + (k % 4) * 0.3), H);
     ctx.fillStyle = 'rgba(255,232,180,' + (0.22 + 0.18 * Math.sin(totalTime / 900 + k * 1.7)) + ')'; ctx.beginPath(); ctx.arc(px, py, cell * (0.018 + 0.012 * (k % 3)), 0, Math.PI * 2); ctx.fill();
@@ -210,7 +193,16 @@ function ambient(n) {   // floating dust in the lamplight, a soft warm flicker, 
     ctx.lineWidth = Math.max(1, cell * 0.018);
     for (let k = 0; k < 9; k++) { const ph = wrap(totalTime / 900 + k * 0.37, 1), px = ox + wrap(k * 0.618 * W * 7, W), py = oy + wrap(k * 0.4142 * H * 11, H); ctx.strokeStyle = 'rgba(200,225,255,' + 0.3 * (1 - ph) + ')'; ctx.beginPath(); ctx.ellipse(px, py, cell * 0.32 * ph, cell * 0.12 * ph, 0, 0, Math.PI * 2); ctx.stroke(); }
   }
-  if (storm && stormFx && !REDUCE_MOTION && running && !st.over) {   // lightning: one soft double flash and a jagged bolt every 9 to 13 s (never more than 3 flashes a second), thunder a moment later
+  if (wind && !REDUCE_MOTION) {   // wind: leaves drift across and a few faint streaks sweep by (very light, they never hide anything)
+    for (let k = 0; k < 12; k++) {
+      const px = ox + wrap(k * 0.618 * W * 3 + totalTime * (0.05 + (k % 4) * 0.012), W + cell * 2) - cell, py = oy + wrap(k * 0.7548 * H * 2, H) + Math.sin(totalTime / 650 + k * 1.9) * cell * 0.35;
+      ctx.save(); ctx.translate(px, py); ctx.rotate(totalTime / 500 + k); ctx.fillStyle = k % 3 ? 'rgba(160,200,120,.5)' : 'rgba(230,170,90,.5)'; ctx.beginPath(); ctx.ellipse(0, 0, cell * 0.09, cell * 0.04, 0, 0, Math.PI * 2); ctx.fill(); ctx.restore();
+    }
+    ctx.strokeStyle = 'rgba(235,245,255,.1)'; ctx.lineWidth = Math.max(1, cell * 0.02); ctx.beginPath();
+    for (let k = 0; k < 7; k++) { const px = ox + wrap(k * 0.43 * W * 3 + totalTime * 0.16, W + cell * 3) - cell * 2, py = oy + wrap(k * 0.31 * H * 5, H); ctx.moveTo(px, py); ctx.lineTo(px + cell * 1.6, py + cell * 0.06 * Math.sin(k + 1)); }
+    ctx.stroke();
+  }
+  if (storm && !REDUCE_MOTION && running && !st.over) {   // lightning: one soft double flash and a jagged bolt every 9 to 13 s (never more than 3 flashes a second), thunder a moment later
     const P = 9000, k = Math.floor(totalTime / P), dt = totalTime - (k * P + 2500 + hash01(k) * 3500);
     if (dt >= 0 && dt < 420) {
       const a = 0.2 * (Math.max(0, 1 - dt / 110) + 0.7 * Math.max(0, 1 - Math.abs(dt - 200) / 110));
@@ -264,7 +256,7 @@ function draw(frac) {
   // everything that stands up is drawn back to front, so Toddy walks behind tall things and in front of the ones behind him
   const items = [];
   const bottomOf = (y) => oy + (y + 1) * cell - cell * 0.04;
-  const ob = obstacleOf(st.night);
+  const ob = cur.meta.ob;
   for (const [x, y] of n.tables) items.push({ y, f: () => {
     if (ob && ready(objFile(ob[0]))) drawStill(ob[0], cc(x, y)[0], bottomOf(y), ob[1] * (n.tables.length > 12 ? 0.74 : 1));
     else { ctx.fillStyle = '#7a4a2a'; ctx.fillRect(ox + x * cell + 2, oy + y * cell + 2, cell - 4, cell - 4); ctx.fillStyle = '#a86a3c'; ctx.fillRect(ox + x * cell + 2, oy + y * cell + 2, cell - 4, cell * 0.4); }
@@ -309,7 +301,7 @@ function draw(frac) {
     const iK = 'v_' + v.who + '_idle', sK = 'v_' + v.who + '_sip', hK = 'v_' + v.who + '_hop';
     const haveI = ready(animFile(iK)), haveV = haveI && ready(animFile(hK)), haveS = haveV && ready(animFile(sK)), subjH = cell * 1.75;
     const lift = !haveV && since > 0 && since < 520 ? Math.sin((since / 520) * Math.PI) * cell * 0.17 : 0;
-    if (floorIdx >= 0) { ctx.beginPath(); ctx.ellipse(bx, bottom - cell * 0.03, cell * 0.34, cell * 0.09, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fill(); }   // a soft contact shadow keeps every visitor separate from the plain colour
+    if (cur.meta.floor.kind === 'plain') { ctx.beginPath(); ctx.ellipse(bx, bottom - cell * 0.03, cell * 0.34, cell * 0.09, 0, 0, Math.PI * 2); ctx.fillStyle = 'rgba(0,0,0,.3)'; ctx.fill(); }   // a soft contact shadow keeps every visitor separate from the plain colour
     ctx.save(); ctx.translate(0, -lift);
     const base = ready(VISITOR_BASE[v.who]);
     let im, cupY = null, cupH = cell * 0.6;   // cupY: where the held cup is drawn (null: no cup yet)
@@ -401,10 +393,9 @@ function draw(frac) {
   if (waiting) {
     const a = 0.5 + 0.5 * Math.sin(totalTime / 260);
     ctx.beginPath(); ctx.arc(tx, ty, cell * (0.75 + 0.12 * a), 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.5 + 0.4 * a) + ')'; ctx.lineWidth = 3; ctx.stroke();
-    ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#1a0a05'; ctx.lineWidth = 5; const hint = controlMode === 'tap' ? 'Tap where Toddy should go' : 'Touch and drag to walk'; ctx.strokeText(hint, W / 2, oy + cell * n.h + 34); ctx.fillText(hint, W / 2, oy + cell * n.h + 34);
-    const dy = -8 * a; if (controlMode !== 'tap') ctx.fillText('↑', tx, ty - cell * 0.95 + dy);
+    ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#1a0a05'; ctx.lineWidth = 5; const hint = 'Tap where Toddy should go'; ctx.strokeText(hint, W / 2, oy + cell * n.h + 34); ctx.fillText(hint, W / 2, oy + cell * n.h + 34);
   }
-  if (!waiting && st.bumped && !st.over && !target) { ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#1a0a05'; ctx.lineWidth = 5; const msg = controlMode === 'tap' ? 'Tap to move on' : 'Drag to move on'; ctx.strokeText(msg, W / 2, oy + cell * n.h + 34); ctx.fillText(msg, W / 2, oy + cell * n.h + 34); }
+  if (!waiting && st.bumped && !st.over && !target) { ctx.fillStyle = '#fff4d6'; ctx.font = '700 22px Fredoka, system-ui, sans-serif'; ctx.textAlign = 'center'; ctx.strokeStyle = '#1a0a05'; ctx.lineWidth = 5; const msg = 'Tap to move on'; ctx.strokeText(msg, W / 2, oy + cell * n.h + 34); ctx.fillText(msg, W / 2, oy + cell * n.h + 34); }
   if (target && !st.over) {   // a soft pulsing ring where Toddy is heading
     const [gx, gy] = cc(target.x, target.y), a = 0.5 + 0.5 * Math.sin(totalTime / 200);
     ctx.beginPath(); ctx.ellipse(gx, gy + cell * 0.18, cell * (0.3 + 0.05 * a), cell * (0.16 + 0.03 * a), 0, 0, Math.PI * 2); ctx.strokeStyle = 'rgba(253,175,30,' + (0.55 + 0.35 * a) + ')'; ctx.lineWidth = 3; ctx.stroke();
@@ -418,9 +409,10 @@ function draw(frac) {
 function banner(text, ms) { const b = $('banner'); b.textContent = text; b.classList.add('show'); clearTimeout(bannerTimer); bannerTimer = setTimeout(() => b.classList.remove('show'), ms || 2500); }
 const COMMON = [...['idle_down', 'walk_down', 'walk_up', 'walk_right', 'hand_right', 'hand_down', 'hand_up', 'bump', 'startled', 'win', 'fx_dust', 'fx_heart'].map(animFile), ...DRINK_NAMES.map((d) => 'trail_anim_fx_splash_' + d + '_v01'),
   ...Object.values(VISITOR_BASE), ...Object.entries(CUST).flatMap(([w, ps]) => ps.map((p) => custFile(w, p))), ...DRINK_NAMES.flatMap((n) => ['trail_badge_' + n + '_v01', 'trail_cup_' + n + '_v01'])];
-function nightFiles(id) {
-  const n = NIGHTS[id], f = ['trail_bg_n' + artOf(id) + '_v01'];
-  if (n.tables.length) f.push(objFile(obstacleOf(id)[0]));
+function levelFiles(n, meta) {
+  const f = [];
+  if (meta.floor.kind === 'painted') f.push('trail_bg_n' + meta.floor.id + '_v01');
+  if (n.tables.length) f.push(objFile(meta.ob[0]));
   if (n.brew.length) f.push(objFile('station'), objFile('ring'), animFile('brew_pour'));
   if (n.cart) f.push(objFile('cart'));
   if (n.thief) f.push(animFile('thief_sneak'), animFile('thief_snatch'));
@@ -429,95 +421,60 @@ function nightFiles(id) {
   for (const w of new Set(n.visitors.map((v) => v.who))) for (const k of ['idle', 'sip', 'hop']) if (ANIMS['v_' + w + '_' + k]) f.push(animFile('v_' + w + '_' + k));
   return f;
 }
-async function startNight(id) {
-  nightId = id; running = false;
-  const o = $('overlay'); o.textContent = ''; o.hidden = false; o.append(mk('div', 'card', 'Getting ' + nm(id) + ' ready…'));
-  await Promise.all(nightFiles(id).map(loadImg));
+function mk(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
+let ALL = null;
+const levelTitle = () => (cur.daily !== null ? 'Daily Run · ' + (cur.daily + 1) + ' of 3' : 'Night ' + nightOf(cur.L) + ' · Level ' + posInNight(cur.L)) + (isBoss(cur.L) ? ' · Boss' : '');
+async function begin(L, daily) {   // the first level of a night shows its picture story once
+  const n = nightOf(L);
+  if (daily === null && posInNight(L) === 1 && !P.seenIntro(n)) { S.intro(L, daily); return; }
+  await startLevel(L, daily);
+}
+async function startLevel(L, daily) {
+  running = false;
+  const o = $('overlay'); o.textContent = ''; o.hidden = false; o.append(mk('div', 'card', 'Getting ready…'));
+  try { ALL = ALL || await loadAll(); } catch (e) { o.textContent = ''; o.append(mk('div', 'card', 'The levels could not load. Please try again.')); setTimeout(S.home, 1800); return; }
+  const plan = daily === null ? null : P.todaysDaily().plan;
+  const lvl = buildLevel(ALL, L, { salt: plan ? plan.salt : 0, floorMode: P.settings().floors });
+  registerLevel(LEVEL_ID, lvl.def); cur = { L, daily, meta: lvl.meta };
+  await Promise.all(levelFiles(lvl.def, lvl.meta).map(loadImg));
+  const id = LEVEL_ID;
   st = newState(id); turns = []; heldDir = null; target = null; lastSent = 4; flashes = []; fx = []; acc = 0; last = 0; tod = null; lastMoveAt = -9999; endAt = 0; confettiAt = -99999; jiggleAt = -9999;
   sighUntil = NIGHTS[id].visitors.map(() => 0); servedAt = NIGHTS[id].visitors.map(() => 0); brewAt = []; shutterAt = {}; shutterWas = {}; thiefPrev = null; thiefSnatchAt = -9999;
   prevPts = curPts = pts(st);
-  o.hidden = true; o.textContent = '';
-  weather = id === 4 ? 'storm' : id === ENDLESS_ID && endless ? weatherFor(endless.n, endless.kind) : 'none'; thunderK = -1;
-  music.play(MUSIC_OF[artOf(id)] || artOf(id)); resize(); updateHud(); running = true; waiting = true; // Toddy waits for the first swipe
-}
-const endlessBest = () => { try { return JSON.parse(localStorage.getItem('trailEndlessBest')) || { level: 0, score: 0 }; } catch (_) { return { level: 0, score: 0 }; } };
-function saveEndlessBest(level, score) { const b = endlessBest(), nb = { level: Math.max(b.level, level), score: Math.max(b.score, score) }; try { localStorage.setItem('trailEndlessBest', JSON.stringify(nb)); } catch (_) { /* optional */ } return nb; }
-const hearts = (k) => '♥'.repeat(Math.max(0, k)) + '♡'.repeat(Math.max(0, ENDLESS.lives - k));
-async function startEndless(n, run) {
-  const o = $('overlay'); o.textContent = ''; o.hidden = false; o.append(mk('div', 'card', 'Building level ' + n + '…'));
-  let lvl;
-  try { const E = await import('./endless.js'); const diag = !!(run && run.diag); lvl = E.makeLevel(n, await E.loadPool(diag), diag ? ENDLESS : { ...ENDLESS, artDrinks: 5 }); }
-  catch (e) { o.textContent = ''; o.append(mk('div', 'card', 'Endless mode could not load. Please try again.')); setTimeout(showMenu, 1800); return; }
-  endless = { n, recipe: lvl.recipe, lives: run ? run.lives : ENDLESS.lives, runScore: run ? run.runScore : 0, kind: ENDLESS.special(n), diag: !!(run && run.diag) }; lvl.def.diag = endless.diag; registerLevel(ENDLESS_ID, lvl.def); ART_OF[ENDLESS_ID] = lvl.theme;
-  await startNight(ENDLESS_ID);
+  o.hidden = true; o.textContent = ''; thunderK = -1;
+  music.play(lvl.meta.music); apply(); resize(); updateHud(); running = true; waiting = true;   // Toddy waits for the first tap
+  banner(levelTitle(), 2300);
 }
 function updateHud() {
   const n = NIGHTS[st.night], c = st.served.filter(Boolean).length;
-  $('served').textContent = (st.night === ENDLESS_ID && endless ? (endless.diag ? 'Diag ' : '') + 'Lv ' + endless.n + (endless.kind === 'boss' ? ' Boss' : endless.kind === 'breather' ? ' Easy' : '') + ' · ' + hearts(endless.lives) + ' · ' : '') + 'Served ' + c + ' / ' + n.visitors.length;
-  $('served').style.fontSize = st.night === ENDLESS_ID && endless ? '0.8em' : '';
+  $('served').textContent = 'Served ' + c + ' / ' + n.visitors.length; $('lvl').textContent = levelTitle();
   { const f = (st.limit - st.t) / st.limit; music.setLevel(st.won || st.over ? 0 : f < 0.25 ? 2 : f < 0.5 ? 1 : 0); }
   $('lanternFill').style.transform = 'scaleX(' + Math.max(0, (st.limit - st.t) / st.limit).toFixed(3) + ')';
 }
-function mk(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
-const NO_INTRO_VIDEO = new Set([20]);   // nights whose intro clip is hidden until redone
-function showIntro(id) {   // a short picture-story card before each night
-  const o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
-  const card = mk('div', 'card'), v = document.createElement('video');
-  const noVideo = NO_INTRO_VIDEO.has(id);
-  if (!noVideo) v.src = 'assets/trail_intro_n' + id + '_v01.mp4'; v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.preload = 'auto'; v.className = 'intro';
-  const tell = { 20: 'A hard sample: two shutters, a rolling cart, puddles, a thief on patrol and nine visitors. Only 45 seconds. Not part of the story nights.', 1: 'Light the lamp, open the café, and bring everyone their drink.', 2: 'A breezy terrace: tables and parasols are in the way. Brew a new cup at the golden ring.', 3: 'Market night: mind the rolling tea cart.', 4: 'Rain! Puddles are slippery and make Toddy slide one extra step.', 5: 'Quiet library: shutters open and close, so wait for the green light.', 6: 'Moon bridge: Nox the night thief snatches a cup if you pass too close.', 7: 'Street party: everything at once!' };
-  const go = mk('button', 'btn', 'Start ' + nm(id)); go.addEventListener('click', () => { unlockSound(); startNight(id); });
-  const back = mk('button', 'btn alt', 'Back'); back.addEventListener('click', showMenu);
-  if (!noVideo) card.append(v); card.append(mk('h1', '', nm(id) + ' · ' + NIGHTS[id].name), mk('p', '', tell[id] || ''), go, back); o.append(card);
-  if (!noVideo) { const pl = v.play(); if (pl && pl.catch) pl.catch(() => {}); }
-}
-function showMenu() {
-  endless = null; menuMusic();
-  const o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
-  const card = mk('div', 'card'); card.append(mk('h1', '', 'TODDY Trail'), mk('p', '', controlMode === 'tap' ? '1 · Tap where Toddy should go' : '1 · Touch and drag to walk'), mk('p', '', '2 · Walk into the visitor who wants your next cup'), mk('p', '', '3 · Serve everyone before the lanterns go out'));
-  const spd = mk('button', 'btn alt', 'Walking speed: ' + speedName);
-  spd.addEventListener('click', () => { const names = Object.keys(SPEEDS); speedName = names[(names.indexOf(speedName) + 1) % names.length]; STEP_MS = 1000 / SPEEDS[speedName]; try { localStorage.setItem('trailSpeed', speedName); } catch (_) { /* optional */ } spd.textContent = 'Walking speed: ' + speedName; });
-  const ctl = mk('button', 'btn alt', 'Controls: ' + (controlMode === 'tap' ? 'Tap to go' : 'Drag to steer'));
-  ctl.addEventListener('click', () => { controlMode = controlMode === 'tap' ? 'steer' : 'tap'; try { localStorage.setItem('trailControl', controlMode); } catch (_) { /* optional */ } ctl.textContent = 'Controls: ' + (controlMode === 'tap' ? 'Tap to go' : 'Drag to steer'); card.firstChild.nextSibling.textContent = controlMode === 'tap' ? '1 · Tap where Toddy should go' : '1 · Touch and drag to walk'; });
-  const flr = mk('button', 'btn alt', floorLabel());
-  flr.addEventListener('click', () => { floorIdx = floorIdx + 1 >= PLAIN.length ? -1 : floorIdx + 1; try { localStorage.setItem('trailFloor', String(floorIdx)); } catch (_) { /* optional */ } flr.textContent = floorLabel(); });
-  const play = mk('button', 'btn', 'Play · Night 1'); play.addEventListener('click', () => { unlockSound(); showIntro(1); }); const wth = mk('button', 'btn alt', stormLabel());
-  wth.addEventListener('click', () => { stormFx = !stormFx; try { localStorage.setItem('trailStorm', stormFx ? 'on' : 'off'); } catch (_) { /* optional */ } wth.textContent = stormLabel(); });
-  card.append(play, spd, ctl, flr, wth);
-  const more = mk('button', 'btn alt', 'Choose another night'), list = mk('div', ''); list.hidden = true;
-  more.addEventListener('click', () => { list.hidden = !list.hidden; });
-  for (const id of NIGHT_IDS) { const b = mk('button', 'btn alt', 'Night ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); showIntro(id); }); list.append(b); }
-  for (const id of SAMPLE_IDS) { const b = mk('button', 'btn alt', 'Sample · Level ' + id + ' · ' + NIGHTS[id].name); b.addEventListener('click', () => { unlockSound(); showIntro(id); }); list.append(b); }
-  for (const d of ENDLESS.difficulties) { const b = mk('button', 'btn alt', 'Diagonal · ' + d.name); b.addEventListener('click', () => { unlockSound(); endless = null; controlMode = 'tap'; startEndless(d.level, { lives: ENDLESS.lives, runScore: 0, diag: true }); }); list.append(b); }
-  for (const d of ENDLESS.difficulties) { const b = mk('button', 'btn alt', 'Endless · ' + d.name); b.addEventListener('click', () => { unlockSound(); endless = null; startEndless(d.level); }); list.append(b); }
-  card.append(more, list); o.append(card);
-}
-function showResult() {
-  const r = score(st), o = $('overlay'); o.textContent = ''; o.hidden = false; running = false;
+function finishLevel() {
+  const r = score(st), stars = starsFor(st), L = cur.L, d = cur.daily; running = false;
   music.stinger(st.won);
-  const card = mk('div', 'card');
-  card.append(mk('h1', '', st.won ? 'All served!' : 'Lanterns out'), mk('div', 'big', String(r.score)), mk('p', '', 'Served ' + r.served + ' of ' + r.of + ' · ' + r.seconds + ' s · spilled ' + (st.spills + st.snatched)));
-  if (nightId === ENDLESS_ID && endless) {   // endless mode: the rules come from endless-config.js
-    const n = endless.n, pass = !!ENDLESS.passed(st, n), perfect = st.won, k = endless.kind;
-    let lives = endless.lives, total = endless.runScore;
-    if (pass) { total += r.score + (perfect ? ENDLESS.perfectBonus : 0); if (k === 'boss') lives = Math.min(ENDLESS.lives, lives + 1); } else lives -= 1;
-    const bestNow = saveEndlessBest(pass ? n : n - 1, total);
-    card.firstChild.textContent = pass ? (perfect ? 'Level ' + n + ' · Perfect!' : 'Level ' + n + ' cleared!') : (lives > 0 ? 'Lanterns out · lost a heart' : 'Run over');
-    card.append(mk('p', '', hearts(lives) + ' · Run score ' + total + (perfect && pass ? ' (includes +' + ENDLESS.perfectBonus + ' Perfect bonus)' : '')), mk('p', '', 'Best: level ' + bestNow.level + ' · ' + bestNow.score + ' points'));
-    if (pass) { const nx = mk('button', 'btn', 'Level ' + (n + 1) + (ENDLESS.special(n + 1) === 'boss' ? ' · Boss' : ENDLESS.special(n + 1) === 'breather' ? ' · Easy' : '')); nx.addEventListener('click', () => startEndless(n + 1, { lives, runScore: total, diag: endless.diag })); card.append(nx); }
-    else if (lives > 0) { const rt = mk('button', 'btn', 'Try again · new layout'); rt.addEventListener('click', () => startEndless(n, { lives, runScore: total, diag: endless.diag })); card.append(rt); }
-    else { const nr = mk('button', 'btn', 'New run'); nr.addEventListener('click', () => { endless = null; showMenu(); }); card.append(nr); }
-    const back = mk('button', 'btn alt', 'Back to menu'); back.addEventListener('click', showMenu);
-    card.append(back); o.append(card); return;
-  }
-  const nextId = NIGHT_IDS.includes(nightId) ? NIGHT_IDS[NIGHT_IDS.indexOf(nightId) + 1] : undefined;
-  if (st.won && nextId) { const nx = mk('button', 'btn', 'Night ' + nextId + ' · ' + NIGHTS[nextId].name); nx.addEventListener('click', () => showIntro(nextId)); card.append(nx); }
-  const again = mk('button', 'btn' + (st.won && nextId ? ' alt' : ''), 'Play again'); again.addEventListener('click', () => startNight(nightId));
-  const other = mk('button', 'btn alt', 'Pick a night'); other.addEventListener('click', showMenu);
-  card.append(again, other); o.append(card);
+  const rec = d === null ? P.recordResult(L, stars, r.score) : { newBest: false, first: false, gained: 0 };
+  const dailyDone = d !== null ? P.recordDailyLevel(d, stars) : false;
+  P.recordPlay({ served: r.served, of: r.of, stars, boss: isBoss(L), left: (st.limit - st.t) / st.limit });
+  for (let i = 0; i < stars; i++) setTimeout(() => { if (sfxOk() && musicGo) music.sfx('star', i); }, 500 + i * 260);
+  S.result({ L, daily: d, stars, score: r.score, served: r.served, of: r.of, seconds: r.seconds, spills: st.spills + st.snatched, rec, dailyDone });
 }
-function unlockSound() { musicGo = true; music.resume(); if (soundOn && actx && actx.state === 'suspended') actx.resume(); }
-function menuMusic() { if (musicGo) music.play('menu'); }
+function pause() { if (!running || !st || st.over) return; running = false; S.pause({ L: cur.L, daily: cur.daily, title: levelTitle() }); }
+function resume() { const o = $('overlay'); o.hidden = true; o.textContent = ''; running = true; last = 0; }
+function apply() {   // push the saved settings into the game
+  const s = P.settings(); STEP_MS = 1000 / SPEEDS[s.speed];
+  music.setMusic(s.music && !muted); music.setEnabled(s.sfx && !muted);
+  $('btnSound').style.opacity = muted ? '.55' : '1'; $('btnSound').setAttribute('aria-pressed', String(!muted));
+}
+function unlockSound() { musicGo = true; music.resume(); apply(); }
+function menuMusic() { running = false; st = null; if (musicGo) music.play('menu'); }
+const S = createScreens({
+  overlay: $('overlay'), begin, start: (L, d) => { unlockSound(); return startLevel(L, d); }, resume, restart: () => startLevel(cur.L, cur.daily),
+  leave: () => { running = false; st = null; }, apply, menuMusic, click: () => { unlockSound(); SND.click(); },
+  exit: () => { window.location.href = '/games/'; },
+  fs: { can: () => fsCan, on: () => !!fsOn(), toggle: () => $('btnFull').click() },
+});
 
 function onEvents(before) {
   const n = NIGHTS[st.night];
@@ -550,11 +507,6 @@ function onEvents(before) {
   }
 }
 
-function stick() {   // the thumb pad: a ring where the finger went down and a knob under the finger
-  const r0 = cv.getBoundingClientRect(), ax = sx - r0.left, ay = sy - r0.top; let kx = fingerX - r0.left - ax, ky = fingerY - r0.top - ay; const d = Math.hypot(kx, ky) || 1, m = Math.min(d, 34); kx = ax + (kx / d) * m; ky = ay + (ky / d) * m;
-  ctx.save(); ctx.globalAlpha = 0.5; ctx.lineWidth = 3; ctx.strokeStyle = '#fff4d6'; ctx.beginPath(); ctx.arc(ax, ay, 34, 0, Math.PI * 2); ctx.stroke();
-  ctx.globalAlpha = 0.45; ctx.fillStyle = '#fdaf1e'; ctx.beginPath(); ctx.arc(kx, ky, 20, 0, Math.PI * 2); ctx.fill(); ctx.restore();
-}
 function frame(now) {
   requestAnimationFrame(frame);
   if (!last) last = now; const dt = Math.min(now - last, 200); last = now; totalTime += dt;
@@ -565,12 +517,11 @@ function frame(now) {
       prevPts = curPts;
       const was = { x: st.x, y: st.y }, lastCup = st.cups.length ? st.cups[st.cups.length - 1] : undefined;
       let want;
-      if (heldDir !== null) { want = heldDir; target = null; pendingTurn = null; }   // arrow keys (and steer mode): finger down = steer that way
-      else if (controlMode === 'tap') { const d = planDir(); want = d < 0 ? 4 : d; pendingTurn = null; if (st.bumped && !st.soft) lastSent = -1; }
-      else { want = pendingTurn !== null ? pendingTurn : 4; pendingTurn = null; }   // finger up = stand still
+      if (heldDir !== null) { want = heldDir; target = null; pendingTurn = null; }   // arrow keys: key down = walk that way
+      else { const d = planDir(); want = d < 0 ? 4 : d; pendingTurn = null; if (st.bumped && !st.soft) lastSent = -1; }
       if (want !== lastSent) { lastSent = want; turns.push([st.t, want]); step(st, want); } else step(st, null);
       if (st.x !== was.x || st.y !== was.y) lastMoveAt = totalTime;
-      if (controlMode === 'tap' && st.bumped) target = null;   // hit something: stop; touch again to go on
+      if (st.bumped) target = null;   // hit something: stop; touch again to go on
       curPts = pts(st);
       onEvents(lastCup);
       updateHud();
@@ -580,13 +531,12 @@ function frame(now) {
       if (st.won) { SND.win(); confettiAt = totalTime; tod = { key: 'win', flip: false, t0: totalTime, until: totalTime + 4000 }; fx.push({ file: animFile('fx_heart'), key: 'fx_heart', x: st.x, y: st.y, dy: -1.8, size: 1.1, t0: totalTime, ms: 1500, rise: true }); }
       else tod = { key: 'startled', flip: false, t0: totalTime, until: totalTime + 4000 };
     }
-    if (st.over && endAt && totalTime - endAt > 2100) { draw(1); showResult(); return; }
+    if (st.over && endAt && totalTime - endAt > 2100) { draw(1); finishLevel(); return; }
   }
   draw(Math.min(acc / STEP_MS, 1));
 }
 
 // ---- tap to go: touch a spot and Toddy walks there by himself, around obstacles ----
-let controlMode = (() => { try { return localStorage.getItem('trailControl') === 'steer' ? 'steer' : 'tap'; } catch (_) { return 'tap'; } })();
 let target = null;   // the cell Toddy is walking to
 // Tap to go in ANY direction: Toddy walks the straight line from where he stands to the touched cell. The grid only allows up/down/left/right steps,
 // so a diagonal is a staircase that hugs the line (across, up, across, up ...), never "all across, then all up". The normal game rules apply the whole way:
@@ -615,29 +565,15 @@ function setTarget(clientX, clientY) {
   let x = Math.floor((clientX - r.left - ox) / cell), y = Math.floor((clientY - r.top - oy) / cell);
   x = Math.max(0, Math.min(n.w - 1, x)); y = Math.max(0, Math.min(n.h - 1, y));
   if (x === st.x && y === st.y) return;
-  if (!target || target.x !== x || target.y !== y) { target = { x, y, sx: st.x, sy: st.y, steps: 0 }; waiting = false; acc = Math.max(acc, STEP_MS * (totalTime - lastMoveAt < STEP_MS * 1.6 ? 0.6 : 1)); SND.turn(); }
+  if (!target || target.x !== x || target.y !== y) { target = { x, y, sx: st.x, sy: st.y, steps: 0 }; waiting = false; acc = Math.max(acc, STEP_MS * (totalTime - lastMoveAt < STEP_MS * 1.6 ? 0.6 : 1)); SND.tap(); }
 }
 
-// ---- input: touch-and-drag steering, arrow keys ----
-let sx = 0, sy = 0, down = false;
-let pendingTurn = null, padId = null, fingerX = 0, fingerY = 0;   // pendingTurn: a quick tap between two steps is still remembered until the next step
-const turnFromDelta = (dx, dy, prev) => {   // dominant axis wins, but the current axis is kept until the other one is clearly stronger (no flicker near the diagonal)
-  const ax = Math.abs(dx), ay = Math.abs(dy), horiz = prev === 1 || prev === 3;
-  const useX = prev === null || prev === undefined ? ax > ay : horiz ? !(ay > ax * 1.35) : ax > ay * 1.35;
-  return useX ? (dx > 0 ? 1 : 3) : (dy > 0 ? 2 : 0);
-};
-const setHeld = (d) => { if (d !== heldDir) { heldDir = d; if (d !== null) { pendingTurn = d; acc = Math.max(acc, STEP_MS * (totalTime - lastMoveAt < STEP_MS * 1.6 ? 0.6 : 1));   /* answer the touch at once: standing still steps now, walking turns within ~40% of a step */ waiting = false; SND.turn(); } } };
-cv.addEventListener('pointerdown', (e) => { if (down) return; padId = e.pointerId; down = true; sx = fingerX = e.clientX; sy = fingerY = e.clientY; unlockSound(); try { cv.setPointerCapture(e.pointerId); } catch (_) {} if (controlMode === 'tap' && running && st && !st.over) setTarget(e.clientX, e.clientY); });
-// Hold and steer: put a finger down and drag; Toddy walks the way you drag and stops when you lift. The anchor follows the finger so changing direction is quick.
-cv.addEventListener('pointermove', (e) => {
-  if (!down || !running || e.pointerId !== padId) return;
-  fingerX = e.clientX; fingerY = e.clientY;
-  if (controlMode === 'tap') { if (!st.over) setTarget(e.clientX, e.clientY); return; }   // keep the target under the finger while it moves
-  const dx = e.clientX - sx, dy = e.clientY - sy, d = Math.hypot(dx, dy);
-  if (d >= 9) setHeld(turnFromDelta(dx, dy, heldDir));
-  if (d > 34) { sx = e.clientX - (dx / d) * 34; sy = e.clientY - (dy / d) * 34; }
-});
-const up = (e) => { if (e && e.pointerId !== padId) return; down = false; padId = null; if (controlMode !== 'tap') setHeld(null); };   // tap mode: lifting the finger does NOT stop Toddy, he keeps walking to the spot
+// ---- input: tap to go (finger or mouse; dragging moves the target); arrow keys also work ----
+let down = false, padId = null, pendingTurn = null;   // pendingTurn: a quick key tap between two steps is still remembered until the next step
+const setHeld = (d) => { if (d !== heldDir) { heldDir = d; if (d !== null) { pendingTurn = d; acc = Math.max(acc, STEP_MS * (totalTime - lastMoveAt < STEP_MS * 1.6 ? 0.6 : 1)); waiting = false; SND.tap(); } } };
+cv.addEventListener('pointerdown', (e) => { if (down) return; padId = e.pointerId; down = true; unlockSound(); try { cv.setPointerCapture(e.pointerId); } catch (_) { /* optional */ } if (running && st && !st.over) setTarget(e.clientX, e.clientY); });
+cv.addEventListener('pointermove', (e) => { if (!down || !running || e.pointerId !== padId || !st || st.over) return; setTarget(e.clientX, e.clientY); });   // the target follows the finger while it moves
+const up = (e) => { if (e && e.pointerId !== padId) return; down = false; padId = null; };   // lifting the finger does NOT stop Toddy, he keeps walking to the spot
 cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up); cv.addEventListener('contextmenu', (e) => e.preventDefault());
 // full screen on and off (Android Chrome and desktop; iPhone Safari does not allow it, so the button hides itself there)
 const fsEl = document.documentElement, fsOn = () => document.fullscreenElement || document.webkitFullscreenElement;
@@ -653,10 +589,12 @@ $('btnFull').addEventListener('click', async () => {
   fsRefresh();
 });
 document.addEventListener('fullscreenchange', fsRefresh); document.addEventListener('webkitfullscreenchange', fsRefresh);
-window.addEventListener('keydown', (e) => { const m = { ArrowUp: 0, ArrowRight: 1, ArrowDown: 2, ArrowLeft: 3, w: 0, d: 1, s: 2, a: 3 }[e.key]; if (m !== undefined && running) { e.preventDefault(); setHeld(m); } });
+window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && running) { pause(); return; } const m = { ArrowUp: 0, ArrowRight: 1, ArrowDown: 2, ArrowLeft: 3, w: 0, d: 1, s: 2, a: 3 }[e.key]; if (m !== undefined && running) { e.preventDefault(); setHeld(m); } });
 window.addEventListener('keyup', (e) => { const m = { ArrowUp: 0, ArrowRight: 1, ArrowDown: 2, ArrowLeft: 3, w: 0, d: 1, s: 2, a: 3 }[e.key]; if (m !== undefined && m === heldDir) setHeld(null); });
-$('btnSound').addEventListener('click', () => { soundOn = !soundOn; music.setEnabled(soundOn); $('btnSound').setAttribute('aria-pressed', String(soundOn)); $('btnSound').style.opacity = soundOn ? '1' : '.55'; unlockSound(); beep(660, 0.08); });
+$('btnSound').addEventListener('click', () => { muted = !muted; unlockSound(); if (!muted) beep(660, 0.08); });
+$('btnPause').addEventListener('click', pause);
+document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
 
 resize(); requestAnimationFrame(frame);
 { const o = $('overlay'); o.textContent = ''; o.append(mk('div', 'card', 'Loading TODDY Trail…')); }
-Promise.all(COMMON.map(loadImg)).then(() => { resize(); showMenu(); });
+Promise.all(COMMON.map(loadImg)).then(() => { resize(); apply(); S.home(); });
