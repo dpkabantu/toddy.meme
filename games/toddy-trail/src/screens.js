@@ -27,13 +27,12 @@ export function createScreens(g) {
     const card = mk('div', 'card home'), nx = P.nextLevel(), set = P.settings(), sk = P.currentStreak(), daily = P.todaysDaily();
     card.append(mk('div', 'eyebrow', 'TODDY'), mk('h1', 'title', 'Trail'), mk('p', 'tagline', 'Tap to guide Toddy. Serve every drink before the lanterns go out.'));
     const row = mk('div', 'drinks'); for (const d of DRINKS) { const im = document.createElement('img'); im.src = 'assets/trail_badge_' + d + '_v01.webp'; im.alt = ''; im.draggable = false; row.append(im); }
-    const play = mk('button', 'btn play'); play.type = 'button'; play.append(mk('span', '', P.highestCleared() === 0 ? 'Play' : 'Continue'), mk('small', '', 'Night ' + nightOf(nx) + ' · Level ' + posInNight(nx)));
-    play.addEventListener('click', () => { g.click(); g.begin(nx, null); });
+    const play = mk('button', 'btn play'); play.type = 'button'; play.append(mk('span', '', 'Play'), mk('small', '', 'Night ' + nightOf(nx) + ' · Level ' + posInNight(nx)));
+    play.addEventListener('click', () => { g.click(); S.levels(nightOf(nx)); });
     const day = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
     const dDone = daily.state.done.every(Boolean);
     card.append(row, play,
-      bigBtn('Daily Run' + (dDone ? '  ✓' : ''), dDone ? 'Done today · streak ' + sk : day + ' · same levels for everyone' + (sk ? ' · streak ' + sk : ''), S.daily),
-      bigBtn('Nights & levels', '★ ' + P.totalStars() + ' · 7 nights, then endless', S.nights));
+      bigBtn('Daily Run' + (dDone ? '  ✓' : ''), dDone ? 'Done today · streak ' + sk : day + ' · same levels for everyone' + (sk ? ' · streak ' + sk : ''), S.daily));
     const r1 = mk('div', 'pills'), snd = pill('Sound: ' + (set.sfx ? 'On' : 'Off'), () => { P.setSetting('sfx', !set.sfx); snd.textContent = 'Sound: ' + (set.sfx ? 'On' : 'Off'); g.apply(); });
     const mus = pill('Music: ' + (set.music ? 'On' : 'Off'), () => { P.setSetting('music', !set.music); mus.textContent = 'Music: ' + (set.music ? 'On' : 'Off'); g.apply(); });
     r1.append(snd, mus);
@@ -44,33 +43,29 @@ export function createScreens(g) {
     open(card);
   };
 
-  S.nights = () => {
-    const card = mk('div', 'card'), unlocked = P.nightsUnlocked();
-    card.append(mk('h1', '', 'Nights'), mk('p', 'sub', '10 levels in every night. The last one is a boss.'));
-    for (let n = 1; n <= STORY_NIGHTS; n++) {
-      const ok = n <= unlocked || P.settings().unlockAll, b = btn((ok ? '' : '🔒 ') + 'Night ' + n + ' · ' + nightName(n) + '   ★ ' + P.nightStars(n) + '/' + PER_NIGHT * 3, () => S.levels(n), true);
-      if (!ok) { b.disabled = true; b.classList.add('locked'); } card.append(b);
+  S.levels = (n) => {   // "Choose a level": night tabs, the night's card, ten levels (each opens when the one before has at least 1 star)
+    g.menuMusic();
+    const card = mk('div', 'card levels'), unlocked = P.nightsUnlocked(), anyOpen = P.settings().unlockAll;
+    const head = mk('div', 'lhead'), bk = mk('button', 'iback', '‹'); bk.type = 'button'; bk.setAttribute('aria-label', 'Back'); bk.addEventListener('click', () => { g.click(); S.home(); });
+    head.append(bk, mk('h1', '', 'Choose a level'), mk('span', 'lstars', '★ ' + P.totalStars())); card.append(head);
+    const tabs = mk('div', 'tabs'), T = Math.max(8, unlocked + 1);
+    for (let k = 1; k <= T; k++) {
+      const ok = k <= unlocked || anyOpen, t = mk('button', 'tab' + (k === n ? ' on' : '') + (ok ? '' : ' locked'), (ok ? '' : '🔒 ') + 'Night ' + k); t.type = 'button';
+      if (ok) t.addEventListener('click', () => { g.click(); S.levels(k); }); else t.disabled = true; tabs.append(t);
     }
-    const eok = 8 <= unlocked || P.settings().unlockAll, e = btn((eok ? '' : '🔒 ') + 'Endless Nights · Night 8 and on', () => S.levels(Math.max(8, unlocked)), true);
-    if (!eok) { e.disabled = true; e.classList.add('locked'); } card.append(e, back('Home', S.home)); open(card);
-  };
-
-  S.levels = (n) => {
-    const card = mk('div', 'card'), unlocked = P.nightsUnlocked(), anyOpen = P.settings().unlockAll;
-    card.append(mk('h1', '', 'Night ' + n), mk('p', 'sub', nightName(n) + '   ★ ' + P.nightStars(n) + '/' + PER_NIGHT * 3));
+    card.append(tabs);
+    const info = mk('div', 'ninfo'); info.append(mk('div', 'k', n > STORY_NIGHTS ? 'ENDLESS · NIGHT ' + n : 'NIGHT ' + n), mk('div', 'nm', nightName(n)), mk('p', '', nightTell(n)), mk('small', '', P.nightStars(n) + ' of ' + PER_NIGHT * 3 + ' stars · serve 60% of the visitors to open the next level'));
+    card.append(info);
     const grid = mk('div', 'lvgrid');
     for (let p = 1; p <= PER_NIGHT; p++) {
-      const L = levelOf(n, p), ok = P.isUnlocked(L), b = mk('button', 'lv' + (ok ? '' : ' locked') + (isBoss(L) ? ' boss' : ''));
+      const L = levelOf(n, p), ok = P.isUnlocked(L), b = mk('button', 'lv' + (ok ? '' : ' locked') + (isBoss(L) ? ' boss' : '') + (ok && !P.starsOf(L) && (L === 1 || P.starsOf(L - 1) > 0) ? ' now' : ''));
       b.type = 'button'; b.append(mk('span', 'num', ok ? String(p) : '🔒'), mk('span', 'st', ok ? starText(P.starsOf(L)) : ''));
       if (isBoss(L)) b.append(mk('span', 'tag', 'Boss'));
       b.setAttribute('aria-label', 'Night ' + n + ' level ' + p + (ok ? ', ' + P.starsOf(L) + ' stars' : ', locked'));
       if (ok) b.addEventListener('click', () => { g.click(); g.begin(L, null); }); else b.disabled = true; grid.append(b);
     }
-    card.append(grid);
-    const row = mk('div', 'row2'), next = btn('Night ' + (n + 1) + ' ›', () => S.levels(n + 1), true);
-    if (n + 1 > unlocked && !anyOpen) next.disabled = true;
-    row.append(n > 1 ? btn('‹ Night ' + (n - 1), () => S.levels(n - 1), true) : mk('span'), next);
-    card.append(row, back('Nights', S.nights)); open(card);
+    card.append(grid, mk('div', 'nexthint', n + 1 <= unlocked || anyOpen ? 'Night ' + (n + 1) + ' is open.' : 'Next: Night ' + (n + 1) + ' · clear level 10 to open it.'), back('Home', S.home)); open(card);
+    const on = tabs.querySelector('.on'); if (on && on.scrollIntoView) { try { on.scrollIntoView({ inline: 'center', block: 'nearest' }); } catch (_) { /* optional */ } }
   };
 
   S.intro = (L, daily) => {   // the picture story before the first level of a night
