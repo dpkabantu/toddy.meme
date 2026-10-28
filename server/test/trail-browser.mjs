@@ -59,7 +59,7 @@ await home(); await shot('home');
 for (const name of ['Play', 'Nights & levels', 'Daily Run', 'How to play', 'Settings', 'About', 'Exit to Games']) assert.ok(await btn(new RegExp('^' + name)).first().isVisible(), 'home has ' + name);
 for (const [name, title] of [['How to play', 'How to play'], ['About', 'About'], ['Settings', 'Settings'], ['Daily Run', 'Daily Run'], ['Nights & levels', 'Nights']]) {
   await btn(new RegExp('^' + name)).first().click(); assert.match(await cardText(), new RegExp(title)); await shot('page-' + title.toLowerCase().replace(/ /g, '-'));
-  await btn(/^‹ /).first().click(); assert.match(await cardText(), /TODDY Trail/, 'Back from ' + name + ' goes Home');
+  await btn(/^‹ /).first().click(); assert.match(await cardText(), /TODDY\s+Trail/, 'Back from ' + name + ' goes Home');
 }
 // Nights: only Night 1 is open at the start; levels: level 1 open, level 2 locked
 await btn(/^Nights & levels/).click();
@@ -78,7 +78,7 @@ await btn(/^Floors/).click(); assert.equal(await btn(/^Floors/).innerText(), 'Fl
 await btn(/^‹ Back/).click();
 
 // ---- Level 1: intro story, tap to win, stars saved ----
-await btn(/^Play · Night 1 · Level 1/).click();
+assert.match(await btn(/^Play/).first().innerText(), /Night 1 · Level 1/); await btn(/^Play/).first().click();
 assert.match(await cardText(), /Night 1 · Opening Night/); await btn(/^Start/).click(); await hidden();
 assert.match(await page.locator('#served').innerText(), /Served 0 \/ 3/); assert.match(await page.locator('#lvl').innerText(), /Night 1 · Level 1/);
 await page.waitForTimeout(400); await shot('level1-plain');
@@ -88,7 +88,7 @@ await page.getByText(/Perfect!|All served!|Level cleared/).waitFor({ timeout: 15
 assert.match(await cardText(), /★/); assert.ok(await btn(/^Next level/).isVisible()); assert.ok(await btn(/^Retry/).isVisible()); assert.ok(await btn(/^‹ Night 1 levels/).isVisible());
 const stars = (await page.locator('.bigstars').innerText()).split('★').length - 1; assert.ok(stars >= 1, 'at least one star');
 // saved: reload, Home says Continue at level 2, level 2 unlocked, level 3 locked
-await home(); assert.ok(await btn(/^Continue · Night 1 · Level 2/).isVisible());
+await home(); assert.match(await btn(/^Continue/).innerText(), /Night 1 · Level 2/);
 await btn(/^Nights & levels/).click(); await btn(/^Night 1 /).click(); assert.equal(await page.locator('.lv:not(.locked)').count(), 2);
 await btn(/^‹ Nights/).click(); await btn(/^‹ Home/).click();
 

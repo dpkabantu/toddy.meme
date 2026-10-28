@@ -18,14 +18,29 @@ export function createScreens(g) {
   const back = (text, fn) => { const b = btn('‹ ' + text, fn, true); b.classList.add('back'); return b; };
   const S = {};
 
+  const pill = (text, fn) => { const b = mk('button', 'pill', text); b.type = 'button'; b.addEventListener('click', () => { g.click(); fn(b); }); return b; };
+  const bigBtn = (title, sub, fn) => { const b = mk('button', 'bigbtn'); b.type = 'button'; b.append(mk('span', 't', title), mk('small', '', sub)); b.addEventListener('click', () => { g.click(); fn(); }); return b; };
+  const DRINKS = ['moon', 'star', 'crescent', 'sun', 'heart', 'snow', 'bolt'];
+
   S.home = () => {
     g.menuMusic();
-    const card = mk('div', 'card'), nx = P.nextLevel(), stars = P.totalStars(), sk = P.currentStreak();
-    card.append(mk('h1', '', 'TODDY Trail'), mk('p', 'sub', 'Serve every drink before the lanterns go out.'));
-    card.append(mk('p', 'chips', '★ ' + stars + (sk ? '   ·   Daily streak ' + sk : '')));
-    const night = nightOf(nx);
-    card.append(btn((P.highestCleared() === 0 ? 'Play' : 'Continue') + ' · Night ' + night + ' · Level ' + posInNight(nx), () => g.begin(nx, null)));
-    card.append(btn('Nights & levels', S.nights, true), btn('Daily Run' + (P.todaysDaily().state.done.every(Boolean) ? '  ✓' : ''), S.daily, true), btn('How to play', () => S.how(S.home), true), btn('Settings', () => S.settings(S.home), true), btn('About', () => S.about(S.home), true), btn('Exit to Games', g.exit, true));
+    const card = mk('div', 'card home'), nx = P.nextLevel(), set = P.settings(), sk = P.currentStreak(), daily = P.todaysDaily();
+    card.append(mk('div', 'eyebrow', 'TODDY'), mk('h1', 'title', 'Trail'), mk('p', 'tagline', 'Tap to guide Toddy. Serve every drink before the lanterns go out.'));
+    const row = mk('div', 'drinks'); for (const d of DRINKS) { const im = document.createElement('img'); im.src = 'assets/trail_badge_' + d + '_v01.webp'; im.alt = ''; im.draggable = false; row.append(im); }
+    const play = mk('button', 'btn play'); play.type = 'button'; play.append(mk('span', '', P.highestCleared() === 0 ? 'Play' : 'Continue'), mk('small', '', 'Night ' + nightOf(nx) + ' · Level ' + posInNight(nx)));
+    play.addEventListener('click', () => { g.click(); g.begin(nx, null); });
+    const day = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+    const dDone = daily.state.done.every(Boolean);
+    card.append(row, play,
+      bigBtn('Daily Run' + (dDone ? '  ✓' : ''), dDone ? 'Done today · streak ' + sk : day + ' · same levels for everyone' + (sk ? ' · streak ' + sk : ''), S.daily),
+      bigBtn('Nights & levels', '★ ' + P.totalStars() + ' · 7 nights, then endless', S.nights));
+    const r1 = mk('div', 'pills'), snd = pill('Sound: ' + (set.sfx ? 'On' : 'Off'), () => { P.setSetting('sfx', !set.sfx); snd.textContent = 'Sound: ' + (set.sfx ? 'On' : 'Off'); g.apply(); });
+    const mus = pill('Music: ' + (set.music ? 'On' : 'Off'), () => { P.setSetting('music', !set.music); mus.textContent = 'Music: ' + (set.music ? 'On' : 'Off'); g.apply(); });
+    r1.append(snd, mus);
+    if (g.fs.can()) { const fsb = pill(g.fs.on() ? 'Exit full screen' : 'Full screen', () => { g.fs.toggle(); setTimeout(() => { fsb.textContent = g.fs.on() ? 'Exit full screen' : 'Full screen'; }, 400); }); r1.append(fsb); }
+    const r2 = mk('div', 'pills'); r2.append(pill('How to play', () => S.how(S.home)), pill('Settings', () => S.settings(S.home)), pill('About', () => S.about(S.home)));
+    const r3 = mk('div', 'pills'); r3.append(pill('Exit to Games', g.exit));
+    card.append(r1, r2, r3, mk('p', 'foot', 'A calm tap-and-serve puzzle. No account or wallet needed; your stars stay on this device.'));
     open(card);
   };
 

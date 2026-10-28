@@ -441,7 +441,7 @@ async function startLevel(L, daily) {
   st = newState(id); turns = []; heldDir = null; target = null; lastSent = 4; flashes = []; fx = []; acc = 0; last = 0; tod = null; lastMoveAt = -9999; endAt = 0; confettiAt = -99999; jiggleAt = -9999;
   sighUntil = NIGHTS[id].visitors.map(() => 0); servedAt = NIGHTS[id].visitors.map(() => 0); brewAt = []; shutterAt = {}; shutterWas = {}; thiefPrev = null; thiefSnatchAt = -9999;
   prevPts = curPts = pts(st);
-  o.hidden = true; o.textContent = ''; thunderK = -1;
+  o.hidden = true; o.textContent = ''; thunderK = -1; $('hud').hidden = false;
   music.play(lvl.meta.music); apply(); resize(); updateHud(); running = true; waiting = true;   // Toddy waits for the first tap
   banner(levelTitle(), 2300);
 }
@@ -468,7 +468,7 @@ function apply() {   // push the saved settings into the game
   $('btnSound').style.opacity = muted ? '.55' : '1'; $('btnSound').setAttribute('aria-pressed', String(!muted));
 }
 function unlockSound() { musicGo = true; music.resume(); apply(); }
-function menuMusic() { running = false; st = null; if (musicGo) music.play('menu'); }
+function menuMusic() { running = false; st = null; $('hud').hidden = true; if (musicGo) music.play('menu'); }
 const S = createScreens({
   overlay: $('overlay'), begin, start: (L, d) => { unlockSound(); return startLevel(L, d); }, resume, restart: () => startLevel(cur.L, cur.daily),
   leave: () => { running = false; st = null; }, apply, menuMusic, click: () => { unlockSound(); SND.click(); },
