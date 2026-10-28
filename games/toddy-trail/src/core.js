@@ -148,13 +148,11 @@ export function newState(nightId) {
   return {
     night: nightId, t: 0, limit: n.seconds * STEPS_PER_SEC,
     x: n.start.x, y: n.start.y, dir: n.start.dir, holding: false, bumped: false, soft: false,
-    cups: n.cups.slice(), ages: n.cups.map(() => 0), cold: 0, hist: [], served: n.visitors.map(() => false), brewCool: n.brew.map(() => 0),
+    cups: n.cups.slice(), hist: [], served: n.visitors.map(() => false), brewCool: n.brew.map(() => 0),
     cartI: 0, thiefI: 0, thiefCool: 0, wrong: 0, spills: 0, bumps: 0, snatched: 0, over: false, won: false, events: [],
   };
 }
 
-// How warm a cup is: 1 = just brewed, 0 = cold (always 1 on levels without cooling).
-export const warmth = (st, k) => { const n = NIGHTS[st.night]; return n && n.fresh ? Math.max(0, 1 - (st.ages[k] || 0) / n.fresh) : 1; };
 export const cellBlocked = (st, x, y) => blocked(st, NIGHTS[st.night], x, y);
 export const cartCell = (st) => { const n = NIGHTS[st.night]; if (!n.cart) return null; const s = seqOf(st.night, 'cart'); return s[st.cartI % s.length]; };
 export const thiefCell = (st) => { const n = NIGHTS[st.night]; if (!n.thief) return null; const s = seqOf(st.night, 'thief'); return s[st.thiefI % s.length]; };
@@ -170,13 +168,11 @@ function blocked(st, n, x, y) {
   return false;
 }
 
-// Giving the first cup to a visitor. With n.fresh set (steps a cup stays hot), a cup that has gone cold is refused and poured away: the visitor is not served and a fresh cup must be brewed.
+// Giving the first cup to a visitor: the right drink serves them, any other drink makes them sigh (nothing is lost).
 function giveCup(st, n, vi) {
   const v = n.visitors[vi];
-  if (st.cups.length > 0 && st.cups[0] === v.want) {
-    if (n.fresh && st.ages[0] >= n.fresh) { const dr = st.cups[0]; st.cups.shift(); st.ages.shift(); st.cold++; st.events.push({ type: 'cold', visitor: vi, drink: dr }); }
-    else { st.cups.shift(); st.ages.shift(); st.served[vi] = true; st.events.push({ type: 'serve', visitor: vi }); }
-  } else { st.wrong++; st.events.push({ type: 'sigh', visitor: vi }); }
+  if (st.cups.length > 0 && st.cups[0] === v.want) { st.cups.shift(); st.served[vi] = true; st.events.push({ type: 'serve', visitor: vi }); }
+  else { st.wrong++; st.events.push({ type: 'sigh', visitor: vi }); }
 }
 
 // Toddy steps onto (nx, ny): his line follows, then brew spots and visitors on that tile react.
@@ -186,7 +182,7 @@ function moveTo(st, n, nx, ny) {
   st.x = nx; st.y = ny;
   for (let i = 0; i < n.brew.length; i++) {
     const b = n.brew[i];
-    if (b.x === nx && b.y === ny && st.brewCool[i] === 0 && st.cups.length < MAX_LINE) { st.cups.push(b.drink); st.ages.push(0); st.brewCool[i] = BREW_COOLDOWN; st.events.push({ type: 'brew', drink: b.drink }); }
+    if (b.x === nx && b.y === ny && st.brewCool[i] === 0 && st.cups.length < MAX_LINE) { st.cups.push(b.drink); st.brewCool[i] = BREW_COOLDOWN; st.events.push({ type: 'brew', drink: b.drink }); }
   }
   for (let i = 0; i < n.visitors.length; i++) {
     const v = n.visitors[i];
@@ -232,7 +228,7 @@ export function step(st, turn) {
     }
     else if (blocked(st, n, nx, ny)) {
       st.bumped = true; st.soft = false; st.bumps++;
-      if (st.cups.length > 0) { st.cups.pop(); st.ages.pop(); st.spills++; st.events.push({ type: 'spill' }); } else st.events.push({ type: 'bump' });
+      if (st.cups.length > 0) { st.cups.pop(); st.spills++; st.events.push({ type: 'spill' }); } else st.events.push({ type: 'bump' });
     } else {
       moveTo(st, n, nx, ny);
       if (isPuddle(n, st.x, st.y)) {   // rain: slide one extra step if the way is clear
@@ -244,9 +240,8 @@ export function step(st, turn) {
   // the thief snatches the last cup if Toddy is on or beside him
   const tc = thiefCell(st);
   if (tc && st.thiefCool === 0 && st.cups.length > 0 && Math.abs(tc[0] - st.x) + Math.abs(tc[1] - st.y) <= 1) {
-    st.cups.pop(); st.ages.pop(); st.snatched++; st.thiefCool = THIEF_COOLDOWN; st.events.push({ type: 'snatch' });
+    st.cups.pop(); st.snatched++; st.thiefCool = THIEF_COOLDOWN; st.events.push({ type: 'snatch' });
   }
-  if (n.fresh) for (let k = 0; k < st.ages.length; k++) st.ages[k]++;   // every cup cools one step
   st.t++;
   if (st.served.every(Boolean)) { st.over = true; st.won = true; }
   else if (st.t >= st.limit) { st.over = true; }
