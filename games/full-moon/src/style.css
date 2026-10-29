@@ -97,3 +97,12 @@ body { overflow: hidden; font-family: var(--body); -webkit-user-select: none; us
 .strip .ps8{height:29px}
 .strip .ps9{height:31px}
 .strip .ps10{height:33px}
+
+/* Moonrise / Full Moon proof badge and challenge note */
+.moonbadge { display: flex; flex-wrap: wrap; align-items: center; justify-content: center; gap: 2px 10px; padding: 8px 12px; border-radius: 16px; border: 2px solid var(--ink); background: linear-gradient(180deg, #ffe08a, #fdaf1e); color: var(--ink); box-shadow: 0 3px 0 var(--gold-deep); }
+.moonbadge b { font: 700 22px var(--display); letter-spacing: .04em; }
+.moonbadge small { flex-basis: 100%; font: 600 12px var(--body); opacity: .85; }
+.mb-moons { display: inline-flex; gap: 3px; }
+.mb-moon { width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fffdf2, #f1c15a); border: 1.5px solid #7a4a0a; display: inline-block; }
+.chal { font-weight: 600; color: var(--gold); }
+.chal.won { color: #fff4d6; }
