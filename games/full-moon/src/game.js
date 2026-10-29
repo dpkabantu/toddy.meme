@@ -673,17 +673,42 @@ function dateLabel() {
   return d.getUTCDate() + ' ' + m[d.getUTCMonth()];
 }
 
+// ---------- challenge links: same drops, a score to beat (a friendly link, not a verified score) ----------
+let challenge = null, challengeWon = false;
+function parseChallenge() {
+  try {
+    const q = new URLSearchParams(location.search);
+    const num = (key, lo, hi) => { const v = q.get(key); if (!/^\d{1,10}$/.test(v || '')) return null; const n = parseInt(v, 10); return n >= lo && n <= hi ? n : null; };
+    const seed = num('seed', 0, 2147483647), beat = num('beat', 0, 9999999);
+    if (seed === null || beat === null) return null;
+    return { seed, beat, mr: num('mr', 0, 99) || 0, lv: num('lv', 1, 11) || 1 };
+  } catch (e) { return null; }
+}
+const moonsHTML = (n) => '<span class="mb-moons">' + '<i class="mb-moon"></i>'.repeat(Math.max(1, Math.min(3, n))) + '</span>';
+function badgeHTML(mr, maxLevel) {      // the proof of a Moonrise (two Full Moons merged) or a Full Moon, shown big
+  if (mr > 0) return '<div class="moonbadge">' + moonsHTML(mr) + '<b>MOONRISE ×' + mr + '</b><small>Two Full Moons merged' + (mr > 1 ? ', ' + mr + ' times' : '') + '</small></div>';
+  if (maxLevel >= 11) return '<div class="moonbadge">' + moonsHTML(1) + '<b>FULL MOON</b><small>Toddy’s Full Moon reached</small></div>';
+  return '';
+}
+function moonBadge() { return moonrises > 0 ? { text: 'MOONRISE ×' + moonrises, n: moonrises } : (S.maxLevel >= 11 ? { text: 'FULL MOON REACHED', n: 1 } : null); }
+function showChallenge() {
+  mode = 'menu'; overlay.hidden = false;
+  overlay.innerHTML = '<div class="card"><div class="label">TODDY</div><h2>A friend challenged you</h2>' + badgeHTML(challenge.mr, challenge.lv) +
+    '<div class="final">' + challenge.beat.toLocaleString('en-US') + '</div><p class="sub">to beat · highest piece ' + challenge.lv + ' of 11 · you both get the same drops</p>' +
+    '<button class="btn" data-act="accept">Accept the challenge</button><button class="btn alt" data-act="menu">Just play</button></div>';
+}
 const WEEKLY_TWISTS = false;   // Season feature, kept for later: off, so every night is the normal game
 function todayTwist() { return WEEKLY_TWISTS ? C.twistForDate(C.dateSeed(new Date())) : 0; }
 function startRun(k2, seedOverride, twistOverride) {
-  kind = k2; burst = null; burstAge = 0;
+  kind = k2; burst = null; burstAge = 0; challengeWon = false;
   const seed = seedOverride !== undefined ? seedOverride : (kind === 'daily' ? C.dateSeed(new Date()) : (Math.random() * 2147483647) | 0);
   twist = kind === 'daily' && twistOverride === undefined ? todayTwist() : (twistOverride || 0);
+  if (!(challenge && kind === 'free' && seed === challenge.seed)) challenge = null;   // a challenge only lives while its own drops are played
   S = C.newGame(seed, twist); lastMax = 0; moonrises = 0; shake = 0; ticketKey = '~'; log = []; fx.length = 0; pops.length = 0; shownNext = 0;
   dropPoseUntil = -1; pressed = false;
   aimX = (C.FIELD.L + C.FIELD.R) / 2; toddyX = aimX;
   bestVal = parseInt(store(bestKey()) || '0', 10) || 0;
-  elMode.textContent = (kind === 'daily' ? 'Daily night' : 'Play') + (WEEKLY_TWISTS ? ' · ' + C.TWISTS[twist].name : '');
+  elMode.textContent = challenge ? 'Challenge · beat ' + challenge.beat.toLocaleString('en-US') : (kind === 'daily' ? 'Daily night' : 'Play') + (WEEKLY_TWISTS ? ' · ' + C.TWISTS[twist].name : '');
   mode = 'play'; overlay.hidden = true;
   setScore(); setNext();
   if (WEEKLY_TWISTS) banner(C.TWISTS[twist].name + ' · ' + C.TWISTS[twist].blurb, 'new', 2600);
@@ -770,6 +795,7 @@ function tickOnce() {
   if (dg > 20 && !S.over && !REDUCE) shake = Math.max(shake, 2 + Math.min(4, Math.floor(dg / 30)));   // the pile trembles while the time runs out
   if (dg > 20 && !S.over) banner('Too high! ' + Math.max(0, (120 - dg) / 60).toFixed(1) + 's', 'warn', 250);
   if (shake > 0) shake--;
+  if (challenge && !challengeWon && S.score > challenge.beat) { challengeWon = true; banner('Challenge beaten! Past ' + challenge.beat.toLocaleString('en-US'), 'new', 2400); sfx.served(); }
   setScore(); setNext();
 }
 
@@ -895,7 +921,16 @@ function makeShareCard() {
   g.fillStyle = 'rgba(253,227,189,.75)'; g.font = '600 24px' + SANS; spaced(g, 'NIGHT SCORE', mid, 706, 8);
   const sg = g.createLinearGradient(0, 720, 0, 830); sg.addColorStop(0, '#fffaf0'); sg.addColorStop(1, '#f6d58c');
   g.save(); g.shadowColor = 'rgba(0,0,0,.45)'; g.shadowBlur = 14; g.shadowOffsetY = 4; g.fillStyle = sg; g.font = '700 128px' + SANS; g.fillText(S.score.toLocaleString('en-US'), mid, 822); g.restore();
-  g.fillStyle = '#fde3bd'; g.font = 'italic 500 42px' + SERIF; g.fillText('“' + cardLine(band, S.maxLevel) + '”', mid, 898);
+  const bd = moonBadge();
+  if (bd) {   // proof of the Moonrise / Full Moon, big and next to the score
+    const pw = 700, ph2 = 66, py = 854, px = mid - pw / 2, pg = g.createLinearGradient(0, py, 0, py + ph2);
+    pg.addColorStop(0, '#ffe08a'); pg.addColorStop(1, '#fdaf1e');
+    g.save(); g.shadowColor = 'rgba(253,175,30,.55)'; g.shadowBlur = 26; g.fillStyle = pg; g.beginPath(); g.roundRect ? g.roundRect(px, py, pw, ph2, 35) : g.rect(px, py, pw, ph2); g.fill(); g.restore();
+    const moon = (mx, my) => { const rg = g.createRadialGradient(mx - 5, my - 5, 2, mx, my, 21); rg.addColorStop(0, '#fffdf2'); rg.addColorStop(1, '#f1c15a'); g.fillStyle = rg; g.strokeStyle = '#7a4a0a'; g.lineWidth = 2; g.beginPath(); g.arc(mx, my, 20, 0, 6.2832); g.fill(); g.stroke(); };
+    const nn = Math.min(3, bd.n);
+    for (let i = 0; i < nn; i++) { moon(mid - 305 + i * 40, py + ph2 / 2); moon(mid + 305 - i * 40, py + ph2 / 2); }
+    g.fillStyle = '#1a0a05'; g.font = '700 ' + fitText(g, bd.text, 400, '700 {s}px' + SANS, 44) + 'px' + SANS; g.fillText(bd.text, mid, py + 46);
+  } else { g.fillStyle = '#fde3bd'; g.font = 'italic 500 42px' + SERIF; g.fillText('“' + cardLine(band, S.maxLevel) + '”', mid, 898); }
   // the pieces made, lit up to the highest one
   const n = 11, gap = 10, ph = 54, widths = PIECE_KEYS.map((k2) => ph * IMG[k2].width / IMG[k2].height);
   let x = (CWD - (widths.reduce((q, w) => q + w, 0) + gap * (n - 1))) / 2;
@@ -937,15 +972,16 @@ async function showPicture() {
 }
 let shareBlob = null, shareUrl = '';
 const gameLink = () => location.origin + location.pathname;
+const shareLink = () => (S && S.over && twist === 0) ? gameLink() + '?seed=' + S.seed + '&beat=' + S.score + '&mr=' + moonrises + '&lv=' + S.maxLevel : gameLink();
 function resultText() {
-  return 'TODDY Full Moon · ' + (kind === 'daily' ? 'Daily night ' + dateLabel() : 'Play') + (WEEKLY_TWISTS ? ' · ' + C.TWISTS[twist].name : '') + ' · ' + S.score.toLocaleString('en-US') + ' · ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal · ' + lasted() + (moonrises ? ' · Moonrise ×' + moonrises : '') + ' — can you beat it? ' + gameLink();
+  return 'TODDY Full Moon · ' + (kind === 'daily' ? 'Daily night ' + dateLabel() : 'Play') + (WEEKLY_TWISTS ? ' · ' + C.TWISTS[twist].name : '') + ' · ' + S.score.toLocaleString('en-US') + ' · ' + C.BAND_NAMES[C.bandFor(S.score, twist)] + ' medal · ' + lasted() + (moonrises ? ' · Moonrise ×' + moonrises : '') + ' — can you beat it? Same drops: ' + shareLink();
 }
 function flash(btn, msg) { const t = btn.textContent; btn.textContent = msg; setTimeout(() => { btn.textContent = t; }, 1800); }
 async function doShare(btn) {
   const text = resultText();
   try {
     if (navigator.share) {
-      const data = { title: 'TODDY Full Moon', text, url: gameLink() };
+      const data = { title: 'TODDY Full Moon', text, url: shareLink() };
       if (shareBlob && navigator.canShare) {
         const f = new File([shareBlob], 'toddy-full-moon.png', { type: 'image/png' });
         if (navigator.canShare({ files: [f] })) { data.files = [f]; }
@@ -965,15 +1001,20 @@ function doSave(btn) {
     flash(btn, 'Saved');
   } catch (e) { flash(btn, 'Press and hold the picture'); }
 }
+function chalHTML() {
+  if (!challenge || S.seed !== challenge.seed) return '';
+  const d = S.score - challenge.beat, mrNote = challenge.mr ? ' They made Moonrise ×' + challenge.mr + '; you made ' + (moonrises ? '×' + moonrises : 'none') + '.' : '';
+  return '<p class="sub chal ' + (d > 0 ? 'won' : '') + '">' + (d > 0 ? 'Challenge beaten by ' + d.toLocaleString('en-US') + '!' : (d === 0 ? 'A perfect tie!' : Math.abs(d).toLocaleString('en-US') + ' short of ' + challenge.beat.toLocaleString('en-US') + '. Try again with the same drops.')) + mrNote + '</p>';
+}
 function showOver() {
   const band = C.bandFor(S.score, twist), nm = C.BAND_NAMES[band];
   const next = band < 3 ? C.bandsOf(twist)[band] : 0;
   overlay.hidden = false;
   overlay.innerHTML =
     '<div class="card"><h2>Night over</h2><img class="medal" alt="" src="' + ASSET['medal_' + (band + 1)] + '">' +
-    '<div class="band">' + nm + '</div><div class="final">' + S.score.toLocaleString('en-US') + '</div>' +
+    '<div class="band">' + nm + '</div>' + badgeHTML(moonrises, S.maxLevel) + '<div class="final">' + S.score.toLocaleString('en-US') + '</div>' + chalHTML() +
     '<p class="sub">Lasted <b>' + lasted() + '</b> · ' + S.drops + ' drops</p><p class="sub">' + (kind === 'daily' ? "Today's best " : 'Best ') + bestVal.toLocaleString('en-US') + ' · highest piece ' + S.maxLevel + ' of 11' + (S.served ? ' · ' + S.served + ' visitor' + (S.served > 1 ? 's' : '') + ' served' : '') + (moonrises ? ' · Moonrise ×' + moonrises : '') + (next ? ' · next medal at ' + next.toLocaleString('en-US') : '') + '</p>' +
-    '<button class="btn" data-act="again">Play again</button><button class="btn share" data-act="pic">Share your night</button><button class="btn alt" data-act="menu">Menu</button></div>';
+    '<button class="btn" data-act="again">' + (challenge && S.seed === challenge.seed ? 'Try again · same drops' : 'Play again') + '</button><button class="btn share" data-act="pic">Share your night</button><button class="btn alt" data-act="menu">Menu</button></div>';
 }
 
 // ---------- full screen (Android and desktop browsers; iPhone Safari has no full screen for web pages) ----------
@@ -1025,18 +1066,19 @@ function toggleSound() { muted = !muted; try { localStorage.setItem('mmMute', mu
 overlay.addEventListener('click', (e) => {
   const b = e.target.closest('button'); if (!b) return;
   const a = b.dataset.act;
-  if (wantFull && (a === 'daily' || a === 'free' || a === 'tw' || a === 'again' || a === 'restart' || a === 'resume')) enterFS();
+  if (wantFull && (a === 'daily' || a === 'free' || a === 'accept' || a === 'tw' || a === 'again' || a === 'restart' || a === 'resume')) enterFS();
   if (a === 'snd') { toggleSound(); b.textContent = 'Sound: ' + (muted ? 'Off' : 'On'); }
   else if (a === 'mus') { musicOn = !musicOn; try { localStorage.setItem('mmMusic', musicOn ? '1' : '0'); } catch (err) { /* none */ } ensureAudio(); syncMusic(); b.textContent = 'Music: ' + (musicOn ? 'On' : 'Off'); }
   else if (a === 'full') { toggleFS(); }
   else if (a === 'iosfull') showIosFull(false);
   else if (a === 'pause') { mode = 'play'; showPause(); }
-  else if (a === 'daily') startRun('daily');
-  else if (a === 'free') startRun('free');
+  else if (a === 'accept') startRun('free', challenge.seed, 0);
+  else if (a === 'daily') { challenge = null; startRun('daily'); }
+  else if (a === 'free') { challenge = null; startRun('free'); }
   else if (a === 'weeks') showWeeks();
-  else if (a === 'tw') startRun('free', undefined, parseInt(b.dataset.w, 10));
+  else if (a === 'tw') { challenge = null; startRun('free', undefined, parseInt(b.dataset.w, 10)); }
   else if (a === 'resume') { mode = 'play'; overlay.hidden = true; }
-  else if (a === 'restart' || a === 'again') startRun(kind, undefined, twist);
+  else if (a === 'restart' || a === 'again') startRun(kind, challenge && kind === 'free' ? challenge.seed : undefined, twist);
   else if (a === 'menu') showMenu();
   else if (a === 'pic') showPicture();
   else if (a === 'back') showOver();
@@ -1096,6 +1138,7 @@ async function boot() {
   layout();
   twist = todayTwist(); S = C.newGame(C.dateSeed(new Date()), twist);     // an idle crate behind the menu
   mode = 'menu'; setScore(); setNext(); showMenu();
+  challenge = parseChallenge(); if (challenge) showChallenge();
   requestAnimationFrame(frame);
   $('loading').hidden = true;
 }
