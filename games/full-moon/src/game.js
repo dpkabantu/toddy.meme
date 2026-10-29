@@ -323,7 +323,7 @@ let S = null, mode = 'boot', kind = 'daily', log = [], lastRun = null, twist = 0
 let aimX = (C.FIELD.L + C.FIELD.R) / 2, toddyX = aimX, pressed = false;
 let dropPoseUntil = -1, overAt = 0, shownNext = 0;
 const fx = [], pops = [];
-let burst = null, burstAge = 0;   // 'Moon Burst': cosmetic explosion of the full crate after game over (never touches the rules)
+let burst = null, burstAge = 0, crateShot = null;   // crateShot: the full crate at the moment of game over, kept for the share picture   // 'Moon Burst': cosmetic explosion of the full crate after game over (never touches the rules)
 const keys = { left: false, right: false };
 let W = 0, H = 0, dpr = 1, k = 1, crateX = 0, crateY = 0, cw = 0, ch = 0, toddyH = 150;
 let bgS = 1, bgX = 0, panelCv = null;
@@ -700,7 +700,7 @@ function showChallenge() {
 const WEEKLY_TWISTS = false;   // Season feature, kept for later: off, so every night is the normal game
 function todayTwist() { return WEEKLY_TWISTS ? C.twistForDate(C.dateSeed(new Date())) : 0; }
 function startRun(k2, seedOverride, twistOverride) {
-  kind = k2; burst = null; burstAge = 0; challengeWon = false;
+  kind = k2; burst = null; burstAge = 0; crateShot = null; challengeWon = false;
   const seed = seedOverride !== undefined ? seedOverride : (kind === 'daily' ? C.dateSeed(new Date()) : (Math.random() * 2147483647) | 0);
   twist = kind === 'daily' && twistOverride === undefined ? todayTwist() : (twistOverride || 0);
   if (!(challenge && kind === 'free' && seed === challenge.seed)) challenge = null;   // a challenge only lives while its own drops are played
@@ -726,6 +726,10 @@ const BURST_FRAMES = 100;   // about 1.7 s at 60 ticks a second
 function startBurst() {
   const B = S.bodies;
   burstAge = 0; burst = null;
+  try {   // keep a picture of the filled crate before the pieces fly away: the share card shows it
+    const sc = document.createElement('canvas'); sc.width = cv.width; sc.height = cv.height; sc.getContext('2d').drawImage(cv, 0, 0);
+    crateShot = { cv: sc, W, H, dpr, crateX, crateY, cw, toddyH };
+  } catch (e) { crateShot = null; }
   if (!B.length) { sfx.over(); return; }
   let cx = 0, cy = 0; for (const b of B) { cx += b.x; cy += b.y; } cx /= B.length; cy /= B.length;
   const order = B.map((b, i) => i).sort((a, b) => B[a].y - B[b].y);   // top of the pile goes first
@@ -939,11 +943,12 @@ function makeShareCard() {
   const statLine = 'Lasted ' + lasted() + '  ◆  Piece ' + S.maxLevel + ' of 11' + (S.served ? '  ◆  ' + S.served + ' visitor' + (S.served > 1 ? 's' : '') + ' served' : '') + (moonrises ? '  ◆  Moonrise ×' + moonrises : '');
   g.fillStyle = '#fde3bd'; g.font = '500 ' + fitText(g, statLine, 940, '500 {s}px' + SANS, 31) + 'px' + SANS; g.fillText(statLine, mid, 1030);
   // the finished crate, cut out of the live game picture (Toddy included)
-  const vx0 = Math.max(0, crateX), vw = Math.min(W, crateX + cw) - vx0;
-  const sy0 = Math.max(0, crateY - toddyH * 0.85), sh = H - sy0;
+  const L = crateShot || { cv, W, H, dpr, crateX, crateY, cw, toddyH };   // the filled crate from game over, not the empty one after the burst
+  const vx0 = Math.max(0, L.crateX), vw = Math.min(L.W, L.crateX + L.cw) - vx0;
+  const sy0 = Math.max(0, L.crateY - L.toddyH * 0.85), sh = L.H - sy0;
   const areaTop = 1060, areaH = 410, sc = Math.min(areaH / sh, 980 / vw), dw = vw * sc, dh = sh * sc, dx = (CWD - dw) / 2, dy = areaTop + (areaH - dh) / 2;
   g.save(); g.shadowColor = 'rgba(0,0,0,.5)'; g.shadowBlur = 24; g.fillStyle = '#000'; g.fillRect(dx, dy, dw, dh); g.restore();
-  g.drawImage(cv, vx0 * dpr, sy0 * dpr, vw * dpr, sh * dpr, dx, dy, dw, dh);
+  g.drawImage(L.cv, vx0 * L.dpr, sy0 * L.dpr, vw * L.dpr, sh * L.dpr, dx, dy, dw, dh);
   g.strokeStyle = 'rgba(201,154,59,.7)'; g.lineWidth = 3; g.strokeRect(dx, dy, dw, dh);
   // sign-off
   g.fillStyle = '#fdaf1e'; g.font = 'italic 600 40px' + SERIF; g.fillText('Can you beat this night?', mid, 1512);
