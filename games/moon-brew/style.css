@@ -495,3 +495,17 @@ html.calm .tray-btn.next { animation: none; }
   .actions { grid-column: 1 / -1; flex-direction: row; }
   .actions .btn.small { flex: 1; }
 }
+
+/* the tray frame: slim 9-slice on phones (more room for beans), full picture on big screens */
+.board-frame.slim { box-sizing: border-box; border: 15px solid transparent; border-image: var(--i-board-frame-thin) 66 / 15px stretch; }
+.board-frame.broad { background: var(--i-board-frame-broad) center / 100% 100% no-repeat; }
+
+/* wider play column on big screens so the tray can grow */
+@media (min-width: 900px) { .play-screen { max-width: 920px; } }
+/* phone held sideways: the left column is narrow, so Hint / Restart go on their own row */
+@media (orientation: landscape) and (max-height: 450px) {
+  .foot { grid-template-columns: 58px 1fr; gap: 6px; }
+  #toddy { width: 58px; height: 62px; margin-top: -18px; }
+  .actions { grid-column: 1 / -1; flex-direction: row; }
+  .actions .btn.small { flex: 1; --h: 32px; }
+}
