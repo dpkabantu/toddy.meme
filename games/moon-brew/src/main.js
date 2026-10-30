@@ -675,35 +675,19 @@ function drawCup(now) {
 const cv = $('board');
 const ctx = cv.getContext('2d');
 let S = 300, cell = 30, ox = 0, oy = 0;
-const FRAME = { broad: { kx: 0.7512, ky: 0.7382 } }; // measured opening of the ornate frame picture
-const FRAME_SLIM = 15; // px: thickness of the slim phone frame (9-slice of the thin frame picture)
 function resizeBoard() {
   if (!level) return;
   const wrap = $('board-wrap').getBoundingClientRect();
   // the picture frame around the tray: the tray fills its opening (measured on the approved art, see README rc14)
-  const broad = matchMedia('(min-width: 1000px) and (min-height: 1150px)').matches; // ornate frame only on very tall screens: it costs a quarter of the tray
-  const fr = $('board-frame');
-  let size;
-  if (broad) {
-    // desktop: the ornate frame picture; the tray fills its opening
-    const F = FRAME.broad;
-    size = Math.max(160, Math.floor(Math.min(wrap.width + 24, wrap.height) * F.kx));
-    fr.className = 'board-frame broad';
-    fr.style.width = Math.round(size / F.kx) + 'px'; fr.style.height = Math.round(size / F.ky) + 'px';
-  } else {
-    // phones: a slim frame that reaches almost to the screen edges, so the tray (and every bean) is as big as possible
-    const outer = Math.floor(Math.min(wrap.width + 28, wrap.height));
-    size = Math.max(160, outer - 2 * FRAME_SLIM);
-    fr.className = 'board-frame slim';
-    fr.style.width = (size + 2 * FRAME_SLIM) + 'px'; fr.style.height = (size + 2 * FRAME_SLIM) + 'px';
-  }
+  // No picture frame: every pixel goes to the tray. On phones it runs almost edge to edge (the screen's side padding is 16 px).
+  const size = Math.max(160, Math.floor(Math.min(wrap.width + 28, wrap.height)));
   const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
   S = size;
   cv.style.width = size + 'px'; cv.style.height = size + 'px';
   cv.width = Math.round(size * dpr); cv.height = Math.round(size * dpr);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   const n = Math.max(level.w, level.h);
-  cell = (size - 10) / n;
+  cell = (size - 6) / n;
   ox = (size - cell * level.w) / 2; oy = (size - cell * level.h) / 2;
 }
 const cxp = x => ox + (x + 0.5) * cell;
@@ -1454,7 +1438,7 @@ document.documentElement.style.setProperty('--counter-bg', `url("${new URL(ASSET
 ['scene_phone', 'scene_desktop', 'garland', 'wing_left', 'wing_right', 'light_phone', 'light_desktop', 'panel_phone', 'panel_desktop',
   'btn_gold_m', 'btn_gold_down_m', 'btn_plum_m', 'btn_plum_down_m', 'btn_round_m', 'btn_round_down_m',
   'btn_gold_d', 'btn_gold_down_d', 'btn_plum_d', 'btn_plum_down_d', 'btn_round_d', 'btn_round_down_d',
-  'board_frame_thin', 'board_frame_broad', 'marker_open', 'marker_cleared', 'marker_locked', 'divider_moon', 'divider_wave', 'ui_star', 'ui_star_empty']
+  'marker_open', 'marker_cleared', 'marker_locked', 'divider_moon', 'divider_wave', 'ui_star', 'ui_star_empty']
   .forEach(n => document.documentElement.style.setProperty('--i-' + n.replace(/_/g, '-'), `url("${new URL(ASSET + n + '_v01.webp', document.baseURI).href}")`));
 // Title loop: a short muted video behind the title. Lazy, off for calm / low data, never blocks the first screen.
 function startTitleLoop() {
