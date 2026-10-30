@@ -1,4 +1,4 @@
-window.MM_ASSETS = {"bg":"assets/bg_v01.webp","crate":"assets/crate_v03.webp","fx_burst":"assets/fx_burst_v01.webp","fx_ring":"assets/fx_ring_v01.webp","fx_spiral":"assets/fx_spiral_v01.webp","medal_1":"assets/medal_1_v01.webp","medal_2":"assets/medal_2_v01.webp","medal_3":"assets/medal_3_v01.webp","medal_4":"assets/medal_4_v01.webp","p01":"assets/p01_sugar_v03.webp","p02":"assets/p02_ice_v03.webp","p03":"assets/p03_bean_light_v02.webp","p04":"assets/p04_bean_medium_v02.webp","p05":"assets/p05_bean_dark_v02.webp","p06":"assets/p06_milk_v03.webp","p07":"assets/p07_cup_v03.webp","p08":"assets/p08_mug_v03.webp","p09":"assets/p09_portal_teal_v03.webp","p10":"assets/p10_portal_violet_v03.webp","p11":"assets/p11_moon_v03.webp","sky_cres":"assets/sky_cres_v01.webp","sky_full":"assets/sky_full_v01.webp","toddy_drop":"assets/toddy_drop_v03.webp","toddy_hold":"assets/toddy_hold_v03.webp"};
+window.MM_ASSETS = {"bg":"assets/bg_v01.webp","crate":"assets/crate_v03.webp","fx_burst":"assets/fx_burst_v01.webp","fx_ring":"assets/fx_ring_v01.webp","fx_spiral":"assets/fx_spiral_v01.webp","medal_1":"assets/medal_1_v01.webp","medal_2":"assets/medal_2_v01.webp","medal_3":"assets/medal_3_v01.webp","medal_4":"assets/medal_4_v01.webp","p01":"assets/p01_sugar_v03.webp","p02":"assets/p02_ice_v03.webp","p03":"assets/p03_bean_light_v02.webp","p04":"assets/p04_bean_medium_v02.webp","p05":"assets/p05_bean_dark_v02.webp","p06":"assets/p06_milk_v03.webp","p07":"assets/p07_cup_v03.webp","p08":"assets/p08_mug_v03.webp","p09":"assets/p09_portal_teal_v03.webp","p10":"assets/p10_portal_violet_v03.webp","p11":"assets/p11_moon_v03.webp","sky_cres":"assets/sky_cres_v01.webp","sky_full":"assets/sky_full_v01.webp","toddy_drop":"assets/toddy_drop_v03.webp","toddy_hold":"assets/toddy_hold_v03.webp","toddy_blink":"assets/toddy_blink_v01.webp","toddy_happy":"assets/toddy_happy_v01.webp","toddy_worried":"assets/toddy_worried_v01.webp","toddy_cheer":"assets/toddy_cheer_v01.webp","fm_panel":"assets/fm_panel_v01.webp","fm_glow":"assets/fm_glow_v01.webp","fm_beam":"assets/fm_beam_v01.webp","fm_sparkles":"assets/fm_sparkles_v01.webp"};
 window.MM_META = {"pieces":[{"level":1,"name":"sugar","file":"p01_sugar_v03.webp","w":78,"h":82.8,"ax":39.0,"ay":41.4,"body":78,"r":34,"rotates":true},{"level":2,"name":"ice","file":"p02_ice_v03.webp","w":101,"h":111.4,"ax":50.5,"ay":55.7,"body":101,"r":44,"rotates":true},{"level":3,"name":"bean_light","file":"p03_bean_light_v02.webp","w":155,"h":125,"ax":77.5,"ay":62.5,"body":136.4,"r":54,"rotates":true},{"level":4,"name":"bean_medium","file":"p04_bean_medium_v02.webp","w":184,"h":146,"ax":92.0,"ay":73.0,"body":161.9,"r":64,"rotates":true},{"level":5,"name":"bean_dark","file":"p05_bean_dark_v02.webp","w":218,"h":175,"ax":109.0,"ay":87.5,"body":191.8,"r":76,"rotates":true},{"level":6,"name":"milk","file":"p06_milk_v03.webp","w":207,"h":198.8,"ax":103.5,"ay":99.4,"body":207,"r":90,"rotates":true},{"level":7,"name":"cup","file":"p07_cup_v03.webp","w":288.6,"h":241.5,"ax":120.8,"ay":120.8,"body":241.5,"r":105,"rotates":true},{"level":8,"name":"mug","file":"p08_mug_v03.webp","w":405.6,"h":318.2,"ax":154.5,"ay":158.8,"body":280.6,"r":122,"rotates":false},{"level":9,"name":"portal_teal","file":"p09_portal_teal_v03.webp","w":327,"h":323.4,"ax":163.5,"ay":161.7,"body":327,"r":142,"rotates":true},{"level":10,"name":"portal_violet","file":"p10_portal_violet_v03.webp","w":373,"h":368.1,"ax":186.5,"ay":184.1,"body":373,"r":162,"rotates":true},{"level":11,"name":"moon","file":"p11_moon_v03.webp","w":427.8,"h":545.2,"ax":213.9,"ay":331.3,"body":427.8,"r":186,"rotates":false}],"bg":{"w":941,"h":1672,"win":[501,91,845,430]},"crate":{"w":1086,"h":1448},"toddy":{"toddy_hold":{"w":381.4,"h":420},"toddy_drop":{"w":381.4,"h":420},"anchor_x":226.8,"paws_y_hold":258.2,"paws_y_drop":272.0}};
 (function () {
 const C = (function(){
@@ -306,6 +306,7 @@ const $ = (id) => document.getElementById(id);
 const app = $('app'), cv = $('c'), ctx = cv.getContext('2d');
 const elScore = $('score'), elBest = $('best'), elMode = $('modeLabel'), elNext = $('nextImg'), overlay = $('overlay');
 const IMG = {};
+const OPTIONAL = new Set(['toddy_blink', 'toddy_happy', 'toddy_worried', 'toddy_cheer', 'fm_panel', 'fm_glow', 'fm_beam', 'fm_sparkles']);   // looks only: the game plays without them
 const pad2 = (n) => (n < 10 ? '0' + n : '' + n);
 const PIECE_KEYS = META.pieces.map((p) => 'p' + pad2(p.level));
 
@@ -329,6 +330,7 @@ let W = 0, H = 0, dpr = 1, k = 1, crateX = 0, crateY = 0, cw = 0, ch = 0, toddyH
 let bgS = 1, bgX = 0, panelCv = null;
 const REDUCE = typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches;
 let bestVal = 0;
+let happyUntil = 0, cheerUntil = 0;
 let bannerUntil = 0, shake = 0, lastMax = 0, moonrises = 0;
 // ---- sound: tiny synth, starts after the first touch, can be muted ----
 let AC = null, muted = false;
@@ -501,6 +503,7 @@ function buildPanel() {
   const grad = g.createLinearGradient(0, 0, 0, h);
   grad.addColorStop(0, 'rgba(18,14,44,0.93)'); grad.addColorStop(1, 'rgba(30,22,60,0.93)');
   g.fillStyle = grad; g.fillRect(0, 0, w, h);
+  if (IMG.fm_panel) { const im = IMG.fm_panel, sc = Math.max(w / im.width, h / im.height); g.globalAlpha = 0.96; g.drawImage(im, (w - im.width * sc) / 2, (h - im.height * sc) / 2, im.width * sc, im.height * sc); g.globalAlpha = 1; return; }
   const rnd = C.mulberry32(7);   // fixed stars so every screen looks the same
   for (let i = 0; i < 26; i++) {
     const x = rnd() * w, y = rnd() * h, s = (0.6 + rnd() * 1.4) * dpr;
@@ -528,6 +531,44 @@ function coverRect(img, x, y, w, h) {   // draw img to cover a rectangle
   ctx.drawImage(img, x + (w - dw) / 2, y + (h - dh) / 2, dw, dh);
 }
 
+// ---- soft light and gold dust (looks only; never touches the rules). Light pictures are black-backed and added on top with 'lighter'.
+const SPARKS = [[35,32,264,258],[370,82,176,176],[656,116,114,115],[932,142,74,72],[104,403,74,73],[593,372,142,151],[762,399,323,91]];   // sprite boxes inside fm_sparkles: big star, medium, small, two dots, crescent, glint
+const DUST = (function () { const r = C.mulberry32(31), a = []; for (let i = 0; i < 16; i++) a.push({ x: r(), y: r(), sp: 0.4 + r() * 0.9, ph: r() * 6.28, spr: [2, 3, 4, 3, 4, 5, 2, 3][i % 8], sz: 7 + r() * 11 }); return a; })();
+function lightPass(now, front) {
+  const L = sx(C.FIELD.L), T = sy(C.FIELD.TOP), Wf = (C.FIELD.R - C.FIELD.L) * k, Hf = (C.FIELD.FLOOR + 6 - C.FIELD.TOP) * k;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter';
+  if (!front) {
+    ctx.beginPath(); ctx.rect(L, T, Wf, Hf); ctx.clip();
+    if (IMG.fm_beam) {   // one slow shaft of moonlight across the crate
+      const dx = REDUCE ? 0 : Math.sin(now / 5200) * Wf * 0.05, a = REDUCE ? 0.34 : 0.3 + 0.08 * Math.sin(now / 3100);
+      ctx.globalAlpha = a; ctx.drawImage(IMG.fm_beam, L + dx - Wf * 0.12, T, Wf * 1.24, Hf);
+    }
+    if (IMG.fm_sparkles && !REDUCE) {   // a few gold motes drifting up, behind the pieces
+      for (const d of DUST) {
+        const y = ((d.y - now / 1000 * 0.012 * d.sp) % 1 + 1) % 1, x = d.x + Math.sin(now / 2300 * d.sp + d.ph) * 0.02, b = SPARKS[d.spr];
+        ctx.globalAlpha = (0.14 + 0.2 * (0.5 + 0.5 * Math.sin(now / 700 * d.sp + d.ph))) * Math.min(1, y * 6, (1 - y) * 6);
+        const w = d.sz * Math.max(0.7, k * 1.4), h = w * b[3] / b[2];
+        ctx.drawImage(IMG.fm_sparkles, b[0], b[1], b[2], b[3], L + x * Wf - w / 2, T + y * Hf - h / 2, w, h);
+      }
+    }
+  } else if (IMG.fm_glow) {   // warm lamp light at the two top corners of the crate
+    const a = REDUCE ? 0.42 : 0.4 + 0.07 * Math.sin(now / 900), gs = Wf * 0.55;
+    ctx.globalAlpha = a; ctx.drawImage(IMG.fm_glow, L - gs * 0.3, T - gs * 0.3, gs, gs); ctx.drawImage(IMG.fm_glow, L + Wf - gs * 0.7, T - gs * 0.3, gs, gs);
+  }
+  ctx.restore();
+}
+// Full Moon celebration clip (light on black), played over the crate on a Moonrise or the first Full Moon
+const celeb = document.getElementById('celeb');
+const ASSET_VIDEO = { celebrate: 'assets/fm_celebrate_v01.mp4', desk: 'assets/desk_loop_v01.mp4' };
+function playCelebrate() { if (!celeb || REDUCE) return; try { if (!celeb.getAttribute('src')) celeb.src = ASSET_VIDEO.celebrate; celeb.currentTime = 0; const p = celeb.play(); if (p && p.catch) p.catch(() => {}); } catch (e) { /* optional */ } }
+function celebPass() {
+  if (!celeb || celeb.paused || celeb.ended || celeb.readyState < 2 || !celeb.videoWidth) return;
+  const L = sx(C.FIELD.L), T = sy(C.FIELD.TOP), Wf = (C.FIELD.R - C.FIELD.L) * k, Hf = (C.FIELD.FLOOR + 6 - C.FIELD.TOP) * k;
+  ctx.save(); ctx.globalCompositeOperation = 'lighter'; ctx.globalAlpha = 0.6; ctx.beginPath(); ctx.rect(L, T, Wf, Hf); ctx.clip();
+  const s = Math.max(Wf / celeb.videoWidth, Hf / celeb.videoHeight), dw = celeb.videoWidth * s, dh = celeb.videoHeight * s;
+  ctx.drawImage(celeb, L + (Wf - dw) / 2, T + (Hf - dh) / 2, dw, dh); ctx.restore();
+}
+
 function render(now) {
   const sh = shake > 0 && !REDUCE ? shake * 0.6 : 0;
   ctx.setTransform(dpr, 0, 0, dpr, Math.sin(now / 17) * sh * dpr, Math.cos(now / 23) * sh * dpr);
@@ -542,6 +583,7 @@ function render(now) {
   // crate back panel
   ctx.drawImage(panelCv, sx(C.FIELD.L), sy(C.FIELD.TOP), (C.FIELD.R - C.FIELD.L) * k, (C.FIELD.FLOOR + 6 - C.FIELD.TOP) * k);
 
+  lightPass(now, false);
   let danger = 0;
   if (S) for (const b of S.bodies) if (b.over > danger) danger = b.over;
   // closing line
@@ -584,6 +626,8 @@ function render(now) {
     ctx.restore();
   }
   ctx.drawImage(IMG.crate, crateX, crateY, cw, ch);
+  lightPass(now, true);
+  celebPass();
   if (burst && S && S.over) {   // flying pieces, in front of the crate, then a soft flash
     for (const p of burst.parts) {
       if (burstAge < p.delay) continue;
@@ -622,7 +666,15 @@ function render(now) {
 function drawToddy() {
   const T = META.toddy;
   const dropping = S && S.tick < dropPoseUntil;
-  const key = dropping ? 'toddy_drop' : 'toddy_hold', info = T[key];
+  const now = performance.now(), dg = S ? S.bodies.reduce((m, b) => Math.max(m, b.over || 0), 0) : 0;
+  let key = dropping ? 'toddy_drop' : 'toddy_hold';   // faces: same body, new expression, only while holding (looks only)
+  if (!dropping) {
+    if (now < cheerUntil && IMG.toddy_cheer) key = 'toddy_cheer';
+    else if ((dg > 20 || (burst && S && S.over)) && IMG.toddy_worried) key = 'toddy_worried';
+    else if (now < happyUntil && IMG.toddy_happy) key = 'toddy_happy';
+    else if (!REDUCE && now % 4600 < 140 && IMG.toddy_blink) key = 'toddy_blink';
+  }
+  const info = T[dropping ? 'toddy_drop' : 'toddy_hold'];
   const sc = toddyH / info.h;
   const paws = (dropping ? T.paws_y_drop : T.paws_y_hold) * sc;
   const pawsY = sy(C.SPAWN_Y) - cw * 0.012;
@@ -686,8 +738,8 @@ function parseChallenge() {
 }
 const moonsHTML = (n) => '<span class="mb-moons">' + '<i class="mb-moon"></i>'.repeat(Math.max(1, Math.min(3, n))) + '</span>';
 function badgeHTML(mr, maxLevel) {      // the proof of a Moonrise (two Full Moons merged) or a Full Moon, shown big
-  if (mr > 0) return '<div class="moonbadge">' + moonsHTML(mr) + '<b>MOONRISE ×' + mr + '</b><small>Two Full Moons merged' + (mr > 1 ? ', ' + mr + ' times' : '') + '</small></div>';
-  if (maxLevel >= 11) return '<div class="moonbadge">' + moonsHTML(1) + '<b>FULL MOON</b><small>Toddy’s Full Moon reached</small></div>';
+  if (mr > 0) return '<div class="moonbadge"><div class="mbrib">' + moonsHTML(mr) + '<b>MOONRISE ×' + mr + '</b></div><small>Two Full Moons merged' + (mr > 1 ? ', ' + mr + ' times' : '') + '</small></div>';
+  if (maxLevel >= 11) return '<div class="moonbadge"><div class="mbrib">' + moonsHTML(1) + '<b>FULL MOON</b></div><small>Toddy’s Full Moon reached</small></div>';
   return '';
 }
 function moonBadge() { return moonrises > 0 ? { text: 'MOONRISE ×' + moonrises, n: moonrises } : (S.maxLevel >= 11 ? { text: 'FULL MOON REACHED', n: 1 } : null); }
@@ -768,6 +820,8 @@ function drain() {
     else if (e.type === 'ticket_gone') banner('The visitor left', 'chain', 1000);
     else if (e.type === 'merge') {
       setScore();
+      if (e.level >= 5 || e.chain >= 1) happyUntil = performance.now() + 1100;
+      if (e.level >= 11 && e.level > lastMax) { cheerUntil = performance.now() + 2200; playCelebrate(); }
       const big = e.level >= 9, mid = e.level >= 7;
       if (e.level >= 8) shake = Math.max(shake, e.level >= 10 ? 16 : 9);
       if (e.level > lastMax) { lastMax = e.level; if (e.level >= 3) { banner('New piece: ' + PIECE_NAMES[e.level - 1] + '!', 'new', 1700); sfx.fresh(e.level); } else sfx.merge(e.level, e.chain); }
@@ -777,7 +831,7 @@ function drain() {
     } else if (e.type === 'vanish') {
       fx.push({ key: 'fx_burst', x: e.x, y: e.y, size: 900, age: 0, dur: 46 });
       fx.push({ key: 'fx_spiral', x: e.x, y: e.y, size: 1200, age: 0, dur: 60 });
-      moonrises++;
+      moonrises++; cheerUntil = performance.now() + 2600; playCelebrate();
       shake = 20; sfx.full(); banner('Moonrise! Two Full Moons +' + e.points, 'new', 2400);
       pops.push({ x: e.x, y: e.y, text: 'MOONRISE +' + e.points, age: 0, color: '#fce25d', big: 12 });
     } else if (e.type === 'gameover') { mode = 'over'; overAt = performance.now(); startBurst(); }
@@ -1122,9 +1176,13 @@ app.addEventListener('pointerup', (ev) => {
 app.addEventListener('pointercancel', () => { pressed = false; });
 app.addEventListener('contextmenu', (e) => e.preventDefault());
 window.addEventListener('keydown', (e) => {
+  if (e.ctrlKey || e.metaKey || e.altKey) return;
   if (e.key === 'ArrowLeft' || e.key === 'a') keys.left = true;
   else if (e.key === 'ArrowRight' || e.key === 'd') keys.right = true;
   else if (e.key === ' ' || e.key === 'Enter' || e.key === 'ArrowDown') { if (mode === 'play') { e.preventDefault(); dropAt(aimX); } }
+  else if (e.key === 'p' || e.key === 'P') { if (mode === 'play') showPause(); else if (mode === 'paused') { mode = 'play'; overlay.hidden = true; } }
+  else if (e.key === 'm' || e.key === 'M') { toggleSound(); }
+  else if (e.key === 'f' || e.key === 'F') { if (canFS) toggleFS(); }
   else if (e.key === 'Escape') { if (mode === 'play') showPause(); else if (mode === 'paused') { mode = 'play'; overlay.hidden = true; } }
 });
 window.addEventListener('keyup', (e) => {
@@ -1137,7 +1195,7 @@ new ResizeObserver(() => { if (IMG.crate) layout(); }).observe(app);
 // ---------- boot ----------
 async function boot() {
   const names = Object.keys(ASSET);
-  const imgs = await Promise.all(names.map((n) => loadImg(ASSET[n])));
+  const imgs = await Promise.all(names.map((n) => (OPTIONAL.has(n) ? loadImg(ASSET[n]).catch(() => null) : loadImg(ASSET[n]))));
   names.forEach((n, i) => { IMG[n] = imgs[i]; });
   try { await document.fonts.load('700 20px Fredoka'); } catch (e) { /* fallback font is fine */ }
   layout();
@@ -1146,6 +1204,8 @@ async function boot() {
   challenge = parseChallenge(); if (challenge) showChallenge();
   requestAnimationFrame(frame);
   $('loading').hidden = true;
+  const dv = $('deskvid');   // moving café backdrop, only on a wide screen with a mouse, and not for people who asked for less motion
+  try { if (dv && !REDUCE && matchMedia('(min-width: 900px) and (hover: hover) and (min-aspect-ratio: 5/4)').matches) { dv.src = ASSET_VIDEO.desk; const p = dv.play(); if (p && p.catch) p.catch(() => {}); } } catch (e) { /* the still picture is there */ }
 }
 window.__mm = { renderSfx, renderMusic, get musicOn() { return musicOn; }, get twist() { return twist; },
   C, dropAt, startRun, showMenu, get S() { return S; }, get log() { return log; }, get lastRun() { return lastRun; },

@@ -106,3 +106,54 @@ body { overflow: hidden; font-family: var(--body); -webkit-user-select: none; us
 .mb-moon { width: 18px; height: 18px; border-radius: 50%; background: radial-gradient(circle at 35% 35%, #fffdf2, #f1c15a); border: 1.5px solid #7a4a0a; display: inline-block; }
 .chal { font-weight: 600; color: var(--gold); }
 .chal.won { color: #fff4d6; }
+
+/* ===== Classy look (pictures are optional: without them the plain colours below still work) ===== */
+:root { --col: clamp(520px, 56vh, 640px); }
+#app { max-width: var(--col); }
+.deco { display: none; }
+#celeb { display: none; }
+
+/* brass buttons */
+.btn { border: 0; border-style: solid; border-width: 0 25px; border-image: url("../assets/btn_gold_v01.webp") 0 56 fill / 0 25px stretch; background: none; box-shadow: none; padding: 13px 0; color: var(--ink); text-shadow: 0 1px 0 rgba(255,235,170,.55); }
+.btn.alt, .btn.share { border-image-source: url("../assets/btn_navy_v01.webp"); color: var(--cream); text-shadow: 0 1px 0 rgba(0,0,0,.5); }
+.btn.share { color: var(--gold); }
+.btn:active { transform: translateY(2px); filter: brightness(.95); }
+.btn:hover { filter: brightness(1.07); }
+.btn.alt:hover, .btn.share:hover { filter: brightness(1.2); }
+#btnFull, #btnSound, #btnPause { border: 0; border-radius: 50%; background: url("../assets/btn_round_v01.webp") center / 100% 100% no-repeat; width: 38px; height: 38px; transition: transform .12s, filter .12s; }
+#btnFull:hover, #btnSound:hover, #btnPause:hover { filter: brightness(1.25); transform: scale(1.06); }
+.ring { border: 0; background: url("../assets/btn_round_v01.webp") center / 100% 100% no-repeat; box-shadow: none; }
+.chip:hover { background: rgba(60,46,110,.85); }
+
+/* score plate, result card frame, gold foil digits */
+#hud { background: none; border: 0; border-image: url("../assets/ui_plate_v01.webp") 40 fill / 9px stretch; border-style: solid; border-width: 9px; box-shadow: 0 4px 14px rgba(0,0,0,.4); }
+#hud::before { content: ""; position: absolute; inset: 0; z-index: -1; background: linear-gradient(to bottom, rgba(14,10,36,.55), rgba(14,10,36,.35)); }
+.card { box-sizing: border-box; width: min(100%, 380px); border: 0; border-style: solid; border-width: 24px; border-image: url("../assets/ui_frame_v01.webp") 58 fill / 24px stretch; border-radius: 0; background: none; padding: 6px 0 2px; box-shadow: none; filter: drop-shadow(0 10px 28px rgba(0,0,0,.55)); }
+.card::before { content: ""; }
+#score, .final, .card h1, .card h2 { background: url("../assets/ui_foil_v01.webp") center / 220px auto; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; text-shadow: none; filter: drop-shadow(0 2px 0 var(--ink)) drop-shadow(0 0 10px rgba(253,175,30,.3)); }
+.moonbadge { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
+.mbrib { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 20px 66px 28px; background: url("../assets/ui_ribbon_v01.webp") center / 100% 100% no-repeat; }
+.moonbadge small { color: var(--cream); opacity: .9; }
+
+/* desktop: wide screen with a mouse. The game column stays exactly the same shape; the sides come alive */
+@media (min-width: 900px) and (min-aspect-ratio: 5/4) {
+  body { background: #0b0919 url("../assets/desk_bg_v01.webp") center / cover no-repeat; }
+  #app { box-shadow: 0 0 0 1px rgba(201,154,59,.5), 0 0 70px rgba(0,0,0,.75); }
+  .deco { display: block; position: fixed; pointer-events: none; }
+  #deskvid { inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 0; }
+  #app { z-index: 1; }
+  .pillar { top: 0; bottom: 0; width: 23.4vh; background: url("../assets/desk_pillar_v01.webp") center / 100% 100% no-repeat; z-index: 2; filter: drop-shadow(0 0 18px rgba(0,0,0,.6)); }
+  .pl { right: calc(50% + var(--col) / 2 - 1px); }
+  .pr { left: calc(50% + var(--col) / 2 - 1px); }
+}
+@media (min-width: 1300px) and (min-aspect-ratio: 5/4) {
+  .sign { top: 0; width: 190px; height: 208px; background: url("../assets/desk_sign_v01.webp") center / contain no-repeat; right: calc(50% + var(--col) / 2 + 23.4vh + 28px); z-index: 2; }
+  .keys { top: 64px; left: calc(50% + var(--col) / 2 + 23.4vh + 28px); width: 190px; box-sizing: border-box; padding: 14px 16px; border: 1.5px solid rgba(201,154,59,.7); border-radius: 14px; background: rgba(20,16,46,.72); font: 500 13px/1.3 var(--body); color: var(--cream); z-index: 2; }
+  .keys b { display: block; margin-bottom: 8px; font: 600 12px var(--display); letter-spacing: .16em; text-transform: uppercase; color: var(--gold); }
+  .keys ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 7px; }
+  .keys li { display: flex; align-items: center; flex-wrap: wrap; gap: 4px; }
+  .keys li span { margin-left: auto; opacity: .75; }
+  .keys kbd { font: 600 11px var(--display); padding: 2px 7px; border: 1.5px solid var(--brass); border-bottom-width: 3px; border-radius: 6px; background: rgba(60,46,110,.7); color: #fff4d6; }
+}
+@media (prefers-reduced-motion: reduce) { #btnFull, #btnSound, #btnPause { transition: none; } }
+.card { touch-action: pan-y; }
