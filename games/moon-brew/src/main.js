@@ -680,10 +680,12 @@ function resizeBoard() {
   const wrap = $('board-wrap').getBoundingClientRect();
   // the picture frame around the tray: the tray fills its opening (measured on the approved art, see README rc14)
   // No picture frame: every pixel goes to the tray. On phones it runs almost edge to edge (the screen's side padding is 16 px).
-  const size = Math.max(160, Math.floor(Math.min(wrap.width + 28, wrap.height)));
+  const GAP = 10; // 8 px gap (about 2 mm) + 2 px gold edge on every side of the tray
+  const size = Math.max(160, Math.floor(Math.min(wrap.width + 28, wrap.height)) - 2 * GAP);
   const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
   S = size;
   cv.style.width = size + 'px'; cv.style.height = size + 'px';
+  cv.style.marginInline = Math.min(0, (wrap.width - size) / 2) + 'px'; // wider than its column: spread the overflow evenly
   cv.width = Math.round(size * dpr); cv.height = Math.round(size * dpr);
   ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
   const n = Math.max(level.w, level.h);
