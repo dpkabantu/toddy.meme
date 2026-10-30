@@ -382,27 +382,34 @@ body.on-title #app::before {
 html.calm body.on-title #app::before { opacity: .3; }
 body.playing #app::before { display: none; }
 
-/* ---------- Buttons: gold (main) and plum (the rest) as 9-slice pictures ---------- */
+/* ---------- Buttons: gold (main) and plum (the rest) ----------
+   Pill art: only the two end caps are cut out (slice top/bottom 0), the middle stretches.
+   Cap width = 0.72 x button height, so the caps are never squashed. Set --h per kind of button. */
 .btn {
-  border: 0; background: transparent; color: var(--cream);
-  border-style: solid; border-width: 22px 30px; padding: 0 6px; min-height: 52px;
-  border-image: var(--i-btn-plum-m) 78 112 fill / 22px 30px stretch;
-  border-radius: 0; text-shadow: 0 1px 0 #0008;
+  --h: 56px; --cap: calc(var(--h) * .72);
+  border: 0 solid transparent; border-width: 0 var(--cap); background: transparent; color: var(--cream);
+  border-image: var(--i-btn-plum-m) 0 112 fill / 0 var(--cap) stretch;
+  min-height: var(--h); padding: 2px 0; border-radius: 0; text-shadow: 0 1px 0 #0008; line-height: 1.15; text-align: center;
 }
+.btn > span { min-width: 0; }
+.btn small { white-space: nowrap; }
 .btn:hover { filter: brightness(1.08); }
 .btn:active { border-image-source: var(--i-btn-plum-down-m); transform: translateY(1px) scale(.99); }
 .btn.primary { background: none; border-image-source: var(--i-btn-gold-m); color: var(--choc); text-shadow: 0 1px 0 #fff7; box-shadow: none; }
 .btn.primary:active { border-image-source: var(--i-btn-gold-down-m); }
 .btn.primary small { color: #5a3410; }
-.btn.ghost { border-image-source: var(--i-btn-plum-m); }
-.btn.small { border-width: 16px 22px; min-height: 44px; border-image-width: 16px 22px; font-size: 13px; }
-.menu-row .btn { border-width: 18px 18px; border-image-width: 18px 18px; padding: 0; min-height: 48px; }
+.btn.play-main { --h: 72px; padding-block: 2px; }
+.btn.small { --h: 44px; font-size: 13px; }
 .btn[disabled], .btn.locked { filter: grayscale(.6); }
+/* the four small buttons under the menu: a rounded square picture, text kept on one line per word */
+.menu-row .btn { --h: 52px; border-width: 0 8px; border-image: var(--i-btn-round-m) 60 fill / 14px 8px stretch; padding: 0; font-size: 12px; white-space: nowrap; }
+.menu-row .btn:active { border-image-source: var(--i-btn-round-down-m); }
+@media (max-width: 359px) { .menu-row.four { grid-template-columns: repeat(2, 1fr); } }
 .icon-btn { width: 48px; height: 48px; border: 0; background: var(--i-btn-round-m) center / contain no-repeat; font-size: 24px; color: var(--cream); }
 .icon-btn:active { background-image: var(--i-btn-round-down-m); }
 .icon-btn.off { opacity: .55; }
 .bar { grid-template-columns: 48px 1fr 48px; }
-.card .btn.small, .card .btns .btn { min-height: 48px; }
+.card .btn.small, .card .btns .btn { --h: 52px; }
 
 /* ---------- Cards: framed plum panel with gold corners ---------- */
 .card {
@@ -448,11 +455,12 @@ html.calm .tray-btn.next { animation: none; }
   body:not(.playing) { background-image: var(--i-scene-desktop, none); }
   body.on-title #app::before { background-image: var(--i-light-desktop); }
   body.on-title::after { height: min(8vw, 120px); }
-  .btn { border-image-source: var(--i-btn-plum-d); border-image-slice: 62 112 fill; border-width: 20px 30px; border-image-width: 20px 30px; min-height: 50px; }
+  .btn { border-image-source: var(--i-btn-plum-d); border-image-slice: 0 90 fill; --h: 52px; }
+  .btn.play-main { --h: 66px; }
+  .menu-row .btn { border-image-source: var(--i-btn-round-d); border-image-slice: 60 fill; }
   .btn:active { border-image-source: var(--i-btn-plum-down-d); }
   .btn.primary { border-image-source: var(--i-btn-gold-d); }
   .btn.primary:active { border-image-source: var(--i-btn-gold-down-d); }
-  .btn.ghost { border-image-source: var(--i-btn-plum-d); }
   .icon-btn { background-image: var(--i-btn-round-d); }
   .icon-btn:active { background-image: var(--i-btn-round-down-d); }
   .card { border-image-source: var(--i-panel-desktop); border-image-slice: 70 fill; border-width: 26px 28px; border-image-width: 26px 28px; }
@@ -465,11 +473,25 @@ html.calm .tray-btn.next { animation: none; }
 }
 
 /* the Hint / Restart pair sits in the footer: keep it compact so the stars stay visible */
-.actions .btn.small { border-width: 12px 14px; border-image-width: 12px 14px; min-height: 40px; font-size: 12px; padding: 0; min-width: 78px; }
-.menu-row .btn { overflow-wrap: anywhere; }
+.actions .btn.small { --h: 36px; --cap: 20px; font-size: 12px; min-width: 0; }
 
 /* tray markers: number as a small badge under the picture's own symbol, stars at the top right */
 .tray-btn span { position: absolute; bottom: 4px; left: 50%; transform: translateX(-50%); min-width: 22px; padding: 0 4px; border-radius: 99px; background: #17112acc; font-size: 13px; line-height: 18px; }
 .tray-btn small { position: absolute; top: 5px; right: 6px; font-size: 9px; letter-spacing: 0; min-height: 0; }
 .tray-btn .pips { left: 50%; right: auto; transform: translateX(-50%); top: 8px; }
 .tray-btn.locked span { display: none; }
+
+/* narrow phones: keep the footer on one tidy row (cup, three stars, Hint / Restart) */
+@media (max-width: 399px) {
+  .foot { grid-template-columns: 58px 1fr auto; gap: 6px; }
+  #toddy { width: 58px; height: 62px; }
+  .brewrow { gap: 4px; }
+  .brewrow canvas { width: 56px; height: auto; }
+  .goal { width: 26px; height: 26px; }
+  .goal b { font-size: 17px; }
+}
+@media (max-width: 359px) {
+  .foot { grid-template-columns: 58px 1fr; }
+  .actions { grid-column: 1 / -1; flex-direction: row; }
+  .actions .btn.small { flex: 1; }
+}
