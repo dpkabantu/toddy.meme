@@ -509,3 +509,14 @@ html.calm .tray-btn.next { animation: none; }
   .actions { grid-column: 1 / -1; flex-direction: row; }
   .actions .btn.small { flex: 1; --h: 32px; }
 }
+
+/* no frame around the tray: a thin gold edge and a soft shadow instead, so beans get the room */
+#board { border-radius: 12px; box-shadow: 0 0 0 2px #c98a2a, 0 0 0 4px #17112a99, 0 10px 22px #000a; }
+/* the tray is wider than its column on phones: centre it (grid would pin it to the left) */
+.board-wrap #board { margin-inline: -14px; }
+/* long order tickets (late Nights) shrink their chips instead of pushing the bumps counter off screen */
+.hud { min-width: 0; }
+.ticket { flex: 1 1 auto; min-width: 0; overflow: hidden; }
+.chip { flex: 1 1 0; min-width: 16px; max-width: 30px; }
+.chip img { width: 100%; max-width: 26px; }
+.cracks { flex: none; }
