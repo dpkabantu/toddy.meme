@@ -4,7 +4,7 @@ import { TRAYS } from './trays.js';
 import { INTROS, TRAYS_PER_NIGHT, trayLevelConfig, dailyConfig, dailyNumber, endlessConfig, ENDLESS_LINES, nightInfo, VISITORS, VISITOR_ORDER, TIER_NAMES, trayTier, tierOf } from './levels.js';
 import { buildPostcard } from './postcard.js';
 
-const BUILD = '1.0.0-rc13';
+const BUILD = '1.0.0-rc14';
 const ASSET = 'assets/';
 const $ = (id) => document.getElementById(id);
 const systemCalm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -309,6 +309,7 @@ function show(name) {
   current = name;
   SCREENS.forEach(s => { $('screen-' + s).hidden = s !== name; });
   document.body.classList.toggle('playing', name === 'play');
+  document.body.classList.toggle('on-title', name === 'title');
   if (name === 'title') renderTitle();
   if (name === 'map') renderMap();
   if (name === 'album') renderAlbum();
@@ -382,6 +383,7 @@ function renderMap() {
     const open = trayOpen(mapNight, t);
     const tier = trayTier(mapNight, t);
     if (!open) b.classList.add('locked');
+    if (s) b.classList.add('done');
     if (open && !s && !nextMarked) { b.classList.add('next'); nextMarked = true; }
     b.innerHTML = `<span>${t === TRAYS_PER_NIGHT ? '\u263E' : t}</span><small>${'\u2605'.repeat(s)}</small><i class="pips" aria-hidden="true">${PIPS(tier)}</i>`;
     b.setAttribute('aria-label', `Tray ${t}, ${TIER_NAMES[tier]}${s ? `, ${s} stars` : ''}${open ? '' : ', locked'}`);
@@ -673,10 +675,22 @@ function drawCup(now) {
 const cv = $('board');
 const ctx = cv.getContext('2d');
 let S = 300, cell = 30, ox = 0, oy = 0;
+const FRAME = {
+  thin: { name: 'thin', file: 'board_frame_thin_v01.webp', kx: 0.8525, ky: 0.8518 },
+  broad: { name: 'broad', file: 'board_frame_broad_v01.webp', kx: 0.7512, ky: 0.7382 },
+};
 function resizeBoard() {
   if (!level) return;
   const wrap = $('board-wrap').getBoundingClientRect();
-  const size = Math.max(160, Math.floor(Math.min(wrap.width, wrap.height)));
+  // the picture frame around the tray: the tray fills its opening (measured on the approved art, see README rc14)
+  const broad = matchMedia('(min-width: 900px) and (min-height: 700px)').matches;
+  const F = broad ? FRAME.broad : FRAME.thin;
+  const size = Math.max(160, Math.floor(Math.min(wrap.width + 24, wrap.height) * F.kx));
+  const fr = $('board-frame');
+  if (fr) {
+    if (fr.dataset.k !== F.name) { fr.dataset.k = F.name; fr.src = ASSET + F.file; }
+    fr.style.width = Math.round(size / F.kx) + 'px'; fr.style.height = Math.round(size / F.ky) + 'px';
+  }
   const dpr = Math.min(window.devicePixelRatio || 1, 2.5);
   S = size;
   cv.style.width = size + 'px'; cv.style.height = size + 'px';
@@ -1429,6 +1443,23 @@ if (window.ResizeObserver) new ResizeObserver(() => { if (current === 'play') { 
 document.querySelectorAll('img[data-src]').forEach(el => { el.src = el.dataset.src; });
 // full address: a relative one would be read from the stylesheet's folder after the build
 document.documentElement.style.setProperty('--counter-bg', `url("${new URL(ASSET + 'counter_background_v01.webp', document.baseURI).href}")`);
+
+// Classy look (rc14): picture addresses for the stylesheet, set here because CSS addresses break after the build
+['scene_phone', 'scene_desktop', 'garland', 'wing_left', 'wing_right', 'light_phone', 'light_desktop', 'panel_phone', 'panel_desktop',
+  'btn_gold_m', 'btn_gold_down_m', 'btn_plum_m', 'btn_plum_down_m', 'btn_round_m', 'btn_round_down_m',
+  'btn_gold_d', 'btn_gold_down_d', 'btn_plum_d', 'btn_plum_down_d', 'btn_round_d', 'btn_round_down_d',
+  'marker_open', 'marker_cleared', 'marker_locked', 'divider_moon', 'divider_wave', 'ui_star', 'ui_star_empty']
+  .forEach(n => document.documentElement.style.setProperty('--i-' + n.replace(/_/g, '-'), `url("${new URL(ASSET + n + '_v01.webp', document.baseURI).href}")`));
+// Title loop: a short muted video behind the title. Lazy, off for calm / low data, never blocks the first screen.
+function startTitleLoop() {
+  const v = $('title-video');
+  if (!v || v.dataset.on || calm() || (navigator.connection && navigator.connection.saveData)) return;
+  v.dataset.on = '1';
+  v.muted = true; v.loop = true; v.playsInline = true;
+  v.addEventListener('canplay', () => { v.classList.add('on'); v.play().catch(() => {}); }, { once: true });
+  v.src = ASSET + (matchMedia('(min-width: 900px)').matches ? 'title_loop_desktop_v01.mp4' : 'title_loop_phone_v01.mp4');
+}
+(window.requestIdleCallback || ((f) => setTimeout(f, 1200)))(() => setTimeout(startTitleLoop, 600));
 
 // Toddy panel
 toddy.cv = $('toddy'); toddy.ctx = toddy.cv.getContext('2d');
