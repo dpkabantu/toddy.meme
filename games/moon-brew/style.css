@@ -511,9 +511,10 @@ html.calm .tray-btn.next { animation: none; }
 }
 
 /* no frame around the tray: a thin gold edge and a soft shadow instead, so beans get the room */
-#board { border-radius: 12px; box-shadow: 0 0 0 2px #c98a2a, 0 0 0 4px #17112a99, 0 10px 22px #000a; }
+/* gold edge 2 px, then an 8 px (about 2 mm) dark gap, then the tray */
+#board { border-radius: 10px; box-shadow: 0 0 0 8px #1c1330, 0 0 0 10px #c98a2a, 0 0 0 11px #17112a99, 0 12px 24px 8px #000a; }
 /* the tray is wider than its column on phones: centre it (grid would pin it to the left) */
-.board-wrap #board { margin-inline: -14px; }
+.board-wrap #board { justify-self: center; }
 /* long order tickets (late Nights) shrink their chips instead of pushing the bumps counter off screen */
 .hud { min-width: 0; }
 .ticket { flex: 1 1 auto; min-width: 0; overflow: hidden; }
