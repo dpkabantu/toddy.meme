@@ -33,6 +33,11 @@
 <script src="src/game.js" defer></script>
 </head>
 <body>
+<video id="deskvid" class="deco" muted loop playsinline preload="none" poster="assets/desk_bg_v01.webp" aria-hidden="true" tabindex="-1"></video>
+<div class="deco pillar pl" aria-hidden="true"></div><div class="deco pillar pr" aria-hidden="true"></div>
+<div class="deco sign" aria-hidden="true"></div>
+<aside class="deco keys" aria-label="Keyboard controls"><b>Controls</b><ul><li><kbd>←</kbd><kbd>→</kbd> or mouse <span>aim</span></li><li><kbd>Space</kbd> or click <span>drop</span></li><li><kbd>P</kbd> <span>pause</span></li><li><kbd>M</kbd> <span>sound</span></li><li><kbd>F</kbd> <span>full screen</span></li></ul></aside>
+<video id="celeb" muted playsinline preload="none" hidden aria-hidden="true"></video>
 <div id="app">
   <canvas id="c" aria-label="Full Moon play area"></canvas>
   <div id="hud">
