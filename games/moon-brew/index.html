@@ -24,6 +24,8 @@
   <link rel="stylesheet" href="./style.css">
 </head>
 <body>
+<video id="title-video" class="title-video" muted loop playsinline preload="none" aria-hidden="true" tabindex="-1"></video>
+<div class="wing wing-l" aria-hidden="true"></div><div class="wing wing-r" aria-hidden="true"></div>
 <!--APP-->
 <div id="app">
   <section id="screen-title" class="screen title-screen">
@@ -85,6 +87,7 @@
       <div class="cracks" id="cracks" aria-label="Bumps left"><span class="crack"></span><span class="crack"></span><span class="crack"></span></div>
     </div>
     <div class="board-wrap" id="board-wrap">
+      <img class="board-frame" id="board-frame" alt="" aria-hidden="true" width="900" height="890">
       <canvas id="board" tabindex="0" aria-label="Bean tray. Tap a bean to roll it."></canvas>
     </div>
     <div class="foot">
