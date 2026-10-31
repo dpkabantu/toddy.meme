@@ -4,7 +4,7 @@ import { TRAYS } from './trays.js';
 import { INTROS, TRAYS_PER_NIGHT, trayLevelConfig, dailyConfig, dailyNumber, endlessConfig, ENDLESS_LINES, nightInfo, VISITORS, VISITOR_ORDER, TIER_NAMES, trayTier, tierOf } from './levels.js';
 import { buildPostcard } from './postcard.js';
 
-const BUILD = '1.0.0-rc14';
+const BUILD = '1.0.0-rc15';
 const ASSET = 'assets/';
 const $ = (id) => document.getElementById(id);
 const systemCalm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -1442,10 +1442,31 @@ document.documentElement.style.setProperty('--counter-bg', `url("${new URL(ASSET
   'btn_gold_d', 'btn_gold_down_d', 'btn_plum_d', 'btn_plum_down_d', 'btn_round_d', 'btn_round_down_d',
   'marker_open', 'marker_cleared', 'marker_locked', 'divider_moon', 'divider_wave', 'ui_star', 'ui_star_empty']
   .forEach(n => document.documentElement.style.setProperty('--i-' + n.replace(/_/g, '-'), `url("${new URL(ASSET + n + '_v01.webp', document.baseURI).href}")`));
+// Look: clean is the default; ?look=rich shows the ornate gold look (remembered in this browser), ?look=clean goes back.
+{
+  let look = 'clean';
+  try {
+    const q = new URLSearchParams(location.search).get('look');
+    if (q === 'rich' || q === 'clean') localStorage.setItem('mb_look', q);
+    look = localStorage.getItem('mb_look') === 'rich' ? 'rich' : 'clean';
+  } catch (e) { /* storage blocked: clean */ }
+  document.documentElement.classList.toggle('look-clean', look === 'clean');
+}
+// Desktop keys (wide screen with a mouse): H hint, R restart, M sound, F full screen. Arrows and Space work on the tray itself.
+document.addEventListener('keydown', (e) => {
+  if (e.ctrlKey || e.metaKey || e.altKey || e.repeat) return;
+  const t = e.target; if (t && (t.tagName === 'INPUT' || t.tagName === 'TEXTAREA')) return;
+  const k = e.key.toLowerCase();
+  if (k === 'm') { setSound(!save.sound); }
+  else if (k === 'f') { const d = document; if (d.fullscreenElement) d.exitFullscreen(); else if (d.documentElement.requestFullscreen) d.documentElement.requestFullscreen().catch(() => {}); }
+  else if ((k === 'h' || k === 'r') && current === 'play' && $('overlay').hidden && $('modal').hidden) { $(k === 'h' ? 'btn-hint' : 'btn-restart').click(); }
+  else return;
+  e.preventDefault();
+});
 // Title loop: a short muted video behind the title. Lazy, off for calm / low data, never blocks the first screen.
 function startTitleLoop() {
   const v = $('title-video');
-  if (!v || v.dataset.on || calm() || (navigator.connection && navigator.connection.saveData)) return;
+  if (!v || v.dataset.on || calm() || !matchMedia('(min-width: 900px) and (hover: hover) and (pointer: fine)').matches || (navigator.connection && navigator.connection.saveData)) return;
   v.dataset.on = '1';
   v.muted = true; v.loop = true; v.playsInline = true;
   v.addEventListener('canplay', () => { v.classList.add('on'); v.play().catch(() => {}); }, { once: true });
