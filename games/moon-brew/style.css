@@ -521,3 +521,68 @@ html.calm .tray-btn.next { animation: none; }
 .chip { flex: 1 1 0; min-width: 16px; max-width: 30px; }
 .chip img { width: 100%; max-width: 26px; }
 .cracks { flex: none; }
+
+/* =====================================================================
+   rc15 CLEAN LOOK (default; ?look=rich brings back the ornate gold look above).
+   Play screen art stays. Menus, buttons, cards, map: plain and readable.
+   ===================================================================== */
+:root { --brass: #c99a3b; --ink: #1a1030; --gold-deep: #a65d0e; }
+.keys { display: none; }
+html.look-clean body:not(.playing) { background: var(--night); }
+html.look-clean body:not(.playing)::before { background: linear-gradient(180deg, #221838, #17112a); }
+html.look-clean body.on-title::after, html.look-clean body:not(.playing)::after { display: none; }
+html.look-clean body.on-title #app::before { display: none; }
+html.look-clean .wing { display: none !important; }
+html.look-clean .tag::after { display: none; }
+html.look-clean .tag { padding-bottom: 0; }
+html.look-clean .hero { box-shadow: 0 14px 30px #0008; border: 2px solid var(--brass); }
+html.look-clean .logo { text-shadow: 0 2px 0 var(--choc); }
+
+/* buttons: solid gold main, outlined navy for the rest */
+html.look-clean .btn { border: 2px solid var(--brass); border-image: none; border-radius: 14px; background: #1b1538; color: var(--cream); min-height: 48px; padding: 8px 16px; box-shadow: none; text-shadow: none; filter: none; }
+html.look-clean .btn:hover { filter: brightness(1.12); }
+html.look-clean .btn:active { transform: translateY(2px); }
+html.look-clean .btn.primary { background: var(--gold); color: var(--choc); border-color: var(--ink); box-shadow: 0 3px 0 var(--gold-deep); }
+html.look-clean .btn.primary:active { box-shadow: 0 1px 0 var(--gold-deep); }
+html.look-clean .btn.primary small { color: #5a3410; }
+html.look-clean .btn.play-main { min-height: 62px; }
+html.look-clean .btn[disabled], html.look-clean .btn.locked { filter: none; opacity: .5; }
+html.look-clean .menu-row .btn { min-height: 46px; padding: 6px 4px; border-radius: 12px; font-size: 12.5px; white-space: normal; }
+html.look-clean .btn.small, html.look-clean .actions .btn.small { min-height: 42px; min-width: 0; padding: 6px 12px; font-size: 13px; border-radius: 12px; }
+html.look-clean .card .btn.small, html.look-clean .card .btns .btn { min-height: 46px; }
+html.look-clean .icon-btn { width: 40px; height: 40px; border: 2px solid var(--brass); border-radius: 11px; background: rgba(20, 16, 46, .82); font-size: 20px; }
+html.look-clean .icon-btn:active { background: rgba(20, 16, 46, .82); transform: translateY(1px); }
+html.look-clean .bar { grid-template-columns: 40px 1fr 40px; }
+
+/* cards: thin brass border on navy, no flourish */
+html.look-clean .card { border: 2px solid var(--brass); border-image: none; border-radius: 20px; background: linear-gradient(160deg, #241c52, #15102f); padding: 20px; }
+html.look-clean .card h3::after { display: none; }
+html.look-clean .card h3 { text-shadow: none; }
+
+/* tray map: plain round markers */
+html.look-clean .tray-btn { background: #1b1538; border: 2px solid var(--line); border-radius: 50%; color: var(--cream); text-shadow: none; filter: none; box-shadow: none; }
+html.look-clean .tray-btn.done { background: var(--gold); border-color: var(--ink); color: var(--choc); }
+html.look-clean .tray-btn.done small { color: var(--choc); text-shadow: none; }
+html.look-clean .tray-btn.finale { background: linear-gradient(180deg, #4a3315, #2d200f); border: 2px solid var(--brass); filter: none; }
+html.look-clean .tray-btn.finale.done { background: var(--gold); }
+html.look-clean .tray-btn.locked { background: #1b1538; opacity: .4; color: var(--muted); }
+html.look-clean .tray-btn.locked span { display: block; }
+html.look-clean .tray-btn.locked small, html.look-clean .tray-btn.locked .pips { visibility: visible; }
+html.look-clean .tray-btn.next { border-color: var(--gold); box-shadow: 0 0 0 3px #fdaf1e55; animation: none; }
+html.look-clean .tray-btn span { position: static; transform: none; background: none; min-width: 0; padding: 0; font-size: 17px; line-height: 1.1; }
+html.look-clean .tray-btn small { position: static; font-size: 10px; min-height: 12px; color: var(--gold); }
+html.look-clean .tray-btn .pips { position: absolute; top: 5px; left: 0; right: 0; transform: none; }
+
+/* desktop: wide screen with a mouse. Café still behind the column, controls card on the side */
+@media (min-width: 900px) and (hover: hover) and (pointer: fine) {
+  html.look-clean body:not(.playing) { background: var(--night) var(--i-scene-desktop, none) center / cover no-repeat fixed; }
+  html.look-clean body:not(.playing)::before { background: linear-gradient(180deg, #17112a99, #17112acc); }
+}
+@media (min-width: 1180px) and (hover: hover) and (pointer: fine) {
+  html.look-clean .keys { display: block; position: fixed; left: 24px; top: 50%; transform: translateY(-50%); width: 200px; z-index: 3; padding: 14px 16px; border: 2px solid var(--brass); border-radius: 16px; background: linear-gradient(160deg, #241c52e6, #15102fe6); font-size: 13px; }
+  html.look-clean .keys b { display: block; color: var(--gold); letter-spacing: .14em; text-transform: uppercase; font-size: 11px; margin-bottom: 8px; }
+  html.look-clean .keys ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
+  html.look-clean .keys li { display: flex; align-items: center; gap: 4px; }
+  html.look-clean .keys em { margin-left: auto; font-style: normal; color: var(--muted); }
+  html.look-clean .keys kbd { font: inherit; font-weight: 800; min-width: 24px; padding: 2px 6px; text-align: center; border: 1.5px solid var(--brass); border-radius: 7px; background: #0004; }
+}
