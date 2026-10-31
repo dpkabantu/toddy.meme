@@ -568,13 +568,15 @@ button.kit-row { cursor: pointer; border-color: rgba(176,96,0,.45); }
   body { align-items: center; position: relative; }
   body::before {
     content: ""; position: fixed; inset: -4vmax; z-index: 0; pointer-events: none;
-    background: url("../assets/title_bg.webp") center / cover no-repeat;
-    filter: blur(1.6vmax) brightness(.38) saturate(.9);
+    background: url("../assets/desk_wide_v01.webp") center / cover no-repeat;
+    filter: brightness(.62) saturate(1.05);
   }
   body::after {
     content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background: radial-gradient(ellipse at center, rgba(18,12,9,0) 35%, rgba(18,12,9,.78) 100%);
+    background: radial-gradient(ellipse at center, rgba(18,12,9,.15) 30%, rgba(18,12,9,.72) 100%);
   }
+  #deskloop { position: fixed; inset: 0; width: 100vw; height: 100vh; object-fit: cover; z-index: 0; pointer-events: none; opacity: .0; filter: brightness(.62) saturate(1.05); animation: deskin 1.2s ease .3s forwards; }
+  @keyframes deskin { to { opacity: 1; } }
   #stage {
     --h: min(calc(100dvh - 40px), calc((100vw - 40px) * 16 / 9));
     z-index: 1; height: var(--h); width: calc(var(--h) * 9 / 16);
@@ -582,3 +584,30 @@ button.kit-row { cursor: pointer; border-color: rgba(176,96,0,.45); }
     box-shadow: 0 0 0 2px rgba(253,175,30,.55), 0 0 0 7px rgba(18,12,9,.85), 0 0 0 8px rgba(253,175,30,.22), 0 18px 60px rgba(0,0,0,.65), 0 0 90px rgba(253,175,30,.14);
   }
 }
+
+
+/* ---------- classy pass: comfortable taps, light, wallpaper ---------- */
+/* Every button is at least 44px tall on any screen (the stage is sized in cqw, so a small phone would make them smaller). */
+.chip, .btn, .notif, .title-nav .chip, #hud .chip { min-height: 44px; }
+.chip { display: inline-flex; align-items: center; justify-content: center; }
+.title-nav .chip { padding-inline: 3.4cqw; }
+#hud .chip { min-width: 44px; }
+.btn { display: inline-flex; align-items: center; justify-content: center; }
+
+/* slow warm light and dust over the painted rooms (never over the phone or text) */
+#stage::after { content: ""; position: absolute; inset: 0 0 auto 0; height: calc(100cqw * 16 / 9); z-index: 1; pointer-events: none;
+  background: url("../assets/rays_v01.webp") left top / cover no-repeat; mix-blend-mode: screen; opacity: .55; animation: raysway 9s ease-in-out infinite alternate; }
+@keyframes raysway { from { opacity: .35; translate: -1cqw 0; } to { opacity: .7; translate: 1.5cqw 0.5cqw; } }
+
+/* the in-game phone gets a soft night-café wallpaper instead of flat navy */
+.lock { background: linear-gradient(rgba(14,19,32,.55), rgba(14,19,32,.78)), url("../assets/phone_wall_v01.webp") center / cover no-repeat, var(--ph-bg); }
+.notif { padding-block: 3cqw; }
+
+/* rank medals are a little larger so the new art reads */
+.rank-badge { width: 18cqw; }
+.crumb { min-height: 44px; display: inline-flex; align-items: center; }
+.crumb.here { min-height: 0; }
+
+/* result screen: let the case-closed desk show through, keep the text readable */
+.result.scrim { background: linear-gradient(rgba(10,6,4,.35), rgba(10,6,4,.55) 45%, rgba(10,6,4,.82)); }
+#stage.dim.res .bg { filter: brightness(.75) saturate(1); }

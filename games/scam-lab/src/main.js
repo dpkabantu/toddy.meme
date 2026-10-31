@@ -22,14 +22,26 @@ const calm = () => store.settings.calm || matchMedia('(prefers-reduced-motion: r
 const env = { calm, toddy, done: (res) => showResult(res) };
 
 function hideAll() { OVERLAYS.forEach((o) => { $(o).hidden = true; }); $('toddy-say').hidden = true; $('mirage-peek').hidden = true; }
-function setBg(name, dim = false) { $('bg').src = A(name); $('stage').classList.toggle('dim', dim); }
+function setBg(name, dim = false) { $('bg').src = A(name); $('stage').classList.toggle('dim', dim); $('stage').classList.toggle('res', name === 'result_v01'); }
 function gameLayer(on) { ['hud', 'phone', 'board', 'board-count', 'toddy'].forEach((id) => { $(id).hidden = !on; }); if (!on) { $('board').replaceChildren(); } }
 function page(...kids) { hideAll(); const p = $('page'); p.className = 'overlay page'; p.replaceChildren(...kids); p.hidden = false; p.scrollTop = 0; }
+function deskLoop() {   // desktop only: a slow lamp-glow loop behind the stage (phones never download it)
+  const wide = matchMedia('(min-width: 1000px) and (hover: hover) and (pointer: fine)').matches;
+  const still = matchMedia('(prefers-reduced-motion: reduce)').matches || (typeof store !== 'undefined' && store.settings && store.settings.calm);
+  let v = document.getElementById('deskloop');
+  if (!wide || still) { if (v) v.remove(); return; }
+  if (v) return;
+  v = document.createElement('video'); v.id = 'deskloop'; v.src = A('desk_loop_v01').replace(/\.webp$/, '.mp4');
+  v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true; v.setAttribute('aria-hidden', 'true'); v.tabIndex = -1;
+  v.addEventListener('error', () => v.remove());
+  document.body.prepend(v); v.play().catch(() => {});
+}
 function applySettings() {
   setSound(store.settings.sound, store.settings.music !== false);
   const mute = $('btn-mute'); mute.textContent = store.settings.sound ? '🔊' : '🔇'; mute.setAttribute('aria-label', store.settings.sound ? 'Sound on. Tap to mute' : 'Sound off. Tap to unmute');
   $('stage').classList.toggle('calm', calm());
   $('stage').classList.toggle('big', !!store.settings.big);
+  deskLoop();
 }
 let up = null; // where the phone's Back button goes from the current screen
 function setUp(fn) {
@@ -134,7 +146,7 @@ function home() {
   page(
     h('div', { class: 'hub' },
       h('div', { class: 'hub-head' },
-        h('img', { class: 'rank-badge', src: A(`rank_${rank.id}`), alt: '' }),
+        h('img', { class: 'rank-badge', src: A(`rank_${rank.id}_v02`), alt: '' }),
         h('div', {}, h('div', { class: 'eyebrow', text: 'YOUR DETECTIVE RANK' }), h('b', { class: 'rank-name', text: rank.name }),
           h('div', { class: 'small-ink', text: `★ ${total} · ${solvedAll} of ${ALL().length} cases solved${nxt ? ` · ${nxt.stars - total}★ to ${nxt.name}` : ''}` })),
         h('button', { class: 'chip', type: 'button', id: 'btn-settings', 'aria-label': 'Settings', onclick: () => { sfx.tap(); settings(); } }, '⚙')),
@@ -272,6 +284,7 @@ function leaveCase() { const w = current ? where(current) : null; w ? chapterPag
 // ---------- result ----------
 async function showResult({ case: c, score: r, seconds }) {
   hideAll();
+  setBg('result_v01', true); gameLayer(false); ['react', 'mirage-peek', 'toddy-say'].forEach((id) => { const e = $(id); if (e) e.hidden = true; });
   const rankBefore = rankFor(store.totalStars());
   let streakLine = null;
   const ps = playState();
@@ -324,7 +337,7 @@ async function showResult({ case: c, score: r, seconds }) {
     h('p', { class: 'tagline', text: chJustDone ? `Chapter ${w.ch.n} solved: ${w.ch.title}!${opened ? ' Every other chapter is now open.' : ''}` : lines[r.stars] }),
     h('div', { class: 'total', id: 'total' }, String(r.total), h('small', { text: ' / 1000' })),
     h('table', { class: 'breakdown' }, h('tbody', {}, rows)),
-    rankUp ? h('div', { class: 'rankup' }, h('img', { src: A(`rank_${rank.id}`), alt: '' }), h('div', {}, h('small', { text: 'NEW RANK' }), h('b', { text: rank.name }))) : null,
+    rankUp ? h('div', { class: 'rankup' }, h('img', { src: A(`rank_${rank.id}_v02`), alt: '' }), h('div', {}, h('small', { text: 'NEW RANK' }), h('b', { text: rank.name }))) : null,
     h('p', { class: 'small-ink', text: streakLine || `Rank: ${rank.name} · ★ ${total}` }),
     (c.daily || c.chapter) ? h('p', { class: 'small-ink', id: 'seasonline', hidden: true }) : null,
     primary,
@@ -351,7 +364,7 @@ async function share(c, r, seconds) {
     : r.stars === 2 ? 'Nearly flawless. Mirage is sweating.' : r.stars === 1 ? 'Stayed safe, but Mirage slipped away. Rematch?' : 'Mirage won this round. Toddy wants a rematch.';
   const small = c.type === 'rush' ? `${witty} Can you spot the scams faster?` : witty;
   const tag = c.daily ? 'Daily Quickie' : `Chapter ${w.ch.n} · ${w.ch.title}`;
-  const canvas = await makeCard({ big, small, stars: r.stars, badge: `rank_${rankFor(store.totalStars()).id}`, tag });
+  const canvas = await makeCard({ big, small, stars: r.stars, badge: `rank_${rankFor(store.totalStars()).id}_v02`, tag });
   shareSheet($('sheet'), { canvas, text: `🔍 ${big} in TODDY Scam Lab. ${witty}`, url: GAME_URL });
 }
 async function challenge(c) {
