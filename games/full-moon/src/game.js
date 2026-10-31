@@ -305,6 +305,12 @@ const META = window.MM_META, ASSET = window.MM_ASSETS;
 const $ = (id) => document.getElementById(id);
 const app = $('app'), cv = $('c'), ctx = cv.getContext('2d');
 const elScore = $('score'), elBest = $('best'), elMode = $('modeLabel'), elNext = $('nextImg'), overlay = $('overlay');
+// Look switch for testing with real players: ?look=clean shows the lighter menus and cards, ?look=rich goes back. Remembered in this browser. Everyone else sees the default look.
+(function () {
+  let v = null;
+  try { const q = new URLSearchParams(location.search).get('look'); if (q === 'clean' || q === 'rich') { try { localStorage.setItem('mmLook', q); } catch (e) { /* none */ } v = q; } else { try { v = localStorage.getItem('mmLook'); } catch (e) { v = null; } } } catch (e) { /* none */ }
+  if (v === 'clean') document.documentElement.classList.add('look-clean');
+})();
 const IMG = {};
 const OPTIONAL = new Set(['toddy_blink', 'toddy_happy', 'toddy_worried', 'toddy_cheer', 'fm_panel', 'fm_glow', 'fm_beam', 'fm_sparkles']);   // looks only: the game plays without them
 const pad2 = (n) => (n < 10 ? '0' + n : '' + n);
