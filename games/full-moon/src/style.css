@@ -132,7 +132,10 @@ body { overflow: hidden; font-family: var(--body); -webkit-user-select: none; us
 .card::before { content: ""; }
 #score, .final, .card h1, .card h2 { background: url("../assets/ui_foil_v01.webp") center / 220px auto; -webkit-background-clip: text; background-clip: text; color: transparent; -webkit-text-fill-color: transparent; text-shadow: none; filter: drop-shadow(0 2px 0 var(--ink)) drop-shadow(0 0 10px rgba(253,175,30,.3)); }
 .moonbadge { display: flex; flex-direction: column; align-items: center; gap: 2px; padding: 0; border: 0; border-radius: 0; background: none; box-shadow: none; }
-.mbrib { display: flex; flex-direction: column; align-items: center; gap: 1px; padding: 20px 66px 28px; background: url("../assets/ui_ribbon_v01.webp") center / 100% 100% no-repeat; }
+.mbrib { box-sizing: border-box; width: min(100%, 380px); aspect-ratio: 640 / 176; display: grid; grid-template-rows: 64% 1fr; justify-items: center; align-items: center; padding: 0 58px; background: url("../assets/ui_ribbon_v01.webp") center / 100% 100% no-repeat; }
+.mbtxt { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2px; line-height: 1; }
+.mbtxt b { font-size: clamp(15px, 5vw, 22px); white-space: nowrap; }
+.mbrib .mb-moons { display: none; }   /* the ribbon says it in words; the pearls sat on its rim */
 .moonbadge small { color: var(--cream); opacity: .9; }
 
 /* desktop: wide screen with a mouse. The game column stays exactly the same shape; the sides come alive */
@@ -173,6 +176,15 @@ body { overflow: hidden; font-family: var(--body); -webkit-user-select: none; us
 .look-clean .final, .look-clean .card h1 { text-shadow: 0 2px 0 var(--ink); }
 .look-clean .card h2 { text-shadow: none; }
 .look-clean .moonbadge { flex-direction: row; flex-wrap: wrap; justify-content: center; gap: 2px 10px; padding: 8px 12px; border: 2px solid var(--ink); border-radius: 16px; background: linear-gradient(180deg, #ffe08a, #fdaf1e); color: var(--ink); box-shadow: 0 3px 0 var(--gold-deep); }
-.look-clean .mbrib { flex-direction: row; gap: 10px; padding: 0; background: none; }
+.look-clean .mbrib { display: block; width: auto; aspect-ratio: auto; padding: 0; background: none; }
+.look-clean .mbtxt { flex-direction: row; gap: 10px; }
+.look-clean .mbrib .mb-moons { display: inline-flex; }
+.look-clean .mbtxt .mb-moon { width: 18px; height: 18px; }
+.look-clean .mbtxt b { font-size: 22px; }
 .look-clean .moonbadge small { flex-basis: 100%; text-align: center; color: var(--ink); opacity: .85; }
 .look-clean .pillar, .look-clean .sign { display: none !important; }
+
+/* shorter phones: keep the whole result card visible with fewer scrolls */
+@media (max-height: 820px) { .card { gap: 8px; } .medal { width: 90px; } .final { font-size: 44px; } }
+@media (max-height: 700px) { .medal { width: 72px; } .final { font-size: 38px; } .card .sub { font-size: 13px; } }
+.look-clean #hud { background: linear-gradient(to bottom, rgba(14,10,36,.94), rgba(14,10,36,.88)); }   /* the window moon no longer shows through the score bar */
