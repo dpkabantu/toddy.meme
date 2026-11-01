@@ -21,6 +21,7 @@ export const NIGHT_INFO = {
   7: { name: 'Street Party Night', tell: 'Street party: everything at once!', music: 7, weather: { none: 2, wind: 2, rain: 3, storm: 3 } },
 };
 const ENDLESS_MUSIC = [2, 3, 5, 6, 4, 7];
+const MOODS = { 1: [255, 170, 80], 2: [230, 190, 90], 3: [240, 110, 140], 4: [80, 120, 230], 5: [70, 190, 170], 6: [150, 110, 240], 7: [250, 150, 60] };   // colour wash per night (lighting only)
 export const nightName = (n) => (NIGHT_INFO[n] ? NIGHT_INFO[n].name : 'Endless Night ' + n);
 export const nightTell = (n) => (NIGHT_INFO[n] ? NIGHT_INFO[n].tell : 'The nights never end. Every level is a little harder than the one before.');
 export const nightOf = (L) => Math.floor((L - 1) / PER_NIGHT) + 1;
@@ -82,6 +83,7 @@ export function buildLevel(all, L, opts = {}) {
   const wk = pickWeighted(rnd, isBoss(L) ? { storm: 6, rain: 2, wind: 2 } : info ? info.weather : { none: 2, wind: 3, rain: 3, storm: 2 });
   const weather = { rain: wk === 'rain' || wk === 'storm', storm: wk === 'storm', wind: wk === 'wind' || wk === 'rain' || wk === 'storm' ? rnd() < (wk === 'wind' ? 1 : 0.5) : false };
   const music = isBoss(L) ? 'boss' : info ? info.music : ENDLESS_MUSIC[(night - 8) % ENDLESS_MUSIC.length];
+  const mood = MOODS[info ? night : ENDLESS_MUSIC[(night - 8) % ENDLESS_MUSIC.length]];
   const steps = limitSteps(base, L);
   const def = {
     id: LEVEL_ID, name: nightName(night) + ' · Level ' + posInNight(L), w: base.w, h: base.h, diag: true,
@@ -100,7 +102,7 @@ export function buildLevel(all, L, opts = {}) {
   def.visitors.forEach((v) => { v.bx += 1; v.by += 1; v.sx += 1; v.sy += 1; });
   if (def.shutters) def.shutters.forEach((q) => { q.x += 1; q.y += 1; });
   if (def.cart) def.cart.path = def.cart.path.map(sh); if (def.thief) def.thief.path = def.thief.path.map(sh); if (def.puddles) def.puddles = def.puddles.map(sh);
-  return { def, meta: { L, night, pos: posInNight(L), boss: isBoss(L), floor, ob, weather, music, idx, best: base.best, skillBest: base.skillBest, skill: Math.ceil(skillSteps(base)), limit: def.seconds * STEPS_PER_SEC, margin: marginFor(L), diffScore: base.score, visitors: def.visitors.length, hazards: base.hz } };
+  return { def, meta: { L, night, pos: posInNight(L), boss: isBoss(L), floor, ob, weather, music, mood, idx, best: base.best, skillBest: base.skillBest, skill: Math.ceil(skillSteps(base)), limit: def.seconds * STEPS_PER_SEC, margin: marginFor(L), diffScore: base.score, visitors: def.visitors.length, hazards: base.hz } };
 }
 
 // ---- stars ----

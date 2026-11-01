@@ -146,7 +146,7 @@ export function createMusic() {
       else if (kind === 'bump') { tone('sine', 150, 40, 0.22, 0.9); hiss('lowpass', 900, 200, 0.14, 0.5); }   // dull thud
       else if (kind === 'slide') { hiss('highpass', 1500, 5000, 0.5, 0.3); tone('triangle', 500, 900, 0.3, 0.08); }   // slippery swoosh
       else if (kind === 'snatch') { tone('sawtooth', 700, 120, 0.4, 0.25); hiss('bandpass', 3000, 800, 0.25, 0.3); }
-      else if (kind === 'serve') { chime(79, 0, 0.3); chime(84, 0.09, 0.3); chime(91, 0.18, 0.28); }
+      else if (kind === 'serve') { const u = Math.min(arg || 0, 5) * 2; chime(79 + u, 0, 0.3); chime(84 + u, 0.09, 0.3); chime(91 + u, 0.18, 0.28); }   // each serve in a row sounds a little higher
       else if (kind === 'brew') { chime(88, 0, 0.22); hiss('bandpass', 3500, 2500, 0.2, 0.15); }
       else if (kind === 'thunder') { hiss('lowpass', 420, 70, 1.8, 0.5); hiss('lowpass', 900, 90, 1.2, 0.3, 0.12); tone('sine', 60, 38, 1.4, 0.22); }   // a long low rumble
       else if (kind === 'sigh') { tone('triangle', 330, 180, 0.4, 0.2); }

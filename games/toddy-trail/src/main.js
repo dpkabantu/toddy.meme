@@ -1,5 +1,6 @@
 // TODDY Trail: canvas, tap-to-go, approved art and animations, nights and levels, stars, Daily Run. No server yet.
 // The rules live in core.js (pure and deterministic). Level choice, timing and looks live in levels.js. Everything in this file is only drawing and input.
+import { setIco } from './icons.js';
 import { NIGHTS, registerLevel, STEPS_PER_SEC, newState, step, score, cartCell, thiefCell, shutterClosed, cellBlocked, DX, DY } from './core.js';
 import { ANIMS, STILLS, BGS } from './art.js';
 import { createMusic } from './music.js';
@@ -27,6 +28,9 @@ const animFile = (k) => 'trail_anim_' + k + '_v01', objFile = (k) => 'trail_obj_
 
 // the level being played: { L, daily (0..2 or null), meta } (meta: floor, obstacle, weather, music, time limit ...)
 let cur = null;
+let menuOn = null, combo = 0, shakeAt = -99999, shakeMag = 0, homeBlur = null;   // picture-only: serve streak, screen shake, the blurred start-page picture
+const buzz = (ms) => { try { if (sfxOk() && navigator.vibrate) navigator.vibrate(ms); } catch (_) { /* optional */ } };
+const shake = (m) => { if (P.settings().lighting && !REDUCE_MOTION) { shakeAt = totalTime; shakeMag = m; } };
 let st = null, turns = [], heldDir = null, lastSent = 4, running = false, waiting = false, last = 0, acc = 0;
 let prevMov = false, prevDirV = -1, jiggleAt = -9999, confettiAt = -99999;   // picture-only: body squash, cup wobble, win confetti
 let prevPts = [], curPts = [], flashes = [], fx = [], actx = null, bannerTimer = 0, totalTime = 0;
@@ -53,17 +57,17 @@ function beep(freq, dur, type, vol) {
     o.start(t); o.stop(t + dur);
   } catch (e) { /* sound is optional */ }
 }
-const SND = Object.fromEntries(['serve', 'sigh', 'spill', 'brew', 'tap', 'win', 'bump', 'slide', 'snatch', 'thunder', 'click'].map((k) => [k, () => { if (sfxOk() && musicGo) music.sfx(k); }]));
+const SND = Object.fromEntries(['serve', 'sigh', 'spill', 'brew', 'tap', 'win', 'bump', 'slide', 'snatch', 'thunder', 'click'].map((k) => [k, (a) => { if (sfxOk() && musicGo) music.sfx(k, a); }]));
 
 // ---- layout ----
 function resize() {
   DPR = Math.min(window.devicePixelRatio || 1, 2);
   const r = cv.getBoundingClientRect(); W = r.width; H = r.height;
   cv.width = Math.round(W * DPR); cv.height = Math.round(H * DPR);
-  const n = st ? NIGHTS[st.night] : { w: 9, h: 13 }, top = 64, pad = 8;
+  const hudEl = $('hud'), n = st ? NIGHTS[st.night] : { w: 9, h: 13 }, top = hudEl.hidden ? 64 : Math.max(64, Math.ceil(hudEl.getBoundingClientRect().bottom - r.top) + 8), pad = 8;
   // a small margin around the floor; the room itself has one empty block all round so visitors are never cut off
-  cell = Math.floor(Math.min((W - pad * 2) / (n.w + 0.3), (H - top - pad * 2) / (n.h + 0.4)));
-  ox = Math.floor((W - cell * n.w) / 2); oy = top + Math.floor(0.4 * cell + (H - top - cell * (n.h + 0.4)) / 2);
+  cell = Math.floor(Math.min((W - pad * 2) / (n.w + 0.3), (H - top - pad * 2 - 30) / (n.h + 0.4)));
+  ox = Math.floor((W - cell * n.w) / 2); oy = top + Math.floor(0.4 * cell + (H - top - 30 - cell * (n.h + 0.4)) / 2);
 }
 window.addEventListener('resize', resize);
 
@@ -225,11 +229,44 @@ function ambient(n) {   // floating dust in the lamplight, a soft warm flicker, 
     }
   }
 }
+// ---- lighting: a colour mood for the night, a soft vignette and warm lamp pools (pictures only; Settings can switch it off) ----
+function lightingFx(n) {
+  if (!P.settings().lighting) return;
+  const Wd = cell * n.w, Hd = cell * n.h, m = cur.meta.mood;
+  ctx.save(); ctx.beginPath(); ctx.rect(ox, oy, Wd, Hd); ctx.clip();
+  ctx.fillStyle = 'rgba(' + m[0] + ',' + m[1] + ',' + m[2] + ',.13)'; ctx.fillRect(ox, oy, Wd, Hd);
+  const cx = ox + Wd / 2, cy = oy + Hd * 0.55, g = ctx.createRadialGradient(cx, cy, Math.min(Wd, Hd) * 0.35, cx, cy, Math.max(Wd, Hd) * 0.78);
+  g.addColorStop(0, 'rgba(8,5,28,0)'); g.addColorStop(1, 'rgba(8,5,28,.5)'); ctx.fillStyle = g; ctx.fillRect(ox, oy, Wd, Hd);
+  ctx.globalCompositeOperation = 'lighter';
+  [[0.18, 0.12], [0.84, 0.12], [0.8, 0.52], [0.2, 0.62], [0.5, 0.95]].forEach(([fx0, fy0], k) => {   // warm pools of lamp light
+    const x = ox + Wd * fx0, y = oy + Hd * fy0, r = cell * 3.8, fl = (REDUCE_MOTION ? 0.13 : 0.13 + 0.03 * Math.sin(totalTime / 600 + k * 2.3) + 0.014 * Math.sin(totalTime / 170 + k));
+    const lg = ctx.createRadialGradient(x, y, 0, x, y, r); lg.addColorStop(0, 'rgba(255,190,100,' + fl.toFixed(3) + ')'); lg.addColorStop(1, 'rgba(255,190,100,0)'); ctx.fillStyle = lg; ctx.fillRect(x - r, y - r, r * 2, r * 2);
+  });
+  // a string of little bulbs along the top edge
+  const N = 9, by = oy + cell * 0.1;
+  for (let i = 0; i <= N; i++) {
+    const t = i / N, x = ox + Wd * t, y = by + Math.sin(t * Math.PI) * cell * 0.16, a = REDUCE_MOTION ? 0.7 : 0.62 + 0.18 * Math.sin(totalTime / 420 + i * 1.7), r = cell * 0.34;
+    const bg = ctx.createRadialGradient(x, y, 0, x, y, r); bg.addColorStop(0, 'rgba(255,214,130,' + a.toFixed(3) + ')'); bg.addColorStop(0.25, 'rgba(255,190,90,' + (a * 0.4).toFixed(3) + ')'); bg.addColorStop(1, 'rgba(255,190,90,0)'); ctx.fillStyle = bg; ctx.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  ctx.restore();
+}
+// ---- the start page and menus: the blurred café, drifting lantern light ----
+function drawHome() {   // the painted café is the page background (CSS); this adds drifting lantern light on top
+  ctx.globalCompositeOperation = 'lighter';
+  const T = REDUCE_MOTION ? 0 : totalTime;
+  for (let k = 0; k < 16; k++) {
+    const r = 16 + (k % 4) * 13, x = wrap(k * 0.618 * W * 3 + Math.sin(T / 3500 + k) * 24, W), y = H - wrap(k * 0.7548 * H * 2 + T * 0.012 * (1 + (k % 3) * 0.4), H * 1.15) + r;
+    const a = 0.1 + 0.05 * Math.sin(T / 900 + k * 1.7), g = ctx.createRadialGradient(x, y, 0, x, y, r); g.addColorStop(0, 'rgba(255,196,107,' + a.toFixed(3) + ')'); g.addColorStop(1, 'rgba(255,196,107,0)'); ctx.fillStyle = g; ctx.fillRect(x - r, y - r, r * 2, r * 2);
+  }
+  ctx.globalCompositeOperation = 'source-over';
+}
 function draw(frac) {
   ctx.setTransform(DPR, 0, 0, DPR, 0, 0);
   ctx.clearRect(0, 0, W, H);
+  { const menu = !st; if (menu !== menuOn) { menuOn = menu; $('app').classList.toggle('menu', menu); } }
+  if (!st) { drawHome(); return; }
   ctx.fillStyle = '#14102e'; ctx.fillRect(0, 0, W, H);
-  if (!st) return;
+  { const a = totalTime - shakeAt; if (a < 260) { const k = (1 - a / 260) * shakeMag; ctx.setTransform(DPR, 0, 0, DPR, Math.sin(a * 0.09) * k * DPR, Math.cos(a * 0.13) * k * 0.6 * DPR); } }
   const n = NIGHTS[st.night], pulse = 0.5 + 0.5 * Math.sin(totalTime / 220);
   drawFloor(n);
   // visitor spots (the square in front of each visitor) and brew rings are drawn on the floor
@@ -350,7 +387,7 @@ function draw(frac) {
   items.sort((a, b) => a.y - b.y);
   for (const it of items) it.f();
 
-  ambient(n);
+  ambient(n); lightingFx(n);
   // speech bubbles: what each waiting visitor wants. The NEAREST visitor who wants Toddy's first cup glows and bobs (no guide line any more).
   n.visitors.forEach((v, i) => {
     if (st.served[i]) return;
@@ -370,6 +407,7 @@ function draw(frac) {
   for (const f of fx) {
     const age = totalTime - f.t0;
     if (age < 0) continue;
+    if (f.kind === 'ring') { const p = age / f.ms, [rx, ry] = cc(f.x, f.y); ctx.strokeStyle = 'rgba(255,226,140,' + (0.75 * (1 - p)).toFixed(3) + ')'; ctx.lineWidth = Math.max(2, cell * 0.07 * (1 - p)); ctx.beginPath(); ctx.ellipse(rx, ry + cell * 0.2, cell * (0.3 + 0.9 * p), cell * (0.16 + 0.45 * p), 0, 0, Math.PI * 2); ctx.stroke(); continue; }
     if (f.kind === 'cup') {   // the served cup: held in Toddy's paws for a moment, then carried over to the customer
       const up = f.ty < f.y && Math.abs(f.ty - f.y) > Math.abs(f.tx - f.x);   // visitor above Toddy: he reaches up with both arms
       const hold = up ? 480 : 260, fly = Math.max(0, Math.min(1, (age - hold) / 380)), ease = fly * fly * (3 - 2 * fly);
@@ -440,7 +478,7 @@ async function startLevel(L, daily) {
   const id = LEVEL_ID;
   st = newState(id); turns = []; heldDir = null; target = null; lastSent = 4; flashes = []; fx = []; acc = 0; last = 0; tod = null; lastMoveAt = -9999; endAt = 0; confettiAt = -99999; jiggleAt = -9999;
   sighUntil = NIGHTS[id].visitors.map(() => 0); servedAt = NIGHTS[id].visitors.map(() => 0); brewAt = []; shutterAt = {}; shutterWas = {}; thiefPrev = null; thiefSnatchAt = -9999;
-  prevPts = curPts = pts(st);
+  prevPts = curPts = pts(st); combo = 0; shakeAt = -99999;
   o.hidden = true; o.textContent = ''; thunderK = -1; $('hud').hidden = false;
   music.play(lvl.meta.music); apply(); resize(); updateHud(); running = true; waiting = true;   // Toddy waits for the first tap
   banner(levelTitle(), 2300);
@@ -449,6 +487,7 @@ function updateHud() {
   const n = NIGHTS[st.night], c = st.served.filter(Boolean).length;
   $('served').textContent = 'Served ' + c + ' / ' + n.visitors.length; $('lvl').textContent = levelTitle();
   { const f = (st.limit - st.t) / st.limit; music.setLevel(st.won || st.over ? 0 : f < 0.25 ? 2 : f < 0.5 ? 1 : 0); }
+  { const fr = (st.limit - st.t) / st.limit, low = !st.over && fr < 0.25, lamp = st.won ? 'lit' : fr <= 0 || (st.over && !st.won) ? 'out' : low ? 'low' : 'lit'; $('timer').classList.toggle('low', low); if ($('lamp').dataset.k !== lamp) { $('lamp').dataset.k = lamp; $('lamp').src = 'assets/trail_icon_lantern_' + lamp + '_v01.webp'; } }
   $('lanternFill').style.transform = 'scaleX(' + Math.max(0, (st.limit - st.t) / st.limit).toFixed(3) + ')';
 }
 function finishLevel() {
@@ -465,7 +504,7 @@ function resume() { const o = $('overlay'); o.hidden = true; o.textContent = '';
 function apply() {   // push the saved settings into the game
   const s = P.settings(); STEP_MS = 1000 / SPEEDS[s.speed];
   music.setMusic(s.music && !muted); music.setEnabled(s.sfx && !muted);
-  $('btnSound').style.opacity = muted ? '.55' : '1'; $('btnSound').setAttribute('aria-pressed', String(!muted));
+  setIco($('btnSound'), muted ? 'mute' : 'sound'); $('btnSound').classList.toggle('off', muted); $('btnSound').setAttribute('aria-pressed', String(!muted));
 }
 function unlockSound() { musicGo = true; music.resume(); apply(); }
 function menuMusic() { running = false; st = null; $('hud').hidden = true; if (musicGo) music.play('menu'); }
@@ -480,16 +519,17 @@ function onEvents(before) {
   const n = NIGHTS[st.night];
   for (const e of st.events) {
     if (e.type === 'serve') {
-      SND.serve(); const v = n.visitors[e.visitor], d = faceVisitor(v); servedAt[e.visitor] = totalTime;
+      combo++; SND.serve(combo - 1); buzz(14); const v = n.visitors[e.visitor], d = faceVisitor(v); servedAt[e.visitor] = totalTime;
+      fx.push({ kind: 'ring', x: v.sx, y: v.sy, t0: totalTime + 640, ms: 750 }); if (combo >= 2) flashes.push({ x: v.sx, y: v.sy + 0.6, t0: totalTime + 200, text: 'x' + combo + ' in a row', color: '#ffd27a' });
       flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: '', color: '#ff8fa3', drink: v.want });
       fx.push({ kind: 'cup', drink: v.want, x: st.x, y: st.y, tx: v.bx, ty: v.by, t0: totalTime, ms: 800 });
       fx.push({ file: animFile('fx_heart'), key: 'fx_heart', x: v.bx, y: v.by, dy: -1.55, size: 0.9, t0: totalTime + 640, ms: 1400, rise: true });
       if (d === 1 || d === 3) setTod('hand_right', d, 1100, 'cancelOnMove'); else if (d === 2) setTod('hand_down', d, 1100, 'cancelOnMove'); else setTod('hand_up', d, 1300, 'cancelOnMove');
     } else if (e.type === 'sigh') {
-      SND.sigh(); const v = n.visitors[e.visitor]; sighUntil[e.visitor] = totalTime + 1300;
+      combo = 0; SND.sigh(); const v = n.visitors[e.visitor]; sighUntil[e.visitor] = totalTime + 1300;
       flashes.push({ x: v.sx, y: v.sy, t0: totalTime, text: 'other drink', color: '#ff8f7a' });
     } else if (e.type === 'spill' || e.type === 'bump') {
-      if (e.type === 'spill') SND.spill(); SND.bump(); const wx = st.x + DX[st.dir] * 0.55, wy = st.y + DY[st.dir] * 0.55;
+      combo = 0; shake(cell * 0.14); buzz(e.type === 'spill' ? 45 : 25); if (e.type === 'spill') SND.spill(); SND.bump(); const wx = st.x + DX[st.dir] * 0.55, wy = st.y + DY[st.dir] * 0.55;
       fx.push({ file: animFile('fx_dust'), key: 'fx_dust', x: wx, y: wy, size: 1.3, t0: totalTime, ms: 800 });
       if (e.type === 'spill' && before !== undefined) fx.push({ file: 'trail_anim_fx_splash_' + DRINK_NAMES[before] + '_v01', key: 'fx_splash', x: st.x, y: st.y, dy: 0.25, size: 1.45, t0: totalTime, ms: 2000 });
       flashes.push({ x: st.x, y: st.y, t0: totalTime, text: e.type === 'spill' ? 'bumped! cup lost' : 'bump!', color: '#ff8f7a' });
@@ -497,7 +537,7 @@ function onEvents(before) {
     } else if (e.type === 'slide') {
       SND.slide(); setTod('slip', st.dir, 800);
     } else if (e.type === 'snatch') {
-      SND.snatch(); SND.spill(); thiefSnatchAt = totalTime; flashes.push({ x: st.x, y: st.y, t0: totalTime, text: 'snatched!', color: '#ff8f7a' });
+      combo = 0; shake(cell * 0.18); buzz(60); SND.snatch(); SND.spill(); thiefSnatchAt = totalTime; flashes.push({ x: st.x, y: st.y, t0: totalTime, text: 'snatched!', color: '#ff8f7a' });
       if (before !== undefined) fx.push({ file: 'trail_anim_fx_splash_' + DRINK_NAMES[before] + '_v01', key: 'fx_splash', x: st.x, y: st.y, dy: 0.25, size: 1.2, t0: totalTime, ms: 1600 });
       setTod('startled', st.dir, 1300, 'cancelOnMove');
     } else if (e.type === 'brew') {
@@ -578,7 +618,7 @@ cv.addEventListener('pointerup', up); cv.addEventListener('pointercancel', up); 
 // full screen on and off (Android Chrome and desktop; iPhone Safari does not allow it, so the button hides itself there)
 const fsEl = document.documentElement, fsOn = () => document.fullscreenElement || document.webkitFullscreenElement;
 const fsCan = !!(fsEl.requestFullscreen || fsEl.webkitRequestFullscreen);
-function fsRefresh() { const b = $('btnFull'); b.textContent = fsOn() ? '✕' : '⛶'; b.setAttribute('aria-label', fsOn() ? 'Exit full screen' : 'Full screen'); b.setAttribute('aria-pressed', String(!!fsOn())); setTimeout(resize, 120); }
+function fsRefresh() { const b = $('btnFull'); setIco(b, fsOn() ? 'collapse' : 'expand'); b.setAttribute('aria-label', fsOn() ? 'Exit full screen' : 'Full screen'); b.setAttribute('aria-pressed', String(!!fsOn())); setTimeout(resize, 120); }
 $('btnFull').hidden = !fsCan;
 $('btnFull').addEventListener('click', async () => {
   unlockSound();
@@ -591,10 +631,12 @@ $('btnFull').addEventListener('click', async () => {
 document.addEventListener('fullscreenchange', fsRefresh); document.addEventListener('webkitfullscreenchange', fsRefresh);
 window.addEventListener('keydown', (e) => { if (e.key === 'Escape' && running) { pause(); return; } const m = { ArrowUp: 0, ArrowRight: 1, ArrowDown: 2, ArrowLeft: 3, w: 0, d: 1, s: 2, a: 3 }[e.key]; if (m !== undefined && running) { e.preventDefault(); setHeld(m); } });
 window.addEventListener('keyup', (e) => { const m = { ArrowUp: 0, ArrowRight: 1, ArrowDown: 2, ArrowLeft: 3, w: 0, d: 1, s: 2, a: 3 }[e.key]; if (m !== undefined && m === heldDir) setHeld(null); });
+setIco($('btnPause'), 'pause'); setIco($('btnFull'), 'expand'); setIco($('btnSound'), 'sound');
 $('btnSound').addEventListener('click', () => { muted = !muted; unlockSound(); if (!muted) beep(660, 0.08); });
 $('btnPause').addEventListener('click', pause);
 document.addEventListener('visibilitychange', () => { if (document.hidden) pause(); });
 
 resize(); requestAnimationFrame(frame);
 { const o = $('overlay'); o.textContent = ''; o.append(mk('div', 'card', 'Loading TODDY Trail…')); }
+['trail_icon_lantern_low_v01', 'trail_icon_lantern_out_v01'].forEach(loadImg);
 Promise.all(COMMON.map(loadImg)).then(() => { resize(); apply(); S.home(); });

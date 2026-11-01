@@ -4,7 +4,7 @@ import { PER_NIGHT, STORY_LEVELS, nightOf } from './levels.js';
 import { dayKey, dailyPlan, GOALS } from './daily.js';
 
 const KEY = 'trailV2';
-const DEFAULT_SETTINGS = { music: true, sfx: true, speed: 'Quick', floors: 'random', weather: 'full', unlockAll: false };
+const DEFAULT_SETTINGS = { music: true, sfx: true, speed: 'Quick', floors: 'random', weather: 'full', lighting: true, unlockAll: false };
 let P = null;
 const fresh = () => ({ v: 1, stars: {}, best: {}, settings: { ...DEFAULT_SETTINGS }, daily: null, streak: { count: 0, last: '' }, seenIntro: {} });
 function load() {

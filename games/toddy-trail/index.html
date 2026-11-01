@@ -5,23 +5,24 @@
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <title>TODDY Trail (test)</title>
 <meta name="robots" content="noindex">
-<meta name="theme-color" content="#14102e">
+<meta name="theme-color" content="#1d1744">
 <link rel="canonical" href="https://toddy.meme/games/toddy-trail/">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&display=swap">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Playfair+Display:wght@700;800&display=swap">
 <link rel="stylesheet" href="src/style.css">
 <script type="module" src="src/main.js"></script>
 </head>
 <body>
 <div id="app">
+  <div id="frame" aria-hidden="true"><i></i><i></i><i></i><i></i></div>
   <canvas id="c" aria-label="Toddy Trail play area"></canvas>
   <div id="hud">
     <div id="hudL"><div id="lvl"></div><div id="served">Served 0 / 3</div></div>
-    <div id="lantern" aria-label="Lanterns: time left"><div id="lanternFill"></div></div>
-    <button id="btnPause" class="ibtn" aria-label="Pause">❚❚</button>
-    <button id="btnFull" class="ibtn" aria-label="Full screen" aria-pressed="false">⛶</button>
-    <button id="btnSound" class="ibtn" aria-label="Sound on" aria-pressed="true">♪</button>
+    <div id="timer" aria-label="Lanterns: time left"><img id="lamp" src="assets/trail_icon_lantern_lit_v01.webp" alt="" width="34" height="34" draggable="false"><div id="lantern"><div id="lanternFill"></div></div></div>
+    <button id="btnPause" class="ibtn" aria-label="Pause"></button>
+    <button id="btnFull" class="ibtn" aria-label="Full screen" aria-pressed="false"></button>
+    <button id="btnSound" class="ibtn" aria-label="Sound on" aria-pressed="true"></button>
   </div>
   <div id="banner" role="status" aria-live="polite"></div>
   <div id="overlay"></div>

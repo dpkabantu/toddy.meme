@@ -51,9 +51,15 @@ export function drawPlainFloor(ctx, ox, oy, cell, w, h, f) {
     for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { const horiz = (x + y) % 2 === 0; for (let k = 1; k <= 3; k++) { if (horiz) { ctx.moveTo(X(x) + cell * 0.12, Y(y) + (cell * k) / 4); ctx.lineTo(X(x) + cell * 0.88, Y(y) + (cell * k) / 4); } else { ctx.moveTo(X(x) + (cell * k) / 4, Y(y) + cell * 0.12); ctx.lineTo(X(x) + (cell * k) / 4, Y(y) + cell * 0.88); } } }
     ctx.stroke();
   }
-  ctx.strokeStyle = 'rgba(255,255,255,.07)'; ctx.beginPath();
-  for (let x = 0; x <= w; x++) { ctx.moveTo(X(x), oy); ctx.lineTo(X(x), oy + h * cell); }
-  for (let y = 0; y <= h; y++) { ctx.moveTo(ox, Y(y)); ctx.lineTo(ox + w * cell, Y(y)); }
+  // a little depth: every tile gets a light top-left edge and a dark bottom-right edge, and the whole floor is a touch lighter at the top
+  ctx.lineWidth = Math.max(1, cell * 0.035);
+  ctx.strokeStyle = 'rgba(255,240,210,.10)'; ctx.beginPath();
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { ctx.moveTo(X(x) + 1, Y(y + 1) - 1); ctx.lineTo(X(x) + 1, Y(y) + 1); ctx.lineTo(X(x + 1) - 1, Y(y) + 1); }
   ctx.stroke();
+  ctx.strokeStyle = 'rgba(8,4,24,.22)'; ctx.beginPath();
+  for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) { ctx.moveTo(X(x + 1) - 1, Y(y) + 2); ctx.lineTo(X(x + 1) - 1, Y(y + 1) - 1); ctx.lineTo(X(x) + 2, Y(y + 1) - 1); }
+  ctx.stroke();
+  const sh = ctx.createLinearGradient(0, oy, 0, oy + h * cell); sh.addColorStop(0, 'rgba(255,230,180,.10)'); sh.addColorStop(1, 'rgba(10,6,30,.14)'); ctx.fillStyle = sh; ctx.fillRect(ox, oy, cell * w, cell * h);
+  ctx.lineWidth = 1;
   ctx.strokeStyle = 'rgba(255,236,190,.55)'; ctx.lineWidth = 3; ctx.strokeRect(ox, oy, cell * w, cell * h);
 }

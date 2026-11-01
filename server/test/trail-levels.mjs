@@ -86,4 +86,5 @@ for (const L of [1, 14, 31, 58, 74]) {
 console.log('levels: all checks passed (' + checked + ' levels re-solved)');
 // ---- 7. nobody stands on the edge of the room: one empty block all round (left, right, above) ----
 for (let L = 1; L <= 150; L++) { const { def } = LV.buildLevel(ALL, L); assert.equal(def.w, 11); assert.equal(def.h, 14); for (const v of def.visitors) { assert.ok(v.bx >= 1 && v.bx <= def.w - 2 && v.by >= 1, 'level ' + L + ': visitor body is one block in from the edge'); assert.ok(v.sx >= 1 && v.sx <= def.w - 2); } }
-console.log('edge space ok');
+for (let L = 1; L <= 150; L += 3) { const m = LV.buildLevel(ALL, L).meta.mood; assert.ok(Array.isArray(m) && m.length === 3 && m.every((v) => v >= 0 && v <= 255), 'every level has a colour mood'); }
+console.log('edge space and mood ok');
