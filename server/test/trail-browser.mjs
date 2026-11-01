@@ -53,7 +53,8 @@ async function playByTaps(def) {
   }
 }
 
-const levelsOf = async (n) => { await btn(/^(Play|Continue)/).first().click(); await page.getByRole('button', { name: new RegExp('^Night ' + n + '(, locked)?$') }).click(); };   // Home > Play opens "Choose a level"
+const NAMES = { 1: 'Lantern Lighting', 2: 'Whisper Terrace', 3: 'Velvet Market', 4: 'Silver Rain', 5: 'Hush Library', 6: 'Moonbridge Reverie', 7: 'Carnival of Lights', 8: 'Amber Harbor' };
+const levelsOf = async (n) => { await btn(/^(Play|Continue)/).first().click(); await page.getByRole('button', { name: new RegExp('^' + NAMES[n] + '(, locked)?$') }).click(); };   // Home > Play opens "Choose a level"
 const playNext = async () => { await btn(/^Play/).first().click(); await page.locator('.lv.now').click(); };   // the level that is open and not yet cleared
 
 // ---- Home and every side page has its Back button ----
@@ -66,8 +67,8 @@ for (const [name, title] of [['How to play', 'How to play'], ['About', 'About'],
 }
 // Nights: only Night 1 is open at the start; levels: level 1 open, level 2 locked
 await btn(/^Play/).first().click(); await shot('levels');
-assert.equal(await page.getByRole('button', { name: /Night 1$/ }).isDisabled(), false); assert.equal(await page.getByRole('button', { name: /^Night 2(, locked)?$/ }).isDisabled(), true);
-assert.equal(await page.locator('.lv:not(.locked)').count(), 1); assert.match(await cardText(), /serve 60%/i);
+assert.equal(await page.getByRole('button', { name: /^Lantern Lighting$/ }).isDisabled(), false); assert.equal(await page.getByRole('button', { name: /^Whisper Terrace(, locked)?$/ }).isDisabled(), true);
+assert.equal(await page.locator('.lv:not(.locked)').count(), 1); assert.match(await cardText(), /60%/);
 await btn(/^(‹ )?Home/).click();
 
 // ---- Settings change things ----
@@ -81,9 +82,9 @@ await btn(/^Floors/).click(); assert.equal(await btn(/^Floors/).innerText(), 'Fl
 await btn(/^‹ Back/).click();
 
 // ---- Level 1: intro story, tap to win, stars saved ----
-assert.match(await btn(/^Play/).first().innerText(), /Night 1 · Level 1/); await playNext();
-assert.match(await cardText(), /Night 1 · Opening Night/); await btn(/^Start/).click(); await hidden();
-assert.match(await page.locator('#served').innerText(), /Served 0 \/ 3/); assert.match(await page.locator('#lvl').innerText(), /Night 1 · Level 1/);
+assert.match(await btn(/^Play/).first().innerText(), /Lantern Lighting · Level 1/); await playNext();
+assert.match(await cardText(), /Lantern Lighting/); await btn(/^Start/).click(); await hidden();
+assert.match(await page.locator('#served').innerText(), /Served 0 \/ 3/); assert.match(await page.locator('#lvl').innerText(), /Lantern Lighting · Level 1/);
 await page.waitForTimeout(400); await shot('level1-plain');
 const L1 = buildLevel(ALL, 1, { floorMode: 'plain' }).def;
 await playByTaps(JSON.parse(JSON.stringify(L1)));
@@ -91,7 +92,7 @@ await page.getByText(/Perfect!|All served!|Level cleared/).waitFor({ timeout: 15
 assert.ok(await btn(/^Next/).isVisible()); assert.ok(await btn(/^Retry/).isVisible()); assert.ok(await btn(/^Levels/).isVisible());
 const stars = await page.locator('.bigstars img.on').count(); assert.ok(stars >= 1, 'at least one star');
 // saved: reload, Home says Continue at level 2, level 2 unlocked, level 3 locked
-await home(); assert.match(await btn(/^Play/).first().innerText(), /Night 1 · Level 2/);
+await home(); assert.match(await btn(/^Play/).first().innerText(), /Lantern Lighting · Level 2/);
 await btn(/^Play/).first().click(); assert.equal(await page.locator('.lv:not(.locked)').count(), 2); await btn(/^(‹ )?Home/).click();
 
 // ---- Pause menu and its Back/Resume buttons ----
@@ -99,7 +100,7 @@ await playNext(); await hidden(); await page.waitForTimeout(300);
 await page.locator('#btnPause').click(); assert.ok(await btn(/^Resume/).isVisible()); assert.ok(await btn(/^Restart level/).isVisible()); assert.ok(await btn(/^Leave to levels/).isVisible()); await shot('pause');
 await btn(/^Settings/).click(); await btn(/^‹ Back/).click(); assert.ok(await btn(/^Resume/).isVisible(), 'Back from Settings returns to Pause');
 await btn(/^Resume/).click(); await hidden();
-await page.keyboard.press('Escape'); assert.ok(await btn(/^Resume/).isVisible()); await btn(/^Leave to levels/).click(); assert.match(await cardText(), /Night 1/);
+await page.keyboard.press('Escape'); assert.ok(await btn(/^Resume/).isVisible()); await btn(/^Leave to levels/).click(); assert.match(await cardText(), /Lantern Lighting/);
 
 // ---- Idle level ends with the lanterns out and 0 stars (level 2 gives 3 visitors and at least 25 s) ----
 await btn(/^(‹ )?Home/).click();
@@ -111,12 +112,12 @@ await btn(/^Retry/).click(); await hidden();
 // ---- Unlock everything (testing switch): boss level, the 7th night and the endless nights open ----
 await page.evaluate(() => { const k = 'trailV2', p = JSON.parse(localStorage.getItem(k)); p.settings.unlockAll = true; localStorage.setItem(k, JSON.stringify(p)); });
 await home(); await levelsOf(4);
-assert.equal(await page.getByRole('button', { name: /Night 7$/ }).isDisabled(), false); assert.equal(await page.getByRole('button', { name: /Night 8$/ }).isDisabled(), false);
+assert.equal(await page.getByRole('button', { name: /^Carnival of Lights$/ }).isDisabled(), false); assert.equal(await page.getByRole('button', { name: /^Amber Harbor$/ }).isDisabled(), false);
 await page.locator('.lv.boss').click();
-await hidden(); await page.waitForTimeout(500); assert.match(await page.locator('#lvl').innerText(), /Night 4 · Level 10 · Boss/); await shot('boss');
-await page.locator('#btnPause').click(); await btn(/^Leave to levels/).click(); await page.getByRole('button', { name: /Night 8$/ }).click();
-assert.match(await cardText(), /ENDLESS · NIGHT 8/); await page.locator('.lv').first().click(); await page.getByRole('button', { name: /^Start/ }).click({ timeout: 2000 }).catch(() => {}); await hidden();
-assert.match(await page.locator('#lvl').innerText(), /Night 8 · Level 1/); await page.waitForTimeout(500); await shot('endless-night8');
+await hidden(); await page.waitForTimeout(500); assert.match(await page.locator('#lvl').innerText(), /Silver Rain · Level 10 · Boss/); await shot('boss');
+await page.locator('#btnPause').click(); await btn(/^Leave to levels/).click(); await page.getByRole('button', { name: /^Amber Harbor$/ }).click();
+assert.match(await cardText(), /ENDLESS · No\. 8/); await page.locator('.lv').first().click(); await page.getByRole('button', { name: /^Start/ }).click({ timeout: 2000 }).catch(() => {}); await hidden();
+assert.match(await page.locator('#lvl').innerText(), /Amber Harbor · Level 1/); await page.waitForTimeout(500); await shot('endless-night8');
 
 // ---- Daily Run: three levels and three goals ----
 await home(); await btn(/^Daily Run/).click(); assert.equal(await page.locator('.goal').count(), 3); await shot('daily');
@@ -134,6 +135,25 @@ for (const L of [15, 33, 52, 66]) {
 }
 // the Full screen button exists in the game bar
 assert.equal(await page.locator('#btnFull').count(), 1);
+
+// ---- Gift cards: a night with all ten levels cleared (saved before cards existed or just now) shows its card ----
+await page.evaluate(() => { const st = {}; for (let i = 1; i <= 10; i++) st[i] = 2; localStorage.setItem('trailV2', JSON.stringify({ v: 1, stars: st, best: {}, settings: {}, daily: null, streak: { count: 0, last: '' }, seenIntro: {} })); });
+await home(); assert.equal(await page.locator('.round .badge').innerText(), '1', 'one gift card badge'); await btn(/^Gift cards/).click();
+assert.match(await cardText(), /Lantern Lighting/); assert.equal(await page.locator('.gift:not(.locked)').count(), 1); assert.ok(await page.locator('.gift.locked').count() >= 6, 'other nights show as locked'); await shot('gift-cards');
+await btn(/^‹ Back/).click(); assert.match(await cardText(), /Toddy\s+Trail/);
+await page.evaluate(() => localStorage.removeItem('trailV2'));
+
+// ---- the "Gift card won!" screen (night card and daily card), shown before the result ----
+await home();
+await page.evaluate(async () => {
+  const { createScreens } = await import('/games/toddy-trail/src/screens.js'); const noop = () => {};
+  const S = createScreens({ overlay: document.getElementById('overlay'), begin: noop, start: noop, resume: noop, restart: noop, leave: noop, apply: noop, menuMusic: noop, click: noop, exit: noop, fs: { can: () => false, on: () => false, toggle: noop } });
+  window.__S = S; window.__done = 0; S.gift({ kind: 'night', n: 1 }, () => { window.__done++; });
+});
+assert.match(await cardText(), /Gift card won!/); assert.match(await cardText(), /Lantern Lighting/); await page.waitForTimeout(900); await shot('gift-won');
+await btn(/^Collect/).click(); assert.equal(await page.evaluate(() => window.__done), 1, 'Collect continues');
+await page.evaluate(() => window.__S.gift({ kind: 'day', key: '2026-11-01' }, () => {})); assert.match(await cardText(), /Daily Run/); await page.waitForTimeout(900); await shot('gift-day');
+await page.evaluate(() => localStorage.removeItem('trailV2'));
 
 assert.deepEqual(problems, [], 'console problems: ' + problems.join(' | '));
 assert.deepEqual(outside, [], 'requests leaving the site: ' + outside.join(' | '));

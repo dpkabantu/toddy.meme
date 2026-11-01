@@ -34,7 +34,7 @@ export function createScreens(g) {
     const card = mk('div', 'card home'), nx = P.nextLevel(), set = P.settings(), sk = P.currentStreak(), daily = P.todaysDaily();
     const title = mk('h1', 'title'); title.append(mk('span', 'a', 'Toddy'), mk('span', 'b', 'Trail'));
     const mascot = mk('div', 'mascot'); mascot.setAttribute('aria-hidden', 'true'); mascot.append(mk('span', 'wave'));
-    const play = mk('button', 'btn play'); play.type = 'button'; play.append(mk('span', 't', 'Play'), mk('small', '', 'Night ' + nightOf(nx) + ' · Level ' + posInNight(nx)));
+    const play = mk('button', 'btn play'); play.type = 'button'; play.append(mk('span', 't', 'Play'), mk('small', '', nightName(nightOf(nx)) + ' · Level ' + posInNight(nx)));
     play.addEventListener('click', () => { g.click(); S.levels(nightOf(nx)); });
     const day = new Date().toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
     const dDone = daily.state.done.every(Boolean);
@@ -42,6 +42,7 @@ export function createScreens(g) {
     const rounds = mk('div', 'rounds');
     rounds.append(round('sound', 'Sound effects', set.sfx, () => { P.setSetting('sfx', !set.sfx); g.apply(); return set.sfx; }), round('music', 'Music', set.music, () => { P.setSetting('music', !set.music); g.apply(); return set.music; }));
     if (g.fs.can()) { const fsb = round('expand', 'Full screen', g.fs.on(), () => { g.fs.toggle(); setTimeout(() => { fsb.classList.toggle('off', !g.fs.on()); fsb.setAttribute('aria-pressed', String(!!g.fs.on())); }, 400); }); fsb.classList.remove('off'); rounds.append(fsb); }
+    { const nc = P.myCards(); const gb = round('gift', 'Gift cards', true, () => { S.cards(S.home); }); gb.classList.remove('off'); if (nc.nights.length + nc.days.length) { const c = mk('i', 'badge', String(nc.nights.length + nc.days.length)); gb.append(c); } rounds.append(gb); }
     const links = mk('div', 'pills3'); links.append(pill('How to play', () => S.how(S.home)), pill('Settings', () => S.settings(S.home)), pill('About', () => S.about(S.home)));
     const ex = mk('button', 'link'); ex.type = 'button'; ex.append(ico('exit'), document.createTextNode(' Exit to Games')); ex.addEventListener('click', () => { g.click(); g.exit(); });
     card.append(pic('trail_emblem_v01', 'emblem', 120, 120), title, orn(), mk('p', 'tagline', 'Tap to guide Toddy. Serve every drink before the lanterns go out.'), mascot, play, dbtn, rounds, orn(), links, ex);
@@ -57,13 +58,13 @@ export function createScreens(g) {
     const tabs = mk('div', 'tabs'), T = Math.max(8, unlocked + 1);
     for (let k = 1; k <= T; k++) {
       const ok = k <= unlocked || anyOpen, t = mk('button', 'tab' + (k === n ? ' on' : '') + (ok ? '' : ' locked')); t.type = 'button';
-      if (!ok) t.append(pic('trail_icon_lock_v01', 'tl', 16)); t.append(document.createTextNode('Night ' + k));
-      if (ok) t.addEventListener('click', () => { g.click(); S.levels(k); }); else { t.disabled = true; t.setAttribute('aria-label', 'Night ' + k + ', locked'); } tabs.append(t);
+      if (!ok) t.append(pic('trail_icon_lock_v01', 'tl', 16)); t.append(document.createTextNode(nightName(k)));
+      if (ok) t.addEventListener('click', () => { g.click(); S.levels(k); }); else { t.disabled = true; t.setAttribute('aria-label', nightName(k) + ', locked'); } tabs.append(t);
     }
     card.append(tabs);
     const got = P.nightStars(n), all = PER_NIGHT * 3;
     const info = mk('div', 'ninfo'), txt = mk('div', 'ntxt'), bar = mk('div', 'pbar'), fill = mk('i'); fill.style.width = Math.round((got / all) * 100) + '%'; bar.append(fill); bar.setAttribute('role', 'img'); bar.setAttribute('aria-label', got + ' of ' + all + ' stars');
-    txt.append(mk('div', 'k', n > STORY_NIGHTS ? 'ENDLESS · NIGHT ' + n : 'NIGHT ' + n), mk('div', 'nm', nightName(n)), orn(), bar, mk('small', '', got + ' / ' + all + ' stars'));
+    txt.append(mk('div', 'k', (n > STORY_NIGHTS ? 'ENDLESS · No. ' : 'No. ') + n), mk('div', 'nm', nightName(n)), orn(), bar, mk('small', '', got + ' / ' + all + ' stars'));
     info.append(pic(hostPic(n).slice(7, -5), 'host', 180, 180), txt); card.append(info, mk('p', 'ntell', nightTell(n)));
     const grid = mk('div', 'lvgrid');
     for (let p = 1; p <= PER_NIGHT; p++) {
@@ -72,10 +73,10 @@ export function createScreens(g) {
       const row = mk('span', 'st'); if (!ok) row.append(pic('trail_icon_lock_v01', 'lk', 20)); else if (isBoss(L) && !sc) row.append(pic('trail_icon_crown_v01', 'lk', 22)); else for (let i = 0; i < 3; i++) row.append(pic(i < sc ? 'trail_icon_star_v01' : 'trail_icon_star_off_v01', 's' + (i < sc ? ' on' : ' off'), 14));
       b.append(row);
       if (isBoss(L) && sc && ok) b.append(pic('trail_icon_crown_v01', 'crown', 18));
-      b.setAttribute('aria-label', 'Night ' + n + ' level ' + p + (isBoss(L) ? ', boss' : '') + (ok ? ', ' + sc + ' stars' : ', locked'));
+      b.setAttribute('aria-label', nightName(n) + ' level ' + p + (isBoss(L) ? ', boss' : '') + (ok ? ', ' + sc + ' stars' : ', locked'));
       if (ok) b.addEventListener('click', () => { g.click(); g.begin(L, null); }); else b.disabled = true; grid.append(b);
     }
-    const hint = mk('p', 'nexthint', 'Serve 60% of the visitors to open the next level.' + (n + 1 <= unlocked || anyOpen ? '' : ' Clear level 10 to open Night ' + (n + 1) + '.'));
+    const hint = mk('p', 'nexthint', 'Serving 60% opens the next level. Finish all 10 levels to win this night\'s gift card.');
     const home = mk('button', 'btn alt homebtn'); home.type = 'button'; home.append(ico('home'), document.createTextNode(' Home')); home.addEventListener('click', () => { g.click(); S.home(); });
     card.append(grid, hint, home); open(card);
     const on = tabs.querySelector('.on'); if (on && on.scrollIntoView) { try { on.scrollIntoView({ inline: 'center', block: 'nearest' }); } catch (_) { /* optional */ } }
@@ -84,7 +85,7 @@ export function createScreens(g) {
   S.intro = (L, daily) => {   // the picture story before the first level of a night
     const n = nightOf(L), card = mk('div', 'card'), v = document.createElement('video');
     if (n <= STORY_NIGHTS) { v.src = 'assets/trail_intro_n' + n + '_v01.mp4'; v.muted = true; v.loop = true; v.autoplay = true; v.playsInline = true; v.setAttribute('playsinline', ''); v.preload = 'auto'; v.className = 'intro'; card.append(v); }
-    card.append(mk('h1', '', 'Night ' + n + ' · ' + nightName(n)), mk('p', '', nightTell(n)));
+    card.append(mk('h1', '', nightName(n)), mk('p', '', nightTell(n)));
     card.append(btn('Start', () => { P.markIntro(n); g.start(L, daily); }), back('Levels', () => S.levels(n))); open(card);
     if (n <= STORY_NIGHTS) { const pl = v.play(); if (pl && pl.catch) pl.catch(() => {}); }
   };
@@ -107,7 +108,7 @@ export function createScreens(g) {
       if (info.stars > 0 && nx < 3) card.append(btn('Daily level ' + (nx + 1), () => g.begin(plan.levels[nx], nx)));
       row.append(btn('Retry', () => g.restart(), info.stars > 0 && nx < 3), btn('Daily Run', S.daily, true));
     } else {
-      if (info.stars > 0) card.append(btn('Next · Night ' + nightOf(info.L + 1) + ' · Level ' + posInNight(info.L + 1), () => g.begin(info.L + 1, null)));
+      if (info.stars > 0) card.append(btn('Next · ' + nightName(nightOf(info.L + 1)) + ' · Level ' + posInNight(info.L + 1), () => g.begin(info.L + 1, null)));
       row.append(btn('Retry', () => g.restart(), info.stars > 0), btn('Levels', () => S.levels(n), true));
     }
     card.append(row);
@@ -169,9 +170,32 @@ export function createScreens(g) {
       const done = state.done[i], b = btn('Level ' + (i + 1) + ' of 3' + (isBoss(L) ? ' · Boss' : '') + '   ' + (done ? starText(state.stars[i]) : 'not played'), () => g.begin(L, i), true);
       card.append(b);
     });
-    card.append(mk('h2', '', 'Today\'s goals'));
+    card.append(mk('p', 'sub', 'Finish all 3 levels to win today\'s gift card.'), mk('h2', '', 'Today\'s goals'));
     for (const gl of plan.goals) { const c = state.goals[gl.id] || 0, row = mk('div', 'goal' + (c >= gl.target ? ' done' : '')); row.append(mk('span', '', gl.text), mk('b', '', c >= gl.target ? '✓' : c + '/' + gl.target)); card.append(row); }
     card.append(back('Home', S.home)); open(card);
+  };
+
+  // ---- gift cards: one for every night with all ten levels cleared, one for every Daily Run finished ----
+  const nightCard = (n, small) => {
+    const c = mk('div', 'gift' + (small ? ' small' : '')), im = pic('trail_gift_n' + (((n - 1) % 7) + 1) + '_v01', 'art'); if (n > 7) im.style.filter = 'hue-rotate(' + (((n - 8) % 6) * 28 + 20) + 'deg) saturate(1.05)';
+    c.append(im, pic('trail_icon_medal_v01', 'stamp'), mk('span', 'cap', nightName(n))); return c;
+  };
+  const dayCard = (key, small) => {
+    const c = mk('div', 'gift day' + (small ? ' small' : '')), d = new Date(key + 'T00:00:00Z');
+    c.append(pic('trail_icon_daily_v01', 'dico'), mk('b', '', 'Daily Run'), mk('span', 'dt', d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' })), pic('trail_icon_flame_v01', 'fl', 26)); return c;
+  };
+  S.gift = (gift, next) => {
+    const card = mk('div', 'card giftcard'), tile = gift.kind === 'night' ? nightCard(gift.n) : dayCard(gift.key);
+    card.append(mk('h1', '', 'Gift card won!'), tile, mk('p', '', gift.kind === 'night' ? 'You finished every level of ' + nightName(gift.n) + '.' : 'You finished today\'s Daily Run.'), btn('Collect', next), btn('My gift cards', () => S.cards(() => next()), true)); open(card);
+  };
+  S.cards = (backFn) => {
+    const card = mk('div', 'card cards'), mine = P.myCards();
+    card.append(mk('h1', '', 'Gift cards'), mk('p', 'sub', mine.nights.length + ' night' + (mine.nights.length === 1 ? '' : 's') + ' · ' + mine.days.length + ' daily'));
+    const grid = mk('div', 'giftgrid');
+    const top = Math.max(STORY_NIGHTS, ...mine.nights);
+    for (let n = 1; n <= top; n++) { const got = mine.nights.includes(n); if (got) grid.append(nightCard(n, true)); else if (n <= STORY_NIGHTS) { const l = mk('div', 'gift small locked'); l.append(pic('trail_icon_lock_v01', 'lk', 34), mk('span', 'cap', nightName(n))); grid.append(l); } }
+    for (const k of mine.days.slice(0, 12)) grid.append(dayCard(k, true));
+    card.append(grid, mk('p', 'tip', 'Finish all 10 levels of a night, or all 3 Daily Run levels, to win a card.'), back('Back', backFn)); open(card);
   };
 
   S.message = (text) => { const c = mk('div', 'card', text); open(c); };

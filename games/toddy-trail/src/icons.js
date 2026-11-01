@@ -8,6 +8,7 @@ const P = {
   pause: '<rect x="6.5" y="5" width="4" height="14" rx="1.4"/><rect x="13.5" y="5" width="4" height="14" rx="1.4"/>',
   back: '<path d="M14.5 5.5L8 12l6.5 6.5" fill="none" stroke="currentColor" stroke-width="2.6" stroke-linecap="round" stroke-linejoin="round"/>',
   home: '<path d="M4 11.2L12 4l8 7.2V20h-5.2v-5.4H9.2V20H4z"/>',
+  gift: '<path d="M4 10h16v3H4zM5.5 13.5h13V20h-13z"/><path d="M12 10v10M12 10C10 10 7.5 9.2 8 7.2 8.5 5.4 11 6 12 10zM12 10c2 0 4.5-.8 4-2.8C15.5 5.4 13 6 12 10z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>',
   exit: '<path d="M10 4H5v16h5M14 8l4 4-4 4M18 12H9" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>',
 };
 export function ico(name, cls) {

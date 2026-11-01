@@ -12,18 +12,21 @@ const WHO = ['milo', 'pip', 'velvet', 'lumi', 'biscuit', 'drizzle', 'pebble', 'b
 const W = 9;
 
 export const NIGHT_INFO = {
-  1: { name: 'Opening Night', tell: 'Light the lamp, open the café, and bring everyone their drink.', music: 1, weather: { none: 5, wind: 5 } },
-  2: { name: 'Terrace Night', tell: 'A breezy terrace: tables and parasols are in the way. Brew a new cup at the golden ring.', music: 2, weather: { none: 4, wind: 6 } },
-  3: { name: 'Market Night', tell: 'Market lane: mind the rolling tea cart.', music: 3, weather: { none: 4, wind: 3, rain: 3 } },
-  4: { name: 'Rainy Night', tell: 'Rain! Puddles are slippery and make Toddy slide one extra step.', music: 4, weather: { rain: 6, storm: 4 } },
-  5: { name: 'Library Night', tell: 'Quiet library: shutters open and close, so wait for the green light.', music: 5, weather: { none: 6, wind: 2, rain: 2 } },
-  6: { name: 'Moon Bridge Night', tell: 'Moon bridge: Nox the night thief snatches a cup if you pass too close.', music: 6, weather: { wind: 4, storm: 3, none: 3 } },
-  7: { name: 'Street Party Night', tell: 'Street party: everything at once!', music: 7, weather: { none: 2, wind: 2, rain: 3, storm: 3 } },
+  1: { name: 'Lantern Lighting', tell: 'Light the lamp, open the café, and bring everyone their drink.', music: 1, weather: { none: 5, wind: 5 } },
+  2: { name: 'Whisper Terrace', tell: 'A breezy terrace: tables and parasols are in the way. Brew a new cup at the golden ring.', music: 2, weather: { none: 4, wind: 6 } },
+  3: { name: 'Velvet Market', tell: 'Market lane: mind the rolling tea cart.', music: 3, weather: { none: 4, wind: 3, rain: 3 } },
+  4: { name: 'Silver Rain', tell: 'Rain! Puddles are slippery and make Toddy slide one extra step.', music: 4, weather: { rain: 6, storm: 4 } },
+  5: { name: 'Hush Library', tell: 'Quiet library: shutters open and close, so wait for the green light.', music: 5, weather: { none: 6, wind: 2, rain: 2 } },
+  6: { name: 'Moonbridge Reverie', tell: 'Moon bridge: Nox the night thief snatches a cup if you pass too close.', music: 6, weather: { wind: 4, storm: 3, none: 3 } },
+  7: { name: 'Carnival of Lights', tell: 'Street party: everything at once!', music: 7, weather: { none: 2, wind: 2, rain: 3, storm: 3 } },
 };
 const ENDLESS_MUSIC = [2, 3, 5, 6, 4, 7];
 const MOODS = { 1: [255, 170, 80], 2: [230, 190, 90], 3: [240, 110, 140], 4: [80, 120, 230], 5: [70, 190, 170], 6: [150, 110, 240], 7: [250, 150, 60] };   // colour wash per night (lighting only)
-export const nightName = (n) => (NIGHT_INFO[n] ? NIGHT_INFO[n].name : 'Endless Night ' + n);
-export const nightTell = (n) => (NIGHT_INFO[n] ? NIGHT_INFO[n].tell : 'The nights never end. Every level is a little harder than the one before.');
+// every night has its own name (the other games use plain "Night 1, 2, 3"); after the seven story nights the names keep coming, then repeat with a Roman number
+export const ENDLESS_NAMES = ['Amber Harbor', 'Starlit Orchard', 'Jade Pavilion', 'Frostlight Gardens', 'Saffron Skies', 'Pearl Lagoon', 'Ember Carnival', 'Whispering Pines', 'Golden Observatory', 'Crystal Conservatory', 'Rose Quartz Alley', 'Blue Hour Bazaar', 'Cinnamon Rooftops', 'Opal Canal', 'Firefly Meadow', 'Lilac Station', 'Copper Clocktower', 'Snowglobe Square', 'Sunken Lanterns', 'Dream Festival', 'Velvet Skyline', 'Honeyed Dusk', 'Aurora Pier', 'Last Star Café'];
+const ROMAN = ['', '', 'II', 'III', 'IV', 'V', 'VI', 'VII', 'VIII', 'IX', 'X'];
+export const nightName = (n) => { if (NIGHT_INFO[n]) return NIGHT_INFO[n].name; const k = n - STORY_NIGHTS - 1, r = Math.floor(k / ENDLESS_NAMES.length) + 1; return ENDLESS_NAMES[k % ENDLESS_NAMES.length] + (r > 1 ? ' ' + (ROMAN[r] || r) : ''); };
+export const nightTell = (n) => (NIGHT_INFO[n] ? NIGHT_INFO[n].tell : 'The evenings never end. Every level is a little harder than the one before.');
 export const nightOf = (L) => Math.floor((L - 1) / PER_NIGHT) + 1;
 export const posInNight = (L) => ((L - 1) % PER_NIGHT) + 1;
 export const levelOf = (night, pos) => (night - 1) * PER_NIGHT + pos;

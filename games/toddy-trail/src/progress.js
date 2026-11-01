@@ -6,7 +6,7 @@ import { dayKey, dailyPlan, GOALS } from './daily.js';
 const KEY = 'trailV2';
 const DEFAULT_SETTINGS = { music: true, sfx: true, speed: 'Quick', floors: 'random', weather: 'full', lighting: true, unlockAll: false };
 let P = null;
-const fresh = () => ({ v: 1, stars: {}, best: {}, settings: { ...DEFAULT_SETTINGS }, daily: null, streak: { count: 0, last: '' }, seenIntro: {} });
+const fresh = () => ({ v: 1, stars: {}, best: {}, settings: { ...DEFAULT_SETTINGS }, daily: null, streak: { count: 0, last: '' }, seenIntro: {}, cards: { nights: {}, days: {} } });
 function load() {
   if (P) return P;
   try { const raw = JSON.parse(localStorage.getItem(KEY)); P = raw && raw.v === 1 ? { ...fresh(), ...raw, settings: { ...DEFAULT_SETTINGS, ...(raw.settings || {}) } } : fresh(); } catch (_) { P = fresh(); }
@@ -23,6 +23,15 @@ export function highestCleared() { let h = 0; for (const k of Object.keys(load()
 export const isUnlocked = (L) => L === 1 || load().settings.unlockAll || L <= highestCleared() + 1;
 export const nextLevel = () => Math.min(highestCleared() + 1, 100000);
 export const nightStars = (n) => { let s = 0; for (let p = 1; p <= PER_NIGHT; p++) s += starsOf((n - 1) * PER_NIGHT + p); return s; };
+// ---- gift cards: one for every night with all ten levels cleared, one for every Daily Run finished ----
+export const nightComplete = (n) => { for (let p = 1; p <= PER_NIGHT; p++) if (!starsOf((n - 1) * PER_NIGHT + p)) return false; return true; };
+export function claimNightCard(n) { load(); if (!nightComplete(n) || P.cards.nights[n]) return false; P.cards.nights[n] = 1; save(); return true; }
+export function claimDayCard(key) { load(); if (P.cards.days[key]) return false; P.cards.days[key] = 1; save(); return true; }
+export function myCards() {   // nights are worked out from the stars, so players who cleared a night before cards existed still get theirs
+  load(); const nights = []; const top = Math.max(highestCleared(), 1);
+  for (let n = 1; n <= nightOf(top) + 1; n++) if (nightComplete(n)) nights.push(n);
+  return { nights, days: Object.keys(P.cards.days).sort().reverse() };
+}
 export const totalStars = () => Object.values(load().stars).reduce((a, b) => a + b, 0);
 export const nightsUnlocked = () => nightOf(highestCleared() + 1);   // highest night the player can open
 export const seenIntro = (n) => !!load().seenIntro[n];

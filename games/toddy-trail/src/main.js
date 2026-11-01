@@ -4,7 +4,7 @@ import { setIco } from './icons.js';
 import { NIGHTS, registerLevel, STEPS_PER_SEC, newState, step, score, cartCell, thiefCell, shutterClosed, cellBlocked, DX, DY } from './core.js';
 import { ANIMS, STILLS, BGS } from './art.js';
 import { createMusic } from './music.js';
-import { LEVEL_ID, loadAll, buildLevel, starsFor, nightOf, posInNight, isBoss } from './levels.js';
+import { LEVEL_ID, loadAll, buildLevel, starsFor, nightOf, posInNight, isBoss, nightName } from './levels.js';
 import { drawPlainFloor } from './floors.js';
 import * as P from './progress.js';
 import { createScreens } from './screens.js';
@@ -461,7 +461,7 @@ function levelFiles(n, meta) {
 }
 function mk(tag, cls, text) { const e = document.createElement(tag); if (cls) e.className = cls; if (text) e.textContent = text; return e; }
 let ALL = null;
-const levelTitle = () => (cur.daily !== null ? 'Daily Run · ' + (cur.daily + 1) + ' of 3' : 'Night ' + nightOf(cur.L) + ' · Level ' + posInNight(cur.L)) + (isBoss(cur.L) ? ' · Boss' : '');
+const levelTitle = () => (cur.daily !== null ? 'Daily Run · ' + (cur.daily + 1) + ' of 3' : nightName(nightOf(cur.L)) + ' · Level ' + posInNight(cur.L)) + (isBoss(cur.L) ? ' · Boss' : '');
 async function begin(L, daily) {   // the first level of a night shows its picture story once
   const n = nightOf(L);
   if (daily === null && posInNight(L) === 1 && !P.seenIntro(n)) { S.intro(L, daily); return; }
@@ -497,7 +497,9 @@ function finishLevel() {
   const dailyDone = d !== null ? P.recordDailyLevel(d, stars) : false;
   P.recordPlay({ served: r.served, of: r.of, stars, boss: isBoss(L), left: (st.limit - st.t) / st.limit });
   for (let i = 0; i < stars; i++) setTimeout(() => { if (sfxOk() && musicGo) music.sfx('star', i); }, 500 + i * 260);
-  S.result({ L, daily: d, stars, score: r.score, served: r.served, of: r.of, seconds: r.seconds, spills: st.spills + st.snatched, rec, dailyDone });
+  const gift = d === null ? (P.claimNightCard(nightOf(L)) ? { kind: 'night', n: nightOf(L) } : null) : (dailyDone && P.claimDayCard(P.todaysDaily().plan.key) ? { kind: 'day', key: P.todaysDaily().plan.key } : null);
+  const info = { L, daily: d, stars, score: r.score, served: r.served, of: r.of, seconds: r.seconds, spills: st.spills + st.snatched, rec, dailyDone };
+  if (gift) setTimeout(() => S.gift(gift, () => S.result(info)), 900); else S.result(info);
 }
 function pause() { if (!running || !st || st.over) return; running = false; S.pause({ L: cur.L, daily: cur.daily, title: levelTitle() }); }
 function resume() { const o = $('overlay'); o.hidden = true; o.textContent = ''; running = true; last = 0; }
