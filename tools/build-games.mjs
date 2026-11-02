@@ -36,7 +36,7 @@ export const RULES = {
   HOME_MAX: 4,          // cards on the home page, ever
   NEW_DAYS: 21,         // "New" badge lasts this long after `added`
   NAV_DOT_DAYS: 7,      // gold dot on the menu "Play" link after a new game
-  DAILY_ROW_MIN: 3,     // "Today's Dailies" row appears at this many daily games
+  DAILY_ROW_MIN: 3,     // "Today's Dailies" row appears at this many daily games, but only when some games are NOT daily (otherwise it would repeat the same cards as "All games")
   FILTERS_MIN: 6,       // filter buttons + "New this week" row appear at this many games
   PAGE_SIZE: 12,        // games shown before "Show more games"
   SEARCH_MIN: 20,       // search box appears at this many games
@@ -140,7 +140,7 @@ export function plan(catalog) {
   const newest = playable.length ? playable[0].added : null;
   return {
     playable, soon, home, dailies,
-    showDailyRow: dailies.length >= RULES.DAILY_ROW_MIN,
+    showDailyRow: dailies.length >= RULES.DAILY_ROW_MIN && dailies.length < playable.length,
     showFilters: playable.length >= RULES.FILTERS_MIN,
     showNewRow: playable.length >= RULES.FILTERS_MIN,
     showMore: playable.length > RULES.PAGE_SIZE,
