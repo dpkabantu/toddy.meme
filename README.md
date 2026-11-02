@@ -48,7 +48,6 @@ When the chain and contract are final, update **every** place below in one commi
 - `index.html` — hero box (`#ca-text`, "TBA at TGE"), Launch & Safety (`#safety-ca-text`, `#official-explorer`), the "Chain TBA / TBA" values in the head (`og:description`, `twitter:description`, `description`), the tokenomics "Launch Chain" card and the "launch chain" pill, the hero snapshot, and the FAQ answers that say "will be published".
 - `linktree.html` — the safety notice and the `description` / `og:description` / `twitter:description` meta tags.
 - `terms.html` — section 2 ("TBA").
-- The disabled DEX Screener icons (index + footer) — turn them into real links.
 - Remove "pre-launch" wording and the roadmap "Phase 1" items as they complete.
 
 ## Games (beta)
@@ -66,5 +65,4 @@ When the chain and contract are final, update **every** place below in one commi
 
 - Fonts still load from Google Fonts. Self-hosting them (Cinzel, Inter, Playfair Display as `.woff2` in `assets/fonts/`, plus `@font-face` rules) would remove the last third-party request and let the CSP drop `fonts.googleapis.com` / `fonts.gstatic.com`.
 - The hero videos are ~4 MB each. They load only after the page has finished loading, only for the screen size in use, and not at all for visitors who prefer reduced motion or use Data Saver.
-- The Reddit link points to a user profile, not a subreddit.
 - `privacy.html` and `terms.html` are plain-language drafts written to match how the site works today. Have a qualified lawyer review them before launch, especially for the jurisdictions you target.
