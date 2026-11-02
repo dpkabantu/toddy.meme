@@ -732,14 +732,6 @@ img { max-width: 100%; height: auto; display: block; }
   background: #000; border-color: rgba(255,255,255,0.6); color: #fff;
   box-shadow: 0 8px 24px rgba(255,255,255,0.2);
 }
-.social-icon-reddit:hover {
-  background: #ff4500; border-color: #ff4500; color: #fff;
-  box-shadow: 0 8px 24px rgba(255,69,0,0.45);
-}
-.social-icon-discord:hover {
-  background: #5865f2; border-color: #5865f2; color: #fff;
-  box-shadow: 0 8px 24px rgba(88,101,242,0.45);
-}
 .social-icon-dex:hover {
   background: var(--gold); border-color: var(--gold); color: var(--black);
   box-shadow: 0 8px 24px rgba(201,168,76,0.45);
@@ -880,26 +872,6 @@ img { max-width: 100%; height: auto; display: block; }
   background: #000; border-color: rgba(255,255,255,0.5); color: #fff;
   box-shadow: 0 6px 18px rgba(255,255,255,0.15);
 }
-.footer-icon-reddit:hover {
-  background: #ff4500; border-color: #ff4500; color: #fff;
-  box-shadow: 0 6px 18px rgba(255,69,0,0.4);
-}
-.footer-icon-discord:hover {
-  background: #5865f2; border-color: #5865f2; color: #fff;
-  box-shadow: 0 6px 18px rgba(88,101,242,0.4);
-}
-.footer-icon-dex:hover {
-  background: var(--gold); border-color: var(--gold); color: var(--black);
-  box-shadow: 0 6px 18px rgba(201,168,76,0.4);
-}
-.footer-linktree-line {
-  font-size: 0.85rem; opacity: 0.6; margin-bottom: 20px;
-}
-.footer-linktree-link {
-  color: var(--gold); text-decoration: none; font-weight: 700;
-  transition: opacity 0.3s ease;
-}
-.footer-linktree-link:hover { opacity: 0.75; }
 .footer-divider {
   height: 1px; background: rgba(255,255,255,0.07); margin: 0 0 25px;
 }
@@ -1183,30 +1155,6 @@ img { max-width: 100%; height: auto; display: block; }
   border-color: rgba(255,255,255,0.72);
 }
 
-/* Reddit */
-.social-icon-btn[aria-label="Reddit"],
-.footer-icon-btn[aria-label="Reddit"] {
-  background: #FF4500;
-  color: #fff;
-  border-color: #FFB49B;
-}
-
-/* Discord */
-.social-icon-btn[aria-label="Discord"],
-.footer-icon-btn[aria-label="Discord"] {
-  background: #5865F2;
-  color: #fff;
-  border-color: #B7BEFF;
-}
-
-/* DEX Screener — dark chart-style button with a vivid green rim */
-.social-icon-btn[aria-label="DEX Screener"],
-.footer-icon-btn[aria-label="DEX Screener"] {
-  background: #132019;
-  color: #B8F36B;
-  border-color: #8BC34A;
-}
-
 /* Keep branded fills on hover; add glow/lift instead of swapping colours. */
 .social-icon-btn[aria-label="Twitter / X"]:hover,
 .footer-icon-btn[aria-label="Twitter / X"]:hover {
@@ -1233,21 +1181,6 @@ img { max-width: 100%; height: auto; display: block; }
 .footer-icon-btn[aria-label="Medium"]:hover {
   background: #080808; color: #fff; border-color: #fff;
   box-shadow: 0 0 18px rgba(255,255,255,0.2), 0 8px 22px rgba(0,0,0,0.38);
-}
-.social-icon-btn[aria-label="Reddit"]:hover,
-.footer-icon-btn[aria-label="Reddit"]:hover {
-  background: #FF4500; color: #fff; border-color: #FFD0C0;
-  box-shadow: 0 0 18px rgba(255,69,0,0.5), 0 8px 22px rgba(0,0,0,0.38);
-}
-.social-icon-btn[aria-label="Discord"]:hover,
-.footer-icon-btn[aria-label="Discord"]:hover {
-  background: #5865F2; color: #fff; border-color: #D4D8FF;
-  box-shadow: 0 0 18px rgba(88,101,242,0.52), 0 8px 22px rgba(0,0,0,0.38);
-}
-.social-icon-btn[aria-label="DEX Screener"]:hover,
-.footer-icon-btn[aria-label="DEX Screener"]:hover {
-  background: #132019; color: #D7FFA5; border-color: #B8F36B;
-  box-shadow: 0 0 18px rgba(139,195,74,0.45), 0 8px 22px rgba(0,0,0,0.38);
 }
 
 /* Visible keyboard focus without changing normal button geometry. */
@@ -1896,8 +1829,6 @@ main:focus, section[tabindex="-1"]:focus { outline: none; }
 .phase-tag { color: var(--gold-light); font-size: .78rem; }
 .night-shift-card small { font-size: .74rem; color: rgba(246,233,208,.86); }
 .safety-link-tba, #official-explorer { color: rgba(246,233,208,.86); }
-.footer-linktree-link { color: var(--gold-light); opacity: 1; text-decoration: underline; text-underline-offset: 3px; }
-.footer-linktree-link:hover { opacity: .8; }
 .phase-progress::before { font-size: .68rem; color: rgba(246,233,208,.78); }
 
 /* ---------- HERO VIDEO PAUSE CONTROL ---------- */
