@@ -744,8 +744,8 @@ function parseChallenge() {
 }
 const moonsHTML = (n) => '<span class="mb-moons">' + '<i class="mb-moon"></i>'.repeat(Math.max(1, Math.min(3, n))) + '</span>';
 function badgeHTML(mr, maxLevel) {      // the proof of a Moonrise (two Full Moons merged) or a Full Moon, shown big
-  if (mr > 0) return '<div class="moonbadge"><div class="mbrib">' + moonsHTML(mr) + '<b>MOONRISE ×' + mr + '</b></div><small>Two Full Moons merged' + (mr > 1 ? ', ' + mr + ' times' : '') + '</small></div>';
-  if (maxLevel >= 11) return '<div class="moonbadge"><div class="mbrib">' + moonsHTML(1) + '<b>FULL MOON</b></div><small>Toddy’s Full Moon reached</small></div>';
+  if (mr > 0) return '<div class="moonbadge"><div class="mbrib"><span class="mbtxt">' + moonsHTML(mr) + '<b>MOONRISE ×' + mr + '</b></span></div><small>Two Full Moons merged' + (mr > 1 ? ', ' + mr + ' times' : '') + '</small></div>';
+  if (maxLevel >= 11) return '<div class="moonbadge"><div class="mbrib"><span class="mbtxt">' + moonsHTML(1) + '<b>FULL MOON</b></span></div><small>Toddy’s Full Moon reached</small></div>';
   return '';
 }
 function moonBadge() { return moonrises > 0 ? { text: 'MOONRISE ×' + moonrises, n: moonrises } : (S.maxLevel >= 11 ? { text: 'FULL MOON REACHED', n: 1 } : null); }
