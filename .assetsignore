@@ -9,3 +9,6 @@ docs
 .github
 tools
 CLAUDE.md
+server
+migrations
+tests
