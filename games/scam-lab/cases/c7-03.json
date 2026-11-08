@@ -6,14 +6,14 @@
   "title": "The Star's Secret",
   "disguise": "influencer",
   "intro": [
-    "An ad shows a drawing of a famous TV host, saying he found a secret way to grow money. It is a drawing, not a real person.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "A famous presenter seems to endorse a new token in a video.",
+    "A link under it lets you join early.",
+    "Tap anything odd, then decide."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Sponsored",
-    "text": "A famous host reveals his money secret"
+    "from": "MoonStar Official",
+    "text": "My secret token, just for you…"
   },
   "screen": {
     "app": "chirp",
@@ -21,44 +21,56 @@
       "name": [
         {
           "clue": "name",
-          "text": "MoneyMakers Daily"
+          "text": "MoonStar Official"
         }
       ],
       "sub": [
-        "Sponsored"
+        {
+          "clue": "sub",
+          "text": "Sponsored post"
+        }
       ],
       "avatar": {
-        "glyph": "🎙️",
-        "clue": "pic"
+        "glyph": "⭐",
+        "clue": "avatar"
       }
     },
-    "banner": [
-      "Ad · you do not follow this page"
-    ],
-    "context": "The ad uses a drawing of \"a famous TV host\". No real person is shown.",
+    "context": "The video looks like a famous presenter, but the voice is slightly off.",
     "items": [
       {
-        "msg": [
+        "time": [
           {
-            "clue": "star",
-            "text": "\"A famous host reveals his secret\""
-          },
-          ": turn $500 into $10,000 in a month!"
-        ]
-      },
-      {
-        "msg": [
-          {
-            "clue": "fast",
-            "text": "It is so easy, he says. Banks hate this trick."
+            "clue": "time",
+            "text": "8:15 PM"
           }
         ]
       },
       {
         "msg": [
+          "I made a fortune with ",
+          {
+            "clue": "token",
+            "text": "$COSMOKOI"
+          },
+          ". ",
+          {
+            "clue": "gain",
+            "text": "Put in 500 USDT, get 5,000 back"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          "This is ",
+          {
+            "clue": "secret",
+            "text": "my secret"
+          },
+          ", only for my fans. ",
           {
             "clue": "link",
-            "text": "Sign up now: vantage-trade-star.live",
+            "text": "cosmokoi-presale.xyz",
             "link": true
           }
         ]
@@ -66,69 +78,74 @@
       {
         "msg": [
           {
-            "clue": "limit",
-            "text": "Limited spots, closes at midnight."
-          }
-        ]
-      },
-      {
-        "msg": [
-          {
-            "clue": "risk",
-            "text": "No risk. Zero loss."
-          }
+            "clue": "rush",
+            "text": "Presale ends at midnight"
+          },
+          "."
         ]
       }
     ]
   },
   "clues": {
-    "star": {
-      "label": "A famous face used",
+    "token": {
+      "label": "A token you never heard of",
       "strength": "strong",
-      "lens": "Scam ads use famous people who never agreed.",
-      "why": "A famous name is not an endorsement. Check the real person's own official channels."
+      "lens": "A new token endorsed by a \"star\".",
+      "why": "Scammers use celebrity faces and voices."
     },
-    "fast": {
-      "label": "\"Turn $500 into $10,000\"",
+    "gain": {
+      "label": "Put in 500, get 5,000",
       "strength": "strong",
-      "lens": "A huge fast return.",
-      "why": "Huge fast returns are the bait."
+      "lens": "A 10x promise.",
+      "why": "Nobody promises 10x."
+    },
+    "secret": {
+      "label": "\"My secret, only for fans\"",
+      "strength": "strong",
+      "lens": "False intimacy.",
+      "why": "It makes a public ad feel private."
     },
     "link": {
-      "label": "A strange sign-up address",
+      "label": "A look-alike link",
       "strength": "strong",
-      "lens": "vantage-trade-star.live is not a regulated firm's site.",
-      "why": "Check that the firm is registered, on the regulator's own site."
+      "lens": "cosmokoi-presale.xyz is a sign-up page.",
+      "why": "A real presenter does not sell tokens through a link."
     },
-    "limit": {
-      "label": "Closes at midnight",
+    "rush": {
+      "label": "Ends at midnight",
       "strength": "strong",
       "lens": "A deadline.",
-      "why": "Pressure is a trick."
-    },
-    "risk": {
-      "label": "\"No risk, zero loss\"",
-      "strength": "strong",
-      "lens": "All investments carry risk.",
-      "why": "There are no investments without risk."
+      "why": "Pressure stops you from checking."
     },
     "name": {
-      "label": "A page name",
+      "label": "MoonStar Official",
       "strength": "harmless",
-      "lens": "MoneyMakers Daily.",
-      "why": "Names are easy to invent."
+      "lens": "A typed word.",
+      "why": "Anyone can type a name."
     },
-    "pic": {
-      "label": "Microphone picture",
+    "sub": {
+      "label": "Sponsored post",
       "strength": "harmless",
-      "lens": "A little microphone.",
+      "lens": "A paid ad.",
+      "why": "Ads can be bought by anyone."
+    },
+    "avatar": {
+      "label": "Star picture",
+      "strength": "harmless",
+      "lens": "A symbol.",
       "why": "Pictures prove nothing."
+    },
+    "time": {
+      "label": "8:15 PM",
+      "strength": "harmless",
+      "lens": "An ordinary time.",
+      "why": "Time proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Sign up and invest $500",
+      "label": "Send 500 USDT",
       "trap": true
     },
     {
@@ -137,119 +154,127 @@
     },
     {
       "id": "verify",
-      "label": "Check if the firm is registered, and check the host's own channels"
+      "label": "Check the star's real channels"
     },
     {
       "id": "block_report",
       "label": "Report the ad"
     }
   ],
-  "best_action": "block_report",
   "acceptable_actions": [
     "verify",
     "ignore"
   ],
-  "trap": {
-    "title": "Vantage Trade · Sign up",
-    "url": "vantage-trade-star.live",
-    "ask": "Deposit $500 by transfer to start trading.",
-    "go": "Deposit $500",
-    "back": "Close this page"
-  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Reported. The platform removed the ad before it reached more people.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Reported. The deepfake ad was flagged.",
+      "mirageSays": "My lovely star!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The host's real channels said he had never promoted it, and the firm was not registered. Case cracked.",
+      "line": "The star's real channels said they never endorse tokens and warned about a fake video. Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You scrolled on safely. A report would also help.",
+      "mirageSays": "Fine. Next ad!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The $500 went to a stranger. The site showed a fake profit, then locked you out.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The 500 USDT left your wallet. The token vanished and the page closed.",
+      "mirageSays": "Thanks for the presale!"
     }
   },
   "what_if": {
-    "go_ahead": "Checking the firm's registration and the host's own channels would have ended it. \"No risk\" does not exist.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "A famous face does not make a token real. Stop at the first ask.",
+    "verify": "Checking the real channels was key.",
+    "ignore": "Scrolling on was safe. A report helps."
   },
-  "golden_rule": "An ad using a famous face and promising no risk is a scam. Check the firm is registered, and check the person's own channels.",
+  "best_action": "block_report",
+  "trap": {
+    "title": "COSMOKOI Presale",
+    "url": "cosmokoi-presale.xyz",
+    "ask": "Connect your wallet and send 500 USDT.",
+    "go": "Send 500 USDT",
+    "back": "Close this page"
+  },
+  "golden_rule": "A famous face selling a token is often a deepfake. Check the star's real channels before anything else.",
   "quick_check": {
-    "q": "An ad with a famous face says you can turn $500 into $10,000 with no risk. What do you do?",
+    "q": "A video of a famous presenter endorses a new token and promises 10x. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Sign up, a famous person backs it"
+        "text": "Join early, the star says so"
       },
       {
         "id": "b",
-        "text": "Invest a little"
+        "text": "Check the star's real channels and report the ad"
       },
       {
         "id": "c",
-        "text": "Do not invest. Report the ad, and check the firm is registered"
+        "text": "Put in a small amount"
       },
       {
         "id": "d",
-        "text": "Share it"
+        "text": "Ask friends in a chat"
       }
     ],
-    "answer": "c",
-    "explain": "A famous face is not proof. No investment is risk-free."
+    "answer": "b",
+    "explain": "Deepfake endorsements are a growing scam. Check the real source."
   },
   "hints": {
-    "nudge": "Did the famous person really say this?",
+    "nudge": "Is it really the star?",
     "glow_order": [
-      "star",
-      "fast",
+      "token",
+      "gain",
+      "secret",
       "link",
-      "limit",
-      "risk"
+      "rush"
     ]
   },
-  "sources": [
-    "ftc-invest-social",
-    "ftc-crypto"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the account",
+      "title": "MoonStar Official",
+      "rows": [
+        {
+          "k": "Real channel",
+          "v": "Never mentions this token",
+          "clue": "token"
+        },
+        {
+          "k": "Ad type",
+          "v": "Paid"
+        }
+      ]
+    },
     {
       "id": "link",
       "icon": "🔗",
-      "label": "Check the firm",
-      "title": "Where the ad goes",
+      "label": "Check the link",
+      "title": "Where it goes",
       "rows": [
         {
-          "k": "Address",
-          "v": "vantage-trade-star.live",
+          "k": "Page",
+          "v": "A presale page",
           "clue": "link"
         },
         {
-          "k": "Registered?",
-          "v": "No"
-        },
-        {
-          "k": "Promise",
-          "v": "\"No risk, zero loss\"",
-          "clue": "risk"
+          "k": "Asks for",
+          "v": "500 USDT",
+          "clue": "gain"
         }
       ]
     },
@@ -257,19 +282,24 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What investment-scam advice says",
       "rows": [
         {
-          "k": "No guaranteed returns",
-          "v": "And no investments without risk",
-          "clue": "risk"
+          "k": "Celebrity token ads",
+          "v": "Are often deepfakes",
+          "clue": "secret"
         },
         {
-          "k": "Famous faces in ads",
-          "v": "May be used without consent",
-          "clue": "star"
+          "k": "10x promises",
+          "v": "Are the scam",
+          "clue": "gain"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-crypto",
+    "ftc-invest-social"
+  ],
+  "checked_on": "2026-11-08"
 }
