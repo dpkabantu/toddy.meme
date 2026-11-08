@@ -3,140 +3,151 @@
   "type": "hunt",
   "chapter": 2,
   "difficulty": 2,
-  "title": "The Copycat Giveaway",
+  "title": "The Copycat Winner Notice",
   "disguise": "influencer",
   "intro": [
-    "A creator you follow seems to be giving away phones. The message came straight to your inbox.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "You entered a real giveaway on Zelvora's official account. Winners will be announced soon.",
+    "Then a DM arrives from \"the Zelvora team\": you won!",
+    "Sniff the message, then decide."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Kiko Official ✔",
-    "text": "You won a phone! Claim it now…"
+    "from": "Zelvora Giveaways ✔",
+    "text": "You won 5,000 ZLX! One step to claim…"
   },
   "screen": {
     "app": "chirp",
     "head": {
       "name": [
         {
-          "clue": "tick",
-          "text": "Kiko Official ✔"
+          "clue": "name",
+          "text": "Zelvora Giveaways ✔"
         }
       ],
       "sub": [
         {
           "clue": "handle",
-          "text": "@kiko_official_giveaway"
+          "text": "@zelvora_g1veaways"
         }
       ],
       "avatar": {
         "glyph": "🎁",
-        "clue": "pic"
+        "clue": "avatar"
       }
     },
     "banner": [
       {
-        "clue": "dmfirst",
+        "clue": "dm",
         "text": "New message request · you do not follow this account"
       }
     ],
-    "context": "You follow a creator called Kiko, whose real account is @kiko.",
+    "context": "You liked the real giveaway post yesterday. Winners are announced on the official account.",
     "items": [
       {
         "time": [
-          "3:20 PM"
+          {
+            "clue": "time",
+            "text": "9:05 PM"
+          }
         ]
       },
       {
         "msg": [
-          "🎉 You are one of ",
+          "Congratulations! You are a ",
           {
-            "clue": "few",
-            "text": "10 lucky winners"
+            "clue": "winner",
+            "text": "winner of 5,000 ZLX"
           },
-          " of a free phone!"
+          "! 🎉"
         ]
       },
       {
         "msg": [
-          "Claim here: ",
-          {
-            "clue": "link",
-            "text": "kiko-phones-claim.live",
-            "link": true
-          },
-          ". ",
+          "To claim it, send ",
           {
             "clue": "fee",
-            "text": "Just pay €5 delivery."
-          }
+            "text": "a small 40 ZLX network fee"
+          },
+          " to this address: ",
+          {
+            "clue": "addr",
+            "text": "0x7c4…e91"
+          },
+          "."
         ]
       },
       {
         "msg": [
           {
-            "clue": "deadline",
-            "text": "Claim in 2 hours or we pick someone else."
-          }
+            "clue": "timer",
+            "text": "Unclaimed prizes are redrawn in",
+            "countdown": 900
+          },
+          "."
         ]
       }
     ]
   },
   "clues": {
-    "dmfirst": {
-      "label": "They messaged first",
-      "strength": "strong",
-      "lens": "A request from an account you do not follow.",
-      "why": "Real creators announce winners in public posts, not by random DMs."
-    },
-    "tick": {
-      "label": "Fake tick",
-      "strength": "strong",
-      "lens": "The ✔ is typed into the name. A real badge sits next to the handle, and there is none.",
-      "why": "Anyone can type a tick into a display name."
-    },
     "handle": {
-      "label": "A copy of the real account",
+      "label": "Look-alike handle",
       "strength": "strong",
-      "lens": "@kiko_official_giveaway is new. The real account is @kiko.",
-      "why": "Copy accounts add words to a real name. Check the real handle."
-    },
-    "link": {
-      "label": "Look-alike link",
-      "strength": "strong",
-      "lens": "kiko-phones-claim.live is not a place a creator would use.",
-      "why": "Never claim a prize through a link a stranger sends."
+      "lens": "@zelvora_g1veaways uses a number 1 instead of an i.",
+      "why": "Copycat accounts change one character. Check the handle letter by letter."
     },
     "fee": {
-      "label": "Pay to receive a \"free\" phone",
+      "label": "Pay to claim",
       "strength": "strong",
-      "lens": "€5 for \"delivery\" of a free phone.",
-      "why": "A free prize that costs money is the scam."
+      "lens": "You are asked to send coins to receive a prize.",
+      "why": "Real prizes never charge you to receive them."
     },
-    "deadline": {
-      "label": "Two-hour deadline",
+    "dm": {
+      "label": "They messaged first",
       "strength": "strong",
-      "lens": "Claim in 2 hours or lose it.",
-      "why": "Pressure is a trick to stop you checking."
+      "lens": "Winners are announced on the official account, not by DM from a new account.",
+      "why": "Copycats message people who entered real giveaways."
     },
-    "few": {
-      "label": "\"10 lucky winners\"",
-      "strength": "harmless",
-      "lens": "A small number of winners.",
-      "why": "The number alone proves nothing."
+    "addr": {
+      "label": "Send to a stranger",
+      "strength": "strong",
+      "lens": "A raw wallet address belonging to the scammer.",
+      "why": "Coins sent there cannot be recovered."
     },
-    "pic": {
-      "label": "A gift picture",
+    "timer": {
+      "label": "Redrawn soon",
+      "strength": "strong",
+      "lens": "A deadline to rush you.",
+      "why": "Pressure stops you from checking the official post."
+    },
+    "winner": {
+      "label": "A big prize",
       "strength": "harmless",
-      "lens": "A little gift box.",
+      "lens": "5,000 ZLX sounds great.",
+      "why": "A big prize is the bait, not proof."
+    },
+    "name": {
+      "label": "Name and tick",
+      "strength": "harmless",
+      "lens": "The name has a typed ✔.",
+      "why": "A tick you can type is not a real badge."
+    },
+    "avatar": {
+      "label": "Gift logo",
+      "strength": "harmless",
+      "lens": "A copy of the giveaway picture.",
       "why": "Pictures are easy to copy."
+    },
+    "time": {
+      "label": "Sent at 9:05 PM",
+      "strength": "harmless",
+      "lens": "An ordinary time.",
+      "why": "The time proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Open the link and pay the €5",
+      "label": "Send the fee and claim",
       "trap": true
     },
     {
@@ -145,11 +156,11 @@
     },
     {
       "id": "verify",
-      "label": "Look at the creator's real page"
+      "label": "Check the official Zelvora account for the winners list"
     },
     {
       "id": "block_report",
-      "label": "Report it and delete it"
+      "label": "Block and report the account"
     }
   ],
   "best_action": "block_report",
@@ -158,127 +169,148 @@
     "ignore"
   ],
   "trap": {
-    "title": "Kiko Phones · Claim",
-    "url": "kiko-phones-claim.live",
-    "ask": "Pay €5 delivery and enter your card number to receive your phone.",
-    "go": "Pay €5",
-    "back": "Close this page"
+    "title": "Claim 5,000 ZLX",
+    "url": "wallet transfer",
+    "ask": "Send 40 ZLX to 0x7c4…e91 to release your prize.",
+    "go": "Send 40 ZLX",
+    "back": "Cancel"
   },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Blocked and reported. The copy account was removed before it reached more fans.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Blocked and reported. The copycat was removed before it reached other entrants.",
+      "mirageSays": "My winners list!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The creator's real page had no giveaway, and a pinned warning about copy accounts. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "The official account listed other winners and warned of fake DMs. Case cracked.",
+      "mirageSays": "Hmph. They read the real post."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. Reporting protects other entrants.",
+      "mirageSays": "Fine. Next entrant!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The €5 page copied your card details. No phone came, and more charges followed.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The 40 ZLX went to the scammer. The prize never existed.",
+      "mirageSays": "Thanks for the fee!"
     }
   },
   "what_if": {
-    "go_ahead": "Checking the real page first would have shown a warning about copy accounts.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "The official post said winners are never asked to pay. That line was the whole answer.",
+    "verify": "Checking was smart. Reporting the copycat helps others.",
+    "ignore": "Ignoring it was safe. A quick report protects others."
   },
-  "golden_rule": "A free prize that asks you to pay is not free. Check the creator's real page, not the DM.",
+  "golden_rule": "A real prize never costs you anything to claim. Check winners on the official account only.",
   "quick_check": {
-    "q": "A DM says you won a free phone, but you must pay €5 for delivery. The account looks like a creator you follow. What do you do?",
+    "q": "After you enter a giveaway, a similar-looking account says you won and asks for a small fee. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Pay €5, it is small"
+        "text": "Pay the small fee"
       },
       {
         "id": "b",
-        "text": "Reply to ask if it is real"
+        "text": "Do not pay. Check the official account and report the copycat"
       },
       {
         "id": "c",
-        "text": "Check the creator's real page, then block and report the copy"
+        "text": "Pay half"
       },
       {
         "id": "d",
-        "text": "Ask the account to prove itself"
+        "text": "Ask for a bigger prize first"
       }
     ],
-    "answer": "c",
-    "explain": "A prize that asks for money is the trap. Check the real page."
+    "answer": "b",
+    "explain": "Prizes are never paid for. Copycats lurk under real giveaways."
   },
   "hints": {
-    "nudge": "Does the real creator's page say anything about this?",
+    "nudge": "Read the handle one character at a time.",
     "glow_order": [
-      "dmfirst",
-      "tick",
-      "handle",
-      "link",
       "fee",
-      "deadline"
+      "handle",
+      "dm",
+      "addr",
+      "timer"
     ]
   },
-  "sources": [
-    "ftc-prize",
-    "ftc-phishing"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check the account",
-      "title": "@kiko_official_giveaway",
+      "title": "Zelvora Giveaways ✔",
       "rows": [
         {
-          "k": "Account created",
-          "v": "2 days ago",
+          "k": "Handle",
+          "v": "@zelvora_g1veaways, with a number 1",
           "clue": "handle"
         },
         {
-          "k": "Verified badge",
-          "v": "None. The ✔ is typed into the name",
-          "clue": "tick"
+          "k": "Joined",
+          "v": "4 days ago"
         },
         {
           "k": "Real account",
-          "v": "@kiko, 4 years old"
+          "v": "@zelvora"
         }
       ]
     },
     {
       "id": "link",
       "icon": "🔗",
-      "label": "Check the link",
-      "title": "Where it goes",
+      "label": "Check the request",
+      "title": "What it asks",
       "rows": [
         {
-          "k": "Opens",
-          "v": "kiko-phones-claim.live",
-          "clue": "link"
+          "k": "Pay first",
+          "v": "A 40 ZLX fee",
+          "clue": "fee"
         },
         {
-          "k": "A fee for the \"free\" phone",
-          "v": "€5",
+          "k": "Send to",
+          "v": "A raw address",
+          "clue": "addr"
+        },
+        {
+          "k": "Deadline",
+          "v": "15 minutes",
+          "clue": "timer"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official page",
+      "title": "What the real account says",
+      "rows": [
+        {
+          "k": "Winners",
+          "v": "Announced on this account only",
+          "clue": "dm"
+        },
+        {
+          "k": "Winners are asked to pay",
+          "v": "Never",
           "clue": "fee"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-prize",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }
