@@ -6,39 +6,36 @@
   "title": "Pay the Tax to Withdraw",
   "disguise": "friend",
   "intro": [
-    "Your partner online has shared profit screenshots for weeks. You finally tried it. Now you want to withdraw.",
-    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
-    "Every chat ends with your choice. Choose wisely."
+    "Your online partner helped you \"invest\". Your balance looks great.",
+    "Now you cannot withdraw until you pay something.",
+    "Pick your replies and sniff each message."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Isha",
-    "text": "Look at today's profit! 📈"
+    "from": "Ana",
+    "text": "Your profit is ready, but…"
   },
   "screen": {
     "app": "chirp",
     "head": {
       "name": [
         {
-          "text": "Isha (partner online)",
+          "text": "Ana",
           "id": "duel-name"
         }
       ],
       "sub": [
-        {
-          "clue": "met",
-          "text": "Together online for 2 months, never met"
-        }
+        "Online for 4 months"
       ],
       "avatar": {
-        "glyph": "📈",
-        "clue": "logo"
+        "glyph": "🌙",
+        "clue": "avatar"
       }
     },
+    "items": [],
     "banner": [
-      "Private chat"
-    ],
-    "items": []
+      "Message request · you do not follow this account"
+    ]
   },
   "duel": {
     "start": "n1",
@@ -47,37 +44,37 @@
         "say": [
           {
             "msg": [
-              "Look, my balance is ",
+              "Your balance is ",
               {
-                "clue": "shot",
-                "text": "€9,400"
+                "clue": "bal",
+                "text": "48,000 USDT"
               },
-              "! [screenshot]"
+              "! Amazing! 🎉"
             ]
           },
           {
             "msg": [
-              "Yours is ",
+              "To withdraw, the platform needs a ",
               {
-                "clue": "yours",
-                "text": "€2,100"
+                "clue": "tax",
+                "text": "20% tax"
               },
-              " now. You can withdraw any time."
+              " paid first."
             ]
           }
         ],
         "replies": [
           {
-            "text": "I will try to withdraw now",
+            "text": "How do I pay it?",
             "next": "n2"
           },
           {
-            "text": "Add more to grow it faster",
+            "text": "Why not take it out of my balance?",
             "next": "n3"
           },
           {
-            "text": "I will stop and ask my bank",
-            "end": "verify"
+            "text": "Block and report",
+            "end": "block_report"
           }
         ]
       },
@@ -85,35 +82,32 @@
         "say": [
           {
             "msg": [
-              "The platform needs you to pay ",
+              "Send ",
               {
-                "clue": "tax",
-                "text": "a 20% tax of €420"
+                "clue": "amt",
+                "text": "9,600 USDT"
               },
-              " before you can withdraw."
-            ]
-          },
-          {
-            "msg": [
+              " to the support address. ",
               {
                 "clue": "rush",
-                "text": "Pay within 24 hours or your account is frozen."
-              }
+                "text": "It must be paid within 24 hours"
+              },
+              "."
             ]
           }
         ],
         "replies": [
           {
-            "text": "OK, paying the tax",
-            "next": "n3"
+            "text": "OK, sending",
+            "end": "go_ahead"
           },
           {
-            "text": "A tax to withdraw my own money? I am stopping.",
-            "end": "block_report"
-          },
-          {
-            "text": "I will ask my bank first",
+            "text": "I will contact the real exchange",
             "end": "verify"
+          },
+          {
+            "text": "This is a scam. Reporting",
+            "end": "block_report"
           }
         ]
       },
@@ -121,34 +115,30 @@
         "say": [
           {
             "msg": [
-              "Paid! Oh, now there is a ",
               {
-                "clue": "more",
-                "text": "\"verification fee\" of €300"
+                "clue": "rule",
+                "text": "The rules do not allow it."
+              },
+              " Everyone pays. ",
+              {
+                "clue": "trust",
+                "text": "Trust me, I paid mine"
               },
               "."
-            ]
-          },
-          {
-            "msg": [
-              {
-                "clue": "love",
-                "text": "If you love me, you will trust me. Everything is tied to this."
-              }
             ]
           }
         ],
         "replies": [
           {
-            "text": "Paying the verification fee",
+            "text": "Fine, sending",
             "end": "go_ahead"
           },
           {
-            "text": "No more. I am done and reporting this.",
+            "text": "No real platform asks this. Reporting",
             "end": "block_report"
           },
           {
-            "text": "I will stop and call my bank",
+            "text": "I will check with the real exchange",
             "end": "verify"
           }
         ]
@@ -156,67 +146,61 @@
     }
   },
   "clues": {
-    "met": {
-      "label": "Never met in person",
+    "bal": {
+      "label": "A huge balance",
       "strength": "strong",
-      "lens": "Two months of chat only.",
-      "why": "Do not invest with someone you have not met."
-    },
-    "shot": {
-      "label": "A huge balance screenshot",
-      "strength": "strong",
-      "lens": "Anyone can make one.",
-      "why": "Never trust a screenshot."
-    },
-    "yours": {
-      "label": "Your balance in their app",
-      "strength": "strong",
-      "lens": "It is a number on a screen, not money you hold.",
-      "why": "A balance in a stranger's app is not money you own."
+      "lens": "Numbers on a fake screen.",
+      "why": "The balance is made up."
     },
     "tax": {
-      "label": "A \"tax\" to withdraw",
+      "label": "A tax to withdraw",
       "strength": "strong",
-      "lens": "You must pay €420 first.",
-      "why": "Real platforms take fees from your balance, not from you in advance. A demand to pay first is the scam."
+      "lens": "A fee before you can take money out.",
+      "why": "Real platforms take fees from the balance."
+    },
+    "amt": {
+      "label": "9,600 USDT",
+      "strength": "strong",
+      "lens": "A big payment.",
+      "why": "It is a new payment, not a deduction."
     },
     "rush": {
-      "label": "Pay within 24 hours",
+      "label": "24 hours",
       "strength": "strong",
       "lens": "A deadline.",
-      "why": "Pressure is a trick."
+      "why": "Pressure stops you from checking."
     },
-    "more": {
-      "label": "Another fee after the tax",
+    "rule": {
+      "label": "\"The rules do not allow it\"",
       "strength": "strong",
-      "lens": "After you pay, there is always one more fee.",
-      "why": "Scammers keep inventing fees."
+      "lens": "A made-up rule.",
+      "why": "A fake rule hides the trick."
     },
-    "love": {
-      "label": "\"If you love me, trust me\"",
+    "trust": {
+      "label": "\"Trust me\"",
       "strength": "strong",
-      "lens": "Love used as pressure.",
-      "why": "Guilt and love are levers."
+      "lens": "Emotional pressure.",
+      "why": "Love is used to lower your guard."
     },
-    "logo": {
-      "label": "Chart picture",
+    "avatar": {
+      "label": "Moon picture",
       "strength": "harmless",
-      "lens": "A little chart.",
+      "lens": "A symbol.",
       "why": "Pictures prove nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Pay the verification fee"
+      "label": "Send the tax"
     },
     {
       "id": "verify",
-      "label": "Stop and call my bank"
+      "label": "Contact the real exchange"
     },
     {
       "id": "block_report",
-      "label": "Stop, block and report"
+      "label": "Block and report"
     }
   ],
   "best_action": "block_report",
@@ -228,85 +212,96 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "You stopped and reported. The account was removed, and you paid no more.",
-      "mirageSays": "Curses! Blocked again!"
+      "line": "Blocked and reported. You stopped at the right place.",
+      "mirageSays": "My lovely tax!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Your bank said this was a known scam, and helped you report it. You stopped in time. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "The real exchange had no account for you and no such tax. Case cracked.",
+      "mirageSays": "Hmph. They asked."
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The \"verification fee\" was lost. The platform locked you out and \"Isha\" vanished.",
-      "mirageSays": "Thanks for the fee!"
+      "line": "The 9,600 USDT vanished. A \"second tax\" demand followed.",
+      "mirageSays": "Thanks for the tax!"
     }
   },
   "what_if": {
-    "go_ahead": "A fee to withdraw your own money is the signal. Every payment after the first is more loss.",
-    "verify": "Stopping was smart. Reporting as well helps others."
+    "go_ahead": "A tax that must be paid first is the last trap. Stop here.",
+    "verify": "Asking the real exchange was the right route."
   },
-  "golden_rule": "If you must pay a fee or tax to withdraw your own money, it is a scam. Stop at the first fee.",
+  "golden_rule": "If you must pay a tax or fee before you can withdraw, you are inside the scam. Stop paying.",
   "quick_check": {
-    "q": "An online partner's platform asks you to pay a 20% tax before you can withdraw. What do you do?",
+    "q": "A fake platform says you must pay a 20% tax before withdrawing. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Pay it, it comes back"
+        "text": "Pay, it is my money"
       },
       {
         "id": "b",
-        "text": "Pay half"
+        "text": "Stop and report. Real platforms deduct fees from the balance"
       },
       {
         "id": "c",
-        "text": "Stop. Do not pay. Report it"
+        "text": "Pay half"
       },
       {
         "id": "d",
-        "text": "Ask for a discount"
+        "text": "Ask her to pay it"
       }
     ],
-    "answer": "c",
-    "explain": "Paying to withdraw your own money is the scam."
+    "answer": "b",
+    "explain": "The balance is fake. The tax is the final trap."
   },
   "hints": {
-    "nudge": "Why would you pay before you can withdraw your own money?",
+    "nudge": "Whose balance is it?",
     "glow_order": [
+      "bal",
       "tax",
-      "more",
-      "yours",
-      "shot",
-      "met",
+      "amt",
       "rush",
-      "love"
+      "rule",
+      "trust"
     ]
   },
-  "sources": [
-    "ftc-romance",
-    "ftc-invest-social"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the platform",
-      "title": "Isha's platform",
+      "label": "Check the account",
+      "title": "Ana",
       "rows": [
         {
-          "k": "Met in person?",
-          "v": "Never",
-          "clue": "met"
+          "k": "Platform",
+          "v": "Not on any exchange list",
+          "clue": "bal"
         },
         {
-          "k": "To withdraw",
-          "v": "Pay a \"tax\" first",
+          "k": "Real exchange",
+          "v": "Has no account for you"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the demand",
+      "title": "What she wants",
+      "rows": [
+        {
+          "k": "Tax",
+          "v": "20%",
           "clue": "tax"
+        },
+        {
+          "k": "Deadline",
+          "v": "24 hours",
+          "clue": "rush"
         }
       ]
     },
@@ -314,18 +309,24 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What investment-scam advice says",
       "rows": [
         {
-          "k": "A fee to withdraw",
-          "v": "A warning sign",
+          "k": "Pay to withdraw",
+          "v": "Is the scam",
           "clue": "tax"
         },
         {
-          "k": "Guaranteed returns",
-          "v": "None exist"
+          "k": "Real platforms",
+          "v": "Take fees from the balance"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-romance",
+    "ftc-crypto",
+    "ftc-invest-social"
+  ],
+  "checked_on": "2026-11-08"
 }

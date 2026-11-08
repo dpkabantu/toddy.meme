@@ -3,16 +3,16 @@
   "type": "hunt",
   "chapter": 6,
   "difficulty": 2,
-  "title": "Camera Broken",
+  "title": "Camera Broken Again",
   "disguise": "friend",
   "intro": [
-    "You have chatted with the same person for weeks. Every time you ask for a video call, there is a reason.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "Your online partner never video-calls. The reason is always the same.",
+    "This time the excuse comes with a request.",
+    "Tap anything odd, then decide."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Marco",
+    "from": "Daniel",
     "text": "My camera is broken again 😔"
   },
   "screen": {
@@ -21,241 +21,260 @@
       "name": [
         {
           "clue": "name",
-          "text": "Marco, 34"
+          "text": "Daniel"
         }
       ],
       "sub": [
         {
-          "clue": "profile",
-          "text": "Chatting for 6 weeks"
+          "clue": "sub",
+          "text": "Online for 3 months"
         }
       ],
       "avatar": {
-        "glyph": "🌍",
-        "clue": "pic"
+        "glyph": "🧭",
+        "clue": "avatar"
       }
     },
-    "banner": [
-      "Private chat"
-    ],
+    "context": "You have chatted for three months. You have never seen him on video.",
     "items": [
       {
         "time": [
-          "9:02 PM"
+          {
+            "clue": "time",
+            "text": "8:40 PM"
+          }
         ]
       },
       {
         "msg": [
-          "I would love to ",
+          "My ",
           {
-            "clue": "call",
-            "text": "see you on video"
+            "clue": "cam",
+            "text": "camera is broken again"
           },
-          ", but my ",
-          {
-            "clue": "excuse",
-            "text": "camera is broken"
-          },
-          ". Again! 😔"
+          " 😔 I cannot call you."
         ]
       },
       {
         "msg": [
-          "And my ",
+          "I could ",
           {
-            "clue": "mic",
-            "text": "microphone does not work either"
+            "clue": "earn",
+            "text": "double our savings"
           },
-          ". So text is best."
+          " in the next hour with a USDT trade. Can you ",
+          {
+            "clue": "send",
+            "text": "send 800 USDT"
+          },
+          "? I will repay you with profit."
         ]
       },
       {
         "msg": [
-          "By the way, ",
+          "It ",
           {
-            "clue": "money",
-            "text": "my bank card is blocked abroad"
+            "clue": "rush",
+            "text": "closes tonight"
           },
-          ". Could you send me a little for ",
-          {
-            "clue": "why",
-            "text": "a new phone and a ticket to visit you"
-          },
-          "?"
-        ]
-      },
-      {
-        "msg": [
+          ". ",
           {
             "clue": "trust",
-            "text": "You are the only one I trust."
+            "text": "Trust me, my love."
           }
         ]
       }
     ]
   },
   "clues": {
-    "call": {
-      "label": "They will not appear on video",
+    "cam": {
+      "label": "Never on camera",
       "strength": "strong",
-      "lens": "For six weeks, never once.",
-      "why": "A person who never appears on camera may not be real."
+      "lens": "Always an excuse to avoid video.",
+      "why": "The person may not be who the photos show."
     },
-    "excuse": {
-      "label": "An excuse for no camera",
+    "send": {
+      "label": "Asks you to send USDT",
       "strength": "strong",
-      "lens": "The camera is \"broken\".",
-      "why": "Excuses are tools."
+      "lens": "A request for money.",
+      "why": "Never send money to someone you have never met."
     },
-    "mic": {
-      "label": "No voice either",
+    "earn": {
+      "label": "A quick profit offer",
       "strength": "strong",
-      "lens": "No camera and no voice.",
-      "why": "Never speaking is a red flag."
+      "lens": "Double your money in an hour.",
+      "why": "Nothing doubles in an hour."
     },
-    "money": {
-      "label": "A money request",
+    "rush": {
+      "label": "Closes tonight",
       "strength": "strong",
-      "lens": "A blocked bank card, so they need yours.",
-      "why": "Never send money to someone you have not met."
-    },
-    "why": {
-      "label": "A ticket to visit you",
-      "strength": "strong",
-      "lens": "A tempting reason to help.",
-      "why": "The reason is made to feel kind."
+      "lens": "A deadline.",
+      "why": "Pressure stops you from checking."
     },
     "trust": {
-      "label": "\"You are the only one I trust\"",
+      "label": "\"Trust me, my love\"",
       "strength": "strong",
-      "lens": "They make you feel special and responsible.",
-      "why": "Guilt and trust are levers."
+      "lens": "Emotional pressure.",
+      "why": "Love is used to lower your guard."
     },
     "name": {
-      "label": "A name and an age",
+      "label": "Daniel",
       "strength": "harmless",
-      "lens": "Marco, 34.",
-      "why": "A profile proves nothing."
+      "lens": "A first name.",
+      "why": "Names prove nothing."
     },
-    "profile": {
-      "label": "Weeks of chatting",
+    "sub": {
+      "label": "Online 3 months",
       "strength": "harmless",
-      "lens": "A long conversation.",
-      "why": "Time alone does not prove it is real. Scammers are patient."
+      "lens": "A long chat.",
+      "why": "Time is a tactic."
     },
-    "pic": {
-      "label": "Globe picture",
+    "avatar": {
+      "label": "Compass picture",
       "strength": "harmless",
-      "lens": "A little globe.",
+      "lens": "A symbol.",
       "why": "Pictures prove nothing."
+    },
+    "time": {
+      "label": "8:40 PM",
+      "strength": "harmless",
+      "lens": "An ordinary time.",
+      "why": "Time proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Send him the money for the phone and ticket"
+      "label": "Send 800 USDT",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
     },
     {
       "id": "verify",
-      "label": "Insist on a video call, and send nothing until we meet"
+      "label": "Ask for a live video call before anything"
     },
     {
       "id": "block_report",
-      "label": "Stop, send nothing and report the profile"
+      "label": "Stop and report"
     }
   ],
-  "best_action": "block_report",
   "acceptable_actions": [
-    "verify"
+    "verify",
+    "ignore"
   ],
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "You stopped and reported. The profile was removed, and you lost nothing.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "You stopped and reported. Your money is safe.",
+      "mirageSays": "My lovely sweetheart!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "You said no money until a video call. The chat went quiet and the profile vanished. Case cracked.",
+      "line": "He never joined the video call and then vanished. Case cracked.",
       "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You ignored the request. Reporting helps others.",
+      "mirageSays": "Fine. Next chat!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The money was lost. Then there was \"customs\" trouble and another request, then another.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The 800 USDT was gone, and the next message asked for 2,000 more.",
+      "mirageSays": "Thanks, my love!"
     }
   },
   "what_if": {
-    "go_ahead": "Never sending money to someone you have not met was the exit. A broken camera for six weeks is a warning.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "Money plus excuses is the pattern. Stop at the first request.",
+    "verify": "A live video call is a fair test.",
+    "ignore": "Ignoring was safe. A report helps others."
+  },
+  "best_action": "block_report",
+  "trap": {
+    "title": "Wallet Transfer",
+    "url": "hedrio.app/send",
+    "ask": "Send 800 USDT to Daniel.",
+    "go": "Send 800 USDT",
+    "back": "Close this page"
   },
   "golden_rule": "Never send money to someone you have not met in person, however long you have chatted.",
   "quick_check": {
-    "q": "After six weeks of chat, a person with a \"broken camera\" asks you for money. What do you do?",
+    "q": "A partner of three months, never seen on video, asks you to send 800 USDT for a trade. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Send a little, they need help"
+        "text": "Send it, we are close"
       },
       {
         "id": "b",
-        "text": "Send it, you trust them"
+        "text": "Stop and report. Never send money to someone you have not met"
       },
       {
         "id": "c",
-        "text": "Send nothing. Report the profile"
+        "text": "Send half"
       },
       {
         "id": "d",
-        "text": "Ask a friend to send it"
+        "text": "Ask him to prove it by chat"
       }
     ],
-    "answer": "c",
-    "explain": "Never send money to someone you have not met. A long chat is not proof."
+    "answer": "b",
+    "explain": "Time and love are tactics. The money request is the test."
   },
   "hints": {
-    "nudge": "In six weeks, have you ever seen or heard them?",
+    "nudge": "Why no video?",
     "glow_order": [
-      "call",
-      "excuse",
-      "mic",
-      "money",
-      "why",
+      "cam",
+      "send",
+      "earn",
+      "rush",
       "trust"
     ]
   },
-  "sources": [
-    "ftc-romance",
-    "ftc-gift-cards"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check the profile",
-      "title": "Marco, 34",
+      "title": "Daniel",
       "rows": [
         {
-          "k": "Video call ever?",
-          "v": "Never, \"camera broken\"",
-          "clue": "call"
+          "k": "Video call so far",
+          "v": "Never",
+          "clue": "cam"
         },
         {
-          "k": "Voice ever?",
-          "v": "No, \"mic broken\"",
-          "clue": "mic"
+          "k": "Photos found elsewhere",
+          "v": "Yes, another name"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the request",
+      "title": "What he asks",
+      "rows": [
+        {
+          "k": "Asks for",
+          "v": "800 USDT",
+          "clue": "send"
         },
         {
-          "k": "Asked for money?",
-          "v": "Yes",
-          "clue": "money"
+          "k": "Promise",
+          "v": "Double in an hour",
+          "clue": "earn"
         }
       ]
     },
@@ -263,18 +282,24 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What romance-scam advice says",
       "rows": [
         {
-          "k": "Send money to an online love interest?",
-          "v": "Never",
-          "clue": "money"
+          "k": "Never on camera",
+          "v": "Is a red flag",
+          "clue": "cam"
         },
         {
-          "k": "Living far away, and asking for money",
-          "v": "Red flags"
+          "k": "Money requests",
+          "v": "Are the scam",
+          "clue": "send"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-romance",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

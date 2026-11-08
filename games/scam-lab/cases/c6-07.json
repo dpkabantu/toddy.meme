@@ -6,14 +6,14 @@
   "title": "The Ship Engineer",
   "disguise": "friend",
   "intro": [
-    "Someone you met online works on a ship far away. He says he wants to visit you, but needs help first.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "A man on a ship contacts you. He says he is an engineer far from home.",
+    "He needs help getting home.",
+    "Tap anything odd, then decide."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Arvind (ship engineer)",
-    "text": "I need $600 for my leave papers…"
+    "from": "Lars",
+    "text": "I need 600 USDT for my leave papers…"
   },
   "screen": {
     "app": "chirp",
@@ -21,230 +21,261 @@
       "name": [
         {
           "clue": "name",
-          "text": "Arvind, ship engineer"
+          "text": "Lars (Offshore Engineer)"
         }
       ],
       "sub": [
         {
-          "clue": "where",
-          "text": "At sea, \"no network on deck\""
+          "clue": "sub",
+          "text": "Currently at sea"
         }
       ],
       "avatar": {
-        "glyph": "🚢",
-        "clue": "pic"
+        "glyph": "⚓",
+        "clue": "avatar"
       }
     },
     "banner": [
-      "Private chat"
+      {
+        "clue": "dm",
+        "text": "Message request · you do not follow this account"
+      }
     ],
-    "context": "You have been chatting online for four weeks. You have never spoken or met.",
+    "context": "You have chatted with Lars for six weeks.",
     "items": [
       {
         "time": [
-          "11:20 PM"
+          {
+            "clue": "time",
+            "text": "6:05 AM"
+          }
         ]
       },
       {
         "msg": [
-          "My darling, my leave is approved! But the ",
+          "Love, my leave is approved but the agency needs ",
           {
-            "clue": "papers",
-            "text": "leave papers need $600"
+            "clue": "fee",
+            "text": "600 USDT for my papers"
           },
           "."
         ]
       },
       {
         "msg": [
-          "My salary is ",
+          "I can only use a ",
           {
-            "clue": "stuck",
-            "text": "stuck until I reach port"
+            "clue": "wallet",
+            "text": "crypto wallet"
           },
-          ". Can you send it now?"
+          " here. My bank is blocked at sea."
         ]
       },
       {
         "msg": [
-          "I will ",
+          "Once I am home I will ",
           {
             "clue": "repay",
             "text": "repay you double"
           },
-          " when I see you."
-        ]
-      },
-      {
-        "msg": [
+          " and we will meet. ",
           {
             "clue": "rush",
-            "text": "The office closes tomorrow."
-          },
-          " ",
-          {
-            "clue": "love",
-            "text": "I love you, please do not let me down."
+            "text": "Please, today."
           }
         ]
       }
     ]
   },
   "clues": {
-    "papers": {
-      "label": "Money for \"leave papers\"",
+    "fee": {
+      "label": "Asks for money for papers",
       "strength": "strong",
-      "lens": "A real employer handles its own paperwork.",
-      "why": "Needing money for papers is a classic story."
+      "lens": "Fees for leave papers.",
+      "why": "Real employers handle leave papers."
     },
-    "stuck": {
-      "label": "Salary \"stuck\"",
+    "wallet": {
+      "label": "Only crypto works",
       "strength": "strong",
-      "lens": "A reason why he cannot pay himself.",
-      "why": "A reason that needs your money is a warning."
+      "lens": "A convenient excuse.",
+      "why": "Crypto is hard to reverse."
     },
     "repay": {
-      "label": "\"I will repay double\"",
+      "label": "\"Repay you double\"",
       "strength": "strong",
-      "lens": "A promise to win trust.",
-      "why": "A promise to repay is bait."
+      "lens": "A promise.",
+      "why": "There is never a repayment."
     },
     "rush": {
-      "label": "The office closes tomorrow",
+      "label": "Please, today",
       "strength": "strong",
       "lens": "A deadline.",
-      "why": "Pressure is a trick."
+      "why": "Pressure stops you from checking."
     },
-    "love": {
-      "label": "Emotional pressure",
+    "dm": {
+      "label": "He wrote first, very warm",
       "strength": "strong",
-      "lens": "\"Do not let me down.\"",
-      "why": "Guilt and love are levers."
-    },
-    "where": {
-      "label": "\"At sea, no network\"",
-      "strength": "strong",
-      "lens": "He is conveniently unreachable.",
-      "why": "Being unreachable keeps you from checking."
+      "lens": "Intense affection.",
+      "why": "It is a script."
     },
     "name": {
-      "label": "A job and a name",
+      "label": "Lars",
       "strength": "harmless",
-      "lens": "Arvind, ship engineer.",
-      "why": "A job title proves nothing."
+      "lens": "A first name.",
+      "why": "Names prove nothing."
     },
-    "pic": {
-      "label": "Ship picture",
+    "sub": {
+      "label": "At sea",
       "strength": "harmless",
-      "lens": "A little ship.",
+      "lens": "A reason to be far away.",
+      "why": "It explains why you cannot meet."
+    },
+    "avatar": {
+      "label": "Anchor picture",
+      "strength": "harmless",
+      "lens": "A symbol.",
       "why": "Pictures prove nothing."
+    },
+    "time": {
+      "label": "6:05 AM",
+      "strength": "harmless",
+      "lens": "An ordinary time.",
+      "why": "Time proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Send the $600"
+      "label": "Send 600 USDT",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
     },
     {
       "id": "verify",
-      "label": "Say I will only help after we meet in person and a video call"
+      "label": "Ask his employer's real office"
     },
     {
       "id": "block_report",
-      "label": "Send nothing and report the profile"
+      "label": "Stop and report"
     }
   ],
-  "best_action": "block_report",
   "acceptable_actions": [
-    "verify"
+    "verify",
+    "ignore"
   ],
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "You sent nothing and reported the profile. It was removed.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "You stopped and reported. Money stays safe.",
+      "mirageSays": "My lovely engineer!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "You asked for a video call and a name of his company. He had no answers, and the chat ended. Case cracked.",
+      "line": "The real shipping company had no such engineer. Case cracked.",
       "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You ignored it. A report helps others.",
+      "mirageSays": "Fine. Next chat!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The $600 was lost. A \"customs fee\" and an \"airport fee\" followed.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The 600 USDT vanished. Then came a new fee for \"customs\".",
+      "mirageSays": "Thanks, love!"
     }
   },
   "what_if": {
-    "go_ahead": "Never sending money to someone you have not met, and asking for a video call, would have stopped it.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "Papers, fees and a wallet only are classic. Stop at the first ask.",
+    "verify": "Calling the employer was smart.",
+    "ignore": "Ignoring was safe. A report helps others."
   },
-  "golden_rule": "Someone far away, working at sea or abroad, who needs money for papers is the classic romance scam. Send nothing.",
+  "best_action": "block_report",
+  "trap": {
+    "title": "Wallet Transfer",
+    "url": "hedrio.app/send",
+    "ask": "Send 600 USDT to Lars.",
+    "go": "Send 600 USDT",
+    "back": "Close this page"
+  },
+  "golden_rule": "A love far away who needs money for papers, flights or fees is a scammer. Never send.",
   "quick_check": {
-    "q": "An online love interest says he is a ship engineer and needs $600 for leave papers. What do you do?",
+    "q": "A man at sea asks for 600 USDT for his leave papers. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Send it, he will repay"
+        "text": "Send it, to bring him home"
       },
       {
         "id": "b",
-        "text": "Send half"
+        "text": "Stop and report. Real employers handle papers"
       },
       {
         "id": "c",
-        "text": "Send nothing. Report the profile"
+        "text": "Send half"
       },
       {
         "id": "d",
-        "text": "Ask him to send papers first"
+        "text": "Ask him to send proof by chat"
       }
     ],
-    "answer": "c",
-    "explain": "Working far away and needing money for papers is the classic story."
+    "answer": "b",
+    "explain": "Papers, fees and crypto only are the signs."
   },
   "hints": {
-    "nudge": "Why can he not pay for his own papers?",
+    "nudge": "Who handles leave papers?",
     "glow_order": [
-      "papers",
-      "stuck",
+      "fee",
+      "wallet",
       "repay",
       "rush",
-      "love",
-      "where"
+      "dm"
     ]
   },
-  "sources": [
-    "ftc-romance",
-    "ftc-gift-cards"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check the profile",
-      "title": "Arvind",
+      "title": "Lars",
       "rows": [
         {
-          "k": "Met in person?",
-          "v": "Never"
+          "k": "Photos found elsewhere",
+          "v": "Yes, another name",
+          "clue": "dm"
         },
         {
-          "k": "Where?",
-          "v": "At sea, \"no network\"",
-          "clue": "where"
+          "k": "Real ship",
+          "v": "Not found"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the request",
+      "title": "What he asks",
+      "rows": [
+        {
+          "k": "Asks for",
+          "v": "600 USDT",
+          "clue": "fee"
         },
         {
-          "k": "Asked for",
-          "v": "$600",
-          "clue": "papers"
+          "k": "Only via",
+          "v": "A crypto wallet",
+          "clue": "wallet"
         }
       ]
     },
@@ -252,18 +283,24 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What romance-scam advice says",
       "rows": [
         {
-          "k": "Working far away, needing money",
-          "v": "A romance scam red flag",
-          "clue": "papers"
+          "k": "Money for papers",
+          "v": "Is the scam",
+          "clue": "fee"
         },
         {
-          "k": "Never send money",
-          "v": "To someone you have not met"
+          "k": "Repayment promised",
+          "v": "Never comes",
+          "clue": "repay"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-romance",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }
