@@ -400,7 +400,7 @@ function renderMap() {
   if (!nx.hidden) {
     const nn = nightInfo(mapNight + 1);
     $('next-visitor').src = ASSET + VISITOR[nn.visitor][0];
-    $('next-text').innerHTML = `<b>Next: ${nn.name}</b> \u00B7 a new visitor and a new postcard. ${mapNight < 2 ? 'Clear tray ${TRAYS_PER_NIGHT} to open it.' : 'Nights never end.'}`;
+    $('next-text').innerHTML = `<b>Next: ${nn.name}</b> \u00B7 a new visitor and a new postcard. ${nightOpen(mapNight + 1) ? '' : `Clear tray ${TRAYS_PER_NIGHT} to open it. `}Nights never end: a new visitor every night.`;
   }
 }
 function say2map(t) { $('night-sub').textContent = `Tray ${t} opens after you clear tray ${t - 1}.`; }
@@ -1204,7 +1204,7 @@ function finish(again) {
   // the serve comes first: it is the payoff
   card(`${serveHtml(false)}<h3>${finale ? 'Night complete!' : head}</h3>
     <div class="path" aria-label="${night.name}: tray ${mode.t} of ${TRAYS_PER_NIGHT}">${nightPath(mode.n, mode.t)}</div>
-    <p class="stat">${night.name} · tray ${mode.t} of ${TRAYS_PER_NIGHT}${finale ? '' : ' · ☾ postcard at ${TRAYS_PER_NIGHT}'}</p>
+    <p class="stat">${night.name} · tray ${mode.t} of ${TRAYS_PER_NIGHT}${finale ? '' : ` · ☾ postcard at ${TRAYS_PER_NIGHT}`}</p>
     <div class="btns"><button class="btn ghost" id="o-retry" type="button">Brew again</button><button class="btn primary" id="o-next" type="button">${result.newCard ? 'Continue' : nextLabel}</button></div>
     ${dailyWaiting() ? '<div class="btns"><button class="btn daily-nudge" id="o-daily" type="button">Today\u2019s Daily Brew \u2192</button></div>' : ''}`);
   bind('o-retry', () => startTray(mode.n, mode.t));
@@ -1311,13 +1311,24 @@ async function renderAccount() {
   box.append(el('span', {}, el('b', { textContent: me.needsNickname ? 'Welcome! Pick a nickname' : 'Signed in' }), el('small', { textContent: 'Other players only ever see your nickname.' }), nick, save1,
     el('label', { className: 'acct-row' }, boards, el('small', { textContent: 'Show me on leaderboards' })), say2, lb, out, del));
 }
+function updateAccountPill() {
+  const b = $('btn-account'); if (!b) return;
+  b.hidden = !acc() || !accountMe || !!accountMe.unavailable;
+  b.textContent = accountMe && accountMe.signedIn ? (accountMe.nickname || 'Account') : 'Sign in';
+  b.classList.toggle('on', !!(accountMe && accountMe.signedIn));
+}
+function openAccount() {
+  modal(`<h3>Account</h3><div class="setting account" id="acct" hidden></div><div class="btns"><button class="btn ghost" id="acct-close" type="button">Close</button></div>`);
+  bind('acct-close', () => { closeModal(); updateAccountPill(); });
+  renderAccount().then(updateAccountPill);
+}
 async function initAccount() {
   const A = acc(); if (!A) return;
   const m = /^\?signin=(ok|cancelled|failed|expired)$/.exec(location.search);
   if (m) history.replaceState(null, '', location.pathname);
-  await syncNow();
-  if (m && m[1] === 'ok') openSettings();
-  else if (m) modal(`<h3>Sign-in did not finish</h3><p>${m[1] === 'cancelled' ? 'No problem. You can keep playing as a guest.' : 'Please try again from Settings. You can keep playing as a guest.'}</p><div class="btns"><button class="btn primary" id="acct-ok" type="button">OK</button></div>`), bind('acct-ok', closeModal);
+  await syncNow(); updateAccountPill();
+  if (m && m[1] === 'ok') openAccount();
+  else if (m) modal(`<h3>Sign-in did not finish</h3><p>${m[1] === 'cancelled' ? 'No problem. You can keep playing as a guest.' : 'Please try again with the Sign in button. You can keep playing as a guest.'}</p><div class="btns"><button class="btn primary" id="acct-ok" type="button">OK</button></div>`), bind('acct-ok', closeModal);
 }
 function modal(html) { $('modal-card').innerHTML = html; $('modal').hidden = false; const b = $('modal-card').querySelector('button'); if (b) b.focus(); }
 function closeModal() { $('modal').hidden = true; }
@@ -1423,6 +1434,7 @@ bind('btn-stats', () => show('stats'));
 bind('stats-back', () => show('title'));
 bind('btn-howto', () => show('howto'));
 bind('btn-settings', openSettings);
+bind('btn-account', openAccount);
 bind('btn-about', () => show('about'));
 bind('about-back', () => show('title'));
 linkTo($('about-bug'), BUG_REPORT_URL);
