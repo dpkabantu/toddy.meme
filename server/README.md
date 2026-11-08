@@ -29,7 +29,7 @@ Step 1 = sign-in, session, profile, delete. Step 2 (this branch) adds saved prog
 
 ### B. Make the database in Cloudflare
 1. https://dash.cloudflare.com > **Storage & databases** > **D1 SQL database** > **Create database**. Name `toddy-accounts`. Location: Western Europe (EU). **Create**.
-2. Open it > **Console** tab. NOTE: the Cloudflare console squashes pasted text onto one line, so lines starting with `--` swallow everything after them. Use the comment-free versions in `migrations/console/` (one block per file) instead. (Older text: open `migrations/0001_accounts.sql` from this repo (GitHub: click the file > **Raw**), copy everything, paste into the console, click **Execute**. Then do the same with `migrations/0002_progress.sql`. Together they create four tables.
+2. Open it > **Console** tab. The Cloudflare console squashes pasted text onto one line, so lines starting with `--` swallow everything after them. Use the comment-free blocks in `migrations/console/` (one block per file, run each, in order: 0001, 0002, 0003). Together they create five tables: players, sessions, anon_links, progress, scores. Running a block twice is safe.
 3. Copy the **Database ID** (on the database's overview page; it is not a secret). Send it to me and I switch the database on in `wrangler.jsonc`.
 
 ### C. Secrets (Cloudflare dashboard, never in GitHub)
@@ -46,10 +46,13 @@ Open `https://<test link>/api/health`. It should say `{"ok":true,"accounts":true
 `privacy.html` section 5 still says "progress saved in the browser, stats off". Before launch it must be updated to list what accounts store, why, how to delete, and that email is used only for sign-in and account contact. I will draft the text for your approval in step 6.
 
 ## Routes
-GET `/api/health` · GET `/api/auth/google/start?anon=<guest id>&return=/games/<game>/` · GET `/api/auth/google/callback` · GET `/api/me` · POST `/api/me/profile` {nickname, avatar, showOnBoards} · GET/PUT `/api/progress/<moon-brew|full-moon|scam-lab>` · POST `/api/logout` · POST `/api/me/delete`.
+GET `/api/health` · GET `/api/auth/google/start?anon=<guest id>&return=/games/<game>/` · GET `/api/auth/google/callback` · GET `/api/me` · POST `/api/me/profile` {nickname, avatar, showOnBoards} · GET/PUT `/api/progress/<moon-brew|full-moon|scam-lab>` · POST `/api/score` {game, day, score} · GET `/api/leaderboard/<game>?period=daily|weekly|monthly` · POST `/api/logout` · POST `/api/me/delete`.
 All POSTs must come from our own pages (Origin check). The session cookie is HttpOnly, Secure, SameSite=Lax, and only a hash of it is stored.
 
 ## Known gaps / decisions
 - The nickname blocked-word list in `server/nickname.js` is a short starter; extend before launch.
 - No rate limiting yet: add a Cloudflare rate-limit rule on `/api/*` (dashboard > Security > WAF > Rate limiting) before launch.
 - Avatars: the code allows 8 (0-7); the pictures come with the account menu in step 2.
+
+## Leaderboards (step 4)
+Daily results only. Server accepts a score only if signed in, 1..max for that game (Moon Brew 1000, Scam Lab 1000, Full Moon 2,000,000), and for yesterday/today/tomorrow (UTC). Best of each day is kept. Boards list nicknames only, never email or name, and skip players who chose to hide. Scores are *saved, not verified* until replay checks exist.

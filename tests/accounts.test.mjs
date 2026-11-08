@@ -4,14 +4,14 @@ import test from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import { DatabaseSync } from 'node:sqlite';
-import worker from '../server/index.js';
+import worker, { periodRange } from '../server/index.js';
 import { cleanNickname } from '../server/nickname.js';
 import { checkClaims } from '../server/google.js';
 import { safeReturn, sign, unsign } from '../server/util.js';
 
 function makeDB() {
   const db = new DatabaseSync(':memory:');
-  db.exec('PRAGMA foreign_keys = ON;'); for (const f of ['0001_accounts', '0002_progress']) db.exec(fs.readFileSync(new URL(`../migrations/${f}.sql`, import.meta.url), 'utf8'));
+  db.exec('PRAGMA foreign_keys = ON;'); for (const f of ['0001_accounts', '0002_progress', '0003_scores']) db.exec(fs.readFileSync(new URL(`../migrations/${f}.sql`, import.meta.url), 'utf8'));
   const stmt = (sql, args = []) => ({
     bind: (...a) => stmt(sql, a),
     first: async () => db.prepare(sql).get(...args) || null,
@@ -115,7 +115,7 @@ test('logout ends the session; delete removes the player, sessions and guest lin
   await post(env, '/api/logout', {}, session); assert.equal((await (await get(env, '/api/me', session)).json()).signedIn, false);
   const again = await signIn(env);
   assert.equal((await post(env, '/api/me/delete', {}, again.session)).status, 200);
-  for (const t of ['players', 'sessions', 'anon_links', 'progress']) assert.equal(env.DB.raw.prepare(`SELECT COUNT(*) n FROM ${t}`).get().n, 0, t);
+  for (const t of ['players', 'sessions', 'anon_links', 'progress', 'scores']) assert.equal(env.DB.raw.prepare(`SELECT COUNT(*) n FROM ${t}`).get().n, 0, t);
   assert.equal((await (await get(env, '/api/me', again.session)).json()).signedIn, false);
 });
 
@@ -147,4 +147,39 @@ test('progress: needs sign-in, own pages only, known games, size limit; save and
   assert.deepEqual(await (await get(env, '/api/progress/moon-brew', other.session)).json(), { data: null }, 'players never see each other');
   assert.equal((await post(env, '/api/me/delete', {}, session)).status, 200);
   assert.equal(env.DB.raw.prepare('SELECT COUNT(*) n FROM progress').get().n, 0);
+});
+
+const today = () => { const d = new Date(); return d.getUTCFullYear() * 10000 + (d.getUTCMonth() + 1) * 100 + d.getUTCDate(); };
+test('period ranges: daily, Monday-to-today, calendar month', () => {
+  const d = new Date(Date.UTC(2026, 10, 8)); // Sunday 8 Nov 2026
+  assert.deepEqual(periodRange('daily', d), [20261108, 20261108]);
+  assert.deepEqual(periodRange('weekly', d), [20261102, 20261108]);
+  assert.deepEqual(periodRange('monthly', d), [20261101, 20261108]);
+  assert.deepEqual(periodRange('weekly', new Date(Date.UTC(2026, 10, 2))), [20261102, 20261102]);
+  assert.equal(periodRange('yearly', d), null);
+});
+
+test('scores: only plausible, only recent, best of the day kept; boards show nicknames only, ranked, with your own rank', async () => {
+  const env = ENV();
+  const a = await signIn(env, GOOD, 'a'.repeat(20)), b = await signIn(env, { ...GOOD, sub: 'g-2', email: 'bo@example.eu', name: 'Bo Private' }, 'b'.repeat(20)), c = await signIn(env, { ...GOOD, sub: 'g-3', email: 'cy@example.eu' }, 'c'.repeat(20));
+  const sc = (who, body, origin) => post(env, '/api/score', body, who.session, origin);
+  assert.equal((await post(env, '/api/score', { game: 'moon-brew', day: today(), score: 500 })).status, 401);
+  assert.equal((await sc(a, { game: 'moon-brew', day: today(), score: 500 }, 'https://evil.example')).status, 403);
+  for (const bad of [{ game: 'moon-brew', day: today(), score: 1001 }, { game: 'moon-brew', day: today(), score: 0 }, { game: 'moon-brew', day: today(), score: 12.5 }, { game: 'moon-brew', day: 20200101, score: 5 }, { game: 'nope', day: today(), score: 5 }])
+    assert.ok((await sc(a, bad)).status >= 400, JSON.stringify(bad));
+  for (const [who, nick] of [[a, 'Aria'], [b, 'Bobby'], [c, 'Cyrus']]) await post(env, '/api/me/profile', { nickname: nick }, who.session);
+  await sc(a, { game: 'moon-brew', day: today(), score: 700 }); await sc(a, { game: 'moon-brew', day: today(), score: 650 }); // lower later score never replaces
+  await sc(b, { game: 'moon-brew', day: today(), score: 900 }); await sc(c, { game: 'moon-brew', day: today(), score: 900 }); await sc(c, { game: 'scam-lab', day: today(), score: 300 });
+  env.DB.raw.prepare("UPDATE scores SET created_at = CASE player_id WHEN (SELECT id FROM players WHERE nickname = 'Bobby') THEN 100 ELSE 200 END WHERE game = 'moon-brew' AND score = 900").run(); // make the tie order certain
+  const board = await (await get(env, '/api/leaderboard/moon-brew?period=daily', a.session)).json();
+  assert.deepEqual(board.entries.map(e => [e.rank, e.nickname, e.score]), [[1, 'Bobby', 900], [2, 'Cyrus', 900], [3, 'Aria', 700]], 'tie: earlier score ranks first');
+  assert.equal(board.entries.find(e => e.you).nickname, 'Aria'); assert.deepEqual(board.you, { rank: 3, score: 700 });
+  const raw = JSON.stringify(board); for (const secret of ['example.eu', 'Private', 'Mia', 'g-2']) assert.ok(!raw.includes(secret), 'no private data on boards: ' + secret);
+  assert.equal((await (await get(env, '/api/leaderboard/scam-lab?period=weekly')).json()).entries.length, 1, 'boards are per game and readable by guests');
+  assert.equal((await get(env, '/api/leaderboard/moon-brew?period=forever')).status, 400);
+  await post(env, '/api/me/profile', { showOnBoards: false }, b.session);
+  assert.deepEqual((await (await get(env, '/api/leaderboard/moon-brew?period=monthly')).json()).entries.map(e => e.nickname), ['Cyrus', 'Aria'], 'hidden players are not listed');
+  await post(env, '/api/me/delete', {}, c.session);
+  assert.deepEqual((await (await get(env, '/api/leaderboard/moon-brew?period=daily')).json()).entries.map(e => e.nickname), ['Aria']);
+  assert.equal(env.DB.raw.prepare("SELECT COUNT(*) n FROM scores WHERE game = 'scam-lab'").get().n, 0, 'delete removes scores');
 });
