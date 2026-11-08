@@ -5,7 +5,7 @@ import { INTROS, TRAYS_PER_NIGHT, trayLevelConfig, dailyConfig, dailyNumber, end
 import { buildPostcard } from './postcard.js';
 import { toSynced, merge as mergeProgress, differs } from './sync.js';
 
-const BUILD = '1.0.0-rc17';
+const BUILD = '1.0.0-rc18';
 const ASSET = 'assets/';
 const $ = (id) => document.getElementById(id);
 const systemCalm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -1139,7 +1139,7 @@ function record() {
     // will use). Later runs are practice and never change it.
     const prev = save.daily[mode.num];
     result.official = !prev;
-    if (!prev) save.daily[mode.num] = { stars: result.s, time: sc.secs, bumps: g.bumps, score: sc.total, log: g.log.slice(0, 2000) };
+    if (!prev) { save.daily[mode.num] = { stars: result.s, time: sc.secs, bumps: g.bumps, score: sc.total, log: g.log.slice(0, 2000) }; sendDaily(mode.num, sc.total); }
   } else {
     const k = trayKey(mode.n, mode.t);
     result.firstClear = !save.stars[k];
@@ -1299,7 +1299,27 @@ async function syncNow() {
   for (const [k, v] of Object.entries(merged.daily)) if (!save.daily[k]) save.daily[k] = v;
   try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* ignore */ }
   if (remote === null || differs(merged, remote)) await A.push(GAME_ID, toSynced(save));
+  sendRecentDailies();
   if (current === 'title') renderTitle(); else if (current === 'map') renderMap();
+}
+// Daily Brew results go to the leaderboard (saved scores; the server keeps the best of each day).
+function sendDaily(day, score) { const A = acc(); if (A && accountMe && accountMe.signedIn && score > 0) A.submitScore(GAME_ID, day, score); }
+function sendRecentDailies() { const t = dailyNumber(); for (const [k, v] of Object.entries(save.daily)) if (Math.abs(Number(k) - t) <= 1 && v && v.score > 0) sendDaily(Number(k), v.score); }
+function openBoard(period = 'daily') {
+  const A = acc(); if (!A) return;
+  const tab = (p) => `<button class="btn ${p === period ? 'primary' : 'ghost'}" data-p="${p}" type="button">${p[0].toUpperCase() + p.slice(1)}</button>`;
+  modal(`<h3>Leaderboard</h3><div class="btns">${['daily', 'weekly', 'monthly'].map(tab).join('')}</div><div id="board-list" class="board-list">Loading...</div>
+    <p class="board-note">Daily Brew results only, the same tray for everyone. Saved scores, not yet verified.</p><div class="btns"><button class="btn ghost" id="board-back" type="button">Back</button></div>`);
+  $('modal-card').querySelectorAll('button[data-p]').forEach(b => b.addEventListener('click', () => openBoard(b.dataset.p)));
+  bind('board-back', openSettings);
+  A.leaderboard(GAME_ID, period).then(d => {
+    const box = $('board-list'); if (!box) return; box.textContent = '';
+    if (!d) { box.textContent = 'The leaderboard is not available right now.'; return; }
+    const line = (rank, name, score, you) => { const r = el('div', { className: 'board-line' + (you ? ' you' : '') }, el('span', { className: 'board-rank', textContent: String(rank) }), el('span', { className: 'board-name', textContent: name }), el('span', { className: 'board-score', textContent: Number(score).toLocaleString('en-US') })); return r; };
+    if (!d.entries.length) box.append(el('small', { textContent: 'No scores yet. Sign in, pick a nickname and play today\u2019s Daily Brew to be first.' }));
+    d.entries.slice(0, 10).forEach(e => box.append(line(e.rank, e.nickname, e.score, e.you)));
+    if (d.you && d.you.rank > 10) box.append(line(d.you.rank, 'You', d.you.score, true));
+  });
 }
 function el(tag, props, ...kids) { const e = document.createElement(tag); Object.assign(e, props || {}); for (const k of kids) e.append(k); return e; }
 async function renderAccount() {
@@ -1310,7 +1330,8 @@ async function renderAccount() {
   const say2 = el('small', { id: 'acct-msg', role: 'status' });
   if (!me.signedIn) {
     const go = el('a', { className: 'btn primary', href: A.signInUrl(GAME_ID), textContent: 'Continue with Google' });
-    box.append(el('span', {}, el('b', { textContent: 'Keep your progress' }), el('small', { textContent: 'Optional. Saves your stars and streak on every device. We store your email, name and a nickname you choose.' }), el('small', {}, el('a', { href: PRIVACY_URL, target: '_blank', rel: 'noopener noreferrer', textContent: 'What we store' }))), go);
+    const lbG = el('button', { className: 'btn ghost', type: 'button', textContent: 'Leaderboard' }); lbG.addEventListener('click', () => openBoard('daily'));
+    box.append(el('span', {}, el('b', { textContent: 'Keep your progress' }), el('small', { textContent: 'Optional. Saves your stars and streak on every device. We store your email, name and a nickname you choose.' }), el('small', {}, el('a', { href: PRIVACY_URL, target: '_blank', rel: 'noopener noreferrer', textContent: 'What we store' }))), go, lbG);
     return;
   }
   const nick = el('input', { id: 'acct-nick', type: 'text', maxLength: 16, value: me.nickname || '', placeholder: 'Pick a nickname', autocomplete: 'off' });
@@ -1320,13 +1341,14 @@ async function renderAccount() {
   boards.addEventListener('change', () => A.setProfile({ showOnBoards: boards.checked }));
   const out = el('button', { className: 'btn ghost', type: 'button', textContent: 'Sign out' });
   out.addEventListener('click', async () => { await A.signOut(); accountMe = null; renderAccount(); });
+  const lb = el('button', { className: 'btn ghost', type: 'button', textContent: 'Leaderboard' }); lb.addEventListener('click', () => openBoard('daily'));
   const del = el('button', { className: 'btn ghost', type: 'button', textContent: 'Delete my data' });
   del.addEventListener('click', async () => {
     if (del.dataset.sure !== '1') { del.dataset.sure = '1'; del.textContent = 'Tap again to delete everything'; return; }
     await A.deleteAccount(); accountMe = null; renderAccount();
   });
   box.append(el('span', {}, el('b', { textContent: me.needsNickname ? 'Welcome! Pick a nickname' : 'Signed in' }), el('small', { textContent: 'Other players only ever see your nickname.' }), nick, save1,
-    el('label', { className: 'acct-row' }, boards, el('small', { textContent: 'Show me on leaderboards' })), say2, out, del));
+    el('label', { className: 'acct-row' }, boards, el('small', { textContent: 'Show me on leaderboards' })), say2, lb, out, del));
 }
 async function initAccount() {
   const A = acc(); if (!A) return;

@@ -11,3 +11,13 @@
 .ta-btn:focus-visible, .ta-card input:focus-visible { outline: 3px solid #fff4d6; outline-offset: 2px; }
 .ta-row { display: flex; align-items: center; gap: 10px; }
 .ta-row input { width: 22px; height: 22px; accent-color: #fdaf1e; }
+.ta-tabs { display: flex; gap: 6px; }
+.ta-tab { flex: 1; min-height: 40px; border-radius: 10px; border: 1px solid #5a4a86; background: transparent; color: #cdbfe6; font: 700 14px system-ui, sans-serif; cursor: pointer; }
+.ta-tab.on { background: #fdaf1e; border-color: #fdaf1e; color: #2a1a05; }
+.ta-list { display: flex; flex-direction: column; gap: 6px; min-height: 60px; }
+.ta-line { display: flex; align-items: center; gap: 10px; background: #261a3f; border-radius: 10px; padding: 8px 10px; }
+.ta-line.you { outline: 2px solid #fdaf1e; }
+.ta-rank { width: 26px; height: 26px; border-radius: 50%; background: #3a2c5e; display: grid; place-items: center; font-weight: 700; font-size: 13px; flex: none; }
+.ta-line:nth-child(1) .ta-rank { background: #fdaf1e; color: #2a1a05; }
+.ta-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.ta-score { font-weight: 700; color: #fdaf1e; }

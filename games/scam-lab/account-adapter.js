@@ -8,6 +8,7 @@
   window.ToddyAccountUI.mount({
     game: 'scam-lab', rowSelector: '.title-nav', chipClass: 'chip',
     read: function () { return pick(raw()); },
+    dailyScores: function () { var d = raw().daily || {}, out = []; Object.keys(d).forEach(function (k) { var day = parseInt(String(k).replace(/-/g, ''), 10); if (day > 20200101 && d[k] && d[k].score > 0) out.push({ day: day, score: d[k].score }); }); return out; },
     merge: function (l, r) {
       r = pick(r || {});
       var rules = (l.rules || []).slice(), seen = {}; rules.forEach(function (x) { seen[x && x.text] = 1; });

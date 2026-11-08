@@ -13,6 +13,7 @@
   window.ToddyAccountUI.mount({
     game: 'full-moon', rowSelector: '.links:has([data-act="how"])', chipClass: 'chip',
     read: read,
+    dailyScores: function () { var out = []; try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i), m = /^mm\.best\.daily\.(\d{8})$/.exec(k); if (m) { var v = parseInt(localStorage.getItem(k), 10); if (v > 0) out.push({ day: parseInt(m[1], 10), score: v }); } } } catch (e) { /* storage blocked */ } return out; },
     merge: function (l, r) {
       r = r || {}; var best = {}, k;
       for (k in (l.best || {})) best[k] = l.best[k];

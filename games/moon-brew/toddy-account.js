@@ -35,6 +35,8 @@
     signOut: function () { cached = null; return call('POST', '/api/logout', {}).then(function (r) { return r.status === 200; }); },
     deleteAccount: function () { cached = null; return call('POST', '/api/me/delete', {}).then(function (r) { return r.status === 200; }); },
     pull: function (game) { return call('GET', '/api/progress/' + game).then(function (r) { return r.status === 200 && r.body ? r.body.data : undefined; }); },
+    submitScore: function (game, day, score) { return call('POST', '/api/score', { game: game, day: day, score: score }).then(function (r) { return r.status === 200; }); },
+    leaderboard: function (game, period) { return call('GET', '/api/leaderboard/' + game + '?period=' + period).then(function (r) { return r.status === 200 ? r.body : null; }); },
     push: function (game, data) { return call('PUT', '/api/progress/' + game, { data: data }).then(function (r) { return r.status === 200; }); },
   };
   window.ToddyAccount = api;
