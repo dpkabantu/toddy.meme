@@ -3,31 +3,29 @@
   "type": "duel",
   "chapter": 1,
   "difficulty": 2,
-  "title": "The Code at the Door",
+  "title": "The Login Code",
   "disguise": "support",
   "intro": [
-    "A text says a courier is outside with your parcel. This time you can talk back.",
-    "Pick your replies and sniff each message as it arrives.",
-    "Every chat ends with your choice. Choose wisely."
+    "Your phone buzzes with a Zelvora login code you did not request.",
+    "Right after it, a text arrives from \"Zelvora Security\".",
+    "You can answer. Pick your replies and sniff each message."
   ],
   "notify": {
     "app": "Messages",
-    "from": "Parcelo driver",
-    "text": "I am outside with your parcel. Please send me the code…"
+    "from": "Zelvora Security",
+    "text": "Sorry, we sent you a code by mistake…"
   },
   "screen": {
     "app": "sms",
     "head": {
       "name": [
         {
-          "text": "Parcelo driver",
+          "text": "Zelvora Security",
           "id": "duel-name"
         }
       ]
     },
-    "banner": [
-      "Text message · unknown number"
-    ],
+    "context": "A real Zelvora code arrived 30 seconds ago, and you did not ask for it.",
     "items": []
   },
   "duel": {
@@ -38,31 +36,21 @@
           {
             "msg": [
               {
-                "clue": "outside",
-                "text": "Hi! I am outside with your parcel."
+                "clue": "mistake",
+                "text": "Hi, we sent you a login code by mistake."
               },
-              " Nobody is answering the bell."
-            ]
-          },
-          {
-            "msg": [
-              "Please ",
-              {
-                "clue": "code",
-                "text": "send me the code that just arrived on your phone"
-              },
-              " so I can hand it over."
+              " Please read it back to us so we can cancel it."
             ]
           }
         ],
         "replies": [
           {
-            "text": "What code?",
-            "next": "n2"
+            "text": "Sure, it is 482917",
+            "end": "go_ahead"
           },
           {
-            "text": "I did not order anything. Who sent you?",
-            "next": "n3"
+            "text": "Who is this, and why do you need it?",
+            "next": "n2"
           },
           {
             "text": "Block and report this number",
@@ -73,74 +61,17 @@
       "n2": {
         "say": [
           {
-            "sys": [
-              {
-                "clue": "bankcode",
-                "text": "Orrin Bank: 482913 is your login code. Never share it with anyone."
-              }
-            ]
-          },
-          {
             "msg": [
-              "That one! 482913. ",
+              "We are Zelvora Security. ",
+              {
+                "clue": "code",
+                "text": "It is only so we can cancel it."
+              },
+              " ",
               {
                 "clue": "rush",
-                "text": "Quickly please, I have 20 more parcels today."
+                "text": "Otherwise your account will be locked in 5 minutes."
               }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "OK, here it is: 482913",
-            "end": "go_ahead"
-          },
-          {
-            "text": "That text is from my bank. Why do you need it?",
-            "next": "n4"
-          },
-          {
-            "text": "Block and report this number",
-            "end": "block_report"
-          }
-        ]
-      },
-      "n3": {
-        "say": [
-          {
-            "msg": [
-              "It is a gift, from someone who likes you 😉 ",
-              {
-                "clue": "gift",
-                "text": "The code is how I confirm it is you."
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Fine, I will read you the code",
-            "next": "n2"
-          },
-          {
-            "text": "I will check with the courier's own app",
-            "end": "verify"
-          },
-          {
-            "text": "Block and report this number",
-            "end": "block_report"
-          }
-        ]
-      },
-      "n4": {
-        "say": [
-          {
-            "msg": [
-              {
-                "clue": "delivery",
-                "text": "It is just the delivery code, the bank name is a coincidence."
-              },
-              " Please hurry!"
             ]
           }
         ],
@@ -150,11 +81,11 @@
             "end": "go_ahead"
           },
           {
-            "text": "A bank code is never a delivery code. I will tell my bank.",
+            "text": "I will open the Zelvora app and look myself",
             "end": "verify"
           },
           {
-            "text": "Block and report this number",
+            "text": "No real security team needs my code. Reporting",
             "end": "block_report"
           }
         ]
@@ -162,51 +93,33 @@
     }
   },
   "clues": {
-    "outside": {
-      "label": "Out-of-the-blue visit",
+    "mistake": {
+      "label": "\"Sent by mistake\"",
       "strength": "strong",
-      "lens": "You did not order anything, and the \"driver\" is texting from a number you do not know.",
-      "why": "A surprise delivery with a request for a code is a way to start a conversation."
+      "lens": "Someone else just tried to sign in to your account, and the code is real.",
+      "why": "The thief needs your code to get in. The story about a mistake is how they ask for it."
     },
     "code": {
-      "label": "Asks for a code",
+      "label": "Asks for the code",
       "strength": "strong",
-      "lens": "It asks you to send the code that just arrived on your phone.",
-      "why": "No delivery needs a code from your phone. Anyone who asks for it is a scammer."
-    },
-    "bankcode": {
-      "label": "The code is from your bank",
-      "strength": "strong",
-      "lens": "The code in the text says \"login code\". It is your bank's, not the courier's.",
-      "why": "Someone is trying to log in to your bank right now. They need you to read them the code."
+      "lens": "Reading it back gives the thief the key.",
+      "why": "Anyone who asks for a login code is a scammer. No exception."
     },
     "rush": {
-      "label": "Hurry",
+      "label": "Lock in 5 minutes",
       "strength": "strong",
-      "lens": "\"Quickly please, I have 20 more parcels.\"",
-      "why": "Rushing you is a pressure trick."
-    },
-    "gift": {
-      "label": "\"Someone likes you\"",
-      "strength": "strong",
-      "lens": "A parcel from a mystery admirer.",
-      "why": "A gift story is a hook, not a reason to hand over a code."
-    },
-    "delivery": {
-      "label": "\"Just a delivery code\"",
-      "strength": "strong",
-      "lens": "\"The bank name is a coincidence.\"",
-      "why": "Explaining away the bank name does not change what the code unlocks."
+      "lens": "A threat on a clock.",
+      "why": "Pressure is there to stop you from checking."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Send the code"
+      "label": "Read the code back to them"
     },
     {
       "id": "verify",
-      "label": "Check with the courier's own app and tell my bank"
+      "label": "Open the Zelvora app and check myself"
     },
     {
       "id": "block_report",
@@ -222,87 +135,98 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "Blocked and reported. Your bank also saw the login attempt fail, since you never sent the code.",
-      "mirageSays": "Curses! Blocked again!"
+      "line": "Blocked and reported. The thief tried the code and failed, and your account stayed yours.",
+      "mirageSays": "So close!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The courier's app showed no parcel for you. Your bank blocked the login attempt. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "The app showed a sign-in attempt from another country, and you changed your password. Case cracked.",
+      "mirageSays": "Hmph. They looked."
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The code let Mirage log in to your bank and move money out within minutes.",
+      "line": "The code let the thief into your account. The coins left within minutes.",
       "mirageSays": "Thanks for the code!"
     }
   },
   "what_if": {
-    "go_ahead": "The text with the code said \"login code\" and \"never share\". Reading that line once was the way out.",
-    "verify": "Checking was smart. Blocking and reporting as well helps others."
+    "go_ahead": "A login code is the last lock on your account. Nobody honest ever needs you to read it out.",
+    "verify": "Checking was smart. Changing your password and reporting the number helps too."
   },
-  "golden_rule": "A login code is for you alone. If someone asks you to read it out, it is a scammer, whatever the story.",
+  "golden_rule": "Never read out a login code. Nobody real will ever ask you for it.",
   "quick_check": {
-    "q": "A \"driver\" asks you to send the code that just arrived by text from your bank. What do you do?",
+    "q": "A real login code arrives that you did not request, and a \"security team\" asks you to read it back. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Send it, they have a parcel for you"
+        "text": "Read it back so they can cancel it"
       },
       {
         "id": "b",
-        "text": "Send it, but only after they confirm your name"
+        "text": "Never share it. Open the app, secure your account and report the number"
       },
       {
         "id": "c",
-        "text": "Never share it. Block and report, and tell your bank"
+        "text": "Read only half of it"
       },
       {
         "id": "d",
-        "text": "Send half of it"
+        "text": "Ignore it and tell nobody"
       }
     ],
-    "answer": "c",
-    "explain": "That code lets someone log in as you. Nobody real ever needs it, not even part of it."
+    "answer": "b",
+    "explain": "A code you did not request means someone is trying to get in. Sharing it opens the door."
   },
   "hints": {
-    "nudge": "Look at the text with the code. Whose code is it?",
+    "nudge": "Who needs your code besides you?",
     "glow_order": [
       "code",
-      "bankcode",
-      "outside",
-      "rush",
-      "gift",
-      "delivery"
+      "mistake",
+      "rush"
     ]
   },
-  "sources": [
-    "ftc-codes",
-    "ftc-shipping"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check the number",
-      "title": "Who is texting",
+      "title": "Zelvora Security",
       "rows": [
         {
           "k": "Number",
-          "v": "Not one you know",
-          "clue": "outside"
+          "v": "Not the one Zelvora's codes come from",
+          "clue": "mistake"
         },
         {
-          "k": "Your orders this week",
-          "v": "None"
+          "k": "Your account",
+          "v": "A login attempt just happened, not by you"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the story",
+      "title": "What they say",
+      "rows": [
+        {
+          "k": "They say",
+          "v": "We sent it by mistake",
+          "clue": "mistake"
         },
         {
-          "k": "Courier's own app",
-          "v": "Shows no parcel for you"
+          "k": "They want",
+          "v": "The code read back",
+          "clue": "code"
+        },
+        {
+          "k": "Deadline",
+          "v": "5 minutes",
+          "clue": "rush"
         }
       ]
     },
@@ -310,19 +234,23 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What consumer advice says",
+      "title": "What Zelvora says",
       "rows": [
         {
-          "k": "A login code",
-          "v": "Is only for you to log in",
+          "k": "Staff will ask for your code",
+          "v": "Never",
           "clue": "code"
         },
         {
-          "k": "Anyone who asks for it",
-          "v": "Is a scammer",
-          "clue": "bankcode"
+          "k": "A code you did not ask for",
+          "v": "Means someone else tried to sign in. Secure your account"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-codes",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

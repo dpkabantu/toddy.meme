@@ -3,17 +3,17 @@
   "type": "hunt",
   "chapter": 1,
   "difficulty": 2,
-  "title": "Lights Out Tonight",
+  "title": "The Withdrawal Hold",
   "disguise": "support",
   "intro": [
-    "A text from your electricity company. It looks urgent.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "A text says a large withdrawal from your Ostrel account is \"on hold\".",
+    "You did not ask for any withdrawal. Your heart skips.",
+    "Sniff the text, then decide."
   ],
   "notify": {
     "app": "Messages",
-    "from": "Brightgrid Energy",
-    "text": "Your power will be cut tonight at 9:30 PM…"
+    "from": "Ostrel Alerts",
+    "text": "Withdrawal of 0.62 BTC on hold. Not you? Call…"
   },
   "screen": {
     "app": "sms",
@@ -21,47 +21,60 @@
       "name": [
         {
           "clue": "sender",
-          "text": "Brightgrid Energy"
+          "text": "Ostrel Alerts"
         }
       ]
     },
-    "context": "You paid your last bill on the 3rd.",
+    "context": "You have not asked to withdraw anything from Ostrel.",
     "items": [
       {
         "time": [
-          "Today 5:12 PM"
-        ]
-      },
-      {
-        "msg": [
-          "Brightgrid Energy: your ",
           {
-            "clue": "unpaid",
-            "text": "bill of $25 is unpaid"
-          },
-          ". ",
-          {
-            "clue": "cut",
-            "text": "Your power will be cut tonight at 9:30 PM."
+            "clue": "time",
+            "text": "Today 3:12 AM"
           }
         ]
       },
       {
         "msg": [
-          "Call our officer ",
+          "Ostrel: your withdrawal of ",
           {
-            "clue": "number",
-            "text": "immediately on 70000 55123"
+            "clue": "amount",
+            "text": "0.62 BTC"
+          },
+          " to a ",
+          {
+            "clue": "newaddr",
+            "text": "new address"
+          },
+          " is ",
+          {
+            "clue": "hold",
+            "text": "on hold"
           },
           "."
         ]
       },
       {
         "msg": [
-          "He will send you an app to ",
           {
-            "clue": "app",
-            "text": "update your details"
+            "clue": "notyou",
+            "text": "Not you?"
+          },
+          " Call our fraud team now on ",
+          {
+            "clue": "phone",
+            "text": "+44 20 7946 0958"
+          },
+          " to cancel it."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "timer",
+            "text": "It will be released in",
+            "countdown": 900
           },
           "."
         ]
@@ -69,41 +82,59 @@
     ]
   },
   "clues": {
-    "unpaid": {
-      "label": "Says the bill is unpaid",
+    "phone": {
+      "label": "Call this number",
       "strength": "strong",
-      "lens": "You paid your last bill on the 3rd.",
-      "why": "A claim that does not match your own records is a warning sign. Check your bill."
+      "lens": "A phone number in the text is the hook.",
+      "why": "The scam is the call. The \"fraud team\" will walk you into moving your coins."
     },
-    "cut": {
-      "label": "Cut-off tonight",
+    "amount": {
+      "label": "A big scary amount",
       "strength": "strong",
-      "lens": "Power cut tonight at 9:30 PM.",
-      "why": "Real utilities do not demand same-day payment to avoid disconnection."
+      "lens": "A huge withdrawal you never made.",
+      "why": "The shock is meant to make you panic."
     },
-    "number": {
-      "label": "A new number to call",
+    "timer": {
+      "label": "Released in minutes",
       "strength": "strong",
-      "lens": "The number is not the one on your bill.",
-      "why": "Use the number on your bill or the company's website, never one from a text."
+      "lens": "A countdown on your money.",
+      "why": "Pressure stops you from checking in the app."
     },
-    "app": {
-      "label": "Installs an app",
+    "notyou": {
+      "label": "\"Not you? Call us\"",
       "strength": "strong",
-      "lens": "The \"officer\" will send you an app to update your details.",
-      "why": "No real company needs you to install an app from a message. It can give a stranger control of your phone."
+      "lens": "It sends you to a number instead of the app.",
+      "why": "A real alert tells you to open the app."
+    },
+    "newaddr": {
+      "label": "Hidden details",
+      "strength": "strong",
+      "lens": "It names no address and no time.",
+      "why": "Real alerts show details you can check in the app."
+    },
+    "hold": {
+      "label": "Sounds official",
+      "strength": "harmless",
+      "lens": "\"On hold\" is a normal phrase.",
+      "why": "Official words are copied easily."
     },
     "sender": {
-      "label": "Company name",
+      "label": "Ostrel Alerts",
       "strength": "harmless",
-      "lens": "The sender says Brightgrid Energy.",
-      "why": "A name is easy to copy. It proves nothing alone."
+      "lens": "The sender name looks right.",
+      "why": "Sender names can be faked. Check inside the app."
+    },
+    "time": {
+      "label": "Sent at 3:12 AM",
+      "strength": "harmless",
+      "lens": "A night-time text.",
+      "why": "Scams are sent at any hour. The time proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Call the number now to save my power",
+      "label": "Call the number",
       "trap": true
     },
     {
@@ -112,11 +143,11 @@
     },
     {
       "id": "verify",
-      "label": "Check my last bill and call the number printed on it"
+      "label": "Open the Ostrel app and check my withdrawals"
     },
     {
       "id": "block_report",
-      "label": "Report it as a scam and delete it"
+      "label": "Delete it and report the text as junk"
     }
   ],
   "best_action": "block_report",
@@ -125,85 +156,81 @@
     "ignore"
   ],
   "trap": {
-    "title": "Call 70000 55123",
-    "url": "tel:70000 55123",
-    "ask": "The \"officer\" says: \"Install this app and share the code it shows, then I will clear your bill.\" The app shows your screen to the caller.",
-    "go": "Install the app",
+    "title": "Ostrel Fraud Team (call)",
+    "url": "phone: +44 20 7946 0958",
+    "ask": "The \"agent\" says your coins are at risk and asks you to move them to a \"safe wallet\" now.",
+    "go": "Move my coins",
     "back": "Hang up"
   },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Reported and deleted. Your real power stayed on, and the number was flagged for others.",
-      "mirageSays": "My officer!"
+      "stamp": "BLOCKED",
+      "line": "Reported and deleted. Your phone company can now block more of these texts.",
+      "mirageSays": "My lovely text!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The number on your bill reached the real company. They said: \"Your account is paid, and we never cut power by text.\" Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "The app showed no withdrawal at all. The text was fake. Case cracked.",
+      "mirageSays": "Hmph. They opened the app."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. The lights stayed on, but the same text is landing on thousands of other phones.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. Reporting would help protect others.",
+      "mirageSays": "Fine. Next phone!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "SCAMMED",
-      "line": "The app let the caller see your phone. They read your bank codes and emptied your account.",
-      "mirageSays": "Thanks for installing!"
+      "stamp": "DRAINED",
+      "line": "The \"agent\" had you move your coins to a \"safe wallet\". It was theirs.",
+      "mirageSays": "Thanks for the coins!"
     }
   },
   "what_if": {
-    "go_ahead": "Checking the number printed on your own bill takes a minute, and it would have reached the real company.",
-    "ignore": "Reporting takes two taps and helps others avoid the same call.",
-    "verify": "Checking was smart. Reporting the text as well protects other people."
+    "go_ahead": "The app would have shown no withdrawal at all. Checking there first takes ten seconds.",
+    "verify": "Checking was smart. Reporting the text helps others.",
+    "ignore": "Ignoring it was safe. A quick report protects others."
   },
-  "golden_rule": "A same-day cut-off threat is a pressure trick. Use the number on your bill, never a number from a text.",
+  "golden_rule": "If a scary alert gives you a phone number, do not call it. Open the app yourself.",
   "quick_check": {
-    "q": "A text says your power will be cut tonight unless you call a number and install an app. What do you do?",
+    "q": "A text says a big withdrawal is on hold and tells you to call a number to cancel it. You never asked for one. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Call quickly, it is only tonight"
+        "text": "Call quickly to stop it"
       },
       {
         "id": "b",
-        "text": "Install the app but do not share a code"
+        "text": "Do not call. Open the app yourself and report the text"
       },
       {
         "id": "c",
-        "text": "Check your bill and use the number printed on it, and report the text"
+        "text": "Reply to the text"
       },
       {
         "id": "d",
-        "text": "Pay in gift cards to be safe"
+        "text": "Call, but give no details"
       }
     ],
-    "answer": "c",
-    "explain": "Real utilities do not demand same-day payment. Your own bill has the right number."
+    "answer": "b",
+    "explain": "The number belongs to the scammers. Your own app shows what is real."
   },
   "hints": {
-    "nudge": "Does the text match what you know about your last bill?",
+    "nudge": "Where does the text want you to go?",
     "glow_order": [
-      "number",
-      "app",
-      "cut",
-      "unpaid"
+      "phone",
+      "notyou",
+      "timer",
+      "amount",
+      "newaddr"
     ]
   },
-  "sources": [
-    "ftc-utility",
-    "ftc-techsupport"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
@@ -212,19 +239,31 @@
       "title": "Who sent this text",
       "rows": [
         {
-          "k": "Sender",
-          "v": "Brightgrid Energy",
+          "k": "Number",
+          "v": "Not a number you know",
           "clue": "sender"
         },
         {
-          "k": "Your last bill",
-          "v": "Paid on the 3rd",
-          "clue": "unpaid"
-        },
+          "k": "Your withdrawals",
+          "v": "None in the app this week",
+          "clue": "amount"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the number",
+      "title": "Who answers",
+      "rows": [
         {
           "k": "Number in the text",
-          "v": "Not the one on your bill",
-          "clue": "number"
+          "v": "+44 20 7946 0958, not on ostrel.io",
+          "clue": "phone"
+        },
+        {
+          "k": "Ostrel's real alerts",
+          "v": "Come inside the app"
         }
       ]
     },
@@ -232,19 +271,23 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What consumer advice says",
+      "title": "What platforms say",
       "rows": [
         {
-          "k": "Real utilities demand same-day payment to avoid disconnection?",
-          "v": "No",
-          "clue": "cut"
+          "k": "A real withdrawal alert",
+          "v": "Shows the address and time in the app"
         },
         {
-          "k": "How to check",
-          "v": "Use the number on your bill or the company's website",
-          "clue": "number"
+          "k": "A \"fraud team\" that asks you to move coins",
+          "v": "Is always a scam",
+          "clue": "notyou"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-bank-call",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

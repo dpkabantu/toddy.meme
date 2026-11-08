@@ -3,32 +3,32 @@
   "type": "duel",
   "chapter": 1,
   "difficulty": 2,
-  "title": "The Helpful Reply",
+  "title": "The Support Reply",
   "disguise": "support",
   "intro": [
-    "You complained online about a late order from Meridu Store. Now someone has replied.",
+    "You posted that your Hedrio wallet will not show your coins. Someone replied.",
     "This time you can talk back. Pick your replies and sniff each message as it arrives.",
     "Every chat ends with your choice. Choose wisely."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Meridu Help ✔",
-    "text": "Sorry about your order! We can refund you here in DMs…"
+    "from": "Hedrio Help ✔",
+    "text": "Sorry about your wallet! We can fix it in DMs…"
   },
   "screen": {
     "app": "chirp",
     "head": {
       "name": [
         {
-          "text": "Meridu Help ✔",
+          "text": "Hedrio Help ✔",
           "id": "duel-name"
         }
       ],
       "sub": [
-        "@meridu_help_24"
+        "@hedrio_help_desk"
       ],
       "avatar": {
-        "glyph": "🛍️",
+        "glyph": "🐾",
         "clue": "logo"
       }
     },
@@ -46,7 +46,7 @@
             "msg": [
               {
                 "clue": "hello",
-                "text": "Hi! So sorry about your late order 😔"
+                "text": "Hi! So sorry your balance is not showing 😔"
               }
             ]
           },
@@ -56,15 +56,15 @@
                 "clue": "dmfirst",
                 "text": "We saw your post"
               },
-              ". We can refund you right here in DMs."
+              ". Our team can fix it right here in DMs."
             ]
           },
           {
             "msg": [
-              "Start the refund here: ",
+              "Scan this to re-connect your wallet: ",
               {
                 "clue": "link",
-                "text": "meridu-refunds.help/claim",
+                "text": "hedrio-reconnect.help/scan",
                 "link": true
               }
             ]
@@ -72,11 +72,11 @@
         ],
         "replies": [
           {
-            "text": "How do I get the refund?",
+            "text": "How does the fix work?",
             "next": "n2"
           },
           {
-            "text": "Are you really Meridu? How can I check?",
+            "text": "Are you really Hedrio? How can I check?",
             "next": "n3"
           },
           {
@@ -89,22 +89,22 @@
         "say": [
           {
             "msg": [
-              "Easy! Enter your card number on the page, then ",
+              "Easy! Scan the code, tap ",
               {
-                "clue": "code",
-                "text": "tell me the 6-digit code we text you"
+                "clue": "approve",
+                "text": "Approve"
               },
-              "."
+              " on every pop-up, and your coins reappear."
             ]
           }
         ],
         "replies": [
           {
-            "text": "OK, opening the link",
+            "text": "OK, scanning it now",
             "end": "go_ahead"
           },
           {
-            "text": "Why would a refund need my card number and a code?",
+            "text": "Why would a fix need me to approve things?",
             "next": "n4"
           },
           {
@@ -114,13 +114,13 @@
         ]
       },
       "n3": {
-        "rename": "Meridu Help (official)",
+        "rename": "Hedrio Help (official)",
         "say": [
           {
             "sys": [
               {
                 "clue": "rename",
-                "text": "The account changed its name to \"Meridu Help (official)\""
+                "text": "The account changed its name to \"Hedrio Help (official)\""
               }
             ]
           },
@@ -129,19 +129,19 @@
               "Of course we are official! ",
               {
                 "clue": "rush",
-                "text": "Your refund expires in 10 minutes, so please hurry"
+                "text": "Your wallet could be locked in 10 minutes"
               },
-              " 🙏"
+              ", so please hurry 🙏"
             ]
           }
         ],
         "replies": [
           {
-            "text": "OK, I do not want to lose the refund",
+            "text": "OK, I do not want it locked",
             "end": "go_ahead"
           },
           {
-            "text": "I will ask on Meridu's own website instead",
+            "text": "I will ask in Hedrio's own app instead",
             "end": "verify"
           },
           {
@@ -154,10 +154,10 @@
         "say": [
           {
             "msg": [
-              "Totally safe, it is how all refunds work. ",
+              "Totally safe, it is how every fix works. ",
               {
                 "clue": "everyone",
-                "text": "Hundreds of customers did it today."
+                "text": "Hundreds of users did it today."
               }
             ]
           }
@@ -168,11 +168,11 @@
             "end": "go_ahead"
           },
           {
-            "text": "I will contact Meridu through its own website first",
+            "text": "I will use the help page inside Hedrio's app first",
             "end": "verify"
           },
           {
-            "text": "No real refund needs my code. Block and report.",
+            "text": "No real fix needs me to approve unknown pop-ups. Reporting",
             "end": "block_report"
           }
         ]
@@ -183,60 +183,60 @@
     "dmfirst": {
       "label": "They messaged first",
       "strength": "strong",
-      "lens": "You never contacted this account. It found your public complaint and messaged you.",
-      "why": "Real companies answer in the open or through their own support page. Scammers watch public complaints."
+      "lens": "You never contacted this account. It found your public post and messaged you.",
+      "why": "Real wallet teams do not hunt for people in DMs. Scammers watch public complaints."
     },
     "link": {
       "label": "Look-alike link",
       "strength": "strong",
-      "lens": "This goes to meridu-refunds.help, not to Meridu's real site.",
-      "why": "Never give card details on a page you reached through a message. Check where the link really goes."
+      "lens": "This goes to hedrio-reconnect.help, not to Hedrio's real site.",
+      "why": "A wallet \"reconnect\" page can ask your wallet to sign away your coins. Check where a link really goes."
     },
-    "code": {
-      "label": "Asks for your code",
+    "approve": {
+      "label": "\"Approve every pop-up\"",
       "strength": "strong",
-      "lens": "It wants the code your bank texts you.",
-      "why": "That code lets someone log in or pay as you. Anyone who asks for it is a scammer."
-    },
-    "rename": {
-      "label": "It renamed itself",
-      "strength": "strong",
-      "lens": "The account changed its name when you doubted it.",
-      "why": "Real companies do not change names to win your trust."
+      "lens": "Approvals and signatures can hand a stranger control of your coins.",
+      "why": "A real fix never needs you to approve things you cannot read."
     },
     "rush": {
-      "label": "Countdown pressure",
+      "label": "Pressure to hurry",
       "strength": "strong",
-      "lens": "The refund \"expires in 10 minutes\".",
-      "why": "Rushing you is a pressure trick. Real refunds do not vanish in minutes."
+      "lens": "A wallet \"locked in 10 minutes\" is a made-up deadline.",
+      "why": "Rushing you stops you from checking."
+    },
+    "rename": {
+      "label": "Name changed on the spot",
+      "strength": "strong",
+      "lens": "It renamed itself \"official\" when you asked.",
+      "why": "Anyone can change a display name in a second. That is not proof."
     },
     "everyone": {
-      "label": "\"Everyone did it\"",
+      "label": "\"Hundreds did it\"",
       "strength": "strong",
-      "lens": "It says hundreds of customers already did it.",
-      "why": "A crowd you cannot see proves nothing."
-    },
-    "logo": {
-      "label": "Shop logo",
-      "strength": "harmless",
-      "lens": "A little shopping-bag picture.",
-      "why": "Logos are easy to copy, so they prove nothing on their own."
+      "lens": "It claims a crowd did it. You cannot check that.",
+      "why": "Fake crowds are an old trick to make a risky thing seem normal."
     },
     "hello": {
-      "label": "Friendly and sorry",
+      "label": "Friendly greeting",
       "strength": "harmless",
-      "lens": "A kind, apologetic hello.",
-      "why": "Being friendly is not suspicious by itself."
+      "lens": "Polite and sympathetic.",
+      "why": "Scammers are friendly. Kindness is not proof."
+    },
+    "logo": {
+      "label": "Hedrio paw logo",
+      "strength": "harmless",
+      "lens": "A copy of the wallet's paw print.",
+      "why": "Logos are copied in seconds."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Enter my card details and the code"
+      "label": "Scan the code and approve"
     },
     {
       "id": "verify",
-      "label": "Contact Meridu through its own website"
+      "label": "Use the help page inside Hedrio's own app"
     },
     {
       "id": "block_report",
@@ -252,56 +252,56 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "Blocked and reported. The platform removed the fake account before it reached anyone else.",
+      "line": "Blocked and reported. The fake support account was removed before it reached anyone else.",
       "mirageSays": "Curses! Blocked again!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Meridu's real website said: \"We never ask for card details or codes in messages.\" Case cracked.",
+      "line": "Hedrio's own help page said: \"We never message first and never ask you to approve connections in DMs.\" Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The code let Mirage pay from your account. The \"refund\" never came, and money left instead.",
-      "mirageSays": "Thanks for the code!"
+      "line": "The pop-ups gave a stranger permission to move your coins. The wallet was empty in minutes.",
+      "mirageSays": "Thanks for approving!"
     }
   },
   "what_if": {
-    "go_ahead": "Asking \"why does a refund need my code?\" was the way out. The answer is: it never does.",
+    "go_ahead": "Asking \"why does a fix need approvals?\" was the way out. The answer is: it never does.",
     "verify": "Checking was smart. Reporting the account as well gets it removed faster."
   },
-  "golden_rule": "A refund never needs your card code. Contact the shop through its own website, not through a message.",
+  "golden_rule": "Wallet support never messages you first. Never scan, connect or approve anything a stranger sends.",
   "quick_check": {
-    "q": "Someone replies to your public complaint and asks for your card number and a code texted to you. What is true?",
+    "q": "A \"wallet support\" account messages you first and asks you to scan a code and approve every pop-up. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Real shops do this to speed up refunds"
+        "text": "Scan and approve, they are helping"
       },
       {
         "id": "b",
-        "text": "It is fine if the account has a ✔ in its name"
+        "text": "Do not scan. Block, report, and use the help page inside the wallet app"
       },
       {
         "id": "c",
-        "text": "A refund never needs your codes, so it is a trap"
+        "text": "Approve only the first pop-up"
       },
       {
         "id": "d",
-        "text": "Give the code but change your password later"
+        "text": "Ask them to approve it for you"
       }
     ],
-    "answer": "c",
-    "explain": "Codes and card numbers are for paying, not for receiving money. That request alone tells you it is a trap."
+    "answer": "b",
+    "explain": "Approving unknown pop-ups can hand over your coins. Real wallet support never messages first."
   },
   "hints": {
-    "nudge": "Why would a refund need a code from you?",
+    "nudge": "Why would fixing a balance need approvals?",
     "glow_order": [
-      "code",
+      "approve",
       "link",
       "dmfirst",
       "rush",
@@ -309,30 +309,25 @@
       "everyone"
     ]
   },
-  "sources": [
-    "ftc-customerservice",
-    "ftc-codes"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check the account",
-      "title": "Meridu Help ✔",
+      "title": "Hedrio Help ✔",
       "rows": [
         {
           "k": "Joined",
-          "v": "2 days ago",
+          "v": "3 days ago",
           "clue": "dmfirst"
         },
         {
           "k": "Followers",
-          "v": "5"
+          "v": "8"
         },
         {
-          "k": "Real Meridu account",
-          "v": "@meridu_store, 6 years old"
+          "k": "Real Hedrio account",
+          "v": "@hedrio_app, 5 years old"
         }
       ]
     },
@@ -340,21 +335,21 @@
       "id": "link",
       "icon": "🔗",
       "label": "Check the link",
-      "title": "Where \"claim\" goes",
+      "title": "Where \"scan\" goes",
       "rows": [
         {
           "k": "Address",
-          "v": "meridu-refunds.help",
+          "v": "hedrio-reconnect.help",
           "clue": "link"
         },
         {
-          "k": "Real shop site",
-          "v": "meridu.store"
+          "k": "Real wallet site",
+          "v": "hedrio.app"
         },
         {
-          "k": "Asks for",
-          "v": "Card number and the code your bank texts",
-          "clue": "code"
+          "k": "Asks you to",
+          "v": "Approve connections",
+          "clue": "approve"
         }
       ]
     },
@@ -362,18 +357,23 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What consumer advice says",
+      "title": "What wallet makers say",
       "rows": [
         {
-          "k": "Contact a shop",
-          "v": "Through its own website or the contact details on your receipt"
+          "k": "Real support",
+          "v": "Replies inside the app, never in surprise DMs"
         },
         {
-          "k": "A message asking for a code",
-          "v": "Anyone who asks for it is a scammer",
-          "clue": "code"
+          "k": "Approvals",
+          "v": "Hand over control of your coins",
+          "clue": "approve"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "cafc-wallet",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

@@ -187,5 +187,26 @@
     "published": null,
     "checked_on": "2026-10-21",
     "supports": "Promises of big returns and pressure to act fast, thin details and a request to pay by crypto or a payment app are red flags; there are no guaranteed returns; research the offer and contact your friend another way."
+  },
+  "ic3-2025": {
+    "title": "FBI IC3 2025 Internet Crime Report: crypto-related fraud (via The Block)",
+    "url": "https://www.theblock.co/amp/post/397134/fbi-says-crypto-related-fraud-losses-hit-record-11-4-billion-in-2025-with-seniors-bearing-the-brunt",
+    "published": "2026-04",
+    "checked_on": "2026-11-08",
+    "supports": "Crypto-related fraud losses $11.37B across 181,565 complaints; investment fraud $7.2B; crypto ATM scams $389M (up 58%); recovery scams $1.4B; adults 60+ lost $4.4B."
+  },
+  "ftc-data-2025": {
+    "title": "AARP: FBI and FTC 2025 fraud reports (summary)",
+    "url": "https://www.aarp.org/money/scams-fraud/fbi-ftc-report-2025-losses",
+    "published": "2026-03",
+    "checked_on": "2026-11-08",
+    "supports": "FTC: record $15.9B reported fraud losses, investment scams the top loss category ($7.9B); people 50+ lost $4.3B vs $2.3B for younger adults. FBI: $20.9B total internet-crime losses."
+  },
+  "chainalysis-2026": {
+    "title": "Chainalysis 2026 Crypto Crime Report: scams (via Decrypt)",
+    "url": "https://decrypt.co/354624/ai-impersonation-drove-crypto-scam-losses-record-17-billion-2025-chainalysis",
+    "published": "2026-03",
+    "checked_on": "2026-11-08",
+    "supports": "Crypto scam losses an estimated $17B in 2025; average payment rose from $782 to $2,764; deepfake impersonation of officials grew over 1,400%; a toll-text phishing campaign sent up to 330,000 texts a day."
   }
 }

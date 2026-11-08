@@ -3,81 +3,96 @@
   "type": "hunt",
   "chapter": 1,
   "difficulty": 2,
-  "title": "The Strike Notice",
-  "disguise": "admin",
+  "title": "The Recovery Expert",
+  "disguise": "support",
   "intro": [
-    "You posted a photo of your cat on Chirp. A message arrives from \"Chirp Safety\".",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "Last month you posted that a fake site emptied part of your wallet.",
+    "Today a stranger replied: they can get it back. It sounds like a miracle.",
+    "Sniff the reply, then decide. Recovery scams are growing fast."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Chirp Safety ✔",
-    "text": "Copyright claim on your photo. Appeal within 24 hours…"
+    "from": "Rekovo Recovery",
+    "text": "We can trace and recover your stolen crypto…"
   },
   "screen": {
     "app": "chirp",
     "head": {
       "name": [
         {
-          "clue": "tick",
-          "text": "Chirp Safety ✔"
+          "clue": "name",
+          "text": "Rekovo Recovery ✔"
         }
       ],
       "sub": [
         {
           "clue": "handle",
-          "text": "@chirp_safety_appeals"
+          "text": "@rekovo_recovery_pro"
         }
       ],
       "avatar": {
-        "glyph": "🛡️",
-        "clue": "logo"
+        "glyph": "🔎",
+        "clue": "avatar"
       }
     },
     "banner": [
       {
-        "clue": "dmfirst",
+        "clue": "dm",
         "text": "New message request · you do not follow this account"
       }
     ],
-    "context": "You posted a photo of your cat this morning.",
+    "context": "You posted about your loss on a public thread last month.",
     "items": [
       {
         "time": [
-          "11:36 AM"
+          {
+            "clue": "time",
+            "text": "11:20 PM"
+          }
         ]
       },
       {
         "msg": [
           {
-            "clue": "strike",
-            "text": "Copyright claim: your photo breaks our rules."
+            "clue": "sorry",
+            "text": "We are so sorry for your loss."
           },
-          " Your account will be ",
+          " Our blockchain team can ",
           {
-            "clue": "deadline",
-            "text": "deleted in 24 hours"
+            "clue": "guarantee",
+            "text": "recover 100% of stolen coins"
           },
           "."
         ]
       },
       {
         "msg": [
-          "To appeal, log in here: ",
+          "Success rate: ",
           {
-            "clue": "link",
-            "text": "chirp-appeal.support/login",
+            "clue": "rate",
+            "text": "98%"
+          },
+          ". Hundreds of happy clients, see ",
+          {
+            "clue": "proof",
+            "text": "our testimonials",
             "link": true
-          }
+          },
+          "."
         ]
       },
       {
         "msg": [
-          "Appeals need your ",
+          "Pay a ",
           {
-            "clue": "login",
-            "text": "password and the code we text you"
+            "clue": "fee",
+            "text": "small 10% release fee"
+          },
+          " first. ",
+          {
+            "clue": "timer",
+            "text": "Funds will be lost forever in",
+            "countdown": 900
           },
           "."
         ]
@@ -85,59 +100,77 @@
     ]
   },
   "clues": {
-    "dmfirst": {
-      "label": "They messaged first",
+    "dm": {
+      "label": "They found you",
       "strength": "strong",
-      "lens": "A private message from an account you do not follow.",
-      "why": "Real platforms send notices inside the app, not through DMs from strangers."
+      "lens": "You did not ask. They messaged after your public post.",
+      "why": "Recovery scammers search for people who have just lost money."
     },
-    "tick": {
-      "label": "Fake tick",
+    "guarantee": {
+      "label": "Guaranteed recovery",
       "strength": "strong",
-      "lens": "The ✔ is typed into the name. Chirp's real verified badge sits after the handle, and there is none.",
-      "why": "Anyone can type a tick into a display name."
+      "lens": "No one can promise 100% recovery. Moved coins are very hard to trace and return.",
+      "why": "A guarantee is a lie. Real investigators promise nothing."
+    },
+    "fee": {
+      "label": "Fee first",
+      "strength": "strong",
+      "lens": "You pay before anything is recovered.",
+      "why": "A fee up front is the heart of the scam. They take it and vanish."
+    },
+    "rate": {
+      "label": "\"98% success\"",
+      "strength": "strong",
+      "lens": "A suspiciously perfect number with no proof.",
+      "why": "Real services cannot show such a number, and none can check it."
+    },
+    "timer": {
+      "label": "Last chance",
+      "strength": "strong",
+      "lens": "Funds \"lost forever\" unless you hurry.",
+      "why": "A made-up deadline stops you from checking with the police or a lawyer."
+    },
+    "proof": {
+      "label": "Testimonials link",
+      "strength": "strong",
+      "lens": "Reviews on a page they control.",
+      "why": "Fake testimonials are easy to write. Check independent sources."
+    },
+    "avatar": {
+      "label": "A magnifier picture",
+      "strength": "harmless",
+      "lens": "It looks like an investigator.",
+      "why": "Pictures prove nothing."
+    },
+    "name": {
+      "label": "A tick in the name",
+      "strength": "harmless",
+      "lens": "A ✔ typed into the display name.",
+      "why": "A tick you can type is not a real verification badge."
     },
     "handle": {
-      "label": "New look-alike account",
-      "strength": "strong",
-      "lens": "Joined 3 days ago, 7 followers. Chirp's real account is @chirp.",
-      "why": "Brand-new look-alike accounts are a classic impersonation sign."
-    },
-    "link": {
-      "label": "Look-alike link",
-      "strength": "strong",
-      "lens": "This goes to chirp-appeal.support, not the real chirp.app.",
-      "why": "Never log in through a link in a message. Open the app yourself and look at your notices."
-    },
-    "login": {
-      "label": "Asks for password and code",
-      "strength": "strong",
-      "lens": "It wants your password and your texted code.",
-      "why": "No real platform needs your password or code for an appeal."
-    },
-    "deadline": {
-      "label": "Delete-in-24-hours threat",
-      "strength": "strong",
-      "lens": "Your account will be deleted in 24 hours.",
-      "why": "A threat with a short deadline is a pressure trick."
-    },
-    "strike": {
-      "label": "Copyright claim",
+      "label": "Professional handle",
       "strength": "harmless",
-      "lens": "A claim that your cat photo breaks the rules.",
-      "why": "The claim sounds serious, but it comes from an unknown account. The claim alone proves nothing."
+      "lens": "It sounds like a firm.",
+      "why": "Anyone can pick a professional-sounding handle."
     },
-    "logo": {
-      "label": "Shield logo",
+    "sorry": {
+      "label": "Sympathy",
       "strength": "harmless",
-      "lens": "A shield picture.",
-      "why": "Logos are easy to copy, so they prove nothing on their own."
+      "lens": "It starts with kind words.",
+      "why": "Kindness is how the trust begins."
+    },
+    "time": {
+      "label": "Late night",
+      "strength": "harmless",
+      "lens": "11:20 PM.",
+      "why": "Time of day proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Open the link and appeal",
+      "label": "Pay the release fee",
       "trap": true
     },
     {
@@ -146,7 +179,7 @@
     },
     {
       "id": "verify",
-      "label": "Open the Chirp app and check my notices"
+      "label": "Report the loss to the police and ask about real help"
     },
     {
       "id": "block_report",
@@ -159,10 +192,10 @@
     "ignore"
   ],
   "trap": {
-    "title": "Chirp · Appeal",
-    "url": "chirp-appeal.support/login",
-    "ask": "Enter your password and the code we text you to appeal.",
-    "go": "Log in and appeal",
+    "title": "Rekovo Recovery · Release fee",
+    "url": "rekovo-recovery.help/pay",
+    "ask": "Send the 10% release fee in coins to start your recovery.",
+    "go": "Send the fee",
     "back": "Close this page"
   },
   "outcomes": {
@@ -170,122 +203,114 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "Blocked and reported. The fake account was removed before it reached other people.",
-      "mirageSays": "Curses! Blocked again!"
+      "line": "Blocked and reported. A second theft was stopped before it started.",
+      "mirageSays": "Not my sad customer!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The app showed no claim and no warning on your account. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "The police page said: \"Nobody can guarantee recovery, and real help never asks for a fee first.\" Case cracked.",
+      "mirageSays": "Hmph. They called the police."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the account is still out there messaging other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. Reporting stops it from reaching other victims.",
+      "mirageSays": "Fine. Next victim!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "SCAMMED",
-      "line": "The page copied your password and code. Within minutes the account was locked and used to message your friends.",
-      "mirageSays": "Thanks for logging in!"
+      "stamp": "DRAINED",
+      "line": "The fee was sent. The \"recovery team\" disappeared, and you had lost money twice.",
+      "mirageSays": "Thanks for the fee!"
     }
   },
   "what_if": {
-    "go_ahead": "Opening the app yourself would have shown no claim anywhere. Real notices live inside the app.",
-    "ignore": "Reporting takes two taps and gets the fake account removed.",
-    "verify": "Checking was smart. Blocking and reporting as well protects others."
+    "go_ahead": "Reporting the first loss to the police, and asking for real advice, would have cost nothing.",
+    "verify": "Checking was smart. Reporting the account helps protect others.",
+    "ignore": "Ignoring it was safe. A quick report protects other victims."
   },
-  "golden_rule": "Real platforms send notices inside the app. A DM that threatens deletion and asks for your password is a trap.",
+  "golden_rule": "Anyone who promises to recover your lost crypto for a fee is probably a second scammer.",
   "quick_check": {
-    "q": "An account you do not follow DMs that your account will be deleted unless you log in through a link. What do you do?",
+    "q": "After a crypto loss, a stranger offers to recover your coins for a 10% fee paid first. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Log in quickly through the link"
+        "text": "Pay the fee, it is only 10%"
       },
       {
         "id": "b",
-        "text": "Reply and explain your cat photo"
+        "text": "Refuse, and report the loss to the police instead"
       },
       {
         "id": "c",
-        "text": "Open the app yourself to check, then block and report"
+        "text": "Ask them to guarantee it in writing"
       },
       {
         "id": "d",
-        "text": "Ask your friends if they got it"
+        "text": "Pay half now, half later"
       }
     ],
-    "answer": "c",
-    "explain": "Real notices live inside the app. Never log in through a link a stranger sends."
+    "answer": "b",
+    "explain": "Recovery scams target people who have just lost money. Real help never asks for a fee first."
   },
   "hints": {
-    "nudge": "Start with who sent it. Do you know this account?",
+    "nudge": "Who promises a guarantee after a loss?",
     "glow_order": [
-      "login",
-      "handle",
-      "link",
-      "dmfirst",
-      "tick",
-      "deadline"
+      "fee",
+      "guarantee",
+      "dm",
+      "rate",
+      "timer",
+      "proof"
     ]
   },
-  "sources": [
-    "ftc-phishing",
-    "ftc-spamtexts",
-    "ftc-codes"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check profile",
-      "title": "Profile check · @chirp_safety_appeals",
+      "label": "Check the account",
+      "title": "Rekovo Recovery ✔",
       "rows": [
         {
-          "k": "Account created",
-          "v": "3 days ago",
-          "clue": "handle"
+          "k": "Joined",
+          "v": "Two weeks ago",
+          "clue": "dm"
         },
         {
-          "k": "Followers",
-          "v": "7"
+          "k": "Verified",
+          "v": "No. The ✔ is typed into the name"
         },
         {
-          "k": "Verified badge",
-          "v": "None. The ✔ is typed into the name",
-          "clue": "tick"
-        },
-        {
-          "k": "Official account",
-          "v": "@chirp, 7 years old"
+          "k": "Where it found you",
+          "v": "Your public post about the loss",
+          "clue": "dm"
         }
       ]
     },
     {
       "id": "link",
       "icon": "🔗",
-      "label": "Check link",
-      "title": "Where the link really goes",
+      "label": "Check the claims",
+      "title": "What it promises",
       "rows": [
         {
-          "k": "Message says",
-          "v": "log in to appeal"
+          "k": "Promise",
+          "v": "Get 100% back",
+          "clue": "guarantee"
         },
         {
-          "k": "It really opens",
-          "v": "chirp-appeal.support",
-          "clue": "link"
+          "k": "Success rate",
+          "v": "98%, no proof",
+          "clue": "rate"
         },
         {
-          "k": "Real Chirp site",
-          "v": "chirp.app"
+          "k": "Before it helps",
+          "v": "You pay a fee",
+          "clue": "fee"
         }
       ]
     },
@@ -293,18 +318,28 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What Chirp's help page says",
+      "title": "What police and regulators say",
       "rows": [
         {
-          "k": "Does Chirp DM you about strikes?",
-          "v": "Never. Notices appear in the app"
+          "k": "Recovery services that ask for a fee first",
+          "v": "Are scams",
+          "clue": "fee"
         },
         {
-          "k": "Does it ask for your password or code?",
-          "v": "Never, from anyone",
-          "clue": "login"
+          "k": "Where to report",
+          "v": "Your national police or cybercrime portal"
+        },
+        {
+          "k": "Chance of getting coins back",
+          "v": "Low, and nobody can promise it",
+          "clue": "guarantee"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ic3-2025",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }
