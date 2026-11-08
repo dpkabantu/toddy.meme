@@ -29,7 +29,7 @@ Step 1 = sign-in, session, profile, delete. Step 2 (this branch) adds saved prog
 
 ### B. Make the database in Cloudflare
 1. https://dash.cloudflare.com > **Storage & databases** > **D1 SQL database** > **Create database**. Name `toddy-accounts`. Location: Western Europe (EU). **Create**.
-2. Open it > **Console** tab. Open `migrations/0001_accounts.sql` from this repo (GitHub: click the file > **Raw**), copy everything, paste into the console, click **Execute**. Then do the same with `migrations/0002_progress.sql` and `migrations/0003_scores.sql`. Together they create five tables. (Already ran 0001 and 0002? Just run 0003.)
+2. Open it > **Console** tab. The Cloudflare console squashes pasted text onto one line, so lines starting with `--` swallow everything after them. Use the comment-free blocks in `migrations/console/` (one block per file, run each, in order: 0001, 0002, 0003). Together they create five tables: players, sessions, anon_links, progress, scores. Running a block twice is safe.
 3. Copy the **Database ID** (on the database's overview page; it is not a secret). Send it to me and I switch the database on in `wrangler.jsonc`.
 
 ### C. Secrets (Cloudflare dashboard, never in GitHub)

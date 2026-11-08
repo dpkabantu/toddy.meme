@@ -1,0 +1,1 @@
+CREATE TABLE IF NOT EXISTS scores ( player_id TEXT NOT NULL REFERENCES players(id) ON DELETE CASCADE, game TEXT NOT NULL, day INTEGER NOT NULL, score INTEGER NOT NULL, created_at INTEGER NOT NULL, PRIMARY KEY (player_id, game, day) ); CREATE INDEX IF NOT EXISTS scores_board ON scores(game, day, score DESC); 

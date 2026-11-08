@@ -13,8 +13,8 @@
   // Private preview copies for test branches (e.g. games-beta). Needed by
   // `npx wrangler preview` in Cloudflare's preview builds; the live site is unaffected.
   "previews": {},
-  // ACCOUNTS DATABASE: switch on in step 2 of server/README.md, after the D1 database exists:
-  // "d1_databases": [{ "binding": "DB", "database_name": "toddy-accounts", "database_id": "PASTE-THE-ID-HERE" }],
+  // ACCOUNTS DATABASE (the database id is not a secret):
+  "d1_databases": [{ "binding": "DB", "database_name": "toddy-accounts", "database_id": "8843623f-1f66-4d6b-9e9a-8524626d69c6" }],
   // Secrets GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET and SESSION_SECRET are set in the Cloudflare dashboard, never here.
   // GAMES / BACKEND — reserved for later, intentionally not enabled yet.
   // When scores, Passport or server-side validation are built, a Worker script
