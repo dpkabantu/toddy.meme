@@ -566,14 +566,17 @@ button.kit-row { cursor: pointer; border-color: rgba(176,96,0,.45); }
    The game keeps its phone-shaped stage; the desk behind it becomes the lab, and the stage gets a frame. */
 @media (min-width: 1000px) and (hover: hover) and (pointer: fine) {
   body { align-items: center; position: relative; }
+  /* Clean, sharp lab backdrop: no blurred picture. Warm dark wood tones with soft lamp light, plain CSS. */
   body::before {
-    content: ""; position: fixed; inset: -4vmax; z-index: 0; pointer-events: none;
-    background: url("../assets/title_bg.webp") center / cover no-repeat;
-    filter: blur(1.6vmax) brightness(.38) saturate(.9);
+    content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
+    background:
+      radial-gradient(ellipse 38% 55% at 50% 50%, rgba(253,175,30,.16), rgba(253,175,30,0) 70%),
+      repeating-linear-gradient(90deg, rgba(255,255,255,.018) 0 2px, rgba(0,0,0,0) 2px 120px),
+      linear-gradient(180deg, #2a1c12 0%, #1a110b 100%);
   }
   body::after {
     content: ""; position: fixed; inset: 0; z-index: 0; pointer-events: none;
-    background: radial-gradient(ellipse at center, rgba(18,12,9,0) 35%, rgba(18,12,9,.78) 100%);
+    background: radial-gradient(ellipse at center, rgba(18,12,9,0) 45%, rgba(18,12,9,.7) 100%);
   }
   #stage {
     --h: min(calc(100dvh - 40px), calc((100vw - 40px) * 16 / 9));
