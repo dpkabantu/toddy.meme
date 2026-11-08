@@ -86,6 +86,7 @@ test('callback refuses a wrong state, a missing cookie, a cancelled screen and b
 
 test('return path cannot leave our games (no open redirect)', () => {
   assert.equal(safeReturn('/games/moon-brew/'), '/games/moon-brew/');
+  assert.equal(safeReturn('/'), '/');
   for (const bad of ['https://evil.example', '//evil.example', '/\\evil', '/games/../x', '/other', undefined]) assert.equal(safeReturn(bad), '/games/');
 });
 
