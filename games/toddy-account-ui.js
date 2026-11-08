@@ -21,7 +21,7 @@
   }
   function render() {
     A.me(true).then(function (m) {
-      me = m; backdrop.textContent = '';
+      me = m; setPill(); backdrop.textContent = '';
       var card = el('div', { className: 'ta-card', role: 'dialog', 'aria-label': 'Account' }); backdrop.append(card);
       card.append(el('h3', { textContent: 'Account' }));
       var done = el('button', { className: 'ta-btn', type: 'button', textContent: 'Close' }); done.addEventListener('click', close);
@@ -72,16 +72,34 @@
     return el('div', { className: 'ta-line' + (you ? ' you' : '') }, el('span', { className: 'ta-rank', textContent: String(rank) }), el('span', { className: 'ta-name', textContent: name }), el('span', { className: 'ta-score', textContent: Number(score).toLocaleString('en-US') }));
   }
 
-  // ----- the "Account" chip, added to every matching button row (the games redraw their menus, so we keep watching) -----
-  function addChips() {
-    var rows = document.querySelectorAll(cfg.rowSelector);
-    for (var i = 0; i < rows.length; i++) {
-      if (rows[i].querySelector('[data-ta-chip]')) continue;
-      var b = el('button', { className: cfg.chipClass || 'chip', type: 'button', textContent: 'Account' }); b.setAttribute('data-ta-chip', '1');
-      b.addEventListener('click', open);
-      rows[i].append(b);
+  // ----- the "Sign in" pill: top right, shown whenever the game's menu is on screen (the games redraw their menus, so we keep watching) -----
+  var pill = null, raf = 0;
+  function pillText() { return me && me.signedIn ? (me.nickname || 'Account') : 'Sign in'; }
+  function setPill() {
+    if (!pill) return;
+    var on = !!(me && me.signedIn), st = on ? 'in' : 'out';
+    if (pill.dataset.st !== st) {
+      pill.dataset.st = st;
+      if (on) { pill.innerHTML = '<svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true" focusable="false"><circle cx="16" cy="11" r="5.2" fill="#fdaf1e"/><path d="M5.5 26c0-5.6 4.7-9 10.5-9s10.5 3.4 10.5 9z" fill="#fdaf1e"/></svg><i class="ta-caret" aria-hidden="true"></i>'; pill.setAttribute('aria-label', 'Your account'); }
+      else { pill.textContent = 'Sign in'; pill.setAttribute('aria-label', 'Sign in or open your account'); }
     }
+    pill.classList.toggle('on', on);
   }
+  function menuVisible() {
+    var rows = document.querySelectorAll(cfg.rowSelector);
+    for (var i = 0; i < rows.length; i++) if (rows[i].getClientRects().length) return true;
+    return false;
+  }
+  function syncPill() {
+    raf = 0;
+    if (!me || me.unavailable) return;
+    if (!pill) {
+      pill = el('button', { className: 'ta-pill' + (cfg.pillAtBottom ? ' bottom' : ''), type: 'button' }); pill.setAttribute('aria-label', 'Sign in or open your account');
+      pill.addEventListener('click', open); document.body.append(pill);
+    }
+    setPill(); var h = !menuVisible(); if (pill.hidden !== h) pill.hidden = h;
+  }
+  function queueSync() { if (!raf) raf = requestAnimationFrame(syncPill); }
 
   // ----- a way back: "All games" next to the chip (shown even when sign-in is off) -----
   function addHome() {
@@ -110,7 +128,7 @@
   }
   function syncNow() {
     return A.me(true).then(function (m) {
-      me = m; if (!m.signedIn) return;
+      me = m; queueSync(); if (!m.signedIn) return;
       return A.pull(cfg.game).then(function (remote) {
         if (remote === undefined) return;
         var local = cfg.read(), merged = cfg.merge(local, remote);
@@ -126,8 +144,8 @@
       addHome(); new MutationObserver(addHome).observe(document.documentElement, { childList: true, subtree: true });
       A.me().then(function (m) {
         if (m.unavailable) return; // service off: no chip, no sync
-        addChips();
-        new MutationObserver(addChips).observe(document.body, { childList: true, subtree: true });
+        me = m; syncPill();
+        new MutationObserver(queueSync).observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['hidden', 'class'] });
         var q = /^\?signin=(ok|cancelled|failed|expired)$/.exec(location.search);
         if (q) history.replaceState(null, '', location.pathname);
         syncNow().then(function () { sendScores(); if (q) open(); });

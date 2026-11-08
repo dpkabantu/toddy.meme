@@ -1311,13 +1311,29 @@ async function renderAccount() {
   box.append(el('span', {}, el('b', { textContent: me.needsNickname ? 'Welcome! Pick a nickname' : 'Signed in' }), el('small', { textContent: 'Other players only ever see your nickname.' }), nick, save1,
     el('label', { className: 'acct-row' }, boards, el('small', { textContent: 'Show me on leaderboards' })), say2, lb, out, del));
 }
+function updateAccountPill() {
+  const b = $('btn-account'); if (!b) return;
+  b.hidden = !acc() || !accountMe || !!accountMe.unavailable;
+  const on = !!(accountMe && accountMe.signedIn), st = on ? 'in' : 'out';
+  if (b.dataset.st !== st) {
+    b.dataset.st = st;
+    if (on) { b.innerHTML = '<svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true" focusable="false"><circle cx="16" cy="11" r="5.2" fill="#fdaf1e"/><path d="M5.5 26c0-5.6 4.7-9 10.5-9s10.5 3.4 10.5 9z" fill="#fdaf1e"/></svg><i class="ta-caret" aria-hidden="true"></i>'; b.setAttribute('aria-label', 'Your account'); }
+    else { b.textContent = 'Sign in'; b.setAttribute('aria-label', 'Sign in or open your account'); }
+  }
+  b.classList.toggle('on', on);
+}
+function openAccount() {
+  modal(`<h3>Account</h3><div class="setting account" id="acct" hidden></div><div class="btns"><button class="btn ghost" id="acct-close" type="button">Close</button></div>`);
+  bind('acct-close', () => { closeModal(); updateAccountPill(); });
+  renderAccount().then(updateAccountPill);
+}
 async function initAccount() {
   const A = acc(); if (!A) return;
   const m = /^\?signin=(ok|cancelled|failed|expired)$/.exec(location.search);
   if (m) history.replaceState(null, '', location.pathname);
-  await syncNow();
-  if (m && m[1] === 'ok') openSettings();
-  else if (m) modal(`<h3>Sign-in did not finish</h3><p>${m[1] === 'cancelled' ? 'No problem. You can keep playing as a guest.' : 'Please try again from Settings. You can keep playing as a guest.'}</p><div class="btns"><button class="btn primary" id="acct-ok" type="button">OK</button></div>`), bind('acct-ok', closeModal);
+  await syncNow(); updateAccountPill();
+  if (m && m[1] === 'ok') openAccount();
+  else if (m) modal(`<h3>Sign-in did not finish</h3><p>${m[1] === 'cancelled' ? 'No problem. You can keep playing as a guest.' : 'Please try again with the Sign in button. You can keep playing as a guest.'}</p><div class="btns"><button class="btn primary" id="acct-ok" type="button">OK</button></div>`), bind('acct-ok', closeModal);
 }
 function modal(html) { $('modal-card').innerHTML = html; $('modal').hidden = false; const b = $('modal-card').querySelector('button'); if (b) b.focus(); }
 function closeModal() { $('modal').hidden = true; }
@@ -1423,6 +1439,7 @@ bind('btn-stats', () => show('stats'));
 bind('stats-back', () => show('title'));
 bind('btn-howto', () => show('howto'));
 bind('btn-settings', openSettings);
+bind('btn-account', openAccount);
 bind('btn-about', () => show('about'));
 bind('about-back', () => show('title'));
 linkTo($('about-bug'), BUG_REPORT_URL);
