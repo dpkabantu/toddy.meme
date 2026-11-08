@@ -3,67 +3,66 @@
   "type": "hunt",
   "chapter": 2,
   "difficulty": 1,
-  "title": "Shoes at 80% Off",
+  "title": "The Cheap Hardware Wallet",
   "disguise": "influencer",
   "intro": [
-    "An ad for your favourite shoes pops up while you scroll. The price looks unreal.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "A sponsored post in your feed: a hardware wallet at 80% off.",
+    "You have been meaning to buy one to keep your coins offline.",
+    "Sniff the post, then decide."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Sponsored",
-    "text": "Strideway Runner: 80% OFF today only!"
+    "from": "Hedrio Outlet",
+    "text": "Hardware wallets 80% off today only!"
   },
   "screen": {
     "app": "chirp",
     "head": {
       "name": [
         {
-          "clue": "brand",
-          "text": "Strideway Outlet"
+          "clue": "name",
+          "text": "Hedrio Outlet"
         }
       ],
       "sub": [
-        "Sponsored"
+        {
+          "clue": "handle",
+          "text": "@hedrio_outlet_deals"
+        }
       ],
       "avatar": {
-        "glyph": "👟",
-        "clue": "pic"
+        "glyph": "🛒",
+        "clue": "avatar"
       }
     },
     "banner": [
-      "Ad · you do not follow this page"
+      {
+        "clue": "ad",
+        "text": "Sponsored"
+      }
     ],
     "items": [
       {
         "msg": [
-          {
-            "clue": "deal",
-            "text": "Strideway Runner shoes: 80% OFF today only!"
-          }
-        ]
-      },
-      {
-        "msg": [
-          "Was €120, now ",
+          "Hedrio Vault wallet: was €99, ",
           {
             "clue": "price",
-            "text": "€24"
+            "text": "now €19"
           },
-          ". ",
+          "! ",
           {
             "clue": "stock",
-            "text": "Only 3 pairs left!"
-          }
+            "text": "Only 12 left"
+          },
+          "."
         ]
       },
       {
         "msg": [
-          "Shop now: ",
+          "Buy here: ",
           {
             "clue": "link",
-            "text": "strideway-outlet-sale.shop",
+            "text": "hedrio-vault-outlet.shop",
             "link": true
           }
         ]
@@ -72,74 +71,79 @@
         "msg": [
           {
             "clue": "pay",
-            "text": "We only take bank transfer or gift cards."
-          }
-        ]
-      },
-      {
-        "msg": [
+            "text": "Pay by bank transfer or crypto only"
+          },
+          " ",
           {
-            "clue": "reviews",
-            "text": "★★★★★ \"Best shop ever!\" · ★★★★★ \"Arrived fast!\""
-          }
+            "clue": "timer",
+            "text": "Sale ends in",
+            "countdown": 900
+          },
+          "."
         ]
       }
     ]
   },
   "clues": {
-    "deal": {
-      "label": "80% off",
+    "price": {
+      "label": "Price far too low",
       "strength": "strong",
-      "lens": "A brand-new shoe at a fifth of its usual price.",
-      "why": "A price far below normal is the bait. Real shops rarely cut this deep."
-    },
-    "stock": {
-      "label": "\"Only 3 left\"",
-      "strength": "strong",
-      "lens": "A countdown of pairs, to make you hurry.",
-      "why": "Pressure to buy now is a scam sign."
+      "lens": "80% off a security product is unrealistic.",
+      "why": "A real maker does not sell its own wallet at a fifth of the price. The cheap price is bait."
     },
     "link": {
-      "label": "Strange shop address",
+      "label": "Look-alike shop",
       "strength": "strong",
-      "lens": "strideway-outlet-sale.shop is not the brand's own site, strideway.com.",
-      "why": "Look-alike shop names are easy to make. Type the brand's own address yourself."
+      "lens": "hedrio-vault-outlet.shop is not hedrio.app.",
+      "why": "The real maker sells from its own site."
     },
     "pay": {
-      "label": "Only transfer or gift cards",
+      "label": "Hard-to-reverse payment only",
       "strength": "strong",
-      "lens": "No card payment, only methods you cannot take back.",
-      "why": "Real shops accept cards, which can be disputed. Only scammers insist on transfers and gift cards."
+      "lens": "Bank transfer or crypto cannot be taken back.",
+      "why": "Scam shops avoid cards because a card payment can be disputed."
     },
-    "reviews": {
-      "label": "Only perfect reviews",
+    "timer": {
+      "label": "Sale ends soon",
       "strength": "strong",
-      "lens": "Every review is five stars with no detail.",
-      "why": "Fake shops write their own praise."
+      "lens": "A countdown to rush you.",
+      "why": "Pressure stops you from checking."
     },
-    "brand": {
-      "label": "A brand name",
-      "strength": "harmless",
-      "lens": "The page is called Strideway Outlet.",
-      "why": "A name is easy to copy. It proves nothing."
+    "stock": {
+      "label": "\"Only 12 left\"",
+      "strength": "strong",
+      "lens": "Fake scarcity.",
+      "why": "Scarcity pushes you to buy before thinking."
     },
-    "pic": {
-      "label": "A shoe picture",
+    "ad": {
+      "label": "A paid ad",
       "strength": "harmless",
-      "lens": "A photo of a running shoe.",
-      "why": "Pictures are copied from real shops in seconds."
+      "lens": "It is marked Sponsored.",
+      "why": "Anyone can pay for an ad, so being an ad proves nothing either way."
     },
-    "price": {
-      "label": "€24",
+    "handle": {
+      "label": "Shop-like handle",
       "strength": "harmless",
-      "lens": "The price on its own.",
-      "why": "The price is only suspicious next to the real one: the 80% discount."
+      "lens": "@hedrio_outlet_deals.",
+      "why": "A handle can be copied. Check the website."
+    },
+    "avatar": {
+      "label": "Shopping cart",
+      "strength": "harmless",
+      "lens": "A cart picture.",
+      "why": "Pictures prove nothing."
+    },
+    "name": {
+      "label": "Hedrio in the name",
+      "strength": "harmless",
+      "lens": "The shop name says Hedrio Outlet.",
+      "why": "Anyone can put a brand in a name. Check the site."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Click the ad and buy the shoes",
+      "label": "Buy it before the sale ends",
       "trap": true
     },
     {
@@ -148,11 +152,11 @@
     },
     {
       "id": "verify",
-      "label": "Go to the brand's own website and compare"
+      "label": "Check hedrio.app for the real price and where to buy"
     },
     {
       "id": "block_report",
-      "label": "Report it and delete it"
+      "label": "Report the ad"
     }
   ],
   "best_action": "block_report",
@@ -161,123 +165,118 @@
     "ignore"
   ],
   "trap": {
-    "title": "Strideway Outlet · Checkout",
-    "url": "strideway-outlet-sale.shop/checkout",
-    "ask": "Pay €24 by bank transfer to confirm your pair.",
-    "go": "Pay €24",
+    "title": "Hedrio Vault Outlet",
+    "url": "hedrio-vault-outlet.shop",
+    "ask": "Pay €19 by bank transfer to reserve your wallet.",
+    "go": "Pay €19",
     "back": "Close this page"
   },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Reported the ad. The platform removed the page before it reached more people.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Reported. The fake shop was taken down before more people paid.",
+      "mirageSays": "My discount!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The brand's real shop sold the same shoe at €120 and had never heard of this outlet. Case cracked.",
+      "line": "The real site listed the wallet at full price and named its official shops. Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You scrolled past safely. A report would protect the next buyer.",
+      "mirageSays": "Fine. Next feed!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The €24 went to a stranger. No shoes ever arrived, and the shop disappeared.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The €19 went to a stranger. No wallet ever arrived.",
+      "mirageSays": "Thanks for the transfer!"
     }
   },
   "what_if": {
-    "go_ahead": "Looking up the brand's own site would have shown the true price. Paying by card would also have let you dispute the payment.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "The real site would have shown the full price and a list of real shops.",
+    "verify": "Checking was smart. Reporting the ad helps others.",
+    "ignore": "Scrolling past was safe. A quick report protects others."
   },
-  "golden_rule": "A price that looks too good, plus transfer-only payment, is a fake shop. Type the real shop's address yourself.",
+  "golden_rule": "Buy wallets only from the maker's own site. A huge discount on a security product is a warning.",
   "quick_check": {
-    "q": "An ad offers a €120 shoe for €24, payable only by bank transfer. What is the best move?",
+    "q": "An ad sells a hardware wallet at 80% off, payable only by bank transfer. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Buy fast, it is nearly sold out"
+        "text": "Buy, it is a bargain"
       },
       {
         "id": "b",
-        "text": "Pay a small deposit first"
+        "text": "Skip it. Buy from the maker's own site and report the ad"
       },
       {
         "id": "c",
-        "text": "Skip it, and check the brand's own website if you want the shoes"
+        "text": "Buy one and test it"
       },
       {
         "id": "d",
-        "text": "Ask the ad to confirm it is real"
+        "text": "Pay half now"
       }
     ],
-    "answer": "c",
-    "explain": "A huge discount with transfer-only payment is the pattern. Real shops accept cards."
+    "answer": "b",
+    "explain": "A too-low price and an irreversible payment are the signs. The maker's own site is the safe place."
   },
   "hints": {
-    "nudge": "Look at the price and how they want to be paid.",
+    "nudge": "Would a real maker sell this for a fifth of the price?",
     "glow_order": [
-      "deal",
-      "stock",
-      "link",
+      "price",
       "pay",
-      "reviews"
+      "link",
+      "timer",
+      "stock"
     ]
   },
-  "sources": [
-    "ftc-marketplace",
-    "ftc-phishing"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the page",
-      "title": "Strideway Outlet",
+      "label": "Check the shop",
+      "title": "Who is selling",
       "rows": [
         {
-          "k": "Page created",
-          "v": "4 days ago",
-          "clue": "brand"
+          "k": "Handle",
+          "v": "@hedrio_outlet_deals, joined 6 days ago",
+          "clue": "handle"
         },
         {
-          "k": "Real brand site",
-          "v": "strideway.com"
-        },
-        {
-          "k": "Reviews",
-          "v": "All five stars, no detail",
-          "clue": "reviews"
+          "k": "Real maker",
+          "v": "hedrio.app"
         }
       ]
     },
     {
       "id": "link",
       "icon": "🔗",
-      "label": "Check the address",
-      "title": "Where the ad goes",
+      "label": "Check the link",
+      "title": "Where the post leads",
       "rows": [
         {
-          "k": "Opens",
-          "v": "strideway-outlet-sale.shop",
+          "k": "It really opens",
+          "v": "hedrio-vault-outlet.shop",
           "clue": "link"
         },
         {
-          "k": "Payment options",
-          "v": "Transfer or gift cards only",
+          "k": "Price on the real site",
+          "v": "€99, never discounted this much",
+          "clue": "price"
+        },
+        {
+          "k": "Payment",
+          "v": "Transfer or crypto only",
           "clue": "pay"
         }
       ]
@@ -286,19 +285,27 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What consumer advice says",
       "rows": [
         {
-          "k": "Paying safely online",
-          "v": "Use a card or a secure payment system that protects buyers",
+          "k": "Too-good prices",
+          "v": "Are bait"
+        },
+        {
+          "k": "Paying by card",
+          "v": "Lets you dispute the payment, a bank transfer does not",
           "clue": "pay"
         },
         {
-          "k": "A price far below normal",
-          "v": "A warning sign",
-          "clue": "deal"
+          "k": "Real makers",
+          "v": "List their official shops on their own site"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-marketplace",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

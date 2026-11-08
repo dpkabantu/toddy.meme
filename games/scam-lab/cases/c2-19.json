@@ -6,25 +6,25 @@
   "title": "Two Giveaway Posts",
   "disguise": "influencer",
   "intro": [
-    "Two posts offer a free phone, both using Kiko's name. One is Kiko. One is Mirage in a creator's hoodie.",
-    "Compare them side by side.",
-    "Sniff the details, then decide."
+    "Two posts announce a \"community giveaway\" for the $ZOOMBEAN token. They look nearly the same.",
+    "One is from the real project. One is a copy by Mirage.",
+    "Compare them side by side."
   ],
   "notify": {
     "app": "Chirp",
     "from": "Two posts",
-    "text": "Phone giveaway: two different accounts"
+    "text": "$ZOOMBEAN community giveaway"
   },
-  "decide_q": "Which post is really from Kiko, and what will you do?",
+  "decide_q": "Which post is real, and what will you do?",
   "screen": {
     "app": "compare",
-    "context": "Both posts say Kiko is giving away a phone. Kiko's own website lists @kiko as the real account.",
+    "context": "Two giveaway posts, side by side.",
     "panels": [
       {
         "label": "Post A",
         "avatar": {
-          "glyph": "🎁",
-          "clue": "pic_a"
+          "glyph": "🫘",
+          "clue": "logo_a"
         },
         "rows": [
           {
@@ -32,16 +32,16 @@
             "v": [
               {
                 "clue": "acct_a",
-                "text": "@kiko"
+                "text": "@zoombeancoin"
               }
             ]
           },
           {
-            "k": "Age and followers",
+            "k": "Age",
             "v": [
               {
                 "clue": "age_a",
-                "text": "4 years · 80,000 followers"
+                "text": "Since 2024, 31K followers"
               }
             ]
           },
@@ -50,41 +50,32 @@
             "v": [
               {
                 "clue": "how_a",
-                "text": "Comment on this public post"
+                "text": "Like, follow, drop your username. Winners drawn live."
               }
             ]
           },
           {
-            "k": "Cost",
+            "k": "Link",
             "v": [
               {
-                "clue": "cost_a",
-                "text": "Free"
-              }
-            ]
-          },
-          {
-            "k": "Winner chosen",
-            "v": [
-              {
-                "clue": "pick_a",
-                "text": "Live, in a public video, on Friday"
+                "clue": "link_a",
+                "text": "Pinned post on the project site"
               }
             ]
           }
         ],
         "note": [
           {
-            "clue": "pin_a",
-            "text": "Pinned: \"Beware of copy accounts. We never DM winners asking for money.\""
+            "clue": "nopay_a",
+            "text": "\"We never ask you to send anything.\""
           }
         ]
       },
       {
         "label": "Post B",
         "avatar": {
-          "glyph": "🎁",
-          "clue": "pic_b"
+          "glyph": "🫘",
+          "clue": "logo_b"
         },
         "rows": [
           {
@@ -92,16 +83,16 @@
             "v": [
               {
                 "clue": "acct_b",
-                "text": "@kiko_giveaways_official"
+                "text": "@zoombean_coin"
               }
             ]
           },
           {
-            "k": "Age and followers",
+            "k": "Age",
             "v": [
               {
                 "clue": "age_b",
-                "text": "3 days · 400 followers"
+                "text": "Joined this month, 2K followers"
               }
             ]
           },
@@ -110,138 +101,117 @@
             "v": [
               {
                 "clue": "how_b",
-                "text": "Send us a DM with your details and €5 delivery",
+                "text": "Send 0.05 BTC to the wallet below. We send back 0.5 BTC."
+              }
+            ]
+          },
+          {
+            "k": "Link",
+            "v": [
+              {
+                "clue": "link_b",
+                "text": "zoombean-giveaway.xyz",
                 "link": true
-              }
-            ]
-          },
-          {
-            "k": "Cost",
-            "v": [
-              {
-                "clue": "cost_b",
-                "text": "€5 delivery"
-              }
-            ]
-          },
-          {
-            "k": "Winner chosen",
-            "v": [
-              {
-                "clue": "pick_b",
-                "text": "Everyone wins! Pay within 2 hours"
               }
             ]
           }
         ],
         "note": [
           {
-            "clue": "pin_b",
-            "text": "No pinned notices. Comments are turned off."
+            "clue": "reply_b",
+            "text": "Replies: \"Got mine!!\" ×400, all new accounts"
           }
         ]
       }
     ]
   },
   "clues": {
-    "acct_b": {
-      "label": "A copy of the real name",
+    "how_b": {
+      "label": "Send first to receive more",
       "strength": "strong",
-      "lens": "@kiko_giveaways_official adds words to @kiko.",
-      "why": "Copy accounts add words to a real name."
+      "lens": "You send coins and are promised more back.",
+      "why": "Nobody gives back ten times what you send. It is the oldest crypto scam."
+    },
+    "acct_b": {
+      "label": "Look-alike account",
+      "strength": "strong",
+      "lens": "@zoombean_coin is a copy of @zoombeancoin.",
+      "why": "Copycat accounts differ by one character."
     },
     "age_b": {
-      "label": "Brand-new account",
+      "label": "A brand-new account",
       "strength": "strong",
-      "lens": "3 days old with 400 followers.",
-      "why": "A new account with a famous name is a copy."
+      "lens": "Joined this month with few followers.",
+      "why": "Real projects have a history."
     },
-    "how_b": {
-      "label": "Enter by DM and pay",
+    "reply_b": {
+      "label": "Fake replies",
       "strength": "strong",
-      "lens": "You must DM your details and pay delivery.",
-      "why": "A real giveaway is entered in public and costs nothing."
+      "lens": "400 identical praises from new accounts.",
+      "why": "Bot replies manufacture trust."
     },
-    "cost_b": {
-      "label": "Costs money",
+    "link_b": {
+      "label": "Look-alike site",
       "strength": "strong",
-      "lens": "€5 for a \"free\" phone.",
-      "why": "A free prize that costs money is a scam."
-    },
-    "pick_b": {
-      "label": "Everyone wins, pay fast",
-      "strength": "strong",
-      "lens": "\"Everyone wins\" and a two-hour deadline.",
-      "why": "If everyone wins, it is not a contest. It is bait."
-    },
-    "pin_b": {
-      "label": "Comments turned off",
-      "strength": "strong",
-      "lens": "No pinned notice, and nobody can ask questions.",
-      "why": "Scammers turn off comments so doubters cannot warn others."
-    },
-    "pic_a": {
-      "label": "Gift picture",
-      "strength": "harmless",
-      "lens": "A gift box.",
-      "why": "Pictures are easy to copy."
-    },
-    "pic_b": {
-      "label": "The same gift picture",
-      "strength": "harmless",
-      "lens": "The same box.",
-      "why": "A copied picture takes seconds."
+      "lens": "zoombean-giveaway.xyz is not the project site.",
+      "why": "Only trust links from the official site."
     },
     "acct_a": {
-      "label": "Real handle",
+      "label": "Real account",
       "strength": "harmless",
-      "lens": "@kiko matches the handle on Kiko's own website.",
-      "why": "A handle matching the official site is good evidence."
+      "lens": "@zoombeancoin matches the project site.",
+      "why": "The handle matches the official one."
     },
     "age_a": {
-      "label": "Old, large account",
+      "label": "An account with a history",
       "strength": "harmless",
-      "lens": "4 years and 80,000 followers.",
-      "why": "Age and followers alone can be faked, but a long history helps."
+      "lens": "Since 2024 with many followers.",
+      "why": "History is a sign of life, but copies can buy followers, so check more."
     },
     "how_a": {
-      "label": "Comment in public",
+      "label": "Free entry",
       "strength": "harmless",
-      "lens": "You enter in a public post.",
-      "why": "Public entry is how real giveaways work."
+      "lens": "Like, follow and drop a username.",
+      "why": "Real giveaways ask for no coins."
     },
-    "cost_a": {
-      "label": "Free",
+    "link_a": {
+      "label": "Pinned on the project site",
       "strength": "harmless",
-      "lens": "No payment.",
-      "why": "Real giveaways are free."
+      "lens": "The giveaway is announced on the official site too.",
+      "why": "Cross-checking with the official site is the best test."
     },
-    "pick_a": {
-      "label": "Public live draw",
+    "nopay_a": {
+      "label": "Warns about sending",
       "strength": "harmless",
-      "lens": "The winner is chosen live, in public.",
-      "why": "A public draw is honest."
+      "lens": "\"We never ask you to send anything.\"",
+      "why": "Real projects warn about scams."
     },
-    "pin_a": {
-      "label": "Warns about copies",
+    "logo_a": {
+      "label": "Bean logo",
       "strength": "harmless",
-      "lens": "The creator warns against copy accounts and money requests.",
-      "why": "Honest accounts warn their fans."
+      "lens": "The project logo.",
+      "why": "Logos are easy to copy."
+    },
+    "logo_b": {
+      "label": "Same bean logo",
+      "strength": "harmless",
+      "lens": "An exact copy.",
+      "why": "Copied in seconds. Proves nothing."
     }
   },
   "actions": [
     {
       "id": "pick_b",
-      "label": "B is Kiko. DM and pay €5",
+      "label": "B is real. Send 0.05 BTC",
       "trap": true
     },
     {
       "id": "verify",
-      "label": "Not sure. Check Kiko's own website"
+      "label": "Check the project site for the real giveaway"
     },
     {
       "id": "block_report",
-      "label": "A is Kiko. Report B as a copy"
+      "label": "A is real. Report B and warn the group"
     }
   ],
   "best_action": "block_report",
@@ -249,77 +219,141 @@
     "verify"
   ],
   "trap": {
-    "title": "Kiko Giveaways · Pay",
-    "url": "kiko-giveaway-claim.live",
-    "ask": "Pay €5 delivery and enter your card number.",
-    "go": "Pay €5",
+    "title": "ZoomBean Giveaway",
+    "url": "zoombean-giveaway.xyz",
+    "ask": "Send 0.05 BTC to receive 0.5 BTC back.",
+    "go": "Send now",
     "back": "Close this page"
   },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "You entered the real giveaway for free and reported the copy. The fake was removed.",
-      "mirageSays": "My creator's hoodie!"
+      "stamp": "BLOCKED",
+      "line": "Reported, and the group was warned. Nobody else sent coins.",
+      "mirageSays": "They read the real site!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Kiko's own website listed @kiko as the real account and warned about copies. Case cracked.",
+      "line": "The project site listed Post A and warned about fake copies. Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "pick_b": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The €5 page copied your card. No phone ever came.",
-      "mirageSays": "Thanks for the delivery fee!"
+      "line": "The 0.05 BTC went to Mirage. There was never anything coming back.",
+      "mirageSays": "Thanks for \"investing\"!"
     }
   },
   "what_if": {
-    "pick_b": "Account B had five warnings: a copied name, a new account, a DM entry, a fee and comments turned off.",
-    "verify": "Checking was smart. Reporting B as well helps get the copy removed."
+    "pick_b": "Real giveaways never ask you to send coins. That alone exposes Post B.",
+    "verify": "Checking the project site was smart. Warning the group protects others."
   },
-  "golden_rule": "A real giveaway is entered in public, costs nothing and is drawn in public. A copy hides, asks for money and rushes.",
+  "golden_rule": "If a giveaway asks you to send coins first, it is a scam. Check the official site.",
   "quick_check": {
-    "q": "Two giveaway posts. One draws live in public and is free. One needs a DM and a fee. Which is the copy?",
+    "q": "A post promises to send back ten times the coins you send. What is it?",
     "options": [
       {
         "id": "a",
-        "text": "The public live one"
+        "text": "A generous community event"
       },
       {
         "id": "b",
-        "text": "The DM-and-fee one"
+        "text": "A scam"
       },
       {
         "id": "c",
-        "text": "Neither"
+        "text": "A partner promotion"
       },
       {
         "id": "d",
-        "text": "Both"
+        "text": "A genuine staking return"
       }
     ],
     "answer": "b",
-    "explain": "A fee and a private DM are the giveaways of a scam."
+    "explain": "Send-and-multiply giveaways are scams. Nobody returns 10x for free."
   },
   "hints": {
-    "nudge": "Which account is new, asks for money and has comments off?",
+    "nudge": "Which post asks you to send coins?",
     "glow_order": [
-      "cost_b",
       "how_b",
+      "link_b",
       "acct_b",
       "age_b",
-      "pick_b",
-      "pin_b"
+      "reply_b"
     ]
   },
-  "sources": [
-    "ftc-prize",
-    "ftc-phishing"
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Compare accounts",
+      "title": "Letter by letter",
+      "rows": [
+        {
+          "k": "Post A",
+          "v": "@zoombeancoin, every letter matches",
+          "clue": "acct_a"
+        },
+        {
+          "k": "Post B",
+          "v": "@zoombean_coin, a copy",
+          "clue": "acct_b"
+        },
+        {
+          "k": "Age of B",
+          "v": "Joined this month",
+          "clue": "age_b"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Compare links",
+      "title": "Where each leads",
+      "rows": [
+        {
+          "k": "Post A",
+          "v": "Pinned on the project site",
+          "clue": "link_a"
+        },
+        {
+          "k": "Post B",
+          "v": "zoombean-giveaway.xyz",
+          "clue": "link_b"
+        },
+        {
+          "k": "How B pays",
+          "v": "Send first, get 10x back",
+          "clue": "how_b"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check replies",
+      "title": "Who replied",
+      "rows": [
+        {
+          "k": "Replies on B",
+          "v": "400 praises from brand-new accounts",
+          "clue": "reply_b"
+        },
+        {
+          "k": "Replies on A",
+          "v": "A mix of real people"
+        }
+      ]
+    }
   ],
-  "checked_on": "2026-10-21"
+  "sources": [
+    "ftc-crypto",
+    "ftc-prize"
+  ],
+  "checked_on": "2026-11-08"
 }

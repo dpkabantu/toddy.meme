@@ -3,152 +3,161 @@
   "type": "hunt",
   "chapter": 2,
   "difficulty": 1,
-  "title": "The Free Gift Card",
-  "disguise": "support",
+  "title": "The Sign-Up Bonus",
+  "disguise": "influencer",
   "intro": [
-    "An email says a two-minute survey earns you a gift card. Easy money, it seems.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "An email offers €25 of free crypto if you confirm your account.",
+    "It comes from an exchange you have heard of. It looks tidy.",
+    "Sniff the email, then decide."
   ],
   "notify": {
     "app": "Mail",
-    "from": "Customer Rewards",
-    "text": "Take our survey and get a €100 gift card"
+    "from": "Ostrel Bonus",
+    "text": "Your €25 welcome bonus is waiting…"
   },
   "screen": {
     "app": "mail",
     "head": {
       "from": [
         {
-          "clue": "from",
-          "text": "Customer Rewards"
+          "clue": "sender",
+          "text": "Ostrel Bonus"
         }
       ],
       "addr": [
         {
           "clue": "addr",
-          "text": "rewards@free-gift-surveys.com"
+          "text": "bonus@ostrel-welcome.top"
         }
       ],
       "subject": [
         {
           "clue": "subject",
-          "text": "Take our 2-minute survey: win a €100 gift card!"
+          "text": "Your €25 welcome bonus is waiting"
         }
       ],
       "time": [
-        "12:14 PM"
+        "8:30 AM"
       ]
     },
     "items": [
       {
         "p": [
+          "Hello ",
           {
             "clue": "greet",
-            "text": "Dear Valued Customer,"
-          }
-        ]
-      },
-      {
-        "p": [
-          "You have been ",
-          {
-            "clue": "picked",
-            "text": "selected"
+            "text": "valued customer"
           },
-          " to give us your opinion. It takes only two minutes."
+          ","
         ]
       },
       {
         "p": [
-          "Answer 3 questions and receive a ",
+          "You qualify for a ",
           {
             "clue": "prize",
-            "text": "€100 gift card"
+            "text": "free €25 in crypto"
           },
-          " from a store of your choice."
+          ". No deposit needed!"
         ]
       },
       {
         "p": [
+          "Just ",
           {
             "clue": "link",
-            "text": "Start the survey",
+            "text": "confirm your account here",
             "link": true
-          }
+          },
+          " and enter your ",
+          {
+            "clue": "seed",
+            "text": "12 recovery words"
+          },
+          " so we can send it."
         ]
       },
       {
         "p": [
-          "At the end, enter your ",
           {
-            "clue": "card",
-            "text": "card number for €1.99 delivery"
+            "clue": "timer",
+            "text": "Offer ends in",
+            "countdown": 900
           },
           "."
         ]
       },
       {
         "foot": [
-          "Customer Rewards Team"
+          {
+            "clue": "foot",
+            "text": "Ostrel Welcome Team"
+          }
         ]
       }
-    ]
+    ],
+    "context": "You have never signed up to Ostrel."
   },
   "clues": {
+    "seed": {
+      "label": "Asks for your recovery words",
+      "strength": "strong",
+      "lens": "No bonus needs the key to your wallet.",
+      "why": "Anyone who has your recovery words owns everything in the wallet."
+    },
     "addr": {
-      "label": "A strange address",
+      "label": "Look-alike address",
       "strength": "strong",
-      "lens": "The email comes from free-gift-surveys.com, which is not any store you shop at.",
-      "why": "Look at the part after the @. It should match a company you know."
-    },
-    "greet": {
-      "label": "\"Dear Valued Customer\"",
-      "strength": "harmless",
-      "lens": "No name at all.",
-      "why": "A vague greeting alone proves little, but it fits mass mailings."
-    },
-    "picked": {
-      "label": "\"You were selected\"",
-      "strength": "strong",
-      "lens": "You never signed up for anything.",
-      "why": "Being picked out of nowhere is a warning sign."
-    },
-    "prize": {
-      "label": "€100 for two minutes",
-      "strength": "strong",
-      "lens": "A big reward for a tiny task.",
-      "why": "Big pay for little work is the bait."
+      "lens": "ostrel-welcome.top is not ostrel.io.",
+      "why": "A different ending is a different owner."
     },
     "link": {
-      "label": "Look-alike link",
+      "label": "Confirm-here link",
       "strength": "strong",
-      "lens": "The button goes to a survey page that is not the store's own site.",
-      "why": "Never start from a link in an unexpected email."
+      "lens": "The link opens a copy of a sign-up page.",
+      "why": "Never confirm accounts through an email link."
     },
-    "card": {
-      "label": "Asks for your card",
+    "prize": {
+      "label": "Free money",
       "strength": "strong",
-      "lens": "A \"free\" gift card that wants your card number for €1.99.",
-      "why": "A reward that wants your card is a trap."
+      "lens": "Free crypto with no deposit.",
+      "why": "Free money from a stranger is bait."
     },
-    "from": {
-      "label": "Friendly name",
+    "timer": {
+      "label": "Offer ends soon",
+      "strength": "strong",
+      "lens": "A countdown to rush you.",
+      "why": "Pressure stops you from checking."
+    },
+    "greet": {
+      "label": "Generic greeting",
       "strength": "harmless",
-      "lens": "The sender is called Customer Rewards.",
-      "why": "A name is easy to copy."
+      "lens": "\"Valued customer\".",
+      "why": "A hint, but real emails use it too."
+    },
+    "sender": {
+      "label": "Ostrel Bonus",
+      "strength": "harmless",
+      "lens": "The name looks right.",
+      "why": "Anyone can type any name."
     },
     "subject": {
-      "label": "Cheerful subject",
+      "label": "Friendly subject",
       "strength": "harmless",
-      "lens": "A friendly, exciting subject line.",
-      "why": "Cheerful tone alone proves nothing."
+      "lens": "A bonus is waiting.",
+      "why": "A friendly subject is bait, not proof."
+    },
+    "foot": {
+      "label": "Welcome team footer",
+      "strength": "harmless",
+      "lens": "Looks tidy.",
+      "why": "Footers are easy to copy."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Click Start and do the survey",
+      "label": "Confirm and enter my words",
       "trap": true
     },
     {
@@ -157,11 +166,11 @@
     },
     {
       "id": "verify",
-      "label": "Check the store's own site for any survey"
+      "label": "Check ostrel.io for any bonus"
     },
     {
       "id": "block_report",
-      "label": "Report it and delete it"
+      "label": "Report it as phishing and delete it"
     }
   ],
   "best_action": "block_report",
@@ -170,106 +179,100 @@
     "ignore"
   ],
   "trap": {
-    "title": "Rewards survey",
-    "url": "free-gift-surveys.com/start",
-    "ask": "Answer three questions, then enter your card number for €1.99 delivery.",
-    "go": "Start the survey",
+    "title": "Ostrel · Welcome bonus",
+    "url": "ostrel-welcome.top/claim",
+    "ask": "Enter your 12 recovery words to receive €25.",
+    "go": "Claim €25",
     "back": "Close this page"
   },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Reported as phishing and deleted. The fake address was blocked within days.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Reported and deleted. The fake domain was taken down.",
+      "mirageSays": "My lovely bonus!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The store's own site had no survey and a warning about fake gift-card emails. Case cracked.",
+      "line": "The real site had no such bonus, and warned about fake emails. Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. A report protects others.",
+      "mirageSays": "Fine. Next inbox!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "SCAMMED",
-      "line": "The \"delivery\" page copied your card details. No gift card came, and strange charges did.",
-      "mirageSays": "Thanks for the details!"
+      "stamp": "DRAINED",
+      "line": "The words gave the thief the whole wallet. The €25 never came, and everything else left.",
+      "mirageSays": "Thanks for the words!"
     }
   },
   "what_if": {
-    "go_ahead": "A reward that asks for your card number is never a reward.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "Nothing ever needs your recovery words. That one request exposed the whole email.",
+    "verify": "Checking was smart. Reporting the email helps others.",
+    "ignore": "Ignoring it was safe. A quick report protects others."
   },
-  "golden_rule": "A free gift card that wants your card number is a trap. Real rewards never need your card.",
+  "golden_rule": "Never type your recovery words anywhere. No bonus, prize or support ever needs them.",
   "quick_check": {
-    "q": "An email offers a €100 gift card for a survey, then asks for your card number for €1.99 delivery. What do you do?",
+    "q": "An email offers free crypto if you enter your 12 recovery words. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Pay €1.99, it is tiny"
+        "text": "Enter them, it is free money"
       },
       {
         "id": "b",
-        "text": "Fill the survey but skip the card"
+        "text": "Never share them. Report the email"
       },
       {
         "id": "c",
-        "text": "Delete it, and report it as phishing"
+        "text": "Enter only half"
       },
       {
         "id": "d",
-        "text": "Forward it to friends"
+        "text": "Enter them on another device"
       }
     ],
-    "answer": "c",
-    "explain": "A reward that wants your card is the trap. Even starting on the page is risky."
+    "answer": "b",
+    "explain": "Your recovery words are the master key. Nobody honest ever asks for them."
   },
   "hints": {
-    "nudge": "Why would a free gift card need your card?",
+    "nudge": "What does the email ask you to type?",
     "glow_order": [
+      "seed",
       "addr",
-      "picked",
-      "prize",
       "link",
-      "card"
+      "prize",
+      "timer"
     ]
   },
-  "sources": [
-    "ftc-phishing",
-    "ftc-prize"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check sender",
-      "title": "Who really sent this",
+      "title": "Who sent this email",
       "rows": [
         {
-          "k": "Address",
-          "v": "rewards@free-gift-surveys.com",
+          "k": "Sent from",
+          "v": "bonus@ostrel-welcome.top",
           "clue": "addr"
         },
         {
-          "k": "Any store you know?",
-          "v": "No"
+          "k": "Real domain",
+          "v": "ostrel.io"
         },
         {
-          "k": "You signed up?",
-          "v": "No",
-          "clue": "picked"
+          "k": "Your account",
+          "v": "You never signed up"
         }
       ]
     },
@@ -277,23 +280,42 @@
       "id": "link",
       "icon": "🔗",
       "label": "Check link",
-      "title": "Where it goes",
+      "title": "Where the link goes",
       "rows": [
         {
-          "k": "Button says",
-          "v": "Start the survey"
-        },
-        {
           "k": "It really opens",
-          "v": "a page that asks for your card",
+          "v": "A copy of a sign-up page",
           "clue": "link"
         },
         {
           "k": "Asks for",
-          "v": "Card number for €1.99",
-          "clue": "card"
+          "v": "12 recovery words",
+          "clue": "seed"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What platforms say",
+      "rows": [
+        {
+          "k": "Staff will ask for your words",
+          "v": "Never",
+          "clue": "seed"
+        },
+        {
+          "k": "Free-money offers",
+          "v": "Are bait",
+          "clue": "prize"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-crypto",
+    "ftc-phishing"
+  ],
+  "checked_on": "2026-11-08"
 }

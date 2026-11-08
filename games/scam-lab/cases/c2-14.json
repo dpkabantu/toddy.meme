@@ -3,17 +3,17 @@
   "type": "hunt",
   "chapter": 2,
   "difficulty": 2,
-  "title": "The Cheap Phone",
-  "disguise": "influencer",
+  "title": "The Pre-Set Wallet",
+  "disguise": "friend",
   "intro": [
-    "You want a used Zephyr X5 phone. A seller on Tradely has one far below the usual price.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "A seller on a marketplace has a \"sealed\" hardware wallet, half the shop price.",
+    "The seller says it even comes with the setup already done.",
+    "Sniff the chat, then decide."
   ],
   "notify": {
     "app": "Messages",
-    "from": "Sameer (seller)",
-    "text": "Phone is yours, send the advance first…"
+    "from": "Marketplace · Dani",
+    "text": "Sealed wallet, set up for you, €40…"
   },
   "screen": {
     "app": "sms",
@@ -21,106 +21,100 @@
       "name": [
         {
           "clue": "sender",
-          "text": "Sameer (seller)"
+          "text": "Marketplace · Dani"
         }
       ]
     },
-    "context": "Listing: Zephyr X5, \"like new\". Usual price about $560.",
+    "context": "You want to buy a hardware wallet to keep your coins offline.",
     "items": [
       {
         "time": [
-          "Today 8:41 PM"
+          {
+            "clue": "time",
+            "text": "Today 12:30 PM"
+          }
         ]
       },
       {
         "msg": [
-          "Hi! The Zephyr X5 is yours for ",
+          "Sealed Hedrio Vault, only ",
           {
             "clue": "price",
-            "text": "$160"
+            "text": "€40"
           },
-          ". I need cash urgently."
+          ". I can post it today."
         ]
       },
       {
         "msg": [
-          "I am in another city, so I will ship it. ",
+          "Good news: ",
           {
-            "clue": "advance",
-            "text": "Send $60 advance for courier first."
-          }
-        ]
-      },
-      {
-        "msg": [
-          "Pay to my ",
-          {
-            "clue": "phone",
-            "text": "personal number by phone transfer"
+            "clue": "preset",
+            "text": "I already set it up for you"
           },
-          ", not through the app, to save fees."
+          ", the recovery card is inside, ",
+          {
+            "clue": "words",
+            "text": "words already written"
+          },
+          "."
         ]
       },
       {
         "msg": [
+          "Just ",
           {
-            "clue": "rush",
-            "text": "Another buyer is ready. Confirm in 30 minutes."
-          }
-        ]
-      },
-      {
-        "msg": [
-          {
-            "clue": "pics",
-            "text": "Photos: the phone with its box and bill."
-          }
+            "clue": "pay",
+            "text": "pay me by bank transfer first"
+          },
+          ", then you can start using it right away."
         ]
       }
     ]
   },
   "clues": {
+    "preset": {
+      "label": "Already set up by the seller",
+      "strength": "strong",
+      "lens": "Someone else set up the wallet before you.",
+      "why": "The person who set it up can steal everything you put in."
+    },
+    "words": {
+      "label": "Recovery words already written",
+      "strength": "strong",
+      "lens": "The seller knows your wallet's recovery words.",
+      "why": "Anyone who knows them can empty the wallet at any time. Only you should ever generate them."
+    },
     "price": {
-      "label": "Price far below normal",
+      "label": "Half price",
       "strength": "strong",
-      "lens": "$160 for a phone that costs about $560.",
-      "why": "A price far below normal is the bait."
+      "lens": "Far below the shop price.",
+      "why": "Bargains on security products are bait."
     },
-    "advance": {
-      "label": "Advance before shipping",
+    "pay": {
+      "label": "Pay first by transfer",
       "strength": "strong",
-      "lens": "He wants $60 before sending anything.",
-      "why": "Pay only when you hold the phone, or through a protected way."
-    },
-    "phone": {
-      "label": "Pay outside the marketplace",
-      "strength": "strong",
-      "lens": "He asks you to skip the app and pay his personal number.",
-      "why": "Leaving the marketplace removes every protection you had."
-    },
-    "rush": {
-      "label": "Hurry or lose it",
-      "strength": "strong",
-      "lens": "Confirm in 30 minutes or another buyer takes it.",
-      "why": "Rushing you is a pressure trick."
-    },
-    "pics": {
-      "label": "Nice photos with a bill",
-      "strength": "harmless",
-      "lens": "A phone, its box and a bill.",
-      "why": "Photos and bills are copied from other ads. They prove nothing."
+      "lens": "You pay before you receive anything.",
+      "why": "An irreversible payment with nothing in your hands yet is a trap."
     },
     "sender": {
-      "label": "A normal name",
+      "label": "Marketplace chat name",
       "strength": "harmless",
-      "lens": "The seller is called Sameer.",
-      "why": "A name proves nothing."
+      "lens": "A normal-looking seller name.",
+      "why": "Names prove nothing."
+    },
+    "time": {
+      "label": "Sent at 12:30 PM",
+      "strength": "harmless",
+      "lens": "An ordinary time.",
+      "why": "The time proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Send the $60 advance"
+      "label": "Buy it and use the card",
+      "trap": true
     },
     {
       "id": "ignore",
@@ -128,11 +122,11 @@
     },
     {
       "id": "verify",
-      "label": "Ask to meet and see the phone first"
+      "label": "Buy only from the maker's own site"
     },
     {
       "id": "block_report",
-      "label": "Report it and delete it"
+      "label": "Report the listing"
     }
   ],
   "best_action": "block_report",
@@ -140,98 +134,118 @@
     "verify",
     "ignore"
   ],
+  "trap": {
+    "title": "Marketplace · Dani",
+    "url": "bank transfer",
+    "ask": "Transfer €40 to Dani for the pre-set wallet.",
+    "go": "Pay €40",
+    "back": "Cancel"
+  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Reported the listing. The marketplace removed the seller before he fooled anyone else.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Reported. The listing was removed, and nobody else put coins in a rigged wallet.",
+      "mirageSays": "My rigged wallet!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The seller refused to meet and went quiet. A search found the same photos in other ads. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "The maker's site said: \"We never ship pre-set wallets. Always set up your own.\" Case cracked.",
+      "mirageSays": "Hmph. They read the maker."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. A report would protect the next buyer.",
+      "mirageSays": "Fine. Next buyer!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "SCAMMED",
-      "line": "The $60 went to a stranger. No phone came, and the number went dead.",
-      "mirageSays": "Thanks for the details!"
+      "stamp": "DRAINED",
+      "line": "You moved your coins in. The seller already had the words, and emptied the wallet within a day.",
+      "mirageSays": "Thanks for the deposit!"
     }
   },
   "what_if": {
-    "go_ahead": "Meeting the seller, paying only for the phone in your hand, or using the marketplace's own payment would have stopped it.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "A wallet that arrives set up is a trap. Only you should ever create the recovery words.",
+    "verify": "Checking was smart. Reporting the listing helps others.",
+    "ignore": "Ignoring it was safe. A report protects others."
   },
-  "golden_rule": "Pay for a used item only when you hold it, or through the marketplace's own protected payment. Never an advance to a stranger.",
+  "golden_rule": "Never use a wallet that someone else has set up, or a recovery phrase someone else wrote.",
   "quick_check": {
-    "q": "A seller offers a used phone at a third of its price and asks for an advance outside the app. What do you do?",
+    "q": "A seller offers a hardware wallet \"already set up\", with the recovery words written on a card. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Send the advance, the price is great"
+        "text": "Buy it, it saves time"
       },
       {
         "id": "b",
-        "text": "Send a smaller advance"
+        "text": "Refuse. Buy new from the maker and make your own words"
       },
       {
         "id": "c",
-        "text": "Only buy after seeing it, or by the marketplace's own protected payment"
+        "text": "Buy it and change the words later"
       },
       {
         "id": "d",
-        "text": "Ask for a bill photo"
+        "text": "Buy it but only store a little"
       }
     ],
-    "answer": "c",
-    "explain": "An advance to a stranger, outside the app, is the trap."
+    "answer": "b",
+    "explain": "Whoever wrote the words can empty the wallet. You must generate your own."
   },
   "hints": {
-    "nudge": "How does he want to be paid, and when?",
+    "nudge": "Who else knows these words?",
     "glow_order": [
+      "words",
+      "preset",
       "price",
-      "advance",
-      "phone",
-      "rush"
+      "pay"
     ]
   },
-  "sources": [
-    "ftc-marketplace"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the listing",
-      "title": "Seller check",
+      "label": "Check the seller",
+      "title": "Marketplace · Dani",
       "rows": [
         {
+          "k": "Joined",
+          "v": "This month"
+        },
+        {
+          "k": "Other listings",
+          "v": "None"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the offer",
+      "title": "What the seller promises",
+      "rows": [
+        {
+          "k": "Set-up",
+          "v": "Done by the seller already",
+          "clue": "preset"
+        },
+        {
+          "k": "Recovery card",
+          "v": "Words already written inside",
+          "clue": "words"
+        },
+        {
           "k": "Price",
-          "v": "$160 (usual $560)",
+          "v": "€40, about half the shop price",
           "clue": "price"
-        },
-        {
-          "k": "Wants to be paid",
-          "v": "Outside the app, first",
-          "clue": "phone"
-        },
-        {
-          "k": "Willing to meet?",
-          "v": "No, \"other city\""
         }
       ]
     },
@@ -239,18 +253,23 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What wallet makers say",
       "rows": [
         {
-          "k": "Pay outside the marketplace?",
-          "v": "Never: you lose its protection",
-          "clue": "phone"
+          "k": "Set-up",
+          "v": "Always done by you, on first start"
         },
         {
-          "k": "Payment methods to avoid",
-          "v": "Transfers, gift cards, crypto: you cannot get them back"
+          "k": "Recovery words",
+          "v": "Must be created on your device and never shared",
+          "clue": "words"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "cafc-wallet",
+    "ftc-marketplace"
+  ],
+  "checked_on": "2026-11-08"
 }

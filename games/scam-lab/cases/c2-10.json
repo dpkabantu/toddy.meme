@@ -4,37 +4,28 @@
   "chapter": 2,
   "difficulty": 3,
   "title": "The Payment Screenshot",
-  "disguise": "influencer",
+  "disguise": "friend",
   "intro": [
-    "You are selling your old bicycle for $130 on Tradely. A buyer says he has paid.",
-    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
-    "Every chat ends with your choice. Choose wisely."
+    "You are selling 500 ZLUSD on a peer-to-peer marketplace. A buyer says they have paid.",
+    "Now they send a screenshot and ask you to release the coins fast.",
+    "Pick your replies, and sniff each message."
   ],
   "notify": {
-    "app": "Tradely",
-    "from": "Buyer: Marco",
-    "text": "I have paid! Please check the screenshot…"
+    "app": "Messages",
+    "from": "Buyer · Alex",
+    "text": "Paid! Screenshot attached, please release…"
   },
   "screen": {
     "app": "sms",
     "head": {
       "name": [
         {
-          "text": "Marco (Tradely buyer)",
+          "text": "Buyer · Alex",
           "id": "duel-name"
         }
-      ],
-      "sub": [
-        "Interested in: bicycle $130"
-      ],
-      "avatar": {
-        "glyph": "🚲",
-        "clue": "logo"
-      }
+      ]
     },
-    "banner": [
-      "Chat opened on Tradely, moved to texts at his request"
-    ],
+    "context": "Your bank app has not shown any new money yet.",
     "items": []
   },
   "duel": {
@@ -44,44 +35,34 @@
         "say": [
           {
             "msg": [
-              "Hi, I want the bicycle. ",
-              {
-                "clue": "offsite",
-                "text": "Let us skip the app and do this by text."
-              }
-            ]
-          },
-          {
-            "msg": [
-              "I have ",
-              {
-                "clue": "paid",
-                "text": "paid $130"
-              },
-              ". Look: ",
+              "Hi! I just paid €500. ",
               {
                 "clue": "shot",
-                "text": "[payment screenshot: \"Sent $130 · Success\"]"
+                "text": "Screenshot attached 📎"
               }
             ]
           },
           {
             "msg": [
-              "Send the bicycle with my courier now."
+              {
+                "clue": "rush",
+                "text": "Please release the coins now"
+              },
+              ", I am in a hurry."
             ]
           }
         ],
         "replies": [
           {
-            "text": "Let me check my bank first",
-            "next": "n2"
-          },
-          {
-            "text": "Sending it now",
+            "text": "Releasing the coins now",
             "end": "go_ahead"
           },
           {
-            "text": "Stop. Report the buyer.",
+            "text": "My bank shows nothing yet. Can I check?",
+            "next": "n2"
+          },
+          {
+            "text": "Block and report this buyer",
             "end": "block_report"
           }
         ]
@@ -90,60 +71,31 @@
         "say": [
           {
             "msg": [
-              "The bank is slow on Sundays. ",
+              "The screenshot says ",
               {
-                "clue": "screenshot",
-                "text": "The screenshot is proof enough."
-              }
-            ]
-          },
-          {
-            "msg": [
-              "I sent $330 by mistake. ",
+                "clue": "status",
+                "text": "\"Payment sent\""
+              },
+              ". Banks are slow, ",
               {
-                "clue": "over",
-                "text": "Return the extra $200 to me and send the bicycle."
-              }
+                "clue": "bank",
+                "text": "it will arrive later"
+              },
+              ". Just release."
             ]
           }
         ],
         "replies": [
           {
-            "text": "OK, returning $200",
+            "text": "OK, releasing",
             "end": "go_ahead"
           },
           {
-            "text": "A screenshot proves nothing. I only trust my own bank balance.",
-            "next": "n3"
-          },
-          {
-            "text": "Report and block",
-            "end": "block_report"
-          }
-        ]
-      },
-      "n3": {
-        "say": [
-          {
-            "msg": [
-              {
-                "clue": "angry",
-                "text": "You are wasting my time. Do it or I will write a bad review!"
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Fine, I will send it",
-            "end": "go_ahead"
-          },
-          {
-            "text": "Money is not in my account, so no bicycle. I will tell Tradely.",
+            "text": "I will wait until my own bank app shows the money",
             "end": "verify"
           },
           {
-            "text": "Report and block",
+            "text": "A screenshot is not money. Reporting",
             "end": "block_report"
           }
         ]
@@ -151,154 +103,147 @@
     }
   },
   "clues": {
-    "offsite": {
-      "label": "Off the marketplace",
-      "strength": "strong",
-      "lens": "He wants to leave the app and talk by text.",
-      "why": "Scammers move you away from the safety of the marketplace."
-    },
-    "paid": {
-      "label": "\"I have paid\"",
-      "strength": "strong",
-      "lens": "Money is claimed, but nothing has arrived in your account.",
-      "why": "Only your own bank or payment app can tell you a payment arrived."
-    },
     "shot": {
       "label": "A screenshot as proof",
       "strength": "strong",
-      "lens": "A picture is not a payment. Anyone can make one in seconds.",
-      "why": "Never trust a screenshot. Trust your own account balance."
+      "lens": "Screenshots are easy to fake or edit.",
+      "why": "The only proof is money showing in your own bank app."
     },
-    "screenshot": {
-      "label": "\"The screenshot is enough\"",
+    "rush": {
+      "label": "\"Release now\"",
       "strength": "strong",
-      "lens": "He pushes you to accept the picture.",
-      "why": "An honest buyer waits while you check."
+      "lens": "Pressure to hand over coins before you check.",
+      "why": "Once coins are released, they cannot be taken back."
     },
-    "over": {
-      "label": "Overpayment and \"send back\"",
+    "status": {
+      "label": "\"Payment sent\", not received",
       "strength": "strong",
-      "lens": "He says he overpaid and asks you to return the extra.",
-      "why": "Sending back \"extra\" money is a classic trick: the first payment never existed."
+      "lens": "Sent is not the same as arrived.",
+      "why": "A pending or sent screen can be reversed or never happen."
     },
-    "angry": {
-      "label": "Anger and threats",
+    "bank": {
+      "label": "\"Banks are slow\"",
       "strength": "strong",
-      "lens": "A bad-review threat to make you rush.",
-      "why": "Pressure is the tool. An honest buyer is patient."
-    },
-    "logo": {
-      "label": "Bicycle picture",
-      "strength": "harmless",
-      "lens": "A little bicycle.",
-      "why": "A picture proves nothing."
+      "lens": "A reason to skip the check.",
+      "why": "A real buyer will wait while you check."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Send the bicycle or the extra money"
+      "label": "Release the coins"
     },
     {
       "id": "verify",
-      "label": "Wait until the money is in my own account"
+      "label": "Wait until the money shows in my own bank app"
     },
     {
       "id": "block_report",
-      "label": "Block and report the buyer"
+      "label": "Block the buyer and report them"
     }
   ],
-  "best_action": "block_report",
+  "best_action": "verify",
   "acceptable_actions": [
-    "verify"
+    "block_report"
   ],
   "outcomes": {
-    "block_report": {
-      "scene": "safe",
-      "mirage": "panic",
-      "stamp": "BLOCKED",
-      "line": "Blocked and reported. Tradely removed the fake buyer before he reached another seller.",
-      "mirageSays": "Curses! Blocked again!"
-    },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Your own account showed no payment at all. No money, no bicycle. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "You waited. No money ever arrived, and the buyer vanished. Your coins stayed yours. Case cracked.",
+      "mirageSays": "Hmph. They checked the bank."
+    },
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Blocked and reported. The marketplace removed the buyer.",
+      "mirageSays": "My fake screenshot!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The payment never existed. You lost the bicycle, or $200, or both.",
-      "mirageSays": "Thanks for the bicycle!"
+      "line": "No payment ever arrived. The coins were gone for good.",
+      "mirageSays": "Thanks for the coins!"
     }
   },
   "what_if": {
-    "go_ahead": "Looking at your own account balance would have ended it in one tap. Nothing arrived.",
-    "verify": "Waiting for the money to appear in your own account is the right habit. Reporting the buyer as well protects others."
+    "go_ahead": "A look at your own bank app would have shown nothing. A screenshot is not money.",
+    "block_report": "Blocking was safe. Waiting for the money in your own bank app also works."
   },
-  "golden_rule": "A screenshot is not a payment. Only your own account balance is proof. Never send \"extra\" money back.",
+  "golden_rule": "Release coins only when the money is in your own account. A screenshot is not a payment.",
   "quick_check": {
-    "q": "A buyer sends a screenshot saying he paid and asks you to ship now. What proves he paid?",
+    "q": "A buyer sends a payment screenshot and asks you to release your coins now. Your bank app shows nothing. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "The screenshot"
+        "text": "Release, the screenshot looks real"
       },
       {
         "id": "b",
-        "text": "His message saying so"
+        "text": "Wait until the money shows in your own bank app"
       },
       {
         "id": "c",
-        "text": "The money showing in your own account"
+        "text": "Release half"
       },
       {
         "id": "d",
-        "text": "A promise to review you well"
+        "text": "Ask them to send another screenshot"
       }
     ],
-    "answer": "c",
-    "explain": "Only your own account shows a payment. Pictures are easy to fake."
+    "answer": "b",
+    "explain": "Only the money in your own account counts. Screenshots can be faked in seconds."
   },
   "hints": {
-    "nudge": "Where would you see a real payment?",
+    "nudge": "What does your own bank app say?",
     "glow_order": [
       "shot",
-      "paid",
-      "over",
-      "offsite",
-      "screenshot",
-      "angry"
+      "rush",
+      "status",
+      "bank"
     ]
   },
-  "sources": [
-    "ftc-marketplace",
-    "ftc-job-scams"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check the buyer",
-      "title": "Marco",
+      "title": "Buyer · Alex",
       "rows": [
         {
           "k": "Account age",
-          "v": "2 days"
+          "v": "2 days old",
+          "clue": "rush"
         },
         {
-          "k": "Left the marketplace?",
-          "v": "Yes, asked for texts",
-          "clue": "offsite"
+          "k": "Completed trades",
+          "v": "1"
         },
         {
-          "k": "Money in your account",
-          "v": "$0",
-          "clue": "paid"
+          "k": "Your bank app",
+          "v": "Shows no new payment",
+          "clue": "status"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the proof",
+      "title": "What they sent",
+      "rows": [
+        {
+          "k": "Proof",
+          "v": "A screenshot",
+          "clue": "shot"
+        },
+        {
+          "k": "It says",
+          "v": "Sent, not received",
+          "clue": "status"
         }
       ]
     },
@@ -306,19 +251,24 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What marketplaces say",
       "rows": [
         {
-          "k": "Pay and sell inside the marketplace",
-          "v": "Keeps the site's protections",
-          "clue": "offsite"
+          "k": "Release coins",
+          "v": "Only after the money arrives in your account",
+          "clue": "shot"
         },
         {
-          "k": "A check or payment with \"send back the extra\"",
-          "v": "A scam, the first payment is fake",
-          "clue": "over"
+          "k": "A buyer in a hurry",
+          "v": "Is a warning sign",
+          "clue": "rush"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-crypto",
+    "ftc-marketplace"
+  ],
+  "checked_on": "2026-11-08"
 }

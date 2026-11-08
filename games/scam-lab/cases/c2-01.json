@@ -3,17 +3,17 @@
   "type": "hunt",
   "chapter": 2,
   "difficulty": 1,
-  "title": "You Have Won!",
+  "title": "The Anniversary Bonus",
   "disguise": "influencer",
   "intro": [
-    "A text just arrived. You have won a big prize, it says. You never entered anything.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "Chapter 2, Toddy: free money. The oldest bait there is.",
+    "A text says you were \"chosen\" for a bonus from an app you have barely used.",
+    "Tap anything that looks odd, then decide."
   ],
   "notify": {
     "app": "Messages",
-    "from": "Luckyvale Draw",
-    "text": "Congratulations! You won $50,000…"
+    "from": "Zelvora Rewards",
+    "text": "You won 200 ZLX! Claim before it expires…"
   },
   "screen": {
     "app": "sms",
@@ -21,7 +21,7 @@
       "name": [
         {
           "clue": "sender",
-          "text": "Luckyvale Draw"
+          "text": "Zelvora Rewards"
         }
       ]
     },
@@ -31,31 +31,31 @@
         "time": [
           {
             "clue": "time",
-            "text": "Today 11:05 AM"
+            "text": "Today 5:20 PM"
           }
         ]
       },
       {
         "msg": [
-          "Congratulations! Your number won ",
+          "Congrats! You are one of ",
+          {
+            "clue": "few",
+            "text": "500 users chosen"
+          },
+          " for the Zelvora anniversary bonus: ",
           {
             "clue": "prize",
-            "text": "$50,000"
+            "text": "200 ZLX free"
           },
-          " in the Luckyvale Draw."
+          "."
         ]
       },
       {
         "msg": [
-          "To receive it, first pay a ",
-          {
-            "clue": "tax",
-            "text": "processing tax of $100"
-          },
-          ": ",
+          "Claim it here: ",
           {
             "clue": "link",
-            "text": "luckyvale-prizeclaim.example/pay",
+            "text": "zelvora-bonus.live/claim",
             "link": true
           }
         ]
@@ -64,69 +64,66 @@
         "msg": [
           {
             "clue": "timer",
-            "text": "Claim within",
-            "countdown": 1800
-          }
-        ]
-      },
-      {
-        "msg": [
+            "text": "Your bonus expires in",
+            "countdown": 900
+          },
+          ". ",
           {
-            "clue": "noentry",
-            "text": "You were picked from all mobile numbers."
+            "clue": "connect",
+            "text": "Connect your wallet to receive it."
           }
         ]
       }
     ]
   },
   "clues": {
-    "noentry": {
-      "label": "No contest entered",
-      "strength": "strong",
-      "lens": "You never entered a draw. You were \"picked from all numbers\".",
-      "why": "Winning something you never entered is a warning sign."
-    },
     "prize": {
-      "label": "A huge prize",
+      "label": "Free coins out of nowhere",
       "strength": "strong",
-      "lens": "$50,000 for doing nothing.",
-      "why": "A big prize out of nowhere is the bait."
-    },
-    "tax": {
-      "label": "Pay to collect",
-      "strength": "strong",
-      "lens": "You must pay $100 \"tax\" before the prize arrives.",
-      "why": "Real prizes are free to collect. A fee is the scam."
+      "lens": "You did nothing to earn 200 ZLX.",
+      "why": "Surprise free money is bait. The prize is a hook, not a gift."
     },
     "link": {
       "label": "Look-alike link",
       "strength": "strong",
-      "lens": "The link goes to luckyvale-prizeclaim.example, a page made only to take your card details.",
-      "why": "Never pay through a link in a text. Search the name yourself instead."
+      "lens": "zelvora-bonus.live is not zelvora.app.",
+      "why": "Only the real domain is Zelvora. A different ending is a copy."
+    },
+    "connect": {
+      "label": "\"Connect your wallet\"",
+      "strength": "strong",
+      "lens": "A fake site can ask your wallet to sign away your coins.",
+      "why": "\"Connect to claim\" is how many wallets get drained."
     },
     "timer": {
-      "label": "Countdown pressure",
+      "label": "Expires soon",
       "strength": "strong",
-      "lens": "You must claim within 30 minutes.",
-      "why": "Rushing you is a pressure trick. A real prize does not expire in minutes."
+      "lens": "A countdown to rush you.",
+      "why": "Pressure is there to stop you from checking."
+    },
+    "few": {
+      "label": "\"One of 500 chosen\"",
+      "strength": "strong",
+      "lens": "A flattering number you cannot check.",
+      "why": "Being \"chosen\" is a classic hook."
     },
     "sender": {
-      "label": "A friendly name",
+      "label": "Zelvora Rewards",
       "strength": "harmless",
-      "lens": "The sender is called Luckyvale Draw.",
-      "why": "Anyone can type a name into a text. It proves nothing."
+      "lens": "The name looks official.",
+      "why": "A sender name proves nothing, anyone can type one."
     },
     "time": {
-      "label": "Sent at 11:05 AM",
+      "label": "Sent at 5:20 PM",
       "strength": "harmless",
-      "lens": "Sent mid-morning.",
-      "why": "Scam texts come at any hour. The time proves nothing."
+      "lens": "An ordinary time.",
+      "why": "Scam texts arrive at any hour."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Open the link and pay the tax",
+      "label": "Claim the bonus",
       "trap": true
     },
     {
@@ -135,11 +132,11 @@
     },
     {
       "id": "verify",
-      "label": "Search the draw's name for warnings"
+      "label": "Check Zelvora's own app for any anniversary bonus"
     },
     {
       "id": "block_report",
-      "label": "Report it and delete it"
+      "label": "Delete it and report the text as junk"
     }
   ],
   "best_action": "block_report",
@@ -148,85 +145,81 @@
     "ignore"
   ],
   "trap": {
-    "title": "Luckyvale Draw · Claim",
-    "url": "luckyvale-prizeclaim.example/pay",
-    "ask": "Pay $100 to release your prize. Enter your card number.",
-    "go": "Pay $100",
+    "title": "Zelvora · Anniversary Bonus",
+    "url": "zelvora-bonus.live/claim",
+    "ask": "Connect your wallet and approve to receive 200 ZLX.",
+    "go": "Connect & approve",
     "back": "Close this page"
   },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Reported and deleted. Your phone company can now block more of these texts.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Reported and deleted. Your phone company can block more of these texts.",
+      "mirageSays": "My lovely bonus!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "No draw, no prize, and the name only appeared on scam warnings. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "The app mentioned no bonus at all. The text was fake. Case cracked.",
+      "mirageSays": "Hmph. They opened the real app."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. Reporting would help protect the next person.",
+      "mirageSays": "Fine. Next phone!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "SCAMMED",
-      "line": "The \"tax\" page copied your card details. The prize never came, and bigger payments followed.",
-      "mirageSays": "Thanks for the details!"
+      "stamp": "DRAINED",
+      "line": "The \"claim\" approved the site to empty your wallet. The ZLX never came, and the coins you owned left.",
+      "mirageSays": "Free for me, anyway!"
     }
   },
   "what_if": {
-    "go_ahead": "A real prize never costs money to collect. Not having entered at all was the first clue.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "Checking the real app first would have shown no bonus anywhere.",
+    "verify": "Checking was smart. Reporting the text helps others.",
+    "ignore": "Ignoring it was safe. A quick report protects others."
   },
-  "golden_rule": "If you must pay to collect a prize, it is not a prize. Delete it.",
+  "golden_rule": "Never \"connect your wallet\" to claim a surprise prize. Check the real app or site first.",
   "quick_check": {
-    "q": "A text says you won a big prize but must pay a \"tax\" first. You never entered. What do you do?",
+    "q": "A text says you were chosen for a free crypto bonus and must connect your wallet on a link. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Pay the tax, the prize is much bigger"
+        "text": "Connect quickly before it expires"
       },
       {
         "id": "b",
-        "text": "Reply to ask for details"
+        "text": "Do not click. Check the real app and report the text"
       },
       {
         "id": "c",
-        "text": "Do not pay. Delete it and report the text"
+        "text": "Connect a small wallet only"
       },
       {
         "id": "d",
-        "text": "Send half now and half later"
+        "text": "Forward it to friends"
       }
     ],
-    "answer": "c",
-    "explain": "Real prizes are free. A fee to claim is the scam."
+    "answer": "b",
+    "explain": "Surprise prizes plus \"connect your wallet\" is the classic drainer bait."
   },
   "hints": {
-    "nudge": "Did you ever enter this draw?",
+    "nudge": "Did you enter anything to win this?",
     "glow_order": [
-      "noentry",
-      "prize",
-      "tax",
+      "connect",
       "link",
-      "timer"
+      "prize",
+      "timer",
+      "few"
     ]
   },
-  "sources": [
-    "ftc-prize"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
@@ -236,12 +229,13 @@
       "rows": [
         {
           "k": "Number",
-          "v": "A mobile number you do not know"
+          "v": "Not a number you know",
+          "clue": "sender"
         },
         {
-          "k": "Draws you entered",
+          "k": "Contests you entered",
           "v": "None",
-          "clue": "noentry"
+          "clue": "prize"
         }
       ]
     },
@@ -249,21 +243,21 @@
       "id": "link",
       "icon": "🔗",
       "label": "Check link",
-      "title": "Where the link goes",
+      "title": "Where the link really goes",
       "rows": [
         {
-          "k": "Message says",
-          "v": "pay a tax to claim"
-        },
-        {
           "k": "It really opens",
-          "v": "luckyvale-prizeclaim.example",
+          "v": "zelvora-bonus.live",
           "clue": "link"
         },
         {
-          "k": "It asks for",
-          "v": "A \"tax\" payment first",
-          "clue": "tax"
+          "k": "Real site",
+          "v": "zelvora.app"
+        },
+        {
+          "k": "Deadline",
+          "v": "15 minutes",
+          "clue": "timer"
         }
       ]
     },
@@ -271,19 +265,23 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What platforms say",
       "rows": [
         {
-          "k": "Do real prizes cost money?",
-          "v": "No. A fee to collect a prize is a scam",
-          "clue": "tax"
+          "k": "Real bonuses",
+          "v": "Appear inside the app, never by surprise text"
         },
         {
-          "k": "A prize for a contest you never entered",
-          "v": "A warning sign",
-          "clue": "noentry"
+          "k": "\"Connect your wallet\" to win",
+          "v": "A common drainer trick",
+          "clue": "connect"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-prize",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }
