@@ -5,6 +5,9 @@ import { startParams, exchange } from './google.js';
 import { cleanNickname } from './nickname.js';
 
 const GAMES = ['moon-brew', 'full-moon', 'scam-lab'], MAX_PROGRESS = 65536;
+// A score above this cannot be real for that game (plausibility only; scores are "saved", not "verified", until a replay check exists).
+const MAX_SCORE = { 'moon-brew': 1000, 'scam-lab': 1000, 'full-moon': 2000000 };
+const BOARD_SIZE = 20;
 const SESSION_DAYS = 30, OAUTH_MINUTES = 10, AVATARS = 8;
 const now = () => Math.floor(Date.now() / 1000);
 
@@ -18,12 +21,15 @@ export default {
       if (path === '/api/auth/google/callback' && request.method === 'GET') return callback(request, env, url);
       if (path === '/api/me' && request.method === 'GET') return me(request, env);
       // everything below changes data: must come from our own pages
+      const bm = path.match(/^\/api\/leaderboard\/([a-z-]+)$/);
+      if (bm && request.method === 'GET') return leaderboard(request, env, bm[1], url);
       const gm = path.match(/^\/api\/progress\/([a-z-]+)$/);
       if (gm && request.method === 'GET') return getProgress(request, env, gm[1]);
       if (request.method !== 'POST' && !(gm && request.method === 'PUT')) return json({ error: 'Not found' }, 404);
       if (request.headers.get('Origin') !== url.origin) return json({ error: 'Blocked' }, 403);
       if (gm) return putProgress(request, env, gm[1]);
       if (path === '/api/logout') return logout(request, env);
+      if (path === '/api/score') return postScore(request, env);
       if (path === '/api/me/profile') return profile(request, env);
       if (path === '/api/me/delete') return deleteMe(request, env);
       return json({ error: 'Not found' }, 404);
@@ -112,6 +118,7 @@ async function deleteMe(request, env) {
   const p = await playerFrom(request, env);
   if (!p) return json({ error: 'Sign in first.' }, 401);
   await env.DB.batch([
+    env.DB.prepare('DELETE FROM scores WHERE player_id = ?').bind(p.id),
     env.DB.prepare('DELETE FROM progress WHERE player_id = ?').bind(p.id),
     env.DB.prepare('DELETE FROM sessions WHERE player_id = ?').bind(p.id),
     env.DB.prepare('DELETE FROM anon_links WHERE player_id = ?').bind(p.id),
@@ -139,4 +146,41 @@ async function putProgress(request, env, game) {
   await env.DB.prepare('INSERT INTO progress (player_id, game, data, updated_at) VALUES (?,?,?,?) ON CONFLICT(player_id, game) DO UPDATE SET data = excluded.data, updated_at = excluded.updated_at')
     .bind(p.id, game, JSON.stringify(body.data), now()).run();
   return json({ ok: true });
+}
+
+// ---------- Daily scores and leaderboards ----------
+const ymd = (d) => d.getUTCFullYear() * 10000 + (d.getUTCMonth() + 1) * 100 + d.getUTCDate();
+const dayToDate = (n) => new Date(Date.UTC(Math.floor(n / 10000), Math.floor(n / 100) % 100 - 1, n % 100));
+export function periodRange(period, today = new Date()) {
+  const t = ymd(today);
+  if (period === 'daily') return [t, t];
+  if (period === 'weekly') { const d = new Date(Date.UTC(today.getUTCFullYear(), today.getUTCMonth(), today.getUTCDate())); d.setUTCDate(d.getUTCDate() - ((d.getUTCDay() + 6) % 7)); return [ymd(d), t]; } // Monday to today
+  if (period === 'monthly') return [Math.floor(t / 100) * 100 + 1, t];
+  return null;
+}
+async function postScore(request, env) {
+  const p = await playerFrom(request, env);
+  if (!p) return json({ error: 'Sign in first.' }, 401);
+  let b; try { b = await request.json(); } catch { return json({ error: 'Bad request.' }, 400); }
+  if (!b || !GAMES.includes(b.game)) return json({ error: 'Unknown game.' }, 404);
+  const score = b.score, day = b.day, today = new Date();
+  if (!Number.isInteger(score) || score < 1 || score > MAX_SCORE[b.game]) return json({ error: 'Score not accepted.' }, 400);
+  const lo = new Date(today.getTime() - 86400000), hi = new Date(today.getTime() + 86400000); // one day either side: players live in every time zone
+  if (!Number.isInteger(day) || day < ymd(lo) || day > ymd(hi) || !(day % 100 >= 1 && day % 100 <= 31)) return json({ error: 'Day not accepted.' }, 400);
+  await env.DB.prepare('INSERT INTO scores (player_id, game, day, score, created_at) VALUES (?,?,?,?,?) ON CONFLICT(player_id, game, day) DO UPDATE SET score = MAX(score, excluded.score)')
+    .bind(p.id, b.game, day, score, now()).run();
+  return json({ ok: true });
+}
+async function leaderboard(request, env, game, url) {
+  if (!GAMES.includes(game)) return json({ error: 'Unknown game.' }, 404);
+  const range = periodRange(url.searchParams.get('period') || 'daily');
+  if (!range) return json({ error: 'Unknown period.' }, 400);
+  const rows = (await env.DB.prepare(`SELECT p.id AS id, p.nickname AS nickname, p.avatar AS avatar, MAX(s.score) AS score, MIN(s.created_at) AS first
+      FROM scores s JOIN players p ON p.id = s.player_id
+      WHERE s.game = ? AND s.day >= ? AND s.day <= ? AND p.show_on_boards = 1 AND p.nickname IS NOT NULL
+      GROUP BY p.id ORDER BY score DESC, first ASC LIMIT ?`).bind(game, range[0], range[1], 500).all()).results;
+  const me = await playerFrom(request, env);
+  const entries = rows.slice(0, BOARD_SIZE).map((r, i) => ({ rank: i + 1, nickname: r.nickname, avatar: r.avatar, score: r.score, you: !!me && r.id === me.id }));
+  const idx = me ? rows.findIndex(r => r.id === me.id) : -1;
+  return json({ period: url.searchParams.get('period') || 'daily', entries, you: idx >= 0 ? { rank: idx + 1, score: rows[idx].score } : null, note: 'Saved scores, not yet verified.' });
 }
