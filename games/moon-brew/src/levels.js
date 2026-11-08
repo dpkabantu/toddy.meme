@@ -2,7 +2,13 @@
 import { rng, makeMask } from './core.js';
 import { PACE, TIER } from './pace.js';
 
-export const TRAYS_PER_NIGHT = 20;
+export const TRAYS_PER_NIGHT = 10;
+// The difficulty ramp, the visitor lines and the coaching cards were written for a 20-tray Night.
+// A 10-tray Night walks the same ramp in bigger steps: tray 1 is the old tray 1, tray 10 is the old finale.
+export const RAMP = 20;
+export const effT = (t) => (t >= TRAYS_PER_NIGHT ? RAMP : Math.round(1 + (t - 1) * (RAMP - 1) / (TRAYS_PER_NIGHT - 1)));
+// the first tray of a 10-tray Night that reaches old tray number T
+const newT = (T) => { for (let t = 1; t <= TRAYS_PER_NIGHT; t++) if (effT(t) >= T) return t; return TRAYS_PER_NIGHT; };
 
 export const NIGHTS = [
   {
@@ -338,7 +344,7 @@ export function nightInfo(n) {
 // bean (or piece) that matters and one short line (8 words or fewer) appears. `on` is the target:
 // 'first' = first bean of the solution, 'sleepy' / 'ice' / 'pair' = that piece, 'milk' = a bean whose
 // path crosses milk. Shown once per player; replays of the tray stay clean.
-export const INTROS = {
+const INTROS_BY_OLD_TRAY = {
   'n1-1': { on: 'first', line: 'Tap a bean. It rolls where it points.' },
   'n1-3': { on: 'first', line: 'Grind the glowing colour first.' },
   'n1-4': { on: 'sleepy', line: 'Sleepy bean! Tap once to wake it.' },
@@ -355,6 +361,8 @@ export const INTROS = {
   'n11-3': { on: 'frost', line: 'Frosted bean: tap once to crack it.' },
   'n13-3': { on: 'honey', line: 'Honey sticks. Tap again to free it.' },
 };
+// the same cards, filed under the tray of a 10-tray Night that now carries that piece
+export const INTROS = Object.fromEntries(Object.entries(INTROS_BY_OLD_TRAY).map(([k, v]) => { const [n, t] = k.slice(1).split('-').map(Number); return [`n${n}-${newT(t)}`, v]; }));
 
 const SHAPES = ['rect', 'circle', 'diamond', 'heart', 'rect', 'face', 'moon', 'circle', 'cup', 'diamond'];
 
@@ -364,12 +372,13 @@ export function beansFor(n, t) {
   let lo, hi;
   if (n < 3) { lo = [6, 10, 14][n]; hi = [52, 60, 66][n]; }
   else { const L = Math.min(n - 2, 10); lo = 16 + Math.round(L * 1.2); hi = 66 + Math.round(L * 0.6); }
-  return Math.round(lo + (hi - lo) * (t - 1) / (TRAYS_PER_NIGHT - 1));
+  return Math.round(lo + (hi - lo) * (t - 1) / (RAMP - 1));
 }
 const cellCount = (shape, size) => makeMask(shape, size, size).flat().filter(Boolean).length;
 
-// Tray settings for night n (0 = Night 1), tray t (1..20). Tutorial 1-2, easy 3-5, medium 6-12, hard 13-19, finale 20.
-export function trayConfig(n, t) {
+// Tray settings for night n (0 = Night 1), tray tn (1..10). tn is stretched onto the old 20-step ramp (effT): tutorial, easy, medium, hard, then the finale at tray 10.
+export function trayConfig(n, tn) {
+  const t = effT(tn); // from here on t is the place on the 20-step ramp
   const band = t <= 5 ? 'easy' : t <= 12 ? 'medium' : t <= 19 ? 'hard' : 'finale';
   const L = Math.max(0, Math.min(n - 2, 12)); // how far past Night 3 we are (0 for Nights 1-3)
   let tight, ticket, pick;
@@ -385,7 +394,7 @@ export function trayConfig(n, t) {
   // the pieces on the tray
   let sleepy = 0, ice = 0, iceAt = 3, pairs = 0, swirls = 0, walls = 0, spin = 0, portals = 0, choc = 0, gates = 0, hswirls = 0, arrows = 0, frost = 0, honey = 0;
   if (n === 0 && t >= 8) sleepy = Math.min(3, 1 + Math.floor((t - 8) / 4));
-  if (n === 0 && t === 4) sleepy = 1; // a small surprise in tray 4
+  if (n === 0 && t >= 4 && t < 8) sleepy = 1; // a small surprise early in Night 1
   if (n >= 1) { ice = Math.min(3, 1 + Math.floor(t / 7)); iceAt = 3 + Math.floor(t / 8); sleepy = t > 4 ? 1 + Math.floor(t / 10) : 0; }
   if (n === 1 && t >= 10) pairs = 1 + Math.floor((t - 10) / 4);
   if (n >= 2) { pairs = t > 3 ? 1 + Math.floor(t / 9) : 0; swirls = t < 5 ? 1 : t < 12 ? 2 : 3; }

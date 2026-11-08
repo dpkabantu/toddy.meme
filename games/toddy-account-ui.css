@@ -21,3 +21,5 @@
 .ta-line:nth-child(1) .ta-rank { background: #fdaf1e; color: #2a1a05; }
 .ta-name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .ta-score { font-weight: 700; color: #fdaf1e; }
+a.ta-home { display: inline-flex; align-items: center; justify-content: center; text-decoration: none; min-height: 44px; box-sizing: border-box; }
+.title-nav.title-nav { flex-wrap: wrap; row-gap: 1.4cqw; }

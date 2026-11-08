@@ -1,11 +1,11 @@
 // TODDY: Moon Brew — screens, drawing, sound and saving.
 import { DX, DY, MAX_BUMPS, generate, newGame, beanAt, frozen, unitOf, traceBean, canRoll, tap, stars, hint, useHint, dailyScore, streaks, fromFrozen, difficulty } from './core.js';
 import { TRAYS } from './trays.js';
-import { INTROS, TRAYS_PER_NIGHT, trayLevelConfig, dailyConfig, dailyNumber, endlessConfig, ENDLESS_LINES, nightInfo, VISITORS, VISITOR_ORDER, TIER_NAMES, trayTier, tierOf } from './levels.js';
+import { INTROS, TRAYS_PER_NIGHT, effT, trayLevelConfig, dailyConfig, dailyNumber, nightInfo, VISITORS, VISITOR_ORDER, TIER_NAMES, trayTier, tierOf } from './levels.js';
 import { buildPostcard } from './postcard.js';
 import { toSynced, merge as mergeProgress, differs } from './sync.js';
 
-const BUILD = '1.0.0-rc18';
+const BUILD = '1.0.0-rc19';
 const ASSET = 'assets/';
 const $ = (id) => document.getElementById(id);
 const systemCalm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -26,6 +26,10 @@ function calm() { return !!(save && save.calm) || systemCalm.matches; }
 // ---------------- Saving ----------------
 const SAVE_KEY = 'toddy.moonbrew.v1';
 const save = Object.assign({ stars: {}, daily: {}, endlessBest: 0, postcards: [], intros: {}, sound: true, music: true, unlockAll: false, calm: false, bigText: false, stats: true }, readSave());
+// Nights used to have 20 trays. A player who already cleared tray 10 of a Night has finished the new, shorter Night: give its postcard.
+(function oldNightsKeepTheirPostcards() {
+  for (let n = 0; n < 400; n++) { if (!save.stars[`n${n + 1}-${TRAYS_PER_NIGHT}`]) { if (n > 3) break; continue; } const id = 'n' + (n + 1); if (!save.postcards.includes(id)) save.postcards.push(id); }
+})();
 function readSave() { try { return JSON.parse(localStorage.getItem(SAVE_KEY) || '{}'); } catch (e) { return {}; } }
 function writeSave() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* storage blocked: play still works */ } schedulePush(); }
 const trayKey = (n, t) => `n${n + 1}-${t}`;
@@ -324,8 +328,6 @@ function unlocked() { return PLAYTEST && save.unlockAll; }
 const NEW_THIS_NIGHT = { 7: 'honey swirl', 9: 'arrow tile', 10: 'frosted bean' }; // 0-based Night
 function nightOpen(n) { return unlocked() || n === 0 || nightCleared(n - 1); }
 function trayOpen(n, t) { return unlocked() || (nightOpen(n) && (t === 1 || !!save.stars[trayKey(n, t - 1)])); }
-function endlessOpen() { return unlocked() || nightCleared(0); }
-function night1Done() { let c = 0; for (let t = 1; t <= TRAYS_PER_NIGHT; t++) if (save.stars[trayKey(0, t)]) c++; return c; }
 function nextTray() { // first tray not cleared yet, in story order (the Nights never run out)
   for (let n = 0; n < 400 && nightOpen(n); n++) for (let t = 1; t <= TRAYS_PER_NIGHT; t++) if (!save.stars[trayKey(n, t)] && trayOpen(n, t)) return [n, t];
   return null;
@@ -339,11 +341,9 @@ function renderTitle() {
   const st = dailyStreak();
   $('daily-status').textContent = today ? `Today: ${today.score || 0} pts${st.current > 1 ? ` · 🔥 ${st.current}` : ''}` : (st.current ? `Keep your ${st.current}-day streak` : 'New tray today');
   $('btn-daily').classList.toggle('glow', !today); // gentle glow until today's Daily Brew is played
-  $('endless-status').textContent = endlessOpen() ? (save.endlessBest ? `Best ${save.endlessBest}` : 'Open') : `🔒 After Night 1 · ${night1Done()}/20`;
-  // the Play button says where the player is going: the Night and tray, so the 20-tray journey is visible from the start
+  // the Play button says where the player is going: the Night and tray, so the 10-tray journey is visible from the start
   const nx = nextTray();
   $('play-status').textContent = !Object.keys(save.stars).length ? `${nightInfo(0).name} · ${TRAYS_PER_NIGHT} trays` : nx ? `Continue · ${nightInfo(nx[0]).name}, tray ${nx[1]}` : 'Play';
-  $('btn-endless').classList.toggle('locked', !endlessOpen());
   $('build-label').textContent = PLAYTEST ? `Playtest build ${BUILD} · nothing here is public yet` : `Moon Brew ${BUILD}`;
 }
 
@@ -373,7 +373,7 @@ function renderMap() {
   $('night-title').textContent = night.title + (NEW_THIS_NIGHT[mapNight] ? ` \u00B7 New: ${NEW_THIS_NIGHT[mapNight]}` : '');
   let got = 0;
   for (let t = 1; t <= TRAYS_PER_NIGHT; t++) got += save.stars[trayKey(mapNight, t)] || 0;
-  $('night-sub').textContent = `${got} of ${TRAYS_PER_NIGHT * 3} stars \u00B7 tray 20 earns a postcard`;
+  $('night-sub').textContent = `${got} of ${TRAYS_PER_NIGHT * 3} stars \u00B7 tray ${TRAYS_PER_NIGHT} earns a postcard`;
   $('map-stars').textContent = `\u2605 ${totalStars()}`;
   const grid = $('trays');
   grid.textContent = '';
@@ -400,7 +400,7 @@ function renderMap() {
   if (!nx.hidden) {
     const nn = nightInfo(mapNight + 1);
     $('next-visitor').src = ASSET + VISITOR[nn.visitor][0];
-    $('next-text').innerHTML = `<b>Next: ${nn.name}</b> \u00B7 a new visitor and a new postcard. ${mapNight < 2 ? 'Clear tray 20 to open it.' : 'Nights never end.'}`;
+    $('next-text').innerHTML = `<b>Next: ${nn.name}</b> \u00B7 a new visitor and a new postcard. ${mapNight < 2 ? 'Clear tray ${TRAYS_PER_NIGHT} to open it.' : 'Nights never end.'}`;
   }
 }
 function say2map(t) { $('night-sub').textContent = `Tray ${t} opens after you clear tray ${t - 1}.`; }
@@ -435,10 +435,9 @@ function renderStats() {
     <div class="tile"><span class="k">Today</span><span class="v">${today ? today.score || 0 : '–'}<small>${today ? ' / 1000' : ''}</small></span><span class="sub">${today ? `${today.time}s · ${today.bumps} bump${today.bumps === 1 ? '' : 's'}` : 'Not brewed yet'}</span></div>
     <div class="tile wide"><span class="k">Last 7 Daily Brews</span><div class="week">${days.join('')}</div></div>
     <div class="tile"><span class="k">Best Daily</span><span class="v">${bestDaily || '–'}</span><span class="sub">${dailies.length} played</span></div>
-    <div class="tile"><span class="k">Endless best</span><span class="v">${save.endlessBest || '–'}</span><span class="sub">points in one run</span></div>
     <div class="tile wide"><span class="k">Stars</span><span class="v">${totalStars()}</span>${nightRows}</div>
     <div class="tile"><span class="k">Trays cleared</span><span class="v">${cleared}</span><span class="sub">${perfect} Perfect Brews</span></div>
-    <div class="tile"><span class="k">Postcards</span><span class="v">${save.postcards.length}</span><span class="sub">tray 20 of each Night</span></div>`;
+    <div class="tile"><span class="k">Postcards</span><span class="v">${save.postcards.length}</span><span class="sub">tray ${TRAYS_PER_NIGHT} of each Night</span></div>`;
   $('stats').querySelectorAll('.track i').forEach(el => { el.style.width = el.dataset.w + '%'; });
 }
 
@@ -485,7 +484,7 @@ function renderAlbum() {
 }
 
 // ---------------- Play state ----------------
-let mode = null;     // { kind: 'story', n, t } | { kind: 'daily', num } | { kind: 'endless', seed, k, score }
+let mode = null;     // { kind: 'story', n, t } | { kind: 'daily', num }
 let level = null, g = null;
 let anims = [];
 let hintBean = null, cursor = null, melts = [];
@@ -494,11 +493,6 @@ let finishTimer = 0;
 
 function startTray(n, t) { mode = { kind: 'story', n, t }; const f = TRAYS[trayKey(n, t)]; load(f ? null : trayLevelConfig(n, t), f ? fromFrozen(f) : null); }
 function startDaily() { const cfg = dailyConfig(); mode = { kind: 'daily', num: cfg.daily, visitor: cfg.visitor }; load(cfg); }
-function startEndless(cont) {
-  // pieces the player has already met in the story may show up here too (nothing unexplained)
-  if (!cont) mode = { kind: 'endless', seed: (Date.now() % 1e9) >>> 0, k: 0, score: 0, pieces: { walls: nightOpen(3), spin: nightOpen(4), portals: nightOpen(6), choc: nightOpen(5), gates: nightOpen(8), hswirls: nightOpen(7), honey: nightOpen(12) } };
-  load(endlessConfig(mode.seed, mode.k, mode.pieces));
-}
 
 // The title pill: where you are, and under it how hard this tray is (dots as well as the word, never colour alone).
 function setWhere(text, tier) {
@@ -519,15 +513,12 @@ function load(cfg, ready) {
   let vis = 'milo', line = '';
   if (mode.kind === 'story') {
     const night = nightInfo(mode.n);
-    vis = night.visitor; line = night.lines[mode.t - 1];
+    vis = night.visitor; line = night.lines[effT(mode.t) - 1];
     setWhere(`${night.name} \u00B7 ${mode.t === TRAYS_PER_NIGHT ? 'Finale' : `Tray ${mode.t}/${TRAYS_PER_NIGHT}`} \u25BE`, trayTier(mode.n, mode.t));
   } else if (mode.kind === 'daily') {
     vis = mode.visitor;
     line = save.daily[mode.num] ? `Practice run. Today\u2019s score: ${save.daily[mode.num].score}.` : 'Today\u2019s puzzle. Same for everyone.';
     setWhere('Daily Brew', tierOf(difficulty(level)));
-  } else {
-    vis = VISITOR_ORDER[mode.k % VISITOR_ORDER.length]; line = ENDLESS_LINES[mode.k % ENDLESS_LINES.length];
-    setWhere(`Endless \u00B7 Tray ${mode.k + 1} \u00B7 ${mode.score} pts`, tierOf(difficulty(level)));
   }
   mode.vis = vis;
   coachPerfect = true;
@@ -1094,7 +1085,7 @@ function serveHtml(small) {
   return `<div class="serve${small ? ' small' : ''}"><img class="serve-cup" src="${ASSET}cup_v02.webp" alt=""><img class="serve-vis" src="${ASSET}${pose}" alt="${VISITOR[v][1]} enjoys the coffee"></div>
     <div class="goals-big" aria-label="${stars(g)} of 3 stars">${parts.map(([t, ok], i) => `<span class="gbig d${i + 1}${ok ? '' : ' lost'}"><b>&#9733;</b><small>${t}</small></span>`).join('')}</div>`;
 }
-// The Night as a path of 20 dots (the last one is the postcard moon): shows the journey without words.
+// The Night as a path of 10 dots (the last one is the postcard moon): shows the journey without words.
 function nightPath(n, cur) {
   let h = '';
   for (let t = 1; t <= TRAYS_PER_NIGHT; t++) {
@@ -1117,20 +1108,12 @@ function serveVisitor() { // the visitor up top reacts too
 // Saves the result the moment a tray ends, so leaving early never loses progress.
 let result = null;
 function modeInfo() {
-  return mode.kind === 'story' ? { mode: 'story', night: mode.n + 1, tray: mode.t } : mode.kind === 'daily' ? { mode: 'daily', day: mode.num } : { mode: 'endless', tray: mode.k + 1 };
+  return mode.kind === 'story' ? { mode: 'story', night: mode.n + 1, tray: mode.t } : { mode: 'daily', day: mode.num };
 }
 function record() {
   const hintsUsed = g.log.filter(e => e[1] === 'h').length;
   track('tray_end', { ...modeInfo(), result: g.status, stars: stars(g), secs: Math.round((performance.now() - startedAt) / 1000), bumps: g.bumps, hints: hintsUsed, beans: level.beans.length });
   result = { s: stars(g), secs: Math.round((performance.now() - startedAt) / 1000) };
-  if (mode.kind === 'endless') {
-    if (g.status === 'won') {
-      result.gained = level.beans.length * 10 + (g.bumps === 0 ? 50 : 0) + (g.perfect && level.ticket.length ? 50 : 0);
-      mode.score += result.gained;
-    }
-    if (mode.score > (save.endlessBest || 0)) { save.endlessBest = mode.score; result.best = true; writeSave(); }
-    return;
-  }
   if (g.status !== 'won') return;
   if (mode.kind === 'daily') {
     const sc = dailyScore(g);
@@ -1156,15 +1139,6 @@ function finish(again) {
   if (!again) {
     if (g.status === 'won') { sfx.win(); toddyPlay('happy'); serveVisitor(); serveSounds(); if (navigator.vibrate) { try { navigator.vibrate([20, 40, 20]); } catch (e) { /* not allowed */ } } }
     else sfx.burnt();
-  }
-
-  if (mode.kind === 'endless') {
-    if (g.status !== 'won') return endRun();
-    card(`${serveHtml(true)}<h3>Tray ${mode.k + 1} served</h3><p>+${result.gained} points · total <b>${mode.score}</b></p>
-      <div class="btns"><button class="btn ghost" id="o-stop" type="button">Stop here</button><button class="btn primary" id="o-next" type="button">Next tray</button></div>`);
-    bind('o-next', () => { mode.k++; startEndless(true); });
-    bind('o-stop', () => endRun());
-    return;
   }
 
   if (g.status === 'burnt') {
@@ -1230,25 +1204,12 @@ function finish(again) {
   // the serve comes first: it is the payoff
   card(`${serveHtml(false)}<h3>${finale ? 'Night complete!' : head}</h3>
     <div class="path" aria-label="${night.name}: tray ${mode.t} of ${TRAYS_PER_NIGHT}">${nightPath(mode.n, mode.t)}</div>
-    <p class="stat">${night.name} · tray ${mode.t} of ${TRAYS_PER_NIGHT}${finale ? '' : ' · ☾ postcard at 20'}</p>
-    ${result.firstClear && mode.n === 0 && finale ? '<p class="stat">Endless Brew is now open.</p>' : ''}
+    <p class="stat">${night.name} · tray ${mode.t} of ${TRAYS_PER_NIGHT}${finale ? '' : ' · ☾ postcard at ${TRAYS_PER_NIGHT}'}</p>
     <div class="btns"><button class="btn ghost" id="o-retry" type="button">Brew again</button><button class="btn primary" id="o-next" type="button">${result.newCard ? 'Continue' : nextLabel}</button></div>
     ${dailyWaiting() ? '<div class="btns"><button class="btn daily-nudge" id="o-daily" type="button">Today\u2019s Daily Brew \u2192</button></div>' : ''}`);
   bind('o-retry', () => startTray(mode.n, mode.t));
   if (dailyWaiting()) bind('o-daily', () => { track('daily_nudge', { from: 'result' }); startDaily(); });
   bind('o-next', () => (result.newCard ? showPostcard() : dailyTip ? showDailyTip() : goNext()));
-}
-
-function endRun() {
-  const cleared = mode.k + (g.status === 'won' ? 1 : 0);
-  card(`<h3>${g.status === 'burnt' ? 'Burnt! Run over' : 'Run complete'}</h3><p>You cleared ${cleared} tray${cleared === 1 ? '' : 's'} for <b>${mode.score}</b> points.</p>
-    <p class="stat">${result && result.best ? 'New best!' : `Best: ${save.endlessBest}`}</p>
-    <div class="btns"><button class="btn primary" id="o-share" type="button">Share</button></div>
-    <div class="btns"><button class="btn ghost" id="o-home" type="button">Title</button><button class="btn ghost" id="o-again" type="button">New run</button></div>`);
-  bind('o-home', () => show('title')); bind('o-again', () => startEndless(false));
-  if (!mode.reported) { mode.reported = true; track('endless_end', { score: mode.score, trays: cleared }); }
-  const shareData = { kind: 'endless', score: mode.score, trays: cleared, best: save.endlessBest, visitor: 'moth' };
-  bind('o-share', () => openShare(shareData, () => endRun()));
 }
 
 // ---------------- Settings ----------------
@@ -1370,7 +1331,7 @@ function dailyLabel(num) {
 }
 function shareText(d) {
   if (d.kind === 'daily') return `TODDY Moon Brew · Daily #${dailyLabel(d.num)}\n${'★'.repeat(d.stars)}${'☆'.repeat(3 - d.stars)} ${d.score}/1000 · ${d.secs}s${d.streak > 1 ? ` · ${d.streak}-day streak` : ''}\nCan you beat it?`;
-  return `TODDY Moon Brew · Endless Brew\n${d.score} points · ${d.trays} tray${d.trays === 1 ? '' : 's'} cleared\nCan you beat it?`;
+  return 'TODDY Moon Brew';
 }
 function loadImg(src) { return new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = src; }); }
 async function drawShare(d) {
@@ -1390,7 +1351,7 @@ async function drawShare(d) {
   x.fillStyle = '#fdaf1e'; x.font = font(800, 34); x.fillText('T O D D Y', W / 2, 700);
   x.fillStyle = '#fde3bd'; x.font = font(900, 110); x.fillText('Moon Brew', W / 2, 810);
   x.fillStyle = '#c3b2d8'; x.font = font(700, 40);
-  x.fillText(d.kind === 'daily' ? `Daily Brew #${dailyLabel(d.num)}` : 'Endless Brew', W / 2, 880);
+  x.fillText(d.kind === 'daily' ? `Daily Brew #${dailyLabel(d.num)}` : 'Moon Brew', W / 2, 880);
   if (d.kind === 'daily') {
     x.font = font(900, 92); x.fillStyle = '#fdaf1e';
     x.fillText('★'.repeat(d.stars) + '☆'.repeat(3 - d.stars), W / 2, 1000);
@@ -1456,18 +1417,6 @@ bind('btn-play', () => {
   mapNight = (nextTray() || [lastOpenNight()])[0]; show('map');
 });
 bind('btn-daily', () => { sfx.tick(); startDaily(); });
-bind('btn-endless', () => {
-  if (endlessOpen()) { startEndless(false); return; }
-  // locked: say why and how far along the player is, with a way straight there
-  const done = night1Done();
-  modal(`<p class="eyebrow">🔒 Locked</p><h3>Endless Brew</h3>
-    <p>Opens after ${nightInfo(0).name}.</p>
-    <div class="path" aria-label="${done} of ${TRAYS_PER_NIGHT} trays cleared">${nightPath(0, -1)}</div>
-    <p class="stat">${done} of ${TRAYS_PER_NIGHT} trays cleared</p>
-    <div class="btns"><button class="btn ghost" id="lk-close" type="button">Close</button><button class="btn primary" id="lk-go" type="button">Play ${nightInfo(0).name}</button></div>`);
-  bind('lk-close', closeModal);
-  bind('lk-go', () => { closeModal(); const nx = nextTray(); if (nx && nx[0] === 0) startTray(0, nx[1]); else { mapNight = 0; show('map'); } });
-});
 bind('where', () => { if (mode && mode.kind === 'story') { clearTimeout(finishTimer); mapNight = mode.n; show('map'); } });
 bind('btn-album', () => show('album'));
 bind('btn-stats', () => show('stats'));
@@ -1484,7 +1433,7 @@ bind('map-back', () => show('title'));
 bind('album-back', () => show('title'));
 bind('howto-back', () => show('title'));
 bind('play-back', () => { clearTimeout(finishTimer); show(mode && mode.kind === 'story' ? 'map' : 'title'); });
-bind('btn-restart', () => { if (mode.kind === 'endless') { if (g.status === 'playing') load(endlessConfig(mode.seed, mode.k, mode.pieces)); } else if (mode.kind === 'daily') startDaily(); else startTray(mode.n, mode.t); });
+bind('btn-restart', () => { if (mode.kind === 'daily') startDaily(); else startTray(mode.n, mode.t); });
 bind('btn-hint', () => {
   if (!g || g.status !== 'playing') return;
   hintBean = useHint(g, performance.now() - startedAt);
@@ -1591,7 +1540,7 @@ track('open', { returning: Object.keys(save.stars).length > 0 || Object.keys(sav
 // Hooks for the automatic browser tests (tools/smoke.py). Not used by players.
 window.__moonbrew = {
   get g() { return g; }, get level() { return level; }, get mode() { return mode; }, get coach() { return coach && coach.key; }, save,
-  startTray, startDaily, startEndless, show, buildPostcard: (n, sc = 0.5) => buildPostcard(n, ASSET, sc), nightInfo, audioState: () => actx ? actx.state : "none",
+  startTray, startDaily, show, buildPostcard: (n, sc = 0.5) => buildPostcard(n, ASSET, sc), nightInfo, audioState: () => actx ? actx.state : "none",
   // test-only level meter: loudest sample and average level of everything leaving the speakers
   meter() { if (!mixOut) return null; if (!this._an) { this._an = actx.createAnalyser(); this._an.fftSize = 2048; mixOut.connect(this._an); } const d = new Float32Array(2048); this._an.getFloatTimeDomainData(d); let pk = 0, sq = 0; for (const v of d) { pk = Math.max(pk, Math.abs(v)); sq += v * v; } return { peak: pk, rms: Math.sqrt(sq / d.length) }; },
   sfx: (n) => sfx[n](), music: () => musicOn,
