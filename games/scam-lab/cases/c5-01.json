@@ -3,17 +3,17 @@
   "type": "hunt",
   "chapter": 5,
   "difficulty": 1,
-  "title": "Earn From Home",
-  "disguise": "influencer",
+  "title": "The Crypto Community Job",
+  "disguise": "support",
   "intro": [
-    "A stranger writes to you about a job you never applied for. The pay sounds amazing.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "Chapter 5, Toddy: jobs. Scammers love people who need work.",
+    "A stranger offers a paid role moderating a crypto community. Daily pay in USDT.",
+    "Tap anything odd, then decide."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Hannah (Recruiter)",
-    "text": "Earn $60 daily from home, no experience…"
+    "from": "Plenvo Talent ✔",
+    "text": "Moderators wanted! Paid daily in USDT…"
   },
   "screen": {
     "app": "chirp",
@@ -21,134 +21,144 @@
       "name": [
         {
           "clue": "name",
-          "text": "Hannah · Recruiter"
+          "text": "Plenvo Talent ✔"
         }
       ],
       "sub": [
         {
           "clue": "handle",
-          "text": "@hannah_jobs_2026"
+          "text": "@plenvo_talent_hiring"
         }
       ],
       "avatar": {
         "glyph": "💼",
-        "clue": "pic"
+        "clue": "avatar"
       }
     },
     "banner": [
       {
-        "clue": "dmfirst",
+        "clue": "dm",
         "text": "Message request · you do not follow this account"
       }
     ],
-    "context": "You have not applied for any job.",
+    "context": "You posted that you are looking for a flexible job.",
     "items": [
       {
         "time": [
-          "10:26 AM"
+          {
+            "clue": "time",
+            "text": "4:15 PM"
+          }
         ]
       },
       {
         "msg": [
-          "Hi! We are hiring for ",
-          {
-            "clue": "parttime",
-            "text": "part-time work from home"
-          },
-          ". You can earn ",
+          "Hi! We need community moderators. ",
           {
             "clue": "pay",
-            "text": "$60 every day"
+            "text": "Earn 120 USDT a day"
+          },
+          " for ",
+          {
+            "clue": "easy",
+            "text": "2 hours of simple tasks"
           },
           "."
         ]
       },
       {
         "msg": [
+          "No experience needed. Start here: ",
           {
-            "clue": "noexp",
-            "text": "No experience or interview needed."
-          },
-          " Just 1 hour a day on your phone."
+            "clue": "link",
+            "text": "plenvo-jobs.me/start",
+            "link": true
+          }
         ]
       },
       {
         "msg": [
-          "Message me on ",
+          "To activate your account, ",
           {
-            "clue": "move",
-            "text": "the messaging app"
+            "clue": "fee",
+            "text": "buy a 50 USDT starter token"
           },
-          " to start today: ",
+          " from our partner. ",
           {
-            "clue": "link",
-            "text": "wa-style.me/anya-jobs",
-            "link": true
+            "clue": "timer",
+            "text": "Only 3 spots left today."
           }
         ]
       }
     ]
   },
   "clues": {
-    "dmfirst": {
-      "label": "They messaged first",
+    "fee": {
+      "label": "Pay to start a job",
       "strength": "strong",
-      "lens": "You never applied. A stranger found you.",
-      "why": "Real recruiters rarely start with a cold DM offering instant pay."
+      "lens": "You are asked to buy a \"starter token\" before working.",
+      "why": "A real employer never charges you to start. The fee is the whole scam."
     },
     "pay": {
-      "label": "Big pay for little work",
+      "label": "Huge pay for easy work",
       "strength": "strong",
-      "lens": "$60 a day for one hour a day.",
-      "why": "Big pay for little work is almost always a scam."
+      "lens": "120 USDT for 2 hours is far above normal.",
+      "why": "Big pay for little work is the bait."
     },
-    "noexp": {
-      "label": "No experience, no interview",
+    "dm": {
+      "label": "They found you",
       "strength": "strong",
-      "lens": "Anyone gets hired at once.",
-      "why": "Real jobs check who you are. A job with no check is bait."
-    },
-    "move": {
-      "label": "Move to another app",
-      "strength": "strong",
-      "lens": "They want you off this platform, where you can report them.",
-      "why": "Scammers move you to private chat fast."
+      "lens": "You did not apply. They messaged after your post.",
+      "why": "Scammers search for people who say they want work."
     },
     "link": {
-      "label": "A link to a chat",
+      "label": "A chat link, not a company page",
       "strength": "strong",
-      "lens": "It goes to a private chat link, not a company site.",
-      "why": "A real employer has an official careers page."
+      "lens": "plenvo-jobs.me is not a real careers site.",
+      "why": "A real employer has its own site."
     },
-    "handle": {
-      "label": "A generic handle",
+    "timer": {
+      "label": "Only 3 spots left",
+      "strength": "strong",
+      "lens": "Fake scarcity.",
+      "why": "Pressure stops you from checking."
+    },
+    "easy": {
+      "label": "Simple tasks",
       "strength": "harmless",
-      "lens": "@hannah_jobs_2026.",
-      "why": "A handle proves nothing alone."
+      "lens": "\"Simple\" sounds harmless.",
+      "why": "It is how the bait is dressed up."
     },
     "name": {
-      "label": "A friendly recruiter name",
+      "label": "Name with a tick",
       "strength": "harmless",
-      "lens": "Hannah, a recruiter.",
-      "why": "Names are easy to invent."
+      "lens": "A typed ✔ in the name.",
+      "why": "A typed tick is not a real badge."
     },
-    "parttime": {
-      "label": "\"Part-time work from home\"",
+    "handle": {
+      "label": "Hiring handle",
       "strength": "harmless",
-      "lens": "A common kind of job.",
-      "why": "The kind of job is normal. What matters is how they hire."
+      "lens": "@plenvo_talent_hiring.",
+      "why": "Handles can be anything."
     },
-    "pic": {
+    "avatar": {
       "label": "Briefcase picture",
       "strength": "harmless",
-      "lens": "A little briefcase.",
+      "lens": "A briefcase.",
       "why": "Pictures prove nothing."
+    },
+    "time": {
+      "label": "Sent at 4:15 PM",
+      "strength": "harmless",
+      "lens": "An ordinary time.",
+      "why": "The time proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Message Hannah on the messaging app"
+      "label": "Buy the starter token",
+      "trap": true
     },
     {
       "id": "ignore",
@@ -156,14 +166,13 @@
     },
     {
       "id": "verify",
-      "label": "Look for a real company page and search the recruiter's name with \"scam\""
+      "label": "Check the company's own careers page"
     },
     {
       "id": "block_report",
       "label": "Block and report the account"
     }
   ],
-  "best_action": "block_report",
   "acceptable_actions": [
     "verify",
     "ignore"
@@ -172,96 +181,112 @@
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Blocked and reported. The platform removed the fake recruiter before it reached more people.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Blocked and reported. The fake recruiter was removed.",
+      "mirageSays": "My lovely job!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "A search of the name showed other people warning about the same \"recruiter\". Case cracked.",
+      "line": "The company's own page had no such job, and warned about fake offers. Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. A report would protect others.",
+      "mirageSays": "Fine. Next jobseeker!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "Hannah sent you to a \"task\" job. It started well, then asked for money to continue.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The 50 USDT went to the scammer. No job ever started.",
+      "mirageSays": "Thanks for the fee!"
     }
   },
   "what_if": {
-    "go_ahead": "Searching the name with \"scam\" takes a minute. No honest job pays this much without an interview.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "A real job never charges a start fee. That one request exposed the whole offer.",
+    "verify": "Checking was smart. Reporting helps others.",
+    "ignore": "Ignoring it was safe. A quick report protects others."
   },
-  "golden_rule": "Big pay for little work, from a stranger, with no interview, is a scam. Look for the company's own careers page.",
+  "best_action": "block_report",
+  "trap": {
+    "title": "Plenvo Talent · Activate",
+    "url": "plenvo-jobs.me/start",
+    "ask": "Buy the 50 USDT starter token to activate your moderator account.",
+    "go": "Buy token",
+    "back": "Close this page"
+  },
+  "golden_rule": "A job that asks you to pay to start is not a job. Never pay a fee, in coins or cash, to get work.",
   "quick_check": {
-    "q": "A stranger DMs you about a work-from-home job paying $60 a day, no interview. What do you do?",
+    "q": "A recruiter offers 120 USDT a day and asks you to buy a 50 USDT starter token first. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Message her and start today"
+        "text": "Buy it, the pay is worth it"
       },
       {
         "id": "b",
-        "text": "Ask for her ID"
+        "text": "Refuse and report. A real job never charges you"
       },
       {
         "id": "c",
-        "text": "Ignore it, or block and report. Look only at real companies' own careers pages"
+        "text": "Buy half"
       },
       {
         "id": "d",
-        "text": "Forward it to friends"
+        "text": "Ask to pay after the first week"
       }
     ],
-    "answer": "c",
-    "explain": "Big pay for little work, with no interview, is the pattern."
+    "answer": "b",
+    "explain": "Paying to start, plus huge pay, is the heart of a job scam."
   },
   "hints": {
-    "nudge": "Why would anyone pay that much with no interview?",
+    "nudge": "Who is paying whom here?",
     "glow_order": [
-      "dmfirst",
+      "fee",
       "pay",
-      "noexp",
-      "move",
-      "link"
+      "dm",
+      "link",
+      "timer"
     ]
   },
-  "sources": [
-    "ftc-job-scams",
-    "ftc-jobs"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check the account",
-      "title": "@hannah_jobs_2026",
+      "title": "Plenvo Talent ✔",
       "rows": [
         {
-          "k": "Account age",
-          "v": "4 days",
-          "clue": "handle"
+          "k": "Joined",
+          "v": "4 days ago",
+          "clue": "dm"
         },
         {
-          "k": "You applied?",
-          "v": "No",
-          "clue": "dmfirst"
+          "k": "Real company page",
+          "v": "plenvo.example/careers"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the link",
+      "title": "Where it goes",
+      "rows": [
+        {
+          "k": "It really opens",
+          "v": "A private chat",
+          "clue": "link"
         },
         {
-          "k": "Real company page?",
-          "v": "None"
+          "k": "First step",
+          "v": "Buy a 50 USDT token",
+          "clue": "fee"
         }
       ]
     },
@@ -269,18 +294,25 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What job-scam advice says",
       "rows": [
         {
-          "k": "Big pay for little work",
-          "v": "A warning sign",
-          "clue": "pay"
+          "k": "Real jobs",
+          "v": "Never charge a fee to start",
+          "clue": "fee"
         },
         {
-          "k": "How to check",
-          "v": "Search the name with \"scam\" or \"review\""
+          "k": "Pay far above normal",
+          "v": "Is bait",
+          "clue": "pay"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-jobs",
+    "ftc-job-scams",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

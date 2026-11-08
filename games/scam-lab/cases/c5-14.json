@@ -3,80 +3,76 @@
   "type": "hunt",
   "chapter": 5,
   "difficulty": 3,
-  "title": "The Overpaid Cheque",
-  "disguise": "admin",
+  "title": "Overpaid in USDT",
+  "disguise": "support",
   "intro": [
-    "A new \"employer\" sent you a cheque that is too big. They ask you to send back the difference.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "A client \"overpays\" you in USDT and wants the extra back.",
+    "It looks like a bonus.",
+    "Sniff the email, then decide."
   ],
   "notify": {
     "app": "Mail",
-    "from": "Mr. Hale (employer)",
-    "text": "Cheque sent. Please return the extra…"
+    "from": "Brightline Studio",
+    "text": "Payment sent: please refund the extra…"
   },
   "screen": {
     "app": "mail",
     "head": {
       "from": [
         {
-          "clue": "from",
-          "text": "Mr. Hale, Hale Home Services"
+          "clue": "sender",
+          "text": "Brightline Studio"
         }
       ],
       "addr": [
         {
           "clue": "addr",
-          "text": "hale.homeservices@freemail.example"
+          "text": "accounts@brightline-studio-pay.co"
         }
       ],
       "subject": [
         {
           "clue": "subject",
-          "text": "Your cheque and next steps"
+          "text": "Payment sent: please refund the extra"
         }
       ],
       "time": [
-        "1:40 PM"
+        "2:14 PM"
       ]
     },
     "items": [
       {
         "p": [
-          "Hello Toddy,"
+          "Hi,"
         ]
       },
       {
         "p": [
-          "Welcome to the team! Your first cheque is on its way: ",
+          "I sent ",
           {
-            "clue": "amount",
-            "text": "£2,400"
+            "clue": "pay",
+            "text": "4,000 USDT"
           },
-          ", including your equipment budget."
+          " by mistake instead of ",
+          {
+            "clue": "right",
+            "text": "400 USDT"
+          },
+          "."
         ]
       },
       {
         "p": [
-          "The cheque is ",
+          "Please send back the extra ",
           {
-            "clue": "over",
-            "text": "£900 more than needed"
+            "clue": "extra",
+            "text": "3,600 USDT"
           },
-          ". Please deposit it and ",
+          " to this wallet: ",
           {
-            "clue": "back",
-            "text": "send me £900 back by bank transfer"
-          },
-          " today."
-        ]
-      },
-      {
-        "p": [
-          "Use the rest for the ",
-          {
-            "clue": "equip",
-            "text": "equipment you will buy from my supplier"
+            "clue": "wallet",
+            "text": "0x71c…9e2a",
+            "link": true
           },
           "."
         ]
@@ -85,66 +81,83 @@
         "p": [
           {
             "clue": "rush",
-            "text": "Do this today so I can start your training."
+            "text": "I need it in the next hour"
+          },
+          " for my own payroll."
+        ]
+      },
+      {
+        "foot": [
+          {
+            "clue": "foot",
+            "text": "Brightline Studio · Accounts"
           }
         ]
       }
-    ]
+    ],
+    "context": "You did a design job for this client last week."
   },
   "clues": {
-    "addr": {
-      "label": "A free-mail address",
+    "pay": {
+      "label": "A big overpayment",
       "strength": "strong",
-      "lens": "A real business writes from its own address.",
-      "why": "Look at the address behind the name."
+      "lens": "More than the invoice, with a refund request.",
+      "why": "The payment is fake, but your refund is real."
     },
-    "amount": {
-      "label": "A cheque before any work",
+    "wallet": {
+      "label": "Send to a new wallet",
       "strength": "strong",
-      "lens": "You are paid before you do a thing.",
-      "why": "Real employers do not pay a big cheque in advance."
-    },
-    "over": {
-      "label": "\"£900 too much\"",
-      "strength": "strong",
-      "lens": "An overpayment to be sent back.",
-      "why": "A cheque that is too big, with a request to return the difference, is a classic trick."
-    },
-    "back": {
-      "label": "\"Send me £900 back\"",
-      "strength": "strong",
-      "lens": "You send real money, then the cheque bounces.",
-      "why": "The cheque is fake. Your transfer is real. You lose the full amount."
-    },
-    "equip": {
-      "label": "Equipment from \"my supplier\"",
-      "strength": "strong",
-      "lens": "You are told where to spend.",
-      "why": "A supplier chosen by the \"employer\" is part of the trick."
+      "lens": "The refund goes to a new wallet.",
+      "why": "Real refunds go back to the sender the same way."
     },
     "rush": {
-      "label": "Do it today",
+      "label": "An hour",
       "strength": "strong",
       "lens": "A deadline.",
-      "why": "Pressure is a trick."
+      "why": "Pressure stops you from checking your wallet."
     },
-    "from": {
-      "label": "A business name",
+    "addr": {
+      "label": "Look-alike address",
+      "strength": "strong",
+      "lens": "brightline-studio-pay.co is not the client's usual address.",
+      "why": "Check against past emails."
+    },
+    "right": {
+      "label": "The right amount was 400",
       "strength": "harmless",
-      "lens": "Hale Home Services.",
-      "why": "Names are easy to invent."
+      "lens": "It matches your invoice.",
+      "why": "That is the real amount."
+    },
+    "extra": {
+      "label": "\"The extra\"",
+      "strength": "harmless",
+      "lens": "A normal-sounding word.",
+      "why": "Words prove nothing."
+    },
+    "sender": {
+      "label": "Brightline Studio",
+      "strength": "harmless",
+      "lens": "Your real client name.",
+      "why": "Names are copied."
     },
     "subject": {
-      "label": "A calm subject",
+      "label": "A payment subject",
       "strength": "harmless",
-      "lens": "Your cheque and next steps.",
-      "why": "A calm subject proves nothing."
+      "lens": "Ordinary.",
+      "why": "Subjects prove nothing."
+    },
+    "foot": {
+      "label": "Accounts footer",
+      "strength": "harmless",
+      "lens": "Looks official.",
+      "why": "Copied easily."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Deposit the cheque and send £900 back"
+      "label": "Send back the extra",
+      "trap": true
     },
     {
       "id": "ignore",
@@ -152,14 +165,13 @@
     },
     {
       "id": "verify",
-      "label": "Do not send anything, and ask my bank if the cheque has really cleared"
+      "label": "Check my wallet and call the client on their known number"
     },
     {
       "id": "block_report",
-      "label": "Do not send anything. Report the email"
+      "label": "Report as a scam and do not send"
     }
   ],
-  "best_action": "block_report",
   "acceptable_actions": [
     "verify",
     "ignore"
@@ -168,93 +180,111 @@
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Reported and deleted. The fake address was blocked.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Reported. You kept your wallet safe.",
+      "mirageSays": "My lovely overpayment!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Your bank said the cheque looked fake and had not cleared. You sent nothing and lost nothing. Case cracked.",
+      "line": "Your wallet showed no payment at all. The client confirmed they sent nothing. Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. A report protects others.",
+      "mirageSays": "Fine. Next inbox!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The cheque bounced a week later. The £900 you sent was real, and the bank took the cheque's amount back.",
-      "mirageSays": "Thanks for the details!"
+      "line": "Your wallet never received 4,000 USDT. The 3,600 you sent was real, and gone.",
+      "mirageSays": "Thanks for the refund!"
     }
   },
   "what_if": {
-    "go_ahead": "Any request to send part of a cheque back is the scam. A bank showing a deposit does not mean the cheque has cleared.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "The payment was never there. Always check your wallet first.",
+    "verify": "Checking your own wallet was the key step.",
+    "ignore": "Ignoring it was safe. A quick report helps others."
   },
-  "golden_rule": "Never send money back from a cheque. A deposit that appears in your account may bounce days later.",
+  "best_action": "block_report",
+  "trap": {
+    "title": "Wallet Transfer",
+    "url": "hedrio.app/send",
+    "ask": "Send 3,600 USDT to 0x71c…9e2a.",
+    "go": "Send 3,600 USDT",
+    "back": "Close this page"
+  },
+  "golden_rule": "Check your own wallet before refunding anyone. If it is not there, nothing was paid.",
   "quick_check": {
-    "q": "An \"employer\" sends a cheque too big and asks you to send back the difference. What do you do?",
+    "q": "A client says they overpaid you in USDT and asks for the extra back. What first?",
     "options": [
       {
         "id": "a",
-        "text": "Send it back, it is their mistake"
+        "text": "Send the extra back quickly"
       },
       {
         "id": "b",
-        "text": "Send half"
+        "text": "Open my own wallet and see if the payment is there"
       },
       {
         "id": "c",
-        "text": "Do not send anything. It is a scam"
+        "text": "Send half"
       },
       {
         "id": "d",
-        "text": "Wait a day and then send it"
+        "text": "Ask them for proof by email"
       }
     ],
-    "answer": "c",
-    "explain": "A cheque can be fake even when the bank shows it. The overpayment is the trick."
+    "answer": "b",
+    "explain": "Fake payments show only in emails and screenshots. Your wallet shows the truth."
   },
   "hints": {
-    "nudge": "What happens to the cheque after you send real money?",
+    "nudge": "Where is the money really?",
     "glow_order": [
-      "addr",
-      "amount",
-      "over",
-      "back",
-      "equip",
-      "rush"
+      "pay",
+      "wallet",
+      "rush",
+      "addr"
     ]
   },
-  "sources": [
-    "ftc-job-scams",
-    "ftc-prize"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check sender",
-      "title": "Who really sent this",
+      "title": "Who sent this email",
       "rows": [
         {
-          "k": "Address",
-          "v": "hale.homeservices@freemail.example",
+          "k": "Sent from",
+          "v": "accounts@brightline-studio-pay.co",
           "clue": "addr"
         },
         {
-          "k": "Work done yet?",
+          "k": "Usual address",
+          "v": "brightline.example"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the wallet",
+      "title": "What your wallet shows",
+      "rows": [
+        {
+          "k": "Incoming payment",
           "v": "None",
-          "clue": "amount"
+          "clue": "pay"
+        },
+        {
+          "k": "Refund wallet",
+          "v": "A new address",
+          "clue": "wallet"
         }
       ]
     },
@@ -262,18 +292,24 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What scam advice says",
       "rows": [
         {
-          "k": "A cheque and a request to send part back",
-          "v": "A scam: the cheque is fake",
-          "clue": "back"
+          "k": "Overpayment scams",
+          "v": "The payment is fake, the refund is real"
         },
         {
-          "k": "Do not rely on a cheque",
-          "v": "Until your bank confirms the funds are fully available"
+          "k": "Deadline",
+          "v": "An hour",
+          "clue": "rush"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-jobs",
+    "ftc-job-scams",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

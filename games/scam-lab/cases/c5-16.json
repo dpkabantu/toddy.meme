@@ -3,155 +3,139 @@
   "type": "hunt",
   "chapter": 5,
   "difficulty": 2,
-  "title": "The Background Check Fee",
-  "disguise": "admin",
+  "title": "The Payroll Wallet Fee",
+  "disguise": "support",
   "intro": [
-    "You got a job offer after a short chat. Now they say you must pay for your own background check.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "Your new job email says you must set up a payroll wallet. There is a fee.",
+    "Everything else looks neat.",
+    "Sniff the email, then decide."
   ],
   "notify": {
     "app": "Mail",
-    "from": "Quillon Hiring",
-    "text": "Welcome! One last step: background check fee"
+    "from": "Onboarding Team",
+    "text": "Set up your payroll wallet…"
   },
   "screen": {
     "app": "mail",
     "head": {
       "from": [
         {
-          "clue": "from",
-          "text": "Quillon Hiring"
+          "clue": "sender",
+          "text": "Onboarding Team"
         }
       ],
       "addr": [
         {
           "clue": "addr",
-          "text": "onboarding@quillon-hiring-desk.live"
+          "text": "onboarding@hedrio-payroll.top"
         }
       ],
       "subject": [
         {
           "clue": "subject",
-          "text": "Welcome! One last step before you start"
+          "text": "Set up your payroll wallet"
         }
       ],
       "time": [
-        "10:45 AM"
+        "10:20 AM"
       ]
     },
     "items": [
       {
         "p": [
-          {
-            "clue": "name",
-            "text": "Hi Toddy,"
-          }
+          "Welcome aboard!"
         ]
       },
       {
         "p": [
-          "You are hired! Before you start, ",
+          "Your pay is in USDT. Activate your payroll wallet at ",
           {
-            "clue": "check",
-            "text": "a background check is needed"
+            "clue": "link",
+            "text": "hedrio-payroll.top/activate",
+            "link": true
           },
           "."
         ]
       },
       {
         "p": [
-          "You must pay the ",
+          "A one-time ",
           {
             "clue": "fee",
-            "text": "£75 fee"
+            "text": "activation fee of 80 USDT"
           },
-          " through this link: ",
-          {
-            "clue": "link",
-            "text": "Pay the check fee",
-            "link": true
-          }
+          " is needed."
         ]
       },
       {
         "p": [
           {
-            "clue": "rush",
-            "text": "Pay within 24 hours or your offer is cancelled."
-          }
+            "clue": "timer",
+            "text": "Activate within 12 hours",
+            "countdown": 900
+          },
+          " to keep your place."
         ]
       },
       {
-        "p": [
+        "foot": [
           {
-            "clue": "refund",
-            "text": "The fee will be refunded in your first pay."
+            "clue": "foot",
+            "text": "Hedrio People Team"
           }
         ]
       }
-    ]
+    ],
+    "context": "You have just accepted a remote job."
   },
   "clues": {
-    "addr": {
-      "label": "A look-alike address",
-      "strength": "strong",
-      "lens": "It comes from quillon-hiring-desk.live, not the company's own domain.",
-      "why": "Look at the address behind the name."
-    },
     "fee": {
-      "label": "You pay for the check",
+      "label": "An activation fee",
       "strength": "strong",
-      "lens": "An honest employer pays for its own checks.",
-      "why": "Honest employers never ask candidates to pay."
+      "lens": "A fee to receive your own pay.",
+      "why": "Employers pay you; you never pay them."
+    },
+    "addr": {
+      "label": "Look-alike address",
+      "strength": "strong",
+      "lens": "hedrio-payroll.top is not the company site.",
+      "why": "Real payroll links live on the company domain."
     },
     "link": {
-      "label": "A payment link",
+      "label": "Activation link",
       "strength": "strong",
-      "lens": "The button goes to a payment page.",
-      "why": "Never pay through an email link."
+      "lens": "The page is outside the company.",
+      "why": "The wallet there is run by the sender."
     },
-    "rush": {
-      "label": "Pay in 24 hours",
+    "timer": {
+      "label": "12 hours",
       "strength": "strong",
       "lens": "A deadline.",
-      "why": "Pressure is a trick."
+      "why": "Pressure stops you from checking."
     },
-    "refund": {
-      "label": "\"Refunded in your first pay\"",
-      "strength": "strong",
-      "lens": "A promise to win your trust.",
-      "why": "A promised refund is bait."
-    },
-    "name": {
-      "label": "Uses your name",
+    "sender": {
+      "label": "Onboarding Team",
       "strength": "harmless",
-      "lens": "It greets you by name.",
-      "why": "Proves little alone."
-    },
-    "from": {
-      "label": "A company name",
-      "strength": "harmless",
-      "lens": "Quillon Hiring.",
-      "why": "Names are easy to copy."
+      "lens": "A common name.",
+      "why": "Names are copied."
     },
     "subject": {
-      "label": "A friendly subject",
+      "label": "Wallet setup",
       "strength": "harmless",
-      "lens": "Welcome!",
-      "why": "Friendly tone proves nothing."
+      "lens": "Plain subject.",
+      "why": "Plain words prove nothing."
     },
-    "check": {
-      "label": "A background check",
+    "foot": {
+      "label": "People team footer",
       "strength": "harmless",
-      "lens": "Many employers do run checks.",
-      "why": "Checks are normal. Paying for them yourself is not."
+      "lens": "Looks official.",
+      "why": "Footers are copied."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Click the link and pay £75",
+      "label": "Pay the fee",
       "trap": true
     },
     {
@@ -160,114 +144,126 @@
     },
     {
       "id": "verify",
-      "label": "Call the company's real HR on a number I look up myself"
+      "label": "Ask HR on their known contact"
     },
     {
       "id": "block_report",
-      "label": "Report it and delete it"
+      "label": "Report as phishing"
     }
   ],
-  "best_action": "block_report",
   "acceptable_actions": [
     "verify",
     "ignore"
   ],
-  "trap": {
-    "title": "Quillon Hiring · Check fee",
-    "url": "quillon-hiring-desk.live/pay",
-    "ask": "Pay £75 by card for your background check.",
-    "go": "Pay £75",
-    "back": "Close this page"
-  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Reported and deleted. The fake address was blocked.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Reported and deleted. The fake domain was flagged.",
+      "mirageSays": "My lovely onboarding!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The company's real HR had no record of you and said: \"We never charge candidates for checks.\" Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "HR said there is no wallet fee and no such email. Case cracked.",
+      "mirageSays": "Hmph. They asked."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. A report helps others.",
+      "mirageSays": "Fine. Next inbox!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The £75 went to a stranger. There was never a job, and the \"company\" vanished.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The 80 USDT went to the fake wallet page. Your wallet seed was asked for next.",
+      "mirageSays": "Thanks for the fee!"
     }
   },
   "what_if": {
-    "go_ahead": "Honest employers pay for their own checks. A call to the real HR would have ended it.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "Fees to get paid are always a sign. Stop at the first ask.",
+    "verify": "Asking on the known contact was the safest.",
+    "ignore": "Ignoring it was safe. A quick report helps others."
   },
-  "golden_rule": "An employer pays for its own checks. A fee from you, to get a job, is a scam.",
+  "best_action": "block_report",
+  "trap": {
+    "title": "Hedrio Payroll · Activate",
+    "url": "hedrio-payroll.top/activate",
+    "ask": "Pay 80 USDT to activate your wallet.",
+    "go": "Pay 80 USDT",
+    "back": "Close this page"
+  },
+  "golden_rule": "A real employer pays you without charging you. Fees to receive pay are a scam.",
   "quick_check": {
-    "q": "After a job offer, an email says you must pay £75 for a background check through a link. What do you do?",
+    "q": "A new employer asks for an 80 USDT fee to activate your payroll wallet. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Pay, it is small and refundable"
+        "text": "Pay, it is small"
       },
       {
         "id": "b",
-        "text": "Pay half"
+        "text": "Ask HR on a contact you already know"
       },
       {
         "id": "c",
-        "text": "Do not pay. Call the company's real HR on a number you look up, and report"
+        "text": "Pay half"
       },
       {
         "id": "d",
-        "text": "Ask for a discount"
+        "text": "Reply asking for a discount"
       }
     ],
-    "answer": "c",
-    "explain": "An honest employer never asks you to pay."
+    "answer": "b",
+    "explain": "Never pay to be paid. Ask HR on a trusted contact."
   },
   "hints": {
-    "nudge": "Who normally pays for a background check?",
+    "nudge": "Who pays whom?",
     "glow_order": [
-      "addr",
       "fee",
+      "addr",
       "link",
-      "rush",
-      "refund"
+      "timer"
     ]
   },
-  "sources": [
-    "ftc-job-scams",
-    "ftc-jobs"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check sender",
-      "title": "Who really sent this",
+      "title": "Who sent this email",
       "rows": [
         {
-          "k": "Address",
-          "v": "onboarding@quillon-hiring-desk.live",
+          "k": "Sent from",
+          "v": "onboarding@hedrio-payroll.top",
           "clue": "addr"
         },
         {
-          "k": "Company's real site",
-          "v": "quillon.example"
+          "k": "Company site",
+          "v": "hedrio.app"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the link",
+      "title": "Where it goes",
+      "rows": [
+        {
+          "k": "Page",
+          "v": "A new wallet page",
+          "clue": "link"
+        },
+        {
+          "k": "Cost",
+          "v": "80 USDT",
+          "clue": "fee"
         }
       ]
     },
@@ -275,18 +271,24 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What job-scam advice says",
       "rows": [
         {
-          "k": "Pay for your own check?",
-          "v": "Honest employers never ask",
-          "clue": "fee"
+          "k": "Real payroll",
+          "v": "Never charges fees"
         },
         {
-          "k": "How to check",
-          "v": "Call the company's real HR"
+          "k": "Deadline",
+          "v": "12 hours",
+          "clue": "timer"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-jobs",
+    "ftc-job-scams",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

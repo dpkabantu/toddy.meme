@@ -3,122 +3,123 @@
   "type": "rush",
   "chapter": 5,
   "difficulty": 2,
-  "title": "Job Inbox",
+  "title": "Crypto Job Inbox",
   "seconds": 60,
   "intro": [
-    "Ten job messages. One minute. Real offers exist too.",
+    "Ten job messages landed at once. Which are scams?",
     "Swipe left if it is a scam, right if it is safe. Or tap the buttons.",
     "Careful: some are honest. Do not cry wolf."
   ],
   "cards": [
     {
       "id": "r1",
-      "app": "Mail",
-      "from": "careers@quillon.example",
-      "text": "Thanks for applying for Junior Designer. Please pick a time for your interview on our careers page.",
-      "scam": false,
-      "why": "You applied, and it asks for nothing but a time on the company's own page."
+      "app": "Chirp",
+      "from": "Moderator Hiring ✔",
+      "text": "Moderators wanted. Buy a 50 USDT starter token to activate your account.",
+      "scam": true,
+      "why": "Real jobs never charge you to start."
     },
     {
       "id": "r2",
-      "app": "Chirp",
-      "from": "Hannah · Recruiter",
-      "text": "Earn $60 daily from home, no experience. Message me now!",
-      "scam": true,
-      "why": "A cold DM with big pay and no experience needed."
+      "app": "Mail",
+      "from": "Hedrio People Team",
+      "text": "Thanks for your interview on Tuesday. Your contract is attached in the careers portal. No payment needed.",
+      "scam": false,
+      "why": "You applied and interviewed, and nothing is asked of you."
     },
     {
       "id": "r3",
       "app": "SMS",
-      "from": "TaskFlow Team",
-      "text": "Like 3 videos, get $9 at once. Join our group: taskflow-earn.example/join",
+      "from": "TaskBoost",
+      "text": "Like 10 videos, get 5 USDT. Join the private chat.",
       "scam": true,
-      "why": "Pay for liking videos, with a small payout first."
+      "why": "Pay for likes plus a private chat is a task scam."
     },
     {
       "id": "r4",
       "app": "Mail",
-      "from": "Lumenara Tech HR",
-      "text": "Offer letter: pay $190 for your laptop kit within 24 hours.",
+      "from": "Pelmora Labs HR",
+      "text": "Offer: 7,500 USDT a month. Buy your laptop from our vendor first.",
       "scam": true,
-      "why": "No real employer charges you for a kit."
+      "why": "No employer makes you buy equipment from its vendor."
     },
     {
       "id": "r5",
       "app": "Mail",
-      "from": "talent@craftloop.example",
-      "text": "Your interview is on Tuesday at 3 PM on our company video link. No fees at any stage.",
+      "from": "Payroll Team",
+      "text": "Your pay slip for October is ready in your employee portal.",
       "scam": false,
-      "why": "It follows your application and asks for nothing."
+      "why": "A normal notice that points to the portal you already use."
     },
     {
       "id": "r6",
-      "app": "SMS",
-      "from": "SkyBridge Placements",
-      "text": "Job abroad, $4,000 a month. Pay $1,600 agent fee to start.",
+      "app": "Chirp",
+      "from": "Kelvaro HR",
+      "text": "Deposit 100 USDT to prove your trading skills. Refunded later.",
       "scam": true,
-      "why": "A huge salary and a big agent fee up front."
+      "why": "Interviews never need a deposit."
     },
     {
       "id": "r7",
-      "app": "Mail",
-      "from": "Harlow Recruiting",
-      "text": "We are hiring a data entry clerk. Register with $24 to get your login.",
-      "scam": true,
-      "why": "A registration fee for a job is a scam."
+      "app": "SMS",
+      "from": "Recruiter Anna",
+      "text": "Hi, I saw your profile. Want a quick call tomorrow about a role? Reply yes or no.",
+      "scam": false,
+      "why": "A normal recruiter approach with no money and no pressure."
     },
     {
       "id": "r8",
       "app": "Chirp",
-      "from": "Mira (HR)",
-      "text": "Your first 3 tasks are done. Top up $120 in crypto for the next set.",
+      "from": "Task Manager Lee",
+      "text": "Your balance is negative. Top up 300 USDT to withdraw.",
       "scam": true,
-      "why": "A crypto top-up to keep working."
+      "why": "Paying to withdraw your own pay is a trap."
     },
     {
       "id": "r9",
       "app": "Mail",
-      "from": "hr@quillon.example",
-      "text": "Your background check is clear. Welcome! Your start date is Monday. Your laptop will be posted to you.",
+      "from": "Team Lead",
+      "text": "Reminder: team stand-up moved to 10:30, same link as always.",
       "scam": false,
-      "why": "It shares good news, asks for nothing, and the company sends the laptop."
+      "why": "An ordinary work note with no ask."
     },
     {
       "id": "r10",
       "app": "SMS",
-      "from": "Unknown number",
-      "text": "Student part-time job: $16 per hour. Send $10 to unlock the link.",
+      "from": "Easy Earn",
+      "text": "Receive USDT in your wallet and forward it to us. Keep 5%.",
       "scam": true,
-      "why": "You pay $10 to be paid $16. It is a trap."
+      "why": "Forwarding money for strangers makes you a money mule."
     }
   ],
-  "golden_rule": "A real job never asks you to pay, and a real recruiter replies to something you did. Check the company's own page.",
+  "golden_rule": "A job that asks you to pay, deposit or forward money is a scam.",
   "quick_check": {
-    "q": "A job message asks you to pay a fee to get started. What is true?",
+    "q": "Which message is the safest to answer?",
     "options": [
       {
         "id": "a",
-        "text": "It is normal for good jobs"
+        "text": "Buy a starter token to activate"
       },
       {
         "id": "b",
-        "text": "Real jobs never ask you to pay to get started"
+        "text": "A recruiter asks for a quick call and nothing else"
       },
       {
         "id": "c",
-        "text": "It is fine if the fee is small"
+        "text": "Top up to withdraw"
       },
       {
         "id": "d",
-        "text": "It is fine if it is refundable"
+        "text": "Forward USDT and keep 5%"
       }
     ],
     "answer": "b",
-    "explain": "Honest employers never charge. A small fee is the bait."
+    "explain": "No money is asked and no pressure is applied."
   },
   "sources": [
+    "ftc-jobs",
     "ftc-job-scams",
-    "ftc-jobs"
+    "ftc-crypto"
   ],
-  "checked_on": "2026-10-21"
+  "checked_on": "2026-11-08"
 }

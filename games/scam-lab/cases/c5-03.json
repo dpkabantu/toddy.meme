@@ -3,42 +3,30 @@
   "type": "duel",
   "chapter": 5,
   "difficulty": 3,
-  "title": "The Deposit to Unlock",
-  "disguise": "support",
+  "title": "The Top-Up to Unlock",
+  "disguise": "admin",
   "intro": [
-    "You did a few paid tasks. Now the \"manager\" says the next level needs a deposit.",
-    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
-    "Every chat ends with your choice. Choose wisely."
+    "You have been doing \"tasks\" and earning small USDT amounts. Now your balance is stuck.",
+    "The manager says you must top up to withdraw.",
+    "Pick your replies and sniff each message."
   ],
   "notify": {
     "app": "Messages",
-    "from": "TaskFlow Manager",
-    "text": "Congratulations! You reached Level 2"
+    "from": "Task Manager Lee",
+    "text": "Your account balance is negative…"
   },
   "screen": {
     "app": "sms",
     "head": {
       "name": [
         {
-          "text": "TaskFlow Manager",
+          "text": "Task Manager Lee",
           "id": "duel-name"
         }
-      ],
-      "sub": [
-        {
-          "clue": "acct",
-          "text": "Your task account: balance £135"
-        }
-      ],
-      "avatar": {
-        "glyph": "📋",
-        "clue": "logo"
-      }
+      ]
     },
-    "banner": [
-      "Chat from the task group"
-    ],
-    "items": []
+    "items": [],
+    "context": "You earned 31 USDT in three days. You want to withdraw it."
   },
   "duel": {
     "start": "n1",
@@ -47,36 +35,31 @@
         "say": [
           {
             "msg": [
-              "Great work! Your balance is ",
+              "Your account has a ",
               {
-                "clue": "bal",
-                "text": "£135"
+                "clue": "neg",
+                "text": "negative balance"
               },
-              ". To withdraw it, you must reach Level 2."
-            ]
-          },
-          {
-            "msg": [
-              "Level 2 needs a ",
+              ". Top up 300 USDT to unlock your ",
               {
-                "clue": "dep",
-                "text": "deposit of £500"
+                "clue": "combo",
+                "text": "combo task"
               },
-              ", which comes back with your earnings."
+              " and your withdrawal."
             ]
           }
         ],
         "replies": [
           {
-            "text": "Why do I pay to withdraw my own money?",
+            "text": "How do I top up?",
             "next": "n2"
           },
           {
-            "text": "OK, paying £500",
+            "text": "Why would a job need me to pay?",
             "next": "n3"
           },
           {
-            "text": "I am leaving and reporting this",
+            "text": "Block and report this number",
             "end": "block_report"
           }
         ]
@@ -85,43 +68,31 @@
         "say": [
           {
             "msg": [
-              "It is ",
+              "Send 300 USDT to the company wallet. ",
               {
-                "clue": "rule",
-                "text": "company policy"
+                "clue": "back",
+                "text": "You will get 500 back"
               },
-              ". Others did it and ",
-              {
-                "clue": "proof",
-                "text": "already withdrew £4,000"
-              },
-              ". Look: ",
-              {
-                "clue": "shot",
-                "text": "[screenshot of a big balance]"
-              }
-            ]
-          },
-          {
-            "msg": [
+              " when the tasks finish. ",
               {
                 "clue": "rush",
-                "text": "Offer ends tonight."
-              }
+                "text": "Do it in 30 minutes"
+              },
+              "."
             ]
           }
         ],
         "replies": [
           {
-            "text": "OK, paying",
-            "next": "n3"
+            "text": "OK, sending",
+            "end": "go_ahead"
           },
           {
-            "text": "A job never charges you to be paid. I am out.",
+            "text": "I will check the company myself",
             "end": "verify"
           },
           {
-            "text": "Report",
+            "text": "No job charges to withdraw. Reporting",
             "end": "block_report"
           }
         ]
@@ -130,34 +101,31 @@
         "say": [
           {
             "msg": [
-              "Payment received. Oh, there is a ",
+              "All our staff do it. ",
               {
-                "clue": "more",
-                "text": "problem with the tasks"
+                "clue": "others",
+                "text": "Hundreds withdrew this week."
               },
-              ". You need £1,500 more to unlock your money."
-            ]
-          },
-          {
-            "msg": [
+              " ",
               {
-                "clue": "again",
-                "text": "Pay now or lose everything you paid."
-              }
+                "clue": "vip",
+                "text": "VIP members pay less"
+              },
+              "."
             ]
           }
         ],
         "replies": [
           {
-            "text": "Paying £1,500 more",
+            "text": "Fine, sending the top-up",
             "end": "go_ahead"
           },
           {
-            "text": "No more. I am done and reporting this.",
+            "text": "I will not pay. Reporting",
             "end": "block_report"
           },
           {
-            "text": "I will stop and ask my bank about the payments",
+            "text": "I will look up the company first",
             "end": "verify"
           }
         ]
@@ -165,79 +133,55 @@
     }
   },
   "clues": {
-    "acct": {
-      "label": "A \"balance\" in their app",
+    "neg": {
+      "label": "\"Negative balance\"",
       "strength": "strong",
-      "lens": "The balance is just a number they control.",
-      "why": "A balance in a stranger's app is not money you own."
+      "lens": "A made-up debt that blocks your money.",
+      "why": "The balance is on their screen, not in a bank."
     },
-    "bal": {
-      "label": "Small earnings shown",
+    "combo": {
+      "label": "A \"combo task\"",
       "strength": "strong",
-      "lens": "They show £135, enough to feel real.",
-      "why": "Small earnings build trust."
+      "lens": "A level that costs more and more.",
+      "why": "Each step needs a bigger payment."
     },
-    "dep": {
-      "label": "A deposit to unlock",
+    "back": {
+      "label": "\"You will get 500 back\"",
       "strength": "strong",
-      "lens": "You must pay £500 to withdraw.",
-      "why": "Real jobs never make you pay to be paid."
-    },
-    "rule": {
-      "label": "\"Company policy\"",
-      "strength": "strong",
-      "lens": "They explain it away.",
-      "why": "A reason does not make it right."
-    },
-    "proof": {
-      "label": "\"Others withdrew\"",
-      "strength": "strong",
-      "lens": "A crowd you cannot see.",
-      "why": "A crowd proves nothing."
-    },
-    "shot": {
-      "label": "A screenshot of a big balance",
-      "strength": "strong",
-      "lens": "Screenshots can be made by anyone.",
-      "why": "Never trust a screenshot."
+      "lens": "A promise of more back.",
+      "why": "Nothing comes back. The next step needs another payment."
     },
     "rush": {
-      "label": "Offer ends tonight",
+      "label": "30 minutes",
       "strength": "strong",
       "lens": "A deadline.",
-      "why": "Pressure is a trick."
+      "why": "Pressure stops you from checking."
     },
-    "more": {
-      "label": "A new problem and more money",
+    "others": {
+      "label": "\"Hundreds withdrew\"",
       "strength": "strong",
-      "lens": "After you pay, there is always one more fee.",
-      "why": "Scammers keep inventing fees."
+      "lens": "A crowd you cannot check.",
+      "why": "Fake crowds make a trap feel safe."
     },
-    "again": {
-      "label": "\"Pay or lose everything\"",
+    "vip": {
+      "label": "\"VIP pays less\"",
       "strength": "strong",
-      "lens": "They threaten you with loss.",
-      "why": "The loss is already done. More money will not fix it."
-    },
-    "logo": {
-      "label": "A task list picture",
-      "strength": "harmless",
-      "lens": "A clipboard.",
-      "why": "Pictures prove nothing."
+      "lens": "A way to push more payments.",
+      "why": "Another upsell inside the trap."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Pay the £1,500"
+      "label": "Send the top-up"
     },
     {
       "id": "verify",
-      "label": "Stop paying and ask my bank"
+      "label": "Look up the company myself"
     },
     {
       "id": "block_report",
-      "label": "Leave the group and report it"
+      "label": "Block and report"
     }
   ],
   "best_action": "block_report",
@@ -249,85 +193,101 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "You left and reported it. The group was removed. You lost the first deposit, but no more.",
-      "mirageSays": "Curses! Blocked again!"
+      "line": "Blocked and reported. The fake task site was reported to the platform.",
+      "mirageSays": "My lovely task!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Your bank explained: these are task scams, and more payments would only mean more losses. You stopped in time.",
+      "line": "The company had no such program and warned about task scams. Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The money was gone. The \"manager\" asked for even more, then vanished.",
-      "mirageSays": "Thanks for the deposits!"
+      "line": "The 300 USDT vanished. The \"manager\" asked for 800 more, then blocked you.",
+      "mirageSays": "Thanks for the top-up!"
     }
   },
   "what_if": {
-    "go_ahead": "The moment a job asked you to pay to be paid, it was a scam. Every deposit after is just more loss.",
-    "verify": "Stopping was brave and smart. Reporting as well helps others."
+    "go_ahead": "A job that charges to withdraw is the trap. Stop at the first demand.",
+    "verify": "Checking the company yourself was the safest move."
   },
-  "golden_rule": "A real job never makes you pay to be paid. The more you pay, the more they ask. Stop at the first fee.",
+  "golden_rule": "A job that asks you to pay to withdraw your own earnings is a scam. Stop at the first top-up.",
   "quick_check": {
-    "q": "A task job says you must pay a deposit to withdraw your earnings. What do you do?",
+    "q": "A task site says your balance is negative and you must top up 300 USDT to withdraw. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Pay it, it comes back"
+        "text": "Top up, to get my money"
       },
       {
         "id": "b",
-        "text": "Pay a smaller deposit"
+        "text": "Stop and report. Real work never charges to withdraw"
       },
       {
         "id": "c",
-        "text": "Stop. A job never charges you to pay you. Report it"
+        "text": "Top up half"
       },
       {
         "id": "d",
-        "text": "Ask them to waive it"
+        "text": "Ask a friend to top up"
       }
     ],
-    "answer": "c",
-    "explain": "A deposit to withdraw is the trap. Stop at once."
+    "answer": "b",
+    "explain": "Every top-up leads to a bigger one. Walk away at the first."
   },
   "hints": {
-    "nudge": "Why would a job charge you to pay you?",
+    "nudge": "Who holds your balance?",
     "glow_order": [
-      "dep",
-      "more",
-      "again",
+      "neg",
+      "combo",
+      "back",
       "rush",
-      "proof",
-      "shot",
-      "rule"
+      "others",
+      "vip"
     ]
   },
-  "sources": [
-    "ftc-jobs",
-    "ftc-job-scams"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the offer",
-      "title": "TaskFlow Manager",
+      "label": "Check the manager",
+      "title": "Task Manager Lee",
       "rows": [
         {
-          "k": "Balance",
-          "v": "£135, only in their app",
-          "clue": "acct"
+          "k": "Number",
+          "v": "Not a company number",
+          "clue": "neg"
         },
         {
-          "k": "To withdraw",
-          "v": "Pay £500",
-          "clue": "dep"
+          "k": "Your balance",
+          "v": "Only on their screen"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the demand",
+      "title": "What they want",
+      "rows": [
+        {
+          "k": "Top up",
+          "v": "300 USDT to a company wallet",
+          "clue": "combo"
+        },
+        {
+          "k": "Promise",
+          "v": "500 back",
+          "clue": "back"
+        },
+        {
+          "k": "Deadline",
+          "v": "30 minutes",
+          "clue": "rush"
         }
       ]
     },
@@ -335,19 +295,24 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What job-scam advice says",
       "rows": [
         {
-          "k": "Real jobs",
-          "v": "Never make you pay to start earning or to get paid",
-          "clue": "dep"
+          "k": "Real jobs charge to withdraw",
+          "v": "Never"
         },
         {
-          "k": "A new fee after paying",
-          "v": "A sign you are being milked",
-          "clue": "more"
+          "k": "Task scams",
+          "v": "Show a balance, then ask for top-ups",
+          "clue": "neg"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-jobs",
+    "ftc-job-scams",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }
