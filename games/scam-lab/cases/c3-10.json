@@ -1,0 +1,371 @@
+{
+  "id": "c3-10",
+  "type": "boss",
+  "chapter": 3,
+  "difficulty": 3,
+  "title": "Account Takeover",
+  "disguise": "friend",
+  "disguise2": "admin",
+  "intro": [
+    "Mirage has stolen Kiko's account, and now he wants Toddy's too.",
+    "He'll use your friend's face, then an official one.",
+    "Collect the clues and unmask him."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Kiko",
+    "text": "Oops, I sent a code to your phone by mistake!"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "kiko",
+          "text": "Kiko",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        "@kiko_bean"
+      ],
+      "avatar": {
+        "glyph": "🐨",
+        "clue": "avatar"
+      }
+    },
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "mistake",
+            "text": "Oops! I put your number by mistake when logging in."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "sendcode",
+            "text": "Can you send me the 6-digit code you just got?"
+          }
+        ]
+      }
+    ]
+  },
+  "duel": {
+    "start": "d1",
+    "nodes": {
+      "d1": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "hurry",
+                "text": "Quick pls, it expires in 2 min!"
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Why would your login send ME a code?",
+            "next": "d2"
+          },
+          {
+            "text": "Here's the code: 482913",
+            "next": "d3"
+          },
+          {
+            "text": "I'll call you instead",
+            "end": "verify"
+          }
+        ]
+      },
+      "d2": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "excuse",
+                "text": "Glitch I guess 🤷 just send it, we're friends"
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "That code unlocks MY account. Not sending. Report.",
+            "end": "block_report"
+          },
+          {
+            "text": "I'll call Kiko to check",
+            "end": "verify"
+          },
+          {
+            "text": "Fine, here",
+            "next": "d3"
+          }
+        ]
+      },
+      "d3": {
+        "rename": "Plenvo Security Team ✔",
+        "disguise": "admin",
+        "say": [
+          {
+            "sys": [
+              {
+                "clue": "swap",
+                "text": "Your account was logged in from a new device. Then \"Plenvo Security Team ✔\" messaged you."
+              }
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "fakesec",
+                "text": "We stopped a hacker! To restore access, send your wallet phrase for identity check."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Send the phrase",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Plenvo never asks for a wallet phrase. Report.",
+            "end": "block_report"
+          },
+          {
+            "text": "Use Plenvo's official account recovery myself",
+            "end": "verify"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "mistake": {
+      "label": "\"Sent by mistake\"",
+      "strength": "strong",
+      "lens": "A code that came to YOUR phone is for YOUR account.",
+      "why": "Codes go to the account owner. Someone is logging in as you."
+    },
+    "sendcode": {
+      "label": "Asks for your code",
+      "strength": "strong",
+      "lens": "The code unlocks your account.",
+      "why": "Never share login codes, even with friends."
+    },
+    "hurry": {
+      "label": "2-minute pressure",
+      "strength": "strong",
+      "lens": "Rushing you.",
+      "why": "Pressure stops thinking."
+    },
+    "excuse": {
+      "label": "\"Glitch\"",
+      "strength": "strong",
+      "lens": "A vague excuse.",
+      "why": "Not an explanation."
+    },
+    "swap": {
+      "label": "\"Security\" shows up after",
+      "strength": "strong",
+      "lens": "Right after the takeover, \"security\" appears.",
+      "why": "The thief comes back in an official mask."
+    },
+    "fakesec": {
+      "label": "Phrase for \"identity check\"",
+      "strength": "strong",
+      "lens": "Security asking for your wallet phrase.",
+      "why": "No app ever needs your wallet phrase."
+    },
+    "kiko": {
+      "label": "Kiko's account",
+      "strength": "harmless",
+      "lens": "It's Kiko's real account.",
+      "why": "Hacked accounts look real."
+    },
+    "avatar": {
+      "label": "Kiko's photo",
+      "strength": "harmless",
+      "lens": "Kiko's photo.",
+      "why": "Hackers keep the photo."
+    }
+  },
+  "actions": [
+    {
+      "id": "open_chat",
+      "label": "Reply to Kiko",
+      "goto": "duel"
+    },
+    {
+      "id": "verify",
+      "label": "Call Kiko on the phone"
+    },
+    {
+      "id": "block_report",
+      "label": "Don't share the code; report Kiko's account as hacked"
+    },
+    {
+      "id": "go_ahead",
+      "label": "Send phrase",
+      "hidden": true
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "caught",
+      "stamp": "CASE CLOSED",
+      "line": "Code kept, account reported. Kiko got his account back, and Toddy's was never touched.",
+      "mirageSays": "Two accounts lost!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Kiko on the phone: \"Hacked! Don't send anything!\"",
+      "mirageSays": "Phone calls ruin everything!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "First the account, then the phrase. Mirage took both.",
+      "mirageSays": "Identity confirmed: mine now!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "A code sent to your phone is for your account. Never pass it on, whoever asks."
+  },
+  "board": {
+    "q": "What's really going on?",
+    "verdicts": [
+      {
+        "id": "scam",
+        "text": "A hacked friend steals my code, then fake security wants my phrase"
+      },
+      {
+        "id": "real",
+        "text": "A real glitch and real Plenvo security"
+      },
+      {
+        "id": "unsure",
+        "text": "Not enough evidence"
+      }
+    ],
+    "answer": "scam",
+    "pick": 3,
+    "explain": "A code \"sent by mistake\", then a security team asking for a phrase. Account takeover, then wallet takeover."
+  },
+  "golden_rule": "A login code that reaches your phone is for your account only. Never share it, not even with a friend.",
+  "quick_check": {
+    "q": "A friend says they sent their login code to your phone by mistake. What's really happening?",
+    "options": [
+      {
+        "id": "a",
+        "text": "A real mistake"
+      },
+      {
+        "id": "b",
+        "text": "Someone is trying to log in as you"
+      }
+    ],
+    "answer": "b",
+    "explain": "Codes go to the account owner."
+  },
+  "hints": {
+    "nudge": "Whose account does that code belong to?",
+    "glow_order": [
+      "mistake",
+      "sendcode",
+      "hurry",
+      "fakesec",
+      "swap"
+    ]
+  },
+  "sources": [
+    "cafc-wallet",
+    "ftc-phishing",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check profile",
+      "title": "Kiko",
+      "rows": [
+        {
+          "k": "Account",
+          "v": "Kiko's real one",
+          "clue": "kiko"
+        },
+        {
+          "k": "Photo",
+          "v": "Kiko's",
+          "clue": "avatar"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the code",
+      "title": "The code sent to you",
+      "rows": [
+        {
+          "k": "It was sent to",
+          "v": "Your phone, for your account",
+          "clue": "mistake"
+        },
+        {
+          "k": "They want it",
+          "v": "Back, right now",
+          "clue": "sendcode"
+        },
+        {
+          "k": "Excuse",
+          "v": "Vague",
+          "clue": "excuse"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the pressure",
+      "title": "Who else shows up",
+      "rows": [
+        {
+          "k": "Real security teams",
+          "v": "Never ask for your wallet phrase"
+        },
+        {
+          "k": "\"Security\" appears",
+          "v": "Right after the takeover",
+          "clue": "swap"
+        },
+        {
+          "k": "Security asks for",
+          "v": "Your wallet phrase",
+          "clue": "fakesec"
+        },
+        {
+          "k": "Tone",
+          "v": "Hurry",
+          "clue": "hurry"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,325 @@
+{
+  "id": "c5-08",
+  "type": "hunt",
+  "chapter": 5,
+  "difficulty": 3,
+  "title": "Two Job Posts",
+  "disguise": "admin",
+  "intro": [
+    "You found two posts for the same job at Quillon Systems. One is the real careers page.",
+    "The other is Mirage in a hiring manager's tie. Compare them side by side.",
+    "Sniff the details, then decide."
+  ],
+  "notify": {
+    "app": "Browser",
+    "from": "Two job posts",
+    "text": "Junior Designer at Quillon Systems"
+  },
+  "decide_q": "Which post is the real Quillon Systems job, and what will you do?",
+  "screen": {
+    "app": "compare",
+    "context": "Both posts advertise a Junior Designer job at Quillon Systems.",
+    "panels": [
+      {
+        "label": "Post A",
+        "avatar": {
+          "glyph": "💼",
+          "clue": "logo_a"
+        },
+        "rows": [
+          {
+            "k": "Address",
+            "v": [
+              {
+                "clue": "addr_a",
+                "text": "quillon.example/careers"
+              }
+            ]
+          },
+          {
+            "k": "Pay",
+            "v": [
+              {
+                "clue": "pay_a",
+                "text": "£32,000 a year, a normal range"
+              }
+            ]
+          },
+          {
+            "k": "How to apply",
+            "v": [
+              {
+                "clue": "how_a",
+                "text": "Fill in the form, then attend an interview"
+              }
+            ]
+          },
+          {
+            "k": "Cost to you",
+            "v": [
+              {
+                "clue": "cost_a",
+                "text": "Nothing"
+              }
+            ]
+          },
+          {
+            "k": "Contact",
+            "v": [
+              {
+                "clue": "contact_a",
+                "text": "Company email and office address"
+              }
+            ]
+          }
+        ],
+        "note": [
+          {
+            "clue": "note_a",
+            "text": "\"We never ask candidates for money.\""
+          }
+        ]
+      },
+      {
+        "label": "Post B",
+        "avatar": {
+          "glyph": "💼",
+          "clue": "logo_b"
+        },
+        "rows": [
+          {
+            "k": "Address",
+            "v": [
+              {
+                "clue": "addr_b",
+                "text": "quillon-hiring-desk.live",
+                "link": true
+              }
+            ]
+          },
+          {
+            "k": "Pay",
+            "v": [
+              {
+                "clue": "pay_b",
+                "text": "£400 a week, no experience"
+              }
+            ]
+          },
+          {
+            "k": "How to apply",
+            "v": [
+              {
+                "clue": "how_b",
+                "text": "Chat with HR on the messaging app, no interview"
+              }
+            ]
+          },
+          {
+            "k": "Cost to you",
+            "v": [
+              {
+                "clue": "cost_b",
+                "text": "£30 registration fee"
+              }
+            ]
+          },
+          {
+            "k": "Contact",
+            "v": [
+              {
+                "clue": "contact_b",
+                "text": "A free-mail address only"
+              }
+            ]
+          }
+        ],
+        "note": [
+          {
+            "clue": "note_b",
+            "text": "\"Only 5 seats left, apply today.\""
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "addr_b": {
+      "label": "A look-alike address",
+      "strength": "strong",
+      "lens": "quillon-hiring-desk.live is not the company's own site.",
+      "why": "Copy posts use look-alike addresses. Use the company's own site."
+    },
+    "pay_b": {
+      "label": "Pay far too high",
+      "strength": "strong",
+      "lens": "£400 a week with no experience.",
+      "why": "Big pay for little work is the bait."
+    },
+    "how_b": {
+      "label": "No interview, chat only",
+      "strength": "strong",
+      "lens": "Hired by chat, no interview.",
+      "why": "Real hiring involves interviews."
+    },
+    "cost_b": {
+      "label": "A registration fee",
+      "strength": "strong",
+      "lens": "You must pay £30.",
+      "why": "Honest employers never charge candidates."
+    },
+    "contact_b": {
+      "label": "Free-mail address only",
+      "strength": "strong",
+      "lens": "No company email, no office.",
+      "why": "A real company has a company address."
+    },
+    "note_b": {
+      "label": "Only 5 seats left",
+      "strength": "strong",
+      "lens": "A rush to apply today.",
+      "why": "Pressure is a trick."
+    },
+    "logo_a": {
+      "label": "Briefcase logo",
+      "strength": "harmless",
+      "lens": "A little briefcase.",
+      "why": "Logos are easy to copy."
+    },
+    "logo_b": {
+      "label": "The same briefcase",
+      "strength": "harmless",
+      "lens": "The same icon.",
+      "why": "A copied icon takes seconds."
+    },
+    "addr_a": {
+      "label": "The company's own site",
+      "strength": "harmless",
+      "lens": "quillon.example/careers is the company's own domain.",
+      "why": "A matching site is good evidence."
+    },
+    "pay_a": {
+      "label": "A normal pay range",
+      "strength": "harmless",
+      "lens": "£32,000 a year for a junior role.",
+      "why": "A normal pay is believable."
+    },
+    "how_a": {
+      "label": "Form and interview",
+      "strength": "harmless",
+      "lens": "You apply, then you are interviewed.",
+      "why": "Real hiring checks you."
+    },
+    "cost_a": {
+      "label": "Costs nothing",
+      "strength": "harmless",
+      "lens": "No fees.",
+      "why": "Honest employers charge nothing."
+    },
+    "contact_a": {
+      "label": "Real contact details",
+      "strength": "harmless",
+      "lens": "A company email and an office address.",
+      "why": "Honest companies tell you who and where they are."
+    },
+    "note_a": {
+      "label": "\"We never ask for money\"",
+      "strength": "harmless",
+      "lens": "The company warns candidates.",
+      "why": "Honest companies warn about scams."
+    }
+  },
+  "actions": [
+    {
+      "id": "pick_b",
+      "label": "B is the real job. Pay the £30",
+      "trap": true
+    },
+    {
+      "id": "verify",
+      "label": "Not sure. Check the company's own site"
+    },
+    {
+      "id": "block_report",
+      "label": "A is the real job. Report B"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "trap": {
+    "title": "Quillon Hiring Desk · Register",
+    "url": "quillon-hiring-desk.live",
+    "ask": "Pay £30 to register and get your interview slot.",
+    "go": "Pay £30",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "You applied on the real page and reported the fake. The fake post was taken down.",
+      "mirageSays": "My hiring-manager tie!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The company's own careers page matched Post A exactly. Post B was a copy. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "pick_b": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The £30 went to a stranger. No interview, and no reply.",
+      "mirageSays": "Thanks for the fee!"
+    }
+  },
+  "what_if": {
+    "pick_b": "Post B had five warnings: look-alike address, big pay, no interview, a fee and a free-mail contact.",
+    "verify": "Checking was smart. Reporting B as well helps get it removed."
+  },
+  "golden_rule": "Compare the address, the pay, the hiring steps and the cost. A fake job post gets at least three wrong.",
+  "quick_check": {
+    "q": "Two posts for the same job. One has no interview and a fee. Which is the fake?",
+    "options": [
+      {
+        "id": "a",
+        "text": "The one with an interview"
+      },
+      {
+        "id": "b",
+        "text": "The one with no interview and a fee"
+      },
+      {
+        "id": "c",
+        "text": "Neither"
+      },
+      {
+        "id": "d",
+        "text": "Both"
+      }
+    ],
+    "answer": "b",
+    "explain": "No interview and a fee are the giveaways."
+  },
+  "hints": {
+    "nudge": "Which post asks you to pay?",
+    "glow_order": [
+      "cost_b",
+      "how_b",
+      "pay_b",
+      "addr_b",
+      "contact_b",
+      "note_b"
+    ]
+  },
+  "sources": [
+    "ftc-job-scams",
+    "ftc-jobs"
+  ],
+  "checked_on": "2026-10-21"
+}

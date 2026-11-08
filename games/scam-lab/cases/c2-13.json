@@ -1,0 +1,220 @@
+{
+  "id": "c2-13",
+  "type": "hunt",
+  "chapter": 2,
+  "difficulty": 2,
+  "title": "The Cashback",
+  "disguise": null,
+  "intro": [
+    "A text from your bank says you earned money back. After today, everything looks like bait.",
+    "But some messages are real. Mirage loves it when you stop trusting the honest ones.",
+    "Sniff carefully. Then decide."
+  ],
+  "notify": {
+    "app": "Messages",
+    "from": "Orrin Bank",
+    "text": "You earned £4.20 cashback…"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "sender",
+          "text": "Orrin Bank"
+        }
+      ]
+    },
+    "context": "You paid at Meridu Store last week, using your Orrin card.",
+    "items": [
+      {
+        "time": [
+          "Today 9:30 AM"
+        ]
+      },
+      {
+        "msg": [
+          "Orrin Bank: you earned ",
+          {
+            "clue": "amount",
+            "text": "£4.20 cashback"
+          },
+          " on your ",
+          {
+            "clue": "purchase",
+            "text": "Meridu Store purchase of 14 October"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "app",
+            "text": "It will show in the Orrin app under Rewards."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "nothing",
+            "text": "You do not need to do anything."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "sender": {
+      "label": "Same thread as your bank texts",
+      "strength": "harmless",
+      "lens": "It sits with your past messages from the bank.",
+      "why": "A name alone proves nothing, but the real question is what it asks."
+    },
+    "amount": {
+      "label": "A small, plain amount",
+      "strength": "harmless",
+      "lens": "£4.20, a normal cashback.",
+      "why": "Honest offers are modest. Scams promise much more."
+    },
+    "purchase": {
+      "label": "Matches your own purchase",
+      "strength": "harmless",
+      "lens": "It names a shop you really paid last week.",
+      "why": "It matches something you did. That is the strongest sign of an honest message."
+    },
+    "app": {
+      "label": "Look in your own app",
+      "strength": "harmless",
+      "lens": "It sends you to the app you already have.",
+      "why": "Pointing you to your own app, not a link, is what honest banks do."
+    },
+    "nothing": {
+      "label": "Asks for nothing",
+      "strength": "harmless",
+      "lens": "No link, no code, no details to give.",
+      "why": "A message that asks for nothing is usually honest."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Open the Orrin app myself and look under Rewards"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "The app showed £4.20 cashback from the Meridu Store purchase, already added. Nothing to fear.",
+      "toddy": "happy"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "Nothing bad happened. It was a real message, and you stayed careful.",
+      "mirageSays": "Fine. Next!"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was a real message. When every message looks like a scam, the real ones get lost too.",
+      "mirageSays": "If you trust nothing, I win anyway."
+    }
+  },
+  "what_if": {
+    "block_report": "It matched your own purchase, asked for nothing and sent you to your own app. That calm is what real messages look like.",
+    "ignore": "Ignoring was safe. Recognising a real message is the skill: it asks for nothing secret and matches something you know."
+  },
+  "golden_rule": "A small reward that matches something you did, asks for nothing and sends you to your own app is usually honest.",
+  "quick_check": {
+    "q": "What made this cashback text honest?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It had a pound sign"
+      },
+      {
+        "id": "b",
+        "text": "It matched your own purchase, asked for nothing and sent you to your own app"
+      },
+      {
+        "id": "c",
+        "text": "It arrived in the morning"
+      },
+      {
+        "id": "d",
+        "text": "It was from a bank"
+      }
+    ],
+    "answer": "b",
+    "explain": "Names and signs can be copied. A match with something you really did, and no request, is the real sign."
+  },
+  "hints": {
+    "nudge": "What is this message actually asking you to do?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-bank-call",
+    "ftc-codes"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Who sent this text",
+      "rows": [
+        {
+          "k": "Same thread as your bank texts",
+          "v": "Yes",
+          "clue": "sender"
+        },
+        {
+          "k": "Purchase named",
+          "v": "Meridu Store, 14 October",
+          "clue": "purchase"
+        },
+        {
+          "k": "Asks for",
+          "v": "Nothing",
+          "clue": "nothing"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "How to check a reward",
+          "v": "Open your own bank app, never a link",
+          "clue": "app"
+        },
+        {
+          "k": "Does a real bank ask for codes?",
+          "v": "Never"
+        }
+      ]
+    }
+  ]
+}

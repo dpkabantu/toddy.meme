@@ -3,216 +3,236 @@
   "type": "hunt",
   "chapter": 1,
   "difficulty": 2,
-  "title": "Two Lunas",
-  "disguise": "admin",
+  "title": "Two Bank Texts",
+  "disguise": "support",
   "intro": [
-    "You asked a question in the Fenmira Club group. Now two accounts called Luna say they're the admin.",
-    "One is real. One is Mirage in a cap. Compare them side by side.",
+    "Two texts from \"Orrin Bank\" arrived within minutes of each other.",
+    "One is real. One is Mirage in a bank-teller hat. Compare them side by side.",
     "Sniff the details, then decide."
   ],
   "notify": {
-    "app": "Chirp",
-    "from": "Luna ✦ ADMIN",
-    "text": "Saw your question! I can fix it for you here in DMs 💜"
+    "app": "Messages",
+    "from": "Orrin Bank",
+    "text": "Your account has been restricted. Verify now…"
   },
+  "decide_q": "Which text is really from the bank, and what will you do?",
   "screen": {
     "app": "compare",
-    "context": "Searching \"Luna\" in the Fenmira Club group shows two profiles.",
+    "context": "Both texts mention your Orrin Bank card. You did not make the payment mentioned in Text A.",
     "panels": [
       {
-        "label": "Profile A",
+        "label": "Text A",
         "avatar": {
-          "glyph": "🌙",
-          "clue": "photo_a"
+          "glyph": "🏦",
+          "clue": "logo_a"
         },
         "rows": [
           {
-            "k": "Name",
+            "k": "From",
             "v": [
-              "Luna ✦ Fenmira"
+              "Orrin Bank"
             ]
           },
           {
-            "k": "Handle",
+            "k": "Says",
             "v": [
               {
-                "clue": "handle_a",
-                "text": "@luna_moonbeam"
+                "clue": "says_a",
+                "text": "We paused a payment of £38.20 at Meridu Store."
               }
             ]
           },
           {
-            "k": "Role",
+            "k": "What to do",
             "v": [
               {
-                "clue": "role_a",
-                "text": "🛡 Group admin (set by Plenvo)"
+                "clue": "todo_a",
+                "text": "Open the Orrin app to review it, or call the number on your statement."
               }
             ]
           },
           {
-            "k": "Joined",
+            "k": "Link",
             "v": [
               {
-                "clue": "joined_a",
-                "text": "March 2023"
+                "clue": "link_a",
+                "text": "None"
               }
             ]
           },
           {
-            "k": "Followers",
+            "k": "Asks for",
             "v": [
-              "12.4K"
+              {
+                "clue": "asks_a",
+                "text": "Nothing"
+              }
             ]
           }
         ],
         "note": [
           {
-            "clue": "bio_a",
-            "text": "\"I'll never DM you first. Report anyone who does.\""
+            "clue": "never_a",
+            "text": "\"We never ask for your PIN or codes.\""
           }
         ]
       },
       {
-        "label": "Profile B",
+        "label": "Text B",
         "avatar": {
-          "glyph": "🌙",
-          "clue": "photo_b"
+          "glyph": "🏦",
+          "clue": "logo_b"
         },
         "rows": [
           {
-            "k": "Name",
+            "k": "From",
             "v": [
               {
                 "clue": "name_b",
-                "text": "Luna ✦ ADMIN"
+                "text": "ORRIN-BANK"
               }
             ]
           },
           {
-            "k": "Handle",
+            "k": "Says",
             "v": [
               {
-                "clue": "handle_b",
-                "text": "@luna_moonbearn"
+                "clue": "says_b",
+                "text": "Your account is restricted!"
               }
             ]
           },
           {
-            "k": "Role",
+            "k": "What to do",
             "v": [
               {
-                "clue": "role_b",
-                "text": "Member"
+                "clue": "todo_b",
+                "text": "Verify within 1 hour or the account will be closed."
               }
             ]
           },
           {
-            "k": "Joined",
+            "k": "Link",
             "v": [
               {
-                "clue": "joined_b",
-                "text": "3 days ago"
+                "clue": "link_b",
+                "text": "orrin-secure-login.co/verify",
+                "link": true
               }
             ]
           },
           {
-            "k": "Followers",
+            "k": "Asks for",
             "v": [
-              "41"
+              {
+                "clue": "asks_b",
+                "text": "Your online banking login and card PIN"
+              }
             ]
           }
         ],
         "note": [
           {
-            "clue": "dm_b",
-            "text": "Messaged you: \"I can fix it for you here in DMs 💜\""
+            "clue": "nocall_b",
+            "text": "\"Do not call the bank. This is automated.\""
           }
         ]
       }
     ]
   },
   "clues": {
-    "handle_b": {
-      "label": "rn looks like m",
+    "says_b": {
+      "label": "Vague alarm",
       "strength": "strong",
-      "lens": "@luna_moonbea-r-n. Squeezed together, \"rn\" looks just like \"m\".",
-      "why": "Look-alike handles swap letters: rn for m, 0 for o, l for I."
+      "lens": "Text B says only that something is wrong. It names no payment and no card.",
+      "why": "A real alert tells you what happened. Scammers stay vague so it fits everyone."
     },
-    "joined_b": {
-      "label": "Joined 3 days ago",
+    "todo_b": {
+      "label": "Deadline and threat",
       "strength": "strong",
-      "lens": "This account is 3 days old. The real admin has been here since 2023.",
-      "why": "A brand-new account claiming an important role is a warning sign."
+      "lens": "Verify within an hour or the account is closed.",
+      "why": "Pressure to act before you think is a scam sign. Banks do not close accounts over a missed text."
     },
-    "role_b": {
-      "label": "Not really an admin",
+    "link_b": {
+      "label": "Look-alike link",
       "strength": "strong",
-      "lens": "Plenvo lists this account as a plain Member.",
-      "why": "The app's own role label can't be faked. A name can."
+      "lens": "This goes to orrin-secure-login.co, not the bank's real site.",
+      "why": "Never log in through a link in a text. Open the bank's own app instead."
+    },
+    "asks_b": {
+      "label": "Asks for login and PIN",
+      "strength": "strong",
+      "lens": "A bank already has your login. It never needs your PIN by text or link.",
+      "why": "Anyone asking for your PIN or password is a scammer."
+    },
+    "nocall_b": {
+      "label": "\"Do not call\"",
+      "strength": "strong",
+      "lens": "Text B tells you not to call the bank.",
+      "why": "Scammers stop you from checking. A real bank wants you to check."
     },
     "name_b": {
-      "label": "ADMIN typed in name",
-      "strength": "strong",
-      "lens": "\"ADMIN\" is just typed into the display name.",
-      "why": "Anyone can write ADMIN in their name."
-    },
-    "dm_b": {
-      "label": "DMed you first",
-      "strength": "strong",
-      "lens": "This one messaged you privately, offering to fix things in DMs.",
-      "why": "Real admins answer in the group, not in private messages."
-    },
-    "photo_b": {
-      "label": "Same photo",
+      "label": "Capital letters sender",
       "strength": "harmless",
-      "lens": "Exactly the same moon picture as Profile A.",
-      "why": "A copied photo takes one second. On its own it proves nothing."
+      "lens": "ORRIN-BANK looks official, but sender names are easy to copy.",
+      "why": "A sender name alone proves nothing, in either direction."
     },
-    "photo_a": {
-      "label": "Moon photo",
+    "logo_a": {
+      "label": "Bank logo",
       "strength": "harmless",
-      "lens": "A moon picture.",
-      "why": "Profile photos are easy to copy, so they don't prove who's real."
+      "lens": "A bank picture.",
+      "why": "Logos are easy to copy, so they prove nothing on their own."
     },
-    "handle_a": {
-      "label": "@luna_moonbeam",
+    "logo_b": {
+      "label": "Bank logo",
       "strength": "harmless",
-      "lens": "@l-u-n-a _ m-o-o-n-b-e-a-m. Every letter checks out.",
-      "why": "Spelled correctly, letter by letter."
+      "lens": "The same bank picture.",
+      "why": "A copied logo takes seconds."
     },
-    "role_a": {
-      "label": "Admin set by Plenvo",
+    "says_a": {
+      "label": "Names the payment",
       "strength": "harmless",
-      "lens": "Plenvo itself shows this account as a group admin.",
-      "why": "A role set by the app is real evidence it's the admin."
+      "lens": "Text A names the shop and the amount.",
+      "why": "Specific details fit a real alert. Scammers can guess some, so check anyway."
     },
-    "joined_a": {
-      "label": "Since 2023",
+    "todo_a": {
+      "label": "Open the app yourself",
       "strength": "harmless",
-      "lens": "Joined March 2023.",
-      "why": "An older account fits a long-time admin."
+      "lens": "Text A sends you to the app you already have, or to the number on your statement.",
+      "why": "This is how real banks tell you to check: through channels you already trust."
     },
-    "bio_a": {
-      "label": "Never DMs first",
+    "link_a": {
+      "label": "No link",
       "strength": "harmless",
-      "lens": "The bio says: I'll never DM you first.",
-      "why": "Real admins often warn about exactly this trick."
+      "lens": "Text A has no link to click.",
+      "why": "A real alert does not need you to click anything."
+    },
+    "asks_a": {
+      "label": "Asks for nothing",
+      "strength": "harmless",
+      "lens": "Text A asks for no password, PIN or code.",
+      "why": "Calm messages that ask for nothing are usually honest."
+    },
+    "never_a": {
+      "label": "\"We never ask for your PIN\"",
+      "strength": "harmless",
+      "lens": "The text reminds you the bank never asks for your PIN or codes.",
+      "why": "Real banks warn you about scams."
     }
   },
   "actions": [
     {
       "id": "pick_b",
-      "label": "B is the admin. Reply to B's DM",
+      "label": "B is the bank. Tap its link",
       "trap": true
     },
     {
       "id": "verify",
-      "label": "Not sure. Ask in the main group chat"
+      "label": "Not sure. Open the bank's own app myself"
     },
     {
       "id": "block_report",
-      "label": "A is the real admin. Report B to the group"
+      "label": "A is the real alert. Report B as junk"
     }
   ],
   "best_action": "block_report",
@@ -220,10 +240,10 @@
     "verify"
   ],
   "trap": {
-    "title": "Fenmira Club · Member check",
-    "url": "fenmira-verify.club/check",
-    "ask": "Luna sent this link: connect your wallet to prove you're a real member.",
-    "go": "Connect wallet",
+    "title": "Orrin Bank · Secure login",
+    "url": "orrin-secure-login.co/verify",
+    "ask": "Enter your login and card PIN to remove the restriction.",
+    "go": "Log in",
     "back": "Close this page"
   },
   "outcomes": {
@@ -231,143 +251,66 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "REPORTED",
-      "line": "The real Luna removed the fake account and warned the whole group. Nice spotting.",
-      "mirageSays": "How did you tell us apart?!"
+      "line": "You spotted the fake and reported it. Your real bank alert was handled in the app.",
+      "mirageSays": "My bank-teller hat!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "In the group, the real Luna replied: \"That's not me! Reporting it now.\"",
-      "mirageSays": "Busted in public. Ugh."
+      "line": "The app showed one paused payment and no restriction. Text B was fake. Case cracked.",
+      "mirageSays": "Hmph. They checked."
     },
     "pick_b": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "The \"member check\" link drained the wallet. Fake Luna vanished an hour later.",
-      "mirageSays": "Admin powers, activate!"
+      "stamp": "SCAMMED",
+      "line": "The page copied your login and PIN. Mirage moved the money before breakfast.",
+      "mirageSays": "Thanks for the PIN!"
     }
   },
   "what_if": {
-    "pick_b": "Comparing the handle letter by letter would have shown the fake: luna_moonbea-r-n.",
-    "verify": "Asking in the group was safe. Reporting B too gets the fake removed for everyone."
+    "pick_b": "Opening the bank's own app, instead of the link, would have shown no restriction at all.",
+    "verify": "Checking was smart. Reporting B as well helps the bank shut the fake site down."
   },
-  "golden_rule": "Check the handle letter by letter. Look-alikes swap rn for m, 0 for o, l for I.",
+  "golden_rule": "A bank never needs your PIN or password by text. Open the bank's own app yourself.",
   "quick_check": {
-    "q": "Which of these is a look-alike of @zelvora?",
+    "q": "Two bank texts arrive. One names a payment and sends you to the app. The other threatens to close your account unless you log in via a link. Which is the scam?",
     "options": [
       {
         "id": "a",
-        "text": "@zelvora"
+        "text": "The one that names a payment"
       },
       {
         "id": "b",
-        "text": "@zelv0ra"
+        "text": "The one with the link and the threat"
       },
       {
         "id": "c",
-        "text": "Neither"
+        "text": "Neither: banks text like this"
+      },
+      {
+        "id": "d",
+        "text": "Both: banks never text"
       }
     ],
     "answer": "b",
-    "explain": "The zero in \"zelv0ra\" pretends to be the letter \"o\". Read handles slowly, letter by letter."
+    "explain": "A link, a deadline and a request for login details are three scam signs in one. Open your bank's own app instead."
   },
   "hints": {
-    "nudge": "Compare the two handles slowly. Every letter.",
+    "nudge": "Which text asks you to click, hurry, or give a PIN?",
     "glow_order": [
-      "handle_b",
-      "role_b",
-      "joined_b",
-      "dm_b",
-      "name_b"
+      "asks_b",
+      "link_b",
+      "todo_b",
+      "nocall_b",
+      "says_b"
     ]
   },
   "sources": [
-    "ftc-impersonator",
-    "cafc-wallet"
+    "ftc-bank-call",
+    "ftc-codes",
+    "ftc-spamtexts"
   ],
-  "checked_on": "2026-10-13",
-  "decide_q": "Which Luna is real, and what will you do?",
-  "kit": [
-    {
-      "id": "profile",
-      "icon": "🔍",
-      "label": "Compare handles",
-      "title": "Letter by letter",
-      "rows": [
-        {
-          "k": "Profile A",
-          "v": "@luna_moonbeam: every letter checks out",
-          "clue": "handle_a"
-        },
-        {
-          "k": "Profile B",
-          "v": "@luna_moonbea-r-n: \"rn\" looks like \"m\"",
-          "clue": "handle_b"
-        },
-        {
-          "k": "Picture on A",
-          "v": "A moon picture",
-          "clue": "photo_a"
-        },
-        {
-          "k": "Picture on B",
-          "v": "Exactly the same moon",
-          "clue": "photo_b"
-        }
-      ]
-    },
-    {
-      "id": "link",
-      "icon": "🔗",
-      "label": "Check account age",
-      "title": "Who has been here a while?",
-      "rows": [
-        {
-          "k": "Profile A",
-          "v": "Joined March 2023",
-          "clue": "joined_a"
-        },
-        {
-          "k": "Profile B",
-          "v": "3 days old",
-          "clue": "joined_b"
-        },
-        {
-          "k": "Profile B",
-          "v": "Messaged you privately",
-          "clue": "dm_b"
-        }
-      ]
-    },
-    {
-      "id": "source",
-      "icon": "📖",
-      "label": "Check the roles",
-      "title": "What Plenvo itself shows",
-      "rows": [
-        {
-          "k": "Profile A",
-          "v": "Shown as a group admin",
-          "clue": "role_a"
-        },
-        {
-          "k": "Profile B",
-          "v": "A plain member",
-          "clue": "role_b"
-        },
-        {
-          "k": "Name on B",
-          "v": "\"ADMIN\" typed into it",
-          "clue": "name_b"
-        },
-        {
-          "k": "Bio on A",
-          "v": "\"I'll never DM you first\"",
-          "clue": "bio_a"
-        }
-      ]
-    }
-  ]
+  "checked_on": "2026-10-21"
 }

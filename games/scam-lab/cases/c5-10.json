@@ -1,0 +1,337 @@
+{
+  "id": "c5-10",
+  "type": "duel",
+  "chapter": 5,
+  "difficulty": 3,
+  "title": "The Chat Interview",
+  "disguise": "admin",
+  "intro": [
+    "A \"company\" wants to interview you only by text chat, then asks for your documents.",
+    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
+    "Every chat ends with your choice. Choose wisely."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Quillon HR",
+    "text": "Interview today, on this chat only"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "text": "Quillon HR Desk",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@quillon_hr_desk_01"
+        }
+      ],
+      "avatar": {
+        "glyph": "💼",
+        "clue": "logo"
+      }
+    },
+    "banner": [
+      "Message request · you do not follow this account"
+    ],
+    "items": []
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              "Hello! You are shortlisted at Quillon Systems. ",
+              {
+                "clue": "chatonly",
+                "text": "Our interview is only on this chat, no video or call."
+              }
+            ]
+          },
+          {
+            "msg": [
+              "Please send ",
+              {
+                "clue": "docs",
+                "text": "photos of your ID card and a selfie holding it"
+              },
+              "."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Why not a video call?",
+            "next": "n2"
+          },
+          {
+            "text": "Sending my ID and selfie",
+            "next": "n3"
+          },
+          {
+            "text": "I will report this account",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              "Our system is ",
+              {
+                "clue": "busy",
+                "text": "busy, so chat is faster"
+              },
+              ". Everyone does it."
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "rush",
+                "text": "Send now or we move to the next candidate."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, sending",
+            "next": "n3"
+          },
+          {
+            "text": "I will check the company's own site first",
+            "end": "verify"
+          },
+          {
+            "text": "Report",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n3": {
+        "say": [
+          {
+            "msg": [
+              "You are selected! To pay your salary, we need your ",
+              {
+                "clue": "bank",
+                "text": "bank account number and card details"
+              },
+              "."
+            ]
+          },
+          {
+            "msg": [
+              "Also pay ",
+              {
+                "clue": "fee",
+                "text": "£20 file charge"
+              },
+              ", refunded with your first salary."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Sending details and the fee",
+            "end": "go_ahead"
+          },
+          {
+            "text": "A job does not need my card or a fee. Reporting.",
+            "end": "block_report"
+          },
+          {
+            "text": "I will call the company's real HR line",
+            "end": "verify"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "handle": {
+      "label": "A new look-alike account",
+      "strength": "strong",
+      "lens": "@quillon_hr_desk_01 is not the company's account.",
+      "why": "Check the company's own site for its real contacts."
+    },
+    "chatonly": {
+      "label": "Chat-only interview",
+      "strength": "strong",
+      "lens": "No video, no call, no voice.",
+      "why": "Real hiring involves speaking to you."
+    },
+    "docs": {
+      "label": "ID photos and a selfie holding it",
+      "strength": "strong",
+      "lens": "Your ID and face, to a stranger.",
+      "why": "These are used to steal your identity."
+    },
+    "busy": {
+      "label": "\"The system is busy\"",
+      "strength": "strong",
+      "lens": "An excuse to skip a call.",
+      "why": "An excuse is a tool."
+    },
+    "rush": {
+      "label": "Send now or lose it",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
+    },
+    "bank": {
+      "label": "Card details for \"salary\"",
+      "strength": "strong",
+      "lens": "A salary needs only an account number, once you are hired and have checked.",
+      "why": "Never give your card details to an employer."
+    },
+    "fee": {
+      "label": "A \"file charge\"",
+      "strength": "strong",
+      "lens": "You must pay to be paid.",
+      "why": "Honest employers never charge candidates."
+    },
+    "logo": {
+      "label": "Briefcase picture",
+      "strength": "harmless",
+      "lens": "A little briefcase.",
+      "why": "Pictures prove nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Send my bank details and the fee"
+    },
+    {
+      "id": "verify",
+      "label": "Check the company's own site and call its HR"
+    },
+    {
+      "id": "block_report",
+      "label": "Block and report the account"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "You blocked and reported the account. It was removed before it reached other job seekers.",
+      "mirageSays": "Curses! Blocked again!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The company's real HR said: \"We have no such chat, and we never ask for fees or documents by chat.\" Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The fee was lost and your bank details and ID were used to open accounts in your name.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "A job that interviews only by chat and wants your ID and card is a theft. Calling the company would have ended it.",
+    "verify": "Checking was smart. Reporting the account as well protects other job seekers."
+  },
+  "golden_rule": "A real employer talks to you and never asks for fees, ID photos or card details by chat. Check on the company's own site.",
+  "quick_check": {
+    "q": "A \"company\" interviews you only by chat, asks for your ID selfie, and a \"file charge\". What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Send everything, you want the job"
+      },
+      {
+        "id": "b",
+        "text": "Send the ID only"
+      },
+      {
+        "id": "c",
+        "text": "Stop. Check the company yourself, and report the account"
+      },
+      {
+        "id": "d",
+        "text": "Ask for a contract first"
+      }
+    ],
+    "answer": "c",
+    "explain": "Never send ID photos and fees to a chat-only recruiter."
+  },
+  "hints": {
+    "nudge": "What does a job interview normally include?",
+    "glow_order": [
+      "docs",
+      "fee",
+      "bank",
+      "chatonly",
+      "handle",
+      "rush",
+      "busy"
+    ]
+  },
+  "sources": [
+    "ftc-job-scams",
+    "ftc-jobs"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the account",
+      "title": "@quillon_hr_desk_01",
+      "rows": [
+        {
+          "k": "Account age",
+          "v": "3 days",
+          "clue": "handle"
+        },
+        {
+          "k": "Interview method",
+          "v": "Chat only",
+          "clue": "chatonly"
+        },
+        {
+          "k": "Asked for",
+          "v": "ID selfie, card details, a fee",
+          "clue": "docs"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Pay to get a job?",
+          "v": "Honest employers never ask",
+          "clue": "fee"
+        },
+        {
+          "k": "How to check",
+          "v": "Use the company's own site and a phone number you look up"
+        }
+      ]
+    }
+  ]
+}

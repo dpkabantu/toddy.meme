@@ -1,38 +1,255 @@
 {
   "id": "c2-04",
-  "type": "rush",
+  "type": "hunt",
   "chapter": 2,
   "difficulty": 2,
-  "title": "Job Hunt",
-  "seconds": 60,
+  "title": "The Real Reward",
+  "disguise": null,
   "intro": [
-    "Toddy is looking for weekend work. The inbox is full of offers.",
-    "Swipe left if it's a scam, right if it's safe. One minute.",
-    "Some offers are real. Don't scare off a good job!"
+    "After so many fake prizes, here's another reward message.",
+    "Fake ones are everywhere. But real ones exist too.",
+    "Sniff carefully before you report anything."
   ],
-  "cards": [
-    { "id": "j1", "app": "Plenvo DM", "from": "Recruiter Elena", "text": "Earn €250 a day just liking videos! Pay €49 registration and start today.", "scam": true, "why": "Real jobs never make you pay to start. Easy money for likes is a task scam." },
-    { "id": "j2", "app": "Email", "from": "jobs@kopicorner.eu", "text": "Thanks for applying for the barista role. Can you come for an interview on Tuesday at 10:00 at our café?", "scam": false, "why": "You applied, it's an in-person interview, and it asks for nothing." },
-    { "id": "j3", "app": "Plenvo DM", "from": "Taskivo Team", "text": "Your account balance is −€120. Top up with crypto to unlock today's commission!", "scam": true, "why": "Task scams invent a \"negative balance\" so you keep paying in." },
-    { "id": "j4", "app": "Email", "from": "hr-portal@yourwork.eu", "text": "Your October payslip is ready. Open the HR app you already use to view it.", "scam": false, "why": "From your real employer, no link, and it points to the app you already use." },
-    { "id": "j5", "app": "SMS", "from": "+44 7700 900511", "text": "Remote job: receive money into your bank account and forward it on. Keep 10%!", "scam": true, "why": "Moving money for strangers makes you a \"money mule\". It's illegal and can get your account closed." },
-    { "id": "j6", "app": "Plenvo DM", "from": "Global Recruit HR", "text": "We found your CV online! You're hired, no interview needed. Send a copy of your passport to start.", "scam": true, "why": "Hired with no interview, then asking for ID: that's identity theft." },
-    { "id": "j7", "app": "SMS", "from": "Marco (friend)", "text": "My café is hiring for weekends! Apply on their website, the link is on their Plenvo page.", "scam": false, "why": "A friend you know, pointing you to the official website. Nothing to pay." },
-    { "id": "j8", "app": "Email", "from": "StarterKit Ltd", "text": "Congratulations! To begin your work-from-home job, buy our €199 starter kit first.", "scam": true, "why": "Real employers provide the tools. Paying for a \"kit\" first is a scam." },
-    { "id": "j9", "app": "Email", "from": "no-reply@jobsboard.eu", "text": "3 new jobs match your saved search \"barista\". Sign in to the Jobsboard app to see them.", "scam": false, "why": "An alert you set up yourself, sending you to the app, asking for nothing." },
-    { "id": "j10", "app": "Plenvo DM", "from": "Crypto Optimizer", "text": "Rate 40 apps a day to \"optimise\" them and earn crypto commission. Deposit first to unlock level 2!", "scam": true, "why": "\"Optimising\" apps for crypto, with deposits to unlock levels, is a task scam." }
+  "notify": {
+    "app": "Ostrel",
+    "from": "Ostrel (in-app)",
+    "text": "Your monthly rewards are ready"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        "Ostrel"
+      ],
+      "addr": [
+        {
+          "clue": "addr",
+          "text": "in-app message"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "Your October rewards are ready 🎉"
+        }
+      ],
+      "time": [
+        "9:00 AM"
+      ]
+    },
+    "context": "You opened the Ostrel app you already use. This is in its message inbox.",
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "points",
+            "text": "You earned 40 reward points this month for your trades."
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "where",
+            "text": "See them any time in the Rewards tab."
+          },
+          " ",
+          {
+            "clue": "nothing",
+            "text": "There's nothing you need to do."
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "warn",
+            "text": "Reminder: Ostrel will never ask you to connect your wallet to claim rewards."
+          }
+        ]
+      },
+      {
+        "foot": [
+          {
+            "clue": "foot",
+            "text": "Ostrel · Rewards"
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "addr": {
+      "label": "Inside the app",
+      "strength": "harmless",
+      "lens": "It arrived in the app's own inbox, not by text or email.",
+      "why": "Messages inside an app you opened yourself are hard to fake."
+    },
+    "subject": {
+      "label": "Happy subject",
+      "strength": "harmless",
+      "lens": "A cheerful subject.",
+      "why": "Emoji and good news aren't warning signs alone."
+    },
+    "points": {
+      "label": "Modest points",
+      "strength": "harmless",
+      "lens": "40 points for trades you really made.",
+      "why": "Small, believable and matching what you did."
+    },
+    "where": {
+      "label": "Points to the app",
+      "strength": "harmless",
+      "lens": "It sends you to the Rewards tab.",
+      "why": "No link, no connection needed."
+    },
+    "nothing": {
+      "label": "Asks for nothing",
+      "strength": "harmless",
+      "lens": "Nothing to do or pay.",
+      "why": "Real rewards ask for nothing."
+    },
+    "warn": {
+      "label": "Safety reminder",
+      "strength": "harmless",
+      "lens": "It warns you about wallet-connect scams.",
+      "why": "Honest companies warn you."
+    },
+    "foot": {
+      "label": "Footer",
+      "strength": "harmless",
+      "lens": "App footer.",
+      "why": "Normal."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Check the Rewards tab in the app"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
   ],
-  "golden_rule": "Real jobs pay you. If a job asks you to pay, top up, or move money, it's a scam.",
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "40 real points, right where the message said. Nice!",
+      "toddy": "happy"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was Ostrel's real in-app message. False alarms make real warnings easier to ignore.",
+      "mirageSays": "Trust nothing? Perfect."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "SAFE",
+      "line": "Nothing bad happened. It was a real reward.",
+      "toddy": "happy"
+    }
+  },
+  "what_if": {
+    "block_report": "It was inside the real app, asked for nothing and warned about scams. That's what genuine looks like."
+  },
+  "golden_rule": "Real rewards appear inside apps you already use, and never need a link, fee or wallet connection.",
   "quick_check": {
-    "q": "A job offer says you earn commission, but first you must top up a \"negative balance\" with crypto. What is it?",
+    "q": "What made this reward genuine?",
     "options": [
-      { "id": "a", "text": "A normal online job" },
-      { "id": "b", "text": "A task scam: stop and report it" },
-      { "id": "c", "text": "Fine if the amount is small" }
+      {
+        "id": "a",
+        "text": "The emoji in the subject"
+      },
+      {
+        "id": "b",
+        "text": "It was inside the real app and asked for nothing"
+      },
+      {
+        "id": "c",
+        "text": "It said \"rewards\""
+      }
     ],
     "answer": "b",
-    "explain": "In task scams the \"balance\" keeps going negative so you keep paying. Real jobs never charge you."
+    "explain": "Where it appears and what it asks for matter most."
   },
-  "sources": ["ftc-data-2024", "ftc-jobs", "ftc-crypto"],
-  "checked_on": "2026-10-18"
+  "hints": {
+    "nudge": "Where did this message arrive, and what does it ask?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-crypto",
+    "ftc-phishing",
+    "cafc-wallet"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check where it came from",
+      "title": "The message",
+      "rows": [
+        {
+          "k": "Arrived in",
+          "v": "The app's own inbox",
+          "clue": "addr"
+        },
+        {
+          "k": "Subject",
+          "v": "A cheerful line",
+          "clue": "subject"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check what it asks",
+      "title": "Anything to click or pay?",
+      "rows": [
+        {
+          "k": "Where it sends you",
+          "v": "The Rewards tab",
+          "clue": "where"
+        },
+        {
+          "k": "You must do or pay",
+          "v": "Nothing",
+          "clue": "nothing"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check your history",
+      "title": "Where 40 points come from",
+      "rows": [
+        {
+          "k": "Points",
+          "v": "For trades you really made",
+          "clue": "points"
+        },
+        {
+          "k": "Warning",
+          "v": "About wallet-connect scams",
+          "clue": "warn"
+        }
+      ]
+    }
+  ]
 }

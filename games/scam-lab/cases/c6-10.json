@@ -1,0 +1,346 @@
+{
+  "id": "c6-10",
+  "type": "duel",
+  "chapter": 6,
+  "difficulty": 3,
+  "title": "It Sounds Just Like Her",
+  "disguise": "friend",
+  "intro": [
+    "A call comes in. The voice sounds exactly like your sister, and she sounds terrified.",
+    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
+    "Every chat ends with your choice. Choose wisely."
+  ],
+  "notify": {
+    "app": "Phone",
+    "from": "Unknown number",
+    "text": "\"It is me, I am in trouble…\""
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "text": "Call from an unknown number",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "num",
+          "text": "Number you do not know"
+        }
+      ],
+      "avatar": {
+        "glyph": "📞",
+        "clue": "logo"
+      }
+    },
+    "banner": [
+      "The voice sounds like your sister"
+    ],
+    "items": []
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              "\"It is me, I am in ",
+              {
+                "clue": "trouble",
+                "text": "serious trouble"
+              },
+              ". I had an accident and ",
+              {
+                "clue": "cry",
+                "text": "I am crying"
+              },
+              ".\""
+            ]
+          },
+          {
+            "msg": [
+              "\"A man will explain. ",
+              {
+                "clue": "money",
+                "text": "Please do what he says"
+              },
+              ".\""
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Which hospital? Tell me your safe word",
+            "next": "n2"
+          },
+          {
+            "text": "Tell me what to do",
+            "next": "n3"
+          },
+          {
+            "text": "I will hang up and call my sister myself",
+            "end": "verify"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              "\"",
+              {
+                "clue": "safe",
+                "text": "I cannot remember, I am so scared."
+              },
+              "\" The man takes the phone: \"She needs £400 now, or it will get worse.\""
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "rush",
+                "text": "You have 15 minutes."
+              },
+              " ",
+              {
+                "clue": "secret",
+                "text": "Do not tell your parents."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, I will send it",
+            "next": "n3"
+          },
+          {
+            "text": "No. A real sister would know our safe word. I am calling her.",
+            "end": "verify"
+          },
+          {
+            "text": "Hang up and report",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n3": {
+        "say": [
+          {
+            "msg": [
+              "\"Send it to this account. ",
+              {
+                "clue": "gift",
+                "text": "Or buy gift cards and read me the codes."
+              },
+              "\""
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Sending the money",
+            "end": "go_ahead"
+          },
+          {
+            "text": "I am hanging up and calling my sister",
+            "end": "verify"
+          },
+          {
+            "text": "Report",
+            "end": "block_report"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "num": {
+      "label": "An unknown number",
+      "strength": "strong",
+      "lens": "Your sister would call from her own number.",
+      "why": "Check by calling her own number."
+    },
+    "trouble": {
+      "label": "A crisis",
+      "strength": "strong",
+      "lens": "An accident and tears.",
+      "why": "Shock is the weapon."
+    },
+    "cry": {
+      "label": "A crying voice",
+      "strength": "strong",
+      "lens": "Crying makes it hard to question.",
+      "why": "Emotion is the tool."
+    },
+    "money": {
+      "label": "\"Do what the man says\"",
+      "strength": "strong",
+      "lens": "A stranger takes control.",
+      "why": "A real emergency does not go through a stranger."
+    },
+    "safe": {
+      "label": "No safe word",
+      "strength": "strong",
+      "lens": "She cannot answer your safe word.",
+      "why": "A family safe word proves who is on the line."
+    },
+    "rush": {
+      "label": "15 minutes",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
+    },
+    "secret": {
+      "label": "\"Do not tell your parents\"",
+      "strength": "strong",
+      "lens": "Secrecy blocks the check.",
+      "why": "Always tell the family."
+    },
+    "gift": {
+      "label": "\"Gift cards and codes\"",
+      "strength": "strong",
+      "lens": "Only scammers want gift cards.",
+      "why": "No honest person asks for gift card codes."
+    },
+    "logo": {
+      "label": "Phone picture",
+      "strength": "harmless",
+      "lens": "A little phone.",
+      "why": "Pictures prove nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Send the money"
+    },
+    {
+      "id": "verify",
+      "label": "Hang up and call my sister on her own number"
+    },
+    {
+      "id": "block_report",
+      "label": "Hang up and report the call"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "You hung up and reported the call. The number was blocked.",
+      "mirageSays": "Curses! Hung up on again!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Your sister picked up at once. She was at work, perfectly safe. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The voice was a copy made by a computer from a short clip. The money was gone.",
+      "mirageSays": "Thanks for the cash!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "A voice can be copied from a short clip. A family safe word, or a call to her own number, beats any copy.",
+    "verify": "Checking was smart. Reporting the number as well protects other families."
+  },
+  "golden_rule": "A voice can be copied. Agree a family safe word, and always hang up and call back on the number you know.",
+  "quick_check": {
+    "q": "A call with your sister's voice says she is in trouble and a man wants money. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Send the money fast"
+      },
+      {
+        "id": "b",
+        "text": "Ask the man for proof"
+      },
+      {
+        "id": "c",
+        "text": "Hang up and call her on her own number"
+      },
+      {
+        "id": "d",
+        "text": "Pay half"
+      }
+    ],
+    "answer": "c",
+    "explain": "Voices can be copied. Call back on a number you know."
+  },
+  "hints": {
+    "nudge": "How can you prove who is really on the line?",
+    "glow_order": [
+      "safe",
+      "num",
+      "money",
+      "secret",
+      "rush",
+      "gift",
+      "trouble",
+      "cry"
+    ]
+  },
+  "sources": [
+    "ftc-family",
+    "ftc-gift-cards"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the call",
+      "title": "Unknown number",
+      "rows": [
+        {
+          "k": "Her own number?",
+          "v": "No",
+          "clue": "num"
+        },
+        {
+          "k": "Answers the safe word?",
+          "v": "No",
+          "clue": "safe"
+        },
+        {
+          "k": "Wants",
+          "v": "Money or gift card codes",
+          "clue": "gift"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "A relative in trouble?",
+          "v": "Check on a number you already know",
+          "clue": "num"
+        },
+        {
+          "k": "Gift cards for payment",
+          "v": "Only scammers ask",
+          "clue": "gift"
+        }
+      ]
+    }
+  ]
+}

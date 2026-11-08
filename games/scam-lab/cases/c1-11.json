@@ -1,0 +1,379 @@
+{
+  "id": "c1-11",
+  "type": "duel",
+  "chapter": 1,
+  "difficulty": 2,
+  "title": "The Helpful Reply",
+  "disguise": "support",
+  "intro": [
+    "You complained online about a late order from Meridu Store. Now someone has replied.",
+    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
+    "Every chat ends with your choice. Choose wisely."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Meridu Help ✔",
+    "text": "Sorry about your order! We can refund you here in DMs…"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "text": "Meridu Help ✔",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        "@meridu_help_24"
+      ],
+      "avatar": {
+        "glyph": "🛍️",
+        "clue": "logo"
+      }
+    },
+    "banner": [
+      "Message request · you do not follow this account"
+    ],
+    "items": []
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "hello",
+                "text": "Hi! So sorry about your late order 😔"
+              }
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "dmfirst",
+                "text": "We saw your post"
+              },
+              ". We can refund you right here in DMs."
+            ]
+          },
+          {
+            "msg": [
+              "Start the refund here: ",
+              {
+                "clue": "link",
+                "text": "meridu-refunds.help/claim",
+                "link": true
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "How do I get the refund?",
+            "next": "n2"
+          },
+          {
+            "text": "Are you really Meridu? How can I check?",
+            "next": "n3"
+          },
+          {
+            "text": "Block and report this account",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              "Easy! Enter your card number on the page, then ",
+              {
+                "clue": "code",
+                "text": "tell me the 6-digit code we text you"
+              },
+              "."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, opening the link",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Why would a refund need my card number and a code?",
+            "next": "n4"
+          },
+          {
+            "text": "Block and report this account",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n3": {
+        "rename": "Meridu Help (official)",
+        "say": [
+          {
+            "sys": [
+              {
+                "clue": "rename",
+                "text": "The account changed its name to \"Meridu Help (official)\""
+              }
+            ]
+          },
+          {
+            "msg": [
+              "Of course we are official! ",
+              {
+                "clue": "rush",
+                "text": "Your refund expires in 10 minutes, so please hurry"
+              },
+              " 🙏"
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, I do not want to lose the refund",
+            "end": "go_ahead"
+          },
+          {
+            "text": "I will ask on Meridu's own website instead",
+            "end": "verify"
+          },
+          {
+            "text": "Block and report",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n4": {
+        "say": [
+          {
+            "msg": [
+              "Totally safe, it is how all refunds work. ",
+              {
+                "clue": "everyone",
+                "text": "Hundreds of customers did it today."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Fine, here goes",
+            "end": "go_ahead"
+          },
+          {
+            "text": "I will contact Meridu through its own website first",
+            "end": "verify"
+          },
+          {
+            "text": "No real refund needs my code. Block and report.",
+            "end": "block_report"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "dmfirst": {
+      "label": "They messaged first",
+      "strength": "strong",
+      "lens": "You never contacted this account. It found your public complaint and messaged you.",
+      "why": "Real companies answer in the open or through their own support page. Scammers watch public complaints."
+    },
+    "link": {
+      "label": "Look-alike link",
+      "strength": "strong",
+      "lens": "This goes to meridu-refunds.help, not to Meridu's real site.",
+      "why": "Never give card details on a page you reached through a message. Check where the link really goes."
+    },
+    "code": {
+      "label": "Asks for your code",
+      "strength": "strong",
+      "lens": "It wants the code your bank texts you.",
+      "why": "That code lets someone log in or pay as you. Anyone who asks for it is a scammer."
+    },
+    "rename": {
+      "label": "It renamed itself",
+      "strength": "strong",
+      "lens": "The account changed its name when you doubted it.",
+      "why": "Real companies do not change names to win your trust."
+    },
+    "rush": {
+      "label": "Countdown pressure",
+      "strength": "strong",
+      "lens": "The refund \"expires in 10 minutes\".",
+      "why": "Rushing you is a pressure trick. Real refunds do not vanish in minutes."
+    },
+    "everyone": {
+      "label": "\"Everyone did it\"",
+      "strength": "strong",
+      "lens": "It says hundreds of customers already did it.",
+      "why": "A crowd you cannot see proves nothing."
+    },
+    "logo": {
+      "label": "Shop logo",
+      "strength": "harmless",
+      "lens": "A little shopping-bag picture.",
+      "why": "Logos are easy to copy, so they prove nothing on their own."
+    },
+    "hello": {
+      "label": "Friendly and sorry",
+      "strength": "harmless",
+      "lens": "A kind, apologetic hello.",
+      "why": "Being friendly is not suspicious by itself."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Enter my card details and the code"
+    },
+    {
+      "id": "verify",
+      "label": "Contact Meridu through its own website"
+    },
+    {
+      "id": "block_report",
+      "label": "Block and report the account"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Blocked and reported. The platform removed the fake account before it reached anyone else.",
+      "mirageSays": "Curses! Blocked again!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Meridu's real website said: \"We never ask for card details or codes in messages.\" Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The code let Mirage pay from your account. The \"refund\" never came, and money left instead.",
+      "mirageSays": "Thanks for the code!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Asking \"why does a refund need my code?\" was the way out. The answer is: it never does.",
+    "verify": "Checking was smart. Reporting the account as well gets it removed faster."
+  },
+  "golden_rule": "A refund never needs your card code. Contact the shop through its own website, not through a message.",
+  "quick_check": {
+    "q": "Someone replies to your public complaint and asks for your card number and a code texted to you. What is true?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Real shops do this to speed up refunds"
+      },
+      {
+        "id": "b",
+        "text": "It is fine if the account has a ✔ in its name"
+      },
+      {
+        "id": "c",
+        "text": "A refund never needs your codes, so it is a trap"
+      },
+      {
+        "id": "d",
+        "text": "Give the code but change your password later"
+      }
+    ],
+    "answer": "c",
+    "explain": "Codes and card numbers are for paying, not for receiving money. That request alone tells you it is a trap."
+  },
+  "hints": {
+    "nudge": "Why would a refund need a code from you?",
+    "glow_order": [
+      "code",
+      "link",
+      "dmfirst",
+      "rush",
+      "rename",
+      "everyone"
+    ]
+  },
+  "sources": [
+    "ftc-customerservice",
+    "ftc-codes"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the account",
+      "title": "Meridu Help ✔",
+      "rows": [
+        {
+          "k": "Joined",
+          "v": "2 days ago",
+          "clue": "dmfirst"
+        },
+        {
+          "k": "Followers",
+          "v": "5"
+        },
+        {
+          "k": "Real Meridu account",
+          "v": "@meridu_store, 6 years old"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the link",
+      "title": "Where \"claim\" goes",
+      "rows": [
+        {
+          "k": "Address",
+          "v": "meridu-refunds.help",
+          "clue": "link"
+        },
+        {
+          "k": "Real shop site",
+          "v": "meridu.store"
+        },
+        {
+          "k": "Asks for",
+          "v": "Card number and the code your bank texts",
+          "clue": "code"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What consumer advice says",
+      "rows": [
+        {
+          "k": "Contact a shop",
+          "v": "Through its own website or the contact details on your receipt"
+        },
+        {
+          "k": "A message asking for a code",
+          "v": "Anyone who asks for it is a scammer",
+          "clue": "code"
+        }
+      ]
+    }
+  ]
+}

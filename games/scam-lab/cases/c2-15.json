@@ -1,0 +1,341 @@
+{
+  "id": "c2-15",
+  "type": "duel",
+  "chapter": 2,
+  "difficulty": 3,
+  "title": "The Last Tickets",
+  "disguise": "friend",
+  "intro": [
+    "Your favourite band is sold out. Someone in a fan group has two tickets to sell.",
+    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
+    "Every chat ends with your choice. Choose wisely."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Dani (fan group)",
+    "text": "I have two tickets, face value!"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "text": "Dani (fan group)",
+          "id": "duel-name"
+        }
+      ],
+      "sub": [
+        "@dani_gigs"
+      ],
+      "avatar": {
+        "glyph": "🎟️",
+        "clue": "logo"
+      }
+    },
+    "banner": [
+      "Message request · from a fan group member"
+    ],
+    "items": []
+  },
+  "duel": {
+    "start": "n1",
+    "nodes": {
+      "n1": {
+        "say": [
+          {
+            "msg": [
+              "Hey! I have ",
+              {
+                "clue": "two",
+                "text": "two tickets"
+              },
+              " for Saturday at face value, €90 each."
+            ]
+          },
+          {
+            "msg": [
+              "I can't go, my ",
+              {
+                "clue": "sad",
+                "text": "grandma is ill"
+              },
+              " 😢"
+            ]
+          },
+          {
+            "msg": [
+              "Send ",
+              {
+                "clue": "transfer",
+                "text": "€180 by bank transfer"
+              },
+              " and I will email the tickets."
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "Can I pay through a safer way, like a card?",
+            "next": "n2"
+          },
+          {
+            "text": "Sending the money now",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Report this account",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n2": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "nocard",
+                "text": "No, only transfer."
+              },
+              " Cards and apps take fees, and I need the money quickly."
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "rush",
+                "text": "Lots of people want them. Pay in 20 minutes."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, paying by transfer",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Can I see the tickets and the booking first?",
+            "next": "n3"
+          },
+          {
+            "text": "Report this account",
+            "end": "block_report"
+          }
+        ]
+      },
+      "n3": {
+        "say": [
+          {
+            "msg": [
+              {
+                "clue": "shot",
+                "text": "Here is a screenshot of the tickets."
+              },
+              " It is a barcode, see?"
+            ]
+          },
+          {
+            "msg": [
+              {
+                "clue": "trust",
+                "text": "Trust me, I am a fan like you."
+              }
+            ]
+          }
+        ],
+        "replies": [
+          {
+            "text": "OK, I trust you",
+            "end": "go_ahead"
+          },
+          {
+            "text": "A screenshot can be copied. I will only buy through the official resale page.",
+            "end": "verify"
+          },
+          {
+            "text": "Report this account",
+            "end": "block_report"
+          }
+        ]
+      }
+    }
+  },
+  "clues": {
+    "two": {
+      "label": "Sold-out tickets at face value",
+      "strength": "strong",
+      "lens": "Sold-out tickets for exactly what they cost.",
+      "why": "A hard-to-get item at a normal price is the bait."
+    },
+    "sad": {
+      "label": "A sad story",
+      "strength": "strong",
+      "lens": "A sick grandmother, to make you feel sorry.",
+      "why": "A sad story is a tool. It is not a reason to skip checks."
+    },
+    "transfer": {
+      "label": "Transfer only",
+      "strength": "strong",
+      "lens": "He wants a bank transfer, not a card.",
+      "why": "Transfers cannot be taken back. Cards let you dispute a payment."
+    },
+    "nocard": {
+      "label": "\"No cards\"",
+      "strength": "strong",
+      "lens": "He refuses a safer way to pay.",
+      "why": "An honest seller does not mind a safe payment."
+    },
+    "rush": {
+      "label": "Hurry",
+      "strength": "strong",
+      "lens": "Pay in 20 minutes or lose them.",
+      "why": "Rushing you is a pressure trick."
+    },
+    "shot": {
+      "label": "A screenshot as proof",
+      "strength": "strong",
+      "lens": "A picture of a barcode, which can be copied by anyone.",
+      "why": "A screenshot cannot prove you own a ticket."
+    },
+    "trust": {
+      "label": "\"Trust me\"",
+      "strength": "strong",
+      "lens": "He asks you to trust him.",
+      "why": "An honest seller offers proof, not trust."
+    },
+    "logo": {
+      "label": "A ticket picture",
+      "strength": "harmless",
+      "lens": "A little ticket.",
+      "why": "Pictures prove nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Pay by bank transfer"
+    },
+    {
+      "id": "verify",
+      "label": "Buy only through the official resale page"
+    },
+    {
+      "id": "block_report",
+      "label": "Block and report the account"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Blocked and reported. The group moderators removed the fake seller before more fans paid.",
+      "mirageSays": "Curses! Blocked again!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The official resale page had real tickets with the venue's own guarantee. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The money was gone in minutes. No tickets ever arrived, and the account disappeared.",
+      "mirageSays": "Thanks for the transfer!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Insisting on a card payment, or the official resale page, would have ended it. A real seller accepts either.",
+    "verify": "Checking was smart. Reporting the account as well protects other fans."
+  },
+  "golden_rule": "Never pay a stranger by transfer for tickets. Use the official resale page, or a payment you can dispute.",
+  "quick_check": {
+    "q": "A stranger offers sold-out tickets at face value, only by bank transfer, and sends a screenshot. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay, they look real"
+      },
+      {
+        "id": "b",
+        "text": "Pay half now"
+      },
+      {
+        "id": "c",
+        "text": "Use only the official resale page"
+      },
+      {
+        "id": "d",
+        "text": "Ask for another screenshot"
+      }
+    ],
+    "answer": "c",
+    "explain": "Transfers cannot be reversed and screenshots can be copied. Use the official resale page."
+  },
+  "hints": {
+    "nudge": "How does the seller insist on being paid?",
+    "glow_order": [
+      "transfer",
+      "nocard",
+      "shot",
+      "rush",
+      "two",
+      "trust",
+      "sad"
+    ]
+  },
+  "sources": [
+    "ftc-marketplace",
+    "ftc-gift-cards"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the account",
+      "title": "@dani_gigs",
+      "rows": [
+        {
+          "k": "Account age",
+          "v": "3 days"
+        },
+        {
+          "k": "Tickets for sale",
+          "v": "Two, sold out",
+          "clue": "two"
+        },
+        {
+          "k": "Wants to be paid",
+          "v": "Transfer only",
+          "clue": "transfer"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Safer payment",
+          "v": "Card or a protected payment service",
+          "clue": "nocard"
+        },
+        {
+          "k": "Transfers, gift cards, crypto",
+          "v": "Cannot be taken back",
+          "clue": "transfer"
+        }
+      ]
+    }
+  ]
+}

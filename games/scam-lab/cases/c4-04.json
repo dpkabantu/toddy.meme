@@ -1,116 +1,180 @@
 {
   "id": "c4-04",
-  "type": "rush",
+  "type": "hunt",
   "chapter": 4,
   "difficulty": 2,
-  "title": "Scary Inbox",
-  "seconds": 60,
+  "title": "The Real Alert",
+  "disguise": null,
   "intro": [
-    "Ten alarming messages. One minute.",
-    "Swipe left for scam, right for safe.",
-    "Some alerts are real. Don't panic, sort."
+    "Another alarming message. After this chapter you might report everything.",
+    "But some alerts are real, and ignoring them is risky too.",
+    "Sniff it. Is it a threat, or your bank doing its job?"
   ],
-  "cards": [
+  "notify": {
+    "app": "Bank app",
+    "from": "Your bank (in-app)",
+    "text": "Was this you? Card payment €480 at 03:12"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        "Your bank"
+      ],
+      "addr": [
+        {
+          "clue": "inapp",
+          "text": "inside your banking app"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "Was this you?"
+        }
+      ],
+      "time": [
+        "3:13 AM"
+      ]
+    },
+    "context": "Your phone showed a notification from the banking app you use every day. You opened the app yourself.",
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "payment",
+            "text": "We paused a card payment of €480 to an online shop at 03:12."
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "answer",
+            "text": "Was this you? Tap Yes or No below."
+          },
+          " ",
+          {
+            "clue": "nocode",
+            "text": "We will never ask for your PIN, passwords or codes."
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "card",
+            "text": "If you tap No, we'll block the card and send a new one."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "inapp": {
+      "label": "Inside the bank app",
+      "strength": "harmless",
+      "lens": "You opened the real app yourself.",
+      "why": "Alerts inside your real app are hard to fake."
+    },
+    "subject": {
+      "label": "\"Was this you?\"",
+      "strength": "harmless",
+      "lens": "A simple question.",
+      "why": "Normal wording for a fraud check."
+    },
+    "payment": {
+      "label": "A paused payment",
+      "strength": "harmless",
+      "lens": "A specific payment they stopped.",
+      "why": "Banks do pause suspicious payments."
+    },
+    "answer": {
+      "label": "Yes or No only",
+      "strength": "harmless",
+      "lens": "It only asks Yes or No.",
+      "why": "No codes, no links, no transfers."
+    },
+    "nocode": {
+      "label": "Never asks for codes",
+      "strength": "harmless",
+      "lens": "It says it never asks for PINs or codes.",
+      "why": "Honest banks remind you of this."
+    },
+    "card": {
+      "label": "Blocks the card for you",
+      "strength": "harmless",
+      "lens": "They'll block it and send a new one.",
+      "why": "The bank does the work; you move no money."
+    }
+  },
+  "actions": [
     {
-      "id": "s1",
-      "app": "Pop-up",
-      "from": "Browser warning",
-      "text": "⚠️ VIRUS DETECTED! Call support now on +44 7700 900321 or your files will be deleted.",
-      "scam": true,
-      "why": "Real virus warnings never ask you to call a number."
+      "id": "go_ahead",
+      "label": "Tap \"No, it wasn't me\" in the app"
     },
     {
-      "id": "s2",
-      "app": "Email",
-      "from": "no-reply@ostrel.io",
-      "text": "Your password was changed. If this was you, nothing to do. If not, open the Ostrel app → Security.",
-      "scam": false,
-      "why": "You just changed it, and it points to the app, not a link."
+      "id": "verify",
+      "label": "Call the number on the back of your card"
     },
     {
-      "id": "s3",
-      "app": "SMS",
-      "from": "Customs Office",
-      "text": "Your parcel is held. Pay €3.99 customs fee here: customs-eu-pay.co",
-      "scam": true,
-      "why": "A small fee through an odd link is phishing."
-    },
-    {
-      "id": "s4",
-      "app": "Email",
-      "from": "Security Team",
-      "text": "Your wallet was hacked! Enter your recovery phrase to secure it within 1 hour.",
-      "scam": true,
-      "why": "Nobody needs your phrase to \"secure\" anything."
-    },
-    {
-      "id": "s5",
-      "app": "Bank app",
-      "from": "Your bank (in-app)",
-      "text": "Was this you? Card payment €480 at 03:12. Answer Yes or No here.",
-      "scam": false,
-      "why": "Inside your real bank app, asking only yes or no."
-    },
-    {
-      "id": "s6",
-      "app": "Email",
-      "from": "Tax Refund Office",
-      "text": "You are owed a €612 tax refund. Enter your card details to receive it.",
-      "scam": true,
-      "why": "Refunds never need your card details by email."
-    },
-    {
-      "id": "s7",
-      "app": "SMS",
-      "from": "Kiko (friend)",
-      "text": "Heads up: someone made a fake account with my photo. Please report it if it messages you!",
-      "scam": false,
-      "why": "A friend you know, warning you and asking nothing."
-    },
-    {
-      "id": "s8",
-      "app": "Plenvo DM",
-      "from": "Account Security",
-      "text": "Your account will be deleted for copyright violation. Appeal here within 2 hours: plenvo-appeal.help",
-      "scam": true,
-      "why": "Fake \"account violation\" links steal logins."
-    },
-    {
-      "id": "s9",
-      "app": "Email",
-      "from": "no-reply@zelvora.app",
-      "text": "Scheduled maintenance tonight 1–2 AM. Your funds are safe. No action needed.",
-      "scam": false,
-      "why": "Real domain, calm, and asks nothing."
-    },
-    {
-      "id": "s10",
-      "app": "SMS",
-      "from": "Police Dept",
-      "text": "Warrant issued in your name. Pay bail in crypto now to cancel it.",
-      "scam": true,
-      "why": "Police never take \"bail\" in crypto by text."
+      "id": "block_report",
+      "label": "Ignore it, it must be a scam"
     }
   ],
-  "golden_rule": "Scary message? Slow down. Real alerts point you to the app or official number, never to a payment, phrase or link.",
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "The card was blocked and a new one is on its way. The €480 never left.",
+      "toddy": "happy"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "It was the real bank. Ignoring a real alert let the €480 payment go through later.",
+      "mirageSays": "Panic or ignore, I win either way!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "CHECKED",
+      "line": "The bank confirmed it was a real alert and blocked the card.",
+      "toddy": "happy"
+    }
+  },
+  "what_if": {
+    "block_report": "It was inside your real app and asked only Yes or No. Real alerts deserve a response."
+  },
+  "golden_rule": "Real alerts live inside your real app and only ask you to confirm. They never ask for codes or transfers.",
   "quick_check": {
-    "q": "A pop-up says \"VIRUS! Call this number now\". What do you do?",
+    "q": "Why was this alert genuine?",
     "options": [
       {
         "id": "a",
-        "text": "Call quickly"
+        "text": "It was urgent"
       },
       {
         "id": "b",
-        "text": "Close it; never call numbers from pop-ups"
+        "text": "It was inside your bank app and asked only Yes or No"
       },
       {
         "id": "c",
-        "text": "Pay for the cleaner they offer"
+        "text": "It used the word \"bank\""
       }
     ],
     "answer": "b",
-    "explain": "Fake virus pop-ups lead to \"tech support\" scams."
+    "explain": "Where it appears and what it asks matter most."
+  },
+  "hints": {
+    "nudge": "Where did this alert appear, and what does it ask you to do?",
+    "glow_order": []
   },
   "sources": [
     "ftc-crypto",
@@ -118,5 +182,61 @@
     "ic3-2024",
     "ftc-phishing"
   ],
-  "checked_on": "2026-10-13"
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check where you are",
+      "title": "The alert",
+      "rows": [
+        {
+          "k": "You opened it in",
+          "v": "The real bank app, yourself",
+          "clue": "inapp"
+        },
+        {
+          "k": "Subject",
+          "v": "A simple question",
+          "clue": "subject"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check what it asks",
+      "title": "The question",
+      "rows": [
+        {
+          "k": "It asks",
+          "v": "Yes or No only",
+          "clue": "answer"
+        },
+        {
+          "k": "Payment",
+          "v": "A specific one they stopped",
+          "clue": "payment"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official page",
+      "title": "What your bank says",
+      "rows": [
+        {
+          "k": "Do they ask for PINs or codes?",
+          "v": "Never",
+          "clue": "nocode"
+        },
+        {
+          "k": "If you say No",
+          "v": "They block the card and send a new one",
+          "clue": "card"
+        }
+      ]
+    }
+  ]
 }

@@ -1,5 +1,5 @@
 // Progress saved on this device only (browser storage). Nothing is sent anywhere.
-const KEY = 'toddy.scamlab.v2';
+const KEY = 'toddy.scamlab.v3';
 const fresh = () => ({ settings: { sound: true, music: true, calm: false, big: false }, stars: {}, best: {}, rules: [], daily: {}, howto: false });
 
 let data = fresh();

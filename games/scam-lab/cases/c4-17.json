@@ -1,0 +1,259 @@
+{
+  "id": "c4-17",
+  "type": "hunt",
+  "chapter": 4,
+  "difficulty": 2,
+  "title": "The Bill Reminder",
+  "disguise": null,
+  "intro": [
+    "A reminder lands about your electricity bill. After a day of threats, you trust nothing.",
+    "But some messages are real. Mirage loves it when you stop trusting the honest ones.",
+    "Sniff carefully. Then decide."
+  ],
+  "notify": {
+    "app": "Mail",
+    "from": "Brightgrid Energy",
+    "text": "Your bill is due on the 28th"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        "Brightgrid Energy"
+      ],
+      "addr": [
+        {
+          "clue": "addr",
+          "text": "bills@brightgrid.energy"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "Your October bill is due on the 28th"
+        }
+      ],
+      "time": [
+        "9:00 AM"
+      ]
+    },
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "name",
+            "text": "Hi Toddy,"
+          }
+        ]
+      },
+      {
+        "p": [
+          "Your bill of ",
+          {
+            "clue": "amount",
+            "text": "£62.40"
+          },
+          " is due on ",
+          {
+            "clue": "date",
+            "text": "28 October"
+          },
+          ". It matches your usual monthly use."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "pay",
+            "text": "Pay in your Brightgrid app or account, as usual."
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "nothreat",
+            "text": "Nothing is wrong. This is only a reminder."
+          }
+        ]
+      },
+      {
+        "foot": [
+          {
+            "clue": "foot",
+            "text": "Your account number ends in 0412 · We never ask for your full card number or PIN by email."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "addr": {
+      "label": "The company's real address",
+      "strength": "harmless",
+      "lens": "It comes from bills@brightgrid.energy, the company's own domain.",
+      "why": "A matching domain is good evidence, so also look at what it asks."
+    },
+    "subject": {
+      "label": "A plain subject",
+      "strength": "harmless",
+      "lens": "No shouting, no threat.",
+      "why": "Calm subjects are typical of real bills."
+    },
+    "name": {
+      "label": "Uses your name",
+      "strength": "harmless",
+      "lens": "It greets you by name.",
+      "why": "It proves little alone, but fits a real account."
+    },
+    "amount": {
+      "label": "A normal amount",
+      "strength": "harmless",
+      "lens": "It matches your usual use.",
+      "why": "You can compare with past bills."
+    },
+    "date": {
+      "label": "A clear due date, not today",
+      "strength": "harmless",
+      "lens": "Due on the 28th, with time to pay.",
+      "why": "Honest reminders give you time. Scams threaten tonight."
+    },
+    "pay": {
+      "label": "Pay as usual",
+      "strength": "harmless",
+      "lens": "It sends you to your own app or account.",
+      "why": "Pointing you to your own account is what honest companies do."
+    },
+    "nothreat": {
+      "label": "No threat",
+      "strength": "harmless",
+      "lens": "It says nothing is wrong.",
+      "why": "Honest reminders do not threaten you."
+    },
+    "foot": {
+      "label": "Partial account number, and a safety line",
+      "strength": "harmless",
+      "lens": "It shows only the end of your account number, and says it never asks for card numbers or PINs.",
+      "why": "Real companies warn you about scams."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Open my Brightgrid app and pay the bill as usual"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "The app showed the same £62.40, due on the 28th, matching your usual use. You paid in two taps.",
+      "toddy": "happy"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "Nothing bad happened today. But a bill ignored too long can bring real late fees. Checking was the better move.",
+      "mirageSays": "Fine. Next!"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was a real bill reminder. When every message looks like a scam, the real ones get lost too.",
+      "mirageSays": "If you trust nothing, I win anyway."
+    }
+  },
+  "what_if": {
+    "block_report": "It matched your usual bill, gave you time, sent you to your own account and threatened nothing. That calm is what real messages look like.",
+    "ignore": "Ignoring was safe. Recognising a real message is the skill: it asks for nothing secret and matches something you know."
+  },
+  "golden_rule": "A real bill reminder matches your usual bill, gives you time and sends you to your own account. A scam threatens tonight.",
+  "quick_check": {
+    "q": "What made this bill reminder honest?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It mentioned the company"
+      },
+      {
+        "id": "b",
+        "text": "It matched your usual bill, gave time and sent you to your own account"
+      },
+      {
+        "id": "c",
+        "text": "It had an amount"
+      },
+      {
+        "id": "d",
+        "text": "It came in the morning"
+      }
+    ],
+    "answer": "b",
+    "explain": "Your usual amount, time to pay and no threat are the real signs."
+  },
+  "hints": {
+    "nudge": "What is this message actually asking you to do?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-utility"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Sender check",
+      "rows": [
+        {
+          "k": "Sent from",
+          "v": "bills@brightgrid.energy",
+          "clue": "addr"
+        },
+        {
+          "k": "Company's real domain",
+          "v": "brightgrid.energy"
+        },
+        {
+          "k": "Amount vs usual",
+          "v": "Matches",
+          "clue": "amount"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Do real utilities demand same-day payment?",
+          "v": "No, they give you time",
+          "clue": "date"
+        },
+        {
+          "k": "How to pay",
+          "v": "In your own app or account",
+          "clue": "pay"
+        }
+      ]
+    }
+  ]
+}

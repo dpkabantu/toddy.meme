@@ -1,0 +1,231 @@
+{
+  "id": "c7-09",
+  "type": "hunt",
+  "chapter": 7,
+  "difficulty": 2,
+  "title": "An Honest Update",
+  "disguise": null,
+  "intro": [
+    "A project Toddy follows posted an update. It's bad news.",
+    "Not every disappointment is a scam. Some teams are just honest.",
+    "Sniff it."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "@pawprint_project ☑",
+    "text": "Update: launch delayed two weeks"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        "PawPrint Project"
+      ],
+      "sub": [
+        {
+          "clue": "badge",
+          "text": "@pawprint_project ☑ · since 2023"
+        }
+      ],
+      "avatar": {
+        "glyph": "🐾",
+        "clue": "avatar"
+      }
+    },
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "delay",
+            "text": "Update: our launch is delayed two weeks. A security review found issues to fix."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "nofunds",
+            "text": "We are not raising money. There is no presale."
+          },
+          " ",
+          {
+            "clue": "nodm",
+            "text": "We will never DM you."
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "risk",
+            "text": "Crypto is risky; only follow along if you're comfortable."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "badge": {
+      "label": "Official account",
+      "strength": "harmless",
+      "lens": "The handle you follow, with the app's badge.",
+      "why": "Same account as always."
+    },
+    "delay": {
+      "label": "Bad news, honestly told",
+      "strength": "harmless",
+      "lens": "A delay for a security review.",
+      "why": "Scammers promise the moon. Honest teams admit delays."
+    },
+    "nofunds": {
+      "label": "No money asked",
+      "strength": "harmless",
+      "lens": "No presale, no fundraising.",
+      "why": "Nothing to pay."
+    },
+    "nodm": {
+      "label": "\"We never DM\"",
+      "strength": "harmless",
+      "lens": "A warning about impostors.",
+      "why": "Honest projects say this."
+    },
+    "risk": {
+      "label": "Risk warning",
+      "strength": "harmless",
+      "lens": "It says crypto is risky.",
+      "why": "Honesty about risk is a good sign."
+    },
+    "avatar": {
+      "label": "Paw logo",
+      "strength": "harmless",
+      "lens": "The project logo.",
+      "why": "Proves nothing alone."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Note it and wait for the official launch"
+    },
+    {
+      "id": "ignore",
+      "label": "Unfollow, too boring"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "Two weeks later, the project launched after its review. No drama.",
+      "toddy": "happy"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was an honest update. Reporting honest teams buries real warnings.",
+      "mirageSays": "Treat honesty as a scam? Delicious."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "SAFE",
+      "line": "Unfollowing was fine. Nothing was wrong with the update.",
+      "toddy": "happy"
+    }
+  },
+  "what_if": {
+    "block_report": "It asked for nothing and admitted a delay. That's how honest teams behave."
+  },
+  "golden_rule": "Honest projects admit delays and risks and ask you for nothing. Hype that promises everything is the warning sign.",
+  "quick_check": {
+    "q": "Which post is a better sign?",
+    "options": [
+      {
+        "id": "a",
+        "text": "\"Delayed for a security review. No presale.\""
+      },
+      {
+        "id": "b",
+        "text": "\"1000x guaranteed, buy before tonight!\""
+      }
+    ],
+    "answer": "a",
+    "explain": "Honesty about problems beats promises of riches."
+  },
+  "hints": {
+    "nudge": "Does this post ask you for anything?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-crypto",
+    "chainalysis-2025",
+    "ic3-2024"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the account",
+      "title": "@pawprint_project",
+      "rows": [
+        {
+          "k": "Handle",
+          "v": "The one you follow, with the app's badge",
+          "clue": "badge"
+        },
+        {
+          "k": "Avatar",
+          "v": "The project logo",
+          "clue": "avatar"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the news",
+      "title": "What they say",
+      "rows": [
+        {
+          "k": "Update",
+          "v": "A delay for a security review",
+          "clue": "delay"
+        },
+        {
+          "k": "Presale or fundraising",
+          "v": "None",
+          "clue": "nofunds"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the safety notes",
+      "title": "In the post",
+      "rows": [
+        {
+          "k": "Impostors",
+          "v": "It warns you about them",
+          "clue": "nodm"
+        },
+        {
+          "k": "Risk",
+          "v": "It says crypto is risky",
+          "clue": "risk"
+        }
+      ]
+    }
+  ]
+}
