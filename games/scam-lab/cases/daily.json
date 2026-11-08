@@ -151,13 +151,13 @@
     "type": "hunt",
     "daily": true,
     "template": "d02",
-    "title": "Daily Quickie · Account Locked",
+    "title": "Daily Quickie · Exchange Account Locked",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
     "notify": {
       "app": "Mail",
-      "from": "Brindle Bank Security",
+      "from": "Ostrel Security",
       "text": "URGENT: your account is locked"
     },
     "screen": {
@@ -166,13 +166,13 @@
         "from": [
           {
             "clue": "from",
-            "text": "Brindle Bank Security"
+            "text": "Ostrel Security"
           }
         ],
         "addr": [
           {
             "clue": "addr",
-            "text": "security@brindle-bank-help.example"
+            "text": "alert@ostrel-secure.help"
           }
         ],
         "subject": [
@@ -182,67 +182,76 @@
           }
         ],
         "time": [
-          "3:12 AM"
+          "8:02 AM"
         ]
       },
       "items": [
         {
           "p": [
-            "Dear customer,"
-          ]
-        },
-        {
-          "p": [
-            "We found ",
+            "Your account is ",
             {
-              "clue": "odd",
-              "text": "unusual activity"
+              "clue": "lock",
+              "text": "locked"
             },
-            ". Your account is locked."
+            " after a suspicious login."
           ]
         },
         {
           "p": [
+            "Verify now at ",
             {
               "clue": "link",
-              "text": "Click here to unlock now",
+              "text": "ostrel-secure.help/verify",
               "link": true
             },
-            " or it will be closed in 24 hours."
+            " or your coins will be ",
+            {
+              "clue": "rush",
+              "text": "frozen in 24 hours",
+              "countdown": 900
+            },
+            "."
           ]
         }
-      ]
+      ],
+      "context": "You use the Ostrel exchange."
     },
     "clues": {
-      "addr": {
-        "label": "Look-alike address",
+      "lock": {
+        "label": "Locked-account scare",
         "strength": "strong",
-        "lens": "The address is brindle-bank-help.example, not the bank’s own.",
-        "why": "Check the address after the @, not just the name."
-      },
-      "subj": {
-        "label": "Shouting subject",
-        "strength": "strong",
-        "lens": "URGENT in capitals.",
-        "why": "Panic is how scammers rush you."
+        "lens": "A scary alert.",
+        "why": "Scare is used to rush you."
       },
       "link": {
-        "label": "Unlock link",
+        "label": "Look-alike link",
         "strength": "strong",
-        "lens": "A button that leads to a fake login page.",
-        "why": "Open your bank’s app yourself instead of tapping a link."
+        "lens": "ostrel-secure.help is not ostrel.io.",
+        "why": "Real exchanges send you to their own app."
+      },
+      "rush": {
+        "label": "24-hour countdown",
+        "strength": "strong",
+        "lens": "A deadline.",
+        "why": "Pressure stops you from checking."
+      },
+      "addr": {
+        "label": "A sender name",
+        "strength": "harmless",
+        "lens": "A security-sounding address.",
+        "why": "Anyone can type a name."
       },
       "from": {
-        "label": "A bank name",
+        "label": "Ostrel Security",
         "strength": "harmless",
-        "lens": "The sender calls itself Brindle Bank Security.",
-        "why": "A name proves nothing."
+        "lens": "A name.",
+        "why": "Names are copied."
       },
-      "odd": {
-        "label": "Vague claim",
+      "subj": {
+        "label": "Urgent subject",
         "strength": "harmless",
-        "lens": "“Unusual activity”, no details.",
-        "why": "Vague alarms prove nothing either way."
+        "lens": "Loud.",
+        "why": "Loud words prove nothing."
       }
     },
     "actions": [
@@ -299,30 +308,30 @@
       }
     },
     "what_if": {},
-    "golden_rule": "A bank never asks you to unlock an account through an email link.",
+    "golden_rule": "An exchange never asks you to log in through an email link. Open the app yourself.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
       "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d03",
     "type": "hunt",
     "daily": true,
     "template": "d03",
-    "title": "Daily Quickie · Virus Warning",
+    "title": "Daily Quickie · Wallet Drainer Warning",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
     "notify": {
       "app": "Messages",
-      "from": "Device Care Team",
-      "text": "VIRUS FOUND on your phone…"
+      "from": "Hedrio Support",
+      "text": "WARNING: your wallet is compromised…"
     },
     "screen": {
       "app": "sms",
@@ -330,7 +339,7 @@
         "name": [
           {
             "clue": "from",
-            "text": "Device Care Team"
+            "text": "Hedrio Support"
           }
         ]
       },
@@ -340,30 +349,32 @@
           "msg": [
             {
               "clue": "virus",
-              "text": "VIRUS FOUND on your phone!"
+              "text": "WARNING: your wallet is compromised!"
             },
             " Do not switch it off."
           ]
         },
         {
           "msg": [
-            "Call our ",
+            "Confirm your ",
             {
-              "clue": "call",
-              "text": "support line"
+              "clue": "seed",
+              "text": "12-word recovery phrase"
             },
-            " now: ",
+            " at ",
             {
-              "clue": "num",
-              "text": "+44 20 5550 0147"
-            }
+              "clue": "link",
+              "text": "hedrio-help.live",
+              "link": true
+            },
+            " to secure it."
           ]
         },
         {
           "msg": [
             {
-              "clue": "remote",
-              "text": "We will need to connect to your phone to remove it."
+              "clue": "rush",
+              "text": "Act now or lose your coins."
             }
           ]
         }
@@ -371,34 +382,34 @@
     },
     "clues": {
       "virus": {
-        "label": "Scary alarm",
+        "label": "Compromised alarm",
         "strength": "strong",
-        "lens": "It shouts about a virus out of nowhere.",
-        "why": "Real security tools do not text you panic messages."
+        "lens": "A scary alert.",
+        "why": "Scare is used to rush you."
       },
-      "call": {
-        "label": "Call us now",
+      "seed": {
+        "label": "Asks for your recovery phrase",
         "strength": "strong",
-        "lens": "It wants you to phone a number it gives you.",
-        "why": "Look up a company’s number yourself. Do not use theirs."
+        "lens": "The key to all your coins.",
+        "why": "Nobody real ever asks for it."
       },
-      "remote": {
-        "label": "Remote access",
+      "link": {
+        "label": "Look-alike link",
         "strength": "strong",
-        "lens": "They want to connect to your phone.",
-        "why": "Giving control of your phone gives away everything on it."
+        "lens": "hedrio-help.live is not hedrio.app.",
+        "why": "Real wallets never ask on links."
+      },
+      "rush": {
+        "label": "Act now",
+        "strength": "strong",
+        "lens": "A deadline.",
+        "why": "Pressure stops you from checking."
       },
       "from": {
-        "label": "A helpful name",
+        "label": "Hedrio Support",
         "strength": "harmless",
-        "lens": "Device Care Team sounds friendly.",
-        "why": "Names are easy to invent."
-      },
-      "num": {
-        "label": "A phone number",
-        "strength": "harmless",
-        "lens": "A normal looking number.",
-        "why": "A number proves nothing either way."
+        "lens": "A support name.",
+        "why": "Names are copied."
       }
     },
     "actions": [
@@ -455,16 +466,16 @@
       }
     },
     "what_if": {},
-    "golden_rule": "Nobody who truly protects your phone texts you to call them and hand over control.",
+    "golden_rule": "No one real ever asks for your recovery phrase. Anyone who does is robbing you.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
       "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d04",
@@ -631,98 +642,111 @@
     "type": "hunt",
     "daily": true,
     "template": "d05",
-    "title": "Daily Quickie · A Friend Needs Gift Cards",
+    "title": "Daily Quickie · A Friend Needs USDT",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
     "notify": {
       "app": "Chirp",
-      "from": "Lena",
-      "text": "Hey, my phone broke. Can you help?"
+      "from": "Marc",
+      "text": "My account is locked. Can you send 200 USDT?"
     },
     "screen": {
       "app": "chirp",
       "head": {
         "name": [
           {
-            "clue": "from",
-            "text": "Lena"
+            "clue": "name",
+            "text": "Marc"
           }
         ],
         "sub": [
-          "New number, not saved"
+          {
+            "clue": "sub",
+            "text": "New account"
+          }
         ],
         "avatar": {
-          "glyph": "🙂"
+          "glyph": "🧢",
+          "clue": "pic"
         }
       },
       "banner": [
         {
-          "clue": "first",
+          "clue": "dm",
           "text": "Message request · not in your contacts"
         }
       ],
+      "context": "Your friend Marc has a saved number. This account is new.",
       "items": [
         {
           "msg": [
-            "Hey it’s Lena, ",
+            "Hey, my account is locked. Can you ",
             {
-              "clue": "new",
-              "text": "my phone broke so this is a new number"
+              "clue": "send",
+              "text": "send 200 USDT"
             },
-            "."
+            " for me?"
           ]
         },
         {
           "msg": [
-            "Can you buy ",
+            "I will ",
             {
-              "clue": "cards",
-              "text": "three gift cards"
+              "clue": "repay",
+              "text": "repay you tomorrow"
             },
-            " for my cousin’s birthday? I’ll pay you back."
-          ]
-        },
-        {
-          "msg": [
+            ". ",
             {
-              "clue": "secret",
-              "text": "Don’t call, my voice is gone. Just send the codes here."
+              "clue": "rush",
+              "text": "Please, now."
             }
           ]
         }
       ]
     },
     "clues": {
-      "new": {
-        "label": "A “new number”",
+      "send": {
+        "label": "Asks for USDT",
         "strength": "strong",
-        "lens": "It says the old phone broke.",
-        "why": "Real friends can prove who they are. Call the old number."
+        "lens": "A request for crypto.",
+        "why": "Real friends call you."
       },
-      "cards": {
-        "label": "Gift card request",
+      "dm": {
+        "label": "New account",
         "strength": "strong",
-        "lens": "It asks for gift cards.",
-        "why": "Gift cards are how scammers get paid. Nobody honest asks for codes."
+        "lens": "Not your friend's usual one.",
+        "why": "Impersonators use new accounts."
       },
-      "secret": {
-        "label": "No calls, only codes",
+      "repay": {
+        "label": "\"Repay tomorrow\"",
         "strength": "strong",
-        "lens": "It avoids a call and wants codes in chat.",
-        "why": "Avoiding a call is a warning sign."
+        "lens": "A promise.",
+        "why": "Repayment is a hook."
       },
-      "first": {
-        "label": "Not in your contacts",
+      "rush": {
+        "label": "Please, now",
+        "strength": "strong",
+        "lens": "A deadline.",
+        "why": "Pressure stops you from checking."
+      },
+      "name": {
+        "label": "Marc",
         "strength": "harmless",
-        "lens": "The number is new.",
-        "why": "A new number alone proves nothing, but check it."
+        "lens": "A first name.",
+        "why": "Names prove nothing."
       },
-      "from": {
-        "label": "A friend’s name",
+      "sub": {
+        "label": "New account",
         "strength": "harmless",
-        "lens": "The name is Lena.",
-        "why": "A name is easy to copy."
+        "lens": "Recent.",
+        "why": "A hint, not proof."
+      },
+      "pic": {
+        "label": "A cap picture",
+        "strength": "harmless",
+        "lens": "A symbol.",
+        "why": "Pictures prove nothing."
       }
     },
     "actions": [
@@ -779,23 +803,23 @@
       }
     },
     "what_if": {},
-    "golden_rule": "If a friend asks for gift cards from a new number, call their old number first.",
+    "golden_rule": "If a friend asks for crypto from a new account, call their real number first.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-impersonator",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d06",
     "type": "hunt",
     "daily": true,
     "template": "d06",
-    "title": "Daily Quickie · A Sweet Stranger",
+    "title": "Daily Quickie · The Perfect Match, Day One",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -809,85 +833,86 @@
       "head": {
         "name": [
           {
-            "clue": "from",
-            "text": "Sofia, 31"
+            "clue": "name",
+            "text": "Sofia"
           }
         ],
         "sub": [
-          "Matched yesterday"
+          {
+            "clue": "sub",
+            "text": "Matched today"
+          }
         ],
         "avatar": {
-          "glyph": "🌷"
+          "glyph": "🌷",
+          "clue": "pic"
         }
       },
-      "banner": [
-        {
-          "clue": "first",
-          "text": "Message request"
-        }
-      ],
+      "context": "You matched on a dating app a few hours ago.",
       "items": [
         {
           "msg": [
+            "I have never felt so ",
             {
               "clue": "fast",
-              "text": "I’ve never felt this connected to anyone"
+              "text": "connected"
             },
-            ", and we only met yesterday."
+            " to someone ❤️"
           ]
         },
         {
           "msg": [
-            "My uncle taught me a ",
+            "My uncle taught me how to ",
             {
-              "clue": "invest",
-              "text": "trading app that doubles money"
+              "clue": "earn",
+              "text": "earn USDT"
             },
-            ". Want me to show you?"
-          ]
-        },
-        {
-          "msg": [
-            "Let’s ",
+            " safely. Want to ",
             {
               "clue": "move",
-              "text": "move to a private chat"
+              "text": "move to a private app"
             },
-            " so we can talk freely."
+            "?"
           ]
         }
       ]
     },
     "clues": {
       "fast": {
-        "label": "Too much, too fast",
+        "label": "Very fast love",
         "strength": "strong",
-        "lens": "Deep feelings after one day.",
-        "why": "Real affection takes time. Fast love is a scam tactic."
+        "lens": "Strong feelings within hours.",
+        "why": "Fast love is a script."
       },
-      "invest": {
-        "label": "Investing tip",
+      "earn": {
+        "label": "Crypto earning talk",
         "strength": "strong",
-        "lens": "A romantic match suggests an app that doubles money.",
-        "why": "Romance plus investing is a classic scam. Never invest on a match’s advice."
+        "lens": "A match talks about earning USDT.",
+        "why": "This is the start of a fake investment."
       },
       "move": {
-        "label": "Move chats",
+        "label": "Move to a private app",
         "strength": "strong",
-        "lens": "It wants a private chat away from the app.",
-        "why": "Moving away from the app removes its safety tools."
+        "lens": "Leaves the dating app.",
+        "why": "Scammers avoid places where they can be reported."
       },
-      "from": {
-        "label": "A friendly profile",
+      "name": {
+        "label": "Sofia",
         "strength": "harmless",
-        "lens": "A smiling photo and a name.",
-        "why": "Photos are easy to steal."
+        "lens": "A first name.",
+        "why": "Names prove nothing."
       },
-      "first": {
-        "label": "A new match",
+      "sub": {
+        "label": "Matched today",
         "strength": "harmless",
-        "lens": "You matched yesterday.",
-        "why": "Matching is normal. What comes next matters."
+        "lens": "Recent.",
+        "why": "Time proves nothing."
+      },
+      "pic": {
+        "label": "Flower picture",
+        "strength": "harmless",
+        "lens": "A symbol.",
+        "why": "Pictures prove nothing."
       }
     },
     "actions": [
@@ -944,16 +969,16 @@
       }
     },
     "what_if": {},
-    "golden_rule": "Love plus an investment tip is a scam. Never invest on a stranger’s advice.",
+    "golden_rule": "Love plus crypto talk in the first days is a script. Slow down.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-romance",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d07",
@@ -1123,7 +1148,7 @@
     "type": "hunt",
     "daily": true,
     "template": "d08",
-    "title": "Daily Quickie · Was This You?",
+    "title": "Daily Quickie · Was This You? Exchange Login",
     "seconds": 90,
     "disguise": null,
     "intro": [],
@@ -1136,81 +1161,90 @@
       "app": "mail",
       "head": {
         "from": [
-          "Your bank"
+          {
+            "clue": "from",
+            "text": "Ostrel"
+          }
         ],
         "addr": [
           {
-            "clue": "inapp",
-            "text": "inside your banking app"
+            "clue": "addr",
+            "text": "no-reply@ostrel.io"
           }
         ],
         "subject": [
           {
             "clue": "subj",
-            "text": "Was this you?"
+            "text": "Was this you? New login"
           }
         ],
         "time": [
-          "2:41 PM"
+          "4:12 PM"
         ]
       },
       "items": [
         {
           "p": [
-            "We paused a ",
+            "We saw a ",
             {
-              "clue": "paused",
-              "text": "card payment of $64.00"
+              "clue": "login",
+              "text": "new login on a new laptop"
             },
-            " at a shop you have not used before."
+            " a minute ago."
           ]
         },
         {
           "p": [
             {
-              "clue": "yesno",
-              "text": "Tap Yes or No below."
+              "clue": "open",
+              "text": "If it was you, no action is needed."
             },
             " ",
             {
-              "clue": "nocodes",
-              "text": "We never ask for PINs or codes."
+              "clue": "safe",
+              "text": "If not, open the Ostrel app yourself and secure your account."
             }
           ]
         }
       ],
-      "context": "You opened your real banking app yourself."
+      "context": "You just logged in on a new laptop yourself."
     },
     "clues": {
-      "inapp": {
-        "label": "Inside the real app",
+      "addr": {
+        "label": "The usual sender",
         "strength": "harmless",
-        "lens": "You opened the app yourself.",
-        "why": "Hard to fake."
+        "lens": "The same address as before.",
+        "why": "A familiar sender is a good sign."
+      },
+      "login": {
+        "label": "You just did this",
+        "strength": "harmless",
+        "lens": "It matches your action.",
+        "why": "You started it."
+      },
+      "open": {
+        "label": "No action needed",
+        "strength": "harmless",
+        "lens": "Nothing is asked.",
+        "why": "Honest notices ask nothing."
+      },
+      "safe": {
+        "label": "Tells you to use the app yourself",
+        "strength": "harmless",
+        "lens": "No link.",
+        "why": "Safe advice."
+      },
+      "from": {
+        "label": "Ostrel",
+        "strength": "harmless",
+        "lens": "The exchange.",
+        "why": "Matches your account."
       },
       "subj": {
-        "label": "A simple question",
+        "label": "A plain subject",
         "strength": "harmless",
-        "lens": "“Was this you?”",
-        "why": "A normal fraud check."
-      },
-      "paused": {
-        "label": "A paused payment",
-        "strength": "harmless",
-        "lens": "They stopped a payment for you.",
-        "why": "Banks do this to protect you."
-      },
-      "yesno": {
-        "label": "Yes or No only",
-        "strength": "harmless",
-        "lens": "Nothing else is asked.",
-        "why": "No codes, no links."
-      },
-      "nocodes": {
-        "label": "Never asks for codes",
-        "strength": "harmless",
-        "lens": "A safety reminder.",
-        "why": "Honest banks say this."
+        "lens": "Calm.",
+        "why": "Normal emails are calm."
       }
     },
     "actions": [
@@ -1267,23 +1301,23 @@
       }
     },
     "what_if": {},
-    "golden_rule": "A real alert lives inside your real app and only asks you to confirm.",
+    "golden_rule": "A login alert for something you just did is fine. Never use its links if you are unsure; open the app.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
       "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d09",
     "type": "hunt",
     "daily": true,
     "template": "d09",
-    "title": "Daily Quickie · Pay To Start Work",
+    "title": "Daily Quickie · Pay To Activate Your Wallet Job",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -1298,84 +1332,91 @@
         "from": [
           {
             "clue": "from",
-            "text": "Talentforge Careers"
+            "text": "Pelmora Labs HR"
           }
         ],
         "addr": [
           {
             "clue": "addr",
-            "text": "hr@talentforge-careers.example"
+            "text": "hr@pelmora-jobs.co"
           }
         ],
         "subject": [
-          "You got the job!"
+          {
+            "clue": "subj",
+            "text": "You got the job! No interview needed"
+          }
         ],
         "time": [
-          "10:30 AM"
+          "9:41 AM"
         ]
       },
       "items": [
         {
           "p": [
-            "Congratulations, you are hired for remote data entry. ",
-            {
-              "clue": "noint",
-              "text": "No interview needed."
-            }
-          ]
-        },
-        {
-          "p": [
-            "Salary: ",
+            "Congratulations! Start earning ",
             {
               "clue": "pay",
-              "text": "$4,500 a month"
+              "text": "400 USDT a day"
             },
-            " for light work."
+            " from home."
           ]
         },
         {
           "p": [
-            "To start, pay a ",
+            "First, pay a ",
             {
               "clue": "fee",
-              "text": "$80 training and equipment fee"
+              "text": "40 USDT activation fee"
             },
-            " today."
+            " at ",
+            {
+              "clue": "link",
+              "text": "pelmora-jobs.co/start",
+              "link": true
+            },
+            "."
           ]
         }
-      ]
+      ],
+      "context": "You never interviewed anywhere."
     },
     "clues": {
-      "noint": {
-        "label": "No interview",
-        "strength": "strong",
-        "lens": "You were hired without being asked a thing.",
-        "why": "Real employers interview you."
-      },
-      "pay": {
-        "label": "Too good pay",
-        "strength": "strong",
-        "lens": "$4,500 a month for easy work.",
-        "why": "Big pay for little work is the bait."
-      },
       "fee": {
         "label": "Pay to start",
         "strength": "strong",
-        "lens": "You must pay $80 first.",
-        "why": "A real job never charges you to begin."
+        "lens": "A fee before work.",
+        "why": "Real jobs never charge you."
       },
-      "addr": {
-        "label": "A look-alike company address",
-        "strength": "harmless",
-        "lens": "The address does not tell you much.",
-        "why": "Addresses are easy to fake."
+      "pay": {
+        "label": "Big daily pay",
+        "strength": "strong",
+        "lens": "High pay for little.",
+        "why": "Pay is bait."
+      },
+      "link": {
+        "label": "Look-alike link",
+        "strength": "strong",
+        "lens": "pelmora-jobs.co is not a real site.",
+        "why": "Real employers have their own."
+      },
+      "subj": {
+        "label": "No interview",
+        "strength": "strong",
+        "lens": "A job with no interview.",
+        "why": "It is bait."
       },
       "from": {
-        "label": "A company name",
+        "label": "HR name",
         "strength": "harmless",
-        "lens": "Talentforge sounds professional.",
-        "why": "Names are easy to invent."
+        "lens": "A name.",
+        "why": "Names are copied."
+      },
+      "addr": {
+        "label": "HR address",
+        "strength": "harmless",
+        "lens": "A name-like address.",
+        "why": "Look for the domain."
       }
     },
     "actions": [
@@ -1432,23 +1473,23 @@
       }
     },
     "what_if": {},
-    "golden_rule": "A job that charges you to start is not a job.",
+    "golden_rule": "A job that asks for a fee is not a job.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-jobs",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d10",
     "type": "hunt",
     "daily": true,
     "template": "d10",
-    "title": "Daily Quickie · A Tax Refund",
+    "title": "Daily Quickie · A Crypto Tax Refund",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -1463,67 +1504,64 @@
         "name": [
           {
             "clue": "from",
-            "text": "Tax Office"
+            "text": "Civic Revenue Portal"
           }
         ]
       },
-      "context": "You have not filed anything this month.",
+      "context": "You are not expecting any refund.",
       "items": [
         {
           "msg": [
             "You are owed a ",
             {
-              "clue": "refund",
-              "text": "refund of $312"
+              "clue": "sum",
+              "text": "refund of 312 USDT"
             },
             "."
           ]
         },
         {
           "msg": [
-            "Claim it now: ",
+            "Claim at ",
             {
               "clue": "link",
-              "text": "taxrefund-claim.example",
+              "text": "civic-revenue-refund.top",
               "link": true
-            }
-          ]
-        },
-        {
-          "msg": [
+            },
+            " with your ",
             {
-              "clue": "timer",
-              "text": "Offer ends",
-              "countdown": 1800
-            }
+              "clue": "wallet",
+              "text": "wallet address and seed phrase"
+            },
+            "."
           ]
         }
       ]
     },
     "clues": {
-      "refund": {
+      "sum": {
         "label": "A surprise refund",
         "strength": "strong",
-        "lens": "A refund you did not expect.",
-        "why": "Tax offices do not text surprise refunds."
+        "lens": "Unexpected money.",
+        "why": "Bait for clicks."
       },
       "link": {
         "label": "Look-alike link",
         "strength": "strong",
-        "lens": "The link is not a government address.",
-        "why": "Use the official government site that you type yourself."
+        "lens": "civic-revenue-refund.top is not a government site.",
+        "why": "Real tax offices do not text links."
       },
-      "timer": {
-        "label": "Countdown",
+      "wallet": {
+        "label": "Asks for your seed phrase",
         "strength": "strong",
-        "lens": "Only 30 minutes left.",
-        "why": "Pressure is the trick."
+        "lens": "The key to your coins.",
+        "why": "Nobody real asks."
       },
       "from": {
-        "label": "An official-sounding name",
+        "label": "Civic Revenue Portal",
         "strength": "harmless",
-        "lens": "“Tax Office”.",
-        "why": "A name proves nothing."
+        "lens": "A made-up name.",
+        "why": "Names are copied."
       }
     },
     "actions": [
@@ -1580,23 +1618,23 @@
       }
     },
     "what_if": {},
-    "golden_rule": "Tax offices do not text refund links. Go to the official site yourself.",
+    "golden_rule": "No tax office pays refunds in coins or asks for your seed phrase.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-government",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d11",
     "type": "hunt",
     "daily": true,
     "template": "d11",
-    "title": "Daily Quickie · Paid Too Much",
+    "title": "Daily Quickie · Sent Too Much USDT",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -1610,76 +1648,96 @@
       "head": {
         "name": [
           {
-            "clue": "from",
-            "text": "Marco (Tradely buyer)"
+            "clue": "name",
+            "text": "Jonas"
           }
         ],
         "sub": [
-          "Interested in: your bike"
+          {
+            "clue": "sub",
+            "text": "Buyer"
+          }
         ],
         "avatar": {
-          "glyph": "🚲"
+          "glyph": "🛒",
+          "clue": "pic"
         }
       },
-      "banner": [
-        "Chat opened on Tradely"
-      ],
+      "context": "You sold a small item for USDT. Check your wallet.",
       "items": [
         {
           "msg": [
-            "Hi! I paid $500 for your $300 bike, ",
+            "I sent ",
             {
-              "clue": "over",
-              "text": "sent too much by mistake"
+              "clue": "extra",
+              "text": "1,000 USDT instead of 100"
+            },
+            ". Please ",
+            {
+              "clue": "send",
+              "text": "send the extra back"
             },
             "."
           ]
         },
         {
           "msg": [
-            "Please ",
-            {
-              "clue": "refund",
-              "text": "send back the extra $200"
-            },
-            " now."
-          ]
-        },
-        {
-          "msg": [
+            "My app shows ",
             {
               "clue": "proof",
-              "text": "Here’s my payment screenshot."
+              "text": "a payment screenshot"
             },
-            " [screenshot]"
+            ". ",
+            {
+              "clue": "rush",
+              "text": "Quick, my boss is waiting."
+            }
           ]
         }
       ]
     },
     "clues": {
-      "over": {
-        "label": "Overpaid",
+      "extra": {
+        "label": "A big overpayment",
         "strength": "strong",
-        "lens": "He paid more than the price.",
-        "why": "Overpayment is a classic trick."
+        "lens": "More than the price.",
+        "why": "The payment is fake, your refund is real."
       },
-      "refund": {
-        "label": "Send money back",
+      "send": {
+        "label": "Send the extra back",
         "strength": "strong",
-        "lens": "He wants real money back.",
-        "why": "The first payment is fake or will be reversed."
+        "lens": "A refund request.",
+        "why": "Check your wallet first."
       },
       "proof": {
-        "label": "Only a screenshot",
+        "label": "A screenshot",
         "strength": "strong",
-        "lens": "He shows a picture, not money in your account.",
-        "why": "Check your own account, not a picture."
+        "lens": "A picture of a payment.",
+        "why": "Screenshots are easy to fake."
       },
-      "from": {
-        "label": "A friendly buyer",
+      "rush": {
+        "label": "Quick",
+        "strength": "strong",
+        "lens": "A deadline.",
+        "why": "Pressure stops you from checking."
+      },
+      "name": {
+        "label": "Jonas",
         "strength": "harmless",
-        "lens": "Polite and quick.",
-        "why": "Politeness proves nothing."
+        "lens": "A first name.",
+        "why": "Names prove nothing."
+      },
+      "sub": {
+        "label": "Buyer",
+        "strength": "harmless",
+        "lens": "A role.",
+        "why": "Roles are typed."
+      },
+      "pic": {
+        "label": "Cart picture",
+        "strength": "harmless",
+        "lens": "A symbol.",
+        "why": "Pictures prove nothing."
       }
     },
     "actions": [
@@ -1736,23 +1794,23 @@
       }
     },
     "what_if": {},
-    "golden_rule": "Never refund an overpayment. Check that money is truly in your account first.",
+    "golden_rule": "Check your own wallet before refunding anyone. If it is not there, nothing was paid.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-marketplace",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d12",
     "type": "hunt",
     "daily": true,
     "template": "d12",
-    "title": "Daily Quickie · Reset Your Password",
+    "title": "Daily Quickie · Reset Your Exchange Password",
     "seconds": 90,
     "disguise": null,
     "intro": [],
@@ -1765,12 +1823,15 @@
       "app": "mail",
       "head": {
         "from": [
-          "Fernly Mail"
+          {
+            "clue": "from",
+            "text": "Ostrel"
+          }
         ],
         "addr": [
           {
             "clue": "addr",
-            "text": "no-reply@fernly.example"
+            "text": "no-reply@ostrel.io"
           }
         ],
         "subject": [
@@ -1796,18 +1857,18 @@
         {
           "p": [
             {
-              "clue": "ignore",
+              "clue": "ign",
               "text": "If this was not you, ignore this email."
             },
             " ",
             {
               "clue": "nocode",
-              "text": "We never ask for your password."
+              "text": "We never ask for your password or recovery phrase."
             }
           ]
         }
       ],
-      "context": "You just tapped “Forgot password” on the Fernly app yourself."
+      "context": "You just tapped “Forgot password” on the Ostrel app yourself."
     },
     "clues": {
       "addr": {
@@ -1828,17 +1889,23 @@
         "lens": "You just requested this reset.",
         "why": "You started it."
       },
-      "ignore": {
+      "ign": {
         "label": "Safe if not you",
         "strength": "harmless",
-        "lens": "It tells you to ignore it if you did not ask.",
-        "why": "Honest emails give you a safe way out."
+        "lens": "It tells you to ignore it.",
+        "why": "Honest notices say so."
       },
       "nocode": {
-        "label": "Never asks for a password",
+        "label": "Never asks for secrets",
         "strength": "harmless",
-        "lens": "It says it never asks for it.",
-        "why": "Honest services say so."
+        "lens": "No password asked.",
+        "why": "Honest notices say so."
+      },
+      "from": {
+        "label": "Ostrel",
+        "strength": "harmless",
+        "lens": "The exchange.",
+        "why": "Matches your account."
       }
     },
     "actions": [
@@ -1902,16 +1969,16 @@
     },
     "sources": [
       "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d13",
     "type": "hunt",
     "daily": true,
     "template": "d13",
-    "title": "Daily Quickie · Hi Mum",
+    "title": "Daily Quickie · Hi Mum, New Wallet",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -1930,60 +1997,58 @@
           }
         ]
       },
-      "context": "You are a parent. Your child has a number you know.",
+      "context": "Your child has a saved number. This one is new.",
       "items": [
         {
           "msg": [
-            {
-              "clue": "hi",
-              "text": "Hi Mum"
-            },
-            ", I lost my phone, this is my new number."
+            "Hi Mum, I lost my phone and my wallet app."
           ]
         },
         {
           "msg": [
+            "Can you send ",
             {
-              "clue": "urgent",
-              "text": "I need to pay a bill today"
+              "clue": "usdt",
+              "text": "300 USDT"
             },
-            ", can you send $600? Bank details below."
-          ]
-        },
-        {
-          "msg": [
+            " to this ",
             {
-              "clue": "nocall",
-              "text": "Can’t talk, I’ll explain later."
+              "clue": "addr",
+              "text": "new address"
+            },
+            "? ",
+            {
+              "clue": "rush",
+              "text": "It is urgent."
             }
           ]
         }
       ]
     },
     "clues": {
-      "hi": {
-        "label": "A “new number” opener",
-        "strength": "strong",
-        "lens": "It says the phone is lost.",
-        "why": "This is a very common trick. Call the number you know."
-      },
-      "urgent": {
-        "label": "An urgent bill",
-        "strength": "strong",
-        "lens": "A bill today.",
-        "why": "Urgent money is a pressure trick."
-      },
-      "nocall": {
-        "label": "No call allowed",
-        "strength": "strong",
-        "lens": "It avoids a call.",
-        "why": "Avoiding a call is a warning sign."
-      },
       "from": {
         "label": "Unknown number",
-        "strength": "harmless",
-        "lens": "A number you do not know.",
-        "why": "A new number alone proves nothing, but check it."
+        "strength": "strong",
+        "lens": "Not your child's number.",
+        "why": "Impersonators use new numbers."
+      },
+      "usdt": {
+        "label": "Asks for USDT",
+        "strength": "strong",
+        "lens": "A request for crypto.",
+        "why": "Real family calls you."
+      },
+      "addr": {
+        "label": "A new address",
+        "strength": "strong",
+        "lens": "An unfamiliar wallet.",
+        "why": "Real requests use known accounts."
+      },
+      "rush": {
+        "label": "Urgent",
+        "strength": "strong",
+        "lens": "A deadline.",
+        "why": "Pressure stops you from checking."
       }
     },
     "actions": [
@@ -2040,16 +2105,16 @@
       }
     },
     "what_if": {},
-    "golden_rule": "If a “child” texts from a new number asking for money, call their old number first.",
+    "golden_rule": "If \"family\" texts from a new number asking for crypto, call the real number first.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-impersonator",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d14",
@@ -2207,7 +2272,7 @@
     "type": "hunt",
     "daily": true,
     "template": "d15",
-    "title": "Daily Quickie · Ten Percent A Day",
+    "title": "Daily Quickie · Ten Percent A Day, In USDT",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -2220,84 +2285,120 @@
       "app": "chirp",
       "head": {
         "name": [
-          "Smart Money Circle"
+          {
+            "clue": "name",
+            "text": "StakeClub"
+          }
         ],
         "sub": [
           {
-            "clue": "members",
-            "text": "2,800 members"
+            "clue": "sub",
+            "text": "Members only"
           }
         ],
         "avatar": {
-          "glyph": "📈"
+          "glyph": "💎",
+          "clue": "pic"
         }
       },
       "banner": [
         {
-          "clue": "added",
-          "text": "You were added by someone you do not know"
+          "clue": "dm",
+          "text": "Message request · you do not follow this account"
         }
       ],
+      "context": "You were added to a group without asking.",
       "items": [
         {
           "msg": [
+            "Members earn ",
             {
-              "clue": "daily",
-              "text": "Earn 10% every day, guaranteed."
+              "clue": "rate",
+              "text": "10% a day"
+            },
+            " on USDT. ",
+            {
+              "clue": "safe",
+              "text": "Fully safe!"
             }
           ]
         },
         {
           "msg": [
-            "Our ",
+            "Deposit at ",
             {
-              "clue": "expert",
-              "text": "top analyst"
+              "clue": "link",
+              "text": "stakeclub-pool.xyz",
+              "link": true
             },
-            " picks the trades."
-          ]
-        },
-        {
-          "msg": [
-            "Deposit now, ",
+            " to ",
             {
-              "clue": "limit",
-              "text": "only 10 spots left!"
+              "clue": "join",
+              "text": "join today"
+            },
+            ". ",
+            {
+              "clue": "vip",
+              "text": "Limited spots."
             }
           ]
         }
       ]
     },
     "clues": {
-      "daily": {
-        "label": "Guaranteed daily returns",
+      "rate": {
+        "label": "10% a day",
         "strength": "strong",
-        "lens": "10% a day, guaranteed.",
-        "why": "No honest investment can guarantee returns."
+        "lens": "An impossible return.",
+        "why": "No one earns 10% a day."
       },
-      "added": {
-        "label": "Added without asking",
+      "safe": {
+        "label": "\"Fully safe\"",
         "strength": "strong",
-        "lens": "A stranger added you.",
-        "why": "Real groups do not add strangers."
+        "lens": "A guarantee.",
+        "why": "There are no guarantees in crypto."
       },
-      "limit": {
+      "link": {
+        "label": "Look-alike link",
+        "strength": "strong",
+        "lens": "stakeclub-pool.xyz is not a real platform.",
+        "why": "Real platforms are regulated."
+      },
+      "vip": {
         "label": "Limited spots",
         "strength": "strong",
-        "lens": "Only a few spots.",
-        "why": "Scarcity is pressure."
+        "lens": "Fake scarcity.",
+        "why": "It pushes you to pay."
       },
-      "members": {
-        "label": "A big group",
+      "name": {
+        "label": "StakeClub",
         "strength": "harmless",
-        "lens": "2,800 members.",
-        "why": "Bots can fill a group."
+        "lens": "A made-up name.",
+        "why": "Names are copied."
       },
-      "expert": {
-        "label": "An “expert”",
+      "pic": {
+        "label": "Gem picture",
         "strength": "harmless",
-        "lens": "A top analyst.",
-        "why": "Titles are easy to claim."
+        "lens": "A symbol.",
+        "why": "Pictures prove nothing."
+      },
+      "join": {
+        "label": "Join today",
+        "strength": "harmless",
+        "lens": "An invitation.",
+        "why": "Invitations are bait."
+      },
+      "dm": {
+        "label": "They messaged you first",
+        "strength": "harmless",
+        "lens": "A cold message.",
+        "why": "Look at the rest of the message."
+      },
+      "sub": {
+        "label": "A label under the name",
+        "strength": "harmless",
+        "lens": "A small label.",
+        "why": "Labels are typed."
       }
     },
     "actions": [
@@ -2354,16 +2455,16 @@
       }
     },
     "what_if": {},
-    "golden_rule": "Guaranteed returns are a lie. Never join groups that promise them.",
+    "golden_rule": "Daily returns of 10% mean a scheme. Walk away.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-invest-social",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d16",
@@ -2513,7 +2614,7 @@
     "type": "hunt",
     "daily": true,
     "template": "d17",
-    "title": "Daily Quickie · New Bank Details",
+    "title": "Daily Quickie · New Wallet For Your Invoice",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -2528,20 +2629,23 @@
         "from": [
           {
             "clue": "from",
-            "text": "Oakline Supplies"
+            "text": "Accounts · Brightline Studio"
           }
         ],
         "addr": [
           {
             "clue": "addr",
-            "text": "accounts@oakline-supplies.example"
+            "text": "accounts@brightline-pay.co"
           }
         ],
         "subject": [
-          "Updated bank details for your invoice"
+          {
+            "clue": "subj",
+            "text": "Updated payment details for your invoice"
+          }
         ],
         "time": [
-          "4:20 PM"
+          "1:20 PM"
         ]
       },
       "items": [
@@ -2549,62 +2653,66 @@
           "p": [
             "Please note our ",
             {
-              "clue": "new",
-              "text": "bank details have changed"
+              "clue": "change",
+              "text": "bank is replaced by a new USDT wallet"
             },
             "."
           ]
         },
         {
           "p": [
-            "Pay this month’s invoice of $2,340 to the new account. ",
+            "Send this month's payment to ",
+            {
+              "clue": "wallet",
+              "text": "0x4af…c8d1",
+              "link": true
+            },
+            ". ",
             {
               "clue": "rush",
-              "text": "Payment is due today."
-            }
-          ]
-        },
-        {
-          "p": [
-            {
-              "clue": "noreply",
-              "text": "Do not call, our phones are down."
+              "text": "Reply today to avoid late fees."
             }
           ]
         }
       ],
-      "context": "You pay Oakline Supplies every month for your small business."
+      "context": "You have an open invoice with this client."
     },
     "clues": {
-      "new": {
-        "label": "Changed bank details",
+      "change": {
+        "label": "Payment details changed",
         "strength": "strong",
-        "lens": "The account number has changed.",
-        "why": "Call the supplier on a number you already know to confirm."
+        "lens": "The destination changed by email.",
+        "why": "This is invoice fraud."
       },
-      "rush": {
-        "label": "Due today",
+      "wallet": {
+        "label": "A new wallet",
         "strength": "strong",
-        "lens": "Payment is due today.",
-        "why": "A rush stops you checking."
-      },
-      "noreply": {
-        "label": "No calls",
-        "strength": "strong",
-        "lens": "It tells you not to call.",
-        "why": "Avoiding a call is a warning sign."
+        "lens": "An unfamiliar address.",
+        "why": "Confirm by a known number."
       },
       "addr": {
-        "label": "A near-copy address",
-        "strength": "harmless",
-        "lens": "Close to the real one.",
-        "why": "Always compare it to the real address."
+        "label": "Look-alike sender",
+        "strength": "strong",
+        "lens": "brightline-pay.co is not the usual address.",
+        "why": "Check against past emails."
+      },
+      "rush": {
+        "label": "Reply today",
+        "strength": "strong",
+        "lens": "A deadline.",
+        "why": "Pressure stops you from checking."
       },
       "from": {
-        "label": "A known supplier",
+        "label": "Accounts name",
         "strength": "harmless",
-        "lens": "The supplier you really use.",
-        "why": "A name proves nothing."
+        "lens": "A name.",
+        "why": "Names are copied."
+      },
+      "subj": {
+        "label": "Updated details",
+        "strength": "harmless",
+        "lens": "Plain.",
+        "why": "Plain words prove nothing."
       }
     },
     "actions": [
@@ -2661,23 +2769,23 @@
       }
     },
     "what_if": {},
-    "golden_rule": "If bank details change, call the supplier on a number you already have before you pay.",
+    "golden_rule": "If payment details change by email, call the supplier on a known number first.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-impersonator",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d18",
     "type": "hunt",
     "daily": true,
     "template": "d18",
-    "title": "Daily Quickie · Renewal Charge",
+    "title": "Daily Quickie · Your Exchange Plan Renewed",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -2692,84 +2800,79 @@
         "from": [
           {
             "clue": "from",
-            "text": "Shieldsafe"
+            "text": "Zelvora Billing"
           }
         ],
         "addr": [
           {
             "clue": "addr",
-            "text": "billing@shieldsafe-renew.example"
+            "text": "billing@zelvora-plans.top"
           }
         ],
         "subject": [
-          "Your plan renewed for $499"
+          {
+            "clue": "subj",
+            "text": "Your plan renewed for 499 USDT"
+          }
         ],
         "time": [
-          "7:44 AM"
+          "3:10 PM"
         ]
       },
       "items": [
         {
           "p": [
-            "Thank you for renewing your ",
+            "Your ",
             {
               "clue": "plan",
-              "text": "protection plan for $499"
+              "text": "Pro plan renewed"
             },
-            "."
+            " for 499 USDT."
           ]
         },
         {
           "p": [
-            "If this was not you, ",
+            "Not you? Call ",
             {
-              "clue": "call",
-              "text": "call us immediately"
+              "clue": "num",
+              "text": "our desk on +44 20 5550 0110"
             },
-            " on +1 555 0188."
-          ]
-        },
-        {
-          "p": [
-            {
-              "clue": "nolink",
-              "text": "Do not reply to this email."
-            }
+            " to cancel and get a refund."
           ]
         }
       ],
-      "context": "You never bought anything from Shieldsafe."
+      "context": "You never bought a paid plan."
     },
     "clues": {
       "plan": {
         "label": "A charge you never made",
         "strength": "strong",
-        "lens": "$499 for something you never bought.",
-        "why": "The fake charge is bait to make you call."
+        "lens": "A surprise charge.",
+        "why": "It is bait to make you call."
       },
-      "call": {
-        "label": "Call us now",
+      "num": {
+        "label": "A phone number in the mail",
         "strength": "strong",
-        "lens": "They want you to phone them.",
-        "why": "The call leads to remote access and payments."
-      },
-      "nolink": {
-        "label": "No way to check",
-        "strength": "strong",
-        "lens": "It tells you not to reply.",
-        "why": "Real firms let you check in your own account."
+        "lens": "You call them.",
+        "why": "The caller asks for your wallet access."
       },
       "addr": {
-        "label": "An odd address",
-        "strength": "harmless",
-        "lens": "The address is not familiar.",
-        "why": "Addresses are easy to fake."
+        "label": "Look-alike sender",
+        "strength": "strong",
+        "lens": "zelvora-plans.top is not zelvora.app.",
+        "why": "Real exchanges use their own domain."
       },
       "from": {
-        "label": "A protection brand",
+        "label": "Zelvora Billing",
         "strength": "harmless",
-        "lens": "Shieldsafe sounds trustworthy.",
-        "why": "Names prove nothing."
+        "lens": "A name.",
+        "why": "Names are copied."
+      },
+      "subj": {
+        "label": "Renewal subject",
+        "strength": "harmless",
+        "lens": "Plain.",
+        "why": "Plain words prove nothing."
       }
     },
     "actions": [
@@ -2826,16 +2929,16 @@
       }
     },
     "what_if": {},
-    "golden_rule": "A bill for something you never bought is bait. Do not call the number it gives.",
+    "golden_rule": "Do not call a number in a surprise bill. Check your account in the app.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-techsupport",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d19",
@@ -3147,7 +3250,7 @@
     "type": "hunt",
     "daily": true,
     "template": "d21",
-    "title": "Daily Quickie · Get Verified",
+    "title": "Daily Quickie · Get The Verified Wallet Badge",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -3161,83 +3264,99 @@
       "head": {
         "name": [
           {
-            "clue": "from",
-            "text": "Chirp Verify Team"
+            "clue": "name",
+            "text": "Hedrio Verify"
           }
         ],
         "sub": [
-          "@chirp_verify_help_7"
+          {
+            "clue": "sub",
+            "text": "Official partner"
+          }
         ],
         "avatar": {
-          "glyph": "✅"
+          "glyph": "✅",
+          "clue": "pic"
         }
       },
       "banner": [
         {
-          "clue": "first",
+          "clue": "dm",
           "text": "Message request · you do not follow this account"
         }
       ],
+      "context": "You never applied for anything.",
       "items": [
         {
           "msg": [
+            "You qualify for a ",
             {
               "clue": "badge",
-              "text": "You qualify for a verified badge!"
-            }
-          ]
-        },
-        {
-          "msg": [
-            "Send us the ",
-            {
-              "clue": "code",
-              "text": "6-digit code"
+              "text": "verified badge"
             },
-            " we just texted you."
+            "!"
           ]
         },
         {
           "msg": [
+            "Connect your wallet at ",
             {
-              "clue": "timer",
-              "text": "Offer ends in",
-              "countdown": 600
-            }
+              "clue": "link",
+              "text": "hedrio-verify.live",
+              "link": true
+            },
+            " and ",
+            {
+              "clue": "fee",
+              "text": "pay a 25 USDT fee"
+            },
+            "."
           ]
         }
       ]
     },
     "clues": {
       "badge": {
-        "label": "Free badge offer",
+        "label": "A verified badge offer",
         "strength": "strong",
-        "lens": "A free badge, out of nowhere.",
-        "why": "Real platforms do not hand out badges by DM."
+        "lens": "Unrequested.",
+        "why": "Badges are bait."
       },
-      "code": {
-        "label": "Asks for a code",
+      "link": {
+        "label": "Look-alike link",
         "strength": "strong",
-        "lens": "They want a code sent to you.",
-        "why": "That code is the key to your account."
+        "lens": "hedrio-verify.live is not hedrio.app.",
+        "why": "Real wallets do not sell badges."
       },
-      "timer": {
-        "label": "Countdown",
+      "fee": {
+        "label": "A fee to verify",
         "strength": "strong",
-        "lens": "Ten minutes left.",
-        "why": "Pressure is the trick."
+        "lens": "You pay.",
+        "why": "Real verification is free."
       },
-      "first": {
-        "label": "They messaged first",
+      "dm": {
+        "label": "They found you",
+        "strength": "strong",
+        "lens": "Cold message.",
+        "why": "Real teams do not cold-message."
+      },
+      "name": {
+        "label": "Hedrio Verify",
         "strength": "harmless",
-        "lens": "A message request.",
-        "why": "Messaging first is a warning sign by itself, but check it."
+        "lens": "A made-up name.",
+        "why": "Names are copied."
       },
-      "from": {
-        "label": "An official-sounding name",
+      "pic": {
+        "label": "Tick picture",
         "strength": "harmless",
-        "lens": "Chirp Verify Team.",
-        "why": "Names are easy to copy."
+        "lens": "A symbol.",
+        "why": "Pictures prove nothing."
+      },
+      "sub": {
+        "label": "A label under the name",
+        "strength": "harmless",
+        "lens": "A small label.",
+        "why": "Labels are typed."
       }
     },
     "actions": [
@@ -3294,23 +3413,23 @@
       }
     },
     "what_if": {},
-    "golden_rule": "Never read a code from your own phone to anyone, whatever they offer.",
+    "golden_rule": "Verification badges are free and never sold through a message.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
       "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d22",
     "type": "hunt",
     "daily": true,
     "template": "d22",
-    "title": "Daily Quickie · Deposit Before Viewing",
+    "title": "Daily Quickie · Deposit Before Viewing, In USDT",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -3324,86 +3443,85 @@
       "head": {
         "name": [
           {
-            "clue": "from",
-            "text": "Fernly Rentals"
+            "clue": "name",
+            "text": "Flat Lister"
           }
         ],
         "sub": [
-          "Listing: 2-bed flat, €650"
+          {
+            "clue": "sub",
+            "text": "Landlord abroad"
+          }
         ],
         "avatar": {
-          "glyph": "🏠"
+          "glyph": "🏠",
+          "clue": "pic"
         }
       },
-      "banner": [
-        "Message from a listing"
-      ],
+      "context": "You asked about a flat online.",
       "items": [
         {
           "msg": [
-            "The flat is ",
+            "The flat is yours if you pay ",
             {
-              "clue": "cheap",
-              "text": "far below the price of similar ones"
+              "clue": "dep",
+              "text": "the deposit of 900 USDT"
             },
             "."
           ]
         },
         {
           "msg": [
-            "I’m abroad, so ",
+            "I am ",
             {
               "clue": "abroad",
-              "text": "I can’t show it"
+              "text": "abroad, so no viewing"
             },
-            ". Pay the ",
+            ". ",
             {
-              "clue": "deposit",
-              "text": "€650 deposit"
-            },
-            " to hold it and I’ll post you the keys."
-          ]
-        },
-        {
-          "msg": [
-            {
-              "clue": "others",
-              "text": "Three other people are interested."
+              "clue": "rush",
+              "text": "Another buyer is waiting."
             }
           ]
         }
       ]
     },
     "clues": {
-      "cheap": {
-        "label": "Too cheap",
+      "dep": {
+        "label": "Deposit in USDT before viewing",
         "strength": "strong",
-        "lens": "A price far below others.",
-        "why": "A bargain flat is the bait."
+        "lens": "You pay first.",
+        "why": "Real landlords show the flat first."
       },
       "abroad": {
-        "label": "Owner abroad",
+        "label": "No viewing",
         "strength": "strong",
-        "lens": "No viewing, no meeting.",
-        "why": "Never pay for a home you have not seen."
+        "lens": "An excuse.",
+        "why": "The flat may not exist."
       },
-      "deposit": {
-        "label": "Deposit first",
+      "rush": {
+        "label": "Another buyer",
         "strength": "strong",
-        "lens": "Pay before you see it.",
-        "why": "A real landlord lets you view first."
+        "lens": "Pressure.",
+        "why": "Pressure stops you from checking."
       },
-      "others": {
-        "label": "Other people interested",
+      "name": {
+        "label": "Flat Lister",
         "strength": "harmless",
-        "lens": "Three others are “interested”.",
-        "why": "It adds pressure but proves nothing."
+        "lens": "A role.",
+        "why": "Roles are typed."
       },
-      "from": {
-        "label": "A rentals name",
+      "pic": {
+        "label": "House picture",
         "strength": "harmless",
-        "lens": "Fernly Rentals.",
-        "why": "A name proves nothing."
+        "lens": "A symbol.",
+        "why": "Pictures are copied."
+      },
+      "sub": {
+        "label": "A label under the name",
+        "strength": "harmless",
+        "lens": "A small label.",
+        "why": "Labels are typed."
       }
     },
     "actions": [
@@ -3460,23 +3578,23 @@
       }
     },
     "what_if": {},
-    "golden_rule": "Never pay a deposit for a home you have not seen in person.",
+    "golden_rule": "Never pay a deposit, in coins or cash, before seeing a place.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-marketplace",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d23",
     "type": "hunt",
     "daily": true,
     "template": "d23",
-    "title": "Daily Quickie · Cheap Tickets",
+    "title": "Daily Quickie · Cheap Tickets For USDT Only",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -3490,51 +3608,44 @@
       "head": {
         "name": [
           {
-            "clue": "from",
-            "text": "Tickets4U"
+            "clue": "name",
+            "text": "TicketPal"
           }
         ],
         "sub": [
-          "Sold out? Not for us"
+          {
+            "clue": "sub",
+            "text": "Resale"
+          }
         ],
         "avatar": {
-          "glyph": "🎟️"
+          "glyph": "🎫",
+          "clue": "pic"
         }
       },
-      "banner": [
-        "Sponsored"
-      ],
+      "context": "A concert sold out last week.",
       "items": [
         {
           "msg": [
-            "Sold-out concert tickets, ",
+            "Sold-out tickets at ",
             {
               "clue": "half",
               "text": "half price"
             },
-            "."
+            "!"
           ]
         },
         {
           "msg": [
-            "Pay by ",
+            "We accept ",
             {
-              "clue": "transfer",
-              "text": "bank transfer only"
+              "clue": "crypto",
+              "text": "USDT only"
             },
-            ", we will email the tickets."
-          ]
-        },
-        {
-          "msg": [
+            ". ",
             {
-              "clue": "rev",
-              "text": "★★★★★ “Got my tickets!”"
-            },
-            " ",
-            {
-              "clue": "few",
-              "text": "Only 4 left!"
+              "clue": "rush",
+              "text": "Only 2 left."
             }
           ]
         }
@@ -3542,34 +3653,40 @@
     },
     "clues": {
       "half": {
-        "label": "Half price",
+        "label": "Half price on a sold-out show",
         "strength": "strong",
-        "lens": "Sold out everywhere, but cheap here.",
-        "why": "A sold-out show at half price is a trap."
+        "lens": "Too good.",
+        "why": "It is bait."
       },
-      "transfer": {
-        "label": "Bank transfer only",
+      "crypto": {
+        "label": "USDT only",
         "strength": "strong",
-        "lens": "No card, no protection.",
-        "why": "Card payments can be reversed. Transfers cannot."
+        "lens": "No card.",
+        "why": "Coins cannot be reversed."
       },
-      "few": {
-        "label": "Only 4 left",
+      "rush": {
+        "label": "Only 2 left",
         "strength": "strong",
-        "lens": "Scarcity pressure.",
-        "why": "Pressure is the trick."
+        "lens": "Fake scarcity.",
+        "why": "Pressure stops you from checking."
       },
-      "rev": {
-        "label": "Glowing reviews",
+      "name": {
+        "label": "TicketPal",
         "strength": "harmless",
-        "lens": "Five-star quotes.",
-        "why": "Reviews are easy to fake."
+        "lens": "A made-up name.",
+        "why": "Names are copied."
       },
-      "from": {
-        "label": "A ticket seller name",
+      "pic": {
+        "label": "Ticket picture",
         "strength": "harmless",
-        "lens": "Tickets4U.",
-        "why": "A name proves nothing."
+        "lens": "A symbol.",
+        "why": "Pictures prove nothing."
+      },
+      "sub": {
+        "label": "A label under the name",
+        "strength": "harmless",
+        "lens": "A small label.",
+        "why": "Labels are typed."
       }
     },
     "actions": [
@@ -3626,16 +3743,16 @@
       }
     },
     "what_if": {},
-    "golden_rule": "Buy tickets only from the official seller or a platform with buyer protection.",
+    "golden_rule": "Cheap tickets that only accept coins are a scam. Use the official seller.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-marketplace",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d24",
@@ -4106,7 +4223,7 @@
     "type": "hunt",
     "daily": true,
     "template": "d27",
-    "title": "Daily Quickie · Move Your Savings",
+    "title": "Daily Quickie · Move Your Coins To A Safe Wallet",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -4121,42 +4238,33 @@
         "name": [
           {
             "clue": "from",
-            "text": "Fraud Desk"
+            "text": "Ostrel Fraud Desk"
           }
         ]
       },
-      "context": "A caller said they were from your bank’s fraud team and then sent this text.",
+      "context": "You never spoke to this number.",
       "items": [
         {
           "msg": [
-            "Your account is under attack. ",
+            "Fraud on your account! ",
             {
               "clue": "move",
-              "text": "Move your savings to the safe account below now."
-            }
+              "text": "Move your coins to a safe wallet"
+            },
+            " now."
           ]
         },
         {
           "msg": [
-            "Account ",
+            "Use this address: ",
             {
-              "clue": "safe",
-              "text": "3921 0048"
+              "clue": "addr",
+              "text": "0x9bd…41e0"
             },
-            ". Do ",
+            ". ",
             {
-              "clue": "secret",
-              "text": "not tell the branch staff"
-            },
-            "."
-          ]
-        },
-        {
-          "msg": [
-            {
-              "clue": "timer",
-              "text": "Act within",
-              "countdown": 900
+              "clue": "rush",
+              "text": "Do it within 15 minutes."
             }
           ]
         }
@@ -4164,34 +4272,28 @@
     },
     "clues": {
       "move": {
-        "label": "Move to a safe account",
+        "label": "Move your coins",
         "strength": "strong",
-        "lens": "They tell you to move your own money.",
-        "why": "No bank ever tells you to move money to a “safe account”."
+        "lens": "Asks you to transfer.",
+        "why": "Real exchanges never ask this."
       },
-      "secret": {
-        "label": "Keep it secret",
+      "addr": {
+        "label": "A \"safe\" address",
         "strength": "strong",
-        "lens": "They tell you not to tell staff.",
-        "why": "Secrecy is how scammers stop you checking."
+        "lens": "An address they own.",
+        "why": "It belongs to the thief."
       },
-      "timer": {
-        "label": "Countdown",
+      "rush": {
+        "label": "15 minutes",
         "strength": "strong",
-        "lens": "Fifteen minutes.",
-        "why": "Pressure is the trick."
-      },
-      "safe": {
-        "label": "A provided account",
-        "strength": "strong",
-        "lens": "An account number they gave you.",
-        "why": "That account belongs to the scammer."
+        "lens": "A deadline.",
+        "why": "Pressure stops you from checking."
       },
       "from": {
-        "label": "A desk name",
+        "label": "Ostrel Fraud Desk",
         "strength": "harmless",
-        "lens": "Fraud Desk.",
-        "why": "A name proves nothing."
+        "lens": "A name.",
+        "why": "Names are copied."
       }
     },
     "actions": [
@@ -4248,23 +4350,23 @@
       }
     },
     "what_if": {},
-    "golden_rule": "A bank never asks you to move your money to a “safe account”. Hang up and call the number on your card.",
+    "golden_rule": "No exchange will ever tell you to move coins to a \"safe\" address.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-bank-call",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d28",
     "type": "hunt",
     "daily": true,
     "template": "d28",
-    "title": "Daily Quickie · Your Login Code",
+    "title": "Daily Quickie · Your Exchange Login Code",
     "seconds": 90,
     "disguise": null,
     "intro": [],
@@ -4279,25 +4381,26 @@
         "name": [
           {
             "clue": "from",
-            "text": "Fernly"
+            "text": "Ostrel"
           }
         ]
       },
-      "context": "You just tapped “Log in” in the Fernly app.",
+      "context": "You are logging in to Ostrel right now.",
       "items": [
         {
           "msg": [
             {
               "clue": "code",
-              "text": "482910 is your Fernly login code."
-            }
+              "text": "482910"
+            },
+            " is your Ostrel login code."
           ]
         },
         {
           "msg": [
             {
-              "clue": "warn",
-              "text": "Never share this code with anyone, not even Fernly staff."
+              "clue": "nosh",
+              "text": "Never share this code. We will never ask for it."
             }
           ]
         }
@@ -4305,22 +4408,22 @@
     },
     "clues": {
       "from": {
-        "label": "The app you just used",
+        "label": "The exchange name",
         "strength": "harmless",
-        "lens": "It is the Fernly app you just opened.",
-        "why": "You started this."
+        "lens": "The app you are using.",
+        "why": "Matches your action."
       },
       "code": {
         "label": "A code you asked for",
         "strength": "harmless",
-        "lens": "You just tapped log in.",
-        "why": "You started this. Use it yourself."
+        "lens": "You requested it.",
+        "why": "You started it."
       },
-      "warn": {
-        "label": "A never-share warning",
+      "nosh": {
+        "label": "Warns never to share it",
         "strength": "harmless",
-        "lens": "It tells you not to share it.",
-        "why": "Real codes warn you. Just never share them."
+        "lens": "Honest notices warn you.",
+        "why": "Honest notices warn you."
       }
     },
     "actions": [
@@ -4377,16 +4480,16 @@
       }
     },
     "what_if": {},
-    "golden_rule": "A code you asked for is fine to use. Never read it to anyone.",
+    "golden_rule": "A code you asked for is fine. Never read it to anyone.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-codes",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d29",
@@ -4731,7 +4834,7 @@
     "type": "hunt",
     "daily": true,
     "template": "d31",
-    "title": "Daily Quickie · Antivirus Renewal",
+    "title": "Daily Quickie · Exchange Invoice You Never Made",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -4746,96 +4849,91 @@
         "from": [
           {
             "clue": "from",
-            "text": "SafeGuard Pro"
+            "text": "Plenvo Billing"
           }
         ],
         "addr": [
           {
             "clue": "addr",
-            "text": "billing@safeguard-pro-support.example"
+            "text": "invoice@plenvo-billing.live"
           }
         ],
         "subject": [
-          "Invoice: $349 charged today"
+          {
+            "clue": "subj",
+            "text": "Invoice: 349 USDT charged today"
+          }
         ],
         "time": [
-          "5:02 AM"
+          "5:25 PM"
         ]
       },
       "items": [
         {
           "p": [
-            "Your ",
+            "You were charged ",
             {
-              "clue": "charge",
-              "text": "$349 renewal"
-            },
-            " was charged today."
-          ]
-        },
-        {
-          "p": [
-            "To cancel, ",
-            {
-              "clue": "call",
-              "text": "call +1 555 0123 now"
-            },
-            " or ",
-            {
-              "clue": "link",
-              "text": "click here",
-              "link": true
+              "clue": "amt",
+              "text": "349 USDT"
             },
             "."
           ]
         },
         {
           "p": [
+            "Dispute at ",
             {
-              "clue": "refund",
-              "text": "We will refund you by remote session."
-            }
+              "clue": "link",
+              "text": "plenvo-billing.live/dispute",
+              "link": true
+            },
+            " and enter your ",
+            {
+              "clue": "seed",
+              "text": "wallet key"
+            },
+            "."
           ]
         }
       ],
-      "context": "You do not use SafeGuard Pro."
+      "context": "You never signed up to Plenvo Pro."
     },
     "clues": {
-      "charge": {
+      "amt": {
         "label": "A charge you never made",
         "strength": "strong",
-        "lens": "$349 for software you do not use.",
-        "why": "The fake charge is bait."
-      },
-      "call": {
-        "label": "Call to cancel",
-        "strength": "strong",
-        "lens": "A number they gave you.",
-        "why": "Look up a company’s number yourself."
-      },
-      "refund": {
-        "label": "Refund by remote session",
-        "strength": "strong",
-        "lens": "They want control of your computer.",
-        "why": "Refund scams empty your account."
+        "lens": "Surprise.",
+        "why": "It makes you click."
       },
       "link": {
-        "label": "Click-here link",
+        "label": "Look-alike link",
         "strength": "strong",
-        "lens": "A button that leads to a fake page.",
-        "why": "Cancel through the company’s real site that you type yourself."
+        "lens": "plenvo-billing.live is not Plenvo.",
+        "why": "Real billing is in the app."
       },
-      "addr": {
-        "label": "An odd address",
-        "strength": "harmless",
-        "lens": "Not familiar.",
-        "why": "Addresses are easy to fake."
+      "seed": {
+        "label": "Asks for your wallet key",
+        "strength": "strong",
+        "lens": "The key to your coins.",
+        "why": "Nobody real asks."
       },
       "from": {
-        "label": "A software name",
+        "label": "Plenvo Billing",
         "strength": "harmless",
-        "lens": "SafeGuard Pro.",
-        "why": "Names prove nothing."
+        "lens": "A name.",
+        "why": "Names are copied."
+      },
+      "addr": {
+        "label": "Billing address",
+        "strength": "harmless",
+        "lens": "A name-like address.",
+        "why": "Look for the domain."
+      },
+      "subj": {
+        "label": "The subject line",
+        "strength": "harmless",
+        "lens": "Plain words.",
+        "why": "Plain words prove nothing."
       }
     },
     "actions": [
@@ -4892,16 +4990,16 @@
       }
     },
     "what_if": {},
-    "golden_rule": "A bill for something you never bought is bait. A real refund never needs access to your computer.",
+    "golden_rule": "A surprise invoice that asks for your wallet key is a phishing trick.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
       "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d32",
@@ -5069,7 +5167,7 @@
     "type": "hunt",
     "daily": true,
     "template": "d33",
-    "title": "Daily Quickie · Urgent From The Manager",
+    "title": "Daily Quickie · Boss Wants USDT, Urgent",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -5084,76 +5182,61 @@
         "name": [
           {
             "clue": "from",
-            "text": "Ms. Carter (Manager)"
+            "text": "Mr. Bennett (new number)"
           }
         ]
       },
-      "context": "You work in a small office. Your manager’s number is saved in your phone.",
+      "context": "Your boss has a saved number. This one is new.",
       "items": [
         {
           "msg": [
+            "Are you at your desk? I need you to ",
             {
-              "clue": "desk",
-              "text": "Are you at your desk?"
+              "clue": "send",
+              "text": "send 1,500 USDT"
             },
-            " I need a favour."
-          ]
-        },
-        {
-          "msg": [
-            "Buy ",
-            {
-              "clue": "cards",
-              "text": "5 gift vouchers"
-            },
-            " for a client, ",
-            {
-              "clue": "num",
-              "text": "this is my private number"
-            },
-            "."
+            " to a vendor."
           ]
         },
         {
           "msg": [
             {
-              "clue": "meet",
-              "text": "I’m in a meeting, can’t talk. Send the codes here."
+              "clue": "secret",
+              "text": "Keep it quiet."
+            },
+            " ",
+            {
+              "clue": "rush",
+              "text": "It is urgent."
             }
           ]
         }
       ]
     },
     "clues": {
-      "desk": {
-        "label": "A vague urgent opener",
+      "send": {
+        "label": "Asks for USDT",
         "strength": "strong",
-        "lens": "It starts with “are you at your desk?”",
-        "why": "Scammers use this to start a chat."
+        "lens": "A crypto payment.",
+        "why": "Real payments follow the finance process."
       },
-      "cards": {
-        "label": "Gift voucher request",
+      "secret": {
+        "label": "Keep it quiet",
         "strength": "strong",
-        "lens": "A manager asking for vouchers.",
-        "why": "Honest managers use proper purchase orders."
+        "lens": "Secrecy.",
+        "why": "Real bosses are happy for you to check."
       },
-      "meet": {
-        "label": "No call, send codes",
+      "rush": {
+        "label": "Urgent",
         "strength": "strong",
-        "lens": "In a meeting, send codes.",
-        "why": "Avoiding a call is a warning sign."
-      },
-      "num": {
-        "label": "A “private number”",
-        "strength": "harmless",
-        "lens": "A number not in your phone.",
-        "why": "A new number alone proves nothing, but check it."
+        "lens": "A deadline.",
+        "why": "Pressure stops you from checking."
       },
       "from": {
-        "label": "Your manager’s name",
-        "strength": "harmless",
-        "lens": "Ms. Carter.",
-        "why": "A name is easy to copy."
+        "label": "A new number",
+        "strength": "strong",
+        "lens": "Not saved.",
+        "why": "Impersonators use new numbers."
       }
     },
     "actions": [
@@ -5210,23 +5293,23 @@
       }
     },
     "what_if": {},
-    "golden_rule": "If your “boss” asks for gift vouchers on a new number, call them on the number you know.",
+    "golden_rule": "If a boss asks for crypto from a new number, call the saved number first.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-impersonator",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d34",
     "type": "hunt",
     "daily": true,
     "template": "d34",
-    "title": "Daily Quickie · Dad, Please Help",
+    "title": "Daily Quickie · Dad, Send USDT To Pay The Fine",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -5245,60 +5328,58 @@
           }
         ]
       },
-      "context": "You are a parent. A voice message came first, sounding a bit like your child.",
+      "context": "Your son has a saved number. This one is new.",
       "items": [
         {
           "msg": [
-            {
-              "clue": "dad",
-              "text": "Dad it’s me, I’m in trouble."
-            },
-            " I lost my wallet and phone."
+            "Dad, it is me, I am in trouble."
           ]
         },
         {
           "msg": [
+            "I need ",
             {
-              "clue": "pay",
-              "text": "Please send $400 right now"
+              "clue": "usdt",
+              "text": "500 USDT"
             },
-            " to this account."
-          ]
-        },
-        {
-          "msg": [
+            " for a fine, ",
             {
-              "clue": "nocall",
-              "text": "Don’t call, they took my phone. I’ll explain later."
+              "clue": "secret",
+              "text": "do not tell Mum"
+            },
+            ". ",
+            {
+              "clue": "rush",
+              "text": "Please hurry."
             }
           ]
         }
       ]
     },
     "clues": {
-      "dad": {
-        "label": "A cry for help",
-        "strength": "strong",
-        "lens": "It starts with an emergency.",
-        "why": "Voices can be copied by computers. Check another way."
-      },
-      "pay": {
-        "label": "Send money now",
-        "strength": "strong",
-        "lens": "Right now, to an account.",
-        "why": "Urgent money is a pressure trick."
-      },
-      "nocall": {
-        "label": "Don’t call",
-        "strength": "strong",
-        "lens": "It tells you not to call.",
-        "why": "Avoiding a call is a warning sign."
-      },
       "from": {
         "label": "Unknown number",
-        "strength": "harmless",
-        "lens": "A number you do not know.",
-        "why": "A new number alone proves nothing, but check it."
+        "strength": "strong",
+        "lens": "Not his number.",
+        "why": "Impersonators use new numbers."
+      },
+      "usdt": {
+        "label": "Asks for USDT",
+        "strength": "strong",
+        "lens": "A crypto request.",
+        "why": "Real fines are not paid in coins."
+      },
+      "secret": {
+        "label": "Do not tell Mum",
+        "strength": "strong",
+        "lens": "Secrecy.",
+        "why": "It stops you from checking."
+      },
+      "rush": {
+        "label": "Please hurry",
+        "strength": "strong",
+        "lens": "A deadline.",
+        "why": "Pressure stops you from checking."
       }
     },
     "actions": [
@@ -5355,23 +5436,23 @@
       }
     },
     "what_if": {},
-    "golden_rule": "A computer can copy a voice. Hang up and call your child on the number you know.",
+    "golden_rule": "Call the real number first. A fine is never paid in coins or in secret.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-impersonator",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d35",
     "type": "hunt",
     "daily": true,
     "template": "d35",
-    "title": "Daily Quickie · Bank Says Move Money",
+    "title": "Daily Quickie · Action Needed: Safe Wallet Transfer",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -5386,29 +5467,32 @@
         "from": [
           {
             "clue": "from",
-            "text": "Brindle Bank Support"
+            "text": "Orrin Bank Security"
           }
         ],
         "addr": [
           {
             "clue": "addr",
-            "text": "support@brindle-bank-care.example"
+            "text": "security@orrin-safe.top"
           }
         ],
         "subject": [
-          "Action needed: safe account transfer"
+          {
+            "clue": "subj",
+            "text": "Action needed: safe wallet transfer"
+          }
         ],
         "time": [
-          "11:48 PM"
+          "2:00 PM"
         ]
       },
       "items": [
         {
           "p": [
-            "We detected a ",
+            "We found ",
             {
-              "clue": "hack",
-              "text": "hacker in your account"
+              "clue": "fraud",
+              "text": "fraud on your account"
             },
             "."
           ]
@@ -5417,52 +5501,66 @@
           "p": [
             {
               "clue": "move",
-              "text": "Transfer your money to our “secure” account"
+              "text": "Transfer your funds to our safe wallet"
             },
-            " below to protect it."
-          ]
-        },
-        {
-          "p": [
+            " at ",
             {
-              "clue": "timer",
-              "text": "Reply in 30 minutes or your account will be frozen."
+              "clue": "link",
+              "text": "orrin-safe.top",
+              "link": true
+            },
+            ". ",
+            {
+              "clue": "rush",
+              "text": "Within 2 hours."
             }
           ]
         }
       ],
-      "context": "You did not contact your bank today."
+      "context": "You have an account at Orrin Bank."
     },
     "clues": {
-      "hack": {
-        "label": "A scary claim",
+      "fraud": {
+        "label": "Fraud alarm",
         "strength": "strong",
-        "lens": "A hacker in your account.",
-        "why": "Fear is how scammers rush you."
+        "lens": "A scary alert.",
+        "why": "Scare is used to rush you."
       },
       "move": {
-        "label": "Move to a secure account",
+        "label": "Transfer to a \"safe\" wallet",
         "strength": "strong",
-        "lens": "They tell you to move your money.",
-        "why": "No bank asks you to do this."
+        "lens": "Moves money to them.",
+        "why": "Banks never ask this."
       },
-      "timer": {
-        "label": "Countdown",
+      "link": {
+        "label": "Look-alike link",
         "strength": "strong",
-        "lens": "30 minutes.",
-        "why": "Pressure is the trick."
+        "lens": "orrin-safe.top is not the bank.",
+        "why": "Real banks use their own app."
       },
-      "addr": {
-        "label": "A look-alike address",
-        "strength": "harmless",
-        "lens": "brindle-bank-care.example is not the bank’s.",
-        "why": "Always check the address after the @."
+      "rush": {
+        "label": "2 hours",
+        "strength": "strong",
+        "lens": "A deadline.",
+        "why": "Pressure stops you from checking."
       },
       "from": {
-        "label": "A bank name",
+        "label": "Orrin Bank Security",
         "strength": "harmless",
-        "lens": "Brindle Bank Support.",
-        "why": "A name proves nothing."
+        "lens": "A name.",
+        "why": "Names are copied."
+      },
+      "subj": {
+        "label": "The subject line",
+        "strength": "harmless",
+        "lens": "Plain words.",
+        "why": "Plain words prove nothing."
+      },
+      "addr": {
+        "label": "The sender address",
+        "strength": "harmless",
+        "lens": "An address.",
+        "why": "Look at the domain, not the name."
       }
     },
     "actions": [
@@ -5519,16 +5617,16 @@
       }
     },
     "what_if": {},
-    "golden_rule": "Banks never ask you to move money to a “secure account”. Call the number on your card.",
+    "golden_rule": "A bank will never tell you to move money to a \"safe\" account or wallet.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-bank-call",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d36",
@@ -5695,7 +5793,7 @@
     "type": "hunt",
     "daily": true,
     "template": "d37",
-    "title": "Daily Quickie · A Loan Fee First",
+    "title": "Daily Quickie · Pre-Approved Crypto Loan",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -5710,20 +5808,20 @@
         "name": [
           {
             "clue": "from",
-            "text": "QuickLoan Direct"
+            "text": "Kelmo Lending"
           }
         ]
       },
-      "context": "You have not applied for any loan.",
+      "context": "You never applied for a loan.",
       "items": [
         {
           "msg": [
-            "You’re ",
+            "You are ",
             {
               "clue": "pre",
-              "text": "pre-approved for $5,000"
+              "text": "pre-approved for 5,000 USDT"
             },
-            ", no credit check."
+            "."
           ]
         },
         {
@@ -5731,58 +5829,43 @@
             "Pay a ",
             {
               "clue": "fee",
-              "text": "$75 insurance fee"
+              "text": "50 USDT fee"
             },
-            " first and we send it today."
-          ]
-        },
-        {
-          "msg": [
-            {
-              "clue": "timer",
-              "text": "Offer closes",
-              "countdown": 3600
-            },
-            " ",
+            " first at ",
             {
               "clue": "link",
-              "text": "Apply: quickloan-direct.example",
+              "text": "kelmo-loan.live",
               "link": true
-            }
+            },
+            "."
           ]
         }
       ]
     },
     "clues": {
       "pre": {
-        "label": "Loan you did not ask for",
+        "label": "Pre-approved, unasked",
         "strength": "strong",
-        "lens": "Pre-approved from nothing.",
-        "why": "Real lenders check you first."
+        "lens": "Unrequested.",
+        "why": "Bait."
       },
       "fee": {
-        "label": "Pay a fee first",
+        "label": "A fee first",
         "strength": "strong",
-        "lens": "A fee before the money.",
-        "why": "A real loan never needs a fee before you get it."
-      },
-      "timer": {
-        "label": "Countdown",
-        "strength": "strong",
-        "lens": "One hour.",
-        "why": "Pressure is the trick."
+        "lens": "You pay to borrow.",
+        "why": "Real lenders deduct fees."
       },
       "link": {
         "label": "Look-alike link",
         "strength": "strong",
-        "lens": "An unknown website.",
-        "why": "Use a lender you chose yourself."
+        "lens": "kelmo-loan.live is not a lender.",
+        "why": "Real lenders are regulated."
       },
       "from": {
-        "label": "A loan name",
+        "label": "Kelmo Lending",
         "strength": "harmless",
-        "lens": "QuickLoan Direct.",
-        "why": "Names prove nothing."
+        "lens": "A made-up name.",
+        "why": "Names are copied."
       }
     },
     "actions": [
@@ -5839,23 +5922,23 @@
       }
     },
     "what_if": {},
-    "golden_rule": "If a loan asks you to pay first, it is a scam.",
+    "golden_rule": "A loan that asks for a fee before paying you is a scam.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-prize",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d38",
     "type": "hunt",
     "daily": true,
     "template": "d38",
-    "title": "Daily Quickie · Wrong Number",
+    "title": "Daily Quickie · Wrong Number, New Friend",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -5874,63 +5957,59 @@
           }
         ]
       },
-      "context": "A stranger texted you.",
+      "context": "You do not know the sender.",
       "items": [
         {
           "msg": [
-            "Hi Anna, ",
-            {
-              "clue": "wrong",
-              "text": "are we still on for lunch?"
-            }
+            "Hi Anna, are we still on for lunch?"
           ]
         },
         {
           "msg": [
-            "Oh sorry, wrong number! You seem nice though. I’m a ",
+            "Oh sorry, wrong number! You seem ",
             {
-              "clue": "rich",
-              "text": "trader who makes $2,000 a day"
+              "clue": "nice",
+              "text": "so nice"
             },
-            "."
-          ]
-        },
-        {
-          "msg": [
-            "Want to learn? I’ll ",
+            ". I ",
             {
-              "clue": "show",
-              "text": "show you my app"
+              "clue": "earn",
+              "text": "earn well with crypto"
             },
-            "."
+            ". Want to chat on a ",
+            {
+              "clue": "move",
+              "text": "private app"
+            },
+            "?"
           ]
         }
       ]
     },
     "clues": {
-      "wrong": {
-        "label": "A “wrong number”",
+      "nice": {
+        "label": "Instant warmth",
         "strength": "strong",
-        "lens": "A message “by mistake”.",
-        "why": "This is how scam chats start."
+        "lens": "Friendly fast.",
+        "why": "Warmth is the hook."
       },
-      "rich": {
-        "label": "A big earner",
+      "earn": {
+        "label": "Crypto earning talk",
         "strength": "strong",
-        "lens": "$2,000 a day.",
-        "why": "Easy daily riches are bait."
+        "lens": "A stranger talks about earning.",
+        "why": "It leads to a fake investment."
       },
-      "show": {
-        "label": "An app to join",
+      "move": {
+        "label": "Move to a private app",
         "strength": "strong",
-        "lens": "A trading app to try.",
-        "why": "The app is fake. It only takes your money."
+        "lens": "Leaves the text.",
+        "why": "Scammers avoid being reported."
       },
       "from": {
         "label": "Unknown number",
         "strength": "harmless",
-        "lens": "A number you do not know.",
-        "why": "A new number alone proves nothing."
+        "lens": "A wrong number.",
+        "why": "It begins innocently."
       }
     },
     "actions": [
@@ -5987,16 +6066,16 @@
       }
     },
     "what_if": {},
-    "golden_rule": "A “wrong number” that turns into an investment tip is a scam. Do not reply.",
+    "golden_rule": "A \"wrong number\" that turns into crypto talk is the start of a long scam.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-romance",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d39",
@@ -6339,7 +6418,7 @@
     "type": "hunt",
     "daily": true,
     "template": "d41",
-    "title": "Daily Quickie · A Famous Face",
+    "title": "Daily Quickie · A TV Host Loves This Token",
     "seconds": 90,
     "disguise": "support",
     "intro": [],
@@ -6353,87 +6432,97 @@
       "head": {
         "name": [
           {
-            "clue": "from",
-            "text": "Smart Wealth Club"
+            "clue": "name",
+            "text": "NewsBeat"
           }
         ],
         "sub": [
-          "Sponsored"
+          {
+            "clue": "sub",
+            "text": "Sponsored post"
+          }
         ],
         "avatar": {
-          "glyph": "💰"
+          "glyph": "📺",
+          "clue": "pic"
         }
       },
-      "banner": [
-        "Ad · you do not follow this page"
-      ],
+      "context": "The video shows a well-known TV host, but the voice is slightly off.",
       "items": [
         {
           "msg": [
-            "A famous TV host says this ",
+            "A famous host says this ",
             {
-              "clue": "face",
-              "text": "changed his life"
-            },
-            ". [video]"
-          ]
-        },
-        {
-          "msg": [
-            "Invest just ",
-            {
-              "clue": "small",
-              "text": "$250"
-            },
-            " and watch it grow ",
-            {
-              "clue": "fast",
-              "text": "ten times in a month"
+              "clue": "token",
+              "text": "new token changed his life"
             },
             "."
           ]
         },
         {
           "msg": [
+            "Put in ",
+            {
+              "clue": "put",
+              "text": "300 USDT, get 3,000"
+            },
+            " at ",
             {
               "clue": "link",
-              "text": "Join now: smartwealthclub.example",
+              "text": "beatcoin-sale.xyz",
               "link": true
+            },
+            ". ",
+            {
+              "clue": "rush",
+              "text": "Ends tonight."
             }
           ]
         }
       ]
     },
     "clues": {
-      "face": {
-        "label": "A famous face",
+      "token": {
+        "label": "A new token endorsed by a face",
         "strength": "strong",
-        "lens": "A well-known person “endorses” it.",
-        "why": "Computers can fake faces and voices. Scammers use them."
+        "lens": "A celebrity ad.",
+        "why": "Deepfake ads are common."
       },
-      "fast": {
-        "label": "Ten times in a month",
+      "put": {
+        "label": "300 becomes 3,000",
         "strength": "strong",
-        "lens": "A huge, quick return.",
-        "why": "No honest investment promises that."
+        "lens": "A 10x promise.",
+        "why": "Nobody promises 10x."
       },
       "link": {
         "label": "Look-alike link",
         "strength": "strong",
-        "lens": "An unknown site.",
-        "why": "Use regulated, well-known platforms you chose yourself."
+        "lens": "beatcoin-sale.xyz is not a real site.",
+        "why": "A real host does not sell tokens by link."
       },
-      "small": {
-        "label": "A small start",
-        "strength": "harmless",
-        "lens": "$250 sounds modest.",
-        "why": "A small start is bait."
+      "rush": {
+        "label": "Ends tonight",
+        "strength": "strong",
+        "lens": "A deadline.",
+        "why": "Pressure stops you from checking."
       },
-      "from": {
-        "label": "A wealth club name",
+      "name": {
+        "label": "NewsBeat",
         "strength": "harmless",
-        "lens": "Smart Wealth Club.",
-        "why": "Names are easy to invent."
+        "lens": "A made-up name.",
+        "why": "Names are copied."
+      },
+      "pic": {
+        "label": "TV picture",
+        "strength": "harmless",
+        "lens": "A symbol.",
+        "why": "Pictures prove nothing."
+      },
+      "sub": {
+        "label": "A label under the name",
+        "strength": "harmless",
+        "lens": "A small label.",
+        "why": "Labels are typed."
       }
     },
     "actions": [
@@ -6490,16 +6579,16 @@
       }
     },
     "what_if": {},
-    "golden_rule": "A famous face in an ad can be fake. Never invest because of one.",
+    "golden_rule": "A famous face selling a token is often a fake video. Check the host's real channels.",
     "hints": {
       "nudge": "",
       "glow_order": []
     },
     "sources": [
-      "ftc-phishing",
-      "ftc-bank-call"
+      "ftc-invest-social",
+      "ftc-crypto"
     ],
-    "checked_on": "2026-10-21"
+    "checked_on": "2026-11-08"
   },
   {
     "id": "d42",
