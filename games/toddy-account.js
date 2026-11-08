@@ -30,7 +30,7 @@
       });
       return cached;
     },
-    signInUrl: function (game) { return '/api/auth/google/start?anon=' + encodeURIComponent(anonId()) + '&return=' + encodeURIComponent('/games/' + game + '/'); },
+    signInUrl: function (game) { return '/api/auth/google/start?anon=' + encodeURIComponent(anonId()) + '&return=' + encodeURIComponent(game ? '/games/' + game + '/' : '/'); },
     setProfile: function (changes) { cached = null; return call('POST', '/api/me/profile', changes).then(function (r) { return { ok: r.status === 200, error: r.body && r.body.error }; }); },
     signOut: function () { cached = null; return call('POST', '/api/logout', {}).then(function (r) { return r.status === 200; }); },
     deleteAccount: function () { cached = null; return call('POST', '/api/me/delete', {}).then(function (r) { return r.status === 200; }); },

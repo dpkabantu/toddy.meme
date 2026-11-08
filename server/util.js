@@ -27,7 +27,7 @@ export function cookie(name, value, { maxAge, path = '/' } = {}) {
 }
 // Only our own game pages may be returned to after sign-in (no open redirects).
 export function safeReturn(p) {
-  if (typeof p !== 'string' || !/^\/games\/[a-z0-9-]+\/?$/.test(p)) return '/games/';
+  if (typeof p !== 'string' || !/^(\/|\/games\/[a-z0-9-]+\/?)$/.test(p)) return '/games/';
   return p;
 }
 export const isAnonId = (s) => typeof s === 'string' && /^[A-Za-z0-9_-]{16,64}$/.test(s);

@@ -25,7 +25,7 @@
       var card = el('div', { className: 'ta-card', role: 'dialog', 'aria-label': 'Account' }); backdrop.append(card);
       card.append(el('h3', { textContent: 'Account' }));
       var done = el('button', { className: 'ta-btn', type: 'button', textContent: 'Close' }); done.addEventListener('click', close);
-      var lb = cfg.leaderboard === false ? null : el('button', { className: 'ta-btn', type: 'button', textContent: 'Leaderboard' }); if (lb) lb.addEventListener('click', function () { board('daily'); });
+      var lb = (cfg.leaderboard === false || !cfg.game) ? null : el('button', { className: 'ta-btn', type: 'button', textContent: 'Leaderboard' }); if (lb) lb.addEventListener('click', function () { board('daily'); });
       if (m.unavailable) { card.append(el('small', { textContent: 'Sign-in is not available right now. You can keep playing as a guest.' }), done); return; }
       if (!m.signedIn) {
         card.append(el('small', { textContent: 'Optional. Keep your progress on every device. We store your email, name and a nickname you choose. Other players only ever see the nickname.' }),
@@ -148,7 +148,23 @@
     });
   }
 
+  // The website header button (home page): same panel, no game, no leaderboard, no progress sync.
+  function mountSite(host, before) {
+    cfg = { game: null, leaderboard: false };
+    A.me().then(function (m) {
+      if (m.unavailable) return;
+      me = m;
+      pill = el('button', { className: 'ta-pill inline', type: 'button' });
+      pill.addEventListener('click', open);
+      host.insertBefore(pill, before || null);
+      setPill();
+      var q = /^\?signin=(ok|cancelled|failed|expired)$/.exec(location.search);
+      if (q) { history.replaceState(null, '', location.pathname + location.hash); open(); }
+    });
+  }
+
   window.ToddyAccountUI = {
+    mountSite: mountSite,
     mount: function (config) {
       cfg = config;
       addHome(); new MutationObserver(addHome).observe(document.documentElement, { childList: true, subtree: true });

@@ -32,3 +32,10 @@ a.ta-home { display: inline-flex; align-items: center; justify-content: center; 
 .ta-pill.bottom { top: auto; bottom: max(10px, env(safe-area-inset-bottom)); }
 .ta-pill.on[hidden] { display: none; }
 .ta-pill.anchored { right: auto; bottom: auto; }
+
+/* Website header button (home page): sits in the navbar instead of floating */
+.ta-pill.inline { position: static; flex: none; margin: 0 12px 0 auto; max-width: 150px; min-height: 40px; padding: 8px 18px; box-shadow: none; background: transparent; color: #fdaf1e; font-size: 0.88rem; }
+.ta-pill.inline:hover { background: rgba(253, 175, 30, .16); }
+.ta-pill.inline.on { position: relative; width: 44px; height: 44px; min-height: 44px; padding: 0; background: #1d1431; }
+.ta-pill.inline.on:hover { background: #2a1d47; }
+@media (max-width: 768px) { .ta-pill.inline { margin: 0 8px 0 auto; padding: 8px 14px; } }
