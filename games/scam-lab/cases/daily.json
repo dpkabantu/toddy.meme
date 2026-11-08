@@ -1,0 +1,6647 @@
+[
+  {
+    "id": "d01",
+    "type": "hunt",
+    "daily": true,
+    "template": "d01",
+    "title": "Daily Quickie · A Parcel Fee",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Messages",
+      "from": "Quillpost",
+      "text": "Your parcel is waiting. Pay a $2 fee…"
+    },
+    "screen": {
+      "app": "sms",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Quillpost"
+          }
+        ]
+      },
+      "context": "You are not expecting any parcel.",
+      "items": [
+        {
+          "msg": [
+            "Your parcel is waiting at our depot."
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "fee",
+              "text": "Pay a $2 customs fee"
+            },
+            " to release it: ",
+            {
+              "clue": "link",
+              "text": "quillpost-release.example",
+              "link": true
+            }
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "timer",
+              "text": "Parcel returned in",
+              "countdown": 3600
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "fee": {
+        "label": "A tiny fee",
+        "strength": "strong",
+        "lens": "A $2 fee, so small it feels safe.",
+        "why": "Small fees are bait. The page behind them wants your card details."
+      },
+      "link": {
+        "label": "Look-alike link",
+        "strength": "strong",
+        "lens": "The link is not a real post service address.",
+        "why": "Real couriers use their own app or site. Never pay through a text link."
+      },
+      "timer": {
+        "label": "Countdown",
+        "strength": "strong",
+        "lens": "Only one hour left.",
+        "why": "Rushing you is a trick to stop you checking."
+      },
+      "from": {
+        "label": "A courier name",
+        "strength": "harmless",
+        "lens": "The sender is called Quillpost.",
+        "why": "Anyone can type a name into a text."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "If you did not order it, a parcel fee text is a scam. Check the courier’s own app.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d02",
+    "type": "hunt",
+    "daily": true,
+    "template": "d02",
+    "title": "Daily Quickie · Account Locked",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Mail",
+      "from": "Brindle Bank Security",
+      "text": "URGENT: your account is locked"
+    },
+    "screen": {
+      "app": "mail",
+      "head": {
+        "from": [
+          {
+            "clue": "from",
+            "text": "Brindle Bank Security"
+          }
+        ],
+        "addr": [
+          {
+            "clue": "addr",
+            "text": "security@brindle-bank-help.example"
+          }
+        ],
+        "subject": [
+          {
+            "clue": "subj",
+            "text": "URGENT: your account is locked"
+          }
+        ],
+        "time": [
+          "3:12 AM"
+        ]
+      },
+      "items": [
+        {
+          "p": [
+            "Dear customer,"
+          ]
+        },
+        {
+          "p": [
+            "We found ",
+            {
+              "clue": "odd",
+              "text": "unusual activity"
+            },
+            ". Your account is locked."
+          ]
+        },
+        {
+          "p": [
+            {
+              "clue": "link",
+              "text": "Click here to unlock now",
+              "link": true
+            },
+            " or it will be closed in 24 hours."
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "addr": {
+        "label": "Look-alike address",
+        "strength": "strong",
+        "lens": "The address is brindle-bank-help.example, not the bank’s own.",
+        "why": "Check the address after the @, not just the name."
+      },
+      "subj": {
+        "label": "Shouting subject",
+        "strength": "strong",
+        "lens": "URGENT in capitals.",
+        "why": "Panic is how scammers rush you."
+      },
+      "link": {
+        "label": "Unlock link",
+        "strength": "strong",
+        "lens": "A button that leads to a fake login page.",
+        "why": "Open your bank’s app yourself instead of tapping a link."
+      },
+      "from": {
+        "label": "A bank name",
+        "strength": "harmless",
+        "lens": "The sender calls itself Brindle Bank Security.",
+        "why": "A name proves nothing."
+      },
+      "odd": {
+        "label": "Vague claim",
+        "strength": "harmless",
+        "lens": "“Unusual activity”, no details.",
+        "why": "Vague alarms prove nothing either way."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A bank never asks you to unlock an account through an email link.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d03",
+    "type": "hunt",
+    "daily": true,
+    "template": "d03",
+    "title": "Daily Quickie · Virus Warning",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Messages",
+      "from": "Device Care Team",
+      "text": "VIRUS FOUND on your phone…"
+    },
+    "screen": {
+      "app": "sms",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Device Care Team"
+          }
+        ]
+      },
+      "context": "You were just browsing normally.",
+      "items": [
+        {
+          "msg": [
+            {
+              "clue": "virus",
+              "text": "VIRUS FOUND on your phone!"
+            },
+            " Do not switch it off."
+          ]
+        },
+        {
+          "msg": [
+            "Call our ",
+            {
+              "clue": "call",
+              "text": "support line"
+            },
+            " now: ",
+            {
+              "clue": "num",
+              "text": "+44 20 5550 0147"
+            }
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "remote",
+              "text": "We will need to connect to your phone to remove it."
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "virus": {
+        "label": "Scary alarm",
+        "strength": "strong",
+        "lens": "It shouts about a virus out of nowhere.",
+        "why": "Real security tools do not text you panic messages."
+      },
+      "call": {
+        "label": "Call us now",
+        "strength": "strong",
+        "lens": "It wants you to phone a number it gives you.",
+        "why": "Look up a company’s number yourself. Do not use theirs."
+      },
+      "remote": {
+        "label": "Remote access",
+        "strength": "strong",
+        "lens": "They want to connect to your phone.",
+        "why": "Giving control of your phone gives away everything on it."
+      },
+      "from": {
+        "label": "A helpful name",
+        "strength": "harmless",
+        "lens": "Device Care Team sounds friendly.",
+        "why": "Names are easy to invent."
+      },
+      "num": {
+        "label": "A phone number",
+        "strength": "harmless",
+        "lens": "A normal looking number.",
+        "why": "A number proves nothing either way."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "Nobody who truly protects your phone texts you to call them and hand over control.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d04",
+    "type": "hunt",
+    "daily": true,
+    "template": "d04",
+    "title": "Daily Quickie · Your Order Is Out",
+    "seconds": 90,
+    "disguise": null,
+    "intro": [],
+    "notify": {
+      "app": "Mail",
+      "from": "Meridu Store",
+      "text": "Your order #48213 is out for delivery"
+    },
+    "screen": {
+      "app": "mail",
+      "head": {
+        "from": [
+          "Meridu Store"
+        ],
+        "addr": [
+          {
+            "clue": "addr",
+            "text": "orders@meridu.example"
+          }
+        ],
+        "subject": [
+          {
+            "clue": "subj",
+            "text": "Your order #48213 is out for delivery"
+          }
+        ],
+        "time": [
+          "8:05 AM"
+        ]
+      },
+      "items": [
+        {
+          "p": [
+            "Hi, your ",
+            {
+              "clue": "order",
+              "text": "lamp is out for delivery today"
+            },
+            "."
+          ]
+        },
+        {
+          "p": [
+            {
+              "clue": "track",
+              "text": "Track it in the Meridu app under My Orders."
+            },
+            " ",
+            {
+              "clue": "nopay",
+              "text": "There is nothing to pay or confirm."
+            }
+          ]
+        }
+      ],
+      "context": "You ordered a lamp from Meridu Store on Monday."
+    },
+    "clues": {
+      "addr": {
+        "label": "The shop’s usual address",
+        "strength": "harmless",
+        "lens": "The address matches the shop’s other emails.",
+        "why": "A familiar address is a good sign. Not proof alone."
+      },
+      "subj": {
+        "label": "A calm subject",
+        "strength": "harmless",
+        "lens": "An order number, no shouting.",
+        "why": "Normal updates are calm."
+      },
+      "order": {
+        "label": "You did order this",
+        "strength": "harmless",
+        "lens": "It matches your order from Monday.",
+        "why": "You started this order yourself."
+      },
+      "track": {
+        "label": "Use the app",
+        "strength": "harmless",
+        "lens": "It sends you to the shop’s own app.",
+        "why": "Honest shops point you to their real app."
+      },
+      "nopay": {
+        "label": "Asks for nothing",
+        "strength": "harmless",
+        "lens": "No payment, no code, no login.",
+        "why": "A message that asks for nothing is usually honest."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "go_ahead",
+    "acceptable_actions": [
+      "ignore",
+      "verify"
+    ],
+    "outcomes": {
+      "go_ahead": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "GENUINE",
+        "line": "It was genuine. Spotting the honest ones matters too.",
+        "toddy": "happy"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "SAFE",
+        "line": "It was genuine, so nothing bad happened.",
+        "toddy": "happy"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "CHECKED",
+        "line": "You checked, and it was genuine. Careful and correct.",
+        "toddy": "happy"
+      },
+      "block_report": {
+        "scene": "wolf",
+        "mirage": "smug",
+        "stamp": "FALSE ALARM",
+        "line": "That one was honest. Crying wolf makes the real warnings easier to miss.",
+        "mirageSays": "Trust nothing? I win anyway."
+      }
+    },
+    "what_if": {},
+    "golden_rule": "An update for something you really ordered, that asks for nothing, is fine.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d05",
+    "type": "hunt",
+    "daily": true,
+    "template": "d05",
+    "title": "Daily Quickie · A Friend Needs Gift Cards",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Chirp",
+      "from": "Lena",
+      "text": "Hey, my phone broke. Can you help?"
+    },
+    "screen": {
+      "app": "chirp",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Lena"
+          }
+        ],
+        "sub": [
+          "New number, not saved"
+        ],
+        "avatar": {
+          "glyph": "🙂"
+        }
+      },
+      "banner": [
+        {
+          "clue": "first",
+          "text": "Message request · not in your contacts"
+        }
+      ],
+      "items": [
+        {
+          "msg": [
+            "Hey it’s Lena, ",
+            {
+              "clue": "new",
+              "text": "my phone broke so this is a new number"
+            },
+            "."
+          ]
+        },
+        {
+          "msg": [
+            "Can you buy ",
+            {
+              "clue": "cards",
+              "text": "three gift cards"
+            },
+            " for my cousin’s birthday? I’ll pay you back."
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "secret",
+              "text": "Don’t call, my voice is gone. Just send the codes here."
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "new": {
+        "label": "A “new number”",
+        "strength": "strong",
+        "lens": "It says the old phone broke.",
+        "why": "Real friends can prove who they are. Call the old number."
+      },
+      "cards": {
+        "label": "Gift card request",
+        "strength": "strong",
+        "lens": "It asks for gift cards.",
+        "why": "Gift cards are how scammers get paid. Nobody honest asks for codes."
+      },
+      "secret": {
+        "label": "No calls, only codes",
+        "strength": "strong",
+        "lens": "It avoids a call and wants codes in chat.",
+        "why": "Avoiding a call is a warning sign."
+      },
+      "first": {
+        "label": "Not in your contacts",
+        "strength": "harmless",
+        "lens": "The number is new.",
+        "why": "A new number alone proves nothing, but check it."
+      },
+      "from": {
+        "label": "A friend’s name",
+        "strength": "harmless",
+        "lens": "The name is Lena.",
+        "why": "A name is easy to copy."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "If a friend asks for gift cards from a new number, call their old number first.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d06",
+    "type": "hunt",
+    "daily": true,
+    "template": "d06",
+    "title": "Daily Quickie · A Sweet Stranger",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Chirp",
+      "from": "Sofia",
+      "text": "I’ve never felt this connected…"
+    },
+    "screen": {
+      "app": "chirp",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Sofia, 31"
+          }
+        ],
+        "sub": [
+          "Matched yesterday"
+        ],
+        "avatar": {
+          "glyph": "🌷"
+        }
+      },
+      "banner": [
+        {
+          "clue": "first",
+          "text": "Message request"
+        }
+      ],
+      "items": [
+        {
+          "msg": [
+            {
+              "clue": "fast",
+              "text": "I’ve never felt this connected to anyone"
+            },
+            ", and we only met yesterday."
+          ]
+        },
+        {
+          "msg": [
+            "My uncle taught me a ",
+            {
+              "clue": "invest",
+              "text": "trading app that doubles money"
+            },
+            ". Want me to show you?"
+          ]
+        },
+        {
+          "msg": [
+            "Let’s ",
+            {
+              "clue": "move",
+              "text": "move to a private chat"
+            },
+            " so we can talk freely."
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "fast": {
+        "label": "Too much, too fast",
+        "strength": "strong",
+        "lens": "Deep feelings after one day.",
+        "why": "Real affection takes time. Fast love is a scam tactic."
+      },
+      "invest": {
+        "label": "Investing tip",
+        "strength": "strong",
+        "lens": "A romantic match suggests an app that doubles money.",
+        "why": "Romance plus investing is a classic scam. Never invest on a match’s advice."
+      },
+      "move": {
+        "label": "Move chats",
+        "strength": "strong",
+        "lens": "It wants a private chat away from the app.",
+        "why": "Moving away from the app removes its safety tools."
+      },
+      "from": {
+        "label": "A friendly profile",
+        "strength": "harmless",
+        "lens": "A smiling photo and a name.",
+        "why": "Photos are easy to steal."
+      },
+      "first": {
+        "label": "A new match",
+        "strength": "harmless",
+        "lens": "You matched yesterday.",
+        "why": "Matching is normal. What comes next matters."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "Love plus an investment tip is a scam. Never invest on a stranger’s advice.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d07",
+    "type": "hunt",
+    "daily": true,
+    "template": "d07",
+    "title": "Daily Quickie · Double Your Coins",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Chirp",
+      "from": "Kelvaro Giveaway",
+      "text": "Send 100, get 200 back!"
+    },
+    "screen": {
+      "app": "chirp",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Kelvaro Giveaway 🚀"
+          }
+        ],
+        "sub": [
+          "@kelvaro_giveaway_live"
+        ],
+        "avatar": {
+          "glyph": "🚀"
+        }
+      },
+      "items": [
+        {
+          "msg": [
+            {
+              "clue": "party",
+              "text": "Giveaway time!"
+            },
+            " Send 100 coins, get ",
+            {
+              "clue": "double",
+              "text": "200 back"
+            },
+            "!"
+          ]
+        },
+        {
+          "msg": [
+            "Send to wallet ",
+            {
+              "clue": "wallet",
+              "text": "0x7Be…91a"
+            },
+            "."
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "timer",
+              "text": "Ends in",
+              "countdown": 900
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "double": {
+        "label": "Send 1, get 2",
+        "strength": "strong",
+        "lens": "You must send first.",
+        "why": "Real giveaways never ask you to send first."
+      },
+      "wallet": {
+        "label": "A stranger’s wallet",
+        "strength": "strong",
+        "lens": "A wallet address from nowhere.",
+        "why": "Coins sent there are gone for good."
+      },
+      "timer": {
+        "label": "Countdown",
+        "strength": "strong",
+        "lens": "Only minutes left.",
+        "why": "Rushing is the trick."
+      },
+      "party": {
+        "label": "Party words",
+        "strength": "harmless",
+        "lens": "Cheerful wording.",
+        "why": "Cheerful words prove nothing."
+      },
+      "from": {
+        "label": "A rocket name",
+        "strength": "harmless",
+        "lens": "A rocket emoji and a project-like name.",
+        "why": "Names and emoji are easy to copy."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "If you must send first to get more back, it is a scam.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d08",
+    "type": "hunt",
+    "daily": true,
+    "template": "d08",
+    "title": "Daily Quickie · Was This You?",
+    "seconds": 90,
+    "disguise": null,
+    "intro": [],
+    "notify": {
+      "app": "Bank app",
+      "from": "Your bank (in-app)",
+      "text": "Was this you? $64.00"
+    },
+    "screen": {
+      "app": "mail",
+      "head": {
+        "from": [
+          "Your bank"
+        ],
+        "addr": [
+          {
+            "clue": "inapp",
+            "text": "inside your banking app"
+          }
+        ],
+        "subject": [
+          {
+            "clue": "subj",
+            "text": "Was this you?"
+          }
+        ],
+        "time": [
+          "2:41 PM"
+        ]
+      },
+      "items": [
+        {
+          "p": [
+            "We paused a ",
+            {
+              "clue": "paused",
+              "text": "card payment of $64.00"
+            },
+            " at a shop you have not used before."
+          ]
+        },
+        {
+          "p": [
+            {
+              "clue": "yesno",
+              "text": "Tap Yes or No below."
+            },
+            " ",
+            {
+              "clue": "nocodes",
+              "text": "We never ask for PINs or codes."
+            }
+          ]
+        }
+      ],
+      "context": "You opened your real banking app yourself."
+    },
+    "clues": {
+      "inapp": {
+        "label": "Inside the real app",
+        "strength": "harmless",
+        "lens": "You opened the app yourself.",
+        "why": "Hard to fake."
+      },
+      "subj": {
+        "label": "A simple question",
+        "strength": "harmless",
+        "lens": "“Was this you?”",
+        "why": "A normal fraud check."
+      },
+      "paused": {
+        "label": "A paused payment",
+        "strength": "harmless",
+        "lens": "They stopped a payment for you.",
+        "why": "Banks do this to protect you."
+      },
+      "yesno": {
+        "label": "Yes or No only",
+        "strength": "harmless",
+        "lens": "Nothing else is asked.",
+        "why": "No codes, no links."
+      },
+      "nocodes": {
+        "label": "Never asks for codes",
+        "strength": "harmless",
+        "lens": "A safety reminder.",
+        "why": "Honest banks say this."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "go_ahead",
+    "acceptable_actions": [
+      "ignore",
+      "verify"
+    ],
+    "outcomes": {
+      "go_ahead": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "GENUINE",
+        "line": "It was genuine. Spotting the honest ones matters too.",
+        "toddy": "happy"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "SAFE",
+        "line": "It was genuine, so nothing bad happened.",
+        "toddy": "happy"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "CHECKED",
+        "line": "You checked, and it was genuine. Careful and correct.",
+        "toddy": "happy"
+      },
+      "block_report": {
+        "scene": "wolf",
+        "mirage": "smug",
+        "stamp": "FALSE ALARM",
+        "line": "That one was honest. Crying wolf makes the real warnings easier to miss.",
+        "mirageSays": "Trust nothing? I win anyway."
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A real alert lives inside your real app and only asks you to confirm.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d09",
+    "type": "hunt",
+    "daily": true,
+    "template": "d09",
+    "title": "Daily Quickie · Pay To Start Work",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Mail",
+      "from": "Talentforge Careers",
+      "text": "You got the job! No interview needed"
+    },
+    "screen": {
+      "app": "mail",
+      "head": {
+        "from": [
+          {
+            "clue": "from",
+            "text": "Talentforge Careers"
+          }
+        ],
+        "addr": [
+          {
+            "clue": "addr",
+            "text": "hr@talentforge-careers.example"
+          }
+        ],
+        "subject": [
+          "You got the job!"
+        ],
+        "time": [
+          "10:30 AM"
+        ]
+      },
+      "items": [
+        {
+          "p": [
+            "Congratulations, you are hired for remote data entry. ",
+            {
+              "clue": "noint",
+              "text": "No interview needed."
+            }
+          ]
+        },
+        {
+          "p": [
+            "Salary: ",
+            {
+              "clue": "pay",
+              "text": "$4,500 a month"
+            },
+            " for light work."
+          ]
+        },
+        {
+          "p": [
+            "To start, pay a ",
+            {
+              "clue": "fee",
+              "text": "$80 training and equipment fee"
+            },
+            " today."
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "noint": {
+        "label": "No interview",
+        "strength": "strong",
+        "lens": "You were hired without being asked a thing.",
+        "why": "Real employers interview you."
+      },
+      "pay": {
+        "label": "Too good pay",
+        "strength": "strong",
+        "lens": "$4,500 a month for easy work.",
+        "why": "Big pay for little work is the bait."
+      },
+      "fee": {
+        "label": "Pay to start",
+        "strength": "strong",
+        "lens": "You must pay $80 first.",
+        "why": "A real job never charges you to begin."
+      },
+      "addr": {
+        "label": "A look-alike company address",
+        "strength": "harmless",
+        "lens": "The address does not tell you much.",
+        "why": "Addresses are easy to fake."
+      },
+      "from": {
+        "label": "A company name",
+        "strength": "harmless",
+        "lens": "Talentforge sounds professional.",
+        "why": "Names are easy to invent."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A job that charges you to start is not a job.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d10",
+    "type": "hunt",
+    "daily": true,
+    "template": "d10",
+    "title": "Daily Quickie · A Tax Refund",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Messages",
+      "from": "Tax Office",
+      "text": "You are owed a refund of $312…"
+    },
+    "screen": {
+      "app": "sms",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Tax Office"
+          }
+        ]
+      },
+      "context": "You have not filed anything this month.",
+      "items": [
+        {
+          "msg": [
+            "You are owed a ",
+            {
+              "clue": "refund",
+              "text": "refund of $312"
+            },
+            "."
+          ]
+        },
+        {
+          "msg": [
+            "Claim it now: ",
+            {
+              "clue": "link",
+              "text": "taxrefund-claim.example",
+              "link": true
+            }
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "timer",
+              "text": "Offer ends",
+              "countdown": 1800
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "refund": {
+        "label": "A surprise refund",
+        "strength": "strong",
+        "lens": "A refund you did not expect.",
+        "why": "Tax offices do not text surprise refunds."
+      },
+      "link": {
+        "label": "Look-alike link",
+        "strength": "strong",
+        "lens": "The link is not a government address.",
+        "why": "Use the official government site that you type yourself."
+      },
+      "timer": {
+        "label": "Countdown",
+        "strength": "strong",
+        "lens": "Only 30 minutes left.",
+        "why": "Pressure is the trick."
+      },
+      "from": {
+        "label": "An official-sounding name",
+        "strength": "harmless",
+        "lens": "“Tax Office”.",
+        "why": "A name proves nothing."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "Tax offices do not text refund links. Go to the official site yourself.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d11",
+    "type": "hunt",
+    "daily": true,
+    "template": "d11",
+    "title": "Daily Quickie · Paid Too Much",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Tradely",
+      "from": "Buyer: Marco",
+      "text": "I sent too much, please refund the rest"
+    },
+    "screen": {
+      "app": "chirp",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Marco (Tradely buyer)"
+          }
+        ],
+        "sub": [
+          "Interested in: your bike"
+        ],
+        "avatar": {
+          "glyph": "🚲"
+        }
+      },
+      "banner": [
+        "Chat opened on Tradely"
+      ],
+      "items": [
+        {
+          "msg": [
+            "Hi! I paid $500 for your $300 bike, ",
+            {
+              "clue": "over",
+              "text": "sent too much by mistake"
+            },
+            "."
+          ]
+        },
+        {
+          "msg": [
+            "Please ",
+            {
+              "clue": "refund",
+              "text": "send back the extra $200"
+            },
+            " now."
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "proof",
+              "text": "Here’s my payment screenshot."
+            },
+            " [screenshot]"
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "over": {
+        "label": "Overpaid",
+        "strength": "strong",
+        "lens": "He paid more than the price.",
+        "why": "Overpayment is a classic trick."
+      },
+      "refund": {
+        "label": "Send money back",
+        "strength": "strong",
+        "lens": "He wants real money back.",
+        "why": "The first payment is fake or will be reversed."
+      },
+      "proof": {
+        "label": "Only a screenshot",
+        "strength": "strong",
+        "lens": "He shows a picture, not money in your account.",
+        "why": "Check your own account, not a picture."
+      },
+      "from": {
+        "label": "A friendly buyer",
+        "strength": "harmless",
+        "lens": "Polite and quick.",
+        "why": "Politeness proves nothing."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "Never refund an overpayment. Check that money is truly in your account first.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d12",
+    "type": "hunt",
+    "daily": true,
+    "template": "d12",
+    "title": "Daily Quickie · Reset Your Password",
+    "seconds": 90,
+    "disguise": null,
+    "intro": [],
+    "notify": {
+      "app": "Mail",
+      "from": "Fernly Mail",
+      "text": "Reset your password"
+    },
+    "screen": {
+      "app": "mail",
+      "head": {
+        "from": [
+          "Fernly Mail"
+        ],
+        "addr": [
+          {
+            "clue": "addr",
+            "text": "no-reply@fernly.example"
+          }
+        ],
+        "subject": [
+          {
+            "clue": "subj",
+            "text": "Reset your password"
+          }
+        ],
+        "time": [
+          "6:50 PM"
+        ]
+      },
+      "items": [
+        {
+          "p": [
+            "You asked to reset your password. ",
+            {
+              "clue": "open",
+              "text": "Use the button in the app."
+            }
+          ]
+        },
+        {
+          "p": [
+            {
+              "clue": "ignore",
+              "text": "If this was not you, ignore this email."
+            },
+            " ",
+            {
+              "clue": "nocode",
+              "text": "We never ask for your password."
+            }
+          ]
+        }
+      ],
+      "context": "You just tapped “Forgot password” on the Fernly app yourself."
+    },
+    "clues": {
+      "addr": {
+        "label": "The usual sender",
+        "strength": "harmless",
+        "lens": "The same address as before.",
+        "why": "A familiar sender is a good sign."
+      },
+      "subj": {
+        "label": "A plain subject",
+        "strength": "harmless",
+        "lens": "No shouting.",
+        "why": "Normal emails are calm."
+      },
+      "open": {
+        "label": "You asked for it",
+        "strength": "harmless",
+        "lens": "You just requested this reset.",
+        "why": "You started it."
+      },
+      "ignore": {
+        "label": "Safe if not you",
+        "strength": "harmless",
+        "lens": "It tells you to ignore it if you did not ask.",
+        "why": "Honest emails give you a safe way out."
+      },
+      "nocode": {
+        "label": "Never asks for a password",
+        "strength": "harmless",
+        "lens": "It says it never asks for it.",
+        "why": "Honest services say so."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "go_ahead",
+    "acceptable_actions": [
+      "ignore",
+      "verify"
+    ],
+    "outcomes": {
+      "go_ahead": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "GENUINE",
+        "line": "It was genuine. Spotting the honest ones matters too.",
+        "toddy": "happy"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "SAFE",
+        "line": "It was genuine, so nothing bad happened.",
+        "toddy": "happy"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "CHECKED",
+        "line": "You checked, and it was genuine. Careful and correct.",
+        "toddy": "happy"
+      },
+      "block_report": {
+        "scene": "wolf",
+        "mirage": "smug",
+        "stamp": "FALSE ALARM",
+        "line": "That one was honest. Crying wolf makes the real warnings easier to miss.",
+        "mirageSays": "Trust nothing? I win anyway."
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A reset you asked for yourself is fine. If you did not ask, ignore it.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d13",
+    "type": "hunt",
+    "daily": true,
+    "template": "d13",
+    "title": "Daily Quickie · Hi Mum",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Messages",
+      "from": "Unknown number",
+      "text": "Hi Mum, I lost my phone…"
+    },
+    "screen": {
+      "app": "sms",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Unknown number"
+          }
+        ]
+      },
+      "context": "You are a parent. Your child has a number you know.",
+      "items": [
+        {
+          "msg": [
+            {
+              "clue": "hi",
+              "text": "Hi Mum"
+            },
+            ", I lost my phone, this is my new number."
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "urgent",
+              "text": "I need to pay a bill today"
+            },
+            ", can you send $600? Bank details below."
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "nocall",
+              "text": "Can’t talk, I’ll explain later."
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "hi": {
+        "label": "A “new number” opener",
+        "strength": "strong",
+        "lens": "It says the phone is lost.",
+        "why": "This is a very common trick. Call the number you know."
+      },
+      "urgent": {
+        "label": "An urgent bill",
+        "strength": "strong",
+        "lens": "A bill today.",
+        "why": "Urgent money is a pressure trick."
+      },
+      "nocall": {
+        "label": "No call allowed",
+        "strength": "strong",
+        "lens": "It avoids a call.",
+        "why": "Avoiding a call is a warning sign."
+      },
+      "from": {
+        "label": "Unknown number",
+        "strength": "harmless",
+        "lens": "A number you do not know.",
+        "why": "A new number alone proves nothing, but check it."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "If a “child” texts from a new number asking for money, call their old number first.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d14",
+    "type": "hunt",
+    "daily": true,
+    "template": "d14",
+    "title": "Daily Quickie · A Parking Sticker",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Chirp",
+      "from": "Parkwise",
+      "text": "Scan to pay for parking"
+    },
+    "screen": {
+      "app": "chirp",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Parkwise"
+          }
+        ],
+        "sub": [
+          "Pay here"
+        ],
+        "avatar": {
+          "glyph": "🅿️"
+        }
+      },
+      "items": [
+        {
+          "msg": [
+            {
+              "clue": "sticker",
+              "text": "Scan this QR code on the meter"
+            },
+            " to pay."
+          ]
+        },
+        {
+          "msg": [
+            "Enter your ",
+            {
+              "clue": "card",
+              "text": "card number and security code"
+            },
+            "."
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "fine",
+              "text": "Fine of $60 if unpaid."
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "sticker": {
+        "label": "A sticker over the meter",
+        "strength": "strong",
+        "lens": "The QR code is on a sticker stuck on the meter.",
+        "why": "Scammers stick fake QR codes on real meters."
+      },
+      "card": {
+        "label": "Full card details",
+        "strength": "strong",
+        "lens": "It asks for your whole card.",
+        "why": "Pay in the official parking app you downloaded yourself."
+      },
+      "fine": {
+        "label": "A fine threat",
+        "strength": "strong",
+        "lens": "A fine if you do not pay.",
+        "why": "Threats rush you."
+      },
+      "from": {
+        "label": "A parking name",
+        "strength": "harmless",
+        "lens": "It sounds like a real parking firm.",
+        "why": "A name proves nothing."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "Never pay through a QR sticker. Use the official parking app or the meter itself.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d15",
+    "type": "hunt",
+    "daily": true,
+    "template": "d15",
+    "title": "Daily Quickie · Ten Percent A Day",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Chirp",
+      "from": "Smart Money Circle",
+      "text": "Members earn 10% a day!"
+    },
+    "screen": {
+      "app": "chirp",
+      "head": {
+        "name": [
+          "Smart Money Circle"
+        ],
+        "sub": [
+          {
+            "clue": "members",
+            "text": "2,800 members"
+          }
+        ],
+        "avatar": {
+          "glyph": "📈"
+        }
+      },
+      "banner": [
+        {
+          "clue": "added",
+          "text": "You were added by someone you do not know"
+        }
+      ],
+      "items": [
+        {
+          "msg": [
+            {
+              "clue": "daily",
+              "text": "Earn 10% every day, guaranteed."
+            }
+          ]
+        },
+        {
+          "msg": [
+            "Our ",
+            {
+              "clue": "expert",
+              "text": "top analyst"
+            },
+            " picks the trades."
+          ]
+        },
+        {
+          "msg": [
+            "Deposit now, ",
+            {
+              "clue": "limit",
+              "text": "only 10 spots left!"
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "daily": {
+        "label": "Guaranteed daily returns",
+        "strength": "strong",
+        "lens": "10% a day, guaranteed.",
+        "why": "No honest investment can guarantee returns."
+      },
+      "added": {
+        "label": "Added without asking",
+        "strength": "strong",
+        "lens": "A stranger added you.",
+        "why": "Real groups do not add strangers."
+      },
+      "limit": {
+        "label": "Limited spots",
+        "strength": "strong",
+        "lens": "Only a few spots.",
+        "why": "Scarcity is pressure."
+      },
+      "members": {
+        "label": "A big group",
+        "strength": "harmless",
+        "lens": "2,800 members.",
+        "why": "Bots can fill a group."
+      },
+      "expert": {
+        "label": "An “expert”",
+        "strength": "harmless",
+        "lens": "A top analyst.",
+        "why": "Titles are easy to claim."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "Guaranteed returns are a lie. Never join groups that promise them.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d16",
+    "type": "hunt",
+    "daily": true,
+    "template": "d16",
+    "title": "Daily Quickie · Appointment Reminder",
+    "seconds": 90,
+    "disguise": null,
+    "intro": [],
+    "notify": {
+      "app": "Messages",
+      "from": "Northgate Clinic",
+      "text": "Reminder: appointment tomorrow 9:30"
+    },
+    "screen": {
+      "app": "sms",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Northgate Clinic"
+          }
+        ]
+      },
+      "context": "You booked a check-up at Northgate Clinic last week.",
+      "items": [
+        {
+          "msg": [
+            {
+              "clue": "appt",
+              "text": "Reminder: your check-up is tomorrow at 9:30."
+            }
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "change",
+              "text": "To change it, call the number on your booking card."
+            }
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "nopay",
+              "text": "No payment needed now."
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "from": {
+        "label": "The clinic you booked",
+        "strength": "harmless",
+        "lens": "It matches your booking.",
+        "why": "You gave them your number yourself."
+      },
+      "appt": {
+        "label": "Matches your booking",
+        "strength": "harmless",
+        "lens": "The time matches what you booked.",
+        "why": "Real reminders match what you did."
+      },
+      "change": {
+        "label": "Use the number you have",
+        "strength": "harmless",
+        "lens": "It tells you to use your own booking card.",
+        "why": "No link, no surprise number."
+      },
+      "nopay": {
+        "label": "Asks for nothing",
+        "strength": "harmless",
+        "lens": "No payment, no link.",
+        "why": "A message that asks for nothing is usually honest."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "go_ahead",
+    "acceptable_actions": [
+      "ignore",
+      "verify"
+    ],
+    "outcomes": {
+      "go_ahead": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "GENUINE",
+        "line": "It was genuine. Spotting the honest ones matters too.",
+        "toddy": "happy"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "SAFE",
+        "line": "It was genuine, so nothing bad happened.",
+        "toddy": "happy"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "CHECKED",
+        "line": "You checked, and it was genuine. Careful and correct.",
+        "toddy": "happy"
+      },
+      "block_report": {
+        "scene": "wolf",
+        "mirage": "smug",
+        "stamp": "FALSE ALARM",
+        "line": "That one was honest. Crying wolf makes the real warnings easier to miss.",
+        "mirageSays": "Trust nothing? I win anyway."
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A reminder for something you booked yourself that asks for nothing is fine.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d17",
+    "type": "hunt",
+    "daily": true,
+    "template": "d17",
+    "title": "Daily Quickie · New Bank Details",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Mail",
+      "from": "Oakline Supplies",
+      "text": "Updated bank details for your invoice"
+    },
+    "screen": {
+      "app": "mail",
+      "head": {
+        "from": [
+          {
+            "clue": "from",
+            "text": "Oakline Supplies"
+          }
+        ],
+        "addr": [
+          {
+            "clue": "addr",
+            "text": "accounts@oakline-supplies.example"
+          }
+        ],
+        "subject": [
+          "Updated bank details for your invoice"
+        ],
+        "time": [
+          "4:20 PM"
+        ]
+      },
+      "items": [
+        {
+          "p": [
+            "Please note our ",
+            {
+              "clue": "new",
+              "text": "bank details have changed"
+            },
+            "."
+          ]
+        },
+        {
+          "p": [
+            "Pay this month’s invoice of $2,340 to the new account. ",
+            {
+              "clue": "rush",
+              "text": "Payment is due today."
+            }
+          ]
+        },
+        {
+          "p": [
+            {
+              "clue": "noreply",
+              "text": "Do not call, our phones are down."
+            }
+          ]
+        }
+      ],
+      "context": "You pay Oakline Supplies every month for your small business."
+    },
+    "clues": {
+      "new": {
+        "label": "Changed bank details",
+        "strength": "strong",
+        "lens": "The account number has changed.",
+        "why": "Call the supplier on a number you already know to confirm."
+      },
+      "rush": {
+        "label": "Due today",
+        "strength": "strong",
+        "lens": "Payment is due today.",
+        "why": "A rush stops you checking."
+      },
+      "noreply": {
+        "label": "No calls",
+        "strength": "strong",
+        "lens": "It tells you not to call.",
+        "why": "Avoiding a call is a warning sign."
+      },
+      "addr": {
+        "label": "A near-copy address",
+        "strength": "harmless",
+        "lens": "Close to the real one.",
+        "why": "Always compare it to the real address."
+      },
+      "from": {
+        "label": "A known supplier",
+        "strength": "harmless",
+        "lens": "The supplier you really use.",
+        "why": "A name proves nothing."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "If bank details change, call the supplier on a number you already have before you pay.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d18",
+    "type": "hunt",
+    "daily": true,
+    "template": "d18",
+    "title": "Daily Quickie · Renewal Charge",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Mail",
+      "from": "Shieldsafe",
+      "text": "Your plan renewed for $499"
+    },
+    "screen": {
+      "app": "mail",
+      "head": {
+        "from": [
+          {
+            "clue": "from",
+            "text": "Shieldsafe"
+          }
+        ],
+        "addr": [
+          {
+            "clue": "addr",
+            "text": "billing@shieldsafe-renew.example"
+          }
+        ],
+        "subject": [
+          "Your plan renewed for $499"
+        ],
+        "time": [
+          "7:44 AM"
+        ]
+      },
+      "items": [
+        {
+          "p": [
+            "Thank you for renewing your ",
+            {
+              "clue": "plan",
+              "text": "protection plan for $499"
+            },
+            "."
+          ]
+        },
+        {
+          "p": [
+            "If this was not you, ",
+            {
+              "clue": "call",
+              "text": "call us immediately"
+            },
+            " on +1 555 0188."
+          ]
+        },
+        {
+          "p": [
+            {
+              "clue": "nolink",
+              "text": "Do not reply to this email."
+            }
+          ]
+        }
+      ],
+      "context": "You never bought anything from Shieldsafe."
+    },
+    "clues": {
+      "plan": {
+        "label": "A charge you never made",
+        "strength": "strong",
+        "lens": "$499 for something you never bought.",
+        "why": "The fake charge is bait to make you call."
+      },
+      "call": {
+        "label": "Call us now",
+        "strength": "strong",
+        "lens": "They want you to phone them.",
+        "why": "The call leads to remote access and payments."
+      },
+      "nolink": {
+        "label": "No way to check",
+        "strength": "strong",
+        "lens": "It tells you not to reply.",
+        "why": "Real firms let you check in your own account."
+      },
+      "addr": {
+        "label": "An odd address",
+        "strength": "harmless",
+        "lens": "The address is not familiar.",
+        "why": "Addresses are easy to fake."
+      },
+      "from": {
+        "label": "A protection brand",
+        "strength": "harmless",
+        "lens": "Shieldsafe sounds trustworthy.",
+        "why": "Names prove nothing."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A bill for something you never bought is bait. Do not call the number it gives.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d19",
+    "type": "hunt",
+    "daily": true,
+    "template": "d19",
+    "title": "Daily Quickie · Power Cut In One Hour",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Messages",
+      "from": "Voltra Energy",
+      "text": "Your power will be cut in 1 hour"
+    },
+    "screen": {
+      "app": "sms",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Voltra Energy"
+          }
+        ]
+      },
+      "context": "You paid your energy bill on time.",
+      "items": [
+        {
+          "msg": [
+            {
+              "clue": "cut",
+              "text": "Your power will be cut in 1 hour"
+            },
+            " for unpaid bills."
+          ]
+        },
+        {
+          "msg": [
+            "Pay now: ",
+            {
+              "clue": "link",
+              "text": "voltra-pay-now.example",
+              "link": true
+            }
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "pay",
+              "text": "Pay by gift card for faster reconnection."
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "cut": {
+        "label": "Cut in one hour",
+        "strength": "strong",
+        "lens": "A one hour threat.",
+        "why": "Real utilities warn you in writing, over days."
+      },
+      "link": {
+        "label": "Look-alike link",
+        "strength": "strong",
+        "lens": "A pay link that is not the utility’s.",
+        "why": "Use your own account on the real site."
+      },
+      "pay": {
+        "label": "Gift card payment",
+        "strength": "strong",
+        "lens": "They ask for gift cards.",
+        "why": "No utility takes gift cards."
+      },
+      "from": {
+        "label": "A utility name",
+        "strength": "harmless",
+        "lens": "Voltra Energy.",
+        "why": "Names are easy to copy."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A real utility never demands gift cards or cuts power within the hour.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d20",
+    "type": "hunt",
+    "daily": true,
+    "template": "d20",
+    "title": "Daily Quickie · Your Bill Is Ready",
+    "seconds": 90,
+    "disguise": null,
+    "intro": [],
+    "notify": {
+      "app": "Mail",
+      "from": "Voltra Energy",
+      "text": "Your October bill is ready"
+    },
+    "screen": {
+      "app": "mail",
+      "head": {
+        "from": [
+          "Voltra Energy"
+        ],
+        "addr": [
+          {
+            "clue": "addr",
+            "text": "bills@voltra.example"
+          }
+        ],
+        "subject": [
+          {
+            "clue": "subj",
+            "text": "Your October bill is ready"
+          }
+        ],
+        "time": [
+          "9:00 AM"
+        ]
+      },
+      "items": [
+        {
+          "p": [
+            "Your bill is ready. ",
+            {
+              "clue": "view",
+              "text": "Log in to your account to see it."
+            }
+          ]
+        },
+        {
+          "p": [
+            {
+              "clue": "due",
+              "text": "Payment is due in 14 days."
+            },
+            " ",
+            {
+              "clue": "nolink",
+              "text": "We never ask for card details by email."
+            }
+          ]
+        }
+      ],
+      "context": "You have an energy account with Voltra, and bills come on the 20th."
+    },
+    "clues": {
+      "addr": {
+        "label": "The usual sender",
+        "strength": "harmless",
+        "lens": "The same sender as before.",
+        "why": "Familiar is a good sign."
+      },
+      "subj": {
+        "label": "A plain subject",
+        "strength": "harmless",
+        "lens": "No shouting.",
+        "why": "Normal bills are calm."
+      },
+      "view": {
+        "label": "Log in yourself",
+        "strength": "harmless",
+        "lens": "It tells you to log in.",
+        "why": "Honest firms send you to their real site."
+      },
+      "due": {
+        "label": "Plenty of time",
+        "strength": "harmless",
+        "lens": "Fourteen days.",
+        "why": "Honest bills give you time."
+      },
+      "nolink": {
+        "label": "Never asks for card details",
+        "strength": "harmless",
+        "lens": "It says it never asks.",
+        "why": "Honest firms say so."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "go_ahead",
+    "acceptable_actions": [
+      "ignore",
+      "verify"
+    ],
+    "outcomes": {
+      "go_ahead": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "GENUINE",
+        "line": "It was genuine. Spotting the honest ones matters too.",
+        "toddy": "happy"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "SAFE",
+        "line": "It was genuine, so nothing bad happened.",
+        "toddy": "happy"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "CHECKED",
+        "line": "You checked, and it was genuine. Careful and correct.",
+        "toddy": "happy"
+      },
+      "block_report": {
+        "scene": "wolf",
+        "mirage": "smug",
+        "stamp": "FALSE ALARM",
+        "line": "That one was honest. Crying wolf makes the real warnings easier to miss.",
+        "mirageSays": "Trust nothing? I win anyway."
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A bill that arrives when you expect it, gives you time and asks for nothing is fine.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d21",
+    "type": "hunt",
+    "daily": true,
+    "template": "d21",
+    "title": "Daily Quickie · Get Verified",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Chirp",
+      "from": "Chirp Verify Team",
+      "text": "You qualify for a verified badge!"
+    },
+    "screen": {
+      "app": "chirp",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Chirp Verify Team"
+          }
+        ],
+        "sub": [
+          "@chirp_verify_help_7"
+        ],
+        "avatar": {
+          "glyph": "✅"
+        }
+      },
+      "banner": [
+        {
+          "clue": "first",
+          "text": "Message request · you do not follow this account"
+        }
+      ],
+      "items": [
+        {
+          "msg": [
+            {
+              "clue": "badge",
+              "text": "You qualify for a verified badge!"
+            }
+          ]
+        },
+        {
+          "msg": [
+            "Send us the ",
+            {
+              "clue": "code",
+              "text": "6-digit code"
+            },
+            " we just texted you."
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "timer",
+              "text": "Offer ends in",
+              "countdown": 600
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "badge": {
+        "label": "Free badge offer",
+        "strength": "strong",
+        "lens": "A free badge, out of nowhere.",
+        "why": "Real platforms do not hand out badges by DM."
+      },
+      "code": {
+        "label": "Asks for a code",
+        "strength": "strong",
+        "lens": "They want a code sent to you.",
+        "why": "That code is the key to your account."
+      },
+      "timer": {
+        "label": "Countdown",
+        "strength": "strong",
+        "lens": "Ten minutes left.",
+        "why": "Pressure is the trick."
+      },
+      "first": {
+        "label": "They messaged first",
+        "strength": "harmless",
+        "lens": "A message request.",
+        "why": "Messaging first is a warning sign by itself, but check it."
+      },
+      "from": {
+        "label": "An official-sounding name",
+        "strength": "harmless",
+        "lens": "Chirp Verify Team.",
+        "why": "Names are easy to copy."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "Never read a code from your own phone to anyone, whatever they offer.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d22",
+    "type": "hunt",
+    "daily": true,
+    "template": "d22",
+    "title": "Daily Quickie · Deposit Before Viewing",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Chirp",
+      "from": "Fernly Rentals",
+      "text": "The flat is yours if you pay the deposit"
+    },
+    "screen": {
+      "app": "chirp",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Fernly Rentals"
+          }
+        ],
+        "sub": [
+          "Listing: 2-bed flat, €650"
+        ],
+        "avatar": {
+          "glyph": "🏠"
+        }
+      },
+      "banner": [
+        "Message from a listing"
+      ],
+      "items": [
+        {
+          "msg": [
+            "The flat is ",
+            {
+              "clue": "cheap",
+              "text": "far below the price of similar ones"
+            },
+            "."
+          ]
+        },
+        {
+          "msg": [
+            "I’m abroad, so ",
+            {
+              "clue": "abroad",
+              "text": "I can’t show it"
+            },
+            ". Pay the ",
+            {
+              "clue": "deposit",
+              "text": "€650 deposit"
+            },
+            " to hold it and I’ll post you the keys."
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "others",
+              "text": "Three other people are interested."
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "cheap": {
+        "label": "Too cheap",
+        "strength": "strong",
+        "lens": "A price far below others.",
+        "why": "A bargain flat is the bait."
+      },
+      "abroad": {
+        "label": "Owner abroad",
+        "strength": "strong",
+        "lens": "No viewing, no meeting.",
+        "why": "Never pay for a home you have not seen."
+      },
+      "deposit": {
+        "label": "Deposit first",
+        "strength": "strong",
+        "lens": "Pay before you see it.",
+        "why": "A real landlord lets you view first."
+      },
+      "others": {
+        "label": "Other people interested",
+        "strength": "harmless",
+        "lens": "Three others are “interested”.",
+        "why": "It adds pressure but proves nothing."
+      },
+      "from": {
+        "label": "A rentals name",
+        "strength": "harmless",
+        "lens": "Fernly Rentals.",
+        "why": "A name proves nothing."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "Never pay a deposit for a home you have not seen in person.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d23",
+    "type": "hunt",
+    "daily": true,
+    "template": "d23",
+    "title": "Daily Quickie · Cheap Tickets",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Chirp",
+      "from": "Tickets4U",
+      "text": "Sold-out concert tickets, half price"
+    },
+    "screen": {
+      "app": "chirp",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Tickets4U"
+          }
+        ],
+        "sub": [
+          "Sold out? Not for us"
+        ],
+        "avatar": {
+          "glyph": "🎟️"
+        }
+      },
+      "banner": [
+        "Sponsored"
+      ],
+      "items": [
+        {
+          "msg": [
+            "Sold-out concert tickets, ",
+            {
+              "clue": "half",
+              "text": "half price"
+            },
+            "."
+          ]
+        },
+        {
+          "msg": [
+            "Pay by ",
+            {
+              "clue": "transfer",
+              "text": "bank transfer only"
+            },
+            ", we will email the tickets."
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "rev",
+              "text": "★★★★★ “Got my tickets!”"
+            },
+            " ",
+            {
+              "clue": "few",
+              "text": "Only 4 left!"
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "half": {
+        "label": "Half price",
+        "strength": "strong",
+        "lens": "Sold out everywhere, but cheap here.",
+        "why": "A sold-out show at half price is a trap."
+      },
+      "transfer": {
+        "label": "Bank transfer only",
+        "strength": "strong",
+        "lens": "No card, no protection.",
+        "why": "Card payments can be reversed. Transfers cannot."
+      },
+      "few": {
+        "label": "Only 4 left",
+        "strength": "strong",
+        "lens": "Scarcity pressure.",
+        "why": "Pressure is the trick."
+      },
+      "rev": {
+        "label": "Glowing reviews",
+        "strength": "harmless",
+        "lens": "Five-star quotes.",
+        "why": "Reviews are easy to fake."
+      },
+      "from": {
+        "label": "A ticket seller name",
+        "strength": "harmless",
+        "lens": "Tickets4U.",
+        "why": "A name proves nothing."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "Buy tickets only from the official seller or a platform with buyer protection.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d24",
+    "type": "hunt",
+    "daily": true,
+    "template": "d24",
+    "title": "Daily Quickie · Order Confirmation",
+    "seconds": 90,
+    "disguise": null,
+    "intro": [],
+    "notify": {
+      "app": "Mail",
+      "from": "Strideway",
+      "text": "Order confirmation #77120"
+    },
+    "screen": {
+      "app": "mail",
+      "head": {
+        "from": [
+          "Strideway"
+        ],
+        "addr": [
+          {
+            "clue": "addr",
+            "text": "orders@strideway.example"
+          }
+        ],
+        "subject": [
+          {
+            "clue": "subj",
+            "text": "Order confirmation #77120"
+          }
+        ],
+        "time": [
+          "1:15 PM"
+        ]
+      },
+      "items": [
+        {
+          "p": [
+            "Thanks for your order. ",
+            {
+              "clue": "item",
+              "text": "One pair of Runner shoes, €79."
+            }
+          ]
+        },
+        {
+          "p": [
+            {
+              "clue": "track",
+              "text": "We’ll email you when they ship."
+            },
+            " ",
+            {
+              "clue": "nopay",
+              "text": "You have already paid. There is nothing more to do."
+            }
+          ]
+        }
+      ],
+      "context": "You bought shoes on Strideway’s own site an hour ago."
+    },
+    "clues": {
+      "addr": {
+        "label": "The shop’s address",
+        "strength": "harmless",
+        "lens": "The address matches the shop.",
+        "why": "A familiar address is a good sign."
+      },
+      "subj": {
+        "label": "A plain subject",
+        "strength": "harmless",
+        "lens": "An order number.",
+        "why": "Normal receipts are plain."
+      },
+      "item": {
+        "label": "Matches your order",
+        "strength": "harmless",
+        "lens": "The item and price match.",
+        "why": "It matches what you did."
+      },
+      "track": {
+        "label": "Ships by email later",
+        "strength": "harmless",
+        "lens": "No link to click.",
+        "why": "Honest shops give you time."
+      },
+      "nopay": {
+        "label": "Nothing more to do",
+        "strength": "harmless",
+        "lens": "You have already paid.",
+        "why": "A message that asks for nothing is usually honest."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "go_ahead",
+    "acceptable_actions": [
+      "ignore",
+      "verify"
+    ],
+    "outcomes": {
+      "go_ahead": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "GENUINE",
+        "line": "It was genuine. Spotting the honest ones matters too.",
+        "toddy": "happy"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "SAFE",
+        "line": "It was genuine, so nothing bad happened.",
+        "toddy": "happy"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "CHECKED",
+        "line": "You checked, and it was genuine. Careful and correct.",
+        "toddy": "happy"
+      },
+      "block_report": {
+        "scene": "wolf",
+        "mirage": "smug",
+        "stamp": "FALSE ALARM",
+        "line": "That one was honest. Crying wolf makes the real warnings easier to miss.",
+        "mirageSays": "Trust nothing? I win anyway."
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A receipt for something you really bought, that asks for nothing more, is fine.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d25",
+    "type": "hunt",
+    "daily": true,
+    "template": "d25",
+    "title": "Daily Quickie · Win A Phone",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Messages",
+      "from": "Prize Centre",
+      "text": "Answer 3 questions and win a phone"
+    },
+    "screen": {
+      "app": "sms",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Prize Centre"
+          }
+        ]
+      },
+      "context": "You did not enter any survey.",
+      "items": [
+        {
+          "msg": [
+            {
+              "clue": "survey",
+              "text": "Answer 3 quick questions"
+            },
+            " and win a new phone!"
+          ]
+        },
+        {
+          "msg": [
+            "Start here: ",
+            {
+              "clue": "link",
+              "text": "phone-prize-survey.example",
+              "link": true
+            }
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "fee",
+              "text": "Just pay $3 shipping."
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "survey": {
+        "label": "A survey prize",
+        "strength": "strong",
+        "lens": "A big prize for three questions.",
+        "why": "Surveys with huge prizes are bait."
+      },
+      "link": {
+        "label": "Look-alike link",
+        "strength": "strong",
+        "lens": "An odd survey site.",
+        "why": "Never enter card details on a link from a text."
+      },
+      "fee": {
+        "label": "Pay shipping",
+        "strength": "strong",
+        "lens": "A “small” $3 fee.",
+        "why": "The fee page takes your card details."
+      },
+      "from": {
+        "label": "A prize name",
+        "strength": "harmless",
+        "lens": "Prize Centre.",
+        "why": "A name proves nothing."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A prize that asks for shipping money is a card-grabbing trap.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d26",
+    "type": "hunt",
+    "daily": true,
+    "template": "d26",
+    "title": "Daily Quickie · Unpaid Toll",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Messages",
+      "from": "Roadway Tolls",
+      "text": "Unpaid toll $6.40, pay now"
+    },
+    "screen": {
+      "app": "sms",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Roadway Tolls"
+          }
+        ]
+      },
+      "context": "You have not driven on any toll road this month.",
+      "items": [
+        {
+          "msg": [
+            "You have an ",
+            {
+              "clue": "unpaid",
+              "text": "unpaid toll of $6.40"
+            },
+            "."
+          ]
+        },
+        {
+          "msg": [
+            "Pay now to avoid a ",
+            {
+              "clue": "fine",
+              "text": "$50 fine"
+            },
+            ": ",
+            {
+              "clue": "link",
+              "text": "roadway-toll-pay.example",
+              "link": true
+            }
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "timer",
+              "text": "Pay within",
+              "countdown": 7200
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "unpaid": {
+        "label": "A toll you never owed",
+        "strength": "strong",
+        "lens": "You did not use a toll road.",
+        "why": "Check with the official toll service yourself."
+      },
+      "link": {
+        "label": "Look-alike link",
+        "strength": "strong",
+        "lens": "A link that is not the toll service’s.",
+        "why": "Use the official site you type yourself."
+      },
+      "fine": {
+        "label": "A fine threat",
+        "strength": "strong",
+        "lens": "A large fine to rush you.",
+        "why": "Threats rush you."
+      },
+      "timer": {
+        "label": "Countdown",
+        "strength": "strong",
+        "lens": "Two hours.",
+        "why": "Pressure is the trick."
+      },
+      "from": {
+        "label": "A toll name",
+        "strength": "harmless",
+        "lens": "Roadway Tolls.",
+        "why": "A name proves nothing."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "Unpaid toll texts with links are scams. Check the official toll site yourself.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d27",
+    "type": "hunt",
+    "daily": true,
+    "template": "d27",
+    "title": "Daily Quickie · Move Your Savings",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Messages",
+      "from": "Fraud Desk",
+      "text": "Move your savings to a safe account now"
+    },
+    "screen": {
+      "app": "sms",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Fraud Desk"
+          }
+        ]
+      },
+      "context": "A caller said they were from your bank’s fraud team and then sent this text.",
+      "items": [
+        {
+          "msg": [
+            "Your account is under attack. ",
+            {
+              "clue": "move",
+              "text": "Move your savings to the safe account below now."
+            }
+          ]
+        },
+        {
+          "msg": [
+            "Account ",
+            {
+              "clue": "safe",
+              "text": "3921 0048"
+            },
+            ". Do ",
+            {
+              "clue": "secret",
+              "text": "not tell the branch staff"
+            },
+            "."
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "timer",
+              "text": "Act within",
+              "countdown": 900
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "move": {
+        "label": "Move to a safe account",
+        "strength": "strong",
+        "lens": "They tell you to move your own money.",
+        "why": "No bank ever tells you to move money to a “safe account”."
+      },
+      "secret": {
+        "label": "Keep it secret",
+        "strength": "strong",
+        "lens": "They tell you not to tell staff.",
+        "why": "Secrecy is how scammers stop you checking."
+      },
+      "timer": {
+        "label": "Countdown",
+        "strength": "strong",
+        "lens": "Fifteen minutes.",
+        "why": "Pressure is the trick."
+      },
+      "safe": {
+        "label": "A provided account",
+        "strength": "strong",
+        "lens": "An account number they gave you.",
+        "why": "That account belongs to the scammer."
+      },
+      "from": {
+        "label": "A desk name",
+        "strength": "harmless",
+        "lens": "Fraud Desk.",
+        "why": "A name proves nothing."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A bank never asks you to move your money to a “safe account”. Hang up and call the number on your card.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d28",
+    "type": "hunt",
+    "daily": true,
+    "template": "d28",
+    "title": "Daily Quickie · Your Login Code",
+    "seconds": 90,
+    "disguise": null,
+    "intro": [],
+    "notify": {
+      "app": "Messages",
+      "from": "Fernly",
+      "text": "482910 is your Fernly login code"
+    },
+    "screen": {
+      "app": "sms",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Fernly"
+          }
+        ]
+      },
+      "context": "You just tapped “Log in” in the Fernly app.",
+      "items": [
+        {
+          "msg": [
+            {
+              "clue": "code",
+              "text": "482910 is your Fernly login code."
+            }
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "warn",
+              "text": "Never share this code with anyone, not even Fernly staff."
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "from": {
+        "label": "The app you just used",
+        "strength": "harmless",
+        "lens": "It is the Fernly app you just opened.",
+        "why": "You started this."
+      },
+      "code": {
+        "label": "A code you asked for",
+        "strength": "harmless",
+        "lens": "You just tapped log in.",
+        "why": "You started this. Use it yourself."
+      },
+      "warn": {
+        "label": "A never-share warning",
+        "strength": "harmless",
+        "lens": "It tells you not to share it.",
+        "why": "Real codes warn you. Just never share them."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "go_ahead",
+    "acceptable_actions": [
+      "ignore",
+      "verify"
+    ],
+    "outcomes": {
+      "go_ahead": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "GENUINE",
+        "line": "It was genuine. Spotting the honest ones matters too.",
+        "toddy": "happy"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "SAFE",
+        "line": "It was genuine, so nothing bad happened.",
+        "toddy": "happy"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "CHECKED",
+        "line": "You checked, and it was genuine. Careful and correct.",
+        "toddy": "happy"
+      },
+      "block_report": {
+        "scene": "wolf",
+        "mirage": "smug",
+        "stamp": "FALSE ALARM",
+        "line": "That one was honest. Crying wolf makes the real warnings easier to miss.",
+        "mirageSays": "Trust nothing? I win anyway."
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A code you asked for is fine to use. Never read it to anyone.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d29",
+    "type": "hunt",
+    "daily": true,
+    "template": "d29",
+    "title": "Daily Quickie · Help After The Storm",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Chirp",
+      "from": "Storm Relief Fund",
+      "text": "Families lost everything. Donate now"
+    },
+    "screen": {
+      "app": "chirp",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Storm Relief Fund"
+          }
+        ],
+        "sub": [
+          "@stormrelief_now_2026"
+        ],
+        "avatar": {
+          "glyph": "🌧️"
+        }
+      },
+      "banner": [
+        {
+          "clue": "first",
+          "text": "Message request · you do not follow this account"
+        }
+      ],
+      "items": [
+        {
+          "msg": [
+            "Families lost everything in the storm. ",
+            {
+              "clue": "emotion",
+              "text": "Please give today. Every cent counts."
+            }
+          ]
+        },
+        {
+          "msg": [
+            "Donate by ",
+            {
+              "clue": "gift",
+              "text": "gift card or crypto only"
+            },
+            ": ",
+            {
+              "clue": "wallet",
+              "text": "bc1q…x7f"
+            }
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "timer",
+              "text": "Matched donations end in",
+              "countdown": 1200
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "emotion": {
+        "label": "A tearful appeal",
+        "strength": "strong",
+        "lens": "A sad story, with no details.",
+        "why": "Real charities tell you who, where and how."
+      },
+      "gift": {
+        "label": "Gift card or crypto only",
+        "strength": "strong",
+        "lens": "No receipt, no way back.",
+        "why": "Real charities take card payments with a receipt."
+      },
+      "timer": {
+        "label": "Countdown",
+        "strength": "strong",
+        "lens": "Matched donations end soon.",
+        "why": "Pressure is the trick."
+      },
+      "wallet": {
+        "label": "A wallet address",
+        "strength": "strong",
+        "lens": "A stranger’s wallet.",
+        "why": "Coins sent there are gone."
+      },
+      "first": {
+        "label": "They messaged first",
+        "strength": "harmless",
+        "lens": "A message request.",
+        "why": "Messaging first needs a check."
+      },
+      "from": {
+        "label": "A relief name",
+        "strength": "harmless",
+        "lens": "Storm Relief Fund.",
+        "why": "Names are easy to invent."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "Give to charities you find yourself, with a receipt. Never by gift card or coins to a stranger.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d30",
+    "type": "hunt",
+    "daily": true,
+    "template": "d30",
+    "title": "Daily Quickie · Claim Your Airdrop",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Chirp",
+      "from": "Orbit Airdrop",
+      "text": "You are eligible for a free airdrop"
+    },
+    "screen": {
+      "app": "chirp",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Orbit Airdrop"
+          }
+        ],
+        "sub": [
+          "@orbit_airdrop_claim"
+        ],
+        "avatar": {
+          "glyph": "🪂"
+        }
+      },
+      "banner": [
+        {
+          "clue": "first",
+          "text": "Message request · you do not follow this account"
+        }
+      ],
+      "items": [
+        {
+          "msg": [
+            "You’re ",
+            {
+              "clue": "eligible",
+              "text": "eligible for a free airdrop"
+            },
+            "!"
+          ]
+        },
+        {
+          "msg": [
+            "Connect your wallet at ",
+            {
+              "clue": "site",
+              "text": "orbit-claim.example",
+              "link": true
+            }
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "approve",
+              "text": "Approve all tokens to claim."
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "eligible": {
+        "label": "A surprise airdrop",
+        "strength": "strong",
+        "lens": "Free tokens out of nowhere.",
+        "why": "Surprise airdrops are bait."
+      },
+      "site": {
+        "label": "Claim site",
+        "strength": "strong",
+        "lens": "An outside claim site.",
+        "why": "Claim sites drain wallets."
+      },
+      "approve": {
+        "label": "Approve all",
+        "strength": "strong",
+        "lens": "It wants access to all your tokens.",
+        "why": "That hands over everything."
+      },
+      "first": {
+        "label": "They messaged first",
+        "strength": "harmless",
+        "lens": "A message request.",
+        "why": "Messaging first needs a check."
+      },
+      "from": {
+        "label": "An airdrop name",
+        "strength": "harmless",
+        "lens": "Orbit Airdrop.",
+        "why": "A name proves nothing."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "Never connect your wallet to claim a surprise airdrop.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d31",
+    "type": "hunt",
+    "daily": true,
+    "template": "d31",
+    "title": "Daily Quickie · Antivirus Renewal",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Mail",
+      "from": "SafeGuard Pro",
+      "text": "Invoice: $349 charged today"
+    },
+    "screen": {
+      "app": "mail",
+      "head": {
+        "from": [
+          {
+            "clue": "from",
+            "text": "SafeGuard Pro"
+          }
+        ],
+        "addr": [
+          {
+            "clue": "addr",
+            "text": "billing@safeguard-pro-support.example"
+          }
+        ],
+        "subject": [
+          "Invoice: $349 charged today"
+        ],
+        "time": [
+          "5:02 AM"
+        ]
+      },
+      "items": [
+        {
+          "p": [
+            "Your ",
+            {
+              "clue": "charge",
+              "text": "$349 renewal"
+            },
+            " was charged today."
+          ]
+        },
+        {
+          "p": [
+            "To cancel, ",
+            {
+              "clue": "call",
+              "text": "call +1 555 0123 now"
+            },
+            " or ",
+            {
+              "clue": "link",
+              "text": "click here",
+              "link": true
+            },
+            "."
+          ]
+        },
+        {
+          "p": [
+            {
+              "clue": "refund",
+              "text": "We will refund you by remote session."
+            }
+          ]
+        }
+      ],
+      "context": "You do not use SafeGuard Pro."
+    },
+    "clues": {
+      "charge": {
+        "label": "A charge you never made",
+        "strength": "strong",
+        "lens": "$349 for software you do not use.",
+        "why": "The fake charge is bait."
+      },
+      "call": {
+        "label": "Call to cancel",
+        "strength": "strong",
+        "lens": "A number they gave you.",
+        "why": "Look up a company’s number yourself."
+      },
+      "refund": {
+        "label": "Refund by remote session",
+        "strength": "strong",
+        "lens": "They want control of your computer.",
+        "why": "Refund scams empty your account."
+      },
+      "link": {
+        "label": "Click-here link",
+        "strength": "strong",
+        "lens": "A button that leads to a fake page.",
+        "why": "Cancel through the company’s real site that you type yourself."
+      },
+      "addr": {
+        "label": "An odd address",
+        "strength": "harmless",
+        "lens": "Not familiar.",
+        "why": "Addresses are easy to fake."
+      },
+      "from": {
+        "label": "A software name",
+        "strength": "harmless",
+        "lens": "SafeGuard Pro.",
+        "why": "Names prove nothing."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A bill for something you never bought is bait. A real refund never needs access to your computer.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d32",
+    "type": "hunt",
+    "daily": true,
+    "template": "d32",
+    "title": "Daily Quickie · Repair Visit Tomorrow",
+    "seconds": 90,
+    "disguise": null,
+    "intro": [],
+    "notify": {
+      "app": "Mail",
+      "from": "Maple Court Homes",
+      "text": "Repair visit tomorrow 10 to 12"
+    },
+    "screen": {
+      "app": "mail",
+      "head": {
+        "from": [
+          "Maple Court Homes"
+        ],
+        "addr": [
+          {
+            "clue": "addr",
+            "text": "maintenance@maplecourt.example"
+          }
+        ],
+        "subject": [
+          {
+            "clue": "subj",
+            "text": "Repair visit tomorrow 10 to 12"
+          }
+        ],
+        "time": [
+          "5:30 PM"
+        ]
+      },
+      "items": [
+        {
+          "p": [
+            "A plumber will visit ",
+            {
+              "clue": "when",
+              "text": "tomorrow between 10 and 12"
+            },
+            " about your ",
+            {
+              "clue": "leak",
+              "text": "leaking tap"
+            },
+            "."
+          ]
+        },
+        {
+          "p": [
+            {
+              "clue": "nopay",
+              "text": "There is no charge."
+            },
+            " Reply here if you need another time."
+          ]
+        }
+      ],
+      "context": "You reported a leaking tap to your landlord last week."
+    },
+    "clues": {
+      "addr": {
+        "label": "Your landlord’s address",
+        "strength": "harmless",
+        "lens": "The same address as before.",
+        "why": "A familiar sender is a good sign."
+      },
+      "subj": {
+        "label": "A plain subject",
+        "strength": "harmless",
+        "lens": "A time, no panic.",
+        "why": "Normal notices are calm."
+      },
+      "leak": {
+        "label": "About your report",
+        "strength": "harmless",
+        "lens": "It matches what you reported.",
+        "why": "It matches what you did."
+      },
+      "when": {
+        "label": "A clear time",
+        "strength": "harmless",
+        "lens": "A specific visit window.",
+        "why": "Honest notices give details."
+      },
+      "nopay": {
+        "label": "No charge",
+        "strength": "harmless",
+        "lens": "Nothing to pay.",
+        "why": "A message that asks for nothing is usually honest."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "go_ahead",
+    "acceptable_actions": [
+      "ignore",
+      "verify"
+    ],
+    "outcomes": {
+      "go_ahead": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "GENUINE",
+        "line": "It was genuine. Spotting the honest ones matters too.",
+        "toddy": "happy"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "SAFE",
+        "line": "It was genuine, so nothing bad happened.",
+        "toddy": "happy"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "CHECKED",
+        "line": "You checked, and it was genuine. Careful and correct.",
+        "toddy": "happy"
+      },
+      "block_report": {
+        "scene": "wolf",
+        "mirage": "smug",
+        "stamp": "FALSE ALARM",
+        "line": "That one was honest. Crying wolf makes the real warnings easier to miss.",
+        "mirageSays": "Trust nothing? I win anyway."
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A notice about something you reported, with clear details and no payment, is fine.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d33",
+    "type": "hunt",
+    "daily": true,
+    "template": "d33",
+    "title": "Daily Quickie · Urgent From The Manager",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Messages",
+      "from": "Ms. Carter (Manager)",
+      "text": "Are you at your desk? Urgent favour"
+    },
+    "screen": {
+      "app": "sms",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Ms. Carter (Manager)"
+          }
+        ]
+      },
+      "context": "You work in a small office. Your manager’s number is saved in your phone.",
+      "items": [
+        {
+          "msg": [
+            {
+              "clue": "desk",
+              "text": "Are you at your desk?"
+            },
+            " I need a favour."
+          ]
+        },
+        {
+          "msg": [
+            "Buy ",
+            {
+              "clue": "cards",
+              "text": "5 gift vouchers"
+            },
+            " for a client, ",
+            {
+              "clue": "num",
+              "text": "this is my private number"
+            },
+            "."
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "meet",
+              "text": "I’m in a meeting, can’t talk. Send the codes here."
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "desk": {
+        "label": "A vague urgent opener",
+        "strength": "strong",
+        "lens": "It starts with “are you at your desk?”",
+        "why": "Scammers use this to start a chat."
+      },
+      "cards": {
+        "label": "Gift voucher request",
+        "strength": "strong",
+        "lens": "A manager asking for vouchers.",
+        "why": "Honest managers use proper purchase orders."
+      },
+      "meet": {
+        "label": "No call, send codes",
+        "strength": "strong",
+        "lens": "In a meeting, send codes.",
+        "why": "Avoiding a call is a warning sign."
+      },
+      "num": {
+        "label": "A “private number”",
+        "strength": "harmless",
+        "lens": "A number not in your phone.",
+        "why": "A new number alone proves nothing, but check it."
+      },
+      "from": {
+        "label": "Your manager’s name",
+        "strength": "harmless",
+        "lens": "Ms. Carter.",
+        "why": "A name is easy to copy."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "If your “boss” asks for gift vouchers on a new number, call them on the number you know.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d34",
+    "type": "hunt",
+    "daily": true,
+    "template": "d34",
+    "title": "Daily Quickie · Dad, Please Help",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Messages",
+      "from": "Unknown number",
+      "text": "Dad it’s me, I’m in trouble"
+    },
+    "screen": {
+      "app": "sms",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Unknown number"
+          }
+        ]
+      },
+      "context": "You are a parent. A voice message came first, sounding a bit like your child.",
+      "items": [
+        {
+          "msg": [
+            {
+              "clue": "dad",
+              "text": "Dad it’s me, I’m in trouble."
+            },
+            " I lost my wallet and phone."
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "pay",
+              "text": "Please send $400 right now"
+            },
+            " to this account."
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "nocall",
+              "text": "Don’t call, they took my phone. I’ll explain later."
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "dad": {
+        "label": "A cry for help",
+        "strength": "strong",
+        "lens": "It starts with an emergency.",
+        "why": "Voices can be copied by computers. Check another way."
+      },
+      "pay": {
+        "label": "Send money now",
+        "strength": "strong",
+        "lens": "Right now, to an account.",
+        "why": "Urgent money is a pressure trick."
+      },
+      "nocall": {
+        "label": "Don’t call",
+        "strength": "strong",
+        "lens": "It tells you not to call.",
+        "why": "Avoiding a call is a warning sign."
+      },
+      "from": {
+        "label": "Unknown number",
+        "strength": "harmless",
+        "lens": "A number you do not know.",
+        "why": "A new number alone proves nothing, but check it."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A computer can copy a voice. Hang up and call your child on the number you know.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d35",
+    "type": "hunt",
+    "daily": true,
+    "template": "d35",
+    "title": "Daily Quickie · Bank Says Move Money",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Mail",
+      "from": "Brindle Bank Support",
+      "text": "Action needed: safe account transfer"
+    },
+    "screen": {
+      "app": "mail",
+      "head": {
+        "from": [
+          {
+            "clue": "from",
+            "text": "Brindle Bank Support"
+          }
+        ],
+        "addr": [
+          {
+            "clue": "addr",
+            "text": "support@brindle-bank-care.example"
+          }
+        ],
+        "subject": [
+          "Action needed: safe account transfer"
+        ],
+        "time": [
+          "11:48 PM"
+        ]
+      },
+      "items": [
+        {
+          "p": [
+            "We detected a ",
+            {
+              "clue": "hack",
+              "text": "hacker in your account"
+            },
+            "."
+          ]
+        },
+        {
+          "p": [
+            {
+              "clue": "move",
+              "text": "Transfer your money to our “secure” account"
+            },
+            " below to protect it."
+          ]
+        },
+        {
+          "p": [
+            {
+              "clue": "timer",
+              "text": "Reply in 30 minutes or your account will be frozen."
+            }
+          ]
+        }
+      ],
+      "context": "You did not contact your bank today."
+    },
+    "clues": {
+      "hack": {
+        "label": "A scary claim",
+        "strength": "strong",
+        "lens": "A hacker in your account.",
+        "why": "Fear is how scammers rush you."
+      },
+      "move": {
+        "label": "Move to a secure account",
+        "strength": "strong",
+        "lens": "They tell you to move your money.",
+        "why": "No bank asks you to do this."
+      },
+      "timer": {
+        "label": "Countdown",
+        "strength": "strong",
+        "lens": "30 minutes.",
+        "why": "Pressure is the trick."
+      },
+      "addr": {
+        "label": "A look-alike address",
+        "strength": "harmless",
+        "lens": "brindle-bank-care.example is not the bank’s.",
+        "why": "Always check the address after the @."
+      },
+      "from": {
+        "label": "A bank name",
+        "strength": "harmless",
+        "lens": "Brindle Bank Support.",
+        "why": "A name proves nothing."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "Banks never ask you to move money to a “secure account”. Call the number on your card.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d36",
+    "type": "hunt",
+    "daily": true,
+    "template": "d36",
+    "title": "Daily Quickie · Thank You For Giving",
+    "seconds": 90,
+    "disguise": null,
+    "intro": [],
+    "notify": {
+      "app": "Mail",
+      "from": "Willow Animal Shelter",
+      "text": "Your donation receipt"
+    },
+    "screen": {
+      "app": "mail",
+      "head": {
+        "from": [
+          "Willow Animal Shelter"
+        ],
+        "addr": [
+          {
+            "clue": "addr",
+            "text": "thanks@willowshelter.example"
+          }
+        ],
+        "subject": [
+          {
+            "clue": "subj",
+            "text": "Your donation receipt"
+          }
+        ],
+        "time": [
+          "12:10 PM"
+        ]
+      },
+      "items": [
+        {
+          "p": [
+            "Thank you for your ",
+            {
+              "clue": "gift",
+              "text": "$20 donation"
+            },
+            " yesterday."
+          ]
+        },
+        {
+          "p": [
+            {
+              "clue": "receipt",
+              "text": "Your receipt is attached for your records."
+            },
+            " ",
+            {
+              "clue": "nothing",
+              "text": "You do not need to do anything."
+            }
+          ]
+        }
+      ],
+      "context": "You donated $20 on the shelter’s own website yesterday."
+    },
+    "clues": {
+      "addr": {
+        "label": "The shelter’s address",
+        "strength": "harmless",
+        "lens": "The same address as before.",
+        "why": "A familiar sender is a good sign."
+      },
+      "subj": {
+        "label": "A plain subject",
+        "strength": "harmless",
+        "lens": "A donation receipt.",
+        "why": "Normal receipts are plain."
+      },
+      "gift": {
+        "label": "Matches your gift",
+        "strength": "harmless",
+        "lens": "The amount matches what you gave.",
+        "why": "It matches what you did."
+      },
+      "receipt": {
+        "label": "A real receipt",
+        "strength": "harmless",
+        "lens": "A receipt for your records.",
+        "why": "Honest charities send receipts."
+      },
+      "nothing": {
+        "label": "Asks for nothing more",
+        "strength": "harmless",
+        "lens": "No new request.",
+        "why": "A message that asks for nothing is usually honest."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "go_ahead",
+    "acceptable_actions": [
+      "ignore",
+      "verify"
+    ],
+    "outcomes": {
+      "go_ahead": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "GENUINE",
+        "line": "It was genuine. Spotting the honest ones matters too.",
+        "toddy": "happy"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "SAFE",
+        "line": "It was genuine, so nothing bad happened.",
+        "toddy": "happy"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "CHECKED",
+        "line": "You checked, and it was genuine. Careful and correct.",
+        "toddy": "happy"
+      },
+      "block_report": {
+        "scene": "wolf",
+        "mirage": "smug",
+        "stamp": "FALSE ALARM",
+        "line": "That one was honest. Crying wolf makes the real warnings easier to miss.",
+        "mirageSays": "Trust nothing? I win anyway."
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A receipt for a gift you made yourself, asking for nothing more, is fine.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d37",
+    "type": "hunt",
+    "daily": true,
+    "template": "d37",
+    "title": "Daily Quickie · A Loan Fee First",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Messages",
+      "from": "QuickLoan Direct",
+      "text": "You are pre-approved for $5,000"
+    },
+    "screen": {
+      "app": "sms",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "QuickLoan Direct"
+          }
+        ]
+      },
+      "context": "You have not applied for any loan.",
+      "items": [
+        {
+          "msg": [
+            "You’re ",
+            {
+              "clue": "pre",
+              "text": "pre-approved for $5,000"
+            },
+            ", no credit check."
+          ]
+        },
+        {
+          "msg": [
+            "Pay a ",
+            {
+              "clue": "fee",
+              "text": "$75 insurance fee"
+            },
+            " first and we send it today."
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "timer",
+              "text": "Offer closes",
+              "countdown": 3600
+            },
+            " ",
+            {
+              "clue": "link",
+              "text": "Apply: quickloan-direct.example",
+              "link": true
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "pre": {
+        "label": "Loan you did not ask for",
+        "strength": "strong",
+        "lens": "Pre-approved from nothing.",
+        "why": "Real lenders check you first."
+      },
+      "fee": {
+        "label": "Pay a fee first",
+        "strength": "strong",
+        "lens": "A fee before the money.",
+        "why": "A real loan never needs a fee before you get it."
+      },
+      "timer": {
+        "label": "Countdown",
+        "strength": "strong",
+        "lens": "One hour.",
+        "why": "Pressure is the trick."
+      },
+      "link": {
+        "label": "Look-alike link",
+        "strength": "strong",
+        "lens": "An unknown website.",
+        "why": "Use a lender you chose yourself."
+      },
+      "from": {
+        "label": "A loan name",
+        "strength": "harmless",
+        "lens": "QuickLoan Direct.",
+        "why": "Names prove nothing."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "If a loan asks you to pay first, it is a scam.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d38",
+    "type": "hunt",
+    "daily": true,
+    "template": "d38",
+    "title": "Daily Quickie · Wrong Number",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Messages",
+      "from": "Unknown number",
+      "text": "Hi Anna, are we still on for lunch?"
+    },
+    "screen": {
+      "app": "sms",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Unknown number"
+          }
+        ]
+      },
+      "context": "A stranger texted you.",
+      "items": [
+        {
+          "msg": [
+            "Hi Anna, ",
+            {
+              "clue": "wrong",
+              "text": "are we still on for lunch?"
+            }
+          ]
+        },
+        {
+          "msg": [
+            "Oh sorry, wrong number! You seem nice though. I’m a ",
+            {
+              "clue": "rich",
+              "text": "trader who makes $2,000 a day"
+            },
+            "."
+          ]
+        },
+        {
+          "msg": [
+            "Want to learn? I’ll ",
+            {
+              "clue": "show",
+              "text": "show you my app"
+            },
+            "."
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "wrong": {
+        "label": "A “wrong number”",
+        "strength": "strong",
+        "lens": "A message “by mistake”.",
+        "why": "This is how scam chats start."
+      },
+      "rich": {
+        "label": "A big earner",
+        "strength": "strong",
+        "lens": "$2,000 a day.",
+        "why": "Easy daily riches are bait."
+      },
+      "show": {
+        "label": "An app to join",
+        "strength": "strong",
+        "lens": "A trading app to try.",
+        "why": "The app is fake. It only takes your money."
+      },
+      "from": {
+        "label": "Unknown number",
+        "strength": "harmless",
+        "lens": "A number you do not know.",
+        "why": "A new number alone proves nothing."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A “wrong number” that turns into an investment tip is a scam. Do not reply.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d39",
+    "type": "hunt",
+    "daily": true,
+    "template": "d39",
+    "title": "Daily Quickie · School Newsletter",
+    "seconds": 90,
+    "disguise": null,
+    "intro": [],
+    "notify": {
+      "app": "Mail",
+      "from": "Hillside Primary School",
+      "text": "Newsletter: sports day on Friday"
+    },
+    "screen": {
+      "app": "mail",
+      "head": {
+        "from": [
+          "Hillside Primary School"
+        ],
+        "addr": [
+          {
+            "clue": "addr",
+            "text": "office@hillsideprimary.example"
+          }
+        ],
+        "subject": [
+          {
+            "clue": "subj",
+            "text": "Newsletter: sports day on Friday"
+          }
+        ],
+        "time": [
+          "4:00 PM"
+        ]
+      },
+      "items": [
+        {
+          "p": [
+            "Sports day is on ",
+            {
+              "clue": "fri",
+              "text": "Friday at 1 pm"
+            },
+            ". Please bring a hat."
+          ]
+        },
+        {
+          "p": [
+            {
+              "clue": "nopay",
+              "text": "No payment is needed."
+            },
+            " ",
+            {
+              "clue": "office",
+              "text": "Questions? Call the office on the number in your parents’ pack."
+            }
+          ]
+        }
+      ],
+      "context": "Your child goes to Hillside Primary, and you get this newsletter every week."
+    },
+    "clues": {
+      "addr": {
+        "label": "The school’s address",
+        "strength": "harmless",
+        "lens": "The same sender as every week.",
+        "why": "A familiar sender is a good sign."
+      },
+      "subj": {
+        "label": "A plain subject",
+        "strength": "harmless",
+        "lens": "A normal newsletter.",
+        "why": "Normal mail is calm."
+      },
+      "fri": {
+        "label": "A clear event",
+        "strength": "harmless",
+        "lens": "Sports day on Friday.",
+        "why": "Honest mail gives details."
+      },
+      "nopay": {
+        "label": "No payment",
+        "strength": "harmless",
+        "lens": "Nothing to pay.",
+        "why": "A message that asks for nothing is usually honest."
+      },
+      "office": {
+        "label": "Use the office number",
+        "strength": "harmless",
+        "lens": "It sends you to the number you already have.",
+        "why": "No link, no surprise number."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "go_ahead",
+    "acceptable_actions": [
+      "ignore",
+      "verify"
+    ],
+    "outcomes": {
+      "go_ahead": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "GENUINE",
+        "line": "It was genuine. Spotting the honest ones matters too.",
+        "toddy": "happy"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "SAFE",
+        "line": "It was genuine, so nothing bad happened.",
+        "toddy": "happy"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "CHECKED",
+        "line": "You checked, and it was genuine. Careful and correct.",
+        "toddy": "happy"
+      },
+      "block_report": {
+        "scene": "wolf",
+        "mirage": "smug",
+        "stamp": "FALSE ALARM",
+        "line": "That one was honest. Crying wolf makes the real warnings easier to miss.",
+        "mirageSays": "Trust nothing? I win anyway."
+      }
+    },
+    "what_if": {},
+    "golden_rule": "The weekly newsletter you always get, asking for nothing, is fine.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d40",
+    "type": "hunt",
+    "daily": true,
+    "template": "d40",
+    "title": "Daily Quickie · Airline Refund",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Mail",
+      "from": "Kestrel Air Refunds",
+      "text": "You are owed a flight refund"
+    },
+    "screen": {
+      "app": "mail",
+      "head": {
+        "from": [
+          {
+            "clue": "from",
+            "text": "Kestrel Air Refunds"
+          }
+        ],
+        "addr": [
+          {
+            "clue": "addr",
+            "text": "refunds@kestrel-air-claims.example"
+          }
+        ],
+        "subject": [
+          "You are owed a flight refund"
+        ],
+        "time": [
+          "9:05 AM"
+        ]
+      },
+      "items": [
+        {
+          "p": [
+            "Your flight was cancelled. ",
+            {
+              "clue": "refund",
+              "text": "You are owed $240."
+            }
+          ]
+        },
+        {
+          "p": [
+            "Enter your ",
+            {
+              "clue": "card",
+              "text": "card details"
+            },
+            " at ",
+            {
+              "clue": "link",
+              "text": "kestrel-refund-claim.example",
+              "link": true
+            },
+            " to receive it."
+          ]
+        },
+        {
+          "p": [
+            {
+              "clue": "timer",
+              "text": "Claim in 24 hours or lose it."
+            }
+          ]
+        }
+      ],
+      "context": "You do not remember any cancelled flight."
+    },
+    "clues": {
+      "refund": {
+        "label": "A refund you did not expect",
+        "strength": "strong",
+        "lens": "A refund for a flight you do not remember.",
+        "why": "Check your own booking on the airline’s real app."
+      },
+      "card": {
+        "label": "Card details to get paid",
+        "strength": "strong",
+        "lens": "To receive money, they want your card.",
+        "why": "You never need your card to receive a refund."
+      },
+      "timer": {
+        "label": "Countdown",
+        "strength": "strong",
+        "lens": "24 hours.",
+        "why": "Pressure is the trick."
+      },
+      "link": {
+        "label": "Look-alike link",
+        "strength": "strong",
+        "lens": "A claim page that is not the airline’s.",
+        "why": "Check refunds on the airline’s own app."
+      },
+      "addr": {
+        "label": "A look-alike address",
+        "strength": "harmless",
+        "lens": "kestrel-air-claims.example is not the airline’s.",
+        "why": "Check the address after the @."
+      },
+      "from": {
+        "label": "An airline name",
+        "strength": "harmless",
+        "lens": "Kestrel Air Refunds.",
+        "why": "A name proves nothing."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "To receive a refund you never need to enter your card details.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d41",
+    "type": "hunt",
+    "daily": true,
+    "template": "d41",
+    "title": "Daily Quickie · A Famous Face",
+    "seconds": 90,
+    "disguise": "support",
+    "intro": [],
+    "notify": {
+      "app": "Chirp",
+      "from": "Smart Wealth Club",
+      "text": "A famous TV host says this changed his life"
+    },
+    "screen": {
+      "app": "chirp",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Smart Wealth Club"
+          }
+        ],
+        "sub": [
+          "Sponsored"
+        ],
+        "avatar": {
+          "glyph": "💰"
+        }
+      },
+      "banner": [
+        "Ad · you do not follow this page"
+      ],
+      "items": [
+        {
+          "msg": [
+            "A famous TV host says this ",
+            {
+              "clue": "face",
+              "text": "changed his life"
+            },
+            ". [video]"
+          ]
+        },
+        {
+          "msg": [
+            "Invest just ",
+            {
+              "clue": "small",
+              "text": "$250"
+            },
+            " and watch it grow ",
+            {
+              "clue": "fast",
+              "text": "ten times in a month"
+            },
+            "."
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "link",
+              "text": "Join now: smartwealthclub.example",
+              "link": true
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "face": {
+        "label": "A famous face",
+        "strength": "strong",
+        "lens": "A well-known person “endorses” it.",
+        "why": "Computers can fake faces and voices. Scammers use them."
+      },
+      "fast": {
+        "label": "Ten times in a month",
+        "strength": "strong",
+        "lens": "A huge, quick return.",
+        "why": "No honest investment promises that."
+      },
+      "link": {
+        "label": "Look-alike link",
+        "strength": "strong",
+        "lens": "An unknown site.",
+        "why": "Use regulated, well-known platforms you chose yourself."
+      },
+      "small": {
+        "label": "A small start",
+        "strength": "harmless",
+        "lens": "$250 sounds modest.",
+        "why": "A small start is bait."
+      },
+      "from": {
+        "label": "A wealth club name",
+        "strength": "harmless",
+        "lens": "Smart Wealth Club.",
+        "why": "Names are easy to invent."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "block_report",
+    "acceptable_actions": [
+      "verify",
+      "ignore"
+    ],
+    "outcomes": {
+      "block_report": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "BLOCKED",
+        "line": "Blocked and reported. That trick won’t reach anyone else today.",
+        "mirageSays": "Not again!"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": "panic",
+        "stamp": "CHECKED",
+        "line": "Checking the real way showed it was fake.",
+        "mirageSays": "They checked!"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": "smug",
+        "stamp": "SAFE",
+        "line": "You stayed safe, but it’s still out there.",
+        "mirageSays": "Next!"
+      },
+      "go_ahead": {
+        "scene": "drained",
+        "mirage": "smug",
+        "stamp": "TRICKED",
+        "line": "That one was a scam. In real life, the money would be gone.",
+        "mirageSays": "Gotcha!"
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A famous face in an ad can be fake. Never invest because of one.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  },
+  {
+    "id": "d42",
+    "type": "hunt",
+    "daily": true,
+    "template": "d42",
+    "title": "Daily Quickie · Library Book Due",
+    "seconds": 90,
+    "disguise": null,
+    "intro": [],
+    "notify": {
+      "app": "Messages",
+      "from": "Riverbank Library",
+      "text": "Your book is due on Friday"
+    },
+    "screen": {
+      "app": "sms",
+      "head": {
+        "name": [
+          {
+            "clue": "from",
+            "text": "Riverbank Library"
+          }
+        ]
+      },
+      "context": "You borrowed a book from Riverbank Library two weeks ago.",
+      "items": [
+        {
+          "msg": [
+            {
+              "clue": "due",
+              "text": "Your book is due on Friday."
+            }
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "renew",
+              "text": "You can renew it in the library app or at the desk."
+            }
+          ]
+        },
+        {
+          "msg": [
+            {
+              "clue": "nopay",
+              "text": "There is no fee if it is returned on time."
+            }
+          ]
+        }
+      ]
+    },
+    "clues": {
+      "from": {
+        "label": "The library you use",
+        "strength": "harmless",
+        "lens": "You gave them your number yourself.",
+        "why": "You started this."
+      },
+      "due": {
+        "label": "Matches your loan",
+        "strength": "harmless",
+        "lens": "You borrowed it two weeks ago.",
+        "why": "It matches what you did."
+      },
+      "renew": {
+        "label": "Use the app or the desk",
+        "strength": "harmless",
+        "lens": "No link to click.",
+        "why": "Honest services send you to their own app."
+      },
+      "nopay": {
+        "label": "No fee on time",
+        "strength": "harmless",
+        "lens": "Nothing to pay.",
+        "why": "A message that asks for nothing is usually honest."
+      }
+    },
+    "actions": [
+      {
+        "id": "go_ahead",
+        "label": "Do what it asks"
+      },
+      {
+        "id": "ignore",
+        "label": "Ignore it"
+      },
+      {
+        "id": "verify",
+        "label": "Check in the official app or with the person"
+      },
+      {
+        "id": "block_report",
+        "label": "Block and report it"
+      }
+    ],
+    "best_action": "go_ahead",
+    "acceptable_actions": [
+      "ignore",
+      "verify"
+    ],
+    "outcomes": {
+      "go_ahead": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "GENUINE",
+        "line": "It was genuine. Spotting the honest ones matters too.",
+        "toddy": "happy"
+      },
+      "ignore": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "SAFE",
+        "line": "It was genuine, so nothing bad happened.",
+        "toddy": "happy"
+      },
+      "verify": {
+        "scene": "safe",
+        "mirage": null,
+        "stamp": "CHECKED",
+        "line": "You checked, and it was genuine. Careful and correct.",
+        "toddy": "happy"
+      },
+      "block_report": {
+        "scene": "wolf",
+        "mirage": "smug",
+        "stamp": "FALSE ALARM",
+        "line": "That one was honest. Crying wolf makes the real warnings easier to miss.",
+        "mirageSays": "Trust nothing? I win anyway."
+      }
+    },
+    "what_if": {},
+    "golden_rule": "A reminder about something you borrowed yourself, asking for nothing, is fine.",
+    "hints": {
+      "nudge": "",
+      "glow_order": []
+    },
+    "sources": [
+      "ftc-phishing",
+      "ftc-bank-call"
+    ],
+    "checked_on": "2026-10-21"
+  }
+]

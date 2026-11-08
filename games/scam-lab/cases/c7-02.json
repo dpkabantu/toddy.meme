@@ -2,274 +2,193 @@
   "id": "c7-02",
   "type": "hunt",
   "chapter": 7,
-  "difficulty": 3,
-  "title": "Two New Tokens",
-  "disguise": "admin",
+  "difficulty": 2,
+  "title": "Invite Three Friends",
+  "disguise": "friend",
   "intro": [
-    "Two new tokens are trending. Toddy wants to understand which is risky and which is a trap.",
-    "Neither is a guaranteed win. One is built so you can't get out.",
-    "Compare the facts."
+    "Chapter 8: get-rich schemes. Old tricks in new crypto clothes.",
+    "A friend of a friend is very excited about a new \"community\".",
+    "Sniff the pitch."
   ],
   "notify": {
-    "app": "Browser",
-    "from": "Token scanner",
-    "text": "Two trending tokens"
+    "app": "Chirp",
+    "from": "Bruno",
+    "text": "Join Pelmora Circle, I'm earning daily! 💸"
   },
-  "decide_q": "Which token is a trap, and what will you do?",
   "screen": {
-    "app": "compare",
-    "context": "Two token pages from a token scanner, side by side.",
-    "panels": [
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "Bruno"
+        }
+      ],
+      "sub": [
+        "friend of Kiko"
+      ],
+      "avatar": {
+        "glyph": "😎",
+        "clue": "avatar"
+      }
+    },
+    "items": [
       {
-        "label": "$PAWPRINT",
-        "avatar": {
-          "glyph": "🐾",
-          "clue": "logo_a"
-        },
-        "rows": [
+        "msg": [
           {
-            "k": "Team",
-            "v": [
-              {
-                "clue": "team_a",
-                "text": "Named team, public profiles"
-              }
-            ]
-          },
-          {
-            "k": "Liquidity",
-            "v": [
-              {
-                "clue": "liq_a",
-                "text": "Locked for 2 years"
-              }
-            ]
-          },
-          {
-            "k": "Selling",
-            "v": [
-              {
-                "clue": "sell_a",
-                "text": "1% tax, anyone can sell"
-              }
-            ]
-          },
-          {
-            "k": "Website says",
-            "v": [
-              {
-                "clue": "risk_a",
-                "text": "\"Risky. Only buy what you can lose.\""
-              }
-            ]
+            "clue": "join",
+            "text": "Join Pelmora Circle with 100 ZLV."
           }
         ]
       },
       {
-        "label": "$ROCKETPAW",
-        "avatar": {
-          "glyph": "🚀",
-          "clue": "logo_b"
-        },
-        "rows": [
+        "msg": [
           {
-            "k": "Team",
-            "v": [
-              {
-                "clue": "team_b",
-                "text": "Anonymous"
-              }
-            ]
+            "clue": "invite",
+            "text": "Invite 3 friends and you earn 30% of what THEY put in!"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "levels",
+            "text": "Get to Gold level and earn from your friends' friends too 🥇"
           },
+          " ",
           {
-            "k": "Liquidity",
-            "v": [
-              {
-                "clue": "liq_b",
-                "text": "Not locked; owner can remove it"
-              }
-            ]
-          },
+            "clue": "early",
+            "text": "Early members are already rich!"
+          }
+        ]
+      },
+      {
+        "msg": [
           {
-            "k": "Selling",
-            "v": [
-              {
-                "clue": "sell_b",
-                "text": "99% sell tax · most holders can't sell"
-              }
-            ]
-          },
-          {
-            "k": "Owner",
-            "v": [
-              {
-                "clue": "mint_b",
-                "text": "Can create unlimited new tokens"
-              }
-            ]
-          },
-          {
-            "k": "Website says",
-            "v": [
-              {
-                "clue": "hype_b",
-                "text": "\"1000x. Can't lose. Moon soon.\""
-              }
-            ]
+            "clue": "product",
+            "text": "What does it do? It's a community, the money comes from new members 😄"
           }
         ]
       }
     ]
   },
   "clues": {
-    "sell_b": {
-      "label": "99% sell tax",
+    "invite": {
+      "label": "Earn from friends' money",
       "strength": "strong",
-      "lens": "You can buy but practically can't sell.",
-      "why": "A \"honeypot\": money goes in, never out."
+      "lens": "Your earnings come from the people you bring in.",
+      "why": "If the money comes from new members, it's a pyramid. It collapses when joining slows."
     },
-    "liq_b": {
-      "label": "Liquidity not locked",
+    "levels": {
+      "label": "Levels and down-lines",
       "strength": "strong",
-      "lens": "The owner can pull the money pool.",
-      "why": "That's how a rug pull happens."
+      "lens": "Earn from friends of friends.",
+      "why": "Multi-level payouts are the shape of a pyramid scheme."
     },
-    "mint_b": {
-      "label": "Unlimited minting",
+    "product": {
+      "label": "No real product",
       "strength": "strong",
-      "lens": "The owner can print endless tokens.",
-      "why": "They can flood the market and crash the price."
+      "lens": "The money \"comes from new members\".",
+      "why": "Nothing is being sold or built."
     },
-    "hype_b": {
-      "label": "\"Can't lose\"",
+    "early": {
+      "label": "\"Early members are rich\"",
       "strength": "strong",
-      "lens": "Guaranteed wins.",
-      "why": "Only scammers say you can't lose."
+      "lens": "Only the first people profit.",
+      "why": "Late joiners pay for early ones."
     },
-    "team_b": {
-      "label": "Anonymous team",
+    "join": {
+      "label": "Pay to join",
       "strength": "strong",
-      "lens": "No one to hold responsible.",
-      "why": "Weak sign alone, but with the rest it matters."
+      "lens": "A joining fee.",
+      "why": "You pay first, then you're asked to recruit."
     },
-    "team_a": {
-      "label": "Named team",
+    "name": {
+      "label": "Friend of a friend",
       "strength": "harmless",
-      "lens": "Public team.",
-      "why": "More accountable, not a guarantee."
+      "lens": "A real person you half-know.",
+      "why": "Many recruiters believe in it themselves. The pitch is the problem."
     },
-    "liq_a": {
-      "label": "Locked liquidity",
+    "avatar": {
+      "label": "Cool picture",
       "strength": "harmless",
-      "lens": "Locked for 2 years.",
-      "why": "The pool can't be pulled quickly."
-    },
-    "sell_a": {
-      "label": "Normal selling",
-      "strength": "harmless",
-      "lens": "Anyone can sell.",
-      "why": "You can get out."
-    },
-    "risk_a": {
-      "label": "Honest risk warning",
-      "strength": "harmless",
-      "lens": "It says it's risky.",
-      "why": "Honesty about risk is a good sign, though it's still risky."
-    },
-    "logo_a": {
-      "label": "Paw logo",
-      "strength": "harmless",
-      "lens": "A paw.",
-      "why": "Proves nothing."
-    },
-    "logo_b": {
-      "label": "Rocket logo",
-      "strength": "harmless",
-      "lens": "A rocket.",
+      "lens": "Sunglasses emoji.",
       "why": "Proves nothing."
     }
   },
   "actions": [
     {
-      "id": "pick_b",
-      "label": "Buy $ROCKETPAW, it promises 1000x",
-      "trap": true
+      "id": "go_ahead",
+      "label": "Join and invite three friends"
     },
     {
-      "id": "verify",
-      "label": "Buy neither until you understand the risks"
+      "id": "ignore",
+      "label": "Say no thanks"
     },
     {
       "id": "block_report",
-      "label": "Avoid $ROCKETPAW and report it to the token scanner"
+      "label": "Say no, and warn Kiko about Pelmora Circle"
     }
   ],
   "best_action": "block_report",
   "acceptable_actions": [
-    "verify"
+    "ignore"
   ],
-  "trap": {
-    "title": "Buy $ROCKETPAW",
-    "url": "rocketpaw.fun/buy",
-    "ask": "Swap your ZLV for $ROCKETPAW. 1000x incoming!",
-    "go": "Buy now",
-    "back": "Close this page"
-  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "Reported. The scanner now labels $ROCKETPAW a honeypot.",
-      "mirageSays": "My honeypot, labelled!"
+      "line": "Toddy declined and warned Kiko. A month later Pelmora Circle froze withdrawals.",
+      "mirageSays": "One less recruit!"
     },
-    "verify": {
+    "ignore": {
       "scene": "safe",
-      "mirage": "panic",
-      "stamp": "CHECKED",
-      "line": "Toddy waited and read more. A week later, $ROCKETPAW's owner pulled the liquidity.",
-      "mirageSays": "He just… waited?"
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "No thanks was the right answer. Warning friends helps more.",
+      "mirageSays": "Fine, Bruno will find others."
     },
-    "pick_b": {
+    "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "RUGGED",
-      "line": "The 99% sell tax trapped the coins, then the owner pulled the pool.",
-      "mirageSays": "Rug pulled!"
+      "stamp": "DRAINED",
+      "line": "Withdrawals froze when new members stopped joining. Toddy's friends lost money too.",
+      "mirageSays": "Every circle ends with me!"
     }
   },
   "what_if": {
-    "pick_b": "A 99% sell tax means you can't get out. Check selling and liquidity before anything else."
+    "go_ahead": "\"Money comes from new members\" is the definition of a pyramid scheme."
   },
-  "golden_rule": "Before buying any new token, check you can actually sell it, and that the money pool is locked.",
+  "golden_rule": "If your profit comes from the people you recruit, it's a pyramid, and the last people in lose.",
   "quick_check": {
-    "q": "A token has a 99% sell tax. What does that mean?",
+    "q": "Where does the money come from in a pyramid scheme?",
     "options": [
       {
         "id": "a",
-        "text": "Great, nobody will sell"
+        "text": "Real business profits"
       },
       {
         "id": "b",
-        "text": "You can buy but can't really sell: a trap"
+        "text": "New members' payments"
       }
     ],
     "answer": "b",
-    "explain": "That's a honeypot."
+    "explain": "That's why it collapses when joining slows."
   },
   "hints": {
-    "nudge": "Compare the Selling rows.",
+    "nudge": "Where does the money actually come from?",
     "glow_order": [
-      "sell_b",
-      "liq_b",
-      "mint_b",
-      "hype_b",
-      "team_b"
+      "product",
+      "invite",
+      "levels",
+      "early",
+      "join"
     ]
   },
   "sources": [
     "ftc-crypto",
-    "chainalysis-2025",
+    "ftc-data-2024",
     "ic3-2024"
   ],
   "checked_on": "2026-10-13",
@@ -277,69 +196,59 @@
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Run the token scan",
-      "title": "Token B",
+      "label": "Check profile",
+      "title": "Bruno",
       "rows": [
         {
-          "k": "Selling",
-          "v": "You can buy but practically cannot sell",
-          "clue": "sell_b"
+          "k": "Who",
+          "v": "A real person you half-know",
+          "clue": "name"
         },
         {
-          "k": "Owner",
-          "v": "Can pull the money pool",
-          "clue": "liq_b"
-        },
-        {
-          "k": "Supply",
-          "v": "Owner can print endless tokens",
-          "clue": "mint_b"
+          "k": "Avatar",
+          "v": "Sunglasses emoji",
+          "clue": "avatar"
         }
       ]
     },
     {
       "id": "link",
       "icon": "🔗",
-      "label": "Check Token A",
-      "title": "The safer one",
+      "label": "Check how you earn",
+      "title": "The plan",
       "rows": [
         {
-          "k": "Selling",
-          "v": "Anyone can sell",
-          "clue": "sell_a"
+          "k": "Earnings come from",
+          "v": "The people you bring in",
+          "clue": "invite"
         },
         {
-          "k": "Money pool",
-          "v": "Locked for 2 years",
-          "clue": "liq_a"
+          "k": "And from",
+          "v": "Friends of friends",
+          "clue": "levels"
         },
         {
-          "k": "Risk warning",
-          "v": "It says it is risky",
-          "clue": "risk_a"
+          "k": "To join",
+          "v": "A fee",
+          "clue": "join"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Check the team",
-      "title": "Who is behind it",
+      "label": "Check where money comes from",
+      "title": "The product",
       "rows": [
         {
-          "k": "Token A",
-          "v": "Public team",
-          "clue": "team_a"
+          "k": "Money comes from",
+          "v": "New members",
+          "clue": "product"
         },
         {
-          "k": "Token B",
-          "v": "No one to hold responsible",
-          "clue": "team_b"
-        },
-        {
-          "k": "B promises",
-          "v": "Guaranteed wins",
-          "clue": "hype_b"
+          "k": "Who profits",
+          "v": "Only the first people",
+          "clue": "early"
         }
       ]
     }

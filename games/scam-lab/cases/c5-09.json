@@ -1,0 +1,262 @@
+{
+  "id": "c5-09",
+  "type": "hunt",
+  "chapter": 5,
+  "difficulty": 2,
+  "title": "The Interview Invite",
+  "disguise": null,
+  "intro": [
+    "An email from a company invites you to an interview. You are wary, and rightly careful.",
+    "But some messages are real. Mirage loves it when you stop trusting the honest ones.",
+    "Sniff carefully. Then decide."
+  ],
+  "notify": {
+    "app": "Mail",
+    "from": "Craftloop Talent Team",
+    "text": "Interview invitation"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        "Craftloop Talent Team"
+      ],
+      "addr": [
+        {
+          "clue": "addr",
+          "text": "talent@craftloop.example"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "Interview invitation: Content Editor"
+        }
+      ],
+      "time": [
+        "2:15 PM"
+      ]
+    },
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "name",
+            "text": "Hello Toddy,"
+          }
+        ]
+      },
+      {
+        "p": [
+          "Thanks for ",
+          {
+            "clue": "applied",
+            "text": "applying for Content Editor through our website"
+          },
+          "."
+        ]
+      },
+      {
+        "p": [
+          "Your interview is on ",
+          {
+            "clue": "when",
+            "text": "Tuesday at 3:00 PM"
+          },
+          ", on our company video link, with ",
+          {
+            "clue": "who",
+            "text": "two members of the editing team"
+          },
+          "."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "nopay",
+            "text": "There is no fee for any stage. We will never ask for your bank details before you are hired."
+          }
+        ]
+      },
+      {
+        "foot": [
+          {
+            "clue": "site",
+            "text": "The role is listed at craftloop.example/jobs."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "addr": {
+      "label": "The company's real address",
+      "strength": "harmless",
+      "lens": "It comes from the company's own domain.",
+      "why": "A matching domain is good evidence."
+    },
+    "subject": {
+      "label": "A plain subject",
+      "strength": "harmless",
+      "lens": "An ordinary invitation.",
+      "why": "Calm subjects are typical."
+    },
+    "name": {
+      "label": "Uses your name",
+      "strength": "harmless",
+      "lens": "It greets you by name.",
+      "why": "Proves little alone."
+    },
+    "applied": {
+      "label": "You did apply",
+      "strength": "harmless",
+      "lens": "It names the role you applied for.",
+      "why": "It matches something you did."
+    },
+    "when": {
+      "label": "A clear time and link",
+      "strength": "harmless",
+      "lens": "A day, a time and a company video link.",
+      "why": "Real invitations are specific."
+    },
+    "who": {
+      "label": "Named interviewers",
+      "strength": "harmless",
+      "lens": "You will meet two members of the team.",
+      "why": "Real interviews involve real people."
+    },
+    "nopay": {
+      "label": "No fees, no bank details",
+      "strength": "harmless",
+      "lens": "It says it never asks for money or bank details.",
+      "why": "Honest companies say this clearly."
+    },
+    "site": {
+      "label": "The role is listed on the site",
+      "strength": "harmless",
+      "lens": "You can check the job page.",
+      "why": "Honest employers let you check."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Check the role on the company's jobs page, then attend the interview"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "ignore"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "The job was listed on the company's own page. The interview went well, and nobody asked for money or bank details.",
+      "toddy": "happy"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "Nothing bad happened. But a real interview invitation unanswered is a lost chance.",
+      "mirageSays": "Fine. Next!"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was a real invitation. When every message looks like a scam, you can lose a real chance.",
+      "mirageSays": "If you trust nothing, I win anyway."
+    }
+  },
+  "what_if": {
+    "block_report": "You applied, it gave a time, named the interviewers, asked for no money and the role was on the jobs page. That is how real hiring looks.",
+    "ignore": "Ignoring was safe. Recognising a real message is the skill: it asks for nothing secret and matches something you know."
+  },
+  "golden_rule": "A real interview invite follows something you did, is specific, and asks for no money or bank details.",
+  "quick_check": {
+    "q": "What made this interview invitation honest?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It said congratulations"
+      },
+      {
+        "id": "b",
+        "text": "You had applied, it was specific and it asked for no money or bank details"
+      },
+      {
+        "id": "c",
+        "text": "It had a logo"
+      },
+      {
+        "id": "d",
+        "text": "It was long"
+      }
+    ],
+    "answer": "b",
+    "explain": "Following your application, a clear plan and no payment are the real signs."
+  },
+  "hints": {
+    "nudge": "What is this message actually asking you to do?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-job-scams"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Sender check",
+      "rows": [
+        {
+          "k": "Sent from",
+          "v": "talent@craftloop.example",
+          "clue": "addr"
+        },
+        {
+          "k": "You applied?",
+          "v": "Yes, on the website",
+          "clue": "applied"
+        },
+        {
+          "k": "Fee asked?",
+          "v": "No",
+          "clue": "nopay"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Do honest employers ask for bank details before hiring?",
+          "v": "No",
+          "clue": "nopay"
+        },
+        {
+          "k": "How to check",
+          "v": "Look on the company's own jobs page",
+          "clue": "site"
+        }
+      ]
+    }
+  ]
+}

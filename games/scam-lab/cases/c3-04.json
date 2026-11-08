@@ -1,121 +1,245 @@
 {
   "id": "c3-04",
-  "type": "rush",
+  "type": "hunt",
   "chapter": 3,
   "difficulty": 2,
-  "title": "Prize Inbox",
-  "seconds": 60,
+  "title": "Moving Day",
+  "disguise": null,
   "intro": [
-    "You've \"won\" a lot of things today. Ten messages, one minute.",
-    "Swipe left for scam, right for safe.",
-    "Some prizes and rewards are real. Careful!"
+    "Lena sends a voice message on Plenvo, from her usual account.",
+    "After hacked accounts, every friend's message feels suspicious.",
+    "Sniff it. Is anything actually wrong?"
   ],
-  "cards": [
+  "notify": {
+    "app": "Chirp",
+    "from": "Lena",
+    "text": "🎤 Voice message (0:14)"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "Lena"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@lena_draws · friends since 2019"
+        }
+      ],
+      "avatar": {
+        "glyph": "🦊",
+        "clue": "avatar"
+      }
+    },
+    "items": [
+      {
+        "msg": [
+          {
+            "clue": "voice",
+            "text": "🎤 Voice message (0:14): \"Hey Toddy! It's me, Lena…\""
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "ask",
+            "text": "Can you help me move flats on Saturday? 📦"
+          }
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "pizza",
+            "text": "Pizza's on me! 🍕"
+          },
+          " ",
+          {
+            "clue": "plan",
+            "text": "Like we talked about at lunch last week."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "voice": {
+      "label": "Her voice",
+      "strength": "harmless",
+      "lens": "A voice message in Lena's own voice.",
+      "why": "Normal for Lena."
+    },
+    "ask": {
+      "label": "Asks for help, not money",
+      "strength": "harmless",
+      "lens": "She asks for help carrying boxes.",
+      "why": "No money, codes or links."
+    },
+    "pizza": {
+      "label": "Pizza offer",
+      "strength": "harmless",
+      "lens": "She offers pizza.",
+      "why": "Friendly and normal."
+    },
+    "plan": {
+      "label": "Matches real life",
+      "strength": "harmless",
+      "lens": "You talked about this in person.",
+      "why": "It matches something only the real Lena knows."
+    },
+    "name": {
+      "label": "Lena's account",
+      "strength": "harmless",
+      "lens": "Her usual account.",
+      "why": "Normal."
+    },
+    "handle": {
+      "label": "Old friendship",
+      "strength": "harmless",
+      "lens": "Friends since 2019.",
+      "why": "Normal."
+    },
+    "avatar": {
+      "label": "Her usual picture",
+      "strength": "harmless",
+      "lens": "Her usual fox avatar.",
+      "why": "Normal."
+    }
+  },
+  "actions": [
     {
-      "id": "p1",
-      "app": "Email",
-      "from": "Zelvora Rewards",
-      "text": "You won 2,000 ZLV! Connect your wallet at zelvora-rewards.co to claim.",
-      "scam": true,
-      "why": "A look-alike link plus \"connect to claim\"."
+      "id": "go_ahead",
+      "label": "Reply: \"Of course! See you Saturday\""
     },
     {
-      "id": "p2",
-      "app": "App",
-      "from": "Ostrel (in-app)",
-      "text": "You earned 40 points this month. See them in the Rewards tab.",
-      "scam": false,
-      "why": "Inside the real app, asking nothing."
+      "id": "verify",
+      "label": "Call her to confirm the time"
     },
     {
-      "id": "p3",
-      "app": "SMS",
-      "from": "+44 7700 900631",
-      "text": "Congratulations! Your number won €10,000 in the Euro Crypto Lottery. Pay €40 to release it.",
-      "scam": true,
-      "why": "A lottery you never entered, with a fee to release it."
-    },
-    {
-      "id": "p4",
-      "app": "Chirp",
-      "from": "@ToddyOfficial",
-      "text": "Community art contest! Post your Toddy drawing with #ToddyArt. Winners get a poster.",
-      "scam": false,
-      "why": "The official account, nothing to pay or connect."
-    },
-    {
-      "id": "p5",
-      "app": "Plenvo DM",
-      "from": "NFT Gifts 🎁",
-      "text": "A free NFT was sent to your wallet! Visit nft-gift.claim to view it.",
-      "scam": true,
-      "why": "Surprise NFTs with a \"view\" link lead to drainer sites."
-    },
-    {
-      "id": "p6",
-      "app": "Email",
-      "from": "no-reply@kopicorner.eu",
-      "text": "Your 10th coffee is free! Show this email at the counter.",
-      "scam": false,
-      "why": "A loyalty reward from a café you use. Nothing to pay."
-    },
-    {
-      "id": "p7",
-      "app": "Plenvo DM",
-      "from": "Giveaway Bot",
-      "text": "You're winner #3! Send 0.01 ZLV to verify your wallet and receive 500 ZLV.",
-      "scam": true,
-      "why": "Sending first to \"verify\" is the scam."
-    },
-    {
-      "id": "p8",
-      "app": "Email",
-      "from": "Promo Team",
-      "text": "Exclusive: Buy now, price will 50x tonight! Last chance!",
-      "scam": true,
-      "why": "Promised 50x plus \"last chance\" is hype bait."
-    },
-    {
-      "id": "p9",
-      "app": "SMS",
-      "from": "Lena (friend)",
-      "text": "I won two cinema tickets at work! Want to come Friday?",
-      "scam": false,
-      "why": "A friend sharing good news and asking nothing."
-    },
-    {
-      "id": "p10",
-      "app": "Plenvo DM",
-      "from": "Airdrop Hunter",
-      "text": "Airdrop ends in 10 min! Enter your recovery phrase to check eligibility.",
-      "scam": true,
-      "why": "Nothing ever needs your recovery phrase."
+      "id": "block_report",
+      "label": "Report her account as hacked"
     }
   ],
-  "golden_rule": "Real rewards ask for nothing. If a prize needs a fee, a phrase or a wallet connection, it's bait.",
+  "best_action": "go_ahead",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "Saturday: boxes, stairs, and a lot of pizza. Lena was thrilled.",
+      "toddy": "happy"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "Lena's real account got locked for a day. Nothing was wrong.",
+      "mirageSays": "Suspect your friends? Excellent."
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "CHECKED",
+      "line": "Lena picked up laughing: \"Yes, 10 am! Bring gloves!\"",
+      "toddy": "happy"
+    }
+  },
+  "what_if": {
+    "block_report": "No money, no codes, no link, and it matched a real conversation. That's just a friend."
+  },
+  "golden_rule": "A friend asking for help, not money, matching something real, is just a friend.",
   "quick_check": {
-    "q": "Which \"prize\" is most likely real?",
+    "q": "Which message from a friend needs checking?",
     "options": [
       {
         "id": "a",
-        "text": "A lottery you never entered, with a release fee"
+        "text": "\"Help me move on Saturday, pizza on me\""
       },
       {
         "id": "b",
-        "text": "Loyalty points shown inside an app you use"
-      },
-      {
-        "id": "c",
-        "text": "A free NFT with a link to view it"
+        "text": "\"Send 200 ZLUSD to this new wallet, can't talk\""
       }
     ],
     "answer": "b",
-    "explain": "Real rewards show up where you already are, and ask for nothing."
+    "explain": "Money to new details plus \"can't talk\" is the warning sign."
+  },
+  "hints": {
+    "nudge": "What is Lena asking for?",
+    "glow_order": []
   },
   "sources": [
-    "ftc-crypto",
+    "cafc-wallet",
     "ftc-phishing",
-    "cafc-wallet"
+    "ftc-crypto"
   ],
-  "checked_on": "2026-10-13"
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check profile",
+      "title": "Lena",
+      "rows": [
+        {
+          "k": "Account",
+          "v": "Her usual one",
+          "clue": "name"
+        },
+        {
+          "k": "Friends since",
+          "v": "2019",
+          "clue": "handle"
+        },
+        {
+          "k": "Avatar",
+          "v": "Her usual fox",
+          "clue": "avatar"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the message",
+      "title": "What she says",
+      "rows": [
+        {
+          "k": "Voice message",
+          "v": "In Lena's own voice",
+          "clue": "voice"
+        },
+        {
+          "k": "She asks",
+          "v": "To help carry boxes",
+          "clue": "ask"
+        },
+        {
+          "k": "She offers",
+          "v": "Pizza",
+          "clue": "pizza"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the plan",
+      "title": "Does it fit?",
+      "rows": [
+        {
+          "k": "You talked about it",
+          "v": "In person",
+          "clue": "plan"
+        }
+      ]
+    }
+  ]
 }

@@ -2,204 +2,174 @@
   "id": "c7-04",
   "type": "hunt",
   "chapter": 7,
-  "difficulty": 3,
-  "title": "The Deepfake",
-  "disguise": "influencer",
+  "difficulty": 2,
+  "title": "The Boring Plan",
+  "disguise": null,
   "intro": [
-    "A video is spreading: Zelvora's CEO announces a \"thank-you giveaway\".",
-    "It looks real. It sounds real. Is it?",
-    "Sniff the post around the video."
+    "Toddy asks Marco how he deals with crypto. Marco's answer is… boring.",
+    "After a chapter of get-rich schemes, boring might be good.",
+    "Sniff it."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Zelvora Live 🎥",
-    "text": "▶ CEO announces 2x giveaway!"
+    "from": "Marco",
+    "text": "Honestly? I keep it really simple."
   },
   "screen": {
     "app": "chirp",
     "head": {
       "name": [
         {
-          "clue": "chan",
-          "text": "Zelvora Live 🎥"
+          "clue": "name",
+          "text": "Marco"
         }
       ],
       "sub": [
-        {
-          "clue": "age",
-          "text": "@zelvora_live_event · joined 3 days ago"
-        }
+        "friend · you asked him"
       ],
       "avatar": {
-        "glyph": "🎥",
+        "glyph": "🙂",
         "clue": "avatar"
       }
     },
+    "context": "You asked Marco how he handles crypto.",
     "items": [
       {
         "msg": [
           {
-            "clue": "video",
-            "text": "▶ [video: the CEO speaking, mouth slightly out of sync, blurry edges]"
+            "clue": "small",
+            "text": "I only put in a small amount I can afford to lose."
           }
         ]
       },
       {
         "msg": [
-          "\"Send ZLV to the address below and ",
           {
-            "clue": "double",
-            "text": "we'll send back double"
-          },
-          ".\""
+            "clue": "regulated",
+            "text": "I use a regulated exchange and keep my phrase on paper at home."
+          }
         ]
       },
       {
         "msg": [
           {
-            "clue": "addr",
-            "text": "Address in description: 0x88c…12a"
+            "clue": "noguar",
+            "text": "No guarantees. Some months it drops."
           },
           " ",
           {
-            "clue": "comments",
-            "text": "· Comments turned off"
-          }
-        ]
-      },
-      {
-        "msg": [
-          {
-            "clue": "views",
-            "text": "👁 120K views"
+            "clue": "noinvite",
+            "text": "I don't need you to join anything!"
           }
         ]
       }
     ]
   },
   "clues": {
-    "video": {
-      "label": "Odd video",
-      "strength": "strong",
-      "lens": "Lips out of sync, blurry edges.",
-      "why": "AI \"deepfake\" videos copy real faces and voices."
-    },
-    "double": {
-      "label": "Double your money",
-      "strength": "strong",
-      "lens": "Send and get double.",
-      "why": "Always a scam, whoever seems to say it."
-    },
-    "addr": {
-      "label": "Send to an address",
-      "strength": "strong",
-      "lens": "A wallet in the description.",
-      "why": "Coins sent there are gone."
-    },
-    "comments": {
-      "label": "Comments off",
-      "strength": "strong",
-      "lens": "Nobody can warn others.",
-      "why": "Scammers turn off comments so warnings can't appear."
-    },
-    "age": {
-      "label": "3-day-old channel",
-      "strength": "strong",
-      "lens": "Not the official account.",
-      "why": "Deepfakes are posted on new look-alike channels."
-    },
-    "chan": {
-      "label": "Brand in the name",
+    "small": {
+      "label": "Small amount",
       "strength": "harmless",
-      "lens": "Zelvora in the name.",
-      "why": "Names prove nothing."
+      "lens": "Only what he can afford to lose.",
+      "why": "Sensible and honest."
     },
-    "views": {
-      "label": "Many views",
+    "regulated": {
+      "label": "Regulated exchange, phrase at home",
       "strength": "harmless",
-      "lens": "120K views.",
-      "why": "Views can be faked or bought."
+      "lens": "Normal safety habits.",
+      "why": "Good practice."
+    },
+    "noguar": {
+      "label": "No guarantees",
+      "strength": "harmless",
+      "lens": "He admits it can drop.",
+      "why": "Honest about risk."
+    },
+    "noinvite": {
+      "label": "Doesn't recruit you",
+      "strength": "harmless",
+      "lens": "He doesn't want you to join anything.",
+      "why": "The opposite of a scheme."
+    },
+    "name": {
+      "label": "Your friend",
+      "strength": "harmless",
+      "lens": "Marco, whom you asked.",
+      "why": "You started the conversation."
     },
     "avatar": {
-      "label": "Camera icon",
+      "label": "Smiley",
       "strength": "harmless",
-      "lens": "A camera.",
+      "lens": "A smiley.",
       "why": "Proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Send ZLV to double it"
+      "label": "Thank Marco and do your own research"
     },
     {
-      "id": "verify",
-      "label": "Check Zelvora's official account"
+      "id": "ignore",
+      "label": "Change the subject"
     },
     {
       "id": "block_report",
-      "label": "Report the video as a deepfake scam"
+      "label": "Report Marco for promoting crypto"
     }
   ],
-  "best_action": "block_report",
+  "best_action": "go_ahead",
   "acceptable_actions": [
-    "verify"
+    "ignore"
   ],
   "outcomes": {
-    "block_report": {
-      "scene": "safe",
-      "mirage": "panic",
-      "stamp": "BLOCKED",
-      "line": "Reported. The platform took the video down.",
-      "mirageSays": "My best fake yet!"
-    },
-    "verify": {
-      "scene": "safe",
-      "mirage": "panic",
-      "stamp": "CHECKED",
-      "line": "Official Zelvora: \"That video is fake. We never do giveaways.\"",
-      "mirageSays": "They checked the real channel!"
-    },
     "go_ahead": {
-      "scene": "drained",
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "Good advice from a good friend. Toddy took notes.",
+      "toddy": "happy"
+    },
+    "block_report": {
+      "scene": "wolf",
       "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "Nothing came back. The \"CEO\" was AI.",
-      "mirageSays": "Doubled… for me!"
+      "stamp": "FALSE ALARM",
+      "line": "Marco was just answering your question honestly. Nothing to report.",
+      "mirageSays": "Report your friends? I love it."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "SAFE",
+      "line": "Fine. Nothing was wrong with what Marco said.",
+      "toddy": "happy"
     }
   },
   "what_if": {
-    "go_ahead": "Even a perfect-looking video can't make \"send and get double\" real."
+    "block_report": "He asked for nothing, promised nothing and admitted risks. That's honest advice."
   },
-  "golden_rule": "Faces and voices can be faked. Judge what a video asks you to do, not who seems to say it.",
+  "golden_rule": "Honest advice is boring: small amounts, real risks, no promises, nobody to recruit.",
   "quick_check": {
-    "q": "A video of a famous CEO says \"send crypto, get double back\". What is it?",
+    "q": "Which sounds like honest crypto advice?",
     "options": [
       {
         "id": "a",
-        "text": "Real, it's their face"
+        "text": "\"Only what you can afford to lose, no guarantees\""
       },
       {
         "id": "b",
-        "text": "A deepfake scam"
+        "text": "\"3% a day guaranteed, invite friends for more\""
       }
     ],
-    "answer": "b",
-    "explain": "AI can fake faces. The ask is always the giveaway."
+    "answer": "a",
+    "explain": "Boring and honest beats exciting and guaranteed."
   },
   "hints": {
-    "nudge": "Ignore the face. What is the video asking for?",
-    "glow_order": [
-      "double",
-      "addr",
-      "comments",
-      "age",
-      "video"
-    ]
+    "nudge": "Does Marco want anything from you?",
+    "glow_order": []
   },
   "sources": [
     "ftc-crypto",
-    "chainalysis-2025",
+    "ftc-data-2024",
     "ic3-2024"
   ],
   "checked_on": "2026-10-13",
@@ -207,59 +177,54 @@
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the channel",
-      "title": "Zelvora Live",
+      "label": "Check profile",
+      "title": "Marco",
       "rows": [
         {
-          "k": "Name",
-          "v": "Has Zelvora in it",
-          "clue": "chan"
+          "k": "Who",
+          "v": "Marco, whom you asked",
+          "clue": "name"
         },
         {
-          "k": "Account",
-          "v": "Not the official one",
-          "clue": "age"
-        },
-        {
-          "k": "Views",
-          "v": "120K",
-          "clue": "views"
+          "k": "Avatar",
+          "v": "A smiley",
+          "clue": "avatar"
         }
       ]
     },
     {
       "id": "link",
       "icon": "🔗",
-      "label": "Check the video",
-      "title": "Look closely",
+      "label": "Check his advice",
+      "title": "What he says",
       "rows": [
         {
-          "k": "Lips and sound",
-          "v": "Out of sync, blurry edges",
-          "clue": "video"
+          "k": "Amount",
+          "v": "Only what he can afford to lose",
+          "clue": "small"
         },
         {
-          "k": "Comments",
-          "v": "Nobody can warn others",
-          "clue": "comments"
+          "k": "He admits",
+          "v": "It can drop",
+          "clue": "noguar"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Check the offer",
-      "title": "What they ask",
+      "label": "Check his approach",
+      "title": "No hooks",
       "rows": [
         {
-          "k": "Send and get",
-          "v": "Double back",
-          "clue": "double"
+          "k": "Joining anything?",
+          "v": "He does not want you to",
+          "clue": "noinvite"
         },
         {
-          "k": "Wallet",
-          "v": "In the description",
-          "clue": "addr"
+          "k": "Habits",
+          "v": "Normal safety habits",
+          "clue": "regulated"
         }
       ]
     }

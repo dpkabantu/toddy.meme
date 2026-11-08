@@ -11,9 +11,10 @@ const BRANDS = [
 const FRIENDS = ['Kiko', 'Lena', 'Marco', 'Sam'];
 const CITIES = ['Lisbon', 'Vienna', 'Lyon', 'Ghent'];
 
+// The TODDY night starts at 13:00 UTC, the same for every player in every time zone.
+// The key is the UTC date of (now - 13 hours), for example 2026-12-08 for 8 Dec 13:00 UTC to 9 Dec 13:00 UTC.
 export function dayKey(d = new Date()) {
-  const y = d.getFullYear(); const m = String(d.getMonth() + 1).padStart(2, '0'); const dd = String(d.getDate()).padStart(2, '0');
-  return `${y}-${m}-${dd}`;
+  return new Date(d.getTime() - 13 * 3600000).toISOString().slice(0, 10);
 }
 export function dayNumber(key) { const [y, m, d] = key.split('-').map(Number); return Math.floor(Date.UTC(y, m - 1, d) / 86400000); }
 function hash(str) { let h = 2166136261; for (let i = 0; i < str.length; i++) { h ^= str.charCodeAt(i); h = Math.imul(h, 16777619); } return h >>> 0; }
@@ -321,9 +322,15 @@ const STD_ACTIONS = [
   { id: 'block_report', label: 'Block and report it' },
 ];
 
+// The 42 written Daily Quickie cases (cases/daily.json). Once loaded, the date picks one: 42 nights in a row show each case once.
+// Until it is loaded (or if it fails to load) the older template cases below are used.
+let DAILY_SET = null;
+export function setDailySet(list) { DAILY_SET = Array.isArray(list) && list.length ? list : null; }
+
 /** Build the full case for a given day key (YYYY-MM-DD). */
 export function dailyCase(key) {
   const n = dayNumber(key);
+  if (DAILY_SET) { const b = DAILY_SET[((n % DAILY_SET.length) + DAILY_SET.length) % DAILY_SET.length]; return { ...JSON.parse(JSON.stringify(b)), id: `daily-${key}`, template: b.id }; }
   const N = TEMPLATES.length;
   const cycle = Math.floor(n / N);
   // shuffle template order per cycle so neighbours vary but every template appears each cycle

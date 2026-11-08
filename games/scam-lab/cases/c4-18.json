@@ -1,0 +1,281 @@
+{
+  "id": "c4-18",
+  "type": "hunt",
+  "chapter": 4,
+  "difficulty": 2,
+  "title": "The Lawyer's Letter",
+  "disguise": "admin",
+  "intro": [
+    "An email from a law firm says you are being sued, unless you settle today.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Mail",
+    "from": "Harlow & Finch Legal",
+    "text": "Legal notice: you are being sued"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        {
+          "clue": "from",
+          "text": "Harlow & Finch Legal"
+        }
+      ],
+      "addr": [
+        {
+          "clue": "addr",
+          "text": "notice@harlowfinch-legal.net"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "LEGAL NOTICE: you are being sued"
+        }
+      ],
+      "time": [
+        "6:45 AM"
+      ]
+    },
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "greet",
+            "text": "Dear Sir or Madam,"
+          }
+        ]
+      },
+      {
+        "p": [
+          "A claim has been filed against you for ",
+          {
+            "clue": "claim",
+            "text": "unpaid dues of $1,850"
+          },
+          "."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "settle",
+            "text": "Settle today to avoid court. After today the amount will double."
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "link",
+            "text": "Settle now",
+            "link": true
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "who",
+            "text": "We act for a client who wishes to remain anonymous."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "addr": {
+      "label": "A strange address",
+      "strength": "strong",
+      "lens": "It comes from harlowfinch-legal.net, not a normal law firm address.",
+      "why": "Look at the address behind the name."
+    },
+    "claim": {
+      "label": "Unpaid dues you do not know",
+      "strength": "strong",
+      "lens": "You owe nothing you can think of.",
+      "why": "A claim you do not recognise needs checking, not paying."
+    },
+    "settle": {
+      "label": "Settle today or it doubles",
+      "strength": "strong",
+      "lens": "A deadline and a doubling penalty.",
+      "why": "A hard deadline stops you thinking."
+    },
+    "link": {
+      "label": "A \"settle now\" link",
+      "strength": "strong",
+      "lens": "It leads to a payment page.",
+      "why": "Real firms do not ask you to settle through an email link."
+    },
+    "who": {
+      "label": "An anonymous client",
+      "strength": "strong",
+      "lens": "They will not say who is suing you.",
+      "why": "A real claim names who is making it."
+    },
+    "greet": {
+      "label": "\"Dear Sir or Madam\"",
+      "strength": "harmless",
+      "lens": "No name.",
+      "why": "Vague greetings are common, but not proof alone."
+    },
+    "from": {
+      "label": "A firm name",
+      "strength": "harmless",
+      "lens": "Harlow & Finch Legal.",
+      "why": "Names are easy to invent."
+    },
+    "subject": {
+      "label": "Capital letters",
+      "strength": "harmless",
+      "lens": "LEGAL NOTICE in capitals.",
+      "why": "Shouting proves nothing alone."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Click Settle now",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Search for the firm and call a number I look up myself"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it and delete it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "trap": {
+    "title": "Harlow & Finch · Settle",
+    "url": "harlowfinch-legal.net/settle",
+    "ask": "Pay $1,850 by card to settle the claim.",
+    "go": "Pay $1,850",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported as phishing and deleted. The fake address was blocked.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "No such firm existed on the official register, and no claim had been filed. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The page copied your card. The \"claim\" never existed, and the money was gone.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Checking whether the firm really exists would have ended it. A real claim names who is suing you.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "A legal threat with a deadline and a payment link is a scam. Check that the firm exists, on a number you look up yourself.",
+  "quick_check": {
+    "q": "An email says you are being sued and must settle today through a link. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay to avoid court"
+      },
+      {
+        "id": "b",
+        "text": "Reply to negotiate"
+      },
+      {
+        "id": "c",
+        "text": "Do not click. Check the firm yourself, and report the email"
+      },
+      {
+        "id": "d",
+        "text": "Forward it to a friend"
+      }
+    ],
+    "answer": "c",
+    "explain": "A real claim names who is suing you and gives time. This one hurried you."
+  },
+  "hints": {
+    "nudge": "Who is the claim from, and how much time did they give you?",
+    "glow_order": [
+      "addr",
+      "claim",
+      "settle",
+      "link",
+      "who"
+    ]
+  },
+  "sources": [
+    "ftc-government",
+    "ftc-phishing"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Who really sent this",
+      "rows": [
+        {
+          "k": "Address",
+          "v": "notice@harlowfinch-legal.net",
+          "clue": "addr"
+        },
+        {
+          "k": "Claimant named?",
+          "v": "No, \"anonymous\"",
+          "clue": "who"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Settle through a link?",
+          "v": "Never",
+          "clue": "link"
+        },
+        {
+          "k": "How to check",
+          "v": "Look up the firm yourself and call it"
+        }
+      ]
+    }
+  ]
+}

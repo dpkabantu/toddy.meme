@@ -1,0 +1,219 @@
+{
+  "id": "c1-09",
+  "type": "hunt",
+  "chapter": 1,
+  "difficulty": 2,
+  "title": "The Real Alert",
+  "disguise": null,
+  "intro": [
+    "A text from your bank. After today, you might be ready to call everything a scam.",
+    "But some messages are real. Mirage loves it when you stop trusting the honest ones.",
+    "Sniff carefully. Then decide."
+  ],
+  "notify": {
+    "app": "Messages",
+    "from": "Orrin Bank",
+    "text": "We paused a card payment of £212.00…"
+  },
+  "screen": {
+    "app": "sms",
+    "head": {
+      "name": [
+        {
+          "clue": "sender",
+          "text": "Orrin Bank"
+        }
+      ]
+    },
+    "context": "You did not make this payment.",
+    "items": [
+      {
+        "time": [
+          "Today 1:22 PM"
+        ]
+      },
+      {
+        "msg": [
+          "Orrin Bank: we ",
+          {
+            "clue": "paused",
+            "text": "paused a card payment of £212.00 at Gadgetz Direct"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          "If this was not you, ",
+          {
+            "clue": "app",
+            "text": "open the Orrin app to review it"
+          },
+          ", or ",
+          {
+            "clue": "call",
+            "text": "call the number on your statement"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "never",
+            "text": "We will never ask for your PIN, password or codes."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "paused": {
+      "label": "Names the payment",
+      "strength": "harmless",
+      "lens": "It names the shop and the amount, and says the payment was paused, not made.",
+      "why": "Specific facts fit a real alert. Scammers can guess some, so you still check through the app."
+    },
+    "app": {
+      "label": "Open the app yourself",
+      "strength": "harmless",
+      "lens": "It sends you to the app you already have.",
+      "why": "Pointing you to the app, not to a link, is what honest banks do."
+    },
+    "call": {
+      "label": "Number on your statement",
+      "strength": "harmless",
+      "lens": "It tells you to call the number on your statement.",
+      "why": "Using a number you already trust avoids fake numbers."
+    },
+    "never": {
+      "label": "Safety reminder",
+      "strength": "harmless",
+      "lens": "It repeats that the bank never asks for your PIN or codes.",
+      "why": "Real banks warn you about scams."
+    },
+    "sender": {
+      "label": "Sender name",
+      "strength": "harmless",
+      "lens": "The sender says Orrin Bank.",
+      "why": "A name alone proves nothing. What the message asks you to do is the real clue: nothing secret, no link."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Open the Orrin app myself and review the payment"
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it as a scam"
+    }
+  ],
+  "best_action": "go_ahead",
+  "acceptable_actions": [],
+  "outcomes": {
+    "go_ahead": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "The app showed a payment you did not make, already paused. One tap to confirm it was fraud, and the bank sent a new card.",
+      "toddy": "happy"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "Nothing bad happened this time. But a real alert deserves a look in your own app.",
+      "mirageSays": "Fine. Next!"
+    },
+    "block_report": {
+      "scene": "wolf",
+      "mirage": "smug",
+      "stamp": "FALSE ALARM",
+      "line": "That was a real alert. When every message looks like a scam, the real warnings get lost too.",
+      "mirageSays": "If you trust nothing, I win anyway."
+    }
+  },
+  "what_if": {
+    "block_report": "Nothing in it asked for money, codes, a PIN or a link. That calm is what real messages look like.",
+    "ignore": "Opening your own app is safe, and it tells you whether the payment really was yours."
+  },
+  "golden_rule": "Real alerts ask for nothing secret and send you to your own app. Check there, never through the text.",
+  "quick_check": {
+    "q": "What showed this bank text was genuine?",
+    "options": [
+      {
+        "id": "a",
+        "text": "It named the bank"
+      },
+      {
+        "id": "b",
+        "text": "It asked for nothing secret and sent you to your own app or the number on your statement"
+      },
+      {
+        "id": "c",
+        "text": "It arrived in the afternoon"
+      },
+      {
+        "id": "d",
+        "text": "It had a capital letter at the start"
+      }
+    ],
+    "answer": "b",
+    "explain": "Names, times and logos can all be copied. Asking for nothing secret, and no link, is the real sign."
+  },
+  "hints": {
+    "nudge": "What is this text actually asking you to do?",
+    "glow_order": []
+  },
+  "sources": [
+    "ftc-bank-call",
+    "ftc-codes"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Who sent this text",
+      "rows": [
+        {
+          "k": "Sent from",
+          "v": "Orrin Bank",
+          "clue": "sender"
+        },
+        {
+          "k": "Same thread as your past bank texts",
+          "v": "Yes"
+        },
+        {
+          "k": "Asks for",
+          "v": "Nothing"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What the bank says",
+      "rows": [
+        {
+          "k": "Does the bank ask for your PIN or codes?",
+          "v": "Never",
+          "clue": "never"
+        },
+        {
+          "k": "How to check",
+          "v": "Open the app or call the number on your statement",
+          "clue": "call"
+        }
+      ]
+    }
+  ]
+}

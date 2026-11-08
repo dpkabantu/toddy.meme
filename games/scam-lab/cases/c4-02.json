@@ -1,256 +1,209 @@
 {
   "id": "c4-02",
-  "type": "duel",
+  "type": "hunt",
   "chapter": 4,
   "difficulty": 2,
-  "title": "The Bank Call",
-  "disguise": "support",
+  "title": "Police Warning",
+  "disguise": "admin",
   "intro": [
-    "Toddy's phone rings. \"Bank fraud department\" shows on screen.",
-    "This is a call, shown as live subtitles. You choose what Toddy says.",
-    "Stay calm. You can hang up any time."
+    "Chapter 4. These scams don't charm you. They scare you.",
+    "Fear makes people skip every check. That's the whole trick.",
+    "An official-looking email just arrived. Breathe, then sniff."
   ],
   "notify": {
-    "app": "Phone",
-    "from": "Bank Fraud Dept",
-    "text": "📞 Incoming call…"
+    "app": "Mail",
+    "from": "Cyber Crime Unit",
+    "text": "URGENT: Your wallet is linked to a criminal case"
   },
   "screen": {
-    "app": "chirp",
+    "app": "mail",
     "head": {
-      "name": [
+      "from": [
         {
-          "text": "📞 \"Bank Fraud Dept\"",
-          "id": "duel-name"
+          "clue": "from",
+          "text": "Cyber Crime Unit"
         }
       ],
-      "sub": [
+      "addr": [
         {
-          "clue": "callerid",
-          "text": "+44 7700 900800 · caller ID"
+          "clue": "addr",
+          "text": "cyber.unit.office@mailbox-eu.com"
         }
       ],
-      "avatar": {
-        "glyph": "🏦",
-        "clue": "avatar"
-      }
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "URGENT: Case #EU-4471 — your wallet"
+        }
+      ],
+      "time": [
+        "11:52 PM"
+      ]
     },
-    "context": "Live call subtitles",
     "items": [
       {
-        "msg": [
+        "p": [
           {
-            "clue": "hello",
-            "text": "Good evening, this is the fraud team at your bank."
+            "clue": "crime",
+            "text": "Your crypto wallet has been linked to money laundering."
+          }
+        ]
+      },
+      {
+        "p": [
+          "To avoid arrest, ",
+          {
+            "clue": "fine",
+            "text": "pay a €1,500 fine in crypto"
+          },
+          " ",
+          {
+            "clue": "deadline",
+            "text": "within 24 hours"
+          },
+          "."
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "secret",
+            "text": "Do not discuss this case with anyone, including your bank."
+          }
+        ]
+      },
+      {
+        "foot": [
+          {
+            "clue": "badge",
+            "text": "🛡️ Official seal · Case #EU-4471"
           }
         ]
       }
     ]
   },
-  "duel": {
-    "start": "n1",
-    "nodes": {
-      "n1": {
-        "say": [
-          {
-            "msg": [
-              {
-                "clue": "attack",
-                "text": "Your account is under attack right now!"
-              },
-              " We must protect your savings."
-            ]
-          },
-          {
-            "msg": [
-              {
-                "clue": "safe",
-                "text": "Move your money to a safe account"
-              },
-              " ",
-              {
-                "clue": "stay",
-                "text": "and stay on the line."
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "What safe account?",
-            "next": "n2"
-          },
-          {
-            "text": "I'll hang up and call the number on my bank card.",
-            "end": "verify"
-          },
-          {
-            "text": "Hang up and report the number",
-            "end": "block_report"
-          }
-        ]
-      },
-      "n2": {
-        "say": [
-          {
-            "msg": [
-              "Go to a crypto ATM, ",
-              {
-                "clue": "atm",
-                "text": "convert your cash to crypto"
-              },
-              " and scan our QR code."
-            ]
-          },
-          {
-            "msg": [
-              {
-                "clue": "tell",
-                "text": "If anyone asks, say it's for a holiday."
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "OK, going to the ATM now",
-            "end": "go_ahead"
-          },
-          {
-            "text": "Banks never ask that. I'm hanging up.",
-            "end": "block_report"
-          },
-          {
-            "text": "I'll call my bank myself",
-            "end": "verify"
-          }
-        ]
-      }
-    }
-  },
   "clues": {
-    "attack": {
-      "label": "Panic opener",
+    "fine": {
+      "label": "Fine paid in crypto",
       "strength": "strong",
-      "lens": "\"Under attack right now!\"",
-      "why": "Panic stops careful thinking."
+      "lens": "Police don't take fines in crypto.",
+      "why": "Only scammers demand payment in crypto."
     },
-    "safe": {
-      "label": "\"Safe account\"",
+    "deadline": {
+      "label": "24-hour threat",
       "strength": "strong",
-      "lens": "Move your money somewhere \"safe\".",
-      "why": "Banks never ask you to move money to a \"safe account\"."
+      "lens": "Pay fast or be arrested.",
+      "why": "Real police don't threaten arrest by email to get paid."
     },
-    "stay": {
-      "label": "Stay on the line",
+    "secret": {
+      "label": "Tell no one",
       "strength": "strong",
-      "lens": "They don't want you to hang up and check.",
-      "why": "Keeping you on the phone stops you calling the real bank."
+      "lens": "Not even your bank.",
+      "why": "Scammers isolate you so nobody can warn you."
     },
-    "atm": {
-      "label": "Cash into a crypto ATM",
+    "addr": {
+      "label": "Free webmail address",
       "strength": "strong",
-      "lens": "Convert cash to crypto for them.",
-      "why": "No bank or government asks you to use a crypto ATM."
+      "lens": "mailbox-eu.com is a generic mail service.",
+      "why": "Real authorities use their official domain."
     },
-    "tell": {
-      "label": "Lie if asked",
+    "crime": {
+      "label": "Scary accusation",
       "strength": "strong",
-      "lens": "They script a lie for you.",
-      "why": "Being told to lie to staff means someone is stealing from you."
+      "lens": "You're accused of a crime out of nowhere.",
+      "why": "Fear is the hook."
     },
-    "callerid": {
-      "label": "Caller ID",
+    "from": {
+      "label": "Official-sounding name",
       "strength": "harmless",
-      "lens": "A number on screen.",
-      "why": "Caller ID can be faked, so it proves nothing either way."
+      "lens": "\"Cyber Crime Unit\".",
+      "why": "Any name can be typed in. Proves nothing."
     },
-    "hello": {
-      "label": "Polite greeting",
+    "subject": {
+      "label": "Case number",
       "strength": "harmless",
-      "lens": "A professional hello.",
-      "why": "Politeness proves nothing."
+      "lens": "A case number.",
+      "why": "Numbers look official but are easy to invent."
     },
-    "avatar": {
-      "label": "Bank icon",
+    "badge": {
+      "label": "Seal emoji",
       "strength": "harmless",
-      "lens": "A bank emoji.",
-      "why": "Proves nothing."
+      "lens": "A shield and \"official seal\".",
+      "why": "Pictures and seals prove nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Do what they say"
+      "label": "Pay the fine to avoid trouble"
     },
     {
       "id": "verify",
-      "label": "Hang up and call the bank yourself"
+      "label": "Call the police on their official number from their website"
     },
     {
       "id": "block_report",
-      "label": "Hang up and report the number"
+      "label": "Report it as phishing and delete it"
     }
   ],
-  "best_action": "verify",
+  "best_action": "block_report",
   "acceptable_actions": [
-    "block_report"
+    "verify"
   ],
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "You hung up and reported it. The fake \"bank\" lost its target.",
-      "mirageSays": "Hung up on me!"
-    },
-    "go_ahead": {
-      "scene": "drained",
-      "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "The \"safe account\" was Mirage's wallet. The cash was gone.",
-      "mirageSays": "Safe with me!"
+      "line": "Reported. The same email went to thousands of crypto holders that night.",
+      "mirageSays": "Not scary enough?!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The real bank, on the number on Toddy's card: \"That wasn't us. Your account is fine.\"",
-      "mirageSays": "He called the REAL bank!"
+      "line": "The real police: \"We never ask for fines in crypto. That's a scam.\"",
+      "mirageSays": "The real police?!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "There was no case. The €1,500 went straight to Mirage.",
+      "mirageSays": "Case closed: in my favour!"
     }
   },
   "what_if": {
-    "go_ahead": "Hanging up and calling the number on your card is always safe.",
-    "block_report": "Reporting was good. Calling your real bank also confirms your money is safe."
+    "go_ahead": "Police never ask for fines in crypto, and never tell you to keep it from your bank."
   },
-  "golden_rule": "Hang up and call your bank on the number on your card. No bank asks you to move money or use a crypto ATM.",
+  "golden_rule": "Real police, tax offices and banks never demand payment in crypto, and never tell you to keep it secret.",
   "quick_check": {
-    "q": "A caller from \"your bank\" says move your money to a safe account. What do you do?",
+    "q": "An email says pay a fine in crypto within 24 hours or be arrested. What is it?",
     "options": [
       {
         "id": "a",
-        "text": "Do it quickly"
+        "text": "Probably real, pay to be safe"
       },
       {
         "id": "b",
-        "text": "Hang up and call the number on your card"
+        "text": "A scam: real authorities never ask for crypto"
       },
       {
         "id": "c",
-        "text": "Ask them to call back later"
+        "text": "Reply and ask for a discount"
       }
     ],
     "answer": "b",
-    "explain": "Calling the real number yourself is the best way to check."
+    "explain": "Fear plus crypto payment is always a scam."
   },
   "hints": {
-    "nudge": "Would a real bank ask this?",
+    "nudge": "How do they want you to pay?",
     "glow_order": [
-      "safe",
-      "atm",
-      "stay",
-      "tell",
-      "attack"
+      "fine",
+      "secret",
+      "deadline",
+      "addr",
+      "crime"
     ]
   },
   "sources": [
@@ -264,72 +217,62 @@
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the caller",
-      "title": "Bank Fraud Dept",
+      "label": "Check sender",
+      "title": "Who really sent it",
       "rows": [
         {
-          "k": "Caller ID",
-          "v": "A number on screen",
-          "clue": "callerid"
+          "k": "Address",
+          "v": "mailbox-eu.com, a generic mail service",
+          "clue": "addr"
         },
         {
-          "k": "Greeting",
-          "v": "A professional hello",
-          "clue": "hello"
+          "k": "Name shown",
+          "v": "\"Cyber Crime Unit\"",
+          "clue": "from"
         },
         {
-          "k": "Picture",
-          "v": "A bank emoji",
-          "clue": "avatar"
+          "k": "Subject",
+          "v": "A case number",
+          "clue": "subject"
         }
       ]
     },
     {
       "id": "link",
       "icon": "🔗",
-      "label": "Check what they say",
-      "title": "The \"emergency\"",
+      "label": "Check demands",
+      "title": "What it wants",
       "rows": [
         {
-          "k": "They say",
-          "v": "You are under attack right now",
-          "clue": "attack"
+          "k": "Payment",
+          "v": "In crypto",
+          "clue": "fine"
         },
         {
-          "k": "Move your money",
-          "v": "Somewhere \"safe\"",
-          "clue": "safe"
+          "k": "Deadline",
+          "v": "Pay fast or be arrested",
+          "clue": "deadline"
         },
         {
-          "k": "Hang up and check?",
-          "v": "They do not want you to",
-          "clue": "stay"
-        },
-        {
-          "k": "Real banks",
-          "v": "Never ask you to move money to a safe account"
+          "k": "Secrecy",
+          "v": "Do not tell your bank",
+          "clue": "secret"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Check the plan",
-      "title": "What they want",
+      "label": "Official page",
+      "title": "What real police say",
       "rows": [
         {
-          "k": "Cash",
-          "v": "Converted to crypto for them",
-          "clue": "atm"
+          "k": "Do police fine you in crypto?",
+          "v": "Never"
         },
         {
-          "k": "A lie",
-          "v": "They script one for you",
-          "clue": "tell"
-        },
-        {
-          "k": "If unsure",
-          "v": "Hang up and call the number on your card"
+          "k": "Do they email arrest threats?",
+          "v": "Never"
         }
       ]
     }

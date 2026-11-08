@@ -4,13 +4,13 @@ import { h, $, A, fmt } from './ui.js';
 import { sfx, setSound, soundOn, wakeMusic } from './audio.js';
 import { store } from './store.js';
 import { RANKS, rankFor, nextRank, streak } from './engine.js';
-import { dailyCase, dayKey, dayNumber } from './daily.js';
+import { dailyCase, dayKey, dayNumber, setDailySet } from './daily.js';
 import { playCase, tick, useHint, playState } from './play.js';
 import { playRush, rushTick, rushState } from './rush.js';
 import { Toddy, preloadToddy } from './chars.js';
 import { makeCard, shareSheet, GAME_URL } from './share.js';
 
-export const VERSION = '0.6.0';
+export const VERSION = '0.7.0';
 const TELEGRAM = 'https://t.me/ToddyCoinCommunity';
 const PRIVACY = 'https://toddy.meme/privacy.html';
 const OVERLAYS = ['page', 'milo', 'lens', 'decide', 'scene', 'debrief', 'quick', 'result', 'sheet'];
@@ -99,7 +99,7 @@ function where(id) { for (const ch of OPEN()) { const i = ch.cases.indexOf(id); 
 const chDone = (ch) => ch.cases.every((id) => store.played(id));
 const chSolved = (ch) => ch.cases.filter((id) => store.played(id)).length;
 const chStars = (ch) => ch.cases.reduce((a, id) => a + store.stars(id), 0);
-function chapterOpen(ch) { const first = OPEN()[0]; return ch === first || chDone(first); }
+function chapterOpen(ch) { return ch.status === 'open' && ch.cases.length > 0; }   // every built chapter is open from the start; cases still go in order inside a chapter
 function unlocked(id) { const w = where(id); if (!w || !chapterOpen(w.ch)) return false; return w.i === 0 || store.played(w.ch.cases[w.i - 1]); }
 const nextIn = (ch) => ch.cases.find((id) => !store.played(id)) || null;
 function nextUp() {
@@ -145,12 +145,12 @@ function home() {
             h('span', { class: 'small-ink', text: `Chapter ${w.ch.n} · ${w.ch.title} · Case ${w.i + 1} of ${w.k}` }),
             h('span', { class: 'play-pill', text: '▶ Play' }))
         : h('div', { class: 'continue done' },
-            h('span', { class: 'eyebrow', text: 'ALL 48 CASES SOLVED' }),
+            h('span', { class: 'eyebrow', text: `ALL ${ALL().length} CASES SOLVED` }),
             h('b', { text: `Every case cracked, ${rankFor(store.totalStars()).name}!` }),
             h('span', { class: 'small-ink', text: 'Replay cases for 3 stars, or keep your Daily Quickie streak going.' })),
 
       h('h2', { class: 'section-h', text: 'Chapters' }),
-      h('p', { class: 'small-ink section-sub', text: 'Ordered by how many people each kind of scam hurts. Chapter 1 first, then any order.' }),
+      h('p', { class: 'small-ink section-sub', text: '7 chapters, 20 cases each. Start with Chapter 1, then pick any chapter. Cases inside a chapter go in order.' }),
       h('div', { class: 'ch-grid' }, CH.chapters.map((ch) => {
         const released = ch.status === 'open' && ch.cases.length;
         const open = released && chapterOpen(ch);
@@ -260,7 +260,8 @@ async function showResult({ case: c, score: r, seconds }) {
     const st = streak(store.dailyKeys().map(dayNumber), dayNumber(key));
     streakLine = first ? `🔥 ${st}-day streak · come back tomorrow for a new case` : 'Practice run: today\'s score was already saved.';
   } else store.record(c.id, r.stars, r.total);
-  const nextInCh = w ? nextIn(w.ch) && w.ch.cases.slice(w.i + 1).find((id) => !store.played(id)) || nextIn(w.ch) : null;
+  // next case in this chapter: the next one not yet played, else the next one in order (so replaying case 2 offers case 3, not another chapter)
+  const nextInCh = w ? w.ch.cases.slice(w.i + 1).find((id) => !store.played(id)) || nextIn(w.ch) || (w.i + 1 < w.k ? w.ch.cases[w.i + 1] : null) : null;
   const chJustDone = w && chDone(w.ch) && w.i === w.k - 1;
   const opened = OPEN().filter(chapterOpen).length > wasOpen;
   const up = nextUp();
@@ -437,6 +438,7 @@ async function boot() {
   const get = (f) => fetch(`cases/${f}`).then((r) => { if (!r.ok) throw new Error(`${f}: ${r.status}`); return r.json(); });
   try {
     CH = await get('chapters.json'); SOURCES = await get('sources.json');
+    try { setDailySet(await get('daily.json')); } catch (e) { /* the older template Daily cases are used */ }
     await Promise.all(CH.chapters.flatMap((ch) => ch.cases.map(async (id, i, all) => { CASES[id] = await get(`${id}.json`); CASES[id].label = `Ch ${ch.n} · Case ${i + 1} of ${all.length}`; })));
   } catch (e) {
     page(h('div', { class: 'pagecard' }, h('h2', { text: 'The case files didn\'t load' }),

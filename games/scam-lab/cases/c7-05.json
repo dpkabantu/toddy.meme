@@ -3,227 +3,367 @@
   "type": "hunt",
   "chapter": 7,
   "difficulty": 2,
-  "title": "An Honest Update",
-  "disguise": null,
+  "title": "Two Trading Apps",
+  "disguise": "support",
   "intro": [
-    "A project Toddy follows posted an update. It's bad news.",
-    "Not every disappointment is a scam. Some teams are just honest.",
-    "Sniff it."
+    "Toddy is curious about investing, the safe way. Two apps came up in a search.",
+    "One behaves like a real, regulated firm. One is built to take your money.",
+    "Compare them side by side."
   ],
   "notify": {
-    "app": "Chirp",
-    "from": "@pawprint_project ☑",
-    "text": "Update: launch delayed two weeks"
+    "app": "Browser",
+    "from": "Search results",
+    "text": "Two trading apps compared"
   },
   "screen": {
-    "app": "chirp",
-    "head": {
-      "name": [
-        "PawPrint Project"
-      ],
-      "sub": [
-        {
-          "clue": "badge",
-          "text": "@pawprint_project ☑ · since 2023"
-        }
-      ],
-      "avatar": {
-        "glyph": "🐾",
-        "clue": "avatar"
-      }
-    },
-    "items": [
+    "app": "compare",
+    "context": "Two trading apps, side by side.",
+    "panels": [
       {
-        "msg": [
+        "label": "Ostrel",
+        "avatar": {
+          "glyph": "★",
+          "clue": "logo_a"
+        },
+        "rows": [
           {
-            "clue": "delay",
-            "text": "Update: our launch is delayed two weeks. A security review found issues to fix."
-          }
-        ]
-      },
-      {
-        "msg": [
-          {
-            "clue": "nofunds",
-            "text": "We are not raising money. There is no presale."
+            "k": "Returns",
+            "v": [
+              {
+                "clue": "risk_a",
+                "text": "\"Investments can lose value\""
+              }
+            ]
           },
-          " ",
           {
-            "clue": "nodm",
-            "text": "We will never DM you."
+            "k": "Licence",
+            "v": [
+              {
+                "clue": "licence_a",
+                "text": "Reg. no. you can check on the regulator's own site"
+              }
+            ]
+          },
+          {
+            "k": "Withdraw",
+            "v": [
+              {
+                "clue": "withdraw_a",
+                "text": "Any time, small fee from your balance"
+              }
+            ]
+          },
+          {
+            "k": "Support",
+            "v": [
+              {
+                "clue": "support_a",
+                "text": "In the app"
+              }
+            ]
+          },
+          {
+            "k": "Since",
+            "v": [
+              "2019"
+            ]
           }
         ]
       },
       {
-        "msg": [
+        "label": "Brenvoy Trade Pro",
+        "avatar": {
+          "glyph": "🚀",
+          "clue": "logo_b"
+        },
+        "rows": [
           {
-            "clue": "risk",
-            "text": "Crypto is risky; only follow along if you're comfortable."
+            "k": "Returns",
+            "v": [
+              {
+                "clue": "guaranteed_b",
+                "text": "\"Guaranteed 2% daily\""
+              }
+            ]
+          },
+          {
+            "k": "Licence",
+            "v": [
+              {
+                "clue": "licence_b",
+                "text": "\"Licensed ✔\" badge, no number"
+              }
+            ]
+          },
+          {
+            "k": "Withdraw",
+            "v": [
+              {
+                "clue": "withdraw_b",
+                "text": "Pay a 20% \"unlock fee\" first"
+              }
+            ]
+          },
+          {
+            "k": "Support",
+            "v": [
+              {
+                "clue": "support_b",
+                "text": "Only via Plenvo DM"
+              }
+            ]
+          },
+          {
+            "k": "Since",
+            "v": [
+              {
+                "clue": "new_b",
+                "text": "3 weeks ago"
+              }
+            ]
+          }
+        ],
+        "note": [
+          {
+            "clue": "bonus_b",
+            "text": "\"Deposit today and get a 50% bonus!\""
           }
         ]
       }
     ]
   },
   "clues": {
-    "badge": {
-      "label": "Official account",
-      "strength": "harmless",
-      "lens": "The handle you follow, with the app's badge.",
-      "why": "Same account as always."
+    "guaranteed_b": {
+      "label": "Guaranteed returns",
+      "strength": "strong",
+      "lens": "A promise of 2% every day.",
+      "why": "Only scammers guarantee profits."
     },
-    "delay": {
-      "label": "Bad news, honestly told",
-      "strength": "harmless",
-      "lens": "A delay for a security review.",
-      "why": "Scammers promise the moon. Honest teams admit delays."
+    "licence_b": {
+      "label": "Badge, no number",
+      "strength": "strong",
+      "lens": "A tick picture with no registration number to check.",
+      "why": "Real firms give a number you can check on the regulator's own website."
     },
-    "nofunds": {
-      "label": "No money asked",
-      "strength": "harmless",
-      "lens": "No presale, no fundraising.",
-      "why": "Nothing to pay."
+    "withdraw_b": {
+      "label": "Pay to withdraw",
+      "strength": "strong",
+      "lens": "You must pay before you can take your own money out.",
+      "why": "Fees to unlock your money are how fake platforms take even more."
     },
-    "nodm": {
-      "label": "\"We never DM\"",
-      "strength": "harmless",
-      "lens": "A warning about impostors.",
-      "why": "Honest projects say this."
+    "support_b": {
+      "label": "Support only in DMs",
+      "strength": "strong",
+      "lens": "No help inside the app, only private messages.",
+      "why": "Real firms have support in the app or on their official site."
     },
-    "risk": {
+    "new_b": {
+      "label": "3 weeks old",
+      "strength": "strong",
+      "lens": "The site appeared three weeks ago.",
+      "why": "Fake platforms pop up and vanish fast."
+    },
+    "bonus_b": {
+      "label": "Deposit bonus pressure",
+      "strength": "strong",
+      "lens": "\"Deposit today\" for a big bonus.",
+      "why": "Bonuses and \"today only\" push you to deposit before you check."
+    },
+    "risk_a": {
       "label": "Risk warning",
       "strength": "harmless",
-      "lens": "It says crypto is risky.",
-      "why": "Honesty about risk is a good sign."
+      "lens": "It warns you can lose money.",
+      "why": "Honest firms warn about risk."
     },
-    "avatar": {
-      "label": "Paw logo",
+    "licence_a": {
+      "label": "Checkable licence",
       "strength": "harmless",
-      "lens": "The project logo.",
-      "why": "Proves nothing alone."
+      "lens": "A registration number you can look up yourself.",
+      "why": "Checkable on the regulator's own site, not just a picture."
+    },
+    "withdraw_a": {
+      "label": "Normal withdrawals",
+      "strength": "harmless",
+      "lens": "Withdraw any time; fees come out of your balance.",
+      "why": "That's how real platforms work."
+    },
+    "support_a": {
+      "label": "In-app support",
+      "strength": "harmless",
+      "lens": "Help inside the app.",
+      "why": "Normal for a real firm."
+    },
+    "logo_a": {
+      "label": "Star logo",
+      "strength": "harmless",
+      "lens": "A star logo.",
+      "why": "Logos prove nothing either way."
+    },
+    "logo_b": {
+      "label": "Rocket logo",
+      "strength": "harmless",
+      "lens": "A rocket logo.",
+      "why": "Logos prove nothing either way, even rockets."
     }
   },
   "actions": [
     {
-      "id": "go_ahead",
-      "label": "Note it and wait for the official launch"
+      "id": "pick_b",
+      "label": "Sign up for Brenvoy Trade Pro, the returns are better",
+      "trap": true
     },
     {
-      "id": "ignore",
-      "label": "Unfollow, too boring"
+      "id": "verify",
+      "label": "Look up both on the official regulator's register"
     },
     {
       "id": "block_report",
-      "label": "Report it as a scam"
+      "label": "Report Brenvoy Trade Pro, then check Ostrel's number on the regulator's site"
     }
   ],
-  "best_action": "go_ahead",
+  "best_action": "block_report",
   "acceptable_actions": [
-    "ignore"
+    "verify"
   ],
+  "trap": {
+    "title": "Brenvoy Trade Pro · Sign up",
+    "url": "brenvoy-trade-pro.app/join",
+    "ask": "Deposit today and get a 50% bonus. Guaranteed 2% daily!",
+    "go": "Deposit now",
+    "back": "Close this page"
+  },
   "outcomes": {
-    "go_ahead": {
-      "scene": "safe",
-      "mirage": null,
-      "stamp": "GENUINE",
-      "line": "Two weeks later, the project launched after its review. No drama.",
-      "toddy": "happy"
-    },
     "block_report": {
-      "scene": "wolf",
-      "mirage": "smug",
-      "stamp": "FALSE ALARM",
-      "line": "That was an honest update. Reporting honest teams buries real warnings.",
-      "mirageSays": "Treat honesty as a scam? Delicious."
-    },
-    "ignore": {
       "scene": "safe",
-      "mirage": null,
-      "stamp": "SAFE",
-      "line": "Unfollowing was fine. Nothing was wrong with the update.",
-      "toddy": "happy"
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported. The site went onto an official warning list a week later.",
+      "mirageSays": "My shiny rocket site!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "Ostrel's number matched the register. Brenvoy Trade Pro wasn't there at all.",
+      "mirageSays": "Registers ruin everything."
+    },
+    "pick_b": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "The \"profits\" grew on screen. The 20% unlock fee was paid. Nothing came out.",
+      "mirageSays": "Withdrawals? Never heard of them."
     }
   },
   "what_if": {
-    "block_report": "It asked for nothing and admitted a delay. That's how honest teams behave."
+    "pick_b": "\"Pay 20% to withdraw\" means your money can't really come out. Check the licence number on the regulator's own site first.",
+    "verify": "Checking was exactly right. Reporting the fake as well helps it get shut down."
   },
-  "golden_rule": "Honest projects admit delays and risks and ask you for nothing. Hype that promises everything is the warning sign.",
+  "golden_rule": "If you must pay to take your own money out, it's not your money any more. Check licences on the regulator's own site.",
   "quick_check": {
-    "q": "Which post is a better sign?",
+    "q": "A trading app asks for a 20% \"unlock fee\" before you can withdraw. What does that mean?",
     "options": [
       {
         "id": "a",
-        "text": "\"Delayed for a security review. No presale.\""
+        "text": "Normal tax, pay it"
       },
       {
         "id": "b",
-        "text": "\"1000x guaranteed, buy before tonight!\""
+        "text": "It's a fake platform: stop paying and report it"
+      },
+      {
+        "id": "c",
+        "text": "Pay half and negotiate"
       }
     ],
-    "answer": "a",
-    "explain": "Honesty about problems beats promises of riches."
+    "answer": "b",
+    "explain": "Real platforms take fees from your balance. \"Pay first to withdraw\" is how fake ones take more."
   },
   "hints": {
-    "nudge": "Does this post ask you for anything?",
-    "glow_order": []
+    "nudge": "Compare how each app lets you take money out.",
+    "glow_order": [
+      "withdraw_b",
+      "guaranteed_b",
+      "licence_b",
+      "support_b",
+      "new_b",
+      "bonus_b"
+    ]
   },
   "sources": [
     "ftc-crypto",
-    "chainalysis-2025",
-    "ic3-2024"
+    "ic3-2024",
+    "ftc-data-2024"
   ],
   "checked_on": "2026-10-13",
+  "decide_q": "Which app is safe, and what will you do?",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the account",
-      "title": "@pawprint_project",
+      "label": "Check the registry",
+      "title": "Licence and age",
       "rows": [
         {
-          "k": "Handle",
-          "v": "The one you follow, with the app's badge",
-          "clue": "badge"
+          "k": "App A",
+          "v": "Registration number you can look up",
+          "clue": "licence_a"
         },
         {
-          "k": "Avatar",
-          "v": "The project logo",
-          "clue": "avatar"
+          "k": "App B",
+          "v": "A tick picture, no number",
+          "clue": "licence_b"
+        },
+        {
+          "k": "App B appeared",
+          "v": "Three weeks ago",
+          "clue": "new_b"
         }
       ]
     },
     {
       "id": "link",
       "icon": "🔗",
-      "label": "Check the news",
-      "title": "What they say",
+      "label": "Check the money rules",
+      "title": "Taking your money out",
       "rows": [
         {
-          "k": "Update",
-          "v": "A delay for a security review",
-          "clue": "delay"
+          "k": "App A",
+          "v": "Withdraw any time; fees come out of your balance",
+          "clue": "withdraw_a"
         },
         {
-          "k": "Presale or fundraising",
-          "v": "None",
-          "clue": "nofunds"
+          "k": "App B",
+          "v": "Pay first to take your money out",
+          "clue": "withdraw_b"
+        },
+        {
+          "k": "App B promises",
+          "v": "2% every day",
+          "clue": "guaranteed_b"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Check the safety notes",
-      "title": "In the post",
+      "label": "Check help and risk",
+      "title": "What each one tells you",
       "rows": [
         {
-          "k": "Impostors",
-          "v": "It warns you about them",
-          "clue": "nodm"
+          "k": "App A warns",
+          "v": "You can lose money",
+          "clue": "risk_a"
         },
         {
-          "k": "Risk",
-          "v": "It says crypto is risky",
-          "clue": "risk"
+          "k": "App A help",
+          "v": "Inside the app",
+          "clue": "support_a"
+        },
+        {
+          "k": "App B help",
+          "v": "Private messages only",
+          "clue": "support_b"
         }
       ]
     }

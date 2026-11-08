@@ -1,0 +1,292 @@
+{
+  "id": "c5-16",
+  "type": "hunt",
+  "chapter": 5,
+  "difficulty": 2,
+  "title": "The Background Check Fee",
+  "disguise": "admin",
+  "intro": [
+    "You got a job offer after a short chat. Now they say you must pay for your own background check.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Mail",
+    "from": "Quillon Hiring",
+    "text": "Welcome! One last step: background check fee"
+  },
+  "screen": {
+    "app": "mail",
+    "head": {
+      "from": [
+        {
+          "clue": "from",
+          "text": "Quillon Hiring"
+        }
+      ],
+      "addr": [
+        {
+          "clue": "addr",
+          "text": "onboarding@quillon-hiring-desk.live"
+        }
+      ],
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "Welcome! One last step before you start"
+        }
+      ],
+      "time": [
+        "10:45 AM"
+      ]
+    },
+    "items": [
+      {
+        "p": [
+          {
+            "clue": "name",
+            "text": "Hi Toddy,"
+          }
+        ]
+      },
+      {
+        "p": [
+          "You are hired! Before you start, ",
+          {
+            "clue": "check",
+            "text": "a background check is needed"
+          },
+          "."
+        ]
+      },
+      {
+        "p": [
+          "You must pay the ",
+          {
+            "clue": "fee",
+            "text": "£75 fee"
+          },
+          " through this link: ",
+          {
+            "clue": "link",
+            "text": "Pay the check fee",
+            "link": true
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "rush",
+            "text": "Pay within 24 hours or your offer is cancelled."
+          }
+        ]
+      },
+      {
+        "p": [
+          {
+            "clue": "refund",
+            "text": "The fee will be refunded in your first pay."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "addr": {
+      "label": "A look-alike address",
+      "strength": "strong",
+      "lens": "It comes from quillon-hiring-desk.live, not the company's own domain.",
+      "why": "Look at the address behind the name."
+    },
+    "fee": {
+      "label": "You pay for the check",
+      "strength": "strong",
+      "lens": "An honest employer pays for its own checks.",
+      "why": "Honest employers never ask candidates to pay."
+    },
+    "link": {
+      "label": "A payment link",
+      "strength": "strong",
+      "lens": "The button goes to a payment page.",
+      "why": "Never pay through an email link."
+    },
+    "rush": {
+      "label": "Pay in 24 hours",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
+    },
+    "refund": {
+      "label": "\"Refunded in your first pay\"",
+      "strength": "strong",
+      "lens": "A promise to win your trust.",
+      "why": "A promised refund is bait."
+    },
+    "name": {
+      "label": "Uses your name",
+      "strength": "harmless",
+      "lens": "It greets you by name.",
+      "why": "Proves little alone."
+    },
+    "from": {
+      "label": "A company name",
+      "strength": "harmless",
+      "lens": "Quillon Hiring.",
+      "why": "Names are easy to copy."
+    },
+    "subject": {
+      "label": "A friendly subject",
+      "strength": "harmless",
+      "lens": "Welcome!",
+      "why": "Friendly tone proves nothing."
+    },
+    "check": {
+      "label": "A background check",
+      "strength": "harmless",
+      "lens": "Many employers do run checks.",
+      "why": "Checks are normal. Paying for them yourself is not."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Click the link and pay £75",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Call the company's real HR on a number I look up myself"
+    },
+    {
+      "id": "block_report",
+      "label": "Report it and delete it"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "trap": {
+    "title": "Quillon Hiring · Check fee",
+    "url": "quillon-hiring-desk.live/pay",
+    "ask": "Pay £75 by card for your background check.",
+    "go": "Pay £75",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Reported and deleted. The fake address was blocked.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The company's real HR had no record of you and said: \"We never charge candidates for checks.\" Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The £75 went to a stranger. There was never a job, and the \"company\" vanished.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Honest employers pay for their own checks. A call to the real HR would have ended it.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "An employer pays for its own checks. A fee from you, to get a job, is a scam.",
+  "quick_check": {
+    "q": "After a job offer, an email says you must pay £75 for a background check through a link. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Pay, it is small and refundable"
+      },
+      {
+        "id": "b",
+        "text": "Pay half"
+      },
+      {
+        "id": "c",
+        "text": "Do not pay. Call the company's real HR on a number you look up, and report"
+      },
+      {
+        "id": "d",
+        "text": "Ask for a discount"
+      }
+    ],
+    "answer": "c",
+    "explain": "An honest employer never asks you to pay."
+  },
+  "hints": {
+    "nudge": "Who normally pays for a background check?",
+    "glow_order": [
+      "addr",
+      "fee",
+      "link",
+      "rush",
+      "refund"
+    ]
+  },
+  "sources": [
+    "ftc-job-scams",
+    "ftc-jobs"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check sender",
+      "title": "Who really sent this",
+      "rows": [
+        {
+          "k": "Address",
+          "v": "onboarding@quillon-hiring-desk.live",
+          "clue": "addr"
+        },
+        {
+          "k": "Company's real site",
+          "v": "quillon.example"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Pay for your own check?",
+          "v": "Honest employers never ask",
+          "clue": "fee"
+        },
+        {
+          "k": "How to check",
+          "v": "Call the company's real HR"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,306 @@
+{
+  "id": "c6-18",
+  "type": "hunt",
+  "chapter": 6,
+  "difficulty": 2,
+  "title": "Help the Flood Victims",
+  "disguise": "support",
+  "intro": [
+    "After a flood, a message asks for donations. It tugs at your heart, but it is a stranger's page.",
+    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
+    "When you are sure, decide what to do."
+  ],
+  "notify": {
+    "app": "Chirp",
+    "from": "Hearth Relief Fund",
+    "text": "Donate now: families lost everything in the flood"
+  },
+  "screen": {
+    "app": "chirp",
+    "head": {
+      "name": [
+        {
+          "clue": "name",
+          "text": "Hearth Relief Fund"
+        }
+      ],
+      "sub": [
+        {
+          "clue": "handle",
+          "text": "@hearth_relief_help"
+        }
+      ],
+      "avatar": {
+        "glyph": "🏠",
+        "clue": "pic"
+      }
+    },
+    "banner": [
+      {
+        "clue": "dmfirst",
+        "text": "Message request · you do not follow this account"
+      }
+    ],
+    "items": [
+      {
+        "time": [
+          "7:40 PM"
+        ]
+      },
+      {
+        "msg": [
+          "Families lost ",
+          {
+            "clue": "everything",
+            "text": "everything"
+          },
+          " in the flood. 😢 ",
+          {
+            "clue": "child",
+            "text": "A child needs you tonight."
+          }
+        ]
+      },
+      {
+        "msg": [
+          "Donate now: ",
+          {
+            "clue": "link",
+            "text": "hearth-relief-donate.live",
+            "link": true
+          }
+        ]
+      },
+      {
+        "msg": [
+          "Send by ",
+          {
+            "clue": "pay",
+            "text": "gift card or crypto"
+          },
+          ", it reaches them fastest."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "rush",
+            "text": "Every minute counts. Give now!"
+          },
+          " ",
+          {
+            "clue": "tax",
+            "text": "Your gift is tax-free."
+          }
+        ]
+      }
+    ]
+  },
+  "clues": {
+    "dmfirst": {
+      "label": "They messaged first",
+      "strength": "strong",
+      "lens": "A stranger's private message.",
+      "why": "Real charities do not DM strangers for money."
+    },
+    "handle": {
+      "label": "A new look-alike handle",
+      "strength": "strong",
+      "lens": "@hearth_relief_help is new.",
+      "why": "Check the charity's real page."
+    },
+    "everything": {
+      "label": "Emotional words",
+      "strength": "strong",
+      "lens": "Words made to touch you.",
+      "why": "Emotion is the lure."
+    },
+    "child": {
+      "label": "\"A child needs you tonight\"",
+      "strength": "strong",
+      "lens": "A story with a child.",
+      "why": "Guilt is a lever."
+    },
+    "link": {
+      "label": "A look-alike link",
+      "strength": "strong",
+      "lens": "hearth-relief-donate.live is not a charity's real site.",
+      "why": "Give through a charity's own site that you find yourself."
+    },
+    "pay": {
+      "label": "Gift card or crypto",
+      "strength": "strong",
+      "lens": "Only scammers ask for these.",
+      "why": "A real charity takes cards or bank payments."
+    },
+    "rush": {
+      "label": "\"Every minute counts\"",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure is a trick."
+    },
+    "tax": {
+      "label": "\"Tax-free\"",
+      "strength": "harmless",
+      "lens": "A claim about tax.",
+      "why": "A claim like this proves nothing."
+    },
+    "name": {
+      "label": "A charity-like name",
+      "strength": "harmless",
+      "lens": "Hearth Relief Fund.",
+      "why": "Names are easy to invent."
+    },
+    "pic": {
+      "label": "House picture",
+      "strength": "harmless",
+      "lens": "A little house.",
+      "why": "Pictures prove nothing."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Donate by gift card or crypto",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
+    },
+    {
+      "id": "verify",
+      "label": "Look for the charity on its own official website and give there"
+    },
+    {
+      "id": "block_report",
+      "label": "Block and report the account"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify",
+    "ignore"
+  ],
+  "trap": {
+    "title": "Hearth Relief · Donate",
+    "url": "hearth-relief-donate.live",
+    "ask": "Send your donation by gift card code or crypto.",
+    "go": "Donate",
+    "back": "Close this page"
+  },
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "REPORTED",
+      "line": "Blocked and reported. The platform removed the fake page before more donors were fooled.",
+      "mirageSays": "Not my lovely scam!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The real relief charity's own website was listed, and it had a donate button with card payments. You gave there. Case cracked.",
+      "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stayed safe. But the same scam is still landing on other people.",
+      "mirageSays": "Fine. Next!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "SCAMMED",
+      "line": "The donation went to a stranger. None of it reached any family.",
+      "mirageSays": "Thanks for the details!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "Giving through a charity's own website, which you find yourself, would have helped real families.",
+    "ignore": "Reporting takes two taps and helps protect other people.",
+    "verify": "Checking was smart. Reporting it as well helps protect other people."
+  },
+  "golden_rule": "Give only through a charity's own website that you find yourself. A charity never asks for gift cards or crypto.",
+  "quick_check": {
+    "q": "A stranger messages you to donate to flood victims by gift card or crypto. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Donate, it is for a good cause"
+      },
+      {
+        "id": "b",
+        "text": "Donate a little"
+      },
+      {
+        "id": "c",
+        "text": "Do not donate through the message. Find the charity's own website and give there"
+      },
+      {
+        "id": "d",
+        "text": "Forward it to friends"
+      }
+    ],
+    "answer": "c",
+    "explain": "Give through a charity's own site. Gift cards and crypto are a scam sign."
+  },
+  "hints": {
+    "nudge": "How does the message want you to pay?",
+    "glow_order": [
+      "dmfirst",
+      "handle",
+      "everything",
+      "child",
+      "link",
+      "pay",
+      "rush"
+    ]
+  },
+  "sources": [
+    "ftc-gift-cards",
+    "ftc-crypto",
+    "ftc-phishing"
+  ],
+  "checked_on": "2026-10-21",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the page",
+      "title": "@hearth_relief_help",
+      "rows": [
+        {
+          "k": "Page age",
+          "v": "2 days",
+          "clue": "handle"
+        },
+        {
+          "k": "Messaged you first?",
+          "v": "Yes",
+          "clue": "dmfirst"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What advice says",
+      "rows": [
+        {
+          "k": "Gift cards or crypto as payment",
+          "v": "Only scammers ask",
+          "clue": "pay"
+        },
+        {
+          "k": "How to give safely",
+          "v": "Through a charity's own website you find yourself"
+        }
+      ]
+    }
+  ]
+}

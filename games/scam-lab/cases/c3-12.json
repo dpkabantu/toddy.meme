@@ -1,0 +1,250 @@
+{
+  "id": "c3-12",
+  "type": "hunt",
+  "chapter": 3,
+  "difficulty": 3,
+  "title": "Unlimited Approval",
+  "disguise": "support",
+  "intro": [
+    "Chapter 5. These scams don't ask for your phrase. They ask for one click.",
+    "Toddy found a \"free mint\" site. The wallet pops up asking to approve something.",
+    "Read what the pop-up really allows."
+  ],
+  "notify": {
+    "app": "Hedrio",
+    "from": "Signature request",
+    "text": "kelvaromint-free.xyz wants permission"
+  },
+  "screen": {
+    "app": "wallet",
+    "site": [
+      {
+        "clue": "site",
+        "text": "kelvaromint-free.xyz"
+      }
+    ],
+    "title": "Allow access to your ZLV?",
+    "context": "You clicked \"Mint for free\" on a site you found in a group chat.",
+    "rows": [
+      {
+        "k": "Spender",
+        "v": [
+          {
+            "clue": "spender",
+            "text": "0xA11c…F3e2 (unknown contract)"
+          }
+        ]
+      },
+      {
+        "k": "Amount",
+        "v": [
+          {
+            "clue": "amount",
+            "text": "UNLIMITED ZLV"
+          }
+        ]
+      },
+      {
+        "k": "Network fee",
+        "v": [
+          {
+            "clue": "fee",
+            "text": "0.0004 ZLV"
+          }
+        ]
+      },
+      {
+        "k": "Mint price",
+        "v": [
+          {
+            "clue": "free",
+            "text": "Free"
+          }
+        ]
+      }
+    ],
+    "note": [
+      {
+        "clue": "warning",
+        "text": "Hedrio: This lets the site move your ZLV at any time, without asking again."
+      }
+    ],
+    "buttons": [
+      "Reject",
+      "Approve"
+    ]
+  },
+  "clues": {
+    "amount": {
+      "label": "Unlimited amount",
+      "strength": "strong",
+      "lens": "UNLIMITED: they could take all your ZLV, now or later.",
+      "why": "A free mint never needs permission to spend all your coins."
+    },
+    "spender": {
+      "label": "Unknown spender",
+      "strength": "strong",
+      "lens": "An unknown contract gets the permission.",
+      "why": "Approvals hand control to whoever owns that contract."
+    },
+    "site": {
+      "label": "Random mint site",
+      "strength": "strong",
+      "lens": "A site from a group chat, not an official link.",
+      "why": "Drainer sites pose as free mints and airdrops."
+    },
+    "warning": {
+      "label": "Wallet warning",
+      "strength": "strong",
+      "lens": "Your wallet itself is warning you.",
+      "why": "Read wallet warnings. They exist for this exact trick."
+    },
+    "free": {
+      "label": "Free mint",
+      "strength": "harmless",
+      "lens": "The mint itself costs nothing.",
+      "why": "Free mints exist. The approval is the problem, not the price."
+    },
+    "fee": {
+      "label": "Small network fee",
+      "strength": "harmless",
+      "lens": "A tiny network fee.",
+      "why": "Normal for any blockchain action."
+    }
+  },
+  "actions": [
+    {
+      "id": "go_ahead",
+      "label": "Approve"
+    },
+    {
+      "id": "verify",
+      "label": "Reject, and look for the project's official mint link"
+    },
+    {
+      "id": "block_report",
+      "label": "Reject and report the site"
+    }
+  ],
+  "best_action": "block_report",
+  "acceptable_actions": [
+    "verify"
+  ],
+  "outcomes": {
+    "block_report": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "BLOCKED",
+      "line": "Rejected and reported. The wallet now flags that site for everyone.",
+      "mirageSays": "One click away!"
+    },
+    "verify": {
+      "scene": "safe",
+      "mirage": "panic",
+      "stamp": "CHECKED",
+      "line": "The real project had no free mint at all. Rejecting saved everything.",
+      "mirageSays": "So close!"
+    },
+    "go_ahead": {
+      "scene": "drained",
+      "mirage": "smug",
+      "stamp": "DRAINED",
+      "line": "Days later, every ZLV quietly left the wallet. The approval let it happen.",
+      "mirageSays": "Unlimited means unlimited!"
+    }
+  },
+  "what_if": {
+    "go_ahead": "\"UNLIMITED\" plus an unknown spender was the moment to reject."
+  },
+  "golden_rule": "Read every wallet pop-up. Never approve \"unlimited\" spending for a site you don't fully trust.",
+  "quick_check": {
+    "q": "A free mint asks for UNLIMITED access to your coins. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Approve, it's free"
+      },
+      {
+        "id": "b",
+        "text": "Reject it"
+      },
+      {
+        "id": "c",
+        "text": "Approve and revoke later"
+      }
+    ],
+    "answer": "b",
+    "explain": "Drainers can act the moment you approve. \"Later\" may be too late."
+  },
+  "hints": {
+    "nudge": "Read the Amount line.",
+    "glow_order": [
+      "amount",
+      "spender",
+      "warning",
+      "site"
+    ]
+  },
+  "sources": [
+    "cafc-wallet",
+    "ftc-crypto",
+    "chainalysis-2025"
+  ],
+  "checked_on": "2026-10-13",
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the request",
+      "title": "What you would approve",
+      "rows": [
+        {
+          "k": "Amount",
+          "v": "UNLIMITED",
+          "clue": "amount"
+        },
+        {
+          "k": "Spender",
+          "v": "An unknown contract",
+          "clue": "spender"
+        },
+        {
+          "k": "Fee",
+          "v": "A tiny network fee",
+          "clue": "fee"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the site",
+      "title": "Where it came from",
+      "rows": [
+        {
+          "k": "Found in",
+          "v": "A group chat, not an official link",
+          "clue": "site"
+        },
+        {
+          "k": "The mint itself",
+          "v": "Costs nothing",
+          "clue": "free"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Check the wallet",
+      "title": "What your wallet says",
+      "rows": [
+        {
+          "k": "Wallet warning",
+          "v": "It is warning you",
+          "clue": "warning"
+        }
+      ]
+    }
+  ]
+}

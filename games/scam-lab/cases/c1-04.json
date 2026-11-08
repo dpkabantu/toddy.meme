@@ -1,382 +1,236 @@
 {
   "id": "c1-04",
-  "type": "duel",
+  "type": "hunt",
   "chapter": 1,
   "difficulty": 2,
-  "title": "The Verify Bot",
-  "disguise": "admin",
+  "title": "The Real Notice",
+  "disguise": null,
   "intro": [
-    "A bot just messaged you about the Fenmira Club group. This time you can talk back.",
-    "Pick your replies. Sniff its messages as they arrive.",
-    "Every chat ends with your choice. Choose wisely."
+    "An email from Zelvora. After tonight, you might be ready to call everything a scam.",
+    "But some messages are real. Mirage loves it when you stop trusting the honest ones.",
+    "Sniff carefully. Then decide."
   ],
   "notify": {
-    "app": "Chirp",
-    "from": "🛡️ Kelmo Bot",
-    "text": "Welcome to Fenmira Club! To stay in the group, verify your wallet…"
+    "app": "Mail",
+    "from": "Zelvora",
+    "text": "We're updating our app on Friday"
   },
   "screen": {
-    "app": "chirp",
+    "app": "mail",
     "head": {
-      "name": [
+      "from": [
+        "Zelvora"
+      ],
+      "addr": [
         {
-          "text": "🛡️ Kelmo Bot",
-          "id": "duel-name"
+          "clue": "noreply",
+          "text": "no-reply@zelvora.app"
         }
       ],
-      "sub": [
-        "@guardian_verify_bot"
+      "subject": [
+        {
+          "clue": "subject",
+          "text": "IMPORTANT: We're updating our app on Friday"
+        }
       ],
-      "avatar": {
-        "glyph": "🛡️",
-        "clue": "shield"
-      }
+      "time": [
+        "9:12 AM"
+      ]
     },
-    "banner": [
-      "Message request · from a member of Fenmira Club"
-    ],
-    "items": []
-  },
-  "duel": {
-    "start": "n1",
-    "nodes": {
-      "n1": {
-        "say": [
+    "items": [
+      {
+        "p": [
           {
-            "msg": [
-              {
-                "clue": "welcome",
-                "text": "Welcome to Fenmira Club! 🎉"
-              }
-            ]
-          },
-          {
-            "msg": [
-              "New members must verify their wallet ",
-              {
-                "clue": "deadline",
-                "text": "within",
-                "countdown": 600
-              },
-              " or be removed."
-            ]
-          },
-          {
-            "msg": [
-              "Start here: ",
-              {
-                "clue": "link",
-                "text": "helpdesk-verify.app",
-                "link": true
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "How do I verify?",
-            "next": "n2"
-          },
-          {
-            "text": "Who runs you? I'll check with the admins.",
-            "next": "n3"
-          },
-          {
-            "text": "Block and report this bot",
-            "end": "block_report"
+            "clue": "name",
+            "text": "Hi Toddy,"
           }
         ]
       },
-      "n2": {
-        "say": [
+      {
+        "p": [
+          "On Friday we're releasing Zelvora 4.2 with faster swaps. ",
           {
-            "msg": [
-              "Easy! Connect your wallet at the link, then ",
-              {
-                "clue": "phrase",
-                "text": "type your 12 words"
-              },
-              " so we know you're human 🤖✅"
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "OK, opening the link",
-            "end": "go_ahead"
+            "clue": "update",
+            "text": "Update from your phone's official app store when it appears."
           },
+          " There's nothing else you need to do."
+        ]
+      },
+      {
+        "p": [
           {
-            "text": "Why would a bot need my 12 words?",
-            "next": "n4"
-          },
-          {
-            "text": "Block and report this bot",
-            "end": "block_report"
+            "clue": "reminder",
+            "text": "Reminder: Zelvora staff will never message you first or ask for your recovery phrase."
           }
         ]
       },
-      "n3": {
-        "rename": "Luna (Admin)",
-        "say": [
-          {
-            "sys": [
-              {
-                "clue": "rename",
-                "text": "Kelmo Bot changed its name to \"Luna (Admin)\""
-              }
-            ]
-          },
-          {
-            "msg": [
-              "It's me, Luna! The bot is mine. ",
-              {
-                "clue": "rush",
-                "text": "No time to check, just verify 🙏"
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "OK, I don't want to be removed",
-            "end": "go_ahead"
-          },
-          {
-            "text": "Admins announce this in the group. I'll ask there.",
-            "end": "verify"
-          },
-          {
-            "text": "Block and report",
-            "end": "block_report"
-          }
+      {
+        "p": [
+          "The Zelvora team"
         ]
       },
-      "n4": {
-        "say": [
+      {
+        "foot": [
           {
-            "msg": [
-              "Totally safe, ",
-              {
-                "clue": "encrypted",
-                "text": "it's encrypted 🔒"
-              },
-              " ",
-              {
-                "clue": "everyone",
-                "text": "Everyone in the group already did it."
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Fine, here goes",
-            "end": "go_ahead"
-          },
-          {
-            "text": "I'll ask the admins in the group first",
-            "end": "verify"
-          },
-          {
-            "text": "Real checks never need my phrase. Block and report.",
-            "end": "block_report"
+            "clue": "unsub",
+            "text": "Unsubscribe · Privacy"
           }
         ]
       }
-    }
+    ]
   },
   "clues": {
-    "deadline": {
-      "label": "Removal deadline",
-      "strength": "strong",
-      "lens": "Verify in 10 minutes or be kicked out. That's pressure.",
-      "why": "Threats with a countdown are designed to stop you thinking."
-    },
-    "link": {
-      "label": "Strange verify link",
-      "strength": "strong",
-      "lens": "helpdesk-verify.app has nothing to do with Plenvo or Fenmira Club.",
-      "why": "Real groups don't make you verify on an outside website."
-    },
-    "phrase": {
-      "label": "Wants your 12 words",
-      "strength": "strong",
-      "lens": "\"Type your 12 words\" means your recovery phrase.",
-      "why": "No bot, admin or app ever needs your recovery phrase."
-    },
-    "rename": {
-      "label": "Changed its name",
-      "strength": "strong",
-      "lens": "The bot just renamed itself to look like an admin.",
-      "why": "A name can change in a second. Chameleons do it all the time."
-    },
-    "rush": {
-      "label": "No time to check",
-      "strength": "strong",
-      "lens": "\"No time to check\" is exactly when you should check.",
-      "why": "Scammers fear you checking, so they rush you."
-    },
-    "encrypted": {
-      "label": "Big safety words",
-      "strength": "strong",
-      "lens": "\"Encrypted\" and a padlock emoji, used to calm you down.",
-      "why": "Safety words and padlocks don't make something safe."
-    },
-    "everyone": {
-      "label": "Everyone did it",
-      "strength": "strong",
-      "lens": "Claims everyone else already did it.",
-      "why": "\"Everyone's doing it\" is social pressure, not proof."
-    },
-    "welcome": {
-      "label": "Warm welcome",
+    "noreply": {
+      "label": "no-reply address",
       "strength": "harmless",
-      "lens": "A cheerful welcome message.",
-      "why": "Real groups welcome people too. Friendly isn't proof either way."
+      "lens": "Sent from no-reply@zelvora.app, Zelvora's real domain.",
+      "why": "Companies often send from no-reply addresses. The domain is the official one."
     },
-    "shield": {
-      "label": "Shield picture",
+    "subject": {
+      "label": "IMPORTANT in caps",
       "strength": "harmless",
-      "lens": "A shield emoji as the profile picture.",
-      "why": "Any account can pick a shield picture. It proves nothing."
+      "lens": "Capital letters, but no deadline, no threat.",
+      "why": "Shouting alone isn't a scam sign. Threats and deadlines are."
+    },
+    "name": {
+      "label": "Uses your name",
+      "strength": "harmless",
+      "lens": "It greets you by name.",
+      "why": "Real companies know your name. (Scammers can too, so it proves nothing on its own.)"
+    },
+    "update": {
+      "label": "Asks you to update",
+      "strength": "harmless",
+      "lens": "It sends you to the official app store. No link to click.",
+      "why": "Pointing you to the official store, not a link, is what honest companies do."
+    },
+    "reminder": {
+      "label": "Safety reminder",
+      "strength": "harmless",
+      "lens": "It repeats the Golden Rule from your first case.",
+      "why": "Real companies warn you about scams."
+    },
+    "unsub": {
+      "label": "Unsubscribe link",
+      "strength": "harmless",
+      "lens": "Standard unsubscribe and privacy links.",
+      "why": "Normal in real newsletters."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Verify with the bot",
-      "trap": true
+      "label": "Update from the app store when it appears"
     },
     {
-      "id": "verify",
-      "label": "Ask the admins in the group"
+      "id": "ignore",
+      "label": "Ignore it"
     },
     {
       "id": "block_report",
-      "label": "Block and report the bot"
+      "label": "Report it as a scam"
     }
   ],
-  "best_action": "block_report",
+  "best_action": "go_ahead",
   "acceptable_actions": [
-    "verify"
+    "ignore"
   ],
-  "trap": {
-    "title": "Guardian Verify",
-    "url": "helpdesk-verify.app",
-    "ask": "Connect your wallet and type your 12 words to prove you're human.",
-    "go": "Verify me",
-    "back": "Close this page"
-  },
   "outcomes": {
-    "block_report": {
-      "scene": "safe",
-      "mirage": "panic",
-      "stamp": "BLOCKED",
-      "line": "Reported. Plenvo shut the bot down before it reached anyone else in the group.",
-      "mirageSays": "My beautiful bot!"
-    },
-    "verify": {
-      "scene": "safe",
-      "mirage": "panic",
-      "stamp": "CHECKED",
-      "line": "The admins posted: \"We have no verify bot. Report it!\" Twenty members did.",
-      "mirageSays": "Twenty reports?!"
-    },
     "go_ahead": {
-      "scene": "drained",
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "GENUINE",
+      "line": "Friday came, the update arrived in the app store, and swaps got faster. Nothing to fear.",
+      "toddy": "happy"
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "SAFE",
+      "line": "Nothing bad happened. It was a real notice, and the app updated itself on Friday.",
+      "toddy": "happy"
+    },
+    "block_report": {
+      "scene": "wolf",
       "mirage": "smug",
-      "stamp": "DRAINED",
-      "line": "The \"verification\" sent the wallet's coins straight to Mirage.",
-      "mirageSays": "Verified… as my next victim!"
+      "stamp": "FALSE ALARM",
+      "line": "That was the real Zelvora. When every message looks like a scam, the real warnings get lost too.",
+      "mirageSays": "If you trust nothing, I win anyway."
     }
   },
   "what_if": {
-    "go_ahead": "Asking \"why does a bot need my 12 words?\" was the way out. The honest answer is: it never does.",
-    "verify": "Asking was smart. Reporting the bot too gets it removed faster."
+    "block_report": "Nothing in it asked for money, codes, a phrase or a link. That calm is what real messages look like.",
+    "ignore": "Ignoring was safe. Recognising a real message is the skill: it asked for nothing secret."
   },
-  "golden_rule": "Real groups never make you verify your wallet on an outside link.",
+  "golden_rule": "Real messages ask for nothing secret and point you to the official app, not a link.",
   "quick_check": {
-    "q": "A group bot says you'll be removed unless you verify your wallet in 10 minutes. What's true?",
+    "q": "What showed this email was genuine?",
     "options": [
       {
         "id": "a",
-        "text": "Bots are official, so it's safe"
+        "text": "It said \"Hi Toddy\""
       },
       {
         "id": "b",
-        "text": "It's fine if the link has a padlock"
+        "text": "It asked for nothing and pointed to the official app store"
       },
       {
         "id": "c",
-        "text": "Real groups don't need your wallet or phrase to let you stay"
+        "text": "It arrived in the morning"
       },
       {
         "id": "d",
-        "text": "Verify quickly, then change your phrase"
+        "text": "It had an Unsubscribe link"
       }
     ],
-    "answer": "c",
-    "explain": "Being in a chat group has nothing to do with your wallet. That request alone tells you it's a trap."
+    "answer": "b",
+    "explain": "Names, times and footers can all be copied. Asking for nothing secret, and no link to click, is the real sign."
   },
   "hints": {
-    "nudge": "Ask yourself: why would a chat group need my wallet?",
-    "glow_order": [
-      "phrase",
-      "link",
-      "deadline",
-      "rename",
-      "rush",
-      "encrypted",
-      "everyone"
-    ]
+    "nudge": "What is this email actually asking you to do?",
+    "glow_order": []
   },
   "sources": [
-    "cafc-wallet",
-    "ftc-crypto"
+    "ftc-phishing"
   ],
   "checked_on": "2026-10-13",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the account",
-      "title": "Kelmo Bot",
+      "label": "Check sender",
+      "title": "Sender check",
       "rows": [
         {
-          "k": "Picture",
-          "v": "A shield emoji",
-          "clue": "shield"
+          "k": "Sent from",
+          "v": "no-reply@zelvora.app",
+          "clue": "noreply"
         },
         {
-          "k": "Real admins",
-          "v": "Never ask you to verify in a chat"
+          "k": "Official domain",
+          "v": "zelvora.app"
+        },
+        {
+          "k": "Match?",
+          "v": "Same domain, letter for letter"
         }
       ]
     },
     {
       "id": "link",
       "icon": "🔗",
-      "label": "Check the link",
-      "title": "Where \"verify\" goes",
+      "label": "Check links",
+      "title": "What the email asks you to click",
       "rows": [
         {
-          "k": "Address",
-          "v": "helpdesk-verify.app",
-          "clue": "link"
+          "k": "Update button",
+          "v": "None. It points to the app store",
+          "clue": "update"
         },
         {
-          "k": "Deadline",
-          "v": "10 minutes or be kicked out",
-          "clue": "deadline"
-        },
-        {
-          "k": "Welcome",
-          "v": "A cheerful one",
-          "clue": "welcome"
-        },
-        {
-          "k": "Its site",
-          "v": "Nothing to do with Plenvo or Fenmira Club"
+          "k": "Footer links",
+          "v": "Unsubscribe and privacy, standard",
+          "clue": "unsub"
         }
       ]
     },
@@ -384,21 +238,16 @@
       "id": "source",
       "icon": "📖",
       "label": "Official page",
-      "title": "What the club says",
+      "title": "Zelvora's real news page says",
       "rows": [
         {
-          "k": "\"Type your 12 words\"",
-          "v": "Means your recovery phrase",
-          "clue": "phrase"
+          "k": "Friday app update",
+          "v": "Announced there too"
         },
         {
-          "k": "Big safety words",
-          "v": "\"Encrypted\" and a padlock emoji",
-          "clue": "encrypted"
-        },
-        {
-          "k": "Real verification",
-          "v": "Happens inside the app, never with your phrase"
+          "k": "Safety reminder",
+          "v": "Same wording as this email",
+          "clue": "reminder"
         }
       ]
     }
