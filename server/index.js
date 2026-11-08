@@ -4,6 +4,7 @@ import { json, cookie, parseCookies, sign, unsign, randomToken, sha256, safeRetu
 import { startParams, exchange } from './google.js';
 import { cleanNickname } from './nickname.js';
 
+const GAMES = ['moon-brew', 'full-moon', 'scam-lab'], MAX_PROGRESS = 65536;
 const SESSION_DAYS = 30, OAUTH_MINUTES = 10, AVATARS = 8;
 const now = () => Math.floor(Date.now() / 1000);
 
@@ -17,8 +18,11 @@ export default {
       if (path === '/api/auth/google/callback' && request.method === 'GET') return callback(request, env, url);
       if (path === '/api/me' && request.method === 'GET') return me(request, env);
       // everything below changes data: must come from our own pages
-      if (request.method !== 'POST') return json({ error: 'Not found' }, 404);
+      const gm = path.match(/^\/api\/progress\/([a-z-]+)$/);
+      if (gm && request.method === 'GET') return getProgress(request, env, gm[1]);
+      if (request.method !== 'POST' && !(gm && request.method === 'PUT')) return json({ error: 'Not found' }, 404);
       if (request.headers.get('Origin') !== url.origin) return json({ error: 'Blocked' }, 403);
+      if (gm) return putProgress(request, env, gm[1]);
       if (path === '/api/logout') return logout(request, env);
       if (path === '/api/me/profile') return profile(request, env);
       if (path === '/api/me/delete') return deleteMe(request, env);
@@ -108,9 +112,31 @@ async function deleteMe(request, env) {
   const p = await playerFrom(request, env);
   if (!p) return json({ error: 'Sign in first.' }, 401);
   await env.DB.batch([
+    env.DB.prepare('DELETE FROM progress WHERE player_id = ?').bind(p.id),
     env.DB.prepare('DELETE FROM sessions WHERE player_id = ?').bind(p.id),
     env.DB.prepare('DELETE FROM anon_links WHERE player_id = ?').bind(p.id),
     env.DB.prepare('DELETE FROM players WHERE id = ?').bind(p.id),
   ]);
   return json({ ok: true }, 200, { 'Set-Cookie': cookie('toddy_session', '', { maxAge: 0 }) });
+}
+
+// Saved progress: the game merges what is on the device with what is here, then saves the result. Last save wins.
+async function getProgress(request, env, game) {
+  const p = await playerFrom(request, env);
+  if (!p) return json({ error: 'Sign in first.' }, 401);
+  if (!GAMES.includes(game)) return json({ error: 'Unknown game.' }, 404);
+  const row = await env.DB.prepare('SELECT data, updated_at FROM progress WHERE player_id = ? AND game = ?').bind(p.id, game).first();
+  return json(row ? { data: JSON.parse(row.data), updatedAt: row.updated_at } : { data: null });
+}
+async function putProgress(request, env, game) {
+  const p = await playerFrom(request, env);
+  if (!p) return json({ error: 'Sign in first.' }, 401);
+  if (!GAMES.includes(game)) return json({ error: 'Unknown game.' }, 404);
+  const text = await request.text();
+  if (text.length > MAX_PROGRESS) return json({ error: 'Too big.' }, 413);
+  let body; try { body = JSON.parse(text); } catch { return json({ error: 'Bad request.' }, 400); }
+  if (!body || typeof body.data !== 'object' || body.data === null || Array.isArray(body.data)) return json({ error: 'Bad request.' }, 400);
+  await env.DB.prepare('INSERT INTO progress (player_id, game, data, updated_at) VALUES (?,?,?,?) ON CONFLICT(player_id, game) DO UPDATE SET data = excluded.data, updated_at = excluded.updated_at')
+    .bind(p.id, game, JSON.stringify(body.data), now()).run();
+  return json({ ok: true });
 }
