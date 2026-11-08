@@ -3,8 +3,9 @@ import { DX, DY, MAX_BUMPS, generate, newGame, beanAt, frozen, unitOf, traceBean
 import { TRAYS } from './trays.js';
 import { INTROS, TRAYS_PER_NIGHT, trayLevelConfig, dailyConfig, dailyNumber, endlessConfig, ENDLESS_LINES, nightInfo, VISITORS, VISITOR_ORDER, TIER_NAMES, trayTier, tierOf } from './levels.js';
 import { buildPostcard } from './postcard.js';
+import { toSynced, merge as mergeProgress, differs } from './sync.js';
 
-const BUILD = '1.0.0-rc16';
+const BUILD = '1.0.0-rc17';
 const ASSET = 'assets/';
 const $ = (id) => document.getElementById(id);
 const systemCalm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -26,7 +27,7 @@ function calm() { return !!(save && save.calm) || systemCalm.matches; }
 const SAVE_KEY = 'toddy.moonbrew.v1';
 const save = Object.assign({ stars: {}, daily: {}, endlessBest: 0, postcards: [], intros: {}, sound: true, music: true, unlockAll: false, calm: false, bigText: false, stats: true }, readSave());
 function readSave() { try { return JSON.parse(localStorage.getItem(SAVE_KEY) || '{}'); } catch (e) { return {}; } }
-function writeSave() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* storage blocked: play still works */ } }
+function writeSave() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* storage blocked: play still works */ } schedulePush(); }
 const trayKey = (n, t) => `n${n + 1}-${t}`;
 
 // ---------------- Anonymous play stats ----------------
@@ -1260,11 +1261,12 @@ function openSettings() {
   const row = (id, label, sub, on) => `<label class="setting"><span><b>${label}</b><small>${sub}</small></span><input type="checkbox" id="${id}" ${on ? 'checked' : ''}></label>`;
   modal(`<h3>Settings</h3>
     <div class="settings">
+      <div class="setting account" id="acct" hidden></div>
       ${row('set-sound', 'Sound', 'Turns all sound on or off', save.sound)}
       ${row('set-music', 'Music', 'Quiet café music while you play', save.music)}
       ${row('set-calm', 'Calmer motion', 'Fewer animations', save.calm)}
       ${row('set-big', 'Bigger text', 'Larger words in the game', save.bigText)}
-      ${row('set-stats', 'Share anonymous play stats', 'Helps us see which trays are too hard. No name, no account.', save.stats)}
+      ${row('set-stats', 'Share anonymous play stats', 'Helps us see which trays are too hard. Never linked to your name or account.', save.stats)}
     </div>
     <div class="btns"><button class="btn primary" id="set-done" type="button">Done</button></div>`);
   $('set-sound').addEventListener('change', e => setSound(e.target.checked));
@@ -1273,6 +1275,66 @@ function openSettings() {
   $('set-big').addEventListener('change', e => { save.bigText = e.target.checked; writeSave(); applySettings(); });
   $('set-stats').addEventListener('change', e => { save.stats = e.target.checked; writeSave(); });
   bind('set-done', closeModal);
+  renderAccount();
+}
+// ---------------- Account (optional Google sign-in) ----------------
+// Guests play exactly as before. Signed-in players keep stars, scores and Daily days on every device. Only the three
+// merge rules in sync.js touch the save; settings and run logs never leave the device.
+const GAME_ID = 'moon-brew';
+const acc = () => window.ToddyAccount || null;
+let pushTimer = 0, accountMe = null;
+function schedulePush() {
+  if (!acc() || !accountMe || !accountMe.signedIn) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(() => acc().push(GAME_ID, toSynced(save)), 4000);
+}
+async function syncNow() {
+  const A = acc(); if (!A) return;
+  accountMe = await A.me(true);
+  if (!accountMe.signedIn) return;
+  const remote = await A.pull(GAME_ID);
+  if (remote === undefined) return; // account unreachable: keep playing locally
+  const merged = mergeProgress(toSynced(save), remote);
+  Object.assign(save, { stars: merged.stars, endlessBest: merged.endlessBest, postcards: merged.postcards, intros: merged.intros });
+  for (const [k, v] of Object.entries(merged.daily)) if (!save.daily[k]) save.daily[k] = v;
+  try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* ignore */ }
+  if (remote === null || differs(merged, remote)) await A.push(GAME_ID, toSynced(save));
+  if (current === 'title') renderTitle(); else if (current === 'map') renderMap();
+}
+function el(tag, props, ...kids) { const e = document.createElement(tag); Object.assign(e, props || {}); for (const k of kids) e.append(k); return e; }
+async function renderAccount() {
+  const box = $('acct'), A = acc(); if (!box || !A) return;
+  const me = await A.me(true); accountMe = me;
+  if (me.unavailable) return; // accounts not switched on: the section stays hidden
+  box.hidden = false; box.textContent = '';
+  const say2 = el('small', { id: 'acct-msg', role: 'status' });
+  if (!me.signedIn) {
+    const go = el('a', { className: 'btn primary', href: A.signInUrl(GAME_ID), textContent: 'Continue with Google' });
+    box.append(el('span', {}, el('b', { textContent: 'Keep your progress' }), el('small', { textContent: 'Optional. Saves your stars and streak on every device. We store your email, name and a nickname you choose.' }), el('small', {}, el('a', { href: PRIVACY_URL, target: '_blank', rel: 'noopener noreferrer', textContent: 'What we store' }))), go);
+    return;
+  }
+  const nick = el('input', { id: 'acct-nick', type: 'text', maxLength: 16, value: me.nickname || '', placeholder: 'Pick a nickname', autocomplete: 'off' });
+  const save1 = el('button', { className: 'btn ghost', type: 'button', textContent: 'Save' });
+  save1.addEventListener('click', async () => { const r = await A.setProfile({ nickname: nick.value }); say2.textContent = r.ok ? 'Saved.' : (r.error || 'Could not save.'); if (r.ok) accountMe = await A.me(true); });
+  const boards = el('input', { type: 'checkbox', checked: me.showOnBoards });
+  boards.addEventListener('change', () => A.setProfile({ showOnBoards: boards.checked }));
+  const out = el('button', { className: 'btn ghost', type: 'button', textContent: 'Sign out' });
+  out.addEventListener('click', async () => { await A.signOut(); accountMe = null; renderAccount(); });
+  const del = el('button', { className: 'btn ghost', type: 'button', textContent: 'Delete my data' });
+  del.addEventListener('click', async () => {
+    if (del.dataset.sure !== '1') { del.dataset.sure = '1'; del.textContent = 'Tap again to delete everything'; return; }
+    await A.deleteAccount(); accountMe = null; renderAccount();
+  });
+  box.append(el('span', {}, el('b', { textContent: me.needsNickname ? 'Welcome! Pick a nickname' : 'Signed in' }), el('small', { textContent: 'Other players only ever see your nickname.' }), nick, save1,
+    el('label', { className: 'acct-row' }, boards, el('small', { textContent: 'Show me on leaderboards' })), say2, out, del));
+}
+async function initAccount() {
+  const A = acc(); if (!A) return;
+  const m = /^\?signin=(ok|cancelled|failed|expired)$/.exec(location.search);
+  if (m) history.replaceState(null, '', location.pathname);
+  await syncNow();
+  if (m && m[1] === 'ok') openSettings();
+  else if (m) modal(`<h3>Sign-in did not finish</h3><p>${m[1] === 'cancelled' ? 'No problem. You can keep playing as a guest.' : 'Please try again from Settings. You can keep playing as a guest.'}</p><div class="btns"><button class="btn primary" id="acct-ok" type="button">OK</button></div>`), bind('acct-ok', closeModal);
 }
 function modal(html) { $('modal-card').innerHTML = html; $('modal').hidden = false; const b = $('modal-card').querySelector('button'); if (b) b.focus(); }
 function closeModal() { $('modal').hidden = true; }
@@ -1493,6 +1555,7 @@ toddy.cv.addEventListener('animationend', (e) => { if (e.animationName === 'hop'
 
 applySettings(); // (sound itself wakes on the first tap)
 show('title');
+initAccount();
 // Test-site shortcut: .../moon-brew/?tray=6-3 opens Night 6, tray 3 at once. Works only on the Cloudflare preview and on localhost, never on toddy.meme.
 {
   const m = /^\?tray=(\d{1,3})-(\d{1,2})$/.exec(location.search), h = location.hostname;

@@ -4,7 +4,7 @@ What this is: a small service on `toddy.meme/api/*`. It lets players sign in wit
 It stores: an internal player id, Google's anonymous id, email, name (owner-only), nickname, avatar, a "hide me from leaderboards" switch, and when they agreed.
 It never handles passwords, wallets or tokens. Guests keep playing exactly as before.
 
-Step 1 (this change) = sign-in, session, profile, delete. Scores and progress sync come in step 2 (Moon Brew first).
+Step 1 = sign-in, session, profile, delete. Step 2 (this branch) adds saved progress per game (`/api/progress/<game>`) and the Account section in Moon Brew's Settings. Leaderboards come next.
 
 ## What I (Claude) built and tested
 - `server/` code and `migrations/0001_accounts.sql`; `node --test tests/accounts.test.mjs` runs 10 checks on the real SQL (in-memory SQLite) with a faked Google reply.
@@ -29,7 +29,7 @@ Step 1 (this change) = sign-in, session, profile, delete. Scores and progress sy
 
 ### B. Make the database in Cloudflare
 1. https://dash.cloudflare.com > **Storage & databases** > **D1 SQL database** > **Create database**. Name `toddy-accounts`. Location: Western Europe (EU). **Create**.
-2. Open it > **Console** tab. Open `migrations/0001_accounts.sql` from this repo (GitHub: click the file > **Raw**), copy everything, paste into the console, click **Execute**. It should list three tables.
+2. Open it > **Console** tab. Open `migrations/0001_accounts.sql` from this repo (GitHub: click the file > **Raw**), copy everything, paste into the console, click **Execute**. Then do the same with `migrations/0002_progress.sql`. Together they create four tables.
 3. Copy the **Database ID** (on the database's overview page; it is not a secret). Send it to me and I switch the database on in `wrangler.jsonc`.
 
 ### C. Secrets (Cloudflare dashboard, never in GitHub)
@@ -46,7 +46,7 @@ Open `https://<test link>/api/health`. It should say `{"ok":true,"accounts":true
 `privacy.html` section 5 still says "progress saved in the browser, stats off". Before launch it must be updated to list what accounts store, why, how to delete, and that email is used only for sign-in and account contact. I will draft the text for your approval in step 6.
 
 ## Routes
-GET `/api/health` · GET `/api/auth/google/start?anon=<guest id>&return=/games/<game>/` · GET `/api/auth/google/callback` · GET `/api/me` · POST `/api/me/profile` {nickname, avatar, showOnBoards} · POST `/api/logout` · POST `/api/me/delete`.
+GET `/api/health` · GET `/api/auth/google/start?anon=<guest id>&return=/games/<game>/` · GET `/api/auth/google/callback` · GET `/api/me` · POST `/api/me/profile` {nickname, avatar, showOnBoards} · GET/PUT `/api/progress/<moon-brew|full-moon|scam-lab>` · POST `/api/logout` · POST `/api/me/delete`.
 All POSTs must come from our own pages (Origin check). The session cookie is HttpOnly, Secure, SameSite=Lax, and only a hash of it is stored.
 
 ## Known gaps / decisions

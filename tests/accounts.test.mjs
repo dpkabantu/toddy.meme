@@ -11,7 +11,7 @@ import { safeReturn, sign, unsign } from '../server/util.js';
 
 function makeDB() {
   const db = new DatabaseSync(':memory:');
-  db.exec('PRAGMA foreign_keys = ON;'); db.exec(fs.readFileSync(new URL('../migrations/0001_accounts.sql', import.meta.url), 'utf8'));
+  db.exec('PRAGMA foreign_keys = ON;'); for (const f of ['0001_accounts', '0002_progress']) db.exec(fs.readFileSync(new URL(`../migrations/${f}.sql`, import.meta.url), 'utf8'));
   const stmt = (sql, args = []) => ({
     bind: (...a) => stmt(sql, a),
     first: async () => db.prepare(sql).get(...args) || null,
@@ -23,7 +23,7 @@ function makeDB() {
 const ENV = () => ({ DB: makeDB(), GOOGLE_CLIENT_ID: 'cid.apps.googleusercontent.com', GOOGLE_CLIENT_SECRET: 'sec', SESSION_SECRET: 'x'.repeat(40) });
 const ORIGIN = 'https://toddy.meme';
 const get = (env, path, cookie) => worker.fetch(new Request(ORIGIN + path, { headers: cookie ? { Cookie: cookie } : {} }), env);
-const post = (env, path, body, cookie, origin = ORIGIN) => worker.fetch(new Request(ORIGIN + path, { method: 'POST', headers: { Origin: origin, 'Content-Type': 'application/json', ...(cookie ? { Cookie: cookie } : {}) }, body: JSON.stringify(body || {}) }), env);
+const post = (env, path, body, cookie, origin = ORIGIN, method = 'POST') => worker.fetch(new Request(ORIGIN + path, { method, headers: { Origin: origin, 'Content-Type': 'application/json', ...(cookie ? { Cookie: cookie } : {}) }, body: JSON.stringify(body || {}) }), env);
 const cookieOf = (res, name) => { for (const c of res.headers.getSetCookie()) if (c.startsWith(name + '=')) return c.split(';')[0]; return null; };
 const idToken = (claims) => 'h.' + Buffer.from(JSON.stringify(claims)).toString('base64url') + '.s';
 function fakeGoogle(claims) {
@@ -115,7 +115,7 @@ test('logout ends the session; delete removes the player, sessions and guest lin
   await post(env, '/api/logout', {}, session); assert.equal((await (await get(env, '/api/me', session)).json()).signedIn, false);
   const again = await signIn(env);
   assert.equal((await post(env, '/api/me/delete', {}, again.session)).status, 200);
-  for (const t of ['players', 'sessions', 'anon_links']) assert.equal(env.DB.raw.prepare(`SELECT COUNT(*) n FROM ${t}`).get().n, 0, t);
+  for (const t of ['players', 'sessions', 'anon_links', 'progress']) assert.equal(env.DB.raw.prepare(`SELECT COUNT(*) n FROM ${t}`).get().n, 0, t);
   assert.equal((await (await get(env, '/api/me', again.session)).json()).signedIn, false);
 });
 
@@ -126,3 +126,25 @@ test('an expired session is not accepted', async () => {
 });
 
 test('claims check', () => { assert.equal(checkClaims(GOOD, { GOOGLE_CLIENT_ID: GOOD.aud }), null); });
+
+test('progress: needs sign-in, own pages only, known games, size limit; save and load; delete removes it', async () => {
+  const env = ENV(); const { session } = await signIn(env);
+  const put = (game, data, c = session, o = ORIGIN) => post(env, '/api/progress/' + game, { data }, c, o, 'PUT');
+  assert.equal((await get(env, '/api/progress/moon-brew')).status, 401);
+  assert.equal((await put('moon-brew', { stars: {} }, null)).status, 401);
+  assert.equal((await put('moon-brew', { stars: {} }, session, 'https://evil.example')).status, 403);
+  assert.equal((await put('not-a-game', {})).status, 404);
+  assert.equal((await put('moon-brew', [1])).status, 400);
+  assert.equal((await put('moon-brew', { blob: 'x'.repeat(70000) })).status, 413);
+  assert.deepEqual(await (await get(env, '/api/progress/moon-brew', session)).json(), { data: null });
+  assert.equal((await put('moon-brew', { stars: { '1-1': 3 }, endlessBest: 460 })).status, 200);
+  assert.equal((await put('moon-brew', { stars: { '1-1': 3, '1-2': 2 } })).status, 200);
+  const got = await (await get(env, '/api/progress/moon-brew', session)).json();
+  assert.deepEqual(got.data, { stars: { '1-1': 3, '1-2': 2 } });
+  await put('scam-lab', { best: 12 });
+  assert.equal(env.DB.raw.prepare('SELECT COUNT(*) n FROM progress').get().n, 2);
+  const other = await signIn(env, { ...GOOD, sub: 'g-9', email: 'z@example.eu' }, 'c'.repeat(20));
+  assert.deepEqual(await (await get(env, '/api/progress/moon-brew', other.session)).json(), { data: null }, 'players never see each other');
+  assert.equal((await post(env, '/api/me/delete', {}, session)).status, 200);
+  assert.equal(env.DB.raw.prepare('SELECT COUNT(*) n FROM progress').get().n, 0);
+});
