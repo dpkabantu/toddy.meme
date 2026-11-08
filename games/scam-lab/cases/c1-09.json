@@ -3,17 +3,17 @@
   "type": "hunt",
   "chapter": 1,
   "difficulty": 2,
-  "title": "The Real Alert",
+  "title": "The New Device Alert",
   "disguise": null,
   "intro": [
-    "A text from your bank. After today, you might be ready to call everything a scam.",
-    "But some messages are real. Mirage loves it when you stop trusting the honest ones.",
+    "After tonight, every message might look like a scam. Mirage hopes so.",
+    "This text came right after you logged in to Zelvora on your new tablet.",
     "Sniff carefully. Then decide."
   ],
   "notify": {
     "app": "Messages",
-    "from": "Orrin Bank",
-    "text": "We paused a card payment of £212.00…"
+    "from": "Zelvora",
+    "text": "New device signed in. Was this you?"
   },
   "screen": {
     "app": "sms",
@@ -21,88 +21,93 @@
       "name": [
         {
           "clue": "sender",
-          "text": "Orrin Bank"
+          "text": "Zelvora"
         }
       ]
     },
-    "context": "You did not make this payment.",
+    "context": "You signed in to Zelvora on a new tablet two minutes ago.",
     "items": [
       {
         "time": [
-          "Today 1:22 PM"
-        ]
-      },
-      {
-        "msg": [
-          "Orrin Bank: we ",
           {
-            "clue": "paused",
-            "text": "paused a card payment of £212.00 at Gadgetz Direct"
-          },
-          "."
+            "clue": "time",
+            "text": "Today 6:42 PM"
+          }
         ]
       },
       {
         "msg": [
-          "If this was not you, ",
+          {
+            "clue": "says",
+            "text": "Zelvora: a new device signed in to your account."
+          },
+          " ",
+          {
+            "clue": "ask",
+            "text": "Was this you? If so, nothing to do."
+          }
+        ]
+      },
+      {
+        "msg": [
           {
             "clue": "app",
-            "text": "open the Orrin app to review it"
-          },
-          ", or ",
-          {
-            "clue": "call",
-            "text": "call the number on your statement"
-          },
-          "."
+            "text": "If it wasn't you, open the Zelvora app and use Account > Security to lock your account."
+          }
         ]
       },
       {
         "msg": [
           {
             "clue": "never",
-            "text": "We will never ask for your PIN, password or codes."
+            "text": "We will never ask for your password, codes or recovery phrase."
           }
         ]
       }
     ]
   },
   "clues": {
-    "paused": {
-      "label": "Names the payment",
+    "says": {
+      "label": "Matches what you just did",
       "strength": "harmless",
-      "lens": "It names the shop and the amount, and says the payment was paused, not made.",
-      "why": "Specific facts fit a real alert. Scammers can guess some, so you still check through the app."
+      "lens": "It mentions a new device, and you really did just sign in on one.",
+      "why": "A message that matches something you just did is a good sign. Still never click through it."
+    },
+    "ask": {
+      "label": "\"Was this you?\" with nothing to do",
+      "strength": "harmless",
+      "lens": "If it was you, it asks for nothing.",
+      "why": "Honest alerts do not demand anything from you."
     },
     "app": {
-      "label": "Open the app yourself",
+      "label": "Sends you to the app",
       "strength": "harmless",
-      "lens": "It sends you to the app you already have.",
-      "why": "Pointing you to the app, not to a link, is what honest banks do."
-    },
-    "call": {
-      "label": "Number on your statement",
-      "strength": "harmless",
-      "lens": "It tells you to call the number on your statement.",
-      "why": "Using a number you already trust avoids fake numbers."
+      "lens": "You are told to open the app yourself.",
+      "why": "This is how real platforms tell you to check: through the app you already trust."
     },
     "never": {
-      "label": "Safety reminder",
+      "label": "Warns about scams",
       "strength": "harmless",
-      "lens": "It repeats that the bank never asks for your PIN or codes.",
-      "why": "Real banks warn you about scams."
+      "lens": "The text says staff never ask for passwords, codes or your phrase.",
+      "why": "Real companies warn you about scams."
     },
     "sender": {
       "label": "Sender name",
       "strength": "harmless",
-      "lens": "The sender says Orrin Bank.",
-      "why": "A name alone proves nothing. What the message asks you to do is the real clue: nothing secret, no link."
+      "lens": "The sender shows Zelvora, in the same thread as your earlier codes.",
+      "why": "A name alone proves little, but here the thread and the timing agree."
+    },
+    "time": {
+      "label": "Sent right after you signed in",
+      "strength": "harmless",
+      "lens": "It arrived two minutes after your sign-in.",
+      "why": "Timing that fits your own actions is reassuring."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Open the Orrin app myself and review the payment"
+      "label": "It was me. Nothing to do"
     },
     {
       "id": "ignore",
@@ -114,67 +119,68 @@
     }
   ],
   "best_action": "go_ahead",
-  "acceptable_actions": [],
+  "acceptable_actions": [
+    "ignore"
+  ],
   "outcomes": {
     "go_ahead": {
       "scene": "safe",
       "mirage": null,
       "stamp": "GENUINE",
-      "line": "The app showed a payment you did not make, already paused. One tap to confirm it was fraud, and the bank sent a new card.",
+      "line": "It was you, and the alert asked for nothing. You stayed calm and did the right thing: nothing.",
       "toddy": "happy"
-    },
-    "ignore": {
-      "scene": "safe",
-      "mirage": "smug",
-      "stamp": "SAFE",
-      "line": "Nothing bad happened this time. But a real alert deserves a look in your own app.",
-      "mirageSays": "Fine. Next!"
     },
     "block_report": {
       "scene": "wolf",
       "mirage": "smug",
       "stamp": "FALSE ALARM",
-      "line": "That was a real alert. When every message looks like a scam, the real warnings get lost too.",
+      "line": "That was the real alert. When every message looks like a scam, you may miss the day a real one matters.",
       "mirageSays": "If you trust nothing, I win anyway."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": null,
+      "stamp": "SAFE",
+      "line": "Nothing bad happened. It was a real alert about your own sign-in.",
+      "toddy": "happy"
     }
   },
   "what_if": {
-    "block_report": "Nothing in it asked for money, codes, a PIN or a link. That calm is what real messages look like.",
-    "ignore": "Opening your own app is safe, and it tells you whether the payment really was yours."
+    "block_report": "It matched what you had just done, asked for nothing and sent you to the app. Those are honest signs.",
+    "ignore": "Ignoring it was fine because you knew it was you. Had it been a surprise, the app would be the place to check."
   },
-  "golden_rule": "Real alerts ask for nothing secret and send you to your own app. Check there, never through the text.",
+  "golden_rule": "Not every alert is a scam. An honest one fits what you did, asks for nothing, and points you to your own app.",
   "quick_check": {
-    "q": "What showed this bank text was genuine?",
+    "q": "Right after you sign in on a new device, a text says \"New device signed in. Was this you?\" It has no link and asks for nothing. What is it most likely?",
     "options": [
       {
         "id": "a",
-        "text": "It named the bank"
+        "text": "A scam, all alerts are scams"
       },
       {
         "id": "b",
-        "text": "It asked for nothing secret and sent you to your own app or the number on your statement"
+        "text": "A genuine security alert"
       },
       {
         "id": "c",
-        "text": "It arrived in the afternoon"
+        "text": "A hacker testing your number"
       },
       {
         "id": "d",
-        "text": "It had a capital letter at the start"
+        "text": "A reason to share your code"
       }
     ],
     "answer": "b",
-    "explain": "Names, times and logos can all be copied. Asking for nothing secret, and no link, is the real sign."
+    "explain": "It matches your action, has no link and asks for nothing. Honest alerts look calm like this."
   },
   "hints": {
-    "nudge": "What is this text actually asking you to do?",
-    "glow_order": []
+    "nudge": "Does it ask you to click, hurry or share anything?",
+    "glow_order": [
+      "ask",
+      "app",
+      "never"
+    ]
   },
-  "sources": [
-    "ftc-bank-call",
-    "ftc-codes"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
@@ -183,37 +189,61 @@
       "title": "Who sent this text",
       "rows": [
         {
-          "k": "Sent from",
-          "v": "Orrin Bank",
+          "k": "Thread",
+          "v": "Same thread as your login codes",
           "clue": "sender"
         },
         {
-          "k": "Same thread as your past bank texts",
-          "v": "Yes"
+          "k": "Your last action",
+          "v": "Signed in on a new tablet 2 minutes ago",
+          "clue": "time"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check links",
+      "title": "What the text asks you to click",
+      "rows": [
+        {
+          "k": "Links in the text",
+          "v": "None"
         },
         {
           "k": "Asks for",
-          "v": "Nothing"
+          "v": "Nothing",
+          "clue": "ask"
+        },
+        {
+          "k": "Tells you to",
+          "v": "Open the app yourself",
+          "clue": "app"
         }
       ]
     },
     {
       "id": "source",
       "icon": "📖",
-      "label": "Official advice",
-      "title": "What the bank says",
+      "label": "Official page",
+      "title": "What Zelvora says",
       "rows": [
         {
-          "k": "Does the bank ask for your PIN or codes?",
-          "v": "Never",
-          "clue": "never"
+          "k": "New-device alerts",
+          "v": "Sent after a new sign-in, with no link",
+          "clue": "says"
         },
         {
-          "k": "How to check",
-          "v": "Open the app or call the number on your statement",
-          "clue": "call"
+          "k": "Staff will never ask for",
+          "v": "Passwords, codes or the recovery phrase",
+          "clue": "never"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-phishing",
+    "ftc-codes"
+  ],
+  "checked_on": "2026-11-08"
 }

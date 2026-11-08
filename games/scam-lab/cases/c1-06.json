@@ -3,41 +3,41 @@
   "type": "hunt",
   "chapter": 1,
   "difficulty": 2,
-  "title": "Account Locked",
+  "title": "Withdrawals Paused",
   "disguise": "support",
   "intro": [
-    "An email just landed. Your bank, it says, has locked your account.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "An email lands in your inbox: your Zelvora account \"needs attention\".",
+    "Fake security emails are one of the most common ways crypto accounts are emptied.",
+    "Sniff the details, then decide."
   ],
   "notify": {
     "app": "Mail",
-    "from": "Orrin Bank Security",
-    "text": "Your account has been LOCKED. Act now."
+    "from": "Zelvora Security",
+    "text": "Withdrawals paused on your account…"
   },
   "screen": {
     "app": "mail",
     "head": {
       "from": [
         {
-          "clue": "from",
-          "text": "Orrin Bank Security"
+          "clue": "sender",
+          "text": "Zelvora Security"
         }
       ],
       "addr": [
         {
           "clue": "addr",
-          "text": "security@orrin-bank-help.com"
+          "text": "security@zelvora-verify.co"
         }
       ],
       "subject": [
         {
           "clue": "subject",
-          "text": "Your account has been LOCKED - act now"
+          "text": "ACTION REQUIRED: withdrawals paused"
         }
       ],
       "time": [
-        "8:03 AM"
+        "7:03 AM"
       ]
     },
     "items": [
@@ -45,108 +45,117 @@
         "p": [
           {
             "clue": "greet",
-            "text": "Dear Customer,"
+            "text": "Dear user,"
           }
         ]
       },
       {
         "p": [
-          "We noticed an unusual sign-in. ",
+          "We detected ",
           {
-            "clue": "deadline",
-            "text": "Restore access within 2 hours"
+            "clue": "vague",
+            "text": "unusual activity"
           },
-          " or your account will be permanently closed."
+          " and have paused all withdrawals."
         ]
       },
       {
         "p": [
+          "To restore access, confirm your identity here: ",
           {
             "clue": "link",
-            "text": "Restore my account",
+            "text": "zelvora-verify.co/restore",
             "link": true
           }
         ]
       },
       {
         "p": [
-          "You will need your ",
+          "You must sign in with your password and ",
           {
-            "clue": "login",
-            "text": "online banking login and card PIN"
+            "clue": "code",
+            "text": "your 2-step code"
           },
-          " to confirm it is you."
-        ]
-      },
-      {
-        "p": [
+          " within ",
           {
-            "clue": "nocall",
-            "text": "Do not contact your branch. This process is automatic."
-          }
+            "clue": "timer",
+            "text": "24 hours",
+            "countdown": 900
+          },
+          " or your funds will be frozen."
         ]
       },
       {
         "foot": [
-          "Orrin Bank Security Team"
+          {
+            "clue": "foot",
+            "text": "Zelvora Security Team · Do not reply"
+          }
         ]
       }
-    ]
+    ],
+    "context": "You have not changed anything on your Zelvora account this week."
   },
   "clues": {
     "addr": {
-      "label": "Not the bank's domain",
+      "label": "Look-alike address",
       "strength": "strong",
-      "lens": "The email comes from orrin-bank-help.com. The bank's real address ends in orrin.app.",
-      "why": "Look-alike sender addresses add extra words. Check the part after the @, letter by letter."
-    },
-    "deadline": {
-      "label": "Deadline and threat",
-      "strength": "strong",
-      "lens": "Two hours, or the account is closed for good.",
-      "why": "A hard deadline is built to stop you thinking. Real banks do not work this way."
+      "lens": "The email comes from zelvora-verify.co, not from zelvora.app.",
+      "why": "Companies write from their own domain. A different ending is a fake."
     },
     "link": {
-      "label": "Look-alike link",
+      "label": "Sign-in link in an email",
       "strength": "strong",
-      "lens": "The button really goes to orrin-bank-help.com/restore.",
-      "why": "Never log in through a link in an email. Type the bank's address or use its app."
+      "lens": "The button leads to zelvora-verify.co, a copy of the login page.",
+      "why": "Never log in through an email link. Open the app yourself."
     },
-    "login": {
-      "label": "Asks for login and PIN",
+    "code": {
+      "label": "Asks for your 2-step code",
       "strength": "strong",
-      "lens": "The page wants your login and your card PIN.",
-      "why": "No real bank asks for your PIN. Anyone who does is a scammer."
+      "lens": "The page wants your password AND the code from your authenticator.",
+      "why": "With both, the thief logs in as you at once. No real company asks for the code."
     },
-    "nocall": {
-      "label": "\"Do not contact your branch\"",
+    "timer": {
+      "label": "Funds will be frozen",
       "strength": "strong",
-      "lens": "The email tells you not to check with your branch.",
-      "why": "Scammers block your way to a check. A real bank is happy for you to check."
+      "lens": "A deadline and a threat to your money.",
+      "why": "Pressure stops you from checking. Real platforms do not freeze funds over an unanswered email."
+    },
+    "vague": {
+      "label": "\"Unusual activity\"",
+      "strength": "strong",
+      "lens": "It does not say what, when or from where.",
+      "why": "Real alerts give details. Vague alarms fit everybody, so scammers use them."
     },
     "greet": {
-      "label": "\"Dear Customer\"",
+      "label": "\"Dear user\"",
       "strength": "harmless",
-      "lens": "No name, just \"Dear Customer\".",
-      "why": "Many real emails use your name, but a generic hello alone is not proof of a scam."
+      "lens": "No name used.",
+      "why": "A generic greeting is a hint, but real emails sometimes use it too. Look at the other signs."
+    },
+    "sender": {
+      "label": "Name says Zelvora",
+      "strength": "harmless",
+      "lens": "The display name is Zelvora Security.",
+      "why": "Anyone can type a display name. Check the address."
     },
     "subject": {
       "label": "Capital letters",
       "strength": "harmless",
-      "lens": "\"LOCKED\" in capitals.",
-      "why": "Shouting alone proves nothing. The threats and the link do."
+      "lens": "ACTION REQUIRED in capitals.",
+      "why": "Shouting alone is not proof. Threats and links are."
     },
-    "from": {
-      "label": "Bank name",
+    "foot": {
+      "label": "Do not reply",
       "strength": "harmless",
-      "lens": "The sender name says Orrin Bank Security.",
-      "why": "A display name is easy to type. Look at the address behind it."
+      "lens": "A footer with a team name.",
+      "why": "Looks tidy, proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Click \"Restore my account\"",
+      "label": "Sign in through the link",
       "trap": true
     },
     {
@@ -155,7 +164,7 @@
     },
     {
       "id": "verify",
-      "label": "Open the Orrin app myself and look"
+      "label": "Open the Zelvora app myself and look"
     },
     {
       "id": "block_report",
@@ -168,9 +177,9 @@
     "ignore"
   ],
   "trap": {
-    "title": "Orrin Bank · Restore access",
-    "url": "orrin-bank-help.com/restore",
-    "ask": "Enter your online banking login and card PIN to restore access.",
+    "title": "Zelvora · Restore access",
+    "url": "zelvora-verify.co/restore",
+    "ask": "Enter your password and 2-step code to restore withdrawals.",
     "go": "Restore access",
     "back": "Close this page"
   },
@@ -178,96 +187,91 @@
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Reported as phishing. The bank's security team had the fake address blocked by lunchtime.",
-      "mirageSays": "Not my lovely email!"
+      "stamp": "BLOCKED",
+      "line": "Reported and deleted. The fake domain was taken down before it reached more inboxes.",
+      "mirageSays": "My lovely email!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The app showed no lock and no warning. The email was fake. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "The app showed no pause and no alert. The email was fake. Case cracked.",
+      "mirageSays": "Hmph. They opened the real app."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. The fake address is still sending the same email to thousands of others.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. Reporting would help protect the next person.",
+      "mirageSays": "Fine. Next inbox!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "SCAMMED",
-      "line": "The page copied your login and PIN. The real account was emptied in minutes.",
-      "mirageSays": "Thanks for logging in!"
+      "stamp": "DRAINED",
+      "line": "The page copied your password and 2-step code. Within minutes the coins were gone.",
+      "mirageSays": "Thanks for the code!"
     }
   },
   "what_if": {
-    "go_ahead": "Opening the bank's own app would have shown no lock, and no problem at all.",
-    "ignore": "Forwarding the email to the bank's fraud address helps get the fake site taken down.",
-    "verify": "Checking was smart. Reporting the email as well protects other people."
+    "go_ahead": "Opening the Zelvora app yourself would have shown no pause at all.",
+    "verify": "Checking was smart. Reporting the email helps get the fake site closed.",
+    "ignore": "Ignoring it was safe. A quick report protects others."
   },
-  "golden_rule": "Never log in through a link in an email. Open the bank's own app or type its address yourself.",
+  "golden_rule": "Never sign in through an email link. Open your exchange app yourself, and never share your 2-step code.",
   "quick_check": {
-    "q": "An email says your account is locked and you have two hours to log in through a button. What do you do?",
+    "q": "An email from your exchange says withdrawals are paused and asks for your password and 2-step code through a link. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Click fast, two hours is short"
+        "text": "Sign in quickly before the deadline"
       },
       {
         "id": "b",
-        "text": "Reply asking if it is real"
+        "text": "Do not click. Open the app yourself and report the email"
       },
       {
         "id": "c",
-        "text": "Open the bank's own app yourself, and report the email"
+        "text": "Reply and ask if it is real"
       },
       {
         "id": "d",
-        "text": "Forward it to a friend to check"
+        "text": "Send only the code"
       }
     ],
-    "answer": "c",
-    "explain": "The deadline and the link are the trap. Your bank's own app shows the truth in seconds."
+    "answer": "b",
+    "explain": "The link, the deadline and the request for your code are all warning signs. Your own app tells the truth."
   },
   "hints": {
-    "nudge": "Look at the address the email really came from.",
+    "nudge": "Read the sender address letter by letter.",
     "glow_order": [
+      "code",
       "addr",
       "link",
-      "login",
-      "deadline",
-      "nocall"
+      "timer",
+      "vague"
     ]
   },
-  "sources": [
-    "ftc-bank-call",
-    "ftc-spamtexts"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check sender",
-      "title": "Who really sent this",
+      "title": "Who sent this email",
       "rows": [
         {
-          "k": "Shown as",
-          "v": "Orrin Bank Security",
-          "clue": "from"
-        },
-        {
-          "k": "Real address behind it",
-          "v": "security@orrin-bank-help.com",
+          "k": "Sent from",
+          "v": "security@zelvora-verify.co",
           "clue": "addr"
         },
         {
-          "k": "The bank's real domain",
-          "v": "orrin.app"
+          "k": "Zelvora's real domain",
+          "v": "zelvora.app"
+        },
+        {
+          "k": "Name",
+          "v": "Zelvora Security",
+          "clue": "sender"
         }
       ]
     },
@@ -275,21 +279,22 @@
       "id": "link",
       "icon": "🔗",
       "label": "Check link",
-      "title": "Where the button goes",
+      "title": "Where the button really goes",
       "rows": [
         {
-          "k": "Button says",
-          "v": "Restore my account"
-        },
-        {
           "k": "It really opens",
-          "v": "orrin-bank-help.com/restore",
+          "v": "zelvora-verify.co, a look-alike login page",
           "clue": "link"
         },
         {
           "k": "Asks for",
-          "v": "Login and card PIN",
-          "clue": "login"
+          "v": "Password and the 2-step code",
+          "clue": "code"
+        },
+        {
+          "k": "Deadline",
+          "v": "24 hours",
+          "clue": "timer"
         }
       ]
     },
@@ -297,23 +302,27 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What the bank and consumer advice say",
+      "title": "What platforms say",
       "rows": [
         {
-          "k": "Does a bank ask for your PIN?",
-          "v": "Never",
-          "clue": "login"
+          "k": "Do they ask for your 2-step code?",
+          "v": "Never"
         },
         {
-          "k": "How to check an alarming message",
-          "v": "Open your own app or call the number on your statement"
+          "k": "Real alerts",
+          "v": "Appear inside the app and say exactly what happened",
+          "clue": "vague"
         },
         {
-          "k": "\"Do not contact us\"",
-          "v": "A warning sign: real banks welcome checks",
-          "clue": "nocall"
+          "k": "Unexpected email with a login link?",
+          "v": "Do not click"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-phishing",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

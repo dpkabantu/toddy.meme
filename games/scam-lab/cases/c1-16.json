@@ -3,36 +3,36 @@
   "type": "hunt",
   "chapter": 1,
   "difficulty": 2,
-  "title": "Two Support Numbers",
+  "title": "Two Support Pages",
   "disguise": "support",
   "intro": [
-    "Your parcel never arrived. You searched for the courier's support number.",
-    "Two results show a phone number. One is real. One is Mirage in a headset. Compare them side by side.",
-    "Sniff the details, then decide."
+    "You searched \"Zelvora support number\". Two results look helpful.",
+    "One is the real help centre. One is an ad paid for by Mirage.",
+    "Compare them side by side."
   ],
   "notify": {
-    "app": "Messages",
-    "from": "Toddy",
-    "text": "Need Parcelo support. Which number is real?"
+    "app": "Browser",
+    "from": "Search results",
+    "text": "Zelvora support number"
   },
-  "decide_q": "Which number belongs to the courier, and what will you do?",
+  "decide_q": "Which one is the real help, and what will you do?",
   "screen": {
     "app": "compare",
-    "context": "You searched for \"Parcelo Express support number\". Your receipt shows the courier's real website.",
+    "context": "Two results for \"Zelvora support number\", side by side.",
     "panels": [
       {
         "label": "Result A",
         "avatar": {
-          "glyph": "📦",
-          "clue": "logo_a"
+          "glyph": "🔎",
+          "clue": "tag_a"
         },
         "rows": [
           {
             "k": "Label",
             "v": [
               {
-                "clue": "ad_a",
-                "text": "No label. A normal result."
+                "clue": "tag_a",
+                "text": "Zelvora Help Centre"
               }
             ]
           },
@@ -40,26 +40,26 @@
             "k": "Address",
             "v": [
               {
-                "clue": "addr_a",
-                "text": "parcelo.app/contact"
+                "clue": "url_a",
+                "text": "help.zelvora.app"
               }
             ]
           },
           {
-            "k": "Number",
+            "k": "Says",
             "v": [
               {
-                "clue": "num_a",
-                "text": "0800 555 0140"
+                "clue": "says_a",
+                "text": "Help articles, a chat inside the app. We never call you first."
               }
             ]
           },
           {
-            "k": "Your receipt",
+            "k": "Phone",
             "v": [
               {
-                "clue": "receipt_a",
-                "text": "Shows this same address"
+                "clue": "phone_a",
+                "text": "No public support number"
               }
             ]
           }
@@ -68,16 +68,16 @@
       {
         "label": "Result B",
         "avatar": {
-          "glyph": "📦",
-          "clue": "logo_b"
+          "glyph": "🔎",
+          "clue": "tag_b"
         },
         "rows": [
           {
             "k": "Label",
             "v": [
               {
-                "clue": "ad_b",
-                "text": "Sponsored (an ad)"
+                "clue": "tag_b",
+                "text": "Sponsored"
               }
             ]
           },
@@ -85,120 +85,108 @@
             "k": "Address",
             "v": [
               {
-                "clue": "addr_b",
-                "text": "parcelo-careline.net"
+                "clue": "url_b",
+                "text": "zelvora-support-24.com"
               }
             ]
           },
           {
-            "k": "Number",
+            "k": "Says",
             "v": [
               {
-                "clue": "num_b",
-                "text": "0800 555 0199 · \"24/7 Instant Refund Line\""
+                "clue": "says_b",
+                "text": "Wallet frozen? Call now, 24/7 live agents!"
               }
             ]
           },
           {
-            "k": "Your receipt",
+            "k": "Phone",
             "v": [
               {
-                "clue": "receipt_b",
-                "text": "Does not show this address"
+                "clue": "phone_b",
+                "text": "0800 555 0142 (free)"
               }
             ]
           }
         ],
         "note": [
           {
-            "clue": "promise_b",
-            "text": "\"Call now for an instant refund.\""
+            "clue": "remote",
+            "text": "\"We will fix it on a call. You only share your screen.\""
           }
         ]
       }
     ]
   },
   "clues": {
-    "ad_b": {
+    "tag_b": {
       "label": "Paid ad",
       "strength": "strong",
-      "lens": "Result B is a sponsored ad. Anyone can pay to appear at the top.",
-      "why": "Scammers pay to put fake support numbers in search results."
+      "lens": "The result is a sponsored ad, not the official page.",
+      "why": "Scammers pay for ads that look like the top result. Ads are not proof."
     },
-    "addr_b": {
-      "label": "Not the courier's site",
+    "url_b": {
+      "label": "Look-alike address",
       "strength": "strong",
-      "lens": "parcelo-careline.net is not the courier's real parcelo.app.",
-      "why": "A support site with a different address is a look-alike."
+      "lens": "zelvora-support-24.com is not zelvora.app.",
+      "why": "A different ending is a different owner."
     },
-    "receipt_b": {
-      "label": "Not on your receipt",
+    "phone_b": {
+      "label": "A support phone number",
       "strength": "strong",
-      "lens": "Your receipt does not show this address or number.",
-      "why": "Your receipt, box or account shows the real contact details."
+      "lens": "Zelvora has no public phone support. This number belongs to the scammers.",
+      "why": "Fake support numbers are how callers take over your phone and wallet."
     },
-    "promise_b": {
-      "label": "\"Instant refund\"",
+    "remote": {
+      "label": "\"Share your screen\"",
       "strength": "strong",
-      "lens": "It promises an instant refund.",
-      "why": "A promise of instant money is bait for your bank details."
+      "lens": "A fix by screen sharing lets the caller see and move your coins.",
+      "why": "No real support asks to see your screen with your wallet open."
     },
-    "logo_a": {
-      "label": "Courier logo",
-      "strength": "harmless",
-      "lens": "A parcel picture.",
-      "why": "Logos are easy to copy, so they prove nothing on their own."
+    "says_b": {
+      "label": "Urgent wallet fear",
+      "strength": "strong",
+      "lens": "\"Wallet frozen?\" is written to scare you.",
+      "why": "Fake pages use fear in the headline."
     },
-    "logo_b": {
-      "label": "Courier logo",
+    "tag_a": {
+      "label": "Official label",
       "strength": "harmless",
-      "lens": "The same parcel picture.",
-      "why": "A copied logo takes seconds."
+      "lens": "The result says Zelvora Help Centre.",
+      "why": "A label alone proves little. The address matters."
     },
-    "ad_a": {
-      "label": "No ad label",
+    "url_a": {
+      "label": "Real address",
       "strength": "harmless",
-      "lens": "A normal result, not an ad.",
-      "why": "Not being an ad does not prove a result is real, but it is not a warning sign."
+      "lens": "help.zelvora.app is a real part of zelvora.app.",
+      "why": "The real address, letter by letter."
     },
-    "addr_a": {
-      "label": "The courier's real address",
+    "says_a": {
+      "label": "Chat inside the app",
       "strength": "harmless",
-      "lens": "parcelo.app matches the address on your receipt.",
-      "why": "A match with something you already trust is real evidence."
+      "lens": "It points you to the app's own chat and says staff never call first.",
+      "why": "This is how real support works."
     },
-    "receipt_a": {
-      "label": "Matches your receipt",
+    "phone_a": {
+      "label": "No phone number",
       "strength": "harmless",
-      "lens": "Your receipt shows this same address.",
-      "why": "Your own paperwork is the best check."
-    },
-    "num_a": {
-      "label": "Number",
-      "strength": "harmless",
-      "lens": "0800 555 0140.",
-      "why": "A number on its own proves nothing. Where it comes from matters."
-    },
-    "num_b": {
-      "label": "Number",
-      "strength": "harmless",
-      "lens": "0800 555 0199, plus a flashy name.",
-      "why": "A flashy name for a phone line is not evidence."
+      "lens": "It does not list a number to call.",
+      "why": "No number is the honest answer for platforms without phone support."
     }
   },
   "actions": [
     {
       "id": "pick_b",
-      "label": "Call Result B. It says \"instant refund\"",
+      "label": "Call the number in the ad",
       "trap": true
     },
     {
       "id": "verify",
-      "label": "Use the number on my receipt or the courier's own site"
+      "label": "Use the help chat inside the Zelvora app"
     },
     {
       "id": "block_report",
-      "label": "A is the real one. Report B's ad"
+      "label": "A is the real help. Report the ad"
     }
   ],
   "best_action": "block_report",
@@ -206,76 +194,141 @@
     "verify"
   ],
   "trap": {
-    "title": "Parcelo Careline",
-    "url": "parcelo-careline.net",
-    "ask": "The agent says: \"To refund you instantly, we need remote access to your phone and your bank details.\"",
-    "go": "Give access and details",
-    "back": "Hang up"
+    "title": "Zelvora Support 24/7",
+    "url": "zelvora-support-24.com",
+    "ask": "Call 0800 555 0142 and share your screen so an agent can fix your wallet.",
+    "go": "Call now",
+    "back": "Close this page"
   },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "You called the real number from your receipt and reported the fake ad. The parcel was traced the same day.",
-      "mirageSays": "My headset!"
+      "stamp": "BLOCKED",
+      "line": "Reported. The fake ad was removed and no one else called that number.",
+      "mirageSays": "My paid ad!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The number on your receipt reached the real courier. They found your parcel. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "The in-app chat answered at once and said no one will ever call you first. Case cracked.",
+      "mirageSays": "Hmph. They used the app."
     },
     "pick_b": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The \"agent\" took remote access and your bank details. The refund never came, and money left.",
+      "line": "The \"agent\" asked you to share your screen and read out your recovery phrase. The wallet was empty by evening.",
       "mirageSays": "Thanks for calling!"
     }
   },
   "what_if": {
-    "pick_b": "Using the number on your receipt, or typing the courier's own address, would have reached the real company.",
-    "verify": "Checking was smart. Reporting the fake ad as well helps get it removed."
+    "pick_b": "The real help centre listed no phone number. That alone exposes the ad.",
+    "verify": "Checking in the app was safest. Reporting the ad helps others."
   },
-  "golden_rule": "Never trust the first phone number a search shows. Use the number on your receipt, box or account.",
+  "golden_rule": "Never call a support number from a search result. Use the help chat inside the app you already trust.",
   "quick_check": {
-    "q": "You search for a courier's support number and the top result is an ad for an \"instant refund line\". What do you do?",
+    "q": "A search ad for your wallet's support shows a phone number and says \"share your screen\". What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Call it, it is at the top"
+        "text": "Call, ads are checked"
       },
       {
         "id": "b",
-        "text": "Check the number on your receipt, box or account"
+        "text": "Do not call. Use the help chat inside the app and report the ad"
       },
       {
         "id": "c",
-        "text": "Call it, but do not give your name"
+        "text": "Call but do not share your screen"
       },
       {
         "id": "d",
-        "text": "Trust it because it has the courier's logo"
+        "text": "Share your screen, but cover the balance"
       }
     ],
     "answer": "b",
-    "explain": "Scammers pay to appear at the top of search results. Your own paperwork is the safest source."
+    "explain": "Fake support ads are paid for by scammers. The app's own help chat is the safe route."
   },
   "hints": {
-    "nudge": "Which result matches your receipt?",
+    "nudge": "Which result is an ad, and who has a phone number?",
     "glow_order": [
-      "receipt_b",
-      "addr_b",
-      "ad_b",
-      "promise_b"
+      "phone_b",
+      "tag_b",
+      "url_b",
+      "remote",
+      "says_b"
     ]
   },
-  "sources": [
-    "ftc-customerservice",
-    "ftc-techsupport",
-    "ftc-utility"
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Check the results",
+      "title": "Who is behind each",
+      "rows": [
+        {
+          "k": "Result A",
+          "v": "Part of zelvora.app",
+          "clue": "url_a"
+        },
+        {
+          "k": "Result B",
+          "v": "Sponsored, zelvora-support-24.com",
+          "clue": "tag_b"
+        },
+        {
+          "k": "Zelvora's real phone support",
+          "v": "None"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the number",
+      "title": "Where B's number goes",
+      "rows": [
+        {
+          "k": "Number",
+          "v": "0800 555 0142, not listed on zelvora.app",
+          "clue": "phone_b"
+        },
+        {
+          "k": "They want you to",
+          "v": "Share your screen",
+          "clue": "remote"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Official advice",
+      "title": "What platforms say",
+      "rows": [
+        {
+          "k": "Search ads",
+          "v": "Can be bought by anyone, so check the address",
+          "clue": "tag_b"
+        },
+        {
+          "k": "Real support",
+          "v": "Lives inside the app",
+          "clue": "says_a"
+        },
+        {
+          "k": "Screen sharing with support",
+          "v": "Never needed",
+          "clue": "remote"
+        }
+      ]
+    }
   ],
-  "checked_on": "2026-10-21"
+  "sources": [
+    "ftc-techsupport",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

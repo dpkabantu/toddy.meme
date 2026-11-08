@@ -3,123 +3,122 @@
   "type": "rush",
   "chapter": 1,
   "difficulty": 2,
-  "title": "Refund Inbox",
+  "title": "Support Inbox",
   "seconds": 60,
   "intro": [
-    "Ten messages promising money back. One minute.",
+    "Ten messages from \"support\" teams, one minute. Your crypto apps have been busy.",
     "Swipe left if it is a scam, right if it is safe. Or tap the buttons.",
-    "Some refunds are real. Do not turn away your own money."
+    "Careful: some are honest. Do not cry wolf."
   ],
   "cards": [
     {
       "id": "r1",
       "app": "SMS",
-      "from": "Civic Revenue Portal",
-      "text": "You are eligible for a tax refund of $83. Claim it now: civic-refund.claims/start",
-      "scam": true,
-      "why": "Tax offices do not text or email to ask you to claim a refund through a link."
+      "from": "Zelvora",
+      "text": "Your Zelvora login code is 482917. Never share it with anyone, including Zelvora staff.",
+      "scam": false,
+      "why": "You asked for a code, it tells you not to share it, and it asks for nothing else."
     },
     {
       "id": "r2",
       "app": "Mail",
-      "from": "orders@meridu.store",
-      "text": "We have refunded £18.00 for your returned item to your original payment method. Nothing else to do.",
-      "scam": false,
-      "why": "You returned the item, the money goes back to where it came from, and it asks for nothing."
+      "from": "Zelvora Security",
+      "text": "Your withdrawals are paused. Sign in here and enter your 2-step code within 1 hour: zelvora-unlock.co/login",
+      "scam": true,
+      "why": "A login link, a deadline and a request for your 2-step code. Real alerts live in the app."
     },
     {
       "id": "r3",
-      "app": "SMS",
-      "from": "Brightgrid Energy",
-      "text": "You overpaid your bill by $19. Enter your bank details to receive it: brightgrid-refund.net",
+      "app": "Chirp",
+      "from": "Hedrio Help ✔",
+      "text": "We saw your post. Send us your 12-word phrase and we will fix your wallet right now.",
       "scam": true,
-      "why": "A real energy company does not ask you for bank details by text to refund an overpayment."
+      "why": "No real support ever asks for your recovery phrase. It is the key to all your coins."
     },
     {
       "id": "r4",
       "app": "Mail",
-      "from": "Parcelo Express",
-      "text": "Your parcel was delayed. Claim your £5 refund: parcelo-compensation.co/claim",
-      "scam": true,
-      "why": "A refund you never asked for, through a link, from an address that is not the courier's."
+      "from": "no-reply@hedrio.app",
+      "text": "Hedrio 3.1 is out. Update from your phone's official app store. Nothing else to do.",
+      "scam": false,
+      "why": "It points to the official app store and asks for nothing."
     },
     {
       "id": "r5",
       "app": "SMS",
-      "from": "Orrin Bank",
-      "text": "Your refund of £12.50 from Gadgetz Direct has arrived in your account.",
-      "scam": false,
-      "why": "It tells you something that already happened, and asks for nothing."
+      "from": "Ostrel",
+      "text": "Withdrawal of 0.4 BTC to a new address requested. Not you? Call +44 20 7946 0000 now.",
+      "scam": true,
+      "why": "A frightening withdrawal and a phone number in the text. Check the number inside your own app."
     },
     {
       "id": "r6",
-      "app": "Mail",
-      "from": "Streamly Support",
-      "text": "Your subscription renews for $7. Not you? Call 0800 555 0188 now for a refund.",
-      "scam": true,
-      "why": "A big surprise charge and a phone number to call is how support scams begin. Check the number on your own account."
+      "app": "Chirp",
+      "from": "Plenvo Admin",
+      "text": "Welcome to the club! Rules are pinned. Admins never DM first or ask for money or phrases.",
+      "scam": false,
+      "why": "It gives rules and asks for nothing. It even warns you about scams."
     },
     {
       "id": "r7",
-      "app": "SMS",
-      "from": "Civic Revenue Portal",
-      "text": "Final notice: you will be arrested unless you confirm your refund details at once.",
+      "app": "Mail",
+      "from": "Rekovo Recovery",
+      "text": "We can recover your lost coins. Pay a 10% fee first. Guaranteed.",
       "scam": true,
-      "why": "Government offices do not threaten arrest over a refund."
+      "why": "A recovery promise with a fee up front is a second scam on top of the first."
     },
     {
       "id": "r8",
-      "app": "Mail",
-      "from": "no-reply@vantel.app",
-      "text": "Your overpayment of £4.30 has been credited to your next bill. No action needed.",
+      "app": "SMS",
+      "from": "Ostrel (in-app)",
+      "text": "You enabled a new withdrawal address. If this was not you, open the app and lock your account.",
       "scam": false,
-      "why": "It happens inside your account and asks for nothing."
+      "why": "It tells you something you did, and sends you to your own app."
     },
     {
       "id": "r9",
-      "app": "SMS",
-      "from": "Unknown number",
-      "text": "You are owed compensation for a data breach. Send a small processing fee to receive £3,000.",
+      "app": "Chirp",
+      "from": "Zelvora Live 🎥",
+      "text": "LIVE: send 0.1 BTC to the QR code and get 0.2 BTC back. 20 minutes left!",
       "scam": true,
-      "why": "Real refunds never ask you to pay a fee first."
+      "why": "Send-and-double is the oldest crypto scam. Nobody gives coins back for free."
     },
     {
       "id": "r10",
-      "app": "SMS",
-      "from": "Kiko (friend)",
-      "text": "Sent you the €15 for the cinema tickets, check your account 🎬",
+      "app": "Mail",
+      "from": "Zelvora",
+      "text": "Your monthly statement is ready in the app. No action needed.",
       "scam": false,
-      "why": "A friend you know. If you want to be sure, check your own account, not a link."
+      "why": "It asks for nothing and points to the app you already use."
     }
   ],
-  "golden_rule": "Real refunds go back to where the money came from. If you must click, pay a fee or give bank details to get money, it is a scam.",
+  "golden_rule": "Real support never asks for your recovery phrase or 2-step code. Check inside your own app.",
   "quick_check": {
-    "q": "A text says you overpaid and asks for your bank details to send a refund. What do you do?",
+    "q": "A message from \"support\" says your withdrawals are paused and you must enter your 2-step code on a link. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Send the details, it is your money"
+        "text": "Enter the code, it is only a check"
       },
       {
         "id": "b",
-        "text": "Reply asking how much"
+        "text": "Do not click. Open the app yourself and report the message"
       },
       {
         "id": "c",
-        "text": "Do not reply. Check your bill or account using contact details you already know"
+        "text": "Reply and ask for a phone number"
       },
       {
         "id": "d",
-        "text": "Click the link but only look"
+        "text": "Forward it to friends as a warning, with the link"
       }
     ],
-    "answer": "c",
-    "explain": "Real companies refund to where the money came from. They never need your bank details by text."
+    "answer": "b",
+    "explain": "The link and the request for your code are the signs. Your own app is the only safe place to check."
   },
   "sources": [
-    "ftc-government",
-    "ftc-spamtexts",
-    "ftc-techsupport"
+    "ftc-crypto",
+    "ftc-phishing"
   ],
-  "checked_on": "2026-10-21"
+  "checked_on": "2026-11-08"
 }
