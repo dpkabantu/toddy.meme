@@ -30,12 +30,24 @@
   border: 2px solid rgba(201,168,76,.4);
 }
 .legal-back {
+  display: inline-flex; align-items: center; gap: 6px; flex: 0 0 auto; white-space: nowrap;
   color: var(--gold-light); text-decoration: none;
-  font-size: .86rem; font-weight: 600;
-  padding: 10px 14px; border-radius: 999px;
-  border: 1px solid rgba(212,175,90,.4);
+  font-size: .86rem; font-weight: 700; letter-spacing: .2px;
+  padding: 9px 16px; border-radius: 999px;
+  border: 1px solid rgba(212,175,90,.45);
+  background: rgba(212,175,90,.07);
+  transition: background .2s ease, border-color .2s ease, color .2s ease;
 }
+.legal-back-short { display: none; }
 .legal-back:hover { background: rgba(153,69,255,.16); border-color: rgba(153,69,255,.55); color: #fff; }
+@media (max-width: 600px) {
+  .legal-header { gap: 10px; }
+  .legal-brand { font-size: 1.15rem; gap: 8px; }
+  .legal-brand img { width: 34px; height: 34px; }
+  .legal-back-long { display: none; }
+  .legal-back-short { display: inline; }
+  .legal-back { padding: 8px 14px; font-size: .84rem; }
+}
 .legal-header a:focus-visible, .legal-card a:focus-visible, .legal-footer a:focus-visible {
   outline: 2px solid var(--gold-light); outline-offset: 3px; border-radius: 6px;
 }
