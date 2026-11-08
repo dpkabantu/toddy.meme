@@ -1209,7 +1209,7 @@ function openBoard(period = 'daily') {
     const box = $('board-list'); if (!box) return; box.textContent = '';
     if (!d) { box.textContent = 'The leaderboard is not available right now.'; return; }
     const line = (rank, name, score, you) => { const r = el('div', { className: 'board-line' + (you ? ' you' : '') }, el('span', { className: 'board-rank', textContent: String(rank) }), el('span', { className: 'board-name', textContent: name }), el('span', { className: 'board-score', textContent: Number(score).toLocaleString('en-US') })); return r; };
-    if (!d.entries.length) box.append(el('small', { textContent: 'No scores yet. Sign in, pick a nickname and clear a tray to be first.' }));
+    if (!d.entries.length) box.append(el('small', { textContent: 'No scores yet. Sign in, pick a name and clear a tray to be first.' }));
     d.entries.slice(0, 10).forEach(e => box.append(line(e.rank, e.nickname, e.score, e.you)));
     if (d.you && d.you.rank > 10) box.append(line(d.you.rank, 'You', d.you.score, true));
   });
@@ -1221,10 +1221,28 @@ async function renderAccount() {
   if (me.unavailable) return; // accounts not switched on: the section stays hidden
   box.hidden = false; box.textContent = '';
   const say2 = el('small', { id: 'acct-msg', role: 'status' });
+  // Passport mode (the single site-wide account): the name is the Passport username, changed on the Passport page, not here.
+  const passport = !!(me.pending || me.username || me.passportId);
+  if (me.pending && !me.signedIn) {
+    const fin = el('a', { className: 'btn primary', href: '/passport/?step=join', textContent: 'Finish joining' });
+    box.append(el('span', {}, el('b', { textContent: 'Almost there' }), el('small', { textContent: 'Google sign-in worked. Pick your username on the Passport page to finish.' })), fin);
+    return;
+  }
   if (!me.signedIn) {
     const go = el('a', { className: 'btn primary', href: A.signInUrl(GAME_ID), textContent: 'Continue with Google' });
     const lbG = el('button', { className: 'btn ghost', type: 'button', textContent: 'Leaderboard' }); lbG.addEventListener('click', () => openBoard('daily'));
-    box.append(el('span', {}, el('b', { textContent: 'Keep your progress' }), el('small', { textContent: 'Optional. Saves your stars and postcards on every device. We store your email, name and a nickname you choose.' }), el('small', {}, el('a', { href: PRIVACY_URL, target: '_blank', rel: 'noopener noreferrer', textContent: 'What we store' }))), go, lbG);
+    box.append(el('span', {}, el('b', { textContent: 'Keep your progress' }), el('small', { textContent: 'Optional. Saves your stars and postcards on every device. We store your email, your Google name and a name you choose.' }), el('small', {}, el('a', { href: PRIVACY_URL, target: '_blank', rel: 'noopener noreferrer', textContent: 'What we store' }))), go, lbG);
+    return;
+  }
+  if (passport) {
+    const bx = el('input', { type: 'checkbox', checked: !(me.boardHidden || me.showOnBoards === false) });
+    bx.addEventListener('change', () => A.setProfile({ showOnBoards: bx.checked }));
+    const lbP = el('button', { className: 'btn ghost', type: 'button', textContent: 'Leaderboard' }); lbP.addEventListener('click', () => openBoard('daily'));
+    const pp = el('a', { className: 'btn ghost', href: '/passport/', textContent: 'Open my Passport' });
+    const outP = el('button', { className: 'btn ghost', type: 'button', textContent: 'Sign out' });
+    outP.addEventListener('click', async () => { await A.signOut(); accountMe = null; renderAccount(); });
+    box.append(el('span', {}, el('b', { textContent: 'Signed in as ' + (me.username || me.nickname || 'player') }), el('small', { textContent: 'Other players only ever see this username. Change it, or delete your data, on your Passport page.' }),
+      el('label', { className: 'acct-row' }, bx, el('small', { textContent: 'Show me on leaderboards' })), lbP, pp, outP));
     return;
   }
   const nick = el('input', { id: 'acct-nick', type: 'text', maxLength: 16, value: me.nickname || '', placeholder: 'Pick a nickname', autocomplete: 'off' });
