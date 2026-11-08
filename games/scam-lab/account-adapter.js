@@ -1,14 +1,14 @@
 // Scam Lab: what goes into an account and how two saves are merged (only ever adds). Settings stay on the device.
 (function () {
   'use strict';
-  var KEY = 'toddy.scamlab.v2';
+  var KEY = 'toddy.scamlab.v3';
   function raw() { try { return JSON.parse(localStorage.getItem(KEY)) || {}; } catch (e) { return {}; } }
   function pick(d) { return { stars: d.stars || {}, best: d.best || {}, rules: d.rules || [], daily: d.daily || {}, howto: !!d.howto }; }
   function maxMap(a, b) { var o = {}, k; for (k in a) o[k] = a[k]; for (k in b) if (Number(b[k]) > (o[k] || 0)) o[k] = Number(b[k]); return o; }
   window.ToddyAccountUI.mount({
-    game: 'scam-lab', rowSelector: '.title-nav', chipClass: 'chip',
+    game: 'scam-lab', rowSelector: '.title-nav', chipClass: 'chip', scoreLabel: 'total points',
     read: function () { return pick(raw()); },
-    dailyScores: function () { var d = raw().daily || {}, out = []; Object.keys(d).forEach(function (k) { var day = parseInt(String(k).replace(/-/g, ''), 10); if (day > 20200101 && d[k] && d[k].score > 0) out.push({ day: day, score: d[k].score }); }); return out; },
+    scores: function () { var b = raw().best || {}, t = 0, k; for (k in b) t += Math.max(0, Number(b[k]) || 0); var n = new Date(); return t > 0 ? [{ day: n.getUTCFullYear() * 10000 + (n.getUTCMonth() + 1) * 100 + n.getUTCDate(), score: Math.round(t) }] : []; },
     merge: function (l, r) {
       r = pick(r || {});
       var rules = (l.rules || []).slice(), seen = {}; rules.forEach(function (x) { seen[x && x.text] = 1; });

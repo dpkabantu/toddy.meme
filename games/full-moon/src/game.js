@@ -886,6 +886,7 @@ function frame(t) {
 function finishRun() {
   lastRun = { seed: S.seed, twist, moonrises, kind, drops: log.slice(), endTick: S.tick, score: S.score, maxLevel: S.maxLevel };
   if (S.score > bestVal) { bestVal = S.score; store(bestKey(), String(bestVal)); }
+  { const t = new Date(), dk = 'mm.day.' + (t.getUTCFullYear() * 10000 + (t.getUTCMonth() + 1) * 100 + t.getUTCDate()); if (S.score > (parseInt(store(dk), 10) || 0)) store(dk, String(S.score)); }  // best run of today, for the leaderboard
   setScore();
   showOver();
 }

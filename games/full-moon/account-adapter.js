@@ -11,9 +11,9 @@
   }
   function later(a, b) { if (!a || !b) return a || b || null; return b.day > a.day || (b.day === a.day && b.n > a.n) ? b : a; }
   window.ToddyAccountUI.mount({
-    game: 'full-moon', pillAtBottom: true, rowSelector: '.links:has([data-act="how"])', chipClass: 'chip',
+    game: 'full-moon', pillAnchor: '.card', scoreLabel: 'best run', rowSelector: '.links:has([data-act="how"])', chipClass: 'chip',
     read: read,
-    dailyScores: function () { var out = []; try { for (var i = 0; i < localStorage.length; i++) { var k = localStorage.key(i), m = /^mm\.best\.daily\.(\d{8})$/.exec(k); if (m) { var v = parseInt(localStorage.getItem(k), 10); if (v > 0) out.push({ day: parseInt(m[1], 10), score: v }); } } } catch (e) { /* storage blocked */ } return out; },
+    scores: function () { var n = new Date(), d = n.getUTCFullYear() * 10000 + (n.getUTCMonth() + 1) * 100 + n.getUTCDate(), v = 0; try { v = parseInt(localStorage.getItem('mm.day.' + d), 10) || 0; } catch (e) { /* storage blocked */ } return v > 0 ? [{ day: d, score: v }] : []; },
     merge: function (l, r) {
       r = r || {}; var best = {}, k;
       for (k in (l.best || {})) best[k] = l.best[k];

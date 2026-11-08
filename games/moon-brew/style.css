@@ -604,3 +604,7 @@ html.look-clean .tray-btn .pips { position: absolute; top: 5px; left: 0; right: 
 .acct-pill.on .ta-caret { position: absolute; right: -3px; bottom: -3px; width: 16px; height: 16px; border-radius: 50%; background: var(--gold); box-shadow: 0 0 0 2px #1d1431; }
 .acct-pill.on .ta-caret::after { content: ""; position: absolute; left: 4px; top: 5px; border: 4px solid transparent; border-top-color: #2a1a05; border-bottom: 0; }
 .acct-pill.on[hidden] { display: none; }
+
+/* the Account window: one clean card, nothing boxed inside another */
+#modal-card .setting.account { border: 0; background: none; padding: 0; text-align: center; }
+#modal-card .setting.account > span { display: grid; gap: 10px; justify-items: stretch; }

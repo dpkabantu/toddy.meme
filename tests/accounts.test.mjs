@@ -165,7 +165,7 @@ test('scores: only plausible, only recent, best of the day kept; boards show nic
   const sc = (who, body, origin) => post(env, '/api/score', body, who.session, origin);
   assert.equal((await post(env, '/api/score', { game: 'moon-brew', day: today(), score: 500 })).status, 401);
   assert.equal((await sc(a, { game: 'moon-brew', day: today(), score: 500 }, 'https://evil.example')).status, 403);
-  for (const bad of [{ game: 'moon-brew', day: today(), score: 1001 }, { game: 'moon-brew', day: today(), score: 0 }, { game: 'moon-brew', day: today(), score: 12.5 }, { game: 'moon-brew', day: 20200101, score: 5 }, { game: 'nope', day: today(), score: 5 }])
+  for (const bad of [{ game: 'moon-brew', day: today(), score: 30001 }, { game: 'moon-brew', day: today(), score: 0 }, { game: 'moon-brew', day: today(), score: 12.5 }, { game: 'moon-brew', day: 20200101, score: 5 }, { game: 'nope', day: today(), score: 5 }])
     assert.ok((await sc(a, bad)).status >= 400, JSON.stringify(bad));
   for (const [who, nick] of [[a, 'Aria'], [b, 'Bobby'], [c, 'Cyrus']]) await post(env, '/api/me/profile', { nickname: nick }, who.session);
   await sc(a, { game: 'moon-brew', day: today(), score: 700 }); await sc(a, { game: 'moon-brew', day: today(), score: 650 }); // lower later score never replaces

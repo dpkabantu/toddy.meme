@@ -1,11 +1,11 @@
 // TODDY: Moon Brew — screens, drawing, sound and saving.
-import { DX, DY, MAX_BUMPS, generate, newGame, beanAt, frozen, unitOf, traceBean, canRoll, tap, stars, hint, useHint, dailyScore, streaks, fromFrozen, difficulty } from './core.js';
+import { DX, DY, MAX_BUMPS, generate, newGame, beanAt, frozen, unitOf, traceBean, canRoll, tap, stars, hint, useHint, fromFrozen, difficulty } from './core.js';
 import { TRAYS } from './trays.js';
-import { INTROS, TRAYS_PER_NIGHT, effT, trayLevelConfig, dailyConfig, dailyNumber, nightInfo, VISITORS, VISITOR_ORDER, TIER_NAMES, trayTier, tierOf } from './levels.js';
+import { INTROS, TRAYS_PER_NIGHT, effT, trayLevelConfig, nightInfo, VISITORS, VISITOR_ORDER, TIER_NAMES, trayTier, tierOf } from './levels.js';
 import { buildPostcard } from './postcard.js';
 import { toSynced, merge as mergeProgress, differs } from './sync.js';
 
-const BUILD = '1.0.0-rc19';
+const BUILD = '1.0.0-rc20';
 const ASSET = 'assets/';
 const $ = (id) => document.getElementById(id);
 const systemCalm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -337,10 +337,6 @@ function nightsCleared() { let c = 0; while (c < 400 && nightCleared(c)) c++; re
 function totalStars() { return Object.entries(save.stars).filter(([k]) => k.startsWith('n')).reduce((s, [, v]) => s + v, 0); }
 
 function renderTitle() {
-  const today = save.daily[dailyNumber()];
-  const st = dailyStreak();
-  $('daily-status').textContent = today ? `Today: ${today.score || 0} pts${st.current > 1 ? ` · 🔥 ${st.current}` : ''}` : (st.current ? `Keep your ${st.current}-day streak` : 'New tray today');
-  $('btn-daily').classList.toggle('glow', !today); // gentle glow until today's Daily Brew is played
   // the Play button says where the player is going: the Night and tray, so the 10-tray journey is visible from the start
   const nx = nextTray();
   $('play-status').textContent = !Object.keys(save.stars).length ? `${nightInfo(0).name} · ${TRAYS_PER_NIGHT} trays` : nx ? `Continue · ${nightInfo(nx[0]).name}, tray ${nx[1]}` : 'Play';
@@ -406,13 +402,7 @@ function renderMap() {
 function say2map(t) { $('night-sub').textContent = `Tray ${t} opens after you clear tray ${t - 1}.`; }
 
 // ---------------- My Brew dashboard ----------------
-function dailyWaiting() { return !save.daily[dailyNumber()]; }
-function dailyStreak() { return streaks(Object.keys(save.daily).map(Number), dailyNumber()); }
 function renderStats() {
-  const st = dailyStreak();
-  const dailies = Object.values(save.daily);
-  const bestDaily = dailies.reduce((m, d) => Math.max(m, d.score || 0), 0);
-  const today = save.daily[dailyNumber()];
   const cleared = Object.keys(save.stars).length;
   const perfect = Object.values(save.stars).filter(v => v === 3).length;
   // the Nights you are on (the last four), as bars
@@ -422,19 +412,7 @@ function renderStats() {
     for (let t = 1; t <= TRAYS_PER_NIGHT; t++) got += save.stars[trayKey(n, t)] || 0;
     return `<div class="nightbar"><span>Night ${n + 1}</span><span class="track"><i data-w="${Math.round(100 * got / 60)}"></i></span><span>\u2605 ${got}</span></div>`;
   }).join('');
-  // last 7 days, oldest first
-  const days = [];
-  const now = new Date();
-  for (let i = 6; i >= 0; i--) {
-    const d = new Date(Date.UTC(now.getUTCFullYear(), now.getUTCMonth(), now.getUTCDate() - i));
-    const num = dailyNumber(d);
-    days.push(`<span class="d${save.daily[num] ? ' done' : ''}${i === 0 ? ' today' : ''}" title="${d.toISOString().slice(0, 10)}">${'SMTWTFS'[d.getUTCDay()]}</span>`);
-  }
   $('stats').innerHTML = `
-    <div class="tile hot"><span class="k">Daily streak</span><span class="v">${st.current} <small>day${st.current === 1 ? '' : 's'}</small></span><span class="sub">Best: ${st.best}</span></div>
-    <div class="tile"><span class="k">Today</span><span class="v">${today ? today.score || 0 : '–'}<small>${today ? ' / 1000' : ''}</small></span><span class="sub">${today ? `${today.time}s · ${today.bumps} bump${today.bumps === 1 ? '' : 's'}` : 'Not brewed yet'}</span></div>
-    <div class="tile wide"><span class="k">Last 7 Daily Brews</span><div class="week">${days.join('')}</div></div>
-    <div class="tile"><span class="k">Best Daily</span><span class="v">${bestDaily || '–'}</span><span class="sub">${dailies.length} played</span></div>
     <div class="tile wide"><span class="k">Stars</span><span class="v">${totalStars()}</span>${nightRows}</div>
     <div class="tile"><span class="k">Trays cleared</span><span class="v">${cleared}</span><span class="sub">${perfect} Perfect Brews</span></div>
     <div class="tile"><span class="k">Postcards</span><span class="v">${save.postcards.length}</span><span class="sub">tray ${TRAYS_PER_NIGHT} of each Night</span></div>`;
@@ -484,7 +462,7 @@ function renderAlbum() {
 }
 
 // ---------------- Play state ----------------
-let mode = null;     // { kind: 'story', n, t } | { kind: 'daily', num }
+let mode = null;     // { kind: 'story', n, t }
 let level = null, g = null;
 let anims = [];
 let hintBean = null, cursor = null, melts = [];
@@ -492,7 +470,6 @@ let startedAt = 0;
 let finishTimer = 0;
 
 function startTray(n, t) { mode = { kind: 'story', n, t }; const f = TRAYS[trayKey(n, t)]; load(f ? null : trayLevelConfig(n, t), f ? fromFrozen(f) : null); }
-function startDaily() { const cfg = dailyConfig(); mode = { kind: 'daily', num: cfg.daily, visitor: cfg.visitor }; load(cfg); }
 
 // The title pill: where you are, and under it how hard this tray is (dots as well as the word, never colour alone).
 function setWhere(text, tier) {
@@ -515,10 +492,6 @@ function load(cfg, ready) {
     const night = nightInfo(mode.n);
     vis = night.visitor; line = night.lines[effT(mode.t) - 1];
     setWhere(`${night.name} \u00B7 ${mode.t === TRAYS_PER_NIGHT ? 'Finale' : `Tray ${mode.t}/${TRAYS_PER_NIGHT}`} \u25BE`, trayTier(mode.n, mode.t));
-  } else if (mode.kind === 'daily') {
-    vis = mode.visitor;
-    line = save.daily[mode.num] ? `Practice run. Today\u2019s score: ${save.daily[mode.num].score}.` : 'Today\u2019s puzzle. Same for everyone.';
-    setWhere('Daily Brew', tierOf(difficulty(level)));
   }
   mode.vis = vis;
   coachPerfect = true;
@@ -1108,22 +1081,14 @@ function serveVisitor() { // the visitor up top reacts too
 // Saves the result the moment a tray ends, so leaving early never loses progress.
 let result = null;
 function modeInfo() {
-  return mode.kind === 'story' ? { mode: 'story', night: mode.n + 1, tray: mode.t } : { mode: 'daily', day: mode.num };
+  return { mode: 'story', night: mode.n + 1, tray: mode.t };
 }
 function record() {
   const hintsUsed = g.log.filter(e => e[1] === 'h').length;
   track('tray_end', { ...modeInfo(), result: g.status, stars: stars(g), secs: Math.round((performance.now() - startedAt) / 1000), bumps: g.bumps, hints: hintsUsed, beans: level.beans.length });
   result = { s: stars(g), secs: Math.round((performance.now() - startedAt) / 1000) };
   if (g.status !== 'won') return;
-  if (mode.kind === 'daily') {
-    const sc = dailyScore(g);
-    result.score = sc;
-    // Fair play: the first cleared run of the day is the official score (what the leaderboard
-    // will use). Later runs are practice and never change it.
-    const prev = save.daily[mode.num];
-    result.official = !prev;
-    if (!prev) { save.daily[mode.num] = { stars: result.s, time: sc.secs, bumps: g.bumps, score: sc.total, log: g.log.slice(0, 2000) }; sendDaily(mode.num, sc.total); }
-  } else {
+  {
     const k = trayKey(mode.n, mode.t);
     result.firstClear = !save.stars[k];
     if (!save.stars[k] || result.s > save.stars[k]) save.stars[k] = result.s;
@@ -1143,34 +1108,13 @@ function finish(again) {
 
   if (g.status === 'burnt') {
     card(`<h3>Burnt brew</h3><p>Three bumps. Check each tip before you tap.</p>
-      <div class="btns"><button class="btn ghost" id="o-back" type="button">${mode.kind === 'daily' ? 'Title' : 'Trays'}</button><button class="btn primary" id="o-retry" type="button">Try again</button></div>`);
-    bind('o-retry', () => (mode.kind === 'daily' ? startDaily() : startTray(mode.n, mode.t)));
-    bind('o-back', () => show(mode.kind === 'daily' ? 'title' : 'map'));
+      <div class="btns"><button class="btn ghost" id="o-back" type="button">Trays</button><button class="btn primary" id="o-retry" type="button">Try again</button></div>`);
+    bind('o-retry', () => startTray(mode.n, mode.t));
+    bind('o-back', () => show('map'));
     return;
   }
 
   const head = s === 3 ? 'Perfect Brew!' : `${(VISITORS[mode.vis] || VISITORS.milo).short} is happy`;
-
-  if (mode.kind === 'daily') {
-    const sc = result.score, st = dailyStreak();
-    const best = save.daily[mode.num].score;
-    card(`${serveHtml(true)}<h3>Daily Brew done</h3>
-      <div class="breakdown">
-        <div><span>Tray cleared</span><span>${sc.clear}</span></div>
-        <div><span>No bumps</span><span>${sc.clean}</span></div>
-        <div><span>Perfect ticket</span><span>${sc.perfect}</span></div>
-        <div><span>Speed (${sc.secs}s)</span><span>${sc.speed}</span></div>
-        ${sc.hints ? `<div><span>Hints (${sc.hints})</span><span>−${sc.hintCost}</span></div>` : ''}
-        <div class="total"><span>Score</span><span>${sc.total} / 1000</span></div>
-      </div>
-      <p class="stat">${result.official ? 'Today\u2019s score is saved.' : `Practice. Today\u2019s score stays ${best}.`} Streak: ${st.current} day${st.current === 1 ? '' : 's'}</p>
-      <div class="btns"><button class="btn primary" id="o-share" type="button">Share</button></div>
-      <div class="btns"><button class="btn ghost" id="o-retry" type="button">Practice again</button><button class="btn ghost" id="o-home" type="button">Done</button></div>`);
-    bind('o-retry', startDaily); bind('o-home', () => show('title'));
-    const shareData = { kind: 'daily', num: mode.num, score: save.daily[mode.num].score, stars: save.daily[mode.num].stars, secs: save.daily[mode.num].time, bumps: save.daily[mode.num].bumps, streak: st.current, visitor: mode.visitor };
-    bind('o-share', () => openShare(shareData, () => finish(true)));
-    return;
-  }
 
   const night = nightInfo(mode.n);
   const finale = mode.t === TRAYS_PER_NIGHT;
@@ -1178,17 +1122,6 @@ function finish(again) {
   const goNext = () => {
     if (!finale) startTray(mode.n, mode.t + 1);
     else { mapNight = mode.n + 1; startTray(mode.n + 1, 1); }
-  };
-  // once ever, after the first clear of tray 2: introduce the Daily Brew (and its shareable score)
-  const dailyTip = result.firstClear && mode.n === 0 && mode.t === 2 && !save.intros.daily && dailyWaiting();
-  const showDailyTip = () => {
-    save.intros.daily = 1; writeSave();
-    track('tip', { tip: 'daily' });
-    card(`<p class="eyebrow">New</p><img class="tip-img" src="${ASSET}cup_v02.webp" alt=""><h3>Daily Brew</h3>
-      <p>A new puzzle every day, same for everyone. Share your score!</p>
-      <div class="btns"><button class="btn ghost" id="o-later" type="button">Later</button><button class="btn primary" id="o-try" type="button">Try it now</button></div>`);
-    bind('o-try', () => { track('daily_nudge', { from: 'tip' }); startDaily(); });
-    bind('o-later', goNext);
   };
   const showPostcard = () => {
     const marked = (save.marks || []).includes(night.id);
@@ -1205,11 +1138,9 @@ function finish(again) {
   card(`${serveHtml(false)}<h3>${finale ? 'Night complete!' : head}</h3>
     <div class="path" aria-label="${night.name}: tray ${mode.t} of ${TRAYS_PER_NIGHT}">${nightPath(mode.n, mode.t)}</div>
     <p class="stat">${night.name} · tray ${mode.t} of ${TRAYS_PER_NIGHT}${finale ? '' : ` · ☾ postcard at ${TRAYS_PER_NIGHT}`}</p>
-    <div class="btns"><button class="btn ghost" id="o-retry" type="button">Brew again</button><button class="btn primary" id="o-next" type="button">${result.newCard ? 'Continue' : nextLabel}</button></div>
-    ${dailyWaiting() ? '<div class="btns"><button class="btn daily-nudge" id="o-daily" type="button">Today\u2019s Daily Brew \u2192</button></div>' : ''}`);
+    <div class="btns"><button class="btn ghost" id="o-retry" type="button">Brew again</button><button class="btn primary" id="o-next" type="button">${result.newCard ? 'Continue' : nextLabel}</button></div>`);
   bind('o-retry', () => startTray(mode.n, mode.t));
-  if (dailyWaiting()) bind('o-daily', () => { track('daily_nudge', { from: 'result' }); startDaily(); });
-  bind('o-next', () => (result.newCard ? showPostcard() : dailyTip ? showDailyTip() : goNext()));
+  bind('o-next', () => (result.newCard ? showPostcard() : goNext()));
 }
 
 // ---------------- Settings ----------------
@@ -1246,6 +1177,7 @@ const acc = () => window.ToddyAccount || null;
 let pushTimer = 0, accountMe = null;
 function schedulePush() {
   if (!acc() || !accountMe || !accountMe.signedIn) return;
+  sendStars();
   clearTimeout(pushTimer);
   pushTimer = setTimeout(() => acc().push(GAME_ID, toSynced(save)), 4000);
 }
@@ -1260,24 +1192,24 @@ async function syncNow() {
   for (const [k, v] of Object.entries(merged.daily)) if (!save.daily[k]) save.daily[k] = v;
   try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* ignore */ }
   if (remote === null || differs(merged, remote)) await A.push(GAME_ID, toSynced(save));
-  sendRecentDailies();
   if (current === 'title') renderTitle(); else if (current === 'map') renderMap();
 }
-// Daily Brew results go to the leaderboard (saved scores; the server keeps the best of each day).
-function sendDaily(day, score) { const A = acc(); if (A && accountMe && accountMe.signedIn && score > 0) A.submitScore(GAME_ID, day, score); }
-function sendRecentDailies() { const t = dailyNumber(); for (const [k, v] of Object.entries(save.daily)) if (Math.abs(Number(k) - t) <= 1 && v && v.score > 0) sendDaily(Number(k), v.score); }
+// The leaderboard ranks total stars (saved scores; the server keeps the best of each day). Never added to other games' scores.
+function todayNumber() { const n = new Date(); return n.getUTCFullYear() * 10000 + (n.getUTCMonth() + 1) * 100 + n.getUTCDate(); }
+let lastStarsSent = 0;
+function sendStars() { const A = acc(); const t = totalStars(); if (A && accountMe && accountMe.signedIn && t > 0 && t !== lastStarsSent) { lastStarsSent = t; A.submitScore(GAME_ID, todayNumber(), t).then(ok => { if (!ok) lastStarsSent = 0; }); } }
 function openBoard(period = 'daily') {
   const A = acc(); if (!A) return;
-  const tab = (p) => `<button class="btn ${p === period ? 'primary' : 'ghost'}" data-p="${p}" type="button">${p[0].toUpperCase() + p.slice(1)}</button>`;
+  const tab = (p) => `<button class="btn ${p === period ? 'primary' : 'ghost'}" data-p="${p}" type="button">${({ daily: 'Today', weekly: 'This week', monthly: 'This month' })[p]}</button>`;
   modal(`<h3>Leaderboard</h3><div class="btns">${['daily', 'weekly', 'monthly'].map(tab).join('')}</div><div id="board-list" class="board-list">Loading...</div>
-    <p class="board-note">Daily Brew results only, the same tray for everyone. Saved scores, not yet verified.</p><div class="btns"><button class="btn ghost" id="board-back" type="button">Back</button></div>`);
+    <p class="board-note">Ranked by total stars. Saved scores, not yet verified.</p><div class="btns"><button class="btn ghost" id="board-back" type="button">Back</button></div>`);
   $('modal-card').querySelectorAll('button[data-p]').forEach(b => b.addEventListener('click', () => openBoard(b.dataset.p)));
-  bind('board-back', openSettings);
+  bind('board-back', openAccount);
   A.leaderboard(GAME_ID, period).then(d => {
     const box = $('board-list'); if (!box) return; box.textContent = '';
     if (!d) { box.textContent = 'The leaderboard is not available right now.'; return; }
     const line = (rank, name, score, you) => { const r = el('div', { className: 'board-line' + (you ? ' you' : '') }, el('span', { className: 'board-rank', textContent: String(rank) }), el('span', { className: 'board-name', textContent: name }), el('span', { className: 'board-score', textContent: Number(score).toLocaleString('en-US') })); return r; };
-    if (!d.entries.length) box.append(el('small', { textContent: 'No scores yet. Sign in, pick a nickname and play today\u2019s Daily Brew to be first.' }));
+    if (!d.entries.length) box.append(el('small', { textContent: 'No scores yet. Sign in, pick a nickname and clear a tray to be first.' }));
     d.entries.slice(0, 10).forEach(e => box.append(line(e.rank, e.nickname, e.score, e.you)));
     if (d.you && d.you.rank > 10) box.append(line(d.you.rank, 'You', d.you.score, true));
   });
@@ -1292,7 +1224,7 @@ async function renderAccount() {
   if (!me.signedIn) {
     const go = el('a', { className: 'btn primary', href: A.signInUrl(GAME_ID), textContent: 'Continue with Google' });
     const lbG = el('button', { className: 'btn ghost', type: 'button', textContent: 'Leaderboard' }); lbG.addEventListener('click', () => openBoard('daily'));
-    box.append(el('span', {}, el('b', { textContent: 'Keep your progress' }), el('small', { textContent: 'Optional. Saves your stars and streak on every device. We store your email, name and a nickname you choose.' }), el('small', {}, el('a', { href: PRIVACY_URL, target: '_blank', rel: 'noopener noreferrer', textContent: 'What we store' }))), go, lbG);
+    box.append(el('span', {}, el('b', { textContent: 'Keep your progress' }), el('small', { textContent: 'Optional. Saves your stars and postcards on every device. We store your email, name and a nickname you choose.' }), el('small', {}, el('a', { href: PRIVACY_URL, target: '_blank', rel: 'noopener noreferrer', textContent: 'What we store' }))), go, lbG);
     return;
   }
   const nick = el('input', { id: 'acct-nick', type: 'text', maxLength: 16, value: me.nickname || '', placeholder: 'Pick a nickname', autocomplete: 'off' });
@@ -1300,9 +1232,9 @@ async function renderAccount() {
   save1.addEventListener('click', async () => { const r = await A.setProfile({ nickname: nick.value }); say2.textContent = r.ok ? 'Saved.' : (r.error || 'Could not save.'); if (r.ok) accountMe = await A.me(true); });
   const boards = el('input', { type: 'checkbox', checked: me.showOnBoards });
   boards.addEventListener('change', () => A.setProfile({ showOnBoards: boards.checked }));
+  const lb = el('button', { className: 'btn ghost', type: 'button', textContent: 'Leaderboard' }); lb.addEventListener('click', () => openBoard('daily'));
   const out = el('button', { className: 'btn ghost', type: 'button', textContent: 'Sign out' });
   out.addEventListener('click', async () => { await A.signOut(); accountMe = null; renderAccount(); });
-  const lb = el('button', { className: 'btn ghost', type: 'button', textContent: 'Leaderboard' }); lb.addEventListener('click', () => openBoard('daily'));
   const del = el('button', { className: 'btn ghost', type: 'button', textContent: 'Delete my data' });
   del.addEventListener('click', async () => {
     if (del.dataset.sure !== '1') { del.dataset.sure = '1'; del.textContent = 'Tap again to delete everything'; return; }
@@ -1331,100 +1263,12 @@ async function initAccount() {
   const A = acc(); if (!A) return;
   const m = /^\?signin=(ok|cancelled|failed|expired)$/.exec(location.search);
   if (m) history.replaceState(null, '', location.pathname);
-  await syncNow(); updateAccountPill();
+  await syncNow(); updateAccountPill(); sendStars();
   if (m && m[1] === 'ok') openAccount();
   else if (m) modal(`<h3>Sign-in did not finish</h3><p>${m[1] === 'cancelled' ? 'No problem. You can keep playing as a guest.' : 'Please try again with the Sign in button. You can keep playing as a guest.'}</p><div class="btns"><button class="btn primary" id="acct-ok" type="button">OK</button></div>`), bind('acct-ok', closeModal);
 }
 function modal(html) { $('modal-card').innerHTML = html; $('modal').hidden = false; const b = $('modal-card').querySelector('button'); if (b) b.focus(); }
 function closeModal() { $('modal').hidden = true; }
-
-// ---------------- Share card ----------------
-// A spoiler-free picture: no tray layout, only the result. Drawn on a canvas, saved as PNG.
-const LAUNCH_DAY = 20261012; // Daily Brew #1
-function dailyLabel(num) {
-  const idx = (n) => Date.UTC(Math.floor(n / 10000), Math.floor(n / 100) % 100 - 1, n % 100) / 864e5;
-  return Math.max(1, Math.round(idx(num) - idx(LAUNCH_DAY)) + 1);
-}
-function shareText(d) {
-  if (d.kind === 'daily') return `TODDY Moon Brew · Daily #${dailyLabel(d.num)}\n${'★'.repeat(d.stars)}${'☆'.repeat(3 - d.stars)} ${d.score}/1000 · ${d.secs}s${d.streak > 1 ? ` · ${d.streak}-day streak` : ''}\nCan you beat it?`;
-  return 'TODDY Moon Brew';
-}
-function loadImg(src) { return new Promise(res => { const im = new Image(); im.onload = () => res(im); im.onerror = () => res(null); im.src = src; }); }
-async function drawShare(d) {
-  const W = 1080, H = 1350;
-  const c = document.createElement('canvas'); c.width = W; c.height = H;
-  const x = c.getContext('2d');
-  x.fillStyle = '#17112a'; x.fillRect(0, 0, W, H);
-  const nn = { milo: 0, moth: 1, star: 2, pip: 3, lumi: 4, velvet: 5, inkwell: 6, biscuit: 7 }[d.visitor] || 0; // the card of that visitor's Night
-  const art = nn < 3 ? await loadImg(ASSET + `postcard_n${nn + 1}_v02.webp`) : await buildPostcard(nn, ASSET, 0.9);
-  if (art) { const aw = art.naturalWidth || art.width, ah = art.naturalHeight || art.height; x.drawImage(art, 0, 0, W, W * ah / aw); }
-  const grad = x.createLinearGradient(0, 380, 0, 760);
-  grad.addColorStop(0, 'rgba(23,17,42,0)'); grad.addColorStop(1, 'rgba(23,17,42,1)');
-  x.fillStyle = grad; x.fillRect(0, 380, W, 400);
-  x.fillStyle = '#17112a'; x.fillRect(0, 760, W, H - 760);
-  const font = (w, s) => `${w} ${s}px ui-rounded, "SF Pro Rounded", "Nunito", system-ui, sans-serif`;
-  x.textAlign = 'center';
-  x.fillStyle = '#fdaf1e'; x.font = font(800, 34); x.fillText('T O D D Y', W / 2, 700);
-  x.fillStyle = '#fde3bd'; x.font = font(900, 110); x.fillText('Moon Brew', W / 2, 810);
-  x.fillStyle = '#c3b2d8'; x.font = font(700, 40);
-  x.fillText(d.kind === 'daily' ? `Daily Brew #${dailyLabel(d.num)}` : 'Moon Brew', W / 2, 880);
-  if (d.kind === 'daily') {
-    x.font = font(900, 92); x.fillStyle = '#fdaf1e';
-    x.fillText('★'.repeat(d.stars) + '☆'.repeat(3 - d.stars), W / 2, 1000);
-    // score and "/1000" centred together
-    x.font = font(900, 150); const sw = x.measureText(String(d.score)).width;
-    x.font = font(800, 50); const tw = x.measureText(' /1000').width;
-    const left = (W - sw - tw) / 2;
-    x.textAlign = 'left';
-    x.fillStyle = '#fde3bd'; x.font = font(900, 150); x.fillText(String(d.score), left, 1150);
-    x.fillStyle = '#c3b2d8'; x.font = font(800, 50); x.fillText(' /1000', left + sw, 1150);
-    x.textAlign = 'center'; x.font = font(700, 40);
-    x.fillText(`${d.secs}s · ${d.bumps} bump${d.bumps === 1 ? '' : 's'}${d.streak > 1 ? ` · ${d.streak}-day streak` : ''}`, W / 2, 1215);
-  } else {
-    x.fillStyle = '#fde3bd'; x.font = font(900, 150); x.fillText(String(d.score), W / 2, 1080);
-    x.fillStyle = '#c3b2d8'; x.font = font(800, 46); x.fillText(`points · ${d.trays} tray${d.trays === 1 ? '' : 's'} cleared`, W / 2, 1150);
-  }
-  x.fillStyle = '#fdaf1e'; x.font = font(800, 38); x.fillText('Can you beat it?  toddy.meme/games/moon-brew', W / 2, 1300);
-  return c;
-}
-let shareBlobUrl = null;
-async function openShare(d, back) {
-  card('<h3>Share your brew</h3><p class="stat">Making your card…</p>');
-  const c = await drawShare(d);
-  const blob = await new Promise(res => c.toBlob(res, 'image/png'));
-  if (shareBlobUrl) URL.revokeObjectURL(shareBlobUrl);
-  shareBlobUrl = URL.createObjectURL(blob);
-  const text = shareText(d);
-  const enc = encodeURIComponent;
-  const file = new File([blob], 'toddy-moon-brew.png', { type: 'image/png' });
-  const touch = ('ontouchstart' in window) || navigator.maxTouchPoints > 0;
-  const nativeShare = touch && navigator.canShare && navigator.canShare({ files: [file] });
-  card(`<h3>Share your brew</h3>
-    <img class="postcard share-img" src="${shareBlobUrl}" alt="Your Moon Brew result card">
-    ${nativeShare ? '<div class="btns"><button class="btn primary" id="s-native" type="button">Share…</button></div>' : ''}
-    <div class="btns"><a class="btn ${nativeShare ? '' : 'primary'}" id="s-x">Post on X</a><a class="btn" id="s-tg">Telegram</a></div>
-    <div class="btns"><button class="btn ghost" id="s-copy" type="button">Copy link</button><button class="btn ghost" id="s-save" type="button">Save image</button></div>
-    <p class="stat" id="s-msg">No spoilers on the card: only your score, stars and time.</p>
-    <div class="btns"><button class="btn ghost" id="s-back" type="button">Back</button></div>`);
-  const msg = (t) => { $('s-msg').textContent = t; };
-  bind('s-back', back);
-  track('share_open', { kind: d.kind });
-  ['s-native', 's-x', 's-tg', 's-copy', 's-save'].forEach(id => { const el = $(id); if (el) el.addEventListener('click', () => track('share', { kind: d.kind, via: id.slice(2) })); });
-  bind('s-native', () => navigator.share({ files: [file], text: `${text} ${SHARE_URL}` })
-    .then(() => msg('Shared. Thank you!'))
-    .catch(e => { if (!e || e.name !== 'AbortError') msg('This screen can\u2019t open the share sheet. Use Post on X or Telegram.'); }));
-  linkTo($('s-x'), `https://x.com/intent/post?text=${enc(text)}&url=${enc(SHARE_URL)}`);
-  linkTo($('s-tg'), `https://t.me/share/url?url=${enc(SHARE_URL)}&text=${enc(text)}`);
-  bind('s-copy', async () => {
-    try { await navigator.clipboard.writeText(`${text} ${SHARE_URL}`); msg('Copied. Paste it anywhere.'); }
-    catch (e) { msg('Copying is blocked here. Long-press to copy: ' + SHARE_URL); }
-  });
-  bind('s-save', () => {
-    if (isFramed()) { msg('This preview can\u2019t save files. Long-press (or right-click) the picture above and choose Save image.'); return; }
-    const a = document.createElement('a'); a.href = shareBlobUrl; a.download = file.name;
-    document.body.appendChild(a); a.click(); a.remove(); msg('Saved as toddy-moon-brew.png');
-  });
-}
 
 // ---------------- Buttons ----------------
 bind('btn-play', () => {
@@ -1432,7 +1276,6 @@ bind('btn-play', () => {
   if (!Object.keys(save.stars).length) { startTray(0, 1); return; } // first time: straight into tray 1
   mapNight = (nextTray() || [lastOpenNight()])[0]; show('map');
 });
-bind('btn-daily', () => { sfx.tick(); startDaily(); });
 bind('where', () => { if (mode && mode.kind === 'story') { clearTimeout(finishTimer); mapNight = mode.n; show('map'); } });
 bind('btn-album', () => show('album'));
 bind('btn-stats', () => show('stats'));
@@ -1450,19 +1293,18 @@ bind('map-back', () => show('title'));
 bind('album-back', () => show('title'));
 bind('howto-back', () => show('title'));
 bind('play-back', () => { clearTimeout(finishTimer); show(mode && mode.kind === 'story' ? 'map' : 'title'); });
-bind('btn-restart', () => { if (mode.kind === 'daily') startDaily(); else startTray(mode.n, mode.t); });
+bind('btn-restart', () => { startTray(mode.n, mode.t); });
 bind('btn-hint', () => {
   if (!g || g.status !== 'playing') return;
   hintBean = useHint(g, performance.now() - startedAt);
   track('hint', { ...modeInfo(), auto: false });
   toddyPlay('thinking');
-  const cost = mode.kind === 'daily' ? ' (−50)' : '';
+  const cost = '';
   say(hintBean ? (hintBean.awake ? `Try the circled bean${cost}.` : hintBean.frost ? `Crack the circled bean${cost}.` : `Wake the circled bean${cost}.`) : 'Stuck. Tap Restart.');
   draw();
 });
 
 // Automatic help when a player is stuck: a gentle nudge after 60 s, a stronger hint after 2 min.
-// In the Daily Brew the stronger step only offers the Hint button, so scores stay fair.
 let lastMove = 0, nudged = 0;
 function resetIdle() { lastMove = performance.now(); nudged = 0; }
 setInterval(() => {
@@ -1474,8 +1316,7 @@ setInterval(() => {
     say('Find a bean with a clear path.');
   } else if (idle >= 50 && nudged < 2) {
     nudged = 2;
-    if (mode.kind === 'daily') say('Still stuck? Tap Hint (−50).');
-    else { hintBean = hint(g); toddyPlay('thinking'); say('Toddy circled one for you.'); draw(); track('hint', { ...modeInfo(), auto: true }); }
+    { hintBean = hint(g); toddyPlay('thinking'); say('Toddy circled one for you.'); draw(); track('hint', { ...modeInfo(), auto: true }); }
   }
 }, 1000);
 $('unlock-all').addEventListener('change', (e) => { save.unlockAll = e.target.checked; writeSave(); renderMap(); });
@@ -1557,7 +1398,7 @@ track('open', { returning: Object.keys(save.stars).length > 0 || Object.keys(sav
 // Hooks for the automatic browser tests (tools/smoke.py). Not used by players.
 window.__moonbrew = {
   get g() { return g; }, get level() { return level; }, get mode() { return mode; }, get coach() { return coach && coach.key; }, save,
-  startTray, startDaily, show, buildPostcard: (n, sc = 0.5) => buildPostcard(n, ASSET, sc), nightInfo, audioState: () => actx ? actx.state : "none",
+  startTray, show, buildPostcard: (n, sc = 0.5) => buildPostcard(n, ASSET, sc), nightInfo, audioState: () => actx ? actx.state : "none",
   // test-only level meter: loudest sample and average level of everything leaving the speakers
   meter() { if (!mixOut) return null; if (!this._an) { this._an = actx.createAnalyser(); this._an.fftSize = 2048; mixOut.connect(this._an); } const d = new Float32Array(2048); this._an.getFloatTimeDomainData(d); let pk = 0, sq = 0; for (const v of d) { pk = Math.max(pk, Math.abs(v)); sq += v * v; } return { peak: pk, rms: Math.sqrt(sq / d.length) }; },
   sfx: (n) => sfx[n](), music: () => musicOn,
