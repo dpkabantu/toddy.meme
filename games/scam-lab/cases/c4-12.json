@@ -3,207 +3,259 @@
   "type": "hunt",
   "chapter": 4,
   "difficulty": 2,
-  "title": "The Threat Text",
-  "disguise": "support",
+  "title": "The Flagged Wallet",
+  "disguise": "admin",
   "intro": [
-    "A message arrives from a stranger. It says private pictures of you exist. It is a text only, and nothing is shown.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "A text says your wallet address was \"flagged\" in a criminal case.",
+    "It asks you to settle quickly to stay out of trouble.",
+    "Sniff the text, then decide."
   ],
   "notify": {
     "app": "Messages",
-    "from": "Unknown number",
-    "text": "I have your private photos…"
+    "from": "Compliance Unit",
+    "text": "Your wallet is flagged. Settle within 24 hours…"
   },
   "screen": {
     "app": "sms",
     "head": {
       "name": [
         {
-          "clue": "num",
-          "text": "Unknown number"
+          "clue": "sender",
+          "text": "Compliance Unit"
         }
       ]
     },
-    "context": "No picture or file is attached. You have no idea what they mean.",
+    "context": "You have never been contacted by any authority.",
     "items": [
       {
         "time": [
-          "Today 11:58 PM"
-        ]
-      },
-      {
-        "msg": [
-          "I have ",
           {
-            "clue": "photos",
-            "text": "your private photos"
-          },
-          ". I will send them to everyone you know."
-        ]
-      },
-      {
-        "msg": [
-          {
-            "clue": "pay",
-            "text": "Pay $300 in the next hour"
-          },
-          " and I will delete them."
-        ]
-      },
-      {
-        "msg": [
-          {
-            "clue": "nopic",
-            "text": "I will not show them to you yet."
+            "clue": "time",
+            "text": "Today 7:15 AM"
           }
         ]
       },
       {
         "msg": [
+          "Your wallet address was ",
           {
-            "clue": "secret",
-            "text": "Tell no one."
-          }
+            "clue": "flag",
+            "text": "flagged in case #44-8812"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          "Settle the fine of ",
+          {
+            "clue": "fine",
+            "text": "0.05 BTC"
+          },
+          " at ",
+          {
+            "clue": "link",
+            "text": "wallet-compliance.help/pay",
+            "link": true
+          },
+          " to ",
+          {
+            "clue": "threat",
+            "text": "avoid being reported"
+          },
+          "."
+        ]
+      },
+      {
+        "msg": [
+          {
+            "clue": "timer",
+            "text": "Reported in",
+            "countdown": 900
+          },
+          "."
         ]
       }
     ]
   },
   "clues": {
-    "photos": {
-      "label": "\"I have your photos\"",
+    "fine": {
+      "label": "A fine in BTC",
       "strength": "strong",
-      "lens": "A claim with nothing shown.",
-      "why": "Scammers send the same threat to thousands of people and hope some are frightened."
+      "lens": "Authorities do not take fines in bitcoin by text.",
+      "why": "Crypto payments cannot be reversed."
     },
-    "pay": {
-      "label": "Pay within the hour",
+    "link": {
+      "label": "Look-alike link",
       "strength": "strong",
-      "lens": "A demand for money, with a short deadline.",
-      "why": "Paying never ends it. It usually leads to more demands."
+      "lens": "wallet-compliance.help is not an official site.",
+      "why": "Government sites use official domains."
     },
-    "nopic": {
-      "label": "Nothing shown",
+    "threat": {
+      "label": "\"Avoid being reported\"",
       "strength": "strong",
-      "lens": "They show no picture, not even one.",
-      "why": "No proof means they probably have nothing."
+      "lens": "A threat to make you pay.",
+      "why": "Real cases give letters and time, not texts with deadlines."
     },
-    "secret": {
-      "label": "\"Tell no one\"",
+    "timer": {
+      "label": "Reported in minutes",
       "strength": "strong",
-      "lens": "Secrecy keeps you alone with the fear.",
-      "why": "Telling someone you trust, and reporting, is the way out."
+      "lens": "A countdown.",
+      "why": "Pressure stops you from checking."
     },
-    "num": {
-      "label": "An unknown number",
+    "flag": {
+      "label": "A flagged wallet, no details",
+      "strength": "strong",
+      "lens": "It names a case number but nothing you can look up.",
+      "why": "A made-up number makes it feel real."
+    },
+    "sender": {
+      "label": "Compliance Unit",
       "strength": "harmless",
-      "lens": "A stranger at midnight.",
-      "why": "The number alone proves little."
+      "lens": "Sounds official.",
+      "why": "Names are easy to type."
+    },
+    "time": {
+      "label": "Sent at 7:15 AM",
+      "strength": "harmless",
+      "lens": "An ordinary time.",
+      "why": "The time proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Pay the $300"
+      "label": "Pay the fine",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
     },
     {
       "id": "verify",
-      "label": "Do not pay. Tell someone I trust"
+      "label": "Contact the police on a number I look up myself"
     },
     {
       "id": "block_report",
-      "label": "Do not pay. Block the number and report it to your local fraud-reporting service"
+      "label": "Delete it and report the text as junk"
     }
   ],
   "best_action": "block_report",
   "acceptable_actions": [
-    "verify"
+    "verify",
+    "ignore"
   ],
+  "trap": {
+    "title": "Wallet Compliance · Pay fine",
+    "url": "wallet-compliance.help/pay",
+    "ask": "Send 0.05 BTC to settle case #44-8812.",
+    "go": "Pay 0.05 BTC",
+    "back": "Close this page"
+  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "You blocked the number and reported it. Nothing was sent anywhere, and the threats stopped.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Reported and deleted. The fake site was taken down.",
+      "mirageSays": "My lovely case!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "You told a friend. They said it was a mass threat message and helped you report it. Nothing followed. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "The police had no case on you and said they never take fines by text. Case cracked.",
+      "mirageSays": "Hmph. They called the real police."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You ignored it safely. Reporting protects others.",
+      "mirageSays": "Fine. Next phone!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The first payment brought a second demand, then a third. Paying never ended it.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The BTC went to a stranger. No case ever existed.",
+      "mirageSays": "Thanks for the fine!"
     }
   },
   "what_if": {
-    "go_ahead": "Not paying, telling someone and reporting would have stopped it. A threat with no proof is usually empty.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "The police would have said there was no case. Checking costs nothing.",
+    "verify": "Checking was smart. Reporting helps others.",
+    "ignore": "Ignoring it was safe. A quick report protects others."
   },
-  "golden_rule": "Never pay a person who threatens you. Block, tell someone you trust, and report it. You are not alone.",
+  "golden_rule": "A text that demands a fine in crypto is a scam. Real cases arrive on paper, with a reference.",
   "quick_check": {
-    "q": "A stranger says they have private photos of you and demands money. They show nothing. What is the best move?",
+    "q": "A text says your wallet is flagged and demands a fine in BTC through a link. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Pay quickly so it ends"
+        "text": "Pay to avoid trouble"
       },
       {
         "id": "b",
-        "text": "Pay half"
+        "text": "Do not pay. Check with the police yourself and report the text"
       },
       {
         "id": "c",
-        "text": "Do not pay. Block, tell someone you trust and report it"
+        "text": "Pay half"
       },
       {
         "id": "d",
-        "text": "Reply to bargain"
+        "text": "Reply to ask for proof"
       }
     ],
-    "answer": "c",
-    "explain": "Paying does not end it. Telling someone and reporting does."
+    "answer": "b",
+    "explain": "A crypto fine by text is always a scam. Look up the real police yourself."
   },
   "hints": {
-    "nudge": "What proof did they actually show?",
+    "nudge": "Who takes fines in bitcoin by text?",
     "glow_order": [
-      "photos",
-      "pay",
-      "nopic",
-      "secret"
+      "fine",
+      "link",
+      "threat",
+      "timer",
+      "flag"
     ]
   },
-  "sources": [
-    "ftc-government"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the message",
-      "title": "What was sent",
+      "label": "Check sender",
+      "title": "Who sent this text",
       "rows": [
         {
-          "k": "Any picture shown?",
-          "v": "None",
-          "clue": "nopic"
+          "k": "Number",
+          "v": "Not a number you know",
+          "clue": "sender"
         },
         {
-          "k": "Asked for money",
-          "v": "$300 in an hour",
-          "clue": "pay"
+          "k": "Your history",
+          "v": "No contact from any authority",
+          "clue": "flag"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check link",
+      "title": "Where it goes",
+      "rows": [
+        {
+          "k": "It really opens",
+          "v": "wallet-compliance.help",
+          "clue": "link"
         },
         {
-          "k": "Asked you to tell no one",
-          "v": "Yes",
-          "clue": "secret"
+          "k": "Asks for",
+          "v": "0.05 BTC",
+          "clue": "fine"
         }
       ]
     },
@@ -211,18 +263,22 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What police say",
       "rows": [
         {
-          "k": "Blackmail messages",
-          "v": "The government warns about them and asks you to report",
-          "clue": "photos"
+          "k": "Fines by text, paid in crypto",
+          "v": "Never"
         },
         {
-          "k": "Where to report",
-          "v": "The fraud-reporting service in your country, or the police"
+          "k": "Real cases",
+          "v": "Start with a letter and a reference"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-government",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

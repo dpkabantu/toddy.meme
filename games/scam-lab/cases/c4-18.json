@@ -3,58 +3,90 @@
   "type": "hunt",
   "chapter": 4,
   "difficulty": 2,
-  "title": "The Lawyer's Letter",
+  "title": "The Lawsuit Letter",
   "disguise": "admin",
   "intro": [
-    "An email from a law firm says you are being sued, unless you settle today.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "An email from a law firm says a token you once bought is part of a \"class action\".",
+    "You owe a \"settlement fee\" or you will be named in court.",
+    "Sniff the email, then decide."
   ],
   "notify": {
     "app": "Mail",
-    "from": "Harlow & Finch Legal",
-    "text": "Legal notice: you are being sued"
+    "from": "Hollenor Legal",
+    "text": "Notice of proceedings: settlement required…"
   },
   "screen": {
     "app": "mail",
     "head": {
       "from": [
         {
-          "clue": "from",
-          "text": "Harlow & Finch Legal"
+          "clue": "sender",
+          "text": "Hollenor Legal"
         }
       ],
       "addr": [
         {
           "clue": "addr",
-          "text": "notice@harlowfinch-legal.net"
+          "text": "office@hollenor-legal-claims.com"
         }
       ],
       "subject": [
         {
           "clue": "subject",
-          "text": "LEGAL NOTICE: you are being sued"
+          "text": "Notice of proceedings: token class action"
         }
       ],
       "time": [
-        "6:45 AM"
+        "10:20 AM"
       ]
     },
     "items": [
       {
         "p": [
+          "Dear ",
           {
             "clue": "greet",
-            "text": "Dear Sir or Madam,"
-          }
+            "text": "Sir or Madam"
+          },
+          ","
         ]
       },
       {
         "p": [
-          "A claim has been filed against you for ",
+          "You are named in ",
           {
-            "clue": "claim",
-            "text": "unpaid dues of $1,850"
+            "clue": "suit",
+            "text": "case HL-2291"
+          },
+          " over the ",
+          {
+            "clue": "tok",
+            "text": "ZOOMBEAN token"
+          },
+          ". A settlement of ",
+          {
+            "clue": "fee",
+            "text": "€450"
+          },
+          " is due."
+        ]
+      },
+      {
+        "p": [
+          "Pay it to wallet ",
+          {
+            "clue": "addr_w",
+            "text": "0x66d…c18"
+          },
+          " in ",
+          {
+            "clue": "coin",
+            "text": "USDT"
+          },
+          " to ",
+          {
+            "clue": "threat",
+            "text": "avoid being named in court"
           },
           "."
         ]
@@ -62,84 +94,102 @@
       {
         "p": [
           {
-            "clue": "settle",
-            "text": "Settle today to avoid court. After today the amount will double."
-          }
+            "clue": "timer",
+            "text": "Reply within",
+            "countdown": 900
+          },
+          "."
         ]
       },
       {
-        "p": [
+        "foot": [
           {
-            "clue": "link",
-            "text": "Settle now",
-            "link": true
-          }
-        ]
-      },
-      {
-        "p": [
-          {
-            "clue": "who",
-            "text": "We act for a client who wishes to remain anonymous."
+            "clue": "foot",
+            "text": "Hollenor Legal · Privileged and confidential"
           }
         ]
       }
-    ]
+    ],
+    "context": "You did buy a small amount of a token last year."
   },
   "clues": {
+    "coin": {
+      "label": "A settlement in USDT",
+      "strength": "strong",
+      "lens": "Law firms and courts do not take settlements to private wallets.",
+      "why": "Crypto payments cannot be reversed."
+    },
     "addr": {
-      "label": "A strange address",
+      "label": "Look-alike address",
       "strength": "strong",
-      "lens": "It comes from harlowfinch-legal.net, not a normal law firm address.",
-      "why": "Look at the address behind the name."
+      "lens": "hollenor-legal-claims.com is not the firm's real site.",
+      "why": "A different ending is a different owner."
     },
-    "claim": {
-      "label": "Unpaid dues you do not know",
+    "threat": {
+      "label": "Named in court",
       "strength": "strong",
-      "lens": "You owe nothing you can think of.",
-      "why": "A claim you do not recognise needs checking, not paying."
+      "lens": "A threat to make you pay.",
+      "why": "Real courts send formal papers, not emails with a wallet address."
     },
-    "settle": {
-      "label": "Settle today or it doubles",
+    "timer": {
+      "label": "Reply in minutes",
       "strength": "strong",
-      "lens": "A deadline and a doubling penalty.",
-      "why": "A hard deadline stops you thinking."
+      "lens": "A deadline.",
+      "why": "Pressure stops you from checking."
     },
-    "link": {
-      "label": "A \"settle now\" link",
+    "suit": {
+      "label": "A case number with no details",
       "strength": "strong",
-      "lens": "It leads to a payment page.",
-      "why": "Real firms do not ask you to settle through an email link."
-    },
-    "who": {
-      "label": "An anonymous client",
-      "strength": "strong",
-      "lens": "They will not say who is suing you.",
-      "why": "A real claim names who is making it."
+      "lens": "Nothing you can look up.",
+      "why": "A made-up number makes it look official."
     },
     "greet": {
-      "label": "\"Dear Sir or Madam\"",
+      "label": "\"Sir or Madam\"",
       "strength": "harmless",
-      "lens": "No name.",
-      "why": "Vague greetings are common, but not proof alone."
+      "lens": "A generic greeting.",
+      "why": "A hint, not proof."
     },
-    "from": {
-      "label": "A firm name",
+    "sender": {
+      "label": "Law firm name",
       "strength": "harmless",
-      "lens": "Harlow & Finch Legal.",
-      "why": "Names are easy to invent."
+      "lens": "Hollenor Legal.",
+      "why": "Anyone can type a firm name."
     },
     "subject": {
-      "label": "Capital letters",
+      "label": "Legal-sounding subject",
       "strength": "harmless",
-      "lens": "LEGAL NOTICE in capitals.",
-      "why": "Shouting proves nothing alone."
+      "lens": "Sounds serious.",
+      "why": "Serious words are bait."
+    },
+    "tok": {
+      "label": "Names a real token you bought",
+      "strength": "harmless",
+      "lens": "The token fits your history.",
+      "why": "Scammers guess popular tokens."
+    },
+    "fee": {
+      "label": "A precise fee",
+      "strength": "harmless",
+      "lens": "€450 looks specific.",
+      "why": "Precise numbers are easy to write."
+    },
+    "addr_w": {
+      "label": "A wallet address",
+      "strength": "harmless",
+      "lens": "A long address.",
+      "why": "Addresses look technical, which is the point."
+    },
+    "foot": {
+      "label": "Confidential footer",
+      "strength": "harmless",
+      "lens": "Official-looking.",
+      "why": "Footers are easy to copy."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Click Settle now",
+      "label": "Pay the settlement",
       "trap": true
     },
     {
@@ -148,11 +198,11 @@
     },
     {
       "id": "verify",
-      "label": "Search for the firm and call a number I look up myself"
+      "label": "Look up the firm and the case on my own"
     },
     {
       "id": "block_report",
-      "label": "Report it and delete it"
+      "label": "Report it as phishing and delete it"
     }
   ],
   "best_action": "block_report",
@@ -161,50 +211,50 @@
     "ignore"
   ],
   "trap": {
-    "title": "Harlow & Finch · Settle",
-    "url": "harlowfinch-legal.net/settle",
-    "ask": "Pay $1,850 by card to settle the claim.",
-    "go": "Pay $1,850",
-    "back": "Close this page"
+    "title": "Hollenor Legal · Settlement",
+    "url": "wallet transfer",
+    "ask": "Send 450 USDT to 0x66d…c18 to settle.",
+    "go": "Send 450 USDT",
+    "back": "Cancel"
   },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Reported as phishing and deleted. The fake address was blocked.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Reported and deleted. The fake domain was taken down.",
+      "mirageSays": "My lovely lawsuit!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "No such firm existed on the official register, and no claim had been filed. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "The court register had no such case, and the firm's real site warned about copies. Case cracked.",
+      "mirageSays": "Hmph. They looked it up."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. A report protects others.",
+      "mirageSays": "Fine. Next inbox!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The page copied your card. The \"claim\" never existed, and the money was gone.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The 450 USDT went to a stranger. No court ever heard of you.",
+      "mirageSays": "Thanks for the settlement!"
     }
   },
   "what_if": {
-    "go_ahead": "Checking whether the firm really exists would have ended it. A real claim names who is suing you.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "A look at the court register would have shown no case at all.",
+    "verify": "Checking was smart. Reporting helps others.",
+    "ignore": "Ignoring it was safe. A quick report protects others."
   },
-  "golden_rule": "A legal threat with a deadline and a payment link is a scam. Check that the firm exists, on a number you look up yourself.",
+  "golden_rule": "Law firms and courts never ask you to pay a settlement in crypto to a wallet address.",
   "quick_check": {
-    "q": "An email says you are being sued and must settle today through a link. What do you do?",
+    "q": "A \"law firm\" email says you owe a settlement, to be paid in USDT to a wallet. What do you do?",
     "options": [
       {
         "id": "a",
@@ -212,51 +262,68 @@
       },
       {
         "id": "b",
-        "text": "Reply to negotiate"
+        "text": "Do not pay. Look the firm up yourself and report the email"
       },
       {
         "id": "c",
-        "text": "Do not click. Check the firm yourself, and report the email"
+        "text": "Pay half"
       },
       {
         "id": "d",
-        "text": "Forward it to a friend"
+        "text": "Reply to negotiate"
       }
     ],
-    "answer": "c",
-    "explain": "A real claim names who is suing you and gives time. This one hurried you."
+    "answer": "b",
+    "explain": "A settlement paid to a private wallet is a scam. Real courts use formal papers."
   },
   "hints": {
-    "nudge": "Who is the claim from, and how much time did they give you?",
+    "nudge": "Where does the email want the money sent?",
     "glow_order": [
+      "coin",
       "addr",
-      "claim",
-      "settle",
-      "link",
-      "who"
+      "threat",
+      "timer",
+      "suit"
     ]
   },
-  "sources": [
-    "ftc-government",
-    "ftc-phishing"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check sender",
-      "title": "Who really sent this",
+      "title": "Who sent this email",
       "rows": [
         {
-          "k": "Address",
-          "v": "notice@harlowfinch-legal.net",
+          "k": "Sent from",
+          "v": "office@hollenor-legal-claims.com",
           "clue": "addr"
         },
         {
-          "k": "Claimant named?",
-          "v": "No, \"anonymous\"",
-          "clue": "who"
+          "k": "The real firm",
+          "v": "Has its own website and a public phone number"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check payment",
+      "title": "What it wants",
+      "rows": [
+        {
+          "k": "Pay in",
+          "v": "USDT to a wallet",
+          "clue": "coin"
+        },
+        {
+          "k": "Case number",
+          "v": "HL-2291, not in any court register",
+          "clue": "suit"
+        },
+        {
+          "k": "Threat",
+          "v": "Named in court",
+          "clue": "threat"
         }
       ]
     },
@@ -264,18 +331,22 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What regulators say",
       "rows": [
         {
-          "k": "Settle through a link?",
-          "v": "Never",
-          "clue": "link"
+          "k": "Settlements to a private wallet",
+          "v": "Never real"
         },
         {
-          "k": "How to check",
-          "v": "Look up the firm yourself and call it"
+          "k": "Check a case",
+          "v": "In the court register yourself"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-government",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

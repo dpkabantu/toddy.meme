@@ -3,71 +3,85 @@
   "type": "hunt",
   "chapter": 4,
   "difficulty": 2,
-  "title": "The Tax Notice",
+  "title": "The Tax Debt in Crypto",
   "disguise": "admin",
   "intro": [
-    "An email says you owe tax and a penalty will be added unless you pay through a link today.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "An email from \"the tax office\" says you have unreported crypto gains and owe a penalty.",
+    "You did trade last year, so it feels uncomfortably plausible.",
+    "Sniff the email, then decide."
   ],
   "notify": {
     "app": "Mail",
     "from": "Civic Revenue Portal",
-    "text": "Final notice: unpaid tax. Pay now."
+    "text": "Final notice: unreported crypto gains…"
   },
   "screen": {
     "app": "mail",
     "head": {
       "from": [
         {
-          "clue": "from",
+          "clue": "sender",
           "text": "Civic Revenue Portal"
         }
       ],
       "addr": [
         {
           "clue": "addr",
-          "text": "notice@civic-revenue-pay.com"
+          "text": "notices@civic-revenue-pay.com"
         }
       ],
       "subject": [
         {
           "clue": "subject",
-          "text": "FINAL NOTICE: unpaid tax, pay now"
+          "text": "FINAL NOTICE: unreported crypto gains"
         }
       ],
       "time": [
-        "7:30 AM"
+        "6:50 AM"
       ]
     },
     "items": [
       {
         "p": [
+          "Dear ",
           {
             "clue": "greet",
-            "text": "Dear Taxpayer,"
-          }
-        ]
-      },
-      {
-        "p": [
-          "You owe ",
-          {
-            "clue": "amount",
-            "text": "$642.30"
+            "text": "taxpayer"
           },
-          " in unpaid tax. ",
-          {
-            "clue": "penalty",
-            "text": "A penalty of $200 will be added at midnight."
-          }
+          ","
         ]
       },
       {
         "p": [
+          "We found ",
+          {
+            "clue": "gains",
+            "text": "unreported crypto gains"
+          },
+          " of €2,300. A penalty of ",
+          {
+            "clue": "pen",
+            "text": "€690"
+          },
+          " is due."
+        ]
+      },
+      {
+        "p": [
+          "Pay it now in ",
+          {
+            "clue": "coin",
+            "text": "USDT"
+          },
+          " to avoid ",
+          {
+            "clue": "threat",
+            "text": "legal action"
+          },
+          ": ",
           {
             "clue": "link",
-            "text": "Pay now",
+            "text": "civic-revenue-pay.com/settle",
             "link": true
           }
         ]
@@ -75,72 +89,96 @@
       {
         "p": [
           {
-            "clue": "arrest",
-            "text": "Failure to pay may lead to legal action and arrest."
-          }
+            "clue": "timer",
+            "text": "Final notice. Pay within",
+            "countdown": 900
+          },
+          "."
         ]
       },
       {
         "foot": [
-          "Civic Revenue Portal"
+          {
+            "clue": "foot",
+            "text": "Civic Revenue Portal · Compliance"
+          }
         ]
       }
-    ]
+    ],
+    "context": "You do trade crypto, and have filed your return as usual."
   },
   "clues": {
-    "addr": {
-      "label": "Not an official address",
+    "coin": {
+      "label": "Pay a tax penalty in USDT",
       "strength": "strong",
-      "lens": "It comes from civic-revenue-pay.com, not a government address.",
-      "why": "Government offices do not send payment requests from addresses like this."
+      "lens": "Tax offices do not take payment in crypto through an email link.",
+      "why": "Real penalties come on letters with a reference number, paid through official channels."
     },
-    "penalty": {
-      "label": "Penalty at midnight",
+    "addr": {
+      "label": "Look-alike address",
       "strength": "strong",
-      "lens": "A deadline and a penalty.",
-      "why": "A hard deadline stops you thinking."
+      "lens": "civic-revenue-pay.com is not the tax office's website.",
+      "why": "Government sites end in the country's official domain."
+    },
+    "threat": {
+      "label": "Legal action",
+      "strength": "strong",
+      "lens": "A threat to scare you into paying.",
+      "why": "Real offices send letters and give time. They do not threaten by email."
+    },
+    "timer": {
+      "label": "Pay within minutes",
+      "strength": "strong",
+      "lens": "A deadline to rush you.",
+      "why": "Pressure stops you from checking."
     },
     "link": {
-      "label": "A \"pay now\" link",
+      "label": "Pay-now link",
       "strength": "strong",
-      "lens": "The button goes to a payment page that is not official.",
-      "why": "Pay taxes only on the official site you type yourself."
+      "lens": "The link opens a copy of a payment page.",
+      "why": "Never pay a tax penalty through an email link."
     },
-    "arrest": {
-      "label": "\"Legal action and arrest\"",
+    "gains": {
+      "label": "Vague gains",
       "strength": "strong",
-      "lens": "A threat of arrest over a bill.",
-      "why": "Fear is the lure."
+      "lens": "It names no exchange, year or reference.",
+      "why": "Real notices carry a reference you can look up."
     },
     "greet": {
-      "label": "\"Dear Taxpayer\"",
+      "label": "\"Dear taxpayer\"",
       "strength": "harmless",
-      "lens": "No name.",
-      "why": "Vague greetings are common, but not proof of a scam alone."
+      "lens": "A generic greeting.",
+      "why": "A hint, but not proof."
     },
-    "amount": {
-      "label": "A specific amount",
-      "strength": "harmless",
-      "lens": "$642.30.",
-      "why": "A specific number can be invented."
-    },
-    "from": {
-      "label": "An official-sounding name",
+    "sender": {
+      "label": "Official-sounding name",
       "strength": "harmless",
       "lens": "Civic Revenue Portal.",
-      "why": "Names are easy to copy."
+      "why": "Names are easy to type."
     },
     "subject": {
-      "label": "Capital letters",
+      "label": "Alarming subject",
       "strength": "harmless",
       "lens": "FINAL NOTICE in capitals.",
-      "why": "Shouting proves nothing alone."
+      "why": "Alarming words are bait."
+    },
+    "pen": {
+      "label": "A specific penalty",
+      "strength": "harmless",
+      "lens": "€690 looks precise.",
+      "why": "Precise numbers make it feel real, but anyone can write them."
+    },
+    "foot": {
+      "label": "Official-looking footer",
+      "strength": "harmless",
+      "lens": "A department name.",
+      "why": "Footers are easy to copy."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Click Pay now",
+      "label": "Pay the penalty in USDT",
       "trap": true
     },
     {
@@ -149,11 +187,11 @@
     },
     {
       "id": "verify",
-      "label": "Check my tax account on the official website I type myself"
+      "label": "Check my tax account on the tax office's real website"
     },
     {
       "id": "block_report",
-      "label": "Report it and delete it"
+      "label": "Report it as phishing and delete it"
     }
   ],
   "best_action": "block_report",
@@ -162,100 +200,119 @@
     "ignore"
   ],
   "trap": {
-    "title": "Civic Revenue · Pay",
-    "url": "civic-revenue-pay.com/pay",
-    "ask": "Enter your card number to pay $642.30 and avoid the penalty.",
-    "go": "Pay $642.30",
+    "title": "Civic Revenue · Settle",
+    "url": "civic-revenue-pay.com/settle",
+    "ask": "Send 690 USDT to settle your penalty.",
+    "go": "Pay in USDT",
     "back": "Close this page"
   },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Reported as phishing and deleted. The fake address was blocked.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Reported and deleted. The fake domain was taken down.",
+      "mirageSays": "My lovely notice!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Your official tax account showed nothing owed. The email was fake. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "Your real tax account showed no debt and no penalty. The email was fake. Case cracked.",
+      "mirageSays": "Hmph. They checked the real office."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. A report protects others.",
+      "mirageSays": "Fine. Next inbox!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The page copied your card details. The \"tax\" was never owed, and the charges kept coming.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The 690 USDT went to a stranger. The tax office never knew about it.",
+      "mirageSays": "Thanks for the penalty!"
     }
   },
   "what_if": {
-    "go_ahead": "Your official account would have shown nothing owed. Government offices do not threaten arrest by email.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "Your real tax account would have shown nothing owed. Checking takes five minutes.",
+    "verify": "Checking was smart. Reporting helps others.",
+    "ignore": "Ignoring it was safe. A quick report protects others."
   },
-  "golden_rule": "Check any tax bill on the official website you type yourself. Never pay through an email link.",
+  "golden_rule": "Tax offices never ask for a penalty in crypto through an email link. Check your own tax account.",
   "quick_check": {
-    "q": "An email says you owe tax and will be arrested unless you pay through a link. What do you do?",
+    "q": "An email from \"the tax office\" demands a penalty paid in USDT through a link. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Pay, to avoid arrest"
+        "text": "Pay quickly to avoid trouble"
       },
       {
         "id": "b",
-        "text": "Reply asking for a copy"
+        "text": "Do not pay. Check the tax office's real site and report the email"
       },
       {
         "id": "c",
-        "text": "Do not click. Check on the official website you type yourself, and report it"
+        "text": "Pay half"
       },
       {
         "id": "d",
-        "text": "Forward it to a friend"
+        "text": "Reply to argue"
       }
     ],
-    "answer": "c",
-    "explain": "Fear is the lure. Your real account shows the truth."
+    "answer": "b",
+    "explain": "Payment in crypto and a link are the signs. Your own tax account tells the truth."
   },
   "hints": {
-    "nudge": "Look at the address the email really came from.",
+    "nudge": "How does the email want to be paid?",
     "glow_order": [
+      "coin",
       "addr",
-      "penalty",
-      "link",
-      "arrest"
+      "threat",
+      "timer",
+      "gains"
     ]
   },
-  "sources": [
-    "ftc-government",
-    "ftc-phishing"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check sender",
-      "title": "Who really sent this",
+      "title": "Who sent this email",
       "rows": [
         {
-          "k": "Address",
-          "v": "notice@civic-revenue-pay.com",
+          "k": "Sent from",
+          "v": "notices@civic-revenue-pay.com",
           "clue": "addr"
         },
         {
-          "k": "A real government address",
-          "v": "Ends in .gov or the official domain"
+          "k": "Real tax office",
+          "v": "Uses its official government domain"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check payment",
+      "title": "What it wants",
+      "rows": [
+        {
+          "k": "Pay in",
+          "v": "USDT",
+          "clue": "coin"
+        },
+        {
+          "k": "Threat",
+          "v": "Legal action",
+          "clue": "threat"
+        },
+        {
+          "k": "Deadline",
+          "v": "Minutes",
+          "clue": "timer"
         }
       ]
     },
@@ -263,18 +320,23 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What tax offices say",
       "rows": [
         {
-          "k": "Do government offices threaten arrest by email?",
-          "v": "Never",
-          "clue": "arrest"
+          "k": "Penalties are paid",
+          "v": "Through official channels, with a reference"
         },
         {
-          "k": "How to check a bill",
-          "v": "Use the official site you type yourself"
+          "k": "A tax office asking for crypto by email",
+          "v": "Never",
+          "clue": "coin"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-government",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

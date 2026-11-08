@@ -6,7 +6,7 @@
   "title": "Panic Inbox",
   "seconds": 60,
   "intro": [
-    "Ten messages, each trying to scare you. One minute. Calm checking beats panic.",
+    "Ten frightening messages, one minute. Panic is the scammer's favourite tool.",
     "Swipe left if it is a scam, right if it is safe. Or tap the buttons.",
     "Careful: some are honest. Do not cry wolf."
   ],
@@ -14,111 +14,111 @@
     {
       "id": "r1",
       "app": "SMS",
-      "from": "Brightgrid Energy",
-      "text": "Your electricity will be cut tonight unless you pay $120 now: brightgrid-pay.live",
-      "scam": true,
-      "why": "A threat to cut power tonight with a payment link. Check your own bill."
+      "from": "Ostrel",
+      "text": "Your login code is 731204. Never share it with anyone, including Ostrel staff.",
+      "scam": false,
+      "why": "A code you asked for, with a warning not to share it."
     },
     {
       "id": "r2",
       "app": "SMS",
-      "from": "Vantel Mobile",
-      "text": "Your SIM will be blocked in 2 hours. Update your details: vantel-sim-update.net",
+      "from": "Compliance Unit",
+      "text": "Your wallet is flagged. Pay a fine of 0.05 BTC at wallet-fines.help within 24 hours.",
       "scam": true,
-      "why": "A deadline and a look-alike link."
+      "why": "A fine in crypto, through a link, with a deadline."
     },
     {
       "id": "r3",
       "app": "Mail",
-      "from": "Brightgrid Energy",
-      "text": "Your bill for September is ready. See it in your Brightgrid account.",
-      "scam": false,
-      "why": "It asks for nothing and sends you to your own account."
+      "from": "Civic Revenue Portal",
+      "text": "Pay your crypto tax penalty in USDT now: civic-pay-usdt.com",
+      "scam": true,
+      "why": "Tax offices never take a penalty in USDT through an email link."
     },
     {
       "id": "r4",
       "app": "SMS",
-      "from": "Orrin Bank",
-      "text": "Your account is frozen! Verify now: orrin-unfreeze.co",
-      "scam": true,
-      "why": "A threat and a look-alike link. Open your own app."
+      "from": "Ostrel (in-app)",
+      "text": "You enabled a new withdrawal address. If this was not you, open the app and lock your account.",
+      "scam": false,
+      "why": "It tells you what you did, and sends you to your own app."
     },
     {
       "id": "r5",
-      "app": "Call",
-      "from": "Unknown number",
-      "text": "This is the Cyber Crime Branch. A warrant is out in your name. Stay on the line.",
+      "app": "Chirp",
+      "from": "Officer Hale",
+      "text": "Stay on camera. Move your coins to the court wallet or a warrant is issued today.",
       "scam": true,
-      "why": "A warrant over a call, with pressure to stay on the line."
+      "why": "No court asks for coins. Staying on camera is the isolation trick."
     },
     {
       "id": "r6",
       "app": "SMS",
-      "from": "Orrin Bank",
-      "text": "Payment of £212.00 at Gadgetz Direct was paused. If this was not you, open the Orrin app.",
-      "scam": false,
-      "why": "It names the payment and sends you to your own app."
+      "from": "Vantel Mobile",
+      "text": "Your SIM will be blocked tonight. Reply YES and send the code we text you.",
+      "scam": true,
+      "why": "A threat, a reply and a request for a code. All warning signs."
     },
     {
       "id": "r7",
       "app": "Mail",
-      "from": "Civic Revenue Portal",
-      "text": "FINAL NOTICE: pay now or face arrest.",
-      "scam": true,
-      "why": "A threat of arrest by email."
+      "from": "Orrin Bank",
+      "text": "A payment of £40 to a new payee was paused. Review it in the Orrin app.",
+      "scam": false,
+      "why": "It names something you can check, and points to the app."
     },
     {
       "id": "r8",
       "app": "SMS",
-      "from": "Mum",
-      "text": "Dinner at 7, bring bread please 🍞",
-      "scam": false,
-      "why": "Your mum, asking for bread."
+      "from": "Unknown number",
+      "text": "Hi Dad, my phone broke. Please send 300 USDT to this address, I will explain later.",
+      "scam": true,
+      "why": "A \"family\" message with a crypto request from a new number."
     },
     {
       "id": "r9",
-      "app": "SMS",
-      "from": "Unknown number",
-      "text": "I have your photos. Pay $300 in the next hour or I send them to everyone.",
-      "scam": true,
-      "why": "A threat with no proof and a short deadline."
+      "app": "Mail",
+      "from": "Zelvora",
+      "text": "Your monthly statement is ready in the app. No action needed.",
+      "scam": false,
+      "why": "It asks for nothing and points to the app."
     },
     {
       "id": "r10",
-      "app": "SMS",
-      "from": "Brightgrid Energy",
-      "text": "Reminder: your bill of £62.40 is due on the 28th. Pay in your app or online as usual.",
-      "scam": false,
-      "why": "A calm reminder with a date, sent to your own account channels."
+      "app": "Call",
+      "from": "Ostrel Fraud Team",
+      "text": "Your account was hacked. Move your coins to our safe wallet now.",
+      "scam": true,
+      "why": "A \"safe wallet\" belongs to the caller. Hang up and open the app."
     }
   ],
-  "golden_rule": "A message that scares you and hurries you is the one to check, slowly, on a number or site you already know.",
+  "golden_rule": "When a message scares you, slow down. Real alerts point you to your own app. Scams point you to a link, a number or a wallet.",
   "quick_check": {
-    "q": "A message says your power will be cut tonight unless you pay by a link. What do you do?",
+    "q": "A caller says your account was hacked and tells you to move your coins to their safe wallet. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Pay fast, it is dark soon"
+        "text": "Move them, it is urgent"
       },
       {
         "id": "b",
-        "text": "Reply STOP"
+        "text": "Hang up, open the app yourself, and report the call"
       },
       {
         "id": "c",
-        "text": "Check your own bill or app, and report the message"
+        "text": "Move half"
       },
       {
         "id": "d",
-        "text": "Call the number in the message"
+        "text": "Ask them to hold on"
       }
     ],
-    "answer": "c",
-    "explain": "Fear and a deadline are the trap. Your own bill shows the truth."
+    "answer": "b",
+    "explain": "A \"safe wallet\" from a stranger is their wallet. Hang up and check in your own app."
   },
   "sources": [
-    "ftc-utility",
-    "ftc-government"
+    "ftc-government",
+    "ftc-crypto"
   ],
-  "checked_on": "2026-10-21"
+  "checked_on": "2026-11-08"
 }
