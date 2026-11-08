@@ -6,14 +6,14 @@
   "title": "The KYC Update",
   "disguise": "support",
   "intro": [
-    "A text says your bank account will be blocked today unless you complete your KYC in an app.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "A text says your Ostrel account needs \"identity re-verification\" under a new rule.",
+    "Real exchanges do check identity, so this might be true. Or it might be a trap.",
+    "Sniff the text, then decide."
   ],
   "notify": {
     "app": "Messages",
-    "from": "VM-ORRIN",
-    "text": "Your KYC has expired. Install the Orrin KYC app…"
+    "from": "Ostrel Compliance",
+    "text": "Re-verify your identity within 48 hours…"
   },
   "screen": {
     "app": "sms",
@@ -21,104 +21,111 @@
       "name": [
         {
           "clue": "sender",
-          "text": "VM-ORRIN"
+          "text": "Ostrel Compliance"
         }
       ]
     },
-    "context": "You did your KYC at the branch last year.",
+    "context": "You verified your identity on Ostrel when you signed up, months ago.",
     "items": [
       {
         "time": [
-          "Today 9:05 AM"
+          {
+            "clue": "time",
+            "text": "Today 10:05 AM"
+          }
         ]
       },
       {
         "msg": [
-          "Orrin Bank: your ",
+          "Ostrel: under a ",
           {
-            "clue": "kyc",
-            "text": "KYC has expired"
+            "clue": "rule",
+            "text": "new regulation"
           },
-          ". Your account will be ",
+          ", all accounts must re-verify within ",
           {
-            "clue": "block",
-            "text": "blocked today"
+            "clue": "timer",
+            "text": "48 hours",
+            "countdown": 900
           },
           "."
         ]
       },
       {
         "msg": [
-          "Install the KYC app and update: ",
+          "Upload your ",
+          {
+            "clue": "docs",
+            "text": "ID and a selfie"
+          },
+          " here: ",
           {
             "clue": "link",
-            "text": "orrin-kyc-update.example/OrrinKYC.apk",
+            "text": "ostrel-kyc-check.com",
             "link": true
           }
         ]
       },
       {
         "msg": [
-          "Keep your ",
+          "Unverified accounts will be ",
           {
-            "clue": "otp",
-            "text": "card details and OTP"
+            "clue": "threat",
+            "text": "restricted and funds frozen"
           },
-          " ready."
-        ]
-      },
-      {
-        "msg": [
-          {
-            "clue": "sig",
-            "text": "Orrin Bank Customer Care"
-          }
+          "."
         ]
       }
     ]
   },
   "clues": {
-    "kyc": {
-      "label": "A sudden KYC deadline",
-      "strength": "strong",
-      "lens": "KYC \"expired\" with no notice.",
-      "why": "KYC-update texts and links are a well-known trick."
-    },
-    "block": {
-      "label": "Block-today threat",
-      "strength": "strong",
-      "lens": "Account blocked today unless you act.",
-      "why": "Banks do not block accounts over a missed text."
-    },
     "link": {
-      "label": "An app file and a look-alike site",
+      "label": "Look-alike link",
       "strength": "strong",
-      "lens": "The link is not the bank's address and ends in \".apk\".",
-      "why": "Never install a bank app from a link. Use the official app store."
+      "lens": "ostrel-kyc-check.com is not ostrel.io.",
+      "why": "Identity checks happen inside the app, never through a text link."
     },
-    "otp": {
-      "label": "Asks for card details and OTP",
+    "docs": {
+      "label": "Asks for ID and selfie",
       "strength": "strong",
-      "lens": "It wants your card details and the OTP.",
-      "why": "No bank asks for your OTP or card details."
+      "lens": "A photo of your ID and your face lets thieves open accounts in your name.",
+      "why": "These are the hardest things to change if stolen."
+    },
+    "threat": {
+      "label": "Funds frozen",
+      "strength": "strong",
+      "lens": "A threat to your money.",
+      "why": "Pressure stops you from checking in the app."
+    },
+    "timer": {
+      "label": "48 hours",
+      "strength": "strong",
+      "lens": "A deadline to rush you.",
+      "why": "Real compliance notices give time and appear in the app."
+    },
+    "rule": {
+      "label": "Vague \"new regulation\"",
+      "strength": "strong",
+      "lens": "It names no rule and no date.",
+      "why": "Vague official-sounding reasons fit everyone, so scammers use them."
     },
     "sender": {
-      "label": "A bank-like name",
+      "label": "Ostrel Compliance",
       "strength": "harmless",
-      "lens": "VM-ORRIN looks official.",
-      "why": "Sender names are easy to copy."
+      "lens": "The name sounds official.",
+      "why": "Anyone can type a sender name."
     },
-    "sig": {
-      "label": "Signed by Customer Care",
+    "time": {
+      "label": "Sent at 10:05 AM",
       "strength": "harmless",
-      "lens": "It sounds like the bank.",
-      "why": "A signature proves nothing."
+      "lens": "An ordinary time.",
+      "why": "The time proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Install the KYC app and update",
+      "label": "Upload my ID and selfie",
       "trap": true
     },
     {
@@ -127,11 +134,11 @@
     },
     {
       "id": "verify",
-      "label": "Open the real Orrin app, or visit the branch"
+      "label": "Open the Ostrel app and look for any verification request"
     },
     {
       "id": "block_report",
-      "label": "Report it and delete it"
+      "label": "Delete it and report the text as junk"
     }
   ],
   "best_action": "block_report",
@@ -140,100 +147,96 @@
     "ignore"
   ],
   "trap": {
-    "title": "Install unknown app?",
-    "url": "OrrinKYC.apk",
-    "ask": "This app wants to read your messages and show over other apps. Install?",
-    "go": "Install",
-    "back": "Cancel"
+    "title": "Ostrel · Identity check",
+    "url": "ostrel-kyc-check.com",
+    "ask": "Upload a photo of your ID and a selfie to keep your account.",
+    "go": "Upload now",
+    "back": "Close this page"
   },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Reported and deleted. Your bank's fraud team had the fake site blocked.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Reported and deleted. The fake site was taken down.",
+      "mirageSays": "My lovely compliance!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The real app showed your KYC as complete. The text was fake. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "The app showed no request at all. The text was fake. Case cracked.",
+      "mirageSays": "Hmph. They opened the real app."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. Reporting protects others.",
+      "mirageSays": "Fine. Next phone!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The fake app read your messages and OTPs and emptied your account.",
-      "mirageSays": "Thanks for the details!"
+      "line": "Your ID and selfie were used to open accounts in your name, and your login was copied too.",
+      "mirageSays": "Thanks for the face!"
     }
   },
   "what_if": {
-    "go_ahead": "Opening the real app, or asking at the branch, would have shown your KYC was fine.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "The real app showed no request. Checking there first would have saved your ID.",
+    "verify": "Checking was smart. Reporting the text helps others.",
+    "ignore": "Ignoring it was safe. A quick report protects others."
   },
-  "golden_rule": "Banks do not update KYC through an app from a text. Use the official app or visit the branch.",
+  "golden_rule": "Identity checks happen inside your exchange app. Never upload ID through a link in a text.",
   "quick_check": {
-    "q": "A text says your KYC has expired and you must install an app from a link or your account is blocked. What do you do?",
+    "q": "A text says to re-verify your identity within 48 hours or lose access, through a link. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Install it quickly"
+        "text": "Upload quickly, ID checks are real"
       },
       {
         "id": "b",
-        "text": "Reply to say you already did it"
+        "text": "Do not click. Open the app and report the text"
       },
       {
         "id": "c",
-        "text": "Do not install it. Check in the real app or at the branch, and report the text"
+        "text": "Upload only your ID, not the selfie"
       },
       {
         "id": "d",
-        "text": "Share the OTP when asked"
+        "text": "Reply to ask if it is real"
       }
     ],
-    "answer": "c",
-    "explain": "KYC updates happen in the official app or at a branch, never through a text link."
+    "answer": "b",
+    "explain": "Real checks live in the app. A link, a deadline and a threat are the signs."
   },
   "hints": {
-    "nudge": "Where does a bank really update your KYC?",
+    "nudge": "Where should an identity check happen?",
     "glow_order": [
-      "kyc",
-      "block",
       "link",
-      "otp"
+      "docs",
+      "threat",
+      "timer",
+      "rule"
     ]
   },
-  "sources": [
-    "ftc-bank-call"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check sender",
-      "title": "Who sent this",
+      "title": "Who sent this text",
       "rows": [
         {
-          "k": "Sender",
-          "v": "VM-ORRIN",
+          "k": "Number",
+          "v": "Not a number you know",
           "clue": "sender"
         },
         {
-          "k": "Your KYC status",
-          "v": "Complete, from last year",
-          "clue": "kyc"
+          "k": "Your last verification",
+          "v": "Done when you signed up"
         }
       ]
     },
@@ -241,20 +244,21 @@
       "id": "link",
       "icon": "🔗",
       "label": "Check link",
-      "title": "Where it goes",
+      "title": "Where it really goes",
       "rows": [
         {
-          "k": "Message says",
-          "v": "install the KYC app"
-        },
-        {
-          "k": "File type",
-          "v": "App installer (.apk)",
+          "k": "It really opens",
+          "v": "ostrel-kyc-check.com",
           "clue": "link"
         },
         {
-          "k": "Real bank app comes from",
-          "v": "The official app store"
+          "k": "Real site",
+          "v": "ostrel.io"
+        },
+        {
+          "k": "Asks for",
+          "v": "ID and selfie",
+          "clue": "docs"
         }
       ]
     },
@@ -262,19 +266,23 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What exchanges say",
       "rows": [
         {
-          "k": "KYC-update calls and links",
-          "v": "A common trick: use the official site or branch",
-          "clue": "kyc"
+          "k": "Identity checks",
+          "v": "Appear inside the app only"
         },
         {
-          "k": "Does a bank ask for your OTP?",
-          "v": "Never",
-          "clue": "otp"
+          "k": "A deadline with a frozen-funds threat",
+          "v": "Is pressure",
+          "clue": "threat"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-phishing",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }
