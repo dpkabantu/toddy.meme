@@ -1314,8 +1314,13 @@ async function renderAccount() {
 function updateAccountPill() {
   const b = $('btn-account'); if (!b) return;
   b.hidden = !acc() || !accountMe || !!accountMe.unavailable;
-  b.textContent = accountMe && accountMe.signedIn ? (accountMe.nickname || 'Account') : 'Sign in';
-  b.classList.toggle('on', !!(accountMe && accountMe.signedIn));
+  const on = !!(accountMe && accountMe.signedIn), st = on ? 'in' : 'out';
+  if (b.dataset.st !== st) {
+    b.dataset.st = st;
+    if (on) { b.innerHTML = '<svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true" focusable="false"><circle cx="16" cy="11" r="5.2" fill="#fdaf1e"/><path d="M5.5 26c0-5.6 4.7-9 10.5-9s10.5 3.4 10.5 9z" fill="#fdaf1e"/></svg><i class="ta-caret" aria-hidden="true"></i>'; b.setAttribute('aria-label', 'Your account'); }
+    else { b.textContent = 'Sign in'; b.setAttribute('aria-label', 'Sign in or open your account'); }
+  }
+  b.classList.toggle('on', on);
 }
 function openAccount() {
   modal(`<h3>Account</h3><div class="setting account" id="acct" hidden></div><div class="btns"><button class="btn ghost" id="acct-close" type="button">Close</button></div>`);

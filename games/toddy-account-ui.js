@@ -75,7 +75,16 @@
   // ----- the "Sign in" pill: top right, shown whenever the game's menu is on screen (the games redraw their menus, so we keep watching) -----
   var pill = null, raf = 0;
   function pillText() { return me && me.signedIn ? (me.nickname || 'Account') : 'Sign in'; }
-  function setPill() { if (!pill) return; var t = pillText(); if (pill.textContent !== t) pill.textContent = t; pill.classList.toggle('on', !!(me && me.signedIn)); }
+  function setPill() {
+    if (!pill) return;
+    var on = !!(me && me.signedIn), st = on ? 'in' : 'out';
+    if (pill.dataset.st !== st) {
+      pill.dataset.st = st;
+      if (on) { pill.innerHTML = '<svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true" focusable="false"><circle cx="16" cy="11" r="5.2" fill="#fdaf1e"/><path d="M5.5 26c0-5.6 4.7-9 10.5-9s10.5 3.4 10.5 9z" fill="#fdaf1e"/></svg><i class="ta-caret" aria-hidden="true"></i>'; pill.setAttribute('aria-label', 'Your account'); }
+      else { pill.textContent = 'Sign in'; pill.setAttribute('aria-label', 'Sign in or open your account'); }
+    }
+    pill.classList.toggle('on', on);
+  }
   function menuVisible() {
     var rows = document.querySelectorAll(cfg.rowSelector);
     for (var i = 0; i < rows.length; i++) if (rows[i].getClientRects().length) return true;
