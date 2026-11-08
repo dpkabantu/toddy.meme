@@ -2046,20 +2046,3 @@ a.game-card:focus-visible { outline: 2px solid var(--gold-light); outline-offset
   .games-filter { flex: 0 0 auto; }
 }
 @media (prefers-reduced-motion: reduce) { .play-all { transition: none; } .play-all:hover { transform: none; } }
-
-/* Header "Sign in" button: same gold, outline and shape as the menu button (the floating
-   in-game pill keeps its own colours; this only restyles the one inside the website navbar). */
-.navbar .ta-pill.inline {
-  min-height: 44px; padding: 8px 18px; border-radius: 12px;
-  border: 1px solid rgba(212,175,90,0.48);
-  background: linear-gradient(145deg, rgba(212,175,90,0.12), rgba(153,69,255,0.08));
-  box-shadow: inset 0 1px 0 rgba(255,255,255,0.08), 0 5px 18px rgba(0,0,0,0.22);
-  color: var(--gold-light);
-  font-family: 'Inter', system-ui, sans-serif; font-weight: 700; font-size: .9rem; letter-spacing: .2px;
-}
-.navbar .ta-pill.inline:hover { background: rgba(201,168,76,0.18); }
-.navbar .ta-pill.inline.on { top: auto; right: auto; width: 44px; padding: 0; border-radius: 12px; background: linear-gradient(145deg, rgba(212,175,90,0.12), rgba(153,69,255,0.08)); }
-.navbar .ta-pill.inline.on:hover { background: rgba(201,168,76,0.18); }
-.navbar .ta-pill.inline.on svg * { fill: var(--gold-light); }
-.navbar .ta-pill.inline.on .ta-caret { background: var(--gold); box-shadow: 0 0 0 2px #1d1431; }
-.navbar .ta-pill.inline:focus-visible { outline: 2px solid var(--gold-light); outline-offset: 3px; }
