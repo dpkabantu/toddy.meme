@@ -4,7 +4,7 @@ import { TRAYS } from './trays.js';
 import { INTROS, TRAYS_PER_NIGHT, trayLevelConfig, dailyConfig, dailyNumber, endlessConfig, ENDLESS_LINES, nightInfo, VISITORS, VISITOR_ORDER, TIER_NAMES, trayTier, tierOf } from './levels.js';
 import { buildPostcard } from './postcard.js';
 
-const BUILD = '1.0.0-rc15';
+const BUILD = '1.0.0-rc16';
 const ASSET = 'assets/';
 const $ = (id) => document.getElementById(id);
 const systemCalm = matchMedia('(prefers-reduced-motion: reduce)');
@@ -320,6 +320,7 @@ function show(name) {
 
 function nightCleared(n) { return !!save.stars[trayKey(n, TRAYS_PER_NIGHT)]; }
 function unlocked() { return PLAYTEST && save.unlockAll; }
+const NEW_THIS_NIGHT = { 7: 'honey swirl', 9: 'arrow tile', 10: 'frosted bean' }; // 0-based Night
 function nightOpen(n) { return unlocked() || n === 0 || nightCleared(n - 1); }
 function trayOpen(n, t) { return unlocked() || (nightOpen(n) && (t === 1 || !!save.stars[trayKey(n, t - 1)])); }
 function endlessOpen() { return unlocked() || nightCleared(0); }
@@ -368,7 +369,7 @@ function renderMap() {
   $('night-visitor').src = ASSET + VISITOR[night.visitor][0];
   $('night-visitor').alt = night.visitorName;
   $('night-name').textContent = `${night.name} \u00B7 ${night.visitorName}`;
-  $('night-title').textContent = night.title;
+  $('night-title').textContent = night.title + (NEW_THIS_NIGHT[mapNight] ? ` \u00B7 New: ${NEW_THIS_NIGHT[mapNight]}` : '');
   let got = 0;
   for (let t = 1; t <= TRAYS_PER_NIGHT; t++) got += save.stars[trayKey(mapNight, t)] || 0;
   $('night-sub').textContent = `${got} of ${TRAYS_PER_NIGHT * 3} stars \u00B7 tray 20 earns a postcard`;
@@ -494,7 +495,7 @@ function startTray(n, t) { mode = { kind: 'story', n, t }; const f = TRAYS[trayK
 function startDaily() { const cfg = dailyConfig(); mode = { kind: 'daily', num: cfg.daily, visitor: cfg.visitor }; load(cfg); }
 function startEndless(cont) {
   // pieces the player has already met in the story may show up here too (nothing unexplained)
-  if (!cont) mode = { kind: 'endless', seed: (Date.now() % 1e9) >>> 0, k: 0, score: 0, pieces: { walls: nightOpen(3), spin: nightOpen(4), portals: nightOpen(6), choc: nightOpen(5), gates: nightOpen(8), caramel: nightOpen(10), honey: nightOpen(12) } };
+  if (!cont) mode = { kind: 'endless', seed: (Date.now() % 1e9) >>> 0, k: 0, score: 0, pieces: { walls: nightOpen(3), spin: nightOpen(4), portals: nightOpen(6), choc: nightOpen(5), gates: nightOpen(8), hswirls: nightOpen(7), honey: nightOpen(12) } };
   load(endlessConfig(mode.seed, mode.k, mode.pieces));
 }
 
@@ -544,7 +545,9 @@ function load(cfg, ready) {
   if ((level.portals || []).length) { img('portal_violet_v02.webp'); img('portal_teal_v02.webp'); }
   if ((level.choc || []).length) img('chocolate_v01.webp');
   if ((level.gates || []).length) img('spoon_gate_v01.webp');
-  if ((level.caramel || []).length) img('caramel_v01.webp');
+  if ((level.hswirls || []).length) img('honey_swirl_v01.webp');
+  if ((level.arrows || []).length) img('arrow_tile_v01.webp');
+  if (level.beans.some(b => b.frost)) { img('bean_frost_v01.webp'); img('bean_cracked_v01.webp'); }
   if ((level.honey || []).length) img('honey_v01.webp');
   if (level.beans.some(b => b.spin)) img('bean_spinner_v02.webp');
   say('');
@@ -581,7 +584,9 @@ function startCoach(k) {
   else if (c.on === 'portal') { const pr = (level.portals || [])[0]; if (pr) { const [x, y] = pr[0].split(',').map(Number); target = { x, y, gone: false }; } }
   else if (c.on === 'choc') { const k = ((level.choc || [])[0] || [])[0]; if (k) { const [x, y] = k.split(',').map(Number); target = { x, y, gone: false }; } }
   else if (c.on === 'gate') { const k = ((level.gates || [])[0] || [])[0]; if (k) { const [x, y] = k.split(',').map(Number); target = { x, y, gone: false }; } }
-  else if (c.on === 'caramel') { const k = (level.caramel || [])[0]; if (k) { const [x, y] = k.split(',').map(Number); target = { x, y, gone: false }; } }
+  else if (c.on === 'hswirl') { const k = (level.hswirls || [])[0]; if (k) { const [x, y] = k.split(',').map(Number); target = { x, y, gone: false }; } }
+  else if (c.on === 'arrow') { const k = ((level.arrows || [])[0] || [])[0]; if (k) { const [x, y] = k.split(',').map(Number); target = { x, y, gone: false }; } }
+  else if (c.on === 'frost') target = g.beans.find(b => b.frost && !b.awake);
   else if (c.on === 'honey') { const k = (level.honey || [])[0]; if (k) { const [x, y] = k.split(',').map(Number); target = { x, y, gone: false }; } }
   if (!target) return; // the piece is not on this tray: nothing to point at
   coach = { key: k, target, line: c.line, t0: performance.now() };
@@ -751,10 +756,15 @@ function draw(now) {
     const him = img('honey_v01.webp');
     if (ready(him)) drawFit(him, cxp(x), cyp(y), cell * 0.9, 0, 1);
   }
-  // caramel swirls turn beans the other way (counter-clockwise), spoon gates let beans pass one way only
-  for (const k of level.caramel || []) {
+  // honey swirls turn beans the other way (counter-clockwise), arrow tiles send a bean one way, spoon gates let beans pass one way only
+  for (const [k, d] of level.arrows || []) {
     const [x, y] = k.split(',').map(Number);
-    const cim = img('caramel_v01.webp');
+    const aim = img('arrow_tile_v01.webp');
+    if (ready(aim)) drawFit(aim, cxp(x), cyp(y), cell * 0.94, ANG[d], 1);
+  }
+  for (const k of level.hswirls || []) {
+    const [x, y] = k.split(',').map(Number);
+    const cim = img('honey_swirl_v01.webp');
     if (ready(cim)) drawFit(cim, cxp(x), cyp(y), cell * 0.92, 0, 1);
     ctx.save(); ctx.translate(cxp(x) - cell * 0.3, cyp(y) - cell * 0.3);
     ctx.strokeStyle = '#7a4a22'; ctx.lineWidth = Math.max(1.5, cell * 0.05); ctx.lineCap = 'round';
@@ -876,8 +886,8 @@ function drawFit(im, x, y, size, ang, alpha) {
 }
 
 function drawBean(b, x, y, ang, alpha, scale) {
-  const sleepy = !b.awake;
-  const im = img(sleepy ? 'bean_sleepy_v02.webp' : b.spin ? 'bean_spinner_v02.webp' : BEAN_IMG[b.roast]);
+  const sleepy = !b.awake && !b.frost;
+  const im = img(b.frost ? (b.awake ? 'bean_cracked_v01.webp' : 'bean_frost_v01.webp') : sleepy ? 'bean_sleepy_v02.webp' : b.spin ? 'bean_spinner_v02.webp' : BEAN_IMG[b.roast]);
   const len = cell * 0.84 * scale;
   ctx.save();
   ctx.globalAlpha = alpha;
@@ -984,7 +994,10 @@ function act(b) {
   hintBean = null;
   // Lines stay short (8 words or fewer): the board, the cup and the stars do the explaining.
   const wasPerfect = coachPerfect;
-  if (ev.type === 'wake') {
+  if (ev.type === 'crack') {
+    anims.push({ bean: b, kind: 'wake', t0: now, dur: calm() ? 1 : 320 }); sfx.wake(); say('Cracked! Tap again.');
+    if (coach && coach.target === b) endCoach();
+  } else if (ev.type === 'wake') {
     anims.push({ bean: b, kind: 'wake', t0: now, dur: calm() ? 1 : 320 }); sfx.wake(); say('Awake! Now it can roll.');
     if (coach && coach.target === b) endCoach();
   } else if (ev.type === 'frozen') {
@@ -1394,7 +1407,7 @@ bind('btn-hint', () => {
   track('hint', { ...modeInfo(), auto: false });
   toddyPlay('thinking');
   const cost = mode.kind === 'daily' ? ' (−50)' : '';
-  say(hintBean ? (hintBean.awake ? `Try the circled bean${cost}.` : `Wake the circled bean${cost}.`) : 'Stuck. Tap Restart.');
+  say(hintBean ? (hintBean.awake ? `Try the circled bean${cost}.` : hintBean.frost ? `Crack the circled bean${cost}.` : `Wake the circled bean${cost}.`) : 'Stuck. Tap Restart.');
   draw();
 });
 

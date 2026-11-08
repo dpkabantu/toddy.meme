@@ -83,7 +83,8 @@ function inPoly(x, y, p) {
 //   walls   - Set of "x,y" cells that stay forever (cinnamon sticks): a bean cannot pass
 //   portals - Map "x,y" -> "x,y" of its twin (moon doors): a bean that enters one comes out of the twin, same direction
 //   gates   - Map "x,y" -> direction (spoon gates): a bean may only pass travelling that way
-//   caramel - Set of "x,y" cells that turn a rolling bean a quarter COUNTER-clockwise (milk turns it clockwise)
+//   hswirls - Set of "x,y" cells (honey swirls) that turn a rolling bean a quarter COUNTER-clockwise (milk turns it clockwise)
+//   arrows  - Map "x,y" -> direction (arrow tiles): a bean that rolls over one is sent that way from there on
 //   choc    - Map "x,y" -> n (chocolate blocks): a wall until n beans have been ground (env.rolled), then gone
 //   honey   - Set of "x,y" cells that stop a rolling bean on the spot: it needs one more tap to carry on
 // Returns { block: {x,y} } if something is in the way, { loop: true } if it would circle forever,
@@ -94,7 +95,7 @@ export function trace(w, h, swirls, occupied, x, y, d, env) {
   const cells = [];
   const seen = new Set();
   const walls = env && env.walls, portals = env && env.portals;
-  const gates = env && env.gates, caramel = env && env.caramel, choc = env && env.choc, honey = env && env.honey;
+  const gates = env && env.gates, hswirls = env && env.hswirls, arrows = env && env.arrows, choc = env && env.choc, honey = env && env.honey;
   const rolled = (env && env.rolled) || 0;
   let cx = x + DX[d], cy = y + DY[d];
   let steps = 0;
@@ -111,9 +112,15 @@ export function trace(w, h, swirls, occupied, x, y, d, env) {
       if (seen.has(s)) return { loop: true };
       seen.add(s);
     }
-    if (caramel && caramel.has(k)) {
+    if (hswirls && hswirls.has(k)) {
       d = (d + 3) % 4;
-      const s = 'c' + cx + ',' + cy + ',' + d;
+      const s = 'h' + cx + ',' + cy + ',' + d;
+      if (seen.has(s)) return { loop: true };
+      seen.add(s);
+    }
+    if (arrows && arrows.has(k)) {
+      d = arrows.get(k);
+      const s = 'a' + cx + ',' + cy + ',' + d;
       if (seen.has(s)) return { loop: true };
       seen.add(s);
     }
@@ -198,21 +205,36 @@ function build(cfg, seed) {
     portals.set(key(a[0], a[1]), key(b[0], b[1])); portals.set(key(b[0], b[1]), key(a[0], a[1]));
     portalList.push([key(a[0], a[1]), key(b[0], b[1]), p]);
   }
-  // spoon gates (one way) and caramel swirls (turn the other way): inside the tray, never crowded
+  // spoon gates (one way), honey swirls (turn the other way) and arrow tiles (send a bean one fixed way): inside the tray, never crowded
   const near4 = (x, y) => taken.has(key(x, y)) || [[1, 0], [-1, 0], [0, 1], [0, -1]].some(([dx, dy]) => taken.has(key(x + dx, y + dy)));
   const gates = new Map(); // "x,y" -> the one direction a bean may pass
-  const caramel = new Set();
+  const hswirls = new Set();
+  const arrows = new Map(); // "x,y" -> the way the arrow sends a bean
   for (const [x, y] of all) {
     if (gates.size >= (cfg.gates || 0)) break;
     if (x === 0 || y === 0 || x === w - 1 || y === h - 1 || near4(x, y)) continue;
     gates.set(key(x, y), Math.floor(R() * 4)); taken.add(key(x, y));
   }
-  for (const [x, y] of all) {
-    if (caramel.size >= (cfg.caramel || 0)) break;
-    if (x === 0 || y === 0 || x === w - 1 || y === h - 1 || near4(x, y)) continue;
-    caramel.add(key(x, y)); taken.add(key(x, y));
+  // honey swirls and arrow tiles go where they close the fewest new rows and columns, so a spinner bean can still find a clear spot
+  const spots = (n) => {
+    const out = [];
+    const used = [...walls, ...swirls, ...portals.keys(), ...gates.keys(), ...hswirls, ...arrows.keys()];
+    const rows = new Set(used.map(k => +k.split(',')[1])), cols = new Set(used.map(k => +k.split(',')[0]));
+    for (const [x, y] of all) {
+      if (x === 0 || y === 0 || x === w - 1 || y === h - 1 || near4(x, y)) continue;
+      out.push([x, y, (rows.has(y) ? 0 : 1) + (cols.has(x) ? 0 : 1), out.length]);
+    }
+    return out.sort((a, b) => a[2] - b[2] || a[3] - b[3]).slice(0, n);
+  };
+  while (hswirls.size < (cfg.hswirls || 0)) { // (spots are re-ranked after every placement)
+    const sp = spots(1)[0]; if (!sp) break;
+    hswirls.add(key(sp[0], sp[1])); taken.add(key(sp[0], sp[1]));
   }
-  const env = { walls, portals, gates, caramel };
+  while (arrows.size < (cfg.arrows || 0)) { // arrow tiles: no random draws, so the rest of the tray is built the same way
+    const sp = spots(1)[0]; if (!sp) break;
+    arrows.set(key(sp[0], sp[1]), (sp[0] * 7 + sp[1] * 3 + arrows.size) % 4); taken.add(key(sp[0], sp[1]));
+  }
+  const env = { walls, portals, gates, hswirls, arrows };
 
   const free = new Set(all.filter(([x, y]) => !taken.has(key(x, y))).map(([x, y]) => key(x, y)));
   const target = cfg.beans ? Math.max(2, Math.min(cfg.beans, free.size)) : Math.max(2, Math.round(free.size * (cfg.fill || 0.6)));
@@ -299,6 +321,8 @@ function build(cfg, seed) {
   pickSome(singles.filter(b => b.id >= iceAt), cfg.ice || 0, R).forEach(b => { b.ice = iceAt; });
   // sleepy beans are always medium roast (that is how the sleepy bean art is painted)
   pickSome(singles.filter(b => !b.ice), cfg.sleepy || 0, R).forEach(b => { b.sleepy = true; b.roast = 1; });
+  // frosted beans (Night 11+): like a sleepy bean it needs one tap first (it cracks, which is never a bump), then it rolls
+  if (cfg.frost) pickSome(singles.filter(b => !b.ice && !b.sleepy), cfg.frost, R).forEach(b => { b.sleepy = true; b.frost = true; b.roast = 1; });
   // honey (Night 13+): sits on a cell that only ONE bean ever rolls through. That bean stops there and needs one more tap.
   // Nothing else crosses the honey, so a stuck bean can never block another one (the tray cannot get stuck).
   const beanCells = new Set(beans.map(b => key(b.x, b.y)));
@@ -334,7 +358,7 @@ function build(cfg, seed) {
     const rayFree = (b) => {
       for (let d = 0; d < 4; d++) for (let cx = b.x + DX[d], cy = b.y + DY[d]; cx >= 0 && cy >= 0 && cx < w && cy < h; cx += DX[d], cy += DY[d]) {
         const k = key(cx, cy);
-        if (walls.has(k) || swirls.has(k) || portals.has(k) || gates.has(k) || caramel.has(k) || chocSet.has(k) || honeySet.has(k)) return false;
+        if (walls.has(k) || swirls.has(k) || portals.has(k) || gates.has(k) || hswirls.has(k) || arrows.has(k) || chocSet.has(k) || honeySet.has(k)) return false;
       }
       return true;
     };
@@ -349,7 +373,7 @@ function build(cfg, seed) {
 
   return {
     w, h, shape: cfg.shape, mask, swirls: [...swirls], walls: [...walls], portals: portalList, beans, ticket, solution, target, seed: cfg.seed,
-    gates: [...gates], caramel: [...caramel], choc: chocCells.map(k => [k, chocAt]), honey: honeyCells,
+    gates: [...gates], hswirls: [...hswirls], arrows: [...arrows], choc: chocCells.map(k => [k, chocAt]), honey: honeyCells,
   };
 }
 function shuffle(a, R) { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(R() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
@@ -358,7 +382,7 @@ function pickSome(arr, n, R) { return shuffle(arr.slice(), R).slice(0, n); }
 // A frozen tray (from src/trays.js) back to a full level object.
 export function fromFrozen(f) {
   return {
-    w: f.w, h: f.h, shape: f.shape, mask: makeMask(f.shape, f.w, f.h), swirls: f.swirls, walls: f.walls || [], portals: f.portals || [], gates: f.gates || [], caramel: f.caramel || [], choc: f.choc || [], honey: f.honey || [],
+    w: f.w, h: f.h, shape: f.shape, mask: makeMask(f.shape, f.w, f.h), swirls: f.swirls, walls: f.walls || [], portals: f.portals || [], gates: f.gates || [], hswirls: f.hswirls || [], arrows: f.arrows || [], choc: f.choc || [], honey: f.honey || [],
     ticket: f.ticket, solution: f.solution,
     beans: f.beans.map(([x, y, dir, roast, sleepy, ice, pair, spin], id) => ({ id, x, y, dir, roast, sleepy: !!sleepy, ice, pair, spin: !!spin })),
   };
@@ -374,7 +398,8 @@ export function newGame(level) {
     walls: new Set(level.walls || []),
     portals,
     gates: new Map(level.gates || []),
-    caramel: new Set(level.caramel || []),
+    hswirls: new Set(level.hswirls || []),
+    arrows: new Map(level.arrows || []),
     choc: new Map(level.choc || []),
     honey: new Set(level.honey || []), // honey cells that still hold a bean (or wait for one)
     stuck: new Set(),                  // ids of beans stuck in honey right now
@@ -389,7 +414,7 @@ export function unitOf(g, b) { return b.pair >= 0 ? [b, g.beans[b.pair]] : [b]; 
 export function traceBean(g, b, ignore) {
   const skip = new Set(ignore.map(o => key(o.x, o.y)));
   const occ = (x, y) => !skip.has(key(x, y)) && !!beanAt(g, x, y);
-  return trace(g.level.w, g.level.h, g.swirls, occ, b.x, b.y, b.dir, { walls: g.walls, portals: g.portals, gates: g.gates, caramel: g.caramel, choc: g.choc, honey: g.honey, rolled: g.rolled });
+  return trace(g.level.w, g.level.h, g.swirls, occ, b.x, b.y, b.dir, { walls: g.walls, portals: g.portals, gates: g.gates, hswirls: g.hswirls, arrows: g.arrows, choc: g.choc, honey: g.honey, rolled: g.rolled });
 }
 export function canRoll(g, b) {
   if (b.gone || !b.awake || frozen(g, b)) return false;
@@ -416,7 +441,7 @@ function unstick(g) {
   return turned;
 }
 function doTap(g, b) {
-  if (!b.awake) { b.awake = true; return { type: 'wake', bean: b }; }
+  if (!b.awake) { b.awake = true; return { type: b.frost ? 'crack' : 'wake', bean: b }; }
   if (frozen(g, b)) return { type: 'frozen', bean: b };
   const unit = unitOf(g, b);
   const traces = unit.map(x => traceBean(g, x, unit));
@@ -500,7 +525,7 @@ export function difficulty(level) {
   const d = n * 0.9 + layers * 3.5 + (1 - m.free0 / n) * 12
     + count(b => b.sleepy) * 1.5 + count(b => b.ice) * 3 + count(b => b.pair >= 0 && b.pair > b.id) * 2.5
     + level.swirls.length * 2 + (level.walls || []).length * 1.5 + (level.portals || []).length * 4 + count(b => b.spin) * 4
-    + (level.gates || []).length * 1.5 + (level.caramel || []).length * 2 + (level.choc || []).length * 3 + (level.honey || []).length * 3
+    + (level.gates || []).length * 1.5 + (level.hswirls || []).length * 2 + (level.arrows || []).length * 2.5 + count(b => b.frost) * 1 + (level.choc || []).length * 3 + (level.honey || []).length * 3
     + level.ticket.length * 0.8;
   return Math.round(d * 10) / 10;
 }
