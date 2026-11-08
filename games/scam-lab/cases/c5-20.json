@@ -14,7 +14,7 @@
   "notify": {
     "app": "Chirp",
     "from": "TaskFlow Careers ✔",
-    "text": "Saw your story! Earn $60 a day…"
+    "text": "Saw your story! Earn 60 USDT a day…"
   },
   "screen": {
     "app": "chirp",
@@ -50,7 +50,7 @@
           "Hi! Saw your story. Our ",
           {
             "clue": "earn",
-            "text": "students earn $60 a day"
+            "text": "students earn 60 USDT a day"
           },
           " doing simple tasks. 😊"
         ]
@@ -83,7 +83,7 @@
               "Welcome! Do 3 free tasks: like and rate 3 videos. ",
               {
                 "clue": "firstpay",
-                "text": "You will get $9 at once."
+                "text": "You will get 9 USDT at once."
               }
             ]
           }
@@ -117,10 +117,10 @@
           },
           {
             "msg": [
-              "Paid! $9 sent. For Level 2 tasks you must ",
+              "Paid! 9 USDT sent. For Level 2 tasks you must ",
               {
                 "clue": "dep",
-                "text": "deposit $100"
+                "text": "deposit 100 USDT"
               },
               ". It comes back with a bonus."
             ]
@@ -152,7 +152,7 @@
               " ",
               {
                 "clue": "proof",
-                "text": "Others withdrew $800 this week."
+                "text": "Others withdrew 800 USDT this week."
               }
             ]
           },
@@ -202,7 +202,7 @@
       "why": "Real recruiters rarely start with a DM that promises easy money."
     },
     "earn": {
-      "label": "$60 a day for simple tasks",
+      "label": "60 USDT a day for simple tasks",
       "strength": "strong",
       "lens": "Big pay for little work.",
       "why": "Big pay for little work is the bait."
@@ -216,7 +216,7 @@
     "firstpay": {
       "label": "A small payout first",
       "strength": "strong",
-      "lens": "$9 to win your trust.",
+      "lens": "9 USDT to win your trust.",
       "why": "The small payout is the hook."
     },
     "swap": {
@@ -228,7 +228,7 @@
     "dep": {
       "label": "A deposit to level up",
       "strength": "strong",
-      "lens": "You must pay $100.",
+      "lens": "You must pay 100 USDT.",
       "why": "Honest employers never charge."
     },
     "rush": {
@@ -238,7 +238,7 @@
       "why": "Pressure is a trick."
     },
     "proof": {
-      "label": "\"Others withdrew $800\"",
+      "label": "\"Others withdrew 800 USDT\"",
       "strength": "strong",
       "lens": "A crowd you cannot see.",
       "why": "A crowd proves nothing."
@@ -343,7 +343,8 @@
   },
   "sources": [
     "ftc-jobs",
-    "ftc-job-scams"
+    "ftc-job-scams",
+    "ftc-crypto"
   ],
   "checked_on": "2026-10-21",
   "kit": [
@@ -408,5 +409,28 @@
         }
       ]
     }
-  ]
+  ],
+  "quick_check": {
+    "q": "A task job paid you a small amount, then asks for a 100 USDT deposit to unlock more. What do you do?",
+    "options": [
+      {
+        "id": "a",
+        "text": "Deposit, to keep earning"
+      },
+      {
+        "id": "b",
+        "text": "Stop and report. Real jobs never ask for deposits"
+      },
+      {
+        "id": "c",
+        "text": "Deposit half"
+      },
+      {
+        "id": "d",
+        "text": "Ask a friend to deposit"
+      }
+    ],
+    "answer": "b",
+    "explain": "The small payout is bait. The deposit is the trap, and each one leads to a bigger one."
+  }
 }

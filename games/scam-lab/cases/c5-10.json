@@ -3,42 +3,39 @@
   "type": "duel",
   "chapter": 5,
   "difficulty": 3,
-  "title": "The Chat Interview",
-  "disguise": "admin",
+  "title": "The Telegram Interview",
+  "disguise": "support",
   "intro": [
-    "A \"company\" wants to interview you only by text chat, then asks for your documents.",
-    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
-    "Every chat ends with your choice. Choose wisely."
+    "A \"recruiter\" offers a trading-firm job and wants to interview you in a chat.",
+    "The interview has one strange step.",
+    "Pick your replies and sniff each message."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Quillon HR",
-    "text": "Interview today, on this chat only"
+    "from": "Kelvaro Capital HR",
+    "text": "Interview invite: trader trainee…"
   },
   "screen": {
     "app": "chirp",
     "head": {
       "name": [
         {
-          "text": "Quillon HR Desk",
+          "text": "Kelvaro Capital HR",
           "id": "duel-name"
         }
       ],
       "sub": [
-        {
-          "clue": "handle",
-          "text": "@quillon_hr_desk_01"
-        }
+        "@kelvaro_hr_team"
       ],
       "avatar": {
-        "glyph": "💼",
-        "clue": "logo"
+        "glyph": "📈",
+        "clue": "avatar"
       }
     },
+    "items": [],
     "banner": [
       "Message request · you do not follow this account"
-    ],
-    "items": []
+    ]
   },
   "duel": {
     "start": "n1",
@@ -47,35 +44,35 @@
         "say": [
           {
             "msg": [
-              "Hello! You are shortlisted at Quillon Systems. ",
+              "Hi! You are shortlisted for our trader trainee role. ",
               {
-                "clue": "chatonly",
-                "text": "Our interview is only on this chat, no video or call."
+                "clue": "salary",
+                "text": "Salary 6,000 USDT a month."
               }
             ]
           },
           {
             "msg": [
-              "Please send ",
+              "The interview is right here in this ",
               {
-                "clue": "docs",
-                "text": "photos of your ID card and a selfie holding it"
+                "clue": "chat",
+                "text": "chat"
               },
-              "."
+              ". First, a skills check."
             ]
           }
         ],
         "replies": [
           {
-            "text": "Why not a video call?",
+            "text": "What is the skills check?",
             "next": "n2"
           },
           {
-            "text": "Sending my ID and selfie",
-            "next": "n3"
+            "text": "I would like an interview on a video call from your company site",
+            "end": "verify"
           },
           {
-            "text": "I will report this account",
+            "text": "Block and report",
             "end": "block_report"
           }
         ]
@@ -84,34 +81,31 @@
         "say": [
           {
             "msg": [
-              "Our system is ",
+              "Deposit ",
               {
-                "clue": "busy",
-                "text": "busy, so chat is faster"
+                "clue": "dep",
+                "text": "100 USDT"
               },
-              ". Everyone does it."
-            ]
-          },
-          {
-            "msg": [
+              " in our trading app to prove you can trade. It is ",
               {
-                "clue": "rush",
-                "text": "Send now or we move to the next candidate."
-              }
+                "clue": "back",
+                "text": "refunded after the interview"
+              },
+              "."
             ]
           }
         ],
         "replies": [
           {
-            "text": "OK, sending",
+            "text": "OK, depositing",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Why does an interview need a deposit?",
             "next": "n3"
           },
           {
-            "text": "I will check the company's own site first",
-            "end": "verify"
-          },
-          {
-            "text": "Report",
+            "text": "Block and report",
             "end": "block_report"
           }
         ]
@@ -120,36 +114,26 @@
         "say": [
           {
             "msg": [
-              "You are selected! To pay your salary, we need your ",
+              "Everyone does it. ",
               {
-                "clue": "bank",
-                "text": "bank account number and card details"
+                "clue": "rush",
+                "text": "The slot closes in 20 minutes"
               },
               "."
-            ]
-          },
-          {
-            "msg": [
-              "Also pay ",
-              {
-                "clue": "fee",
-                "text": "£20 file charge"
-              },
-              ", refunded with your first salary."
             ]
           }
         ],
         "replies": [
           {
-            "text": "Sending details and the fee",
+            "text": "Fine, depositing",
             "end": "go_ahead"
           },
           {
-            "text": "A job does not need my card or a fee. Reporting.",
+            "text": "No real interview needs a deposit. Reporting",
             "end": "block_report"
           },
           {
-            "text": "I will call the company's real HR line",
+            "text": "I will check Kelvaro's real site",
             "end": "verify"
           }
         ]
@@ -157,67 +141,55 @@
     }
   },
   "clues": {
-    "handle": {
-      "label": "A new look-alike account",
+    "dep": {
+      "label": "A deposit to interview",
       "strength": "strong",
-      "lens": "@quillon_hr_desk_01 is not the company's account.",
-      "why": "Check the company's own site for its real contacts."
+      "lens": "You pay to be interviewed.",
+      "why": "Real interviews are free."
     },
-    "chatonly": {
-      "label": "Chat-only interview",
+    "salary": {
+      "label": "A huge salary for a trainee",
       "strength": "strong",
-      "lens": "No video, no call, no voice.",
-      "why": "Real hiring involves speaking to you."
+      "lens": "6,000 USDT for a trainee is unrealistic.",
+      "why": "Big pay is bait."
     },
-    "docs": {
-      "label": "ID photos and a selfie holding it",
+    "chat": {
+      "label": "Interview in a chat",
       "strength": "strong",
-      "lens": "Your ID and face, to a stranger.",
-      "why": "These are used to steal your identity."
+      "lens": "The whole interview is a private chat.",
+      "why": "Real firms use their own systems."
     },
-    "busy": {
-      "label": "\"The system is busy\"",
+    "back": {
+      "label": "\"Refunded later\"",
       "strength": "strong",
-      "lens": "An excuse to skip a call.",
-      "why": "An excuse is a tool."
+      "lens": "A promise of a refund.",
+      "why": "The refund never comes."
     },
     "rush": {
-      "label": "Send now or lose it",
+      "label": "20 minutes",
       "strength": "strong",
       "lens": "A deadline.",
-      "why": "Pressure is a trick."
+      "why": "Pressure stops you from checking."
     },
-    "bank": {
-      "label": "Card details for \"salary\"",
-      "strength": "strong",
-      "lens": "A salary needs only an account number, once you are hired and have checked.",
-      "why": "Never give your card details to an employer."
-    },
-    "fee": {
-      "label": "A \"file charge\"",
-      "strength": "strong",
-      "lens": "You must pay to be paid.",
-      "why": "Honest employers never charge candidates."
-    },
-    "logo": {
-      "label": "Briefcase picture",
+    "avatar": {
+      "label": "A chart picture",
       "strength": "harmless",
-      "lens": "A little briefcase.",
+      "lens": "A chart emoji.",
       "why": "Pictures prove nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Send my bank details and the fee"
+      "label": "Deposit 100 USDT"
     },
     {
       "id": "verify",
-      "label": "Check the company's own site and call its HR"
+      "label": "Check Kelvaro's real site"
     },
     {
       "id": "block_report",
-      "label": "Block and report the account"
+      "label": "Block and report"
     }
   ],
   "best_action": "block_report",
@@ -229,90 +201,105 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "You blocked and reported the account. It was removed before it reached other job seekers.",
-      "mirageSays": "Curses! Blocked again!"
+      "line": "Blocked and reported. The fake recruiter was removed.",
+      "mirageSays": "My lovely interview!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The company's real HR said: \"We have no such chat, and we never ask for fees or documents by chat.\" Case cracked.",
+      "line": "The real site had no such role and said interviews are always free. Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The fee was lost and your bank details and ID were used to open accounts in your name.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The 100 USDT went into a fake trading app. The \"recruiter\" vanished.",
+      "mirageSays": "Thanks for the deposit!"
     }
   },
   "what_if": {
-    "go_ahead": "A job that interviews only by chat and wants your ID and card is a theft. Calling the company would have ended it.",
-    "verify": "Checking was smart. Reporting the account as well protects other job seekers."
+    "go_ahead": "An interview that costs money is not an interview.",
+    "verify": "Checking the real site was safest."
   },
-  "golden_rule": "A real employer talks to you and never asks for fees, ID photos or card details by chat. Check on the company's own site.",
+  "golden_rule": "A real interview never needs a deposit, and a real firm never interviews you in a private chat.",
   "quick_check": {
-    "q": "A \"company\" interviews you only by chat, asks for your ID selfie, and a \"file charge\". What do you do?",
+    "q": "A recruiter asks you to deposit 100 USDT in their trading app to prove your skills. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Send everything, you want the job"
+        "text": "Deposit, it is refunded later"
       },
       {
         "id": "b",
-        "text": "Send the ID only"
+        "text": "Refuse and report. Interviews are free"
       },
       {
         "id": "c",
-        "text": "Stop. Check the company yourself, and report the account"
+        "text": "Deposit a smaller amount"
       },
       {
         "id": "d",
-        "text": "Ask for a contract first"
+        "text": "Ask a friend to deposit"
       }
     ],
-    "answer": "c",
-    "explain": "Never send ID photos and fees to a chat-only recruiter."
+    "answer": "b",
+    "explain": "Paying to interview is a scam. Check the firm's real site."
   },
   "hints": {
-    "nudge": "What does a job interview normally include?",
+    "nudge": "What does an interview cost?",
     "glow_order": [
-      "docs",
-      "fee",
-      "bank",
-      "chatonly",
-      "handle",
-      "rush",
-      "busy"
+      "dep",
+      "salary",
+      "chat",
+      "back",
+      "rush"
     ]
   },
-  "sources": [
-    "ftc-job-scams",
-    "ftc-jobs"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check the account",
-      "title": "@quillon_hr_desk_01",
+      "title": "Kelvaro Capital HR",
       "rows": [
         {
-          "k": "Account age",
-          "v": "3 days",
-          "clue": "handle"
+          "k": "Joined",
+          "v": "Last week",
+          "clue": "chat"
         },
         {
-          "k": "Interview method",
-          "v": "Chat only",
-          "clue": "chatonly"
+          "k": "Real firm",
+          "v": "kelvaro.example, has no chat interviews"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the demand",
+      "title": "What they want",
+      "rows": [
+        {
+          "k": "Where it happens",
+          "v": "A private chat",
+          "clue": "chat"
         },
         {
-          "k": "Asked for",
-          "v": "ID selfie, card details, a fee",
-          "clue": "docs"
+          "k": "Deposit",
+          "v": "100 USDT in their app",
+          "clue": "dep"
+        },
+        {
+          "k": "Refund",
+          "v": "After the interview",
+          "clue": "back"
+        },
+        {
+          "k": "Deadline",
+          "v": "20 minutes",
+          "clue": "rush"
         }
       ]
     },
@@ -320,18 +307,24 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What job-scam advice says",
       "rows": [
         {
-          "k": "Pay to get a job?",
-          "v": "Honest employers never ask",
-          "clue": "fee"
+          "k": "Interviews",
+          "v": "Are always free"
         },
         {
-          "k": "How to check",
-          "v": "Use the company's own site and a phone number you look up"
+          "k": "Pay far above normal",
+          "v": "Is bait",
+          "clue": "salary"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-jobs",
+    "ftc-job-scams",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

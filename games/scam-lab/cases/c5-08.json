@@ -3,22 +3,22 @@
   "type": "hunt",
   "chapter": 5,
   "difficulty": 3,
-  "title": "Two Job Posts",
-  "disguise": "admin",
+  "title": "Two Web3 Job Posts",
+  "disguise": "support",
   "intro": [
-    "You found two posts for the same job at Quillon Systems. One is the real careers page.",
-    "The other is Mirage in a hiring manager's tie. Compare them side by side.",
-    "Sniff the details, then decide."
+    "Two job posts for a community manager at the same crypto project. They look alike.",
+    "One is real. One is a copy by Mirage.",
+    "Compare them side by side."
   ],
   "notify": {
     "app": "Browser",
-    "from": "Two job posts",
-    "text": "Junior Designer at Quillon Systems"
+    "from": "Two posts",
+    "text": "Community manager at Hedrio?"
   },
-  "decide_q": "Which post is the real Quillon Systems job, and what will you do?",
+  "decide_q": "Which post is real, and what will you do?",
   "screen": {
     "app": "compare",
-    "context": "Both posts advertise a Junior Designer job at Quillon Systems.",
+    "context": "Two job posts, side by side.",
     "panels": [
       {
         "label": "Post A",
@@ -28,11 +28,11 @@
         },
         "rows": [
           {
-            "k": "Address",
+            "k": "Posted on",
             "v": [
               {
-                "clue": "addr_a",
-                "text": "quillon.example/careers"
+                "clue": "site_a",
+                "text": "hedrio.app/careers"
               }
             ]
           },
@@ -41,25 +41,16 @@
             "v": [
               {
                 "clue": "pay_a",
-                "text": "£32,000 a year, a normal range"
+                "text": "€3,800 a month, a normal range"
               }
             ]
           },
           {
-            "k": "How to apply",
+            "k": "Process",
             "v": [
               {
-                "clue": "how_a",
-                "text": "Fill in the form, then attend an interview"
-              }
-            ]
-          },
-          {
-            "k": "Cost to you",
-            "v": [
-              {
-                "clue": "cost_a",
-                "text": "Nothing"
+                "clue": "proc_a",
+                "text": "Two interviews, a short task"
               }
             ]
           },
@@ -68,15 +59,15 @@
             "v": [
               {
                 "clue": "contact_a",
-                "text": "Company email and office address"
+                "text": "A hedrio.app address"
               }
             ]
           }
         ],
         "note": [
           {
-            "clue": "note_a",
-            "text": "\"We never ask candidates for money.\""
+            "clue": "nofee_a",
+            "text": "\"We never ask applicants for money.\""
           }
         ]
       },
@@ -88,12 +79,11 @@
         },
         "rows": [
           {
-            "k": "Address",
+            "k": "Posted on",
             "v": [
               {
-                "clue": "addr_b",
-                "text": "quillon-hiring-desk.live",
-                "link": true
+                "clue": "site_b",
+                "text": "A chat group link"
               }
             ]
           },
@@ -102,25 +92,16 @@
             "v": [
               {
                 "clue": "pay_b",
-                "text": "£400 a week, no experience"
+                "text": "500 USDT a day, no experience"
               }
             ]
           },
           {
-            "k": "How to apply",
+            "k": "Process",
             "v": [
               {
-                "clue": "how_b",
-                "text": "Chat with HR on the messaging app, no interview"
-              }
-            ]
-          },
-          {
-            "k": "Cost to you",
-            "v": [
-              {
-                "clue": "cost_b",
-                "text": "£30 registration fee"
+                "clue": "proc_b",
+                "text": "No interview, start today"
               }
             ]
           },
@@ -129,197 +110,250 @@
             "v": [
               {
                 "clue": "contact_b",
-                "text": "A free-mail address only"
+                "text": "A free-mail address"
               }
             ]
           }
         ],
         "note": [
           {
-            "clue": "note_b",
-            "text": "\"Only 5 seats left, apply today.\""
+            "clue": "fee_b",
+            "text": "\"Pay 100 USDT for training materials.\""
           }
         ]
       }
     ]
   },
   "clues": {
-    "addr_b": {
-      "label": "A look-alike address",
+    "fee_b": {
+      "label": "Pay for training",
       "strength": "strong",
-      "lens": "quillon-hiring-desk.live is not the company's own site.",
-      "why": "Copy posts use look-alike addresses. Use the company's own site."
+      "lens": "You are asked to pay for training.",
+      "why": "Real employers never charge for training."
     },
     "pay_b": {
-      "label": "Pay far too high",
+      "label": "Huge pay, no experience",
       "strength": "strong",
-      "lens": "£400 a week with no experience.",
-      "why": "Big pay for little work is the bait."
+      "lens": "500 USDT a day is not real.",
+      "why": "The pay is bait."
     },
-    "how_b": {
-      "label": "No interview, chat only",
+    "proc_b": {
+      "label": "No interview",
       "strength": "strong",
-      "lens": "Hired by chat, no interview.",
-      "why": "Real hiring involves interviews."
+      "lens": "Start today with no interview.",
+      "why": "Real jobs have a process."
     },
-    "cost_b": {
-      "label": "A registration fee",
+    "site_b": {
+      "label": "Posted in a chat group",
       "strength": "strong",
-      "lens": "You must pay £30.",
-      "why": "Honest employers never charge candidates."
+      "lens": "A chat link, not a careers page.",
+      "why": "Real jobs live on the company site."
     },
     "contact_b": {
-      "label": "Free-mail address only",
+      "label": "Free-mail contact",
       "strength": "strong",
-      "lens": "No company email, no office.",
-      "why": "A real company has a company address."
+      "lens": "A free email address.",
+      "why": "Real recruiters use the company domain."
     },
-    "note_b": {
-      "label": "Only 5 seats left",
-      "strength": "strong",
-      "lens": "A rush to apply today.",
-      "why": "Pressure is a trick."
-    },
-    "logo_a": {
-      "label": "Briefcase logo",
+    "site_a": {
+      "label": "The careers page",
       "strength": "harmless",
-      "lens": "A little briefcase.",
-      "why": "Logos are easy to copy."
-    },
-    "logo_b": {
-      "label": "The same briefcase",
-      "strength": "harmless",
-      "lens": "The same icon.",
-      "why": "A copied icon takes seconds."
-    },
-    "addr_a": {
-      "label": "The company's own site",
-      "strength": "harmless",
-      "lens": "quillon.example/careers is the company's own domain.",
-      "why": "A matching site is good evidence."
+      "lens": "On the official site.",
+      "why": "The official site is the best test."
     },
     "pay_a": {
-      "label": "A normal pay range",
+      "label": "A normal salary",
       "strength": "harmless",
-      "lens": "£32,000 a year for a junior role.",
-      "why": "A normal pay is believable."
+      "lens": "A believable range.",
+      "why": "Believable pay fits real jobs."
     },
-    "how_a": {
-      "label": "Form and interview",
+    "proc_a": {
+      "label": "Interviews and a task",
       "strength": "harmless",
-      "lens": "You apply, then you are interviewed.",
-      "why": "Real hiring checks you."
-    },
-    "cost_a": {
-      "label": "Costs nothing",
-      "strength": "harmless",
-      "lens": "No fees.",
-      "why": "Honest employers charge nothing."
+      "lens": "A normal process.",
+      "why": "A real process is slower."
     },
     "contact_a": {
-      "label": "Real contact details",
+      "label": "Company address",
       "strength": "harmless",
-      "lens": "A company email and an office address.",
-      "why": "Honest companies tell you who and where they are."
+      "lens": "Ends in hedrio.app.",
+      "why": "Company domain."
     },
-    "note_a": {
-      "label": "\"We never ask for money\"",
+    "nofee_a": {
+      "label": "Warns about fees",
       "strength": "harmless",
-      "lens": "The company warns candidates.",
-      "why": "Honest companies warn about scams."
+      "lens": "It says it never asks for money.",
+      "why": "Real employers warn about scams."
+    },
+    "logo_a": {
+      "label": "Paw logo",
+      "strength": "harmless",
+      "lens": "The company logo.",
+      "why": "Logos are copied in seconds."
+    },
+    "logo_b": {
+      "label": "Same paw logo",
+      "strength": "harmless",
+      "lens": "A copy.",
+      "why": "Proves nothing."
     }
   },
   "actions": [
     {
       "id": "pick_b",
-      "label": "B is the real job. Pay the £30",
+      "label": "B is real. Pay for the training",
       "trap": true
     },
     {
       "id": "verify",
-      "label": "Not sure. Check the company's own site"
+      "label": "Check the real careers page"
     },
     {
       "id": "block_report",
-      "label": "A is the real job. Report B"
+      "label": "A is real. Report B"
     }
   ],
-  "best_action": "block_report",
   "acceptable_actions": [
     "verify"
   ],
-  "trap": {
-    "title": "Quillon Hiring Desk · Register",
-    "url": "quillon-hiring-desk.live",
-    "ask": "Pay £30 to register and get your interview slot.",
-    "go": "Pay £30",
-    "back": "Close this page"
-  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "You applied on the real page and reported the fake. The fake post was taken down.",
-      "mirageSays": "My hiring-manager tie!"
+      "stamp": "BLOCKED",
+      "line": "Reported, and the group was warned. Nobody paid.",
+      "mirageSays": "They read the real page!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The company's own careers page matched Post A exactly. Post B was a copy. Case cracked.",
+      "line": "The real careers page listed Post A and warned about copies. Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "pick_b": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The £30 went to a stranger. No interview, and no reply.",
+      "line": "The 100 USDT went to Mirage. No training, no job.",
       "mirageSays": "Thanks for the fee!"
     }
   },
   "what_if": {
-    "pick_b": "Post B had five warnings: look-alike address, big pay, no interview, a fee and a free-mail contact.",
-    "verify": "Checking was smart. Reporting B as well helps get it removed."
+    "pick_b": "Real jobs never charge for training. That alone exposes Post B.",
+    "verify": "Checking the real page was smart. Warning the group protects others."
   },
-  "golden_rule": "Compare the address, the pay, the hiring steps and the cost. A fake job post gets at least three wrong.",
+  "best_action": "block_report",
+  "trap": {
+    "title": "Hedrio Careers (chat)",
+    "url": "chat group",
+    "ask": "Pay 100 USDT for training to begin your job.",
+    "go": "Pay 100 USDT",
+    "back": "Close this page"
+  },
+  "golden_rule": "If a job asks you to pay for training, it is a scam. Check the company's own careers page.",
   "quick_check": {
-    "q": "Two posts for the same job. One has no interview and a fee. Which is the fake?",
+    "q": "A job post says to pay 100 USDT for training before you start. What is it?",
     "options": [
       {
         "id": "a",
-        "text": "The one with an interview"
+        "text": "A normal onboarding fee"
       },
       {
         "id": "b",
-        "text": "The one with no interview and a fee"
+        "text": "A scam"
       },
       {
         "id": "c",
-        "text": "Neither"
+        "text": "A refundable deposit"
       },
       {
         "id": "d",
-        "text": "Both"
+        "text": "A partner perk"
       }
     ],
     "answer": "b",
-    "explain": "No interview and a fee are the giveaways."
+    "explain": "Real employers never charge applicants."
   },
   "hints": {
     "nudge": "Which post asks you to pay?",
     "glow_order": [
-      "cost_b",
-      "how_b",
+      "fee_b",
       "pay_b",
-      "addr_b",
-      "contact_b",
-      "note_b"
+      "proc_b",
+      "site_b",
+      "contact_b"
     ]
   },
-  "sources": [
-    "ftc-job-scams",
-    "ftc-jobs"
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Compare the posts",
+      "title": "Where each lives",
+      "rows": [
+        {
+          "k": "Post A",
+          "v": "hedrio.app/careers",
+          "clue": "site_a"
+        },
+        {
+          "k": "Post B",
+          "v": "A chat group link",
+          "clue": "site_b"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Compare the pay",
+      "title": "What each pays",
+      "rows": [
+        {
+          "k": "Post A",
+          "v": "€3,800 a month",
+          "clue": "pay_a"
+        },
+        {
+          "k": "Post B",
+          "v": "500 USDT a day",
+          "clue": "pay_b"
+        },
+        {
+          "k": "Training fee",
+          "v": "Only Post B asks",
+          "clue": "fee_b"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Compare the process",
+      "title": "How you are hired",
+      "rows": [
+        {
+          "k": "Post A",
+          "v": "Interviews and a task",
+          "clue": "proc_a"
+        },
+        {
+          "k": "Post B",
+          "v": "None",
+          "clue": "proc_b"
+        },
+        {
+          "k": "Contact on B",
+          "v": "A free-mail address",
+          "clue": "contact_b"
+        }
+      ]
+    }
   ],
-  "checked_on": "2026-10-21"
+  "sources": [
+    "ftc-jobs",
+    "ftc-job-scams"
+  ],
+  "checked_on": "2026-11-08"
 }

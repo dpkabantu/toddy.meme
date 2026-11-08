@@ -3,158 +3,162 @@
   "type": "hunt",
   "chapter": 5,
   "difficulty": 2,
-  "title": "The Offer Letter",
-  "disguise": "admin",
+  "title": "The Web3 Offer Letter",
+  "disguise": "support",
   "intro": [
-    "You got an offer letter from a famous company. You are thrilled, until it asks for a payment.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "An email offers you a job at a crypto company, with a salary paid partly in tokens.",
+    "You never applied, but the letter looks tidy.",
+    "Sniff the email, then decide."
   ],
   "notify": {
     "app": "Mail",
-    "from": "Lumenara Tech HR",
-    "text": "Offer letter: Software Trainee"
+    "from": "Pelmora Labs HR",
+    "text": "Offer of employment: Community Manager…"
   },
   "screen": {
     "app": "mail",
     "head": {
       "from": [
         {
-          "clue": "from",
-          "text": "Lumenara Tech HR"
+          "clue": "sender",
+          "text": "Pelmora Labs HR"
         }
       ],
       "addr": [
         {
           "clue": "addr",
-          "text": "hr.lumenara-careers@freemail.example"
+          "text": "hr@pelmora-labs-careers.co"
         }
       ],
       "subject": [
         {
           "clue": "subject",
-          "text": "Offer letter: Software Trainee, $70,000 a year"
+          "text": "Offer of employment: Community Manager"
         }
       ],
       "time": [
-        "12:30 PM"
+        "9:05 AM"
       ]
     },
     "items": [
       {
         "p": [
+          "Dear ",
           {
             "clue": "greet",
-            "text": "Dear Candidate,"
-          }
+            "text": "candidate"
+          },
+          ","
         ]
       },
       {
         "p": [
-          "Congratulations! You are ",
-          {
-            "clue": "selected",
-            "text": "selected as a Software Trainee"
-          },
-          " at Lumenara Tech with ",
+          "We are pleased to offer you a role with a salary of ",
           {
             "clue": "pay",
-            "text": "$70,000 a year"
+            "text": "7,500 USDT a month"
+          },
+          ", no interview needed."
+        ]
+      },
+      {
+        "p": [
+          "To start, ",
+          {
+            "clue": "fee",
+            "text": "buy your equipment from our vendor"
+          },
+          " at ",
+          {
+            "clue": "link",
+            "text": "pelmora-vendor.shop",
+            "link": true
+          },
+          ". We will refund it in your first payroll."
+        ]
+      },
+      {
+        "p": [
+          "Please accept within ",
+          {
+            "clue": "timer",
+            "text": "24 hours",
+            "countdown": 900
           },
           "."
         ]
       },
       {
-        "p": [
-          "You did not need to ",
+        "foot": [
           {
-            "clue": "noint",
-            "text": "appear for any interview"
-          },
-          ", since your profile was shortlisted."
-        ]
-      },
-      {
-        "p": [
-          "To receive your laptop and joining kit, pay a ",
-          {
-            "clue": "fee",
-            "text": "refundable fee of $190"
-          },
-          " within 24 hours."
-        ]
-      },
-      {
-        "p": [
-          {
-            "clue": "link",
-            "text": "Pay and confirm your joining",
-            "link": true
+            "clue": "foot",
+            "text": "Pelmora Labs · People Team"
           }
         ]
       }
-    ]
+    ],
+    "context": "You never applied to Pelmora Labs."
   },
   "clues": {
-    "addr": {
-      "label": "A free-mail address",
-      "strength": "strong",
-      "lens": "A big company's HR would write from the company's own domain, not a free mail address.",
-      "why": "Look at the address behind the name."
-    },
-    "selected": {
-      "label": "Selected without applying",
-      "strength": "strong",
-      "lens": "You never applied or took a test.",
-      "why": "A job offer out of nowhere is a warning sign."
-    },
-    "noint": {
-      "label": "No interview at all",
-      "strength": "strong",
-      "lens": "Real hiring involves interviews.",
-      "why": "A job with no interview is bait."
-    },
     "fee": {
-      "label": "A \"refundable\" fee for a kit",
+      "label": "Buy your own equipment first",
       "strength": "strong",
-      "lens": "You must pay $190 to receive a laptop.",
-      "why": "Honest employers never ask you to pay to get a job or a kit."
+      "lens": "A new hire is asked to pay a vendor.",
+      "why": "The \"refund\" never comes. The vendor is the scammer."
     },
-    "link": {
-      "label": "A pay-and-confirm link",
+    "addr": {
+      "label": "Look-alike address",
       "strength": "strong",
-      "lens": "The button leads to a payment page.",
-      "why": "Never pay through an email link."
+      "lens": "pelmora-labs-careers.co is not the company site.",
+      "why": "Real offers come from the company domain."
     },
     "pay": {
-      "label": "A good salary",
-      "strength": "harmless",
-      "lens": "$70,000 a year, a believable offer.",
-      "why": "The salary alone proves nothing."
+      "label": "A huge salary with no interview",
+      "strength": "strong",
+      "lens": "7,500 USDT with no interview is not real.",
+      "why": "Real offers follow real interviews."
+    },
+    "link": {
+      "label": "A vendor link",
+      "strength": "strong",
+      "lens": "The \"vendor\" shop is run by the sender.",
+      "why": "Real employers send you equipment themselves."
+    },
+    "timer": {
+      "label": "24 hours to accept",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure stops you from checking."
     },
     "greet": {
-      "label": "\"Dear Candidate\"",
+      "label": "\"Dear candidate\"",
       "strength": "harmless",
-      "lens": "No name.",
-      "why": "Vague greetings are common but not proof alone."
+      "lens": "A generic greeting.",
+      "why": "A hint, not proof."
     },
-    "from": {
-      "label": "The company name",
+    "sender": {
+      "label": "HR name",
       "strength": "harmless",
-      "lens": "Lumenara Tech HR.",
-      "why": "Names are easy to copy."
+      "lens": "Pelmora Labs HR.",
+      "why": "A name proves nothing."
     },
     "subject": {
-      "label": "An offer subject",
+      "label": "Offer of employment",
       "strength": "harmless",
-      "lens": "Offer letter: Software Trainee.",
-      "why": "Subjects prove nothing."
+      "lens": "A formal subject.",
+      "why": "Formal words are copied easily."
+    },
+    "foot": {
+      "label": "People team footer",
+      "strength": "harmless",
+      "lens": "Looks official.",
+      "why": "Footers are easy to copy."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Click the link and pay $190",
+      "label": "Buy the equipment",
       "trap": true
     },
     {
@@ -163,115 +167,127 @@
     },
     {
       "id": "verify",
-      "label": "Check the company's own careers page and call its real HR line"
+      "label": "Check the company's real careers page"
     },
     {
       "id": "block_report",
-      "label": "Report it and delete it"
+      "label": "Report it as phishing and delete it"
     }
   ],
-  "best_action": "block_report",
   "acceptable_actions": [
     "verify",
     "ignore"
   ],
-  "trap": {
-    "title": "Lumenara Tech · Joining",
-    "url": "lumenara-joining.example/pay",
-    "ask": "Pay $190 by card to confirm your joining and receive your kit.",
-    "go": "Pay $190",
-    "back": "Close this page"
-  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Reported as phishing and deleted. The fake address was blocked.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Reported and deleted. The fake domain was taken down.",
+      "mirageSays": "My lovely offer!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The company's real careers page said: \"We never charge candidates.\" Case cracked.",
+      "line": "The company's real page had no such role and warned about fake offers. Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. A report protects others.",
+      "mirageSays": "Fine. Next inbox!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The $190 went to a stranger. No laptop and no job ever came.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The 1,400 USDT went to the \"vendor\". No laptop, no payroll, no job.",
+      "mirageSays": "Thanks for the laptop money!"
     }
   },
   "what_if": {
-    "go_ahead": "Honest employers never charge for a kit or a job. Checking the careers page took a minute.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "A real employer never asks you to buy things first. That line exposed the offer.",
+    "verify": "Checking was smart. Reporting helps others.",
+    "ignore": "Ignoring it was safe. A quick report protects others."
   },
-  "golden_rule": "No real employer asks you to pay for a job, a laptop or a kit. Check on the company's own site.",
+  "best_action": "block_report",
+  "trap": {
+    "title": "Pelmora Vendor Shop",
+    "url": "pelmora-vendor.shop",
+    "ask": "Pay 1,400 USDT for your laptop. It will be refunded in payroll.",
+    "go": "Pay 1,400 USDT",
+    "back": "Close this page"
+  },
+  "golden_rule": "A real employer never asks you to pay for equipment or fees before you start.",
   "quick_check": {
-    "q": "A famous company's offer letter, from a free-mail address, asks you to pay $190 for a laptop kit. What do you do?",
+    "q": "A job offer with no interview asks you to buy equipment from its \"vendor\" and promises a refund. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Pay, it is refundable"
+        "text": "Buy it, it will be refunded"
       },
       {
         "id": "b",
-        "text": "Pay half"
+        "text": "Refuse and report. Real employers send equipment themselves"
       },
       {
         "id": "c",
-        "text": "Do not pay. Check the company's careers page, and report the email"
+        "text": "Buy half"
       },
       {
         "id": "d",
-        "text": "Ask for an installment plan"
+        "text": "Ask for the refund first, then buy"
       }
     ],
-    "answer": "c",
-    "explain": "Never pay to get a job. A real company pays you."
+    "answer": "b",
+    "explain": "A refund promised later is the bait. Real employers do not use vendors you must pay."
   },
   "hints": {
-    "nudge": "Who pays whom in a real job?",
+    "nudge": "Who pays for what?",
     "glow_order": [
-      "addr",
-      "selected",
-      "noint",
       "fee",
-      "link"
+      "pay",
+      "addr",
+      "link",
+      "timer"
     ]
   },
-  "sources": [
-    "ftc-job-scams",
-    "ftc-jobs"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check sender",
-      "title": "Who really sent this",
+      "title": "Who sent this email",
       "rows": [
         {
-          "k": "Address",
-          "v": "hr.lumenara-careers@freemail.example",
+          "k": "Sent from",
+          "v": "hr@pelmora-labs-careers.co",
           "clue": "addr"
         },
         {
-          "k": "Interview done?",
-          "v": "None",
-          "clue": "noint"
+          "k": "Your application",
+          "v": "None sent"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the vendor",
+      "title": "Where it leads",
+      "rows": [
+        {
+          "k": "Shop",
+          "v": "pelmora-vendor.shop, a week old",
+          "clue": "link"
+        },
+        {
+          "k": "Asks you to",
+          "v": "Pay before you start",
+          "clue": "fee"
         }
       ]
     },
@@ -279,18 +295,25 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What job-scam advice says",
       "rows": [
         {
-          "k": "Pay to get a job?",
-          "v": "Honest employers never ask",
+          "k": "Real jobs",
+          "v": "Never charge you to start",
           "clue": "fee"
         },
         {
-          "k": "How to check",
-          "v": "Look on the company's own careers page"
+          "k": "An offer with no interview",
+          "v": "Is a red flag",
+          "clue": "pay"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-jobs",
+    "ftc-job-scams",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }
