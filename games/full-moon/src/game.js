@@ -905,7 +905,7 @@ function showMenu() {
     '<button class="btn" data-act="free">Play</button>' +
     settingsRow() +
     '<div class="links"><button class="chip" data-act="how">How to play</button>' + (WEEKLY_TWISTS ? '<button class="chip" data-act="weeks">Weekly twists</button>' : '') + '<button class="chip" data-act="pieces">Pieces</button><button class="chip" data-act="about">About</button><button class="chip" data-act="sharegame">Share game</button></div>' +
-    '<p class="help">A calm puzzle. Every piece is made up, nothing leaves this device unless you sign in, and the game never asks for real details.</p></div>';
+    '<p class="help">A calm puzzle. Every piece is made up, nothing leaves this device, and the game never asks for real details.</p></div>';
 }
 function showWeeks() {
   mode = 'menu'; overlay.hidden = false;

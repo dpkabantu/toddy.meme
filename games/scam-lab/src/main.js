@@ -62,7 +62,7 @@ function title() {
         h('button', { class: 'chip', id: 't-howto', type: 'button', onclick: () => { sfx.tap(); howTo(title); } }, 'How to play'),
         h('button', { class: 'chip', id: 't-help', type: 'button', onclick: () => { sfx.tap(); help(title); } }, 'Real help'),
         h('button', { class: 'chip', id: 't-about', type: 'button', onclick: () => { sfx.tap(); about(title); } }, 'About')),
-      h('p', { class: 'legal', text: 'A safety game. Every brand, account and link is made up, nothing you do leaves this device unless you sign in, and the game never asks for real details. Education only, not financial advice.' })));
+      h('p', { class: 'legal', text: 'A safety game. Every brand, account and link is made up, nothing you do leaves this device, and the game never asks for real details. Education only, not financial advice.' })));
 }
 
 // ---------- how to play ----------

@@ -3,7 +3,6 @@ import { DX, DY, MAX_BUMPS, generate, newGame, beanAt, frozen, unitOf, traceBean
 import { TRAYS } from './trays.js';
 import { INTROS, TRAYS_PER_NIGHT, effT, trayLevelConfig, nightInfo, VISITORS, VISITOR_ORDER, TIER_NAMES, trayTier, tierOf } from './levels.js';
 import { buildPostcard } from './postcard.js';
-import { toSynced, merge as mergeProgress, differs } from './sync.js';
 
 const BUILD = '1.0.0-rc20';
 const ASSET = 'assets/';
@@ -31,7 +30,7 @@ const save = Object.assign({ stars: {}, daily: {}, endlessBest: 0, postcards: []
   for (let n = 0; n < 400; n++) { if (!save.stars[`n${n + 1}-${TRAYS_PER_NIGHT}`]) { if (n > 3) break; continue; } const id = 'n' + (n + 1); if (!save.postcards.includes(id)) save.postcards.push(id); }
 })();
 function readSave() { try { return JSON.parse(localStorage.getItem(SAVE_KEY) || '{}'); } catch (e) { return {}; } }
-function writeSave() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* storage blocked: play still works */ } schedulePush(); }
+function writeSave() { try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* storage blocked: play still works */ } }
 const trayKey = (n, t) => `n${n + 1}-${t}`;
 
 // ---------------- Anonymous play stats ----------------
@@ -1153,7 +1152,6 @@ function openSettings() {
   const row = (id, label, sub, on) => `<label class="setting"><span><b>${label}</b><small>${sub}</small></span><input type="checkbox" id="${id}" ${on ? 'checked' : ''}></label>`;
   modal(`<h3>Settings</h3>
     <div class="settings">
-      <div class="setting account" id="acct" hidden></div>
       ${row('set-sound', 'Sound', 'Turns all sound on or off', save.sound)}
       ${row('set-music', 'Music', 'Quiet café music while you play', save.music)}
       ${row('set-calm', 'Calmer motion', 'Fewer animations', save.calm)}
@@ -1167,105 +1165,6 @@ function openSettings() {
   $('set-big').addEventListener('change', e => { save.bigText = e.target.checked; writeSave(); applySettings(); });
   $('set-stats').addEventListener('change', e => { save.stats = e.target.checked; writeSave(); });
   bind('set-done', closeModal);
-  renderAccount();
-}
-// ---------------- Account (optional Google sign-in) ----------------
-// Guests play exactly as before. Signed-in players keep stars, scores and Daily days on every device. Only the three
-// merge rules in sync.js touch the save; settings and run logs never leave the device.
-const GAME_ID = 'moon-brew';
-const acc = () => window.ToddyAccount || null;
-let pushTimer = 0, accountMe = null;
-function schedulePush() {
-  if (!acc() || !accountMe || !accountMe.signedIn) return;
-  sendStars();
-  clearTimeout(pushTimer);
-  pushTimer = setTimeout(() => acc().push(GAME_ID, toSynced(save)), 4000);
-}
-async function syncNow() {
-  const A = acc(); if (!A) return;
-  accountMe = await A.me(true);
-  if (!accountMe.signedIn) return;
-  const remote = await A.pull(GAME_ID);
-  if (remote === undefined) return; // account unreachable: keep playing locally
-  const merged = mergeProgress(toSynced(save), remote);
-  Object.assign(save, { stars: merged.stars, endlessBest: merged.endlessBest, postcards: merged.postcards, intros: merged.intros });
-  for (const [k, v] of Object.entries(merged.daily)) if (!save.daily[k]) save.daily[k] = v;
-  try { localStorage.setItem(SAVE_KEY, JSON.stringify(save)); } catch (e) { /* ignore */ }
-  if (remote === null || differs(merged, remote)) await A.push(GAME_ID, toSynced(save));
-  if (current === 'title') renderTitle(); else if (current === 'map') renderMap();
-}
-// The leaderboard ranks total stars (saved scores; the server keeps the best of each day). Never added to other games' scores.
-function todayNumber() { const n = new Date(); return n.getUTCFullYear() * 10000 + (n.getUTCMonth() + 1) * 100 + n.getUTCDate(); }
-let lastStarsSent = 0;
-function sendStars() { const A = acc(); const t = totalStars(); if (A && accountMe && accountMe.signedIn && t > 0 && t !== lastStarsSent) { lastStarsSent = t; A.submitScore(GAME_ID, todayNumber(), t).then(ok => { if (!ok) lastStarsSent = 0; }); } }
-function openBoard(period = 'daily') {
-  const A = acc(); if (!A) return;
-  const tab = (p) => `<button class="btn ${p === period ? 'primary' : 'ghost'}" data-p="${p}" type="button">${({ daily: 'Today', weekly: 'This week', monthly: 'This month' })[p]}</button>`;
-  modal(`<h3>Leaderboard</h3><div class="btns">${['daily', 'weekly', 'monthly'].map(tab).join('')}</div><div id="board-list" class="board-list">Loading...</div>
-    <p class="board-note">Ranked by total stars. Saved scores, not yet verified.</p><div class="btns"><button class="btn ghost" id="board-back" type="button">Back</button></div>`);
-  $('modal-card').querySelectorAll('button[data-p]').forEach(b => b.addEventListener('click', () => openBoard(b.dataset.p)));
-  bind('board-back', openAccount);
-  A.leaderboard(GAME_ID, period).then(d => {
-    const box = $('board-list'); if (!box) return; box.textContent = '';
-    if (!d) { box.textContent = 'The leaderboard is not available right now.'; return; }
-    const line = (rank, name, score, you) => { const r = el('div', { className: 'board-line' + (you ? ' you' : '') }, el('span', { className: 'board-rank', textContent: String(rank) }), el('span', { className: 'board-name', textContent: name }), el('span', { className: 'board-score', textContent: Number(score).toLocaleString('en-US') })); return r; };
-    if (!d.entries.length) box.append(el('small', { textContent: 'No scores yet. Sign in, pick a nickname and clear a tray to be first.' }));
-    d.entries.slice(0, 10).forEach(e => box.append(line(e.rank, e.nickname, e.score, e.you)));
-    if (d.you && d.you.rank > 10) box.append(line(d.you.rank, 'You', d.you.score, true));
-  });
-}
-function el(tag, props, ...kids) { const e = document.createElement(tag); Object.assign(e, props || {}); for (const k of kids) e.append(k); return e; }
-async function renderAccount() {
-  const box = $('acct'), A = acc(); if (!box || !A) return;
-  const me = await A.me(true); accountMe = me;
-  if (me.unavailable) return; // accounts not switched on: the section stays hidden
-  box.hidden = false; box.textContent = '';
-  const say2 = el('small', { id: 'acct-msg', role: 'status' });
-  if (!me.signedIn) {
-    const go = el('a', { className: 'btn primary', href: A.signInUrl(GAME_ID), textContent: 'Continue with Google' });
-    const lbG = el('button', { className: 'btn ghost', type: 'button', textContent: 'Leaderboard' }); lbG.addEventListener('click', () => openBoard('daily'));
-    box.append(el('span', {}, el('b', { textContent: 'Keep your progress' }), el('small', { textContent: 'Optional. Saves your stars and postcards on every device. We store your email, name and a nickname you choose.' }), el('small', {}, el('a', { href: PRIVACY_URL, target: '_blank', rel: 'noopener noreferrer', textContent: 'What we store' }))), go, lbG);
-    return;
-  }
-  const nick = el('input', { id: 'acct-nick', type: 'text', maxLength: 16, value: me.nickname || '', placeholder: 'Pick a nickname', autocomplete: 'off' });
-  const save1 = el('button', { className: 'btn ghost', type: 'button', textContent: 'Save' });
-  save1.addEventListener('click', async () => { const r = await A.setProfile({ nickname: nick.value }); say2.textContent = r.ok ? 'Saved.' : (r.error || 'Could not save.'); if (r.ok) accountMe = await A.me(true); });
-  const boards = el('input', { type: 'checkbox', checked: me.showOnBoards });
-  boards.addEventListener('change', () => A.setProfile({ showOnBoards: boards.checked }));
-  const lb = el('button', { className: 'btn ghost', type: 'button', textContent: 'Leaderboard' }); lb.addEventListener('click', () => openBoard('daily'));
-  const out = el('button', { className: 'btn ghost', type: 'button', textContent: 'Sign out' });
-  out.addEventListener('click', async () => { await A.signOut(); accountMe = null; renderAccount(); });
-  const del = el('button', { className: 'btn ghost', type: 'button', textContent: 'Delete my data' });
-  del.addEventListener('click', async () => {
-    if (del.dataset.sure !== '1') { del.dataset.sure = '1'; del.textContent = 'Tap again to delete everything'; return; }
-    await A.deleteAccount(); accountMe = null; renderAccount();
-  });
-  box.append(el('span', {}, el('b', { textContent: me.needsNickname ? 'Welcome! Pick a nickname' : 'Signed in' }), el('small', { textContent: 'Other players only ever see your nickname.' }), nick, save1,
-    el('label', { className: 'acct-row' }, boards, el('small', { textContent: 'Show me on leaderboards' })), say2, lb, out, del));
-}
-function updateAccountPill() {
-  const b = $('btn-account'); if (!b) return;
-  b.hidden = !acc() || !accountMe || !!accountMe.unavailable;
-  const on = !!(accountMe && accountMe.signedIn), st = on ? 'in' : 'out';
-  if (b.dataset.st !== st) {
-    b.dataset.st = st;
-    if (on) { b.innerHTML = '<svg viewBox="0 0 32 32" width="26" height="26" aria-hidden="true" focusable="false"><circle cx="16" cy="11" r="5.2" fill="#fdaf1e"/><path d="M5.5 26c0-5.6 4.7-9 10.5-9s10.5 3.4 10.5 9z" fill="#fdaf1e"/></svg><i class="ta-caret" aria-hidden="true"></i>'; b.setAttribute('aria-label', 'Your account'); }
-    else { b.textContent = 'Sign in'; b.setAttribute('aria-label', 'Sign in or open your account'); }
-  }
-  b.classList.toggle('on', on);
-}
-function openAccount() {
-  modal(`<h3>Account</h3><div class="setting account" id="acct" hidden></div><div class="btns"><button class="btn ghost" id="acct-close" type="button">Close</button></div>`);
-  bind('acct-close', () => { closeModal(); updateAccountPill(); });
-  renderAccount().then(updateAccountPill);
-}
-async function initAccount() {
-  const A = acc(); if (!A) return;
-  const m = /^\?signin=(ok|cancelled|failed|expired)$/.exec(location.search);
-  if (m) history.replaceState(null, '', location.pathname);
-  await syncNow(); updateAccountPill(); sendStars();
-  if (m && m[1] === 'ok') openAccount();
-  else if (m) modal(`<h3>Sign-in did not finish</h3><p>${m[1] === 'cancelled' ? 'No problem. You can keep playing as a guest.' : 'Please try again with the Sign in button. You can keep playing as a guest.'}</p><div class="btns"><button class="btn primary" id="acct-ok" type="button">OK</button></div>`), bind('acct-ok', closeModal);
 }
 function modal(html) { $('modal-card').innerHTML = html; $('modal').hidden = false; const b = $('modal-card').querySelector('button'); if (b) b.focus(); }
 function closeModal() { $('modal').hidden = true; }
@@ -1282,7 +1181,6 @@ bind('btn-stats', () => show('stats'));
 bind('stats-back', () => show('title'));
 bind('btn-howto', () => show('howto'));
 bind('btn-settings', openSettings);
-bind('btn-account', openAccount);
 bind('btn-about', () => show('about'));
 bind('about-back', () => show('title'));
 linkTo($('about-bug'), BUG_REPORT_URL);
@@ -1384,7 +1282,6 @@ toddy.cv.addEventListener('animationend', (e) => { if (e.animationName === 'hop'
 
 applySettings(); // (sound itself wakes on the first tap)
 show('title');
-initAccount();
 // Test-site shortcut: .../moon-brew/?tray=6-3 opens Night 6, tray 3 at once. Works only on the Cloudflare preview and on localhost, never on toddy.meme.
 {
   const m = /^\?tray=(\d{1,3})-(\d{1,2})$/.exec(location.search), h = location.hostname;

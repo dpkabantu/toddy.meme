@@ -1,1 +1,0 @@
-CREATE TABLE IF NOT EXISTS progress ( player_id TEXT NOT NULL REFERENCES players(id) ON DELETE CASCADE, game TEXT NOT NULL, data TEXT NOT NULL, updated_at INTEGER NOT NULL, PRIMARY KEY (player_id, game) ); 
