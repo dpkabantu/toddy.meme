@@ -6,7 +6,7 @@ import { cleanNickname } from './nickname.js';
 
 const GAMES = ['moon-brew', 'full-moon', 'scam-lab'], MAX_PROGRESS = 65536;
 // A score above this cannot be real for that game (plausibility only; scores are "saved", not "verified", until a replay check exists).
-const MAX_SCORE = { 'moon-brew': 1000, 'scam-lab': 1000, 'full-moon': 2000000 };
+const MAX_SCORE = { 'moon-brew': 30000, 'scam-lab': 200000, 'full-moon': 2000000 }; // moon-brew: total stars, scam-lab: total points, full-moon: one run
 const BOARD_SIZE = 20;
 const SESSION_DAYS = 30, OAUTH_MINUTES = 10, AVATARS = 8;
 const now = () => Math.floor(Date.now() / 1000);

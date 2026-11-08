@@ -125,8 +125,6 @@ function home() {
   gameLayer(false); setBg('lab_bg', true); setUp(title);
   location.hash.length > 1 && history.replaceState(history.state, '', location.pathname + location.search);
   const total = store.totalStars(); const rank = rankFor(total); const nxt = nextRank(total);
-  const key = dayKey(); const today = store.daily(key);
-  const st = streak(store.dailyKeys().map(dayNumber), dayNumber(key));
   const first = ALL()[0];
   const up = nextUp(); const w = up ? where(up) : null;
   const solvedAll = ALL().filter((id) => store.played(id)).length;
@@ -147,7 +145,7 @@ function home() {
         : h('div', { class: 'continue done' },
             h('span', { class: 'eyebrow', text: `ALL ${ALL().length} CASES SOLVED` }),
             h('b', { text: `Every case cracked, ${rankFor(store.totalStars()).name}!` }),
-            h('span', { class: 'small-ink', text: 'Replay cases for 3 stars, or keep your Daily Quickie streak going.' })),
+            h('span', { class: 'small-ink', text: 'Replay cases for 3 stars and collect every Golden Rule.' })),
 
       h('h2', { class: 'section-h', text: 'Chapters' }),
       h('p', { class: 'small-ink section-sub', text: '7 chapters, 20 cases each. Start with Chapter 1, then pick any chapter. Cases inside a chapter go in order.' }),
@@ -166,10 +164,6 @@ function home() {
             h('span', { class: 'ch-state', text: label })));
       })),
 
-      h('button', { class: `daily${today ? ' done' : ''}`, id: 'btn-daily', type: 'button', disabled: !store.played(first), onclick: () => { sfx.tap(); caseIntro('daily'); } },
-        h('div', { class: 'eyebrow', text: 'BONUS · DAILY QUICKIE' }),
-        h('b', { text: !store.played(first) ? 'Unlocks after your first case' : today ? `Done today · ${today.score} / 1000` : 'A new 90-second case every day' }),
-        h('span', { class: 'small-ink', text: `${st ? `🔥 ${st}-day streak · ` : ''}Same case for everyone${today ? ' · replay for practice' : ''}` })),
       h('nav', { class: 'hub-nav' },
         h('button', { class: 'chip', id: 'btn-notebook', type: 'button', onclick: () => { sfx.tap(); notebook(); } }, '📒 Golden Rules'),
         h('button', { class: 'chip', id: 'btn-howto', type: 'button', onclick: () => { sfx.tap(); howTo(); } }, 'How to play'),
@@ -438,7 +432,6 @@ async function boot() {
   const get = (f) => fetch(`cases/${f}`).then((r) => { if (!r.ok) throw new Error(`${f}: ${r.status}`); return r.json(); });
   try {
     CH = await get('chapters.json'); SOURCES = await get('sources.json');
-    try { setDailySet(await get('daily.json')); } catch (e) { /* the older template Daily cases are used */ }
     await Promise.all(CH.chapters.flatMap((ch) => ch.cases.map(async (id, i, all) => { CASES[id] = await get(`${id}.json`); CASES[id].label = `Ch ${ch.n} · Case ${i + 1} of ${all.length}`; })));
   } catch (e) {
     page(h('div', { class: 'pagecard' }, h('h2', { text: 'The case files didn\'t load' }),

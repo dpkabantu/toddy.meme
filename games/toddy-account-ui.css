@@ -31,3 +31,4 @@ a.ta-home { display: inline-flex; align-items: center; justify-content: center; 
 .ta-pill:focus-visible { outline: 3px solid #fff4d6; outline-offset: 2px; }
 .ta-pill.bottom { top: auto; bottom: max(10px, env(safe-area-inset-bottom)); }
 .ta-pill.on[hidden] { display: none; }
+.ta-pill.anchored { right: auto; bottom: auto; }

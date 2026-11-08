@@ -5,7 +5,7 @@
   'use strict';
   var A = window.ToddyAccount; if (!A) return;
   var cfg = null, me = null, lastPushed = '', backdrop = null, sentScores = {};
-  function el(tag, props) { var e = document.createElement(tag); if (props) for (var k in props) e[k] = props[k]; for (var i = 2; i < arguments.length; i++) e.append(arguments[i]); return e; }
+  function el(tag, props) { var e = document.createElement(tag); if (props) for (var k in props) e[k] = props[k]; for (var i = 2; i < arguments.length; i++) if (arguments[i] != null) e.append(arguments[i]); return e; }
   function stamp(d) { return JSON.stringify(d); }
 
   // ----- panel -----
@@ -25,7 +25,7 @@
       var card = el('div', { className: 'ta-card', role: 'dialog', 'aria-label': 'Account' }); backdrop.append(card);
       card.append(el('h3', { textContent: 'Account' }));
       var done = el('button', { className: 'ta-btn', type: 'button', textContent: 'Close' }); done.addEventListener('click', close);
-      var lb = el('button', { className: 'ta-btn', type: 'button', textContent: 'Leaderboard' }); lb.addEventListener('click', function () { board('daily'); });
+      var lb = cfg.leaderboard === false ? null : el('button', { className: 'ta-btn', type: 'button', textContent: 'Leaderboard' }); if (lb) lb.addEventListener('click', function () { board('daily'); });
       if (m.unavailable) { card.append(el('small', { textContent: 'Sign-in is not available right now. You can keep playing as a guest.' }), done); return; }
       if (!m.signedIn) {
         card.append(el('small', { textContent: 'Optional. Keep your progress on every device. We store your email, name and a nickname you choose. Other players only ever see the nickname.' }),
@@ -54,16 +54,16 @@
     card.append(el('h3', { textContent: 'Leaderboard' }));
     var tabs = el('div', { className: 'ta-tabs' });
     ['daily', 'weekly', 'monthly'].forEach(function (p) {
-      var t = el('button', { className: 'ta-tab' + (p === period ? ' on' : ''), type: 'button', textContent: p.charAt(0).toUpperCase() + p.slice(1) }); t.setAttribute('aria-pressed', p === period ? 'true' : 'false');
+      var t = el('button', { className: 'ta-tab' + (p === period ? ' on' : ''), type: 'button', textContent: { daily: 'Today', weekly: 'This week', monthly: 'This month' }[p] }); t.setAttribute('aria-pressed', p === period ? 'true' : 'false');
       t.addEventListener('click', function () { board(p); }); tabs.append(t);
     });
     var list = el('div', { className: 'ta-list', textContent: 'Loading...' });
     var back = el('button', { className: 'ta-btn', type: 'button', textContent: 'Back' }); back.addEventListener('click', render);
-    card.append(tabs, list, el('small', { textContent: 'Daily results only, the same puzzle for everyone. Saved scores, not yet verified.' }), back);
+    card.append(tabs, list, el('small', { textContent: 'Ranked by ' + (cfg.scoreLabel || 'score') + '. Saved scores, not yet verified.' }), back);
     A.leaderboard(cfg.game, period).then(function (d) {
       list.textContent = '';
       if (!d) { list.textContent = 'The leaderboard is not available right now.'; return; }
-      if (!d.entries.length) list.append(el('small', { textContent: 'No scores yet for this period. Sign in, pick a nickname and play today\u2019s Daily to be first.' }));
+      if (!d.entries.length) list.append(el('small', { textContent: 'No scores yet for this period. Sign in, pick a nickname and play to be first.' }));
       d.entries.slice(0, 10).forEach(function (e) { list.append(row(e.rank, e.nickname, e.score, e.you)); });
       if (d.you && d.you.rank > 10) list.append(row(d.you.rank, 'You', d.you.score, true));
     });
@@ -96,8 +96,18 @@
     if (!pill) {
       pill = el('button', { className: 'ta-pill' + (cfg.pillAtBottom ? ' bottom' : ''), type: 'button' }); pill.setAttribute('aria-label', 'Sign in or open your account');
       pill.addEventListener('click', open); document.body.append(pill);
+      if (cfg.pillAnchor) { window.addEventListener('resize', queueSync); setInterval(function () { if (!pill.hidden) placePill(); }, 600); }
     }
     setPill(); var h = !menuVisible(); if (pill.hidden !== h) pill.hidden = h;
+    if (!h && cfg.pillAnchor) placePill();
+  }
+  // Full Moon: the button sits inside the menu card, top right (the card is redrawn and can move, so we measure it each time)
+  function placePill() {
+    var rows = document.querySelectorAll(cfg.rowSelector), card = null;
+    for (var i = 0; i < rows.length && !card; i++) if (rows[i].getClientRects().length) card = rows[i].closest(cfg.pillAnchor);
+    if (!card) return;
+    var r = card.getBoundingClientRect(); pill.classList.add('anchored');
+    pill.style.top = Math.round(r.top + 10) + 'px'; pill.style.left = Math.round(r.right - 10 - pill.offsetWidth) + 'px';
   }
   function queueSync() { if (!raf) raf = requestAnimationFrame(syncPill); }
 
@@ -120,8 +130,8 @@
   }
   // Daily results the game has saved are sent once to the leaderboard (the server keeps the best of each day).
   function sendScores() {
-    if (!me || !me.signedIn || !cfg.dailyScores) return;
-    cfg.dailyScores().forEach(function (d) {
+    var list = cfg.scores || cfg.dailyScores; if (!me || !me.signedIn || !list) return;
+    list().forEach(function (d) {
       var k = d.day + ':' + d.score; if (sentScores[k]) return; sentScores[k] = 1;
       A.submitScore(cfg.game, d.day, d.score).then(function (ok) { if (!ok) delete sentScores[k]; });
     });
