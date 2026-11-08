@@ -214,6 +214,7 @@ a.btn { text-decoration: none; color: var(--cream); justify-content: center; }
 .setting span { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
 .setting small { color: var(--muted); font-size: 12px; }
 .setting input { width: 22px; height: 22px; accent-color: var(--gold); flex: none; }
+.build .linkish { display: inline-block; padding: 10px 4px; }
 .linkish { background: none; border: 0; padding: 0; color: var(--gold); font-size: inherit; text-decoration: underline; letter-spacing: inherit; }
 .about { display: flex; flex-direction: column; gap: 10px; }
 .about a { color: var(--gold); }
@@ -577,14 +578,6 @@ html.look-clean .tray-btn .pips { position: absolute; top: 5px; left: 0; right: 
 @media (min-width: 900px) and (hover: hover) and (pointer: fine) {
   html.look-clean body:not(.playing) { background: var(--night) var(--i-scene-desktop, none) center / cover no-repeat fixed; }
   html.look-clean body:not(.playing)::before { background: linear-gradient(180deg, #17112a99, #17112acc); }
-}
-@media (min-width: 1180px) and (hover: hover) and (pointer: fine) {
-  html.look-clean .keys { display: block; position: fixed; left: 24px; top: 50%; transform: translateY(-50%); width: 200px; z-index: 3; padding: 14px 16px; border: 2px solid var(--brass); border-radius: 16px; background: linear-gradient(160deg, #241c52e6, #15102fe6); font-size: 13px; }
-  html.look-clean .keys b { display: block; color: var(--gold); letter-spacing: .14em; text-transform: uppercase; font-size: 11px; margin-bottom: 8px; }
-  html.look-clean .keys ul { list-style: none; margin: 0; padding: 0; display: grid; gap: 7px; }
-  html.look-clean .keys li { display: flex; align-items: center; gap: 4px; }
-  html.look-clean .keys em { margin-left: auto; font-style: normal; color: var(--muted); }
-  html.look-clean .keys kbd { font: inherit; font-weight: 800; min-width: 24px; padding: 2px 6px; text-align: center; border: 1.5px solid var(--brass); border-radius: 7px; background: #0004; }
 }
 
 /* optional account block in Settings */

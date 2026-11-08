@@ -83,6 +83,16 @@
     }
   }
 
+  // ----- a way back: "All games" next to the chip (shown even when sign-in is off) -----
+  function addHome() {
+    var rows = document.querySelectorAll(cfg.rowSelector);
+    for (var i = 0; i < rows.length; i++) {
+      if (rows[i].querySelector('[data-ta-home]')) continue;
+      var a = el('a', { className: (cfg.chipClass || 'chip') + ' ta-home', href: '/games/', textContent: '\u2190 All games' }); a.setAttribute('data-ta-home', '1');
+      rows[i].append(a);
+    }
+  }
+
   // ----- progress sync -----
   function push() {
     if (!me || !me.signedIn) return;
@@ -113,6 +123,7 @@
   window.ToddyAccountUI = {
     mount: function (config) {
       cfg = config;
+      addHome(); new MutationObserver(addHome).observe(document.documentElement, { childList: true, subtree: true });
       A.me().then(function (m) {
         if (m.unavailable) return; // service off: no chip, no sync
         addChips();

@@ -35,9 +35,8 @@
       <h1 class="logo">Moon Brew</h1>
       <p class="tag">Clear the bean tray. Brew for the night visitors.</p>
       <div class="menu">
-        <button id="btn-play" class="btn primary play-main" type="button"><span>Play</span><small id="play-status">Night 1 · 20 trays</small></button>
+        <button id="btn-play" class="btn primary play-main" type="button"><span>Play</span><small id="play-status">Night 1 · 10 trays</small></button>
         <button id="btn-daily" class="btn" type="button"><span>Daily Brew</span><small id="daily-status">New tray today</small></button>
-        <button id="btn-endless" class="btn" type="button"><span>Endless Brew</span><small id="endless-status">Finish Night 1 to open</small></button>
         <div class="menu-row four">
           <button id="btn-stats" class="btn ghost" type="button">My Brew</button>
           <button id="btn-album" class="btn ghost" type="button">Postcards</button>
@@ -46,7 +45,7 @@
         </div>
       </div>
       <p class="safety">TODDY games never ask for your wallet, seed phrase or payment.</p>
-      <p class="build"><span id="build-label">Moon Brew</span> · <button class="linkish" id="btn-about" type="button">About &amp; privacy</button></p>
+      <p class="build"><a class="linkish" id="home-link" href="/games/">&#8592; All games</a> &middot; <span id="build-label">Moon Brew</span> · <button class="linkish" id="btn-about" type="button">About &amp; privacy</button></p>
     </div>
   </section>
 
@@ -145,7 +144,7 @@
       <h2 class="bar-title">Postcards</h2>
       <span></span>
     </header>
-    <p class="muted center">Finish tray 20 of each Night to collect its postcard.</p>
+    <p class="muted center">Finish tray 10 of each Night to collect its postcard.</p>
     <div class="album" id="album"></div>
   </section>
 
@@ -173,9 +172,8 @@
       <div class="rule"><img data-src="assets/bean_frost_v01.webp" alt=""><div><b>Frosted bean</b><p>Tap once to crack the frost (never a bump), tap again to grind. From Night 11.</p></div></div>
       <div class="rule"><img data-src="assets/honey_v01.webp" alt=""><div><b>Honey drop</b><p>A bean that rolls onto honey sticks. Tap it once more to free it. From Night 13.</p></div></div>
       <div class="rule stars-rule"><span class="big-stars">&#9733;&#9733;&#9733;</span><div><b>Three stars</b><p>Clear the tray, make no bumps, and follow the ticket.</p></div></div>
-      <div class="rule"><img data-src="assets/postcard_n1_v02.webp" alt=""><div><b>Endless Nights</b><p>Nights never end. Every Night has a new visitor, a new postcard, and trays a little harder than the last. Dots show how hard: &#9679; Easy to &#9679;&#9679;&#9679;&#9679; Expert.</p></div></div>
+      <div class="rule"><img data-src="assets/postcard_n1_v02.webp" alt=""><div><b>More Nights</b><p>Nights never end. Every Night has a new visitor, a new postcard, and trays a little harder than the last. Dots show how hard: &#9679; Easy to &#9679;&#9679;&#9679;&#9679; Expert.</p></div></div>
       <div class="rule"><img data-src="assets/postcard_n1_v02.webp" alt=""><div><b>Daily Brew</b><p>One new tray a day, same for everyone. Score out of 1000. Play daily to grow your streak.</p></div></div>
-      <div class="rule"><img data-src="assets/visitor_star_v01.webp" alt=""><div><b>Endless Brew</b><p>Opens after Night 1. Trays keep coming until three bumps.</p></div></div>
     </div>
   </section>
   <div class="overlay" id="modal" hidden><div class="card" id="modal-card"></div></div>
