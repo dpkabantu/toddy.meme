@@ -6,13 +6,13 @@
   "title": "Let Me Show You How I Earn",
   "disguise": "friend",
   "intro": [
-    "A friendship online has turned warm. Now your friend shows you how he makes money.",
-    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
-    "Every chat ends with your choice. Choose wisely."
+    "Your online partner wants to show you how he earns from crypto.",
+    "He sends screenshots of huge profits.",
+    "Pick your replies and sniff each message."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Leo",
+    "from": "Ana",
     "text": "Look at my profits this week! 📈"
   },
   "screen": {
@@ -20,25 +20,22 @@
     "head": {
       "name": [
         {
-          "text": "Leo (friend from the app)",
+          "text": "Ana",
           "id": "duel-name"
         }
       ],
       "sub": [
-        {
-          "clue": "met",
-          "text": "Chatting for 3 weeks, never met"
-        }
+        "Online for 2 months"
       ],
       "avatar": {
-        "glyph": "📈",
-        "clue": "logo"
+        "glyph": "🌙",
+        "clue": "avatar"
       }
     },
+    "items": [],
     "banner": [
-      "Private chat"
-    ],
-    "items": []
+      "Message request · you do not follow this account"
+    ]
   },
   "duel": {
     "start": "n1",
@@ -47,35 +44,41 @@
         "say": [
           {
             "msg": [
-              "I have a secret. I earn ",
+              "Look at my ",
               {
-                "clue": "earn",
-                "text": "$1,000 a week"
+                "clue": "profit",
+                "text": "profits this week"
               },
-              " by trading on a special platform."
+              "! 📈"
             ]
           },
           {
             "msg": [
+              "I use ",
               {
-                "clue": "shot",
-                "text": "Look: [screenshot of a big balance]"
+                "clue": "app",
+                "text": "an app my uncle gave me"
               },
-              " I can teach you, just because I care."
+              ". You can start with just ",
+              {
+                "clue": "small",
+                "text": "100 USDT"
+              },
+              "."
             ]
           }
         ],
         "replies": [
           {
-            "text": "Tell me more",
+            "text": "Show me how",
             "next": "n2"
           },
           {
-            "text": "I will start with a little",
-            "next": "n3"
+            "text": "I want to check the app first",
+            "end": "verify"
           },
           {
-            "text": "That sounds like a scam. I will stop here.",
+            "text": "Block and report",
             "end": "block_report"
           }
         ]
@@ -84,80 +87,46 @@
         "say": [
           {
             "msg": [
-              "It is ",
+              "Download it from this link: ",
               {
-                "clue": "safe",
-                "text": "very safe"
+                "clue": "link",
+                "text": "ana-trade.top",
+                "link": true
               },
-              ", I have a private tip from an \"insider\". ",
+              ". ",
               {
-                "clue": "rule",
-                "text": "Start with just $100."
+                "clue": "guard",
+                "text": "The support team will guide you."
               }
             ]
           },
           {
             "msg": [
+              "After a few days you can ",
+              {
+                "clue": "wd",
+                "text": "withdraw"
+              },
+              ". ",
               {
                 "clue": "rush",
-                "text": "The tip is only for today."
-              }
+                "text": "The offer ends tonight"
+              },
+              "."
             ]
           }
         ],
         "replies": [
           {
-            "text": "OK, starting",
-            "next": "n3"
-          },
-          {
-            "text": "I will check the platform on my own first",
-            "end": "verify"
-          },
-          {
-            "text": "Stop and report",
-            "end": "block_report"
-          }
-        ]
-      },
-      "n3": {
-        "say": [
-          {
-            "msg": [
-              "Great! Your first ",
-              {
-                "clue": "win",
-                "text": "profit of $25"
-              },
-              " is in. You can withdraw any time."
-            ]
-          },
-          {
-            "msg": [
-              "Put in ",
-              {
-                "clue": "more",
-                "text": "$500"
-              },
-              " to unlock the higher tier. ",
-              {
-                "clue": "friend",
-                "text": "I did it, so trust me."
-              }
-            ]
-          }
-        ],
-        "replies": [
-          {
-            "text": "Adding $500",
+            "text": "OK, depositing",
             "end": "go_ahead"
           },
           {
-            "text": "No. Reporting this.",
+            "text": "This looks like a scam. Reporting",
             "end": "block_report"
           },
           {
-            "text": "I will try to withdraw first and check with my bank",
+            "text": "I will look up the app",
             "end": "verify"
           }
         ]
@@ -165,79 +134,67 @@
     }
   },
   "clues": {
-    "met": {
-      "label": "Never met in person",
+    "profit": {
+      "label": "Screenshots of profit",
       "strength": "strong",
-      "lens": "Three weeks of chat only.",
-      "why": "Do not invest with someone you have not met."
+      "lens": "Screenshots are easy to fake.",
+      "why": "Fake gains build trust."
     },
-    "earn": {
-      "label": "Huge weekly earnings",
+    "app": {
+      "label": "An app only she knows",
       "strength": "strong",
-      "lens": "$1,000 a week.",
-      "why": "Huge fast earnings are the bait."
+      "lens": "A private trading app.",
+      "why": "It is a fake app that shows fake numbers."
     },
-    "shot": {
-      "label": "A screenshot of a balance",
+    "small": {
+      "label": "Start with 100 USDT",
       "strength": "strong",
-      "lens": "Anyone can make one.",
-      "why": "Never trust a screenshot."
+      "lens": "A small first deposit.",
+      "why": "It starts small and grows."
     },
-    "safe": {
-      "label": "\"Very safe\" and an insider tip",
+    "link": {
+      "label": "A look-alike link",
       "strength": "strong",
-      "lens": "No investment is safe or guaranteed.",
-      "why": "There are no guaranteed returns."
+      "lens": "ana-trade.top is not a real exchange.",
+      "why": "Real exchanges have their own sites."
     },
-    "rule": {
-      "label": "Start small",
+    "guard": {
+      "label": "\"Support will guide you\"",
       "strength": "strong",
-      "lens": "A small start builds trust.",
-      "why": "The small win is the hook."
+      "lens": "A fake helper.",
+      "why": "Helpers push you to deposit more."
+    },
+    "wd": {
+      "label": "\"Withdraw after a few days\"",
+      "strength": "strong",
+      "lens": "A promise.",
+      "why": "Withdrawals get blocked later."
     },
     "rush": {
-      "label": "Only for today",
+      "label": "Ends tonight",
       "strength": "strong",
       "lens": "A deadline.",
-      "why": "Pressure is a trick."
+      "why": "Pressure stops you from checking."
     },
-    "win": {
-      "label": "A small early profit",
-      "strength": "strong",
-      "lens": "It shows a profit on their screen.",
-      "why": "A profit on their screen is not money you can take."
-    },
-    "more": {
-      "label": "\"Put in more to unlock\"",
-      "strength": "strong",
-      "lens": "More money to reach a \"tier\".",
-      "why": "Scammers keep asking for more."
-    },
-    "friend": {
-      "label": "\"Trust me, I did it\"",
-      "strength": "strong",
-      "lens": "A friendship used as proof.",
-      "why": "Trust built online can be fake."
-    },
-    "logo": {
-      "label": "Chart picture",
+    "avatar": {
+      "label": "Moon picture",
       "strength": "harmless",
-      "lens": "A little chart.",
+      "lens": "A symbol.",
       "why": "Pictures prove nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Add $500"
+      "label": "Deposit 100 USDT"
     },
     {
       "id": "verify",
-      "label": "Check the platform on my own, and try a withdrawal first"
+      "label": "Look the app up first"
     },
     {
       "id": "block_report",
-      "label": "Stop, block and report"
+      "label": "Block and report"
     }
   ],
   "best_action": "block_report",
@@ -249,87 +206,97 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "You stopped and reported. The account was removed, and you lost nothing.",
-      "mirageSays": "Curses! Blocked again!"
+      "line": "Blocked and reported. The fake app was reported.",
+      "mirageSays": "My lovely trader!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The platform was not registered anywhere, and withdrawals did not work. You stopped in time. Case cracked.",
+      "line": "No such app was on the official stores, and warnings matched it. Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The $500 vanished. The platform locked your account and \"Leo\" disappeared.",
-      "mirageSays": "Thanks for the investment!"
+      "line": "The fake app showed big gains. When you tried to withdraw, it asked for a \"tax\". Your 5,000 USDT was gone.",
+      "mirageSays": "Thanks for the deposit!"
     }
   },
   "what_if": {
-    "go_ahead": "No honest friend brings you a \"secret platform\" after three weeks. A withdrawal test would have shown the trap.",
-    "verify": "Checking was smart. Reporting the account as well helps others."
+    "go_ahead": "Fake gains on a fake app are the bait. Stop at the first screenshot.",
+    "verify": "Checking the app first was smart."
   },
-  "golden_rule": "A friend you have never met who shows you how to earn is a scam. There are no guaranteed returns.",
+  "golden_rule": "A private trading app from someone you met online is a trap. The profits on screen are fake.",
   "quick_check": {
-    "q": "An online friend you have never met shows you a trading platform and a big balance. What do you do?",
+    "q": "A new online friend shows big profits from an app she gave you. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Start with a little"
+        "text": "Try it with a small amount"
       },
       {
         "id": "b",
-        "text": "Start with a lot"
+        "text": "Check it independently and report"
       },
       {
         "id": "c",
-        "text": "Do not invest. Block and report"
+        "text": "Ask her to guide me"
       },
       {
         "id": "d",
-        "text": "Ask for another screenshot"
+        "text": "Deposit and withdraw quickly"
       }
     ],
-    "answer": "c",
-    "explain": "Never invest on a \"friend's\" tip you cannot check."
+    "answer": "b",
+    "explain": "The app is fake, and the gains are numbers on a screen."
   },
   "hints": {
-    "nudge": "Have you ever met this friend, and who gains?",
+    "nudge": "Whose app is it?",
     "glow_order": [
-      "met",
-      "earn",
-      "shot",
-      "safe",
-      "more",
-      "rule",
-      "rush",
-      "win",
-      "friend"
+      "profit",
+      "app",
+      "small",
+      "link",
+      "guard",
+      "wd",
+      "rush"
     ]
   },
-  "sources": [
-    "ftc-invest-social",
-    "ftc-romance"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the friend",
-      "title": "Leo",
+      "label": "Check the profile",
+      "title": "Ana",
       "rows": [
         {
-          "k": "Met in person?",
-          "v": "Never",
-          "clue": "met"
+          "k": "Profile age",
+          "v": "3 weeks",
+          "clue": "profit"
         },
         {
-          "k": "Shown",
-          "v": "A screenshot of a balance",
-          "clue": "shot"
+          "k": "Photos found elsewhere",
+          "v": "Yes, another name"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the app",
+      "title": "Where it leads",
+      "rows": [
+        {
+          "k": "Deposit",
+          "v": "Starts at 100 USDT",
+          "clue": "small"
+        },
+        {
+          "k": "Address",
+          "v": "ana-trade.top",
+          "clue": "link"
         }
       ]
     },
@@ -337,18 +304,25 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What investment-scam advice says",
       "rows": [
         {
-          "k": "Guaranteed returns?",
-          "v": "None exist",
-          "clue": "safe"
+          "k": "Apps from online friends",
+          "v": "Are the scam",
+          "clue": "app"
         },
         {
-          "k": "Social media investing",
-          "v": "Research it and contact your friend another way"
+          "k": "Withdrawals",
+          "v": "Get blocked later",
+          "clue": "wd"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-romance",
+    "ftc-crypto",
+    "ftc-invest-social"
+  ],
+  "checked_on": "2026-11-08"
 }

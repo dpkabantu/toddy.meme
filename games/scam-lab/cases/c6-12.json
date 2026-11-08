@@ -3,12 +3,12 @@
   "type": "hunt",
   "chapter": 6,
   "difficulty": 2,
-  "title": "The Boss Needs Vouchers",
+  "title": "The Boss Needs USDT",
   "disguise": "admin",
   "intro": [
-    "A message from your \"boss\" arrives on a chat. He is in a meeting and needs a quick favour.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "Your boss texts from a new number. It is urgent.",
+    "He asks for something unusual.",
+    "Tap anything odd, then decide."
   ],
   "notify": {
     "app": "Chirp",
@@ -45,7 +45,10 @@
     "items": [
       {
         "time": [
-          "10:05 AM"
+          {
+            "clue": "time",
+            "text": "10:05 AM"
+          }
         ]
       },
       {
@@ -60,27 +63,17 @@
       },
       {
         "msg": [
-          "I need ",
+          "I need to ",
           {
-            "clue": "vouchers",
-            "text": "5 gift vouchers of $100"
+            "clue": "pay",
+            "text": "pay a vendor 2,000 USDT"
           },
-          " for clients, right now."
-        ]
-      },
-      {
-        "msg": [
-          "Buy them and ",
+          " right now. Can you ",
           {
-            "clue": "codes",
-            "text": "send me the codes"
+            "clue": "send",
+            "text": "send it from the company wallet"
           },
-          ". I will ",
-          {
-            "clue": "repay",
-            "text": "repay you today"
-          },
-          "."
+          " to this address?"
         ]
       },
       {
@@ -99,71 +92,72 @@
     ]
   },
   "clues": {
+    "pay": {
+      "label": "Pay in USDT to a new address",
+      "strength": "strong",
+      "lens": "A payment to an unfamiliar wallet.",
+      "why": "Real payments go through the finance process."
+    },
+    "send": {
+      "label": "Use the company wallet",
+      "strength": "strong",
+      "lens": "Asks you to bypass approvals.",
+      "why": "Scammers want you to skip the checks."
+    },
+    "num": {
+      "label": "A new number",
+      "strength": "strong",
+      "lens": "Not your boss's saved number.",
+      "why": "Impersonators use new numbers."
+    },
     "dmfirst": {
-      "label": "A new, unsaved number",
+      "label": "Message request",
       "strength": "strong",
-      "lens": "Not your boss's real number.",
-      "why": "Check by calling the number you already have."
-    },
-    "meeting": {
-      "label": "\"Cannot talk\"",
-      "strength": "strong",
-      "lens": "A reason you cannot call back.",
-      "why": "A reason to avoid a call is a warning."
-    },
-    "vouchers": {
-      "label": "Gift vouchers",
-      "strength": "strong",
-      "lens": "Gift cards are a scammer's favourite payment.",
-      "why": "No honest boss asks you to buy gift cards."
-    },
-    "codes": {
-      "label": "\"Send me the codes\"",
-      "strength": "strong",
-      "lens": "The codes are as good as cash and cannot be traced.",
-      "why": "Never send gift card codes."
-    },
-    "repay": {
-      "label": "\"I will repay you today\"",
-      "strength": "strong",
-      "lens": "A promise to win trust.",
-      "why": "A promise to repay is bait."
+      "lens": "Not in your contacts.",
+      "why": "Your real boss is saved."
     },
     "secret": {
-      "label": "\"Keep this between us\"",
+      "label": "Keep this between us",
       "strength": "strong",
-      "lens": "Secrecy stops you checking.",
-      "why": "Always check."
+      "lens": "Secrecy.",
+      "why": "Real bosses are happy for you to check."
     },
     "rush": {
       "label": "Urgent",
       "strength": "strong",
       "lens": "A deadline.",
-      "why": "Pressure is a trick."
+      "why": "Pressure stops you from checking."
+    },
+    "meeting": {
+      "label": "Cannot talk",
+      "strength": "strong",
+      "lens": "An excuse not to call.",
+      "why": "It stops you from verifying by voice."
     },
     "name": {
-      "label": "The boss's name",
+      "label": "Mr. Bennett (CEO)",
       "strength": "harmless",
-      "lens": "Mr. Bennett, CEO.",
-      "why": "A name is easy to copy."
+      "lens": "A typed title.",
+      "why": "Anyone can type a title."
     },
     "pic": {
       "label": "Suit picture",
       "strength": "harmless",
-      "lens": "A little suit.",
+      "lens": "A symbol.",
       "why": "Pictures prove nothing."
     },
-    "num": {
-      "label": "A new number",
+    "time": {
+      "label": "10:05 AM",
       "strength": "harmless",
-      "lens": "A number you do not have saved.",
-      "why": "The number alone proves little. Call the real one."
+      "lens": "An ordinary time.",
+      "why": "Time proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Buy the vouchers and send the codes"
+      "label": "Send 2,000 USDT",
+      "trap": true
     },
     {
       "id": "ignore",
@@ -171,14 +165,13 @@
     },
     {
       "id": "verify",
-      "label": "Call my boss on his real number"
+      "label": "Call my boss's saved number"
     },
     {
       "id": "block_report",
-      "label": "Report the account and tell my manager"
+      "label": "Block and report"
     }
   ],
-  "best_action": "block_report",
   "acceptable_actions": [
     "verify",
     "ignore"
@@ -187,99 +180,114 @@
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "You reported it and told your manager. The company warned everyone, and the account was removed.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Blocked and reported to IT. The fake number was flagged.",
+      "mirageSays": "My lovely boss!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Your real boss was at his desk and had sent nothing. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "Your real boss said he never texted. Case cracked.",
+      "mirageSays": "Hmph. They called."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it. A report to IT helps your team.",
+      "mirageSays": "Fine. Next text!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The $500 in vouchers were gone as soon as you sent the codes. No boss ever repaid you.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The 2,000 USDT left the company wallet and could not be recalled.",
+      "mirageSays": "Thanks, boss!"
     }
   },
   "what_if": {
-    "go_ahead": "A call to your boss's saved number would have ended it. No real boss asks for gift cards.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "A boss who hides and hurries is a sign. Stop at the first ask.",
+    "verify": "Calling the saved number was the right move.",
+    "ignore": "Ignoring was safe. A report helps your team."
   },
-  "golden_rule": "A \"boss\" who messages from a new number and wants gift cards is a scam. Call the real number.",
+  "best_action": "block_report",
+  "trap": {
+    "title": "Company Wallet",
+    "url": "hedrio.app/send",
+    "ask": "Send 2,000 USDT to the vendor address.",
+    "go": "Send 2,000 USDT",
+    "back": "Close this page"
+  },
+  "golden_rule": "If a boss asks for crypto or gift codes from a new number, call the saved number first.",
   "quick_check": {
-    "q": "A \"boss\" on a new number asks you to buy gift vouchers and send the codes. What do you do?",
+    "q": "Your boss texts from a new number, asking you to send 2,000 USDT now and keep it secret. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Buy them, he is the boss"
+        "text": "Send it, he is the boss"
       },
       {
         "id": "b",
-        "text": "Buy two"
+        "text": "Call his saved number and tell IT"
       },
       {
         "id": "c",
-        "text": "Call your boss on his real number. Report the message"
+        "text": "Send half"
       },
       {
         "id": "d",
-        "text": "Ask him to pay you first"
+        "text": "Reply asking for details"
       }
     ],
-    "answer": "c",
-    "explain": "No honest boss asks for gift card codes."
+    "answer": "b",
+    "explain": "A real boss expects you to check."
   },
   "hints": {
-    "nudge": "What payment method does the \"boss\" want?",
+    "nudge": "Is this really your boss?",
     "glow_order": [
+      "num",
       "dmfirst",
-      "meeting",
-      "vouchers",
-      "codes",
-      "repay",
+      "pay",
+      "send",
       "secret",
-      "rush"
+      "rush",
+      "meeting"
     ]
   },
-  "sources": [
-    "ftc-gift-cards",
-    "ftc-family"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the sender",
-      "title": "Mr. Bennett",
+      "label": "Check the number",
+      "title": "Mr. Bennett (CEO)",
       "rows": [
         {
-          "k": "The number",
-          "v": "Not your boss's real one",
-          "clue": "dmfirst"
+          "k": "Number",
+          "v": "Not saved in your phone",
+          "clue": "num"
         },
         {
-          "k": "Asks for",
-          "v": "Gift voucher codes",
-          "clue": "codes"
+          "k": "Real boss number",
+          "v": "Saved in your contacts"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the request",
+      "title": "What he asks",
+      "rows": [
+        {
+          "k": "Pays to",
+          "v": "A new USDT address",
+          "clue": "pay"
         },
         {
-          "k": "Can he talk?",
-          "v": "No, \"in a meeting\"",
-          "clue": "meeting"
+          "k": "Using",
+          "v": "The company wallet",
+          "clue": "send"
         }
       ]
     },
@@ -287,18 +295,24 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What impersonation advice says",
       "rows": [
         {
-          "k": "Gift cards as payment",
-          "v": "No honest business or agency asks",
-          "clue": "vouchers"
+          "k": "Boss from a new number",
+          "v": "Is an impersonator",
+          "clue": "num"
         },
         {
-          "k": "How to check",
-          "v": "Call the person on a number you already know"
+          "k": "Secrecy",
+          "v": "Is a red flag",
+          "clue": "secret"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-impersonator",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

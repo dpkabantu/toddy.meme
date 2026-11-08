@@ -6,13 +6,13 @@
   "title": "The Perfect Match",
   "disguise": "friend",
   "intro": [
-    "You matched with someone on a dating app. The conversation is lovely, and then it moves quickly.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "Chapter 6, Toddy: romance and trust. Scammers build a friendship first.",
+    "A new match is very sweet and wants to move to another app.",
+    "Tap anything odd, then decide."
   ],
   "notify": {
-    "app": "Heartlane",
-    "from": "Sofia",
+    "app": "Chirp",
+    "from": "Elena",
     "text": "Let us move to the messaging app 💕"
   },
   "screen": {
@@ -21,227 +21,238 @@
       "name": [
         {
           "clue": "name",
-          "text": "Sofia, 29"
+          "text": "Elena"
         }
       ],
       "sub": [
         {
-          "clue": "profile",
-          "text": "Matched 20 minutes ago"
+          "clue": "sub",
+          "text": "Matched 2 days ago"
         }
       ],
       "avatar": {
-        "glyph": "💕",
-        "clue": "pic"
+        "glyph": "🌷",
+        "clue": "avatar"
       }
     },
     "banner": [
-      "Heartlane dating app"
+      {
+        "clue": "dm",
+        "text": "Message request · she wrote first"
+      }
     ],
+    "context": "You matched on a dating app two days ago.",
     "items": [
       {
         "time": [
-          "8:14 PM"
+          {
+            "clue": "time",
+            "text": "9:12 PM"
+          }
         ]
       },
       {
         "msg": [
-          "Hi handsome! 😍 You seem ",
-          {
-            "clue": "special",
-            "text": "so special"
-          },
-          ". I feel like I ",
-          {
-            "clue": "known",
-            "text": "have known you for years"
-          },
-          "."
+          "I feel like I have known you forever 💕"
         ]
       },
       {
         "msg": [
-          "This app is boring. ",
+          "Let us ",
           {
             "clue": "move",
-            "text": "Let us move to the messaging app"
+            "text": "move to a private messaging app"
           },
-          ", my number is below."
+          ". This one is slow."
         ]
       },
       {
         "msg": [
+          "I am a trader. My uncle taught me a way to ",
           {
-            "clue": "fast",
-            "text": "I think I am falling for you already."
+            "clue": "earn",
+            "text": "earn USDT"
           },
-          " 💕"
-        ]
-      },
-      {
-        "msg": [
-          {
-            "clue": "nopic",
-            "text": "I am shy about photos and calls, we will talk by text."
-          }
+          " every day. I can show you soon!"
         ]
       }
     ]
   },
   "clues": {
-    "special": {
-      "label": "Instant flattery",
-      "strength": "strong",
-      "lens": "\"So special\" after 20 minutes.",
-      "why": "Fast flattery is a way to lower your guard."
-    },
-    "known": {
-      "label": "\"I have known you for years\"",
-      "strength": "strong",
-      "lens": "A strong bond after minutes.",
-      "why": "Real bonds take time."
-    },
     "move": {
-      "label": "Move off the app quickly",
+      "label": "Move to a private app",
       "strength": "strong",
-      "lens": "They want you away from the app's safety tools.",
-      "why": "Scammers move you to private chat fast."
+      "lens": "She wants to leave the dating app fast.",
+      "why": "Scammers move you away from places where they can be reported."
     },
-    "fast": {
-      "label": "Falling in love already",
+    "earn": {
+      "label": "A trader with a \"method\"",
       "strength": "strong",
-      "lens": "A declaration after minutes.",
-      "why": "Love bombing is a tactic."
+      "lens": "A new match talks about earning USDT.",
+      "why": "Pig-butchering scams start with love and end with a fake investment."
     },
-    "nopic": {
-      "label": "No photos or calls",
+    "dm": {
+      "label": "She wrote first, very warm",
       "strength": "strong",
-      "lens": "They avoid showing themselves.",
-      "why": "A person who never appears on camera may not be real."
+      "lens": "Intense affection after two days.",
+      "why": "Fast love is a script."
     },
     "name": {
-      "label": "A name and an age",
+      "label": "Elena",
       "strength": "harmless",
-      "lens": "Sofia, 29.",
-      "why": "A profile proves nothing."
+      "lens": "A first name only.",
+      "why": "Names prove nothing."
     },
-    "profile": {
-      "label": "Matched recently",
+    "sub": {
+      "label": "Matched 2 days ago",
       "strength": "harmless",
-      "lens": "A fresh match.",
-      "why": "Fresh matches are normal."
+      "lens": "Recent.",
+      "why": "Time is not proof."
     },
-    "pic": {
-      "label": "Heart picture",
+    "avatar": {
+      "label": "Flower picture",
       "strength": "harmless",
-      "lens": "A heart icon.",
+      "lens": "A flower.",
       "why": "Pictures prove nothing."
+    },
+    "time": {
+      "label": "9:12 PM",
+      "strength": "harmless",
+      "lens": "An ordinary time.",
+      "why": "Time proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Move to the messaging app and keep chatting"
+      "label": "Move to the private app",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
     },
     {
       "id": "verify",
-      "label": "Ask for a video call first, and stay on the app"
+      "label": "Reverse-search her photos and check her story"
     },
     {
       "id": "block_report",
-      "label": "Stop chatting and report the profile"
+      "label": "Block and report"
     }
   ],
-  "best_action": "block_report",
   "acceptable_actions": [
-    "verify"
+    "verify",
+    "ignore"
   ],
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "You reported the profile. The app removed it before it reached more people.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Blocked and reported on the dating app. Your savings stayed safe.",
+      "mirageSays": "My lovely match!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "You asked for a video call. The profile gave excuses and vanished. Case cracked.",
+      "line": "Her photos belonged to someone else, and her story had holes. Case cracked.",
       "mirageSays": "Hmph. They checked."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You stopped replying. Reporting would also protect others.",
+      "mirageSays": "Fine. Next match!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The \"match\" became a close friend in a week, then needed money for an emergency.",
-      "mirageSays": "Thanks for the details!"
+      "line": "Weeks of sweet messages followed. Then she showed you a fake trading app, and your 5,000 USDT was gone.",
+      "mirageSays": "Thanks for the love!"
     }
   },
   "what_if": {
-    "go_ahead": "Insisting on a video call, and staying on the app, were the exits. Love does not rush you off a safe app.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "Moving off the app is the scammer's first step. Slow down at the first move.",
+    "verify": "Checking her photos was smart. Reporting helps others.",
+    "ignore": "Stopping was safe. A quick report protects others."
   },
-  "golden_rule": "A match who flatters you fast and moves you off the app is a warning. Ask for a video call, and report if they refuse.",
+  "best_action": "block_report",
+  "trap": {
+    "title": "Elena · Private chat",
+    "url": "chat.link/elena",
+    "ask": "Open the private chat to see her trading method.",
+    "go": "Open chat",
+    "back": "Close this page"
+  },
+  "golden_rule": "If a new match talks about crypto trading within days, it is not love. Slow down and check.",
   "quick_check": {
-    "q": "A new match flatters you, says they are falling for you and wants to move to a private app. What do you do?",
+    "q": "A new match, two days in, wants to move to a private app and mentions a trading method. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Move, it is romantic"
+        "text": "Follow, she seems kind"
       },
       {
         "id": "b",
-        "text": "Move but stay careful"
+        "text": "Slow down, check her photos and report"
       },
       {
         "id": "c",
-        "text": "Stay on the app, ask for a video call, and report if they refuse"
+        "text": "Try the method with a small amount"
       },
       {
         "id": "d",
-        "text": "Send a photo to build trust"
+        "text": "Ask her to send proof by chat"
       }
     ],
-    "answer": "c",
-    "explain": "Fast love and a fast move are the pattern."
+    "answer": "b",
+    "explain": "Fast love plus a crypto method is the pig-butchering script."
   },
   "hints": {
-    "nudge": "How fast did the love arrive, and where do they want to chat?",
+    "nudge": "Why is she in a hurry?",
     "glow_order": [
-      "special",
-      "known",
       "move",
-      "fast",
-      "nopic"
+      "earn",
+      "dm"
     ]
   },
-  "sources": [
-    "ftc-romance"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check the profile",
-      "title": "Sofia, 29",
+      "title": "Elena",
       "rows": [
         {
-          "k": "Matched",
-          "v": "20 minutes ago",
-          "clue": "profile"
+          "k": "Profile age",
+          "v": "3 days old",
+          "clue": "dm"
         },
         {
-          "k": "Wants to move to",
+          "k": "Photos found elsewhere",
+          "v": "Yes, another name"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the plan",
+      "title": "What she wants",
+      "rows": [
+        {
+          "k": "Move to",
           "v": "A private app",
           "clue": "move"
         },
         {
-          "k": "Will they do a video call?",
-          "v": "No",
-          "clue": "nopic"
+          "k": "Then",
+          "v": "A trading method",
+          "clue": "earn"
         }
       ]
     },
@@ -249,18 +260,23 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What romance-scam advice says",
       "rows": [
         {
-          "k": "Pressure to move off the platform",
-          "v": "A red flag",
-          "clue": "move"
+          "k": "Fast love online",
+          "v": "Is a red flag"
         },
         {
-          "k": "Never send money",
-          "v": "To an online love interest"
+          "k": "Crypto from a new match",
+          "v": "Is a scam",
+          "clue": "earn"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-romance",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

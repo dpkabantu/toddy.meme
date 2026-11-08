@@ -3,78 +3,76 @@
   "type": "hunt",
   "chapter": 6,
   "difficulty": 1,
-  "title": "The Distant Inheritance",
+  "title": "The Dormant Wallet Inheritance",
   "disguise": "admin",
   "intro": [
-    "An email from a lawyer abroad says a stranger left you a huge inheritance.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "An email says a distant relative left you a crypto wallet.",
+    "You only need to pay to unlock it.",
+    "Sniff the email, then decide."
   ],
   "notify": {
     "app": "Mail",
-    "from": "Barrister Okoro Legal",
-    "text": "You are named in a will: $4,500,000"
+    "from": "Hollenor Legal",
+    "text": "You are named in a will: 480 BTC"
   },
   "screen": {
     "app": "mail",
     "head": {
       "from": [
         {
-          "clue": "from",
-          "text": "Barrister Okoro, Legal Chambers"
+          "clue": "sender",
+          "text": "Hollenor Legal"
         }
       ],
       "addr": [
         {
           "clue": "addr",
-          "text": "okoro.chambers@freemail.example"
+          "text": "claims@hollenor-legal-estate.top"
         }
       ],
       "subject": [
         {
           "clue": "subject",
-          "text": "You are named in a will: $4,500,000"
+          "text": "You are named in a will"
         }
       ],
       "time": [
-        "2:50 AM"
+        "3:50 PM"
       ]
     },
     "items": [
       {
         "p": [
-          {
-            "clue": "greet",
-            "text": "Dear Beneficiary,"
-          }
+          "Dear beneficiary,"
         ]
       },
       {
         "p": [
-          "A wealthy client, ",
+          "Mr. Ivar Holm left you ",
           {
-            "clue": "stranger",
-            "text": "a man you have never met"
-          },
-          ", died without family and left you ",
-          {
-            "clue": "amount",
-            "text": "$4,500,000"
+            "clue": "big",
+            "text": "a dormant wallet worth 480 BTC"
           },
           "."
         ]
       },
       {
         "p": [
-          "To release the funds, send your ",
+          "You are ",
           {
-            "clue": "id",
-            "text": "ID copy and bank details"
+            "clue": "chosen",
+            "text": "the only living relative"
           },
-          ", and pay a ",
+          ". To release it, pay a ",
           {
             "clue": "fee",
-            "text": "transfer fee of $1,200"
+            "text": "legal fee of 1,500 USDT"
+          },
+          " at ",
+          {
+            "clue": "link",
+            "text": "hollenor-legal-estate.top",
+            "link": true
           },
           "."
         ]
@@ -82,84 +80,84 @@
       {
         "p": [
           {
-            "clue": "secret",
-            "text": "Keep this confidential."
+            "clue": "timer",
+            "text": "Claim within 7 days",
+            "countdown": 900
           },
-          " ",
+          " or it goes to the state."
+        ]
+      },
+      {
+        "foot": [
           {
-            "clue": "rush",
-            "text": "The funds will be returned to the state in 7 days."
+            "clue": "foot",
+            "text": "Hollenor Legal · Estate Desk"
           }
         ]
       }
-    ]
+    ],
+    "context": "You do not know anyone named Ivar Holm."
   },
   "clues": {
-    "addr": {
-      "label": "A free-mail address",
-      "strength": "strong",
-      "lens": "A real law firm writes from its own domain.",
-      "why": "Look at the address behind the name."
-    },
-    "stranger": {
-      "label": "A stranger left you money",
-      "strength": "strong",
-      "lens": "A man you have never met.",
-      "why": "Money from strangers does not exist."
-    },
-    "amount": {
-      "label": "A huge sum",
-      "strength": "strong",
-      "lens": "$4,500,000 for nothing.",
-      "why": "A huge windfall out of nowhere is the bait."
-    },
-    "id": {
-      "label": "Asks for your ID and bank details",
-      "strength": "strong",
-      "lens": "These are used to steal your identity.",
-      "why": "Never send these to a stranger."
-    },
     "fee": {
-      "label": "A fee to release the money",
+      "label": "A fee to release",
       "strength": "strong",
-      "lens": "You must pay $1,200 first.",
-      "why": "A fee to receive a windfall is the scam."
+      "lens": "Pay first, receive later.",
+      "why": "Real inheritances never need a fee up front."
     },
-    "secret": {
-      "label": "\"Keep this confidential\"",
+    "big": {
+      "label": "Huge sum, unknown person",
       "strength": "strong",
-      "lens": "Secrecy stops you checking.",
-      "why": "Always check."
+      "lens": "A fortune from a stranger.",
+      "why": "It is bait."
     },
-    "rush": {
-      "label": "Funds returned in 7 days",
+    "chosen": {
+      "label": "\"The only living relative\"",
+      "strength": "strong",
+      "lens": "A flattering story.",
+      "why": "It is built to feel special."
+    },
+    "addr": {
+      "label": "Look-alike address",
+      "strength": "strong",
+      "lens": "hollenor-legal-estate.top is not a law firm.",
+      "why": "Real firms have real sites."
+    },
+    "timer": {
+      "label": "Claim within 7 days",
       "strength": "strong",
       "lens": "A deadline.",
-      "why": "Pressure is a trick."
+      "why": "Pressure stops you from checking."
     },
-    "greet": {
-      "label": "\"Dear Beneficiary\"",
-      "strength": "harmless",
-      "lens": "No name.",
-      "why": "The greeting proves little alone."
+    "link": {
+      "label": "A payment link",
+      "strength": "strong",
+      "lens": "A page to pay a fee.",
+      "why": "Real estates never need your payment."
     },
-    "from": {
-      "label": "A barrister's name",
+    "sender": {
+      "label": "Hollenor Legal",
       "strength": "harmless",
-      "lens": "Barrister Okoro.",
-      "why": "Names and titles are easy to invent."
+      "lens": "A made-up firm.",
+      "why": "Names are copied."
     },
     "subject": {
-      "label": "A big subject",
+      "label": "A will notice",
       "strength": "harmless",
-      "lens": "You are named in a will.",
-      "why": "The subject is the bait."
+      "lens": "Plain.",
+      "why": "Plain words prove nothing."
+    },
+    "foot": {
+      "label": "Estate desk footer",
+      "strength": "harmless",
+      "lens": "Looks official.",
+      "why": "Copied easily."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Send my ID, bank details and the fee",
+      "label": "Pay the legal fee",
       "trap": true
     },
     {
@@ -168,117 +166,128 @@
     },
     {
       "id": "verify",
-      "label": "Search the firm and the story for warnings"
+      "label": "Check the firm and the will with the court"
     },
     {
       "id": "block_report",
-      "label": "Report the email and delete it"
+      "label": "Report as phishing and delete"
     }
   ],
-  "best_action": "block_report",
   "acceptable_actions": [
     "verify",
     "ignore"
   ],
-  "trap": {
-    "title": "Legal Chambers · Release funds",
-    "url": "okoro-chambers.example/release",
-    "ask": "Upload your ID and pay $1,200 to release $4,500,000.",
-    "go": "Pay $1,200",
-    "back": "Close this page"
-  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Reported and deleted. The fake address was blocked.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Reported and deleted. The fake firm was flagged.",
+      "mirageSays": "My lovely inheritance!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "A search showed the same \"inheritance\" email in many scam warnings. Case cracked.",
+      "line": "The court had no such will, and warned about fake inheritances. Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. A report helps others.",
+      "mirageSays": "Fine. Next inbox!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The fee was lost and your ID was used to open accounts in your name. No inheritance ever came.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The 1,500 USDT went to the scammers. Then came a \"tax\" demand.",
+      "mirageSays": "Thanks for the fee!"
     }
   },
   "what_if": {
-    "go_ahead": "A stranger leaving you millions, and a fee to receive it, is the oldest trick there is.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "Fees to claim a fortune are the scam. Stop at the first ask.",
+    "verify": "Checking with the court was the right route.",
+    "ignore": "Ignoring was safe. A report helps others."
   },
-  "golden_rule": "Money from a stranger that needs a fee to arrive is not an inheritance. Delete it.",
+  "best_action": "block_report",
+  "trap": {
+    "title": "Hollenor · Release Wallet",
+    "url": "hollenor-legal-estate.top",
+    "ask": "Pay 1,500 USDT to unlock the wallet.",
+    "go": "Pay 1,500 USDT",
+    "back": "Close this page"
+  },
+  "golden_rule": "A stranger's fortune that needs a fee is not an inheritance. Never pay to receive money.",
   "quick_check": {
-    "q": "An email says a stranger left you $4,500,000 and you must pay a fee to release it. What do you do?",
+    "q": "An email says a stranger left you a wallet worth 480 BTC, and you must pay 1,500 USDT. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Pay the fee, it is millions"
+        "text": "Pay, it is a fortune"
       },
       {
         "id": "b",
-        "text": "Pay half"
+        "text": "Refuse and report. Real inheritances never need a fee"
       },
       {
         "id": "c",
-        "text": "Do not pay or reply. Delete it and report it"
+        "text": "Pay half"
       },
       {
         "id": "d",
-        "text": "Send your ID only"
+        "text": "Reply asking for proof"
       }
     ],
-    "answer": "c",
-    "explain": "A fee to receive a windfall is the scam."
+    "answer": "b",
+    "explain": "If someone you do not know leaves you money and asks for a fee, it is bait."
   },
   "hints": {
-    "nudge": "Why would you pay to receive free money?",
+    "nudge": "Why you? Why a fee?",
     "glow_order": [
-      "addr",
-      "stranger",
-      "amount",
-      "id",
       "fee",
-      "secret",
-      "rush"
+      "big",
+      "chosen",
+      "addr",
+      "timer",
+      "link"
     ]
   },
-  "sources": [
-    "ftc-prize",
-    "ftc-phishing"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check sender",
-      "title": "Who really sent this",
+      "title": "Hollenor Legal",
       "rows": [
         {
-          "k": "Address",
-          "v": "okoro.chambers@freemail.example",
+          "k": "Sent from",
+          "v": "claims@hollenor-legal-estate.top",
           "clue": "addr"
         },
         {
-          "k": "Do you know the man?",
-          "v": "No",
-          "clue": "stranger"
+          "k": "Ivar Holm",
+          "v": "Nobody you know"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the demand",
+      "title": "What they want",
+      "rows": [
+        {
+          "k": "Fee",
+          "v": "1,500 USDT",
+          "clue": "fee"
+        },
+        {
+          "k": "Prize",
+          "v": "480 BTC",
+          "clue": "big"
         }
       ]
     },
@@ -286,18 +295,24 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What inheritance-scam advice says",
       "rows": [
         {
-          "k": "A fee to receive a windfall",
-          "v": "A scam sign",
+          "k": "Fees to claim money",
+          "v": "Are the scam",
           "clue": "fee"
         },
         {
-          "k": "How to check",
-          "v": "Search the story with \"scam\""
+          "k": "Unknown benefactors",
+          "v": "Are bait",
+          "clue": "big"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-impersonator",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

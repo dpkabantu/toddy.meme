@@ -6,13 +6,13 @@
   "title": "The Recovery Agent",
   "disguise": "support",
   "intro": [
-    "You lost money in a scam last month. A \"recovery agent\" says he can get it back, for a fee.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "You lost money to a scam. Now an email says they can get it back.",
+    "It is exactly what you hoped for.",
+    "Sniff the email, then decide."
   ],
   "notify": {
     "app": "Mail",
-    "from": "Recovery Desk",
+    "from": "Rekovo Recovery",
     "text": "We can recover your lost funds"
   },
   "screen": {
@@ -20,14 +20,14 @@
     "head": {
       "from": [
         {
-          "clue": "from",
-          "text": "Fund Recovery Desk"
+          "clue": "sender",
+          "text": "Rekovo Recovery"
         }
       ],
       "addr": [
         {
           "clue": "addr",
-          "text": "help@fundrecovery-desk.live"
+          "text": "case@rekovo-recovery.help"
         }
       ],
       "subject": [
@@ -37,126 +37,126 @@
         }
       ],
       "time": [
-        "3:10 PM"
+        "11:30 AM"
       ]
     },
     "items": [
       {
         "p": [
+          "Dear victim,"
+        ]
+      },
+      {
+        "p": [
+          "We tracked your lost ",
           {
-            "clue": "name",
-            "text": "Dear Victim,"
+            "clue": "amt",
+            "text": "12,000 USDT"
+          },
+          " on the blockchain and can recover it."
+        ]
+      },
+      {
+        "p": [
+          "Pay a ",
+          {
+            "clue": "fee",
+            "text": "10% processing fee"
+          },
+          " first at ",
+          {
+            "clue": "link",
+            "text": "rekovo-recovery.help/pay",
+            "link": true
+          },
+          ". ",
+          {
+            "clue": "guar",
+            "text": "Success is guaranteed."
           }
         ]
       },
       {
         "p": [
-          "We know you ",
           {
-            "clue": "knowloss",
-            "text": "lost $2,400 to an online scam last month"
+            "clue": "timer",
+            "text": "Reply within 48 hours",
+            "countdown": 900
           },
           "."
         ]
       },
       {
-        "p": [
-          "Our team can ",
+        "foot": [
           {
-            "clue": "guarantee",
-            "text": "recover 100% of your money"
-          },
-          ", guaranteed."
-        ]
-      },
-      {
-        "p": [
-          "First pay a ",
-          {
-            "clue": "fee",
-            "text": "processing fee of $300"
-          },
-          ", to open your case."
-        ]
-      },
-      {
-        "p": [
-          {
-            "clue": "nopolice",
-            "text": "Do not contact the police, it will delay recovery."
-          }
-        ]
-      },
-      {
-        "p": [
-          {
-            "clue": "sure",
-            "text": "We have recovered millions for others."
+            "clue": "foot",
+            "text": "Rekovo Recovery · Licensed Investigators"
           }
         ]
       }
-    ]
+    ],
+    "context": "You posted about your loss in a support group last week."
   },
   "clues": {
-    "addr": {
-      "label": "A look-alike address",
+    "fee": {
+      "label": "A fee to recover",
       "strength": "strong",
-      "lens": "The address is a strange new site.",
-      "why": "Check who is behind the address."
+      "lens": "Pay first, get money later.",
+      "why": "This is a second scam aimed at victims."
     },
-    "knowloss": {
+    "guar": {
+      "label": "\"Success is guaranteed\"",
+      "strength": "strong",
+      "lens": "A guarantee.",
+      "why": "No one can guarantee recovery."
+    },
+    "addr": {
+      "label": "Look-alike address",
+      "strength": "strong",
+      "lens": "rekovo-recovery.help is not a law-enforcement site.",
+      "why": "Real agencies never contact you first for fees."
+    },
+    "link": {
+      "label": "A payment link",
+      "strength": "strong",
+      "lens": "A page to pay a fee.",
+      "why": "Recovery never needs your payment."
+    },
+    "timer": {
+      "label": "48 hours",
+      "strength": "strong",
+      "lens": "A deadline.",
+      "why": "Pressure stops you from checking."
+    },
+    "amt": {
       "label": "They know your loss",
       "strength": "strong",
-      "lens": "They found your name on a list of scam victims.",
-      "why": "Scammers buy lists of victims and target them again."
+      "lens": "They found you from your post.",
+      "why": "Scammers read victim groups."
     },
-    "guarantee": {
-      "label": "A 100% guarantee",
-      "strength": "strong",
-      "lens": "No honest agent can guarantee recovery.",
-      "why": "Guarantees are a lie."
-    },
-    "fee": {
-      "label": "A fee up front",
-      "strength": "strong",
-      "lens": "You must pay $300 first.",
-      "why": "A second scam asks for a fee to recover the first loss."
-    },
-    "nopolice": {
-      "label": "\"Do not contact the police\"",
-      "strength": "strong",
-      "lens": "They stop you getting real help.",
-      "why": "Reporting is exactly what you should do."
-    },
-    "sure": {
-      "label": "\"Millions recovered for others\"",
-      "strength": "strong",
-      "lens": "A claim nobody can check.",
-      "why": "A crowd proves nothing."
-    },
-    "name": {
-      "label": "\"Dear Victim\"",
+    "sender": {
+      "label": "Rekovo Recovery",
       "strength": "harmless",
-      "lens": "A cold greeting.",
-      "why": "The greeting proves little alone."
-    },
-    "from": {
-      "label": "A recovery desk name",
-      "strength": "harmless",
-      "lens": "Fund Recovery Desk.",
-      "why": "Names are easy to invent."
+      "lens": "A made-up name.",
+      "why": "Names are copied."
     },
     "subject": {
-      "label": "A hopeful subject",
+      "label": "Recovery offer",
       "strength": "harmless",
-      "lens": "We can recover your lost funds.",
-      "why": "Hope is the bait."
+      "lens": "Plain subject.",
+      "why": "Plain words prove nothing."
+    },
+    "foot": {
+      "label": "Licensed Investigators",
+      "strength": "harmless",
+      "lens": "A claim.",
+      "why": "Claims are typed."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Pay the $300 processing fee",
+      "label": "Pay the fee",
       "trap": true
     },
     {
@@ -165,120 +165,128 @@
     },
     {
       "id": "verify",
-      "label": "Report my earlier loss on the cyber helpline instead"
+      "label": "Report the loss to the real police and bank"
     },
     {
       "id": "block_report",
-      "label": "Report the email and delete it"
+      "label": "Report as phishing and delete"
     }
   ],
-  "best_action": "block_report",
   "acceptable_actions": [
     "verify",
     "ignore"
   ],
-  "trap": {
-    "title": "Fund Recovery Desk · Open case",
-    "url": "fundrecovery-desk.live/pay",
-    "ask": "Pay $300 to open your recovery case.",
-    "go": "Pay $300",
-    "back": "Close this page"
-  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Reported and deleted. You also reported your first loss through the official helpline.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Reported and deleted. The fake recovery site was flagged.",
+      "mirageSays": "My lovely victim!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The official helpline took your report and explained that no one can guarantee recovery or ask a fee. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "The real police told you recovery firms that ask for fees are scams. Case cracked.",
+      "mirageSays": "Hmph. They asked."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. A report helps others.",
+      "mirageSays": "Fine. Next inbox!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "A second loss on top of the first. The \"agent\" asked for more fees, then vanished.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The 1,200 USDT went to the recovery scammers. Then came a \"legal fee\".",
+      "mirageSays": "Thanks, victim!"
     }
   },
   "what_if": {
-    "go_ahead": "No honest agent guarantees recovery or charges first. Reporting on the helpline is free.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "Recovery for a fee is a second scam. Stop at the first ask.",
+    "verify": "Going to the real police was the right route.",
+    "ignore": "Ignoring was safe. A report helps others."
   },
-  "golden_rule": "A recovery agent who guarantees your money back, for a fee, is a second scam. Report your first loss on the official helpline.",
+  "best_action": "block_report",
+  "trap": {
+    "title": "Rekovo · Pay Fee",
+    "url": "rekovo-recovery.help/pay",
+    "ask": "Pay 1,200 USDT to start your recovery.",
+    "go": "Pay 1,200 USDT",
+    "back": "Close this page"
+  },
+  "golden_rule": "If someone offers to recover lost crypto for a fee, it is a second scam. Report to the real police.",
   "quick_check": {
-    "q": "After a scam loss, an agent guarantees to recover your money for a $300 fee and says not to call the police. What do you do?",
+    "q": "After losing crypto, an agent offers to recover it for a 10% fee, success guaranteed. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Pay, you want it back"
+        "text": "Pay, it is my only chance"
       },
       {
         "id": "b",
-        "text": "Pay half"
+        "text": "Refuse. Report to the real police and your platform"
       },
       {
         "id": "c",
-        "text": "Do not pay. Report your loss on the official helpline"
+        "text": "Pay half"
       },
       {
         "id": "d",
-        "text": "Ask for a refund policy"
+        "text": "Ask for proof first"
       }
     ],
-    "answer": "c",
-    "explain": "A second scam targets victims. Reporting is free."
+    "answer": "b",
+    "explain": "Recovery scammers target victims. Real help is free."
   },
   "hints": {
-    "nudge": "Who gains from a fee to recover lost money?",
+    "nudge": "Who finds victims?",
     "glow_order": [
-      "addr",
-      "knowloss",
-      "guarantee",
       "fee",
-      "nopolice",
-      "sure"
+      "guar",
+      "addr",
+      "amt",
+      "link",
+      "timer"
     ]
   },
-  "sources": [
-    "ftc-job-scams"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check sender",
-      "title": "Fund Recovery Desk",
+      "title": "Rekovo Recovery",
       "rows": [
         {
-          "k": "Address",
-          "v": "help@fundrecovery-desk.live",
+          "k": "Sent from",
+          "v": "case@rekovo-recovery.help",
           "clue": "addr"
         },
         {
-          "k": "Guarantee",
-          "v": "100%",
-          "clue": "guarantee"
+          "k": "You contacted them",
+          "v": "Never"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the demand",
+      "title": "What they want",
+      "rows": [
+        {
+          "k": "Fee first",
+          "v": "10%",
+          "clue": "fee"
         },
         {
-          "k": "Fee",
-          "v": "$300 first",
-          "clue": "fee"
+          "k": "Promise",
+          "v": "Guaranteed",
+          "clue": "guar"
         }
       ]
     },
@@ -286,18 +294,24 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What recovery-scam advice says",
       "rows": [
         {
-          "k": "Where to report a loss",
-          "v": "The fraud-reporting service in your country, or the police"
+          "k": "Recovery for a fee",
+          "v": "Is a scam",
+          "clue": "fee"
         },
         {
-          "k": "Do not contact the police?",
-          "v": "A warning sign",
-          "clue": "nopolice"
+          "k": "Guarantees",
+          "v": "Do not exist",
+          "clue": "guar"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-romance",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

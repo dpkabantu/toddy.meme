@@ -6,120 +6,119 @@
   "title": "Messages Inbox",
   "seconds": 60,
   "intro": [
-    "Ten messages from people who say they know you. One minute. Some are real.",
+    "Ten messages landed. Which are traps of the heart or the wallet?",
     "Swipe left if it is a scam, right if it is safe. Or tap the buttons.",
     "Careful: some are honest. Do not cry wolf."
   ],
   "cards": [
     {
       "id": "r1",
-      "app": "SMS",
-      "from": "Unknown number",
-      "text": "Hi Mum, my phone broke, this is my new number. Can you pay a bill for me? Urgent.",
+      "app": "Chirp",
+      "from": "New match",
+      "text": "I feel like I have known you forever. Let us move to a private app.",
       "scam": true,
-      "why": "A new number, a money request and a rush: the classic \"Hi Mum\" scam."
+      "why": "Fast love and a move to a private app is the script."
     },
     {
       "id": "r2",
-      "app": "Chirp",
-      "from": "Nora",
-      "text": "I land on the 14th at 3 PM! Video call on Sunday? No need to arrange anything.",
+      "app": "SMS",
+      "from": "Mum",
+      "text": "Dinner at 7 on Sunday? Dad is making soup.",
       "scam": false,
-      "why": "A long-time friend with a clear plan, offering a video call, and asking for nothing."
+      "why": "A normal family message."
     },
     {
       "id": "r3",
       "app": "Chirp",
-      "from": "Sofia, 29",
-      "text": "I feel like I have known you for years. Let us move to a private app. 💕",
+      "from": "Lars (Engineer)",
+      "text": "Please send 600 USDT for my papers.",
       "scam": true,
-      "why": "Fast love and a fast move off the app."
+      "why": "Money for papers from a love far away is a scam."
     },
     {
       "id": "r4",
       "app": "SMS",
-      "from": "Mr. Bennett (CEO)",
-      "text": "Are you at your desk? I need 5 gift vouchers urgently. Send the codes.",
-      "scam": true,
-      "why": "A \"boss\" on a new number asking for gift card codes."
+      "from": "Dr. Lindqvist Dental",
+      "text": "Your appointment is tomorrow at 3. Reply C to confirm.",
+      "scam": false,
+      "why": "A normal reminder with no link or money."
     },
     {
       "id": "r5",
-      "app": "SMS",
-      "from": "Dev (cousin)",
-      "text": "Wrong number? No, I am just saying hi. Coming to the wedding on Saturday?",
-      "scam": false,
-      "why": "A cousin you know, asking about a wedding you both know about."
+      "app": "Chirp",
+      "from": "Daniel",
+      "text": "My camera is broken again. Send 800 USDT for a trade.",
+      "scam": true,
+      "why": "Never on camera plus money is the scam."
     },
     {
       "id": "r6",
-      "app": "Chirp",
-      "from": "Arvind, ship engineer",
-      "text": "My leave papers need $1,200. Please send it now, my love.",
-      "scam": true,
-      "why": "Someone far away who needs money for papers."
+      "app": "Mail",
+      "from": "Library",
+      "text": "Your book is due in 3 days. Renew on the library site you use.",
+      "scam": false,
+      "why": "A normal notice pointing to a site you already use."
     },
     {
       "id": "r7",
-      "app": "SMS",
-      "from": "Unknown number",
-      "text": "Hey, sorry, wrong number! But you seem nice. Let us chat? 😊",
+      "app": "Chirp",
+      "from": "Ana",
+      "text": "Look at my profits! Download my app to join.",
       "scam": true,
-      "why": "A \"wrong number\" that turns into a friendship is how long cons start."
+      "why": "A private trading app from a new friend is a trap."
     },
     {
       "id": "r8",
-      "app": "Chirp",
-      "from": "Marco, 34",
-      "text": "My camera is broken again. Can you send me some money for a new phone?",
+      "app": "SMS",
+      "from": "Mr. Bennett (new number)",
+      "text": "Are you at your desk? Send 2,000 USDT now. Keep it quiet.",
       "scam": true,
-      "why": "Never appears on video, and then asks for money."
+      "why": "A boss from a new number asking for crypto is an impersonator."
     },
     {
       "id": "r9",
       "app": "SMS",
-      "from": "Sister",
-      "text": "Dinner is at 7, bring dessert 🍰",
+      "from": "Anna (friend)",
+      "text": "Coffee on Saturday? Same café as last time.",
       "scam": false,
-      "why": "Your sister, asking for dessert."
+      "why": "A normal plan from a known friend."
     },
     {
       "id": "r10",
-      "app": "Chirp",
-      "from": "Leo",
-      "text": "I earn $1,600 a week trading. Let me show you how.",
+      "app": "Mail",
+      "from": "Recovery Desk",
+      "text": "We can recover your lost funds for a 10% fee.",
       "scam": true,
-      "why": "A friend you never met, offering secret earnings."
+      "why": "Recovery services that charge up front are scams."
     }
   ],
-  "golden_rule": "People you have not met in person, who ask for money or move you away, are the ones to check. Call people you know on numbers you know.",
+  "golden_rule": "If someone you have never met asks for money, crypto or secrecy, it is a scam, however sweet.",
   "quick_check": {
-    "q": "A \"wrong number\" message turns into a friendly chat, and later asks you to invest. What is going on?",
+    "q": "Which message is safe?",
     "options": [
       {
         "id": "a",
-        "text": "A new friend"
+        "text": "A new match asking to move to a private app"
       },
       {
         "id": "b",
-        "text": "A long con that starts with a wrong number"
+        "text": "A friend suggesting coffee at the usual café"
       },
       {
         "id": "c",
-        "text": "A coincidence"
+        "text": "A boss from a new number asking for USDT"
       },
       {
         "id": "d",
-        "text": "A real mistake"
+        "text": "A recovery desk asking for a fee"
       }
     ],
     "answer": "b",
-    "explain": "Long cons often start with a harmless wrong number."
+    "explain": "It is a known friend with no money and no pressure."
   },
   "sources": [
     "ftc-romance",
-    "ftc-family",
-    "ftc-gift-cards"
+    "ftc-crypto"
   ],
-  "checked_on": "2026-10-21"
+  "checked_on": "2026-11-08"
 }
