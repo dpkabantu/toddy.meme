@@ -38,7 +38,8 @@
       "hubText": "Spot the red flags in 48 crypto-scam cases, from fake giveaways to fake support. A new Daily Case every day. Free, no account, no wallet.",
       "card": "/assets/games/scam-lab-card-v5.webp",
       "cardAlt": "Toddy with a magnifying glass beside the Scam Lab corkboard",
-      "added": "2026-10-18"
+      "added": "2026-10-18",
+      "updated": "2026-11-08"
     },
     {
       "id": "full-moon",
@@ -55,7 +56,7 @@
       "card": "/assets/games/full-moon-card.webp",
       "cardAlt": "Toddy beside the glowing Full Moon piece in the night café",
       "added": "2026-10-19",
-      "updated": "2026-10-30"
+      "updated": "2026-11-08"
     }
   ]
 }

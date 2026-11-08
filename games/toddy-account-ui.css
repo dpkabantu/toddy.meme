@@ -1,0 +1,13 @@
+/* Account chip and panel shared by the TODDY games that do not have their own settings screen. */
+.ta-back { position: fixed; inset: 0; z-index: 99999; background: rgba(10, 6, 24, .72); display: flex; align-items: center; justify-content: center; padding: 16px; }
+.ta-back[hidden] { display: none; }
+.ta-card { width: min(420px, 100%); max-height: 92vh; overflow: auto; background-color: #1d1431; color: #fff4d6; border: 2px solid #fdaf1e; border-radius: 18px; padding: 18px 16px; font: 500 15px/1.4 system-ui, -apple-system, 'Segoe UI', sans-serif; box-shadow: 0 10px 40px rgba(0, 0, 0, .5); display: flex; flex-direction: column; gap: 10px; text-align: left; }
+.ta-card h3 { margin: 0; text-align: center; color: #fdaf1e; font-size: 20px; }
+.ta-card small { color: #cdbfe6; font-size: 13px; }
+.ta-card a { color: #fdaf1e; }
+.ta-card input[type=text] { width: 100%; box-sizing: border-box; height: 44px; border-radius: 10px; border: 1px solid #5a4a86; background: #120c24; color: #fff4d6; padding: 0 12px; font: inherit; }
+.ta-btn { display: block; box-sizing: border-box; width: 100%; min-height: 44px; padding: 10px 14px; border-radius: 12px; border: 2px solid #fdaf1e; background: transparent; color: #fff4d6; font: 700 15px system-ui, sans-serif; text-align: center; text-decoration: none; cursor: pointer; }
+.ta-btn.go { background: #fdaf1e; color: #2a1a05; }
+.ta-btn:focus-visible, .ta-card input:focus-visible { outline: 3px solid #fff4d6; outline-offset: 2px; }
+.ta-row { display: flex; align-items: center; gap: 10px; }
+.ta-row input { width: 22px; height: 22px; accent-color: #fdaf1e; }
