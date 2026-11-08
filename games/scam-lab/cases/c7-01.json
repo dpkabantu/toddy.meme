@@ -6,14 +6,14 @@
   "title": "The Free Tips Group",
   "disguise": "influencer",
   "intro": [
-    "A stranger adds you to a group that shares free stock tips. The group looks very busy and very happy.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "Chapter 7, Toddy: investing. Scammers sell certainty.",
+    "A stranger invites you to a free group that \"calls\" the next winning coin.",
+    "Tap anything odd, then decide."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Stock Gurus Club",
-    "text": "Welcome! Free tips, 90% accuracy"
+    "from": "CoinCall Pro ✔",
+    "text": "Free signals, 90% win rate…"
   },
   "screen": {
     "app": "chirp",
@@ -21,139 +21,145 @@
       "name": [
         {
           "clue": "name",
-          "text": "Stock Gurus Club"
+          "text": "CoinCall Pro ✔"
         }
       ],
       "sub": [
         {
-          "clue": "members",
-          "text": "3,200 members"
+          "clue": "handle",
+          "text": "@coincall_pro_signals"
         }
       ],
       "avatar": {
         "glyph": "📈",
-        "clue": "pic"
+        "clue": "avatar"
       }
     },
     "banner": [
       {
-        "clue": "added",
-        "text": "You were added by someone you do not know"
+        "clue": "dm",
+        "text": "Message request · you do not follow this account"
       }
     ],
+    "context": "You never asked for trading tips.",
     "items": [
       {
         "time": [
-          "9:10 AM"
+          {
+            "clue": "time",
+            "text": "7:50 PM"
+          }
         ]
       },
       {
         "msg": [
-          "Welcome! Our tips have ",
+          "Join our free group! ",
           {
-            "clue": "acc",
-            "text": "90% accuracy"
-          },
-          " and double your money in a week. 🚀"
-        ]
-      },
-      {
-        "msg": [
-          {
-            "clue": "proof",
-            "text": "Members made $10,000 yesterday!"
-          },
-          " [screenshot]"
-        ]
-      },
-      {
-        "msg": [
-          "For the next VIP tip, ",
-          {
-            "clue": "vip",
-            "text": "pay $200 to join our VIP room"
+            "clue": "win",
+            "text": "90% of our calls win"
           },
           "."
         ]
       },
       {
         "msg": [
+          "Members turned ",
           {
-            "clue": "rush",
-            "text": "Only 10 VIP seats left today."
+            "clue": "gain",
+            "text": "200 USDT into 4,000 USDT"
+          },
+          " last week. ",
+          {
+            "clue": "link",
+            "text": "coincall-vip.live/join",
+            "link": true
           }
         ]
       },
       {
         "msg": [
+          "The next call drops in ",
           {
-            "clue": "guar",
-            "text": "Profit guaranteed or your money back."
-          }
+            "clue": "timer",
+            "text": "10 minutes"
+          },
+          ". ",
+          {
+            "clue": "vip",
+            "text": "VIP spots are limited"
+          },
+          "."
         ]
       }
     ]
   },
   "clues": {
-    "added": {
-      "label": "Added without asking",
+    "win": {
+      "label": "\"90% win rate\"",
       "strength": "strong",
-      "lens": "You never asked to join.",
-      "why": "Unwanted groups are how scams find people."
+      "lens": "A huge claim.",
+      "why": "No one wins nine times out of ten in crypto."
     },
-    "acc": {
-      "label": "\"90% accuracy\"",
+    "gain": {
+      "label": "200 turned into 4,000",
       "strength": "strong",
-      "lens": "No one predicts markets with 90% accuracy.",
-      "why": "No honest adviser promises this."
+      "lens": "A story of huge gains.",
+      "why": "Stories are picked and sometimes faked."
     },
-    "proof": {
-      "label": "Screenshots of big profits",
+    "dm": {
+      "label": "They found you",
       "strength": "strong",
-      "lens": "Anyone can make one.",
-      "why": "Never trust a screenshot."
+      "lens": "You did not ask.",
+      "why": "Scammers send tips to strangers."
     },
-    "vip": {
-      "label": "Pay to join the VIP room",
+    "link": {
+      "label": "A look-alike link",
       "strength": "strong",
-      "lens": "You pay for \"better\" tips.",
-      "why": "The VIP fee is the real business."
+      "lens": "coincall-vip.live is a sign-up page.",
+      "why": "A free group often leads to a paid one."
     },
-    "rush": {
-      "label": "Only 10 seats left",
+    "timer": {
+      "label": "10 minutes",
       "strength": "strong",
       "lens": "A deadline.",
-      "why": "Pressure is a trick."
+      "why": "Pressure stops you from checking."
     },
-    "guar": {
-      "label": "\"Profit guaranteed\"",
+    "vip": {
+      "label": "Limited VIP spots",
       "strength": "strong",
-      "lens": "No investment is guaranteed.",
-      "why": "There are no guaranteed returns."
-    },
-    "members": {
-      "label": "3,200 members",
-      "strength": "harmless",
-      "lens": "A big, busy group.",
-      "why": "Many of the members are fake, and a crowd proves nothing."
+      "lens": "Fake scarcity.",
+      "why": "It pushes you to pay."
     },
     "name": {
-      "label": "A confident name",
+      "label": "Name with a tick",
       "strength": "harmless",
-      "lens": "Stock Gurus Club.",
-      "why": "Names are easy to invent."
+      "lens": "A typed ✔.",
+      "why": "A typed tick is not a real badge."
     },
-    "pic": {
+    "handle": {
+      "label": "Signals handle",
+      "strength": "harmless",
+      "lens": "@coincall_pro_signals.",
+      "why": "Handles can be anything."
+    },
+    "avatar": {
       "label": "Chart picture",
       "strength": "harmless",
-      "lens": "A little chart.",
+      "lens": "A chart.",
       "why": "Pictures prove nothing."
+    },
+    "time": {
+      "label": "7:50 PM",
+      "strength": "harmless",
+      "lens": "An ordinary time.",
+      "why": "Time proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Pay $200 for the VIP room"
+      "label": "Join the group",
+      "trap": true
     },
     {
       "id": "ignore",
@@ -161,14 +167,13 @@
     },
     {
       "id": "verify",
-      "label": "Check whether the group's adviser is registered, on the regulator's own site"
+      "label": "Check the group's record independently"
     },
     {
       "id": "block_report",
-      "label": "Leave the group and report it"
+      "label": "Block and report"
     }
   ],
-  "best_action": "block_report",
   "acceptable_actions": [
     "verify",
     "ignore"
@@ -177,96 +182,113 @@
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "You left and reported. The group was removed before it reached more people.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Blocked and reported. The fake tipster was removed.",
+      "mirageSays": "My lovely calls!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The regulator's own site had no adviser by that name. The group was unregistered. Case cracked.",
+      "line": "No independent record of the wins existed, and warnings matched it. Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. A report helps others.",
+      "mirageSays": "Fine. Next phone!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The VIP tips lost money, the \"guarantee\" never came, and the group vanished.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The free group led to a \"VIP\" fee of 500 USDT, then a fake trading app. The money was gone.",
+      "mirageSays": "Thanks for joining!"
     }
   },
   "what_if": {
-    "go_ahead": "No adviser can guarantee profit. Checking that an adviser is registered takes a minute.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "\"Free\" tips lead to paid ones. Stop at the first claim.",
+    "verify": "Checking the record was smart.",
+    "ignore": "Ignoring was safe. A report helps others."
   },
-  "golden_rule": "No one can guarantee profit. Take investment advice only from a registered adviser, and never from tips in a group.",
+  "best_action": "block_report",
+  "trap": {
+    "title": "CoinCall · Join",
+    "url": "coincall-vip.live/join",
+    "ask": "Join the free group and get a VIP offer.",
+    "go": "Join",
+    "back": "Close this page"
+  },
+  "golden_rule": "Nobody can promise a winning rate in crypto. A free tip group is the doorway to a paid trap.",
   "quick_check": {
-    "q": "A group promises 90% accuracy and guaranteed profit if you pay $200 for VIP tips. What do you do?",
+    "q": "A stranger invites you to a free group that claims a 90% win rate. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Pay, it is a small price"
+        "text": "Join, it is free"
       },
       {
         "id": "b",
-        "text": "Pay a smaller VIP plan"
+        "text": "Do not join. Report. Nobody can promise wins"
       },
       {
         "id": "c",
-        "text": "Leave and report it. Use only a registered adviser"
+        "text": "Join and watch only"
       },
       {
         "id": "d",
-        "text": "Share it with friends"
+        "text": "Ask for proof in the group"
       }
     ],
-    "answer": "c",
-    "explain": "No guaranteed profit exists. Hot tips in groups are a trap."
+    "answer": "b",
+    "explain": "A free group is the first step to a paid trap."
   },
   "hints": {
-    "nudge": "Can anyone really guarantee a profit?",
+    "nudge": "Can anyone promise wins?",
     "glow_order": [
-      "added",
-      "acc",
-      "proof",
-      "vip",
-      "rush",
-      "guar"
+      "win",
+      "gain",
+      "dm",
+      "link",
+      "timer",
+      "vip"
     ]
   },
-  "sources": [
-    "ftc-invest-social"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the group",
-      "title": "Stock Gurus Club",
+      "label": "Check the account",
+      "title": "CoinCall Pro",
       "rows": [
         {
-          "k": "Added by",
-          "v": "Someone you do not know",
-          "clue": "added"
+          "k": "Joined",
+          "v": "Last week",
+          "clue": "dm"
         },
         {
-          "k": "Registered adviser?",
-          "v": "No"
+          "k": "Wins checked by anyone",
+          "v": "None"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the link",
+      "title": "Where it goes",
+      "rows": [
+        {
+          "k": "Page",
+          "v": "A sign-up page",
+          "clue": "link"
         },
         {
-          "k": "Claims",
-          "v": "90% accuracy, guaranteed",
-          "clue": "acc"
+          "k": "Soon after",
+          "v": "A VIP fee",
+          "clue": "vip"
         }
       ]
     },
@@ -274,18 +296,23 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What investment-scam advice says",
       "rows": [
         {
-          "k": "Hot tips",
-          "v": "Do not base decisions on them",
-          "clue": "acc"
+          "k": "Guaranteed win rates",
+          "v": "Are the scam",
+          "clue": "win"
         },
         {
-          "k": "Who to take advice from",
-          "v": "A registered adviser"
+          "k": "Free tips groups",
+          "v": "Often lead to paid ones"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-crypto",
+    "ftc-invest-social"
+  ],
+  "checked_on": "2026-11-08"
 }

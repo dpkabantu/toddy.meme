@@ -6,14 +6,14 @@
   "title": "The Institutional Account",
   "disguise": "influencer",
   "intro": [
-    "A message invites you to a \"special account\" that gets shares before the public. You only need to invest.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "A \"fund manager\" invites you to a private account for big investors.",
+    "The pitch sounds very professional.",
+    "Tap anything odd, then decide."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Nora (Investment Manager)",
-    "text": "Special IPO access for selected investors"
+    "from": "Orrin Capital Desk",
+    "text": "Private OTC access for qualified clients…"
   },
   "screen": {
     "app": "chirp",
@@ -21,161 +21,157 @@
       "name": [
         {
           "clue": "name",
-          "text": "Nora · Investment Manager"
+          "text": "Orrin Capital Desk"
         }
       ],
       "sub": [
         {
-          "clue": "handle",
-          "text": "@nora_ipo_vip"
+          "clue": "sub",
+          "text": "Institutional Relations"
         }
       ],
       "avatar": {
-        "glyph": "💹",
-        "clue": "pic"
+        "glyph": "🏛️",
+        "clue": "avatar"
       }
     },
     "banner": [
       {
-        "clue": "dmfirst",
+        "clue": "dm",
         "text": "Message request · you do not follow this account"
       }
     ],
-    "context": "You have never invested before.",
+    "context": "You were not looking for an investment manager.",
     "items": [
       {
         "time": [
-          "1:25 PM"
+          {
+            "clue": "time",
+            "text": "11:00 AM"
+          }
         ]
       },
       {
         "msg": [
-          "You have been ",
+          "We run a private ",
           {
-            "clue": "picked",
-            "text": "selected for an institutional account"
+            "clue": "otc",
+            "text": "OTC desk"
           },
-          ". These get shares ",
+          " for qualified clients. ",
           {
-            "clue": "pre",
-            "text": "before the public"
+            "clue": "ret",
+            "text": "Fixed 4% weekly returns"
           },
           "."
         ]
       },
       {
         "msg": [
-          "Our members get ",
+          "Minimum is ",
           {
-            "clue": "gain",
-            "text": "200% gain on listing day"
+            "clue": "min",
+            "text": "2,000 USDT"
           },
-          ", guaranteed."
-        ]
-      },
-      {
-        "msg": [
-          "Download our app: ",
+          ". Fund your account at ",
           {
             "clue": "link",
-            "text": "solis-ipo-vip.live/app",
+            "text": "orrin-otc.top",
             "link": true
           },
-          ". Deposit ",
-          {
-            "clue": "dep",
-            "text": "$1,000"
-          },
-          " to start."
+          "."
         ]
       },
       {
         "msg": [
+          "Capital is ",
           {
-            "clue": "rush",
-            "text": "The allotment closes tonight."
+            "clue": "safe",
+            "text": "fully insured"
           },
-          " ",
+          ". ",
           {
-            "clue": "secret",
-            "text": "This is not open to everyone, do not share it."
-          }
+            "clue": "timer",
+            "text": "Slots close Friday"
+          },
+          "."
         ]
       }
     ]
   },
   "clues": {
-    "dmfirst": {
-      "label": "They messaged first",
+    "ret": {
+      "label": "Fixed 4% a week",
       "strength": "strong",
-      "lens": "A stranger found you.",
-      "why": "Real advisers do not cold-message strangers with guaranteed deals."
+      "lens": "A guaranteed high return.",
+      "why": "No market pays fixed weekly returns."
     },
-    "picked": {
-      "label": "\"Selected for an institutional account\"",
+    "otc": {
+      "label": "A private OTC desk",
       "strength": "strong",
-      "lens": "You never applied.",
-      "why": "Flattery is a lure."
+      "lens": "A closed channel.",
+      "why": "It hides the scheme from regulators."
     },
-    "pre": {
-      "label": "Shares \"before the public\"",
+    "safe": {
+      "label": "\"Fully insured\"",
       "strength": "strong",
-      "lens": "A privilege claim with no proof.",
-      "why": "Honest firms do not sell secret access."
+      "lens": "A guarantee.",
+      "why": "Crypto deposits are not insured this way."
     },
-    "gain": {
-      "label": "\"200% guaranteed gain\"",
+    "dm": {
+      "label": "They found you",
       "strength": "strong",
-      "lens": "No gain is guaranteed.",
-      "why": "There are no guaranteed returns."
+      "lens": "You did not ask.",
+      "why": "Real funds do not cold-message."
     },
     "link": {
-      "label": "An app from a link",
+      "label": "A look-alike link",
       "strength": "strong",
-      "lens": "solis-ipo-vip.live is not a registered firm's app.",
-      "why": "Install apps from the official store, and check the firm is registered."
+      "lens": "orrin-otc.top is not a regulated firm.",
+      "why": "Real firms are registered."
     },
-    "dep": {
-      "label": "A deposit to start",
-      "strength": "strong",
-      "lens": "$1,000 into a stranger's app.",
-      "why": "Your money goes to the scammer."
-    },
-    "rush": {
-      "label": "Allotment closes tonight",
+    "timer": {
+      "label": "Slots close Friday",
       "strength": "strong",
       "lens": "A deadline.",
-      "why": "Pressure is a trick."
+      "why": "Pressure stops you from checking."
     },
-    "secret": {
-      "label": "\"Do not share it\"",
-      "strength": "strong",
-      "lens": "Secrecy blocks the check.",
-      "why": "Always check."
-    },
-    "handle": {
-      "label": "A job-like handle",
+    "min": {
+      "label": "Minimum 2,000 USDT",
       "strength": "harmless",
-      "lens": "@nora_ipo_vip.",
-      "why": "Handles prove nothing alone."
+      "lens": "A moderate starting amount.",
+      "why": "The first deposit is small; more comes later."
     },
     "name": {
-      "label": "A manager title",
+      "label": "Orrin Capital Desk",
       "strength": "harmless",
-      "lens": "Nora, Investment Manager.",
-      "why": "Titles are easy to claim."
+      "lens": "A made-up name.",
+      "why": "Names are copied."
     },
-    "pic": {
-      "label": "Chart picture",
+    "sub": {
+      "label": "Institutional Relations",
       "strength": "harmless",
-      "lens": "A little chart.",
+      "lens": "A title.",
+      "why": "Titles are typed."
+    },
+    "avatar": {
+      "label": "Building picture",
+      "strength": "harmless",
+      "lens": "A symbol.",
       "why": "Pictures prove nothing."
+    },
+    "time": {
+      "label": "11:00 AM",
+      "strength": "harmless",
+      "lens": "An ordinary time.",
+      "why": "Time proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Install the app and deposit $1,000"
+      "label": "Fund the account",
+      "trap": true
     },
     {
       "id": "ignore",
@@ -183,14 +179,13 @@
     },
     {
       "id": "verify",
-      "label": "Check the firm's registration on the regulator's own site"
+      "label": "Check the regulator's register"
     },
     {
       "id": "block_report",
-      "label": "Block and report the account"
+      "label": "Block and report"
     }
   ],
-  "best_action": "block_report",
   "acceptable_actions": [
     "verify",
     "ignore"
@@ -199,98 +194,114 @@
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "Blocked and reported. The platform removed the account before it reached more people.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Blocked and reported. The fake desk was flagged.",
+      "mirageSays": "My lovely desk!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The regulator's site had no such firm or manager. Case cracked.",
+      "line": "The regulator's register had no such firm and listed it as a warning. Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "ignore": {
       "scene": "safe",
       "mirage": "smug",
       "stamp": "SAFE",
-      "line": "You stayed safe. But the same scam is still landing on other people.",
-      "mirageSays": "Fine. Next!"
+      "line": "You ignored it safely. A report helps others.",
+      "mirageSays": "Fine. Next phone!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The $1,000 went into a fake app. The \"gain\" showed on screen, but withdrawals never worked.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The first 2,000 USDT showed as 2,080 on a fake screen. You added more, then could not withdraw.",
+      "mirageSays": "Thanks for the funding!"
     }
   },
   "what_if": {
-    "go_ahead": "Checking the registration would have ended it. No one can guarantee a 200% gain.",
-    "ignore": "Reporting takes two taps and helps protect other people.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "Fixed weekly returns do not exist. Stop at the first promise.",
+    "verify": "Checking the register was the right move.",
+    "ignore": "Ignoring was safe. A report helps others."
   },
-  "golden_rule": "Secret early access to shares, with a guaranteed gain, is a scam. Check that the firm is registered.",
+  "best_action": "block_report",
+  "trap": {
+    "title": "Orrin OTC · Fund Account",
+    "url": "orrin-otc.top",
+    "ask": "Send 2,000 USDT to fund your institutional account.",
+    "go": "Send 2,000 USDT",
+    "back": "Close this page"
+  },
+  "golden_rule": "Fixed returns and a private channel mean a scheme. Check the regulator's register before sending anything.",
   "quick_check": {
-    "q": "A stranger offers an \"institutional account\" with a guaranteed 200% gain on listing. What do you do?",
+    "q": "A \"private desk\" offers fixed 4% weekly returns and says funds are insured. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Deposit quickly"
+        "text": "Fund it, it is insured"
       },
       {
         "id": "b",
-        "text": "Deposit a little"
+        "text": "Check the regulator's register and report"
       },
       {
         "id": "c",
-        "text": "Do not deposit. Block and report. Use only registered firms"
+        "text": "Fund half"
       },
       {
         "id": "d",
         "text": "Ask for a brochure"
       }
     ],
-    "answer": "c",
-    "explain": "No gain is guaranteed. Secret access is a lure."
+    "answer": "b",
+    "explain": "Fixed returns are the classic sign of a fraud."
   },
   "hints": {
-    "nudge": "Who guarantees a gain on a share listing?",
+    "nudge": "Who regulates them?",
     "glow_order": [
-      "dmfirst",
-      "picked",
-      "pre",
-      "gain",
+      "ret",
+      "otc",
+      "safe",
+      "dm",
       "link",
-      "dep",
-      "rush",
-      "secret"
+      "timer"
     ]
   },
-  "sources": [
-    "ftc-invest-social"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the account",
-      "title": "@nora_ipo_vip",
+      "label": "Check the firm",
+      "title": "Orrin Capital Desk",
       "rows": [
         {
-          "k": "You applied?",
-          "v": "No",
-          "clue": "dmfirst"
+          "k": "Regulator register",
+          "v": "Not listed",
+          "clue": "otc"
         },
         {
-          "k": "Registered?",
-          "v": "No"
+          "k": "Contact",
+          "v": "Cold message",
+          "clue": "dm"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the offer",
+      "title": "What they promise",
+      "rows": [
+        {
+          "k": "Return",
+          "v": "Fixed 4% weekly",
+          "clue": "ret"
         },
         {
-          "k": "Promise",
-          "v": "200% guaranteed gain",
-          "clue": "gain"
+          "k": "Insurance",
+          "v": "Claimed",
+          "clue": "safe"
         }
       ]
     },
@@ -298,18 +309,24 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What investment-scam advice says",
       "rows": [
         {
-          "k": "Deal only with registered intermediaries",
-          "v": "Check the regulator's own website"
+          "k": "Fixed returns",
+          "v": "Are the scam",
+          "clue": "ret"
         },
         {
-          "k": "Guaranteed returns",
-          "v": "None exist",
-          "clue": "gain"
+          "k": "Private desks",
+          "v": "Hide the scheme",
+          "clue": "otc"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-crypto",
+    "ftc-invest-social"
+  ],
+  "checked_on": "2026-11-08"
 }

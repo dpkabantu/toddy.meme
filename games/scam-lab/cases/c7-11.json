@@ -3,72 +3,63 @@
   "type": "hunt",
   "chapter": 7,
   "difficulty": 3,
-  "title": "Two Broker Apps",
+  "title": "Two Exchange Apps",
   "disguise": "influencer",
   "intro": [
-    "Two apps offer to help you invest. One is Capitol Brokerage, a real, registered firm.",
-    "The other is Mirage with a stock ticker on his tie. Compare them side by side.",
-    "Sniff the details, then decide."
+    "Two app listings show the same exchange, Zelvora.",
+    "One is real. One is a copy by Mirage.",
+    "Compare them side by side."
   ],
   "notify": {
-    "app": "App store",
+    "app": "Browser",
     "from": "Two apps",
-    "text": "Invest in shares: two different apps"
+    "text": "Which Zelvora is real?"
   },
-  "decide_q": "Which app is the registered broker, and what will you do?",
+  "decide_q": "Which app is real, and what will you do?",
   "screen": {
     "app": "compare",
-    "context": "Both apps say they let you buy shares. You found one in the official store and one in a group.",
+    "context": "Two exchange apps, side by side.",
     "panels": [
       {
         "label": "App A",
         "avatar": {
-          "glyph": "📊",
+          "glyph": "🪙",
           "clue": "logo_a"
         },
         "rows": [
           {
-            "k": "Where found",
+            "k": "Publisher",
             "v": [
               {
-                "clue": "src_a",
-                "text": "The phone's official app store"
+                "clue": "pub_a",
+                "text": "Zelvora Ltd, verified"
               }
             ]
           },
           {
-            "k": "Registration",
+            "k": "Downloads",
             "v": [
               {
-                "clue": "reg_a",
-                "text": "Registration number shown, listed on the regulator's site"
+                "clue": "dl_a",
+                "text": "Millions, long history"
               }
             ]
           },
           {
-            "k": "Promise",
+            "k": "Link",
             "v": [
               {
-                "clue": "promise_a",
-                "text": "\"Investing carries risk. Past results do not guarantee the future.\""
+                "clue": "link_a",
+                "text": "zelvora.app"
               }
             ]
           },
           {
-            "k": "Money goes to",
+            "k": "Reviews",
             "v": [
               {
-                "clue": "pay_a",
-                "text": "Your own bank account to the broker's regulated account"
-              }
-            ]
-          },
-          {
-            "k": "Withdrawals",
-            "v": [
-              {
-                "clue": "wd_a",
-                "text": "To your own bank account, any time"
+                "clue": "rev_a",
+                "text": "Mixed, real-sounding"
               }
             ]
           }
@@ -76,249 +67,288 @@
         "note": [
           {
             "clue": "note_a",
-            "text": "Support: office address and a published phone number."
+            "text": "\"We never DM you or ask for your seed phrase.\""
           }
         ]
       },
       {
         "label": "App B",
         "avatar": {
-          "glyph": "📊",
+          "glyph": "🪙",
           "clue": "logo_b"
         },
         "rows": [
           {
-            "k": "Where found",
+            "k": "Publisher",
             "v": [
               {
-                "clue": "src_b",
-                "text": "A link in a group chat",
-                "link": true
+                "clue": "pub_b",
+                "text": "Unknown developer"
               }
             ]
           },
           {
-            "k": "Registration",
+            "k": "Downloads",
             "v": [
               {
-                "clue": "reg_b",
-                "text": "None shown"
+                "clue": "dl_b",
+                "text": "A few hundred, new"
               }
             ]
           },
           {
-            "k": "Promise",
+            "k": "Link",
             "v": [
               {
-                "clue": "promise_b",
-                "text": "\"Guaranteed 40% a month!\""
+                "clue": "link_b",
+                "text": "zelvora-app.xyz"
               }
             ]
           },
           {
-            "k": "Money goes to",
+            "k": "Reviews",
             "v": [
               {
-                "clue": "pay_b",
-                "text": "A personal account of \"our manager\""
-              }
-            ]
-          },
-          {
-            "k": "Withdrawals",
-            "v": [
-              {
-                "clue": "wd_b",
-                "text": "After paying a \"tax\" first"
+                "clue": "rev_b",
+                "text": "All five stars, same words"
               }
             ]
           }
         ],
         "note": [
           {
-            "clue": "note_b",
-            "text": "Support: a chat account only."
+            "clue": "promo_b",
+            "text": "\"Deposit now, get 30% bonus!\""
           }
         ]
       }
     ]
   },
   "clues": {
-    "src_b": {
-      "label": "Found in a group link",
+    "pub_b": {
+      "label": "Unknown developer",
       "strength": "strong",
-      "lens": "Not the official store.",
-      "why": "Install investing apps from the official store."
+      "lens": "Not the real company.",
+      "why": "Real apps have a verified publisher."
     },
-    "reg_b": {
-      "label": "No registration",
+    "dl_b": {
+      "label": "A few hundred downloads",
       "strength": "strong",
-      "lens": "No registration number is shown.",
-      "why": "Deal only with registered firms, and check on the regulator's site."
+      "lens": "A brand-new copy.",
+      "why": "The real app has a long history."
     },
-    "promise_b": {
-      "label": "\"Guaranteed 40% a month\"",
+    "link_b": {
+      "label": "A look-alike link",
       "strength": "strong",
-      "lens": "No gain is guaranteed.",
-      "why": "There are no guaranteed returns."
+      "lens": "zelvora-app.xyz is not the real site.",
+      "why": "The real site is zelvora.app."
     },
-    "pay_b": {
-      "label": "A personal account",
+    "rev_b": {
+      "label": "Identical five-star reviews",
       "strength": "strong",
-      "lens": "Your money goes to a person, not a firm.",
-      "why": "A real broker takes money into regulated accounts."
+      "lens": "Fake reviews.",
+      "why": "Real reviews differ."
     },
-    "wd_b": {
-      "label": "A \"tax\" to withdraw",
+    "promo_b": {
+      "label": "30% deposit bonus",
       "strength": "strong",
-      "lens": "You must pay first to take your own money out.",
-      "why": "Paying to withdraw is the scam."
+      "lens": "A bonus for deposits.",
+      "why": "Bonuses are bait."
     },
-    "note_b": {
-      "label": "Chat only support",
-      "strength": "strong",
-      "lens": "No office, no phone.",
-      "why": "Real firms tell you where they are."
-    },
-    "logo_a": {
-      "label": "Chart logo",
+    "pub_a": {
+      "label": "Verified publisher",
       "strength": "harmless",
-      "lens": "A little chart.",
-      "why": "Logos are easy to copy."
+      "lens": "The real company.",
+      "why": "The publisher is the best test."
     },
-    "logo_b": {
-      "label": "The same chart",
+    "dl_a": {
+      "label": "Millions of downloads",
       "strength": "harmless",
-      "lens": "The same icon.",
-      "why": "A copied icon takes seconds."
+      "lens": "A long history.",
+      "why": "History is hard to fake."
     },
-    "src_a": {
-      "label": "Official app store",
+    "link_a": {
+      "label": "The real site",
       "strength": "harmless",
-      "lens": "Found in the phone's official store.",
-      "why": "A good sign, but check more."
+      "lens": "zelvora.app.",
+      "why": "The real address."
     },
-    "reg_a": {
-      "label": "Registration shown",
+    "rev_a": {
+      "label": "Mixed reviews",
       "strength": "harmless",
-      "lens": "A registration number you can check on the regulator's site.",
-      "why": "This is checkable evidence."
-    },
-    "promise_a": {
-      "label": "A risk warning",
-      "strength": "harmless",
-      "lens": "It warns that investing carries risk.",
-      "why": "Honest firms warn about risk."
-    },
-    "pay_a": {
-      "label": "Your own regulated account",
-      "strength": "harmless",
-      "lens": "Money goes to a regulated account.",
-      "why": "This is how real brokers work."
-    },
-    "wd_a": {
-      "label": "Withdraw any time to your bank",
-      "strength": "harmless",
-      "lens": "To your own bank account.",
-      "why": "This is honest."
+      "lens": "Real-sounding.",
+      "why": "Real reviews are mixed."
     },
     "note_a": {
-      "label": "Real contact details",
+      "label": "Warns about DMs and seed phrases",
       "strength": "harmless",
-      "lens": "An office and a phone number.",
-      "why": "Honest firms are reachable."
+      "lens": "A real warning.",
+      "why": "Real firms warn you."
+    },
+    "logo_a": {
+      "label": "Coin logo",
+      "strength": "harmless",
+      "lens": "The logo.",
+      "why": "Logos are copied."
+    },
+    "logo_b": {
+      "label": "Same coin logo",
+      "strength": "harmless",
+      "lens": "A copy.",
+      "why": "Proves nothing."
     }
   },
   "actions": [
     {
       "id": "pick_b",
-      "label": "B is the broker. Deposit $1,000",
+      "label": "Install B and deposit",
       "trap": true
     },
     {
       "id": "verify",
-      "label": "Not sure. Check each firm on the regulator's site"
+      "label": "Check the exchange's own site for the app link"
     },
     {
       "id": "block_report",
-      "label": "A is the broker. Report B"
+      "label": "A is real. Report B"
     }
   ],
-  "best_action": "block_report",
   "acceptable_actions": [
     "verify"
   ],
-  "trap": {
-    "title": "Solis Shares App · Deposit",
-    "url": "solis-shares-app.live",
-    "ask": "Deposit $1,000 to the account of our manager.",
-    "go": "Deposit $1,000",
-    "back": "Close this page"
-  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "You picked the registered broker and reported the fake. The fake app was removed.",
-      "mirageSays": "My stock-ticker tie!"
+      "stamp": "BLOCKED",
+      "line": "Reported to the store. The copy was removed.",
+      "mirageSays": "They read the real page!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The regulator's site listed App A and not App B. Case cracked.",
+      "line": "The real site linked to App A and warned about copies. Case cracked.",
       "mirageSays": "Hmph. They checked."
     },
     "pick_b": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The $1,000 went to a stranger. The app showed a fake profit, then locked you out.",
+      "line": "App B showed a big balance. When you tried to withdraw, the account locked.",
       "mirageSays": "Thanks for the deposit!"
     }
   },
   "what_if": {
-    "pick_b": "App B had five warnings: a group link, no registration, a guarantee, a personal account and a withdrawal tax.",
-    "verify": "Checking was smart. Reporting B as well helps get it removed."
+    "pick_b": "Download apps only from the link on the exchange's own site.",
+    "verify": "Checking the real site was smart. Reporting B helps others."
   },
-  "golden_rule": "Check that a broker is registered on the regulator's own site. A fake app has no registration, guarantees profit and takes money into a personal account.",
+  "best_action": "block_report",
+  "trap": {
+    "title": "Zelvora (copy)",
+    "url": "zelvora-app.xyz",
+    "ask": "Deposit now and get a 30% bonus.",
+    "go": "Deposit",
+    "back": "Close this page"
+  },
+  "golden_rule": "Get an exchange app only from the link on its own website, never from a search or an ad.",
   "quick_check": {
-    "q": "Two apps. One guarantees 40% a month and takes money into a personal account. Which is the fake?",
+    "q": "Two apps look alike. One has an unknown publisher and identical five-star reviews. What is it?",
     "options": [
       {
         "id": "a",
-        "text": "The one with a risk warning"
+        "text": "A smaller version of the real app"
       },
       {
         "id": "b",
-        "text": "The one that guarantees profit and uses a personal account"
+        "text": "A copy"
       },
       {
         "id": "c",
-        "text": "Neither"
+        "text": "A beta"
       },
       {
         "id": "d",
-        "text": "Both"
+        "text": "A partner app"
       }
     ],
     "answer": "b",
-    "explain": "A guarantee and a personal account are the giveaways."
+    "explain": "An unknown publisher and copied reviews are signs of a fake."
   },
   "hints": {
-    "nudge": "Which app guarantees profit and wants money in a personal account?",
+    "nudge": "Who made each app?",
     "glow_order": [
-      "promise_b",
-      "pay_b",
-      "reg_b",
-      "wd_b",
-      "src_b",
-      "note_b"
+      "pub_b",
+      "dl_b",
+      "link_b",
+      "rev_b",
+      "promo_b"
     ]
   },
+  "kit": [
+    {
+      "id": "profile",
+      "icon": "🔍",
+      "label": "Compare the publishers",
+      "title": "Who made them",
+      "rows": [
+        {
+          "k": "App A",
+          "v": "Zelvora Ltd, verified",
+          "clue": "pub_a"
+        },
+        {
+          "k": "App B",
+          "v": "Unknown developer",
+          "clue": "pub_b"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Compare the links",
+      "title": "Where they live",
+      "rows": [
+        {
+          "k": "App A",
+          "v": "zelvora.app",
+          "clue": "link_a"
+        },
+        {
+          "k": "App B",
+          "v": "zelvora-app.xyz",
+          "clue": "link_b"
+        }
+      ]
+    },
+    {
+      "id": "source",
+      "icon": "📖",
+      "label": "Compare the reviews",
+      "title": "What users say",
+      "rows": [
+        {
+          "k": "App A",
+          "v": "Mixed",
+          "clue": "rev_a"
+        },
+        {
+          "k": "App B",
+          "v": "All identical",
+          "clue": "rev_b"
+        },
+        {
+          "k": "Downloads on B",
+          "v": "A few hundred",
+          "clue": "dl_b"
+        }
+      ]
+    }
+  ],
   "sources": [
+    "ftc-crypto",
     "ftc-invest-social"
   ],
-  "checked_on": "2026-10-21"
+  "checked_on": "2026-11-08"
 }
