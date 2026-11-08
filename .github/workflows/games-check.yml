@@ -16,3 +16,4 @@ jobs:
         with:
           node-version: 22
       - run: node tools/build-games.mjs --check
+      - run: node --test tests/accounts.test.mjs
