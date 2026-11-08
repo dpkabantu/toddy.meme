@@ -6,37 +6,34 @@
   "title": "Stay on Camera",
   "disguise": "admin",
   "intro": [
-    "A caller says your SIM was used in a crime. He wants you on a video call and tells you to tell no one.",
-    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
-    "Every chat ends with your choice. Choose wisely."
+    "A caller says you are part of a money investigation, and you must stay on camera.",
+    "They are calm, official, and very patient. That is the trick.",
+    "Pick your replies and sniff each message."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Officer Raman",
-    "text": "Your SIM is linked to a serious case"
+    "from": "Investigator Hale",
+    "text": "Stay on camera. This is a legal matter…"
   },
   "screen": {
     "app": "chirp",
     "head": {
       "name": [
         {
-          "text": "Officer Raman · Cyber Cell",
+          "text": "Investigator Hale",
           "id": "duel-name"
         }
       ],
       "sub": [
-        {
-          "clue": "num",
-          "text": "Unknown number"
-        }
+        "@case_unit_hale"
       ],
       "avatar": {
-        "glyph": "🛡️",
-        "clue": "badge"
+        "glyph": "⚖️",
+        "clue": "avatar"
       }
     },
     "banner": [
-      "Video call request"
+      "Video call · you do not follow this account"
     ],
     "items": []
   },
@@ -47,40 +44,30 @@
         "say": [
           {
             "msg": [
-              "Your SIM was used for ",
+              "A wallet linked to your name was ",
               {
                 "clue": "crime",
-                "text": "illegal money transfers"
+                "text": "used in a crime"
               },
-              ". A case is open. ",
+              ". ",
               {
-                "clue": "arrest",
-                "text": "You may be arrested today."
+                "clue": "cam",
+                "text": "Stay on camera, do not hang up."
               }
-            ]
-          },
-          {
-            "msg": [
-              "Join the video call now and ",
-              {
-                "clue": "stay",
-                "text": "stay on camera"
-              },
-              "."
             ]
           }
         ],
         "replies": [
           {
-            "text": "I did nothing. Why me?",
+            "text": "What do I have to do?",
             "next": "n2"
           },
           {
-            "text": "Joining the call",
-            "next": "n3"
+            "text": "I will hang up and call the police myself",
+            "end": "verify"
           },
           {
-            "text": "I will hang up and report this",
+            "text": "Block and report",
             "end": "block_report"
           }
         ]
@@ -89,39 +76,30 @@
         "say": [
           {
             "msg": [
-              "We have ",
+              "To prove your innocence, ",
               {
-                "clue": "proof",
-                "text": "proof"
+                "clue": "move",
+                "text": "move your coins to the court-appointed wallet"
               },
-              ". You can clear your name only by ",
-              {
-                "clue": "co",
-                "text": "cooperating"
-              },
-              "."
-            ]
-          },
-          {
-            "msg": [
+              ". ",
               {
                 "clue": "secret",
-                "text": "Tell no one. If you do, it is a crime."
+                "text": "Tell nobody, it would obstruct justice."
               }
             ]
           }
         ],
         "replies": [
           {
-            "text": "OK, I will cooperate",
+            "text": "OK, sending them",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Why do I need to send coins to prove anything?",
             "next": "n3"
           },
           {
-            "text": "That is not how cases work. I am telling my family and ending this.",
-            "end": "verify"
-          },
-          {
-            "text": "Hang up and report",
+            "text": "Block and report",
             "end": "block_report"
           }
         ]
@@ -130,34 +108,25 @@
         "say": [
           {
             "msg": [
-              "Good. Now ",
+              "It is standard procedure. ",
               {
-                "clue": "verify",
-                "text": "send your savings to our \"safe account\""
-              },
-              " so we can check them. They will be returned after."
-            ]
-          },
-          {
-            "msg": [
-              {
-                "clue": "rush",
-                "text": "You have 20 minutes."
+                "clue": "arrest",
+                "text": "Hang up and a warrant will be issued today."
               }
             ]
           }
         ],
         "replies": [
           {
-            "text": "Sending it now",
+            "text": "Fine, I will do it",
             "end": "go_ahead"
           },
           {
-            "text": "No. I am ending the call and calling the helpline.",
+            "text": "No court asks for coins. Hanging up and reporting",
             "end": "block_report"
           },
           {
-            "text": "I will go to the police station in person",
+            "text": "I will call the police on a number I find myself",
             "end": "verify"
           }
         ]
@@ -165,79 +134,55 @@
     }
   },
   "clues": {
-    "num": {
-      "label": "An unknown number",
-      "strength": "strong",
-      "lens": "A stranger calling about a serious case.",
-      "why": "Real cases do not begin with a surprise call."
-    },
-    "crime": {
-      "label": "A crime story",
-      "strength": "strong",
-      "lens": "Your SIM was supposedly used for illegal transfers.",
-      "why": "A frightening story fits everyone."
-    },
-    "arrest": {
-      "label": "\"You may be arrested today\"",
-      "strength": "strong",
-      "lens": "A threat of arrest by phone.",
-      "why": "Arrests do not happen through a screen."
-    },
-    "stay": {
+    "cam": {
       "label": "\"Stay on camera\"",
       "strength": "strong",
-      "lens": "They keep you watched.",
-      "why": "Keeping you on camera is how victims are controlled."
+      "lens": "They keep you on the line so you cannot check.",
+      "why": "Isolation is the core of this scam."
     },
-    "proof": {
-      "label": "\"We have proof\"",
+    "move": {
+      "label": "Move coins to \"prove innocence\"",
       "strength": "strong",
-      "lens": "They claim proof but show none.",
-      "why": "No proof is shown because there is none."
-    },
-    "co": {
-      "label": "\"Clear your name by cooperating\"",
-      "strength": "strong",
-      "lens": "They make you feel guilty so you obey.",
-      "why": "Guilt is a lever."
+      "lens": "No court asks you to move coins.",
+      "why": "The coins go to the scammer."
     },
     "secret": {
-      "label": "\"Tell no one\"",
+      "label": "\"Tell nobody\"",
       "strength": "strong",
-      "lens": "Secrecy stops people helping you.",
-      "why": "Always tell someone you trust."
+      "lens": "Secrecy stops others from warning you.",
+      "why": "Real cases never forbid you from talking to a lawyer or family."
     },
-    "verify": {
-      "label": "\"Send savings to a safe account\"",
+    "arrest": {
+      "label": "Threat of a warrant",
       "strength": "strong",
-      "lens": "They want your money moved.",
-      "why": "No honest officer asks you to move money."
+      "lens": "A threat to make you obey.",
+      "why": "Fear is the tool."
     },
-    "rush": {
-      "label": "20 minutes",
+    "crime": {
+      "label": "A sudden accusation",
       "strength": "strong",
-      "lens": "A deadline to stop you thinking.",
-      "why": "Rushing is a pressure trick."
+      "lens": "No letter, no case number.",
+      "why": "Real cases start with paperwork, not a video call."
     },
-    "badge": {
-      "label": "A badge picture",
+    "avatar": {
+      "label": "A scales picture",
       "strength": "harmless",
-      "lens": "A shield icon.",
-      "why": "Badges are easy to fake."
+      "lens": "A justice symbol.",
+      "why": "Pictures prove nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Send the savings to the \"safe account\""
+      "label": "Move my coins as told"
     },
     {
       "id": "verify",
-      "label": "Tell my family and visit the police station in person"
+      "label": "Hang up and call the police myself"
     },
     {
       "id": "block_report",
-      "label": "End the call and report it to your local fraud-reporting service"
+      "label": "Block and report"
     }
   ],
   "best_action": "block_report",
@@ -249,90 +194,100 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "You ended the call and reported it. The number was traced and the account frozen.",
-      "mirageSays": "Curses! Hung up on again!"
+      "line": "Blocked and reported. The \"investigator\" moved on to someone else.",
+      "mirageSays": "My patient plan!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "At the station they said: no case, no arrest, no officer by that name. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "The real police said no case works like this, and thanked you for reporting. Case cracked.",
+      "mirageSays": "Hmph. They called the police."
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "SCAMMED",
-      "line": "The savings moved to a stranger. The \"officer\" and the account disappeared.",
-      "mirageSays": "Thanks for the savings!"
+      "stamp": "DRAINED",
+      "line": "The coins went to the \"court wallet\". The caller vanished.",
+      "mirageSays": "Thanks for the coins!"
     }
   },
   "what_if": {
-    "go_ahead": "Telling one family member would have broken the spell. The secrecy was the trap.",
-    "verify": "Going in person was safe. Reporting the call as well helps trace the number."
+    "go_ahead": "No court asks anyone to move coins. Asking \"why\" was the way out.",
+    "verify": "Calling the police yourself was the safest move."
   },
-  "golden_rule": "No one can arrest you through a screen, and no one honest says \"tell no one\". End the call and tell someone you trust.",
+  "golden_rule": "A real investigation never needs you to stay on camera, keep a secret, or move coins.",
   "quick_check": {
-    "q": "A caller says your SIM was used for a crime, keeps you on camera and tells you not to tell anyone. What is the best move?",
+    "q": "A caller says to stay on camera, tell nobody, and move your coins to prove your innocence. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Obey to clear your name"
+        "text": "Obey, they are the law"
       },
       {
         "id": "b",
-        "text": "Obey but record the call"
+        "text": "Hang up and report it. No real case works like this"
       },
       {
         "id": "c",
-        "text": "End the call, tell someone you trust and to your local fraud-reporting service"
+        "text": "Obey but record the call"
       },
       {
         "id": "d",
-        "text": "Ask for his ID"
+        "text": "Move half the coins"
       }
     ],
-    "answer": "c",
-    "explain": "The secrecy is the clue. A trusted person ends the spell."
+    "answer": "b",
+    "explain": "Staying on a call, secrecy and moving coins are the signs of an arrest scam."
   },
   "hints": {
-    "nudge": "Why would a real officer ask you to keep it secret?",
+    "nudge": "What does a real court ever ask you to move?",
     "glow_order": [
+      "move",
+      "cam",
       "secret",
-      "stay",
-      "verify",
       "arrest",
-      "rush",
-      "proof",
-      "crime",
-      "co"
+      "crime"
     ]
   },
-  "sources": [
-    "ftc-government"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
       "label": "Check the caller",
-      "title": "Officer Raman",
+      "title": "Investigator Hale",
       "rows": [
         {
-          "k": "Called you first?",
-          "v": "Yes",
-          "clue": "num"
+          "k": "Account age",
+          "v": "5 days",
+          "clue": "crime"
         },
         {
-          "k": "Asked you to tell no one",
-          "v": "Yes",
+          "k": "Official contact",
+          "v": "Police never start with a surprise video call"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check what they want",
+      "title": "Their demands",
+      "rows": [
+        {
+          "k": "Stay on camera",
+          "v": "Until you pay",
+          "clue": "cam"
+        },
+        {
+          "k": "Move coins to",
+          "v": "A \"court-appointed\" wallet",
+          "clue": "move"
+        },
+        {
+          "k": "Tell nobody",
+          "v": "Required",
           "clue": "secret"
-        },
-        {
-          "k": "Asked for money",
-          "v": "Yes, \"safe account\"",
-          "clue": "verify"
         }
       ]
     },
@@ -340,18 +295,28 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What the government says",
+      "title": "What police say",
       "rows": [
         {
-          "k": "Criminals pose as police and keep victims on video calls",
-          "v": "Yes, they warn about it",
-          "clue": "stay"
+          "k": "If unsure",
+          "v": "Hang up and call the police yourself"
         },
         {
-          "k": "Where to report",
-          "v": "The fraud-reporting service in your country"
+          "k": "Police ask you to move coins",
+          "v": "Never",
+          "clue": "move"
+        },
+        {
+          "k": "A threat if you hang up",
+          "v": "Is pressure",
+          "clue": "arrest"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-government",
+    "chainalysis-2026"
+  ],
+  "checked_on": "2026-11-08"
 }

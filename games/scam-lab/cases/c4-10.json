@@ -3,41 +3,29 @@
   "type": "duel",
   "chapter": 4,
   "difficulty": 3,
-  "title": "Your SIM Will Be Blocked",
-  "disguise": "admin",
+  "title": "The SIM Swap Warning",
+  "disguise": "support",
   "intro": [
-    "A caller from \"the cyber police\" says your SIM was misused and will be blocked in two hours.",
-    "This time you can talk back. Pick your replies and sniff each message as it arrives.",
-    "Every chat ends with your choice. Choose wisely."
+    "A text from your \"phone company\" says your SIM will be blocked tonight.",
+    "Scammers who take over your number can reset your exchange passwords. That is the real goal.",
+    "Pick your replies and sniff each message."
   ],
   "notify": {
     "app": "Messages",
-    "from": "Cyber Police",
-    "text": "Your SIM will be blocked in 2 hours"
+    "from": "Vantel Mobile",
+    "text": "Your SIM will be blocked tonight. Reply…"
   },
   "screen": {
     "app": "sms",
     "head": {
       "name": [
         {
-          "text": "Cyber Police Unit",
+          "text": "Vantel Mobile",
           "id": "duel-name"
         }
-      ],
-      "sub": [
-        {
-          "clue": "num",
-          "text": "Unknown number"
-        }
-      ],
-      "avatar": {
-        "glyph": "🛡️",
-        "clue": "badge"
-      }
+      ]
     },
-    "banner": [
-      "Text after a phone call"
-    ],
+    "context": "You use your phone number to reset your exchange password.",
     "items": []
   },
   "duel": {
@@ -47,42 +35,32 @@
         "say": [
           {
             "msg": [
-              "Your SIM was ",
-              {
-                "clue": "misuse",
-                "text": "misused for illegal calls"
-              },
-              ". It will be ",
+              "Vantel: your SIM will be ",
               {
                 "clue": "block",
-                "text": "blocked in 2 hours"
+                "text": "blocked tonight"
               },
-              "."
-            ]
-          },
-          {
-            "msg": [
-              "To keep it active, press 1 or text your ",
+              " unless you confirm. Reply ",
               {
-                "clue": "idno",
-                "text": "ID details"
+                "clue": "reply",
+                "text": "YES"
               },
-              " to this number."
+              " to keep your number."
             ]
           }
         ],
         "replies": [
           {
-            "text": "I did not do anything. Please do not block it.",
+            "text": "YES",
             "next": "n2"
           },
           {
-            "text": "Sending my details",
-            "next": "n3"
+            "text": "I will check with Vantel in its own app",
+            "end": "verify"
           },
           {
-            "text": "I will call my phone company myself",
-            "end": "verify"
+            "text": "Block and report this number",
+            "end": "block_report"
           }
         ]
       },
@@ -90,39 +68,31 @@
         "say": [
           {
             "msg": [
-              "We can stop the block. ",
+              "Thanks! To finish, send the ",
               {
-                "clue": "pay",
-                "text": "Pay a $50 verification fee"
+                "clue": "code",
+                "text": "6-digit code"
               },
-              " and give the ",
+              " we just texted you, and your ",
               {
-                "clue": "otp",
-                "text": "code we send"
+                "clue": "pin",
+                "text": "SIM PIN"
               },
               "."
-            ]
-          },
-          {
-            "msg": [
-              {
-                "clue": "rush",
-                "text": "Only 90 minutes left."
-              }
             ]
           }
         ],
         "replies": [
           {
-            "text": "OK, paying and sharing the code",
+            "text": "Here it is",
+            "end": "go_ahead"
+          },
+          {
+            "text": "Why do you need my codes?",
             "next": "n3"
           },
           {
-            "text": "A fee and a code for a \"verification\"? I will call my phone company.",
-            "end": "verify"
-          },
-          {
-            "text": "Report this number",
+            "text": "Block and report",
             "end": "block_report"
           }
         ]
@@ -131,31 +101,26 @@
         "say": [
           {
             "msg": [
-              "Good. Your ",
+              "Security check. ",
               {
-                "clue": "done",
-                "text": "SIM is safe"
+                "clue": "rush",
+                "text": "Do it in 5 minutes"
               },
-              ". Now your account will be checked: ",
-              {
-                "clue": "bank",
-                "text": "send the code your bank texts you"
-              },
-              "."
+              " or the SIM is lost."
             ]
           }
         ],
         "replies": [
           {
-            "text": "Sending it",
+            "text": "OK, sending",
             "end": "go_ahead"
           },
           {
-            "text": "Stop. I am reporting this.",
+            "text": "No real company asks for codes. Reporting",
             "end": "block_report"
           },
           {
-            "text": "I will call my phone company",
+            "text": "I will open Vantel's app and check",
             "end": "verify"
           }
         ]
@@ -163,79 +128,49 @@
     }
   },
   "clues": {
-    "num": {
-      "label": "An unknown number",
-      "strength": "strong",
-      "lens": "A stranger claiming to be police.",
-      "why": "Real police do not start with an unknown text."
-    },
-    "misuse": {
-      "label": "A \"misuse\" story",
-      "strength": "strong",
-      "lens": "They say your SIM was used for illegal calls, with no proof.",
-      "why": "A frightening story with no proof."
-    },
     "block": {
-      "label": "\"Blocked in 2 hours\"",
+      "label": "Blocked tonight",
       "strength": "strong",
-      "lens": "A countdown to blocking.",
-      "why": "Deadlines are pressure."
+      "lens": "A threat to your number.",
+      "why": "The panic is meant to make you reply fast."
     },
-    "idno": {
-      "label": "Asks for your ID details",
+    "reply": {
+      "label": "Reply YES",
       "strength": "strong",
-      "lens": "They want your ID details by text.",
-      "why": "Never send ID details to a number that contacted you."
+      "lens": "A tiny reply starts the trick.",
+      "why": "It tells them your number is active and you respond."
     },
-    "pay": {
-      "label": "A fee to avoid blocking",
+    "code": {
+      "label": "Asks for a code",
       "strength": "strong",
-      "lens": "You must pay $50.",
-      "why": "No honest office charges to keep a SIM active by phone."
+      "lens": "The code is a login or reset code for another account.",
+      "why": "Anyone who asks for it is a scammer."
     },
-    "otp": {
-      "label": "Asks for the code",
+    "pin": {
+      "label": "Asks for your SIM PIN",
       "strength": "strong",
-      "lens": "They want the code sent to you.",
-      "why": "A code is a key to your account. Never share it."
+      "lens": "The PIN protects your number.",
+      "why": "With it, they can move your number to their own SIM."
     },
     "rush": {
-      "label": "Only 90 minutes",
+      "label": "5 minutes",
       "strength": "strong",
-      "lens": "The deadline shrinks.",
-      "why": "Rushing is a pressure trick."
-    },
-    "done": {
-      "label": "\"Your SIM is safe\"",
-      "strength": "harmless",
-      "lens": "A friendly reassurance.",
-      "why": "Reassurance after a threat is a trick."
-    },
-    "bank": {
-      "label": "\"Send your bank code\"",
-      "strength": "strong",
-      "lens": "Now they ask for your bank code.",
-      "why": "The bank code is the real prize."
-    },
-    "badge": {
-      "label": "A badge picture",
-      "strength": "harmless",
-      "lens": "A shield icon.",
-      "why": "Badges are easy to fake."
+      "lens": "A deadline to rush you.",
+      "why": "Pressure stops you from checking."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Send the bank code"
+      "label": "Send the code and PIN"
     },
     {
       "id": "verify",
-      "label": "Call my phone company on the number on my bill"
+      "label": "Check with Vantel in its own app"
     },
     {
       "id": "block_report",
-      "label": "Block the number and report it to your local fraud-reporting service"
+      "label": "Block and report the number"
     }
   ],
   "best_action": "block_report",
@@ -247,90 +182,100 @@
       "scene": "safe",
       "mirage": "panic",
       "stamp": "BLOCKED",
-      "line": "You blocked and reported it. The number was traced and blocked.",
-      "mirageSays": "Curses! Blocked again!"
+      "line": "Blocked and reported. Your number stayed yours.",
+      "mirageSays": "So close!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "Your phone company said: nothing is wrong with your SIM, and they never block lines through such texts. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "Vantel's app showed no block. You also added a SIM PIN lock. Case cracked.",
+      "mirageSays": "Hmph. They looked."
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The code gave them your account. It was emptied within minutes, and your SIM was never in danger.",
-      "mirageSays": "Thanks for the code!"
+      "line": "They took over your number and reset your exchange password. The coins left within the hour.",
+      "mirageSays": "Thanks for the codes!"
     }
   },
   "what_if": {
-    "go_ahead": "Calling your phone company on the number on your bill would have shown the SIM was fine.",
-    "verify": "Checking was smart. Reporting the number as well protects others."
+    "go_ahead": "Your phone number is the key to your exchange account. Never send codes or a SIM PIN.",
+    "verify": "Checking in the app was smart."
   },
-  "golden_rule": "A call or text that threatens to block your SIM and asks for money, ID or a code is a scam. Check with your company on the number on your bill.",
+  "golden_rule": "A SIM-block text that asks for codes is a way into your exchange account. Never share codes or your SIM PIN.",
   "quick_check": {
-    "q": "A \"cyber police\" caller says your SIM will be blocked in two hours unless you pay a fee and share a code. What do you do?",
+    "q": "A text says your SIM will be blocked and asks for a code and your SIM PIN. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Pay and share the code"
+        "text": "Send them, to keep the number"
       },
       {
         "id": "b",
-        "text": "Share only the code"
+        "text": "Do not reply. Check with the phone company's own app and report it"
       },
       {
         "id": "c",
-        "text": "Hang up. Call your phone company yourself, and report the number"
+        "text": "Send only the code"
       },
       {
         "id": "d",
-        "text": "Ask for a written order"
+        "text": "Reply STOP"
       }
     ],
-    "answer": "c",
-    "explain": "A threat plus a fee plus a code is a scam. Your phone company tells the truth."
+    "answer": "b",
+    "explain": "Codes and a SIM PIN can hand your number to a thief, and your exchange account with it."
   },
   "hints": {
-    "nudge": "What do they want from you besides the SIM?",
+    "nudge": "What is your phone number protecting?",
     "glow_order": [
-      "pay",
-      "otp",
-      "idno",
-      "bank",
+      "code",
+      "pin",
       "block",
-      "rush",
-      "misuse",
-      "num"
+      "reply",
+      "rush"
     ]
   },
-  "sources": [
-    "ftc-government"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the caller",
-      "title": "Cyber Police Unit",
+      "label": "Check sender",
+      "title": "Vantel Mobile",
       "rows": [
         {
-          "k": "Called you first?",
-          "v": "Yes",
-          "clue": "num"
+          "k": "Number",
+          "v": "Not the number Vantel uses",
+          "clue": "block"
         },
         {
-          "k": "Asked for money",
-          "v": "$50",
-          "clue": "pay"
+          "k": "Your account",
+          "v": "No block planned"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the asks",
+      "title": "What they want",
+      "rows": [
+        {
+          "k": "Reply",
+          "v": "YES",
+          "clue": "reply"
         },
         {
-          "k": "Asked for a code",
-          "v": "Yes",
-          "clue": "otp"
+          "k": "Then",
+          "v": "A code and your SIM PIN",
+          "clue": "code"
+        },
+        {
+          "k": "Deadline",
+          "v": "5 minutes",
+          "clue": "rush"
         }
       ]
     },
@@ -338,18 +283,23 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What advice says",
+      "title": "What phone companies say",
       "rows": [
         {
-          "k": "Does anyone honest need your OTP?",
+          "k": "They ask for a code or SIM PIN",
           "v": "Never",
-          "clue": "otp"
+          "clue": "code"
         },
         {
-          "k": "Where to report",
-          "v": "The fraud-reporting service in your country"
+          "k": "Protect your number",
+          "v": "Set a SIM PIN and a number lock"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-codes",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }

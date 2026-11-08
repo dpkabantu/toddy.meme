@@ -3,17 +3,17 @@
   "type": "hunt",
   "chapter": 4,
   "difficulty": 2,
-  "title": "The Video Call Officer",
+  "title": "The Officer on Video",
   "disguise": "admin",
   "intro": [
-    "Your phone rings with a video call from someone in a police-style uniform. He says you are in serious trouble.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "Chapter 4, Toddy: fear. Scammers want you scared, not thinking.",
+    "A video call arrives from an \"officer\" who says your Ostrel account is linked to a crime.",
+    "The face looks real. Sniff everything else."
   ],
   "notify": {
     "app": "Chirp",
-    "from": "Cyber Crime Branch",
-    "text": "Video call: serious case in your name"
+    "from": "Financial Crimes Unit",
+    "text": "Video call: your account is under investigation…"
   },
   "screen": {
     "app": "chirp",
@@ -21,238 +21,289 @@
       "name": [
         {
           "clue": "name",
-          "text": "Inspector Kale · Cyber Crime Branch"
+          "text": "Officer Brandt · Financial Crimes"
         }
       ],
       "sub": [
         {
-          "clue": "num",
-          "text": "Unknown number · video call"
+          "clue": "handle",
+          "text": "@fcu_officer_brandt"
         }
       ],
       "avatar": {
         "glyph": "🛡️",
-        "clue": "badge"
+        "clue": "avatar"
       }
     },
     "banner": [
       {
-        "clue": "video",
-        "text": "They called you first, on video"
+        "clue": "dm",
+        "text": "Video call request from an account you do not follow"
       }
     ],
-    "context": "You have never been contacted by any officer before.",
+    "context": "The face on screen is smooth and a little stiff when it turns.",
     "items": [
       {
         "time": [
-          "2:14 PM"
+          {
+            "clue": "time",
+            "text": "1:12 PM"
+          }
         ]
       },
       {
         "msg": [
-          "A parcel in your name was caught with ",
+          "Your Ostrel account is linked to ",
           {
-            "clue": "parcel",
-            "text": "illegal items"
+            "clue": "crime",
+            "text": "money laundering"
           },
-          ". A case is open against you."
+          ". I am speaking to you on ",
+          {
+            "clue": "video",
+            "text": "video, so you know I am real"
+          },
+          "."
         ]
       },
       {
         "msg": [
-          "You are under ",
           {
-            "clue": "digital",
-            "text": "\"digital arrest\""
+            "clue": "secret",
+            "text": "Do not tell anyone, or you will be arrested."
           },
-          ". ",
+          " You must ",
+          {
+            "clue": "move",
+            "text": "move your coins to a secure government wallet"
+          },
+          " today."
+        ]
+      },
+      {
+        "msg": [
+          "Send them to ",
+          {
+            "clue": "addr",
+            "text": "0x5be…2a0"
+          },
+          " and keep ",
           {
             "clue": "stay",
-            "text": "Stay on camera and do not leave this call."
-          }
-        ]
-      },
-      {
-        "msg": [
-          {
-            "clue": "tell",
-            "text": "Tell no one, not even your family. It is a secret investigation."
-          }
-        ]
-      },
-      {
-        "msg": [
-          "To close the case, move your savings to a ",
-          {
-            "clue": "safe",
-            "text": "\"safe account\""
+            "text": "this call open"
           },
-          " for checking."
+          " until I confirm."
         ]
       }
     ]
   },
   "clues": {
-    "video": {
-      "label": "They called you, on video",
+    "move": {
+      "label": "Move your coins to their wallet",
       "strength": "strong",
-      "lens": "An officer you have never met calls you on video, out of the blue.",
-      "why": "Official cases are not handled by a surprise video call."
+      "lens": "No real authority asks you to transfer coins to a \"secure\" address.",
+      "why": "This is the whole scam: you move the coins yourself."
     },
-    "parcel": {
-      "label": "\"A parcel in your name\"",
-      "strength": "strong",
-      "lens": "A parcel you never sent, full of illegal items.",
-      "why": "A parcel story is a common script."
-    },
-    "digital": {
-      "label": "\"Digital arrest\"",
-      "strength": "strong",
-      "lens": "You are told you are arrested, but only through a screen.",
-      "why": "This is the scam the government warns about. Ending the call is always allowed."
-    },
-    "stay": {
-      "label": "\"Stay on camera\"",
-      "strength": "strong",
-      "lens": "They keep you on the call so you cannot check with anyone.",
-      "why": "Keeping you on camera is how victims are controlled."
-    },
-    "tell": {
+    "secret": {
       "label": "\"Tell no one\"",
       "strength": "strong",
-      "lens": "You are told to keep it secret from your family.",
-      "why": "Secrecy stops people helping you. Always tell someone."
+      "lens": "Secrecy stops others from warning you.",
+      "why": "Real investigators never forbid you to talk to family or a lawyer."
     },
-    "safe": {
-      "label": "\"Move your money to a safe account\"",
+    "stay": {
+      "label": "Keep the call open",
       "strength": "strong",
-      "lens": "They want your savings moved to an account they give you.",
-      "why": "No honest officer asks you to move money anywhere."
+      "lens": "They watch you so you cannot check anything.",
+      "why": "Isolation is how pressure works."
+    },
+    "crime": {
+      "label": "A sudden accusation",
+      "strength": "strong",
+      "lens": "You are accused with no letter and no case number.",
+      "why": "Police do not accuse people by video chat."
+    },
+    "dm": {
+      "label": "A call from nowhere",
+      "strength": "strong",
+      "lens": "You did not ask for this call, and the account is new.",
+      "why": "Real authorities do not start with an unknown video call."
+    },
+    "addr": {
+      "label": "A raw wallet address",
+      "strength": "strong",
+      "lens": "A personal address, not an official account.",
+      "why": "Governments do not collect coins this way."
+    },
+    "video": {
+      "label": "A convincing face",
+      "strength": "harmless",
+      "lens": "The video looks real.",
+      "why": "Faces can be faked with AI. Video is not proof."
     },
     "name": {
-      "label": "A strong title and name",
+      "label": "Officer title",
       "strength": "harmless",
-      "lens": "Inspector Kale of the Cyber Crime Branch.",
-      "why": "A title is easy to say. It proves nothing."
+      "lens": "A title and a name.",
+      "why": "Titles are easy to type."
     },
-    "num": {
-      "label": "An unknown number",
+    "handle": {
+      "label": "Official-sounding handle",
       "strength": "harmless",
-      "lens": "A number you do not know.",
-      "why": "The number alone proves little."
+      "lens": "@fcu_officer_brandt.",
+      "why": "Handles can be anything."
     },
-    "badge": {
-      "label": "A badge picture",
+    "avatar": {
+      "label": "A shield picture",
       "strength": "harmless",
-      "lens": "A shield icon.",
-      "why": "Badges and uniforms are easy to fake."
+      "lens": "A shield.",
+      "why": "Pictures prove nothing."
+    },
+    "time": {
+      "label": "Sent at 1:12 PM",
+      "strength": "harmless",
+      "lens": "An ordinary time.",
+      "why": "The time proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Do as the officer says and move the money"
+      "label": "Move my coins as told",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
     },
     {
       "id": "verify",
-      "label": "End the call, then tell my family and call the helpline"
+      "label": "Hang up and call the police on a number I look up myself"
     },
     {
       "id": "block_report",
-      "label": "End the call and report it to your local fraud-reporting service"
+      "label": "Block and report the account"
     }
   ],
   "best_action": "block_report",
   "acceptable_actions": [
-    "verify"
+    "verify",
+    "ignore"
   ],
+  "trap": {
+    "title": "Secure Government Wallet",
+    "url": "wallet transfer",
+    "ask": "Send all your coins to 0x5be…2a0 to prove your innocence.",
+    "go": "Send coins",
+    "back": "Cancel"
+  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "You ended the call and reported it on the cyber helpline. The number was traced and blocked.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Blocked and reported. The fake officer moved on to the next target.",
+      "mirageSays": "My official face!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "You ended the call and rang your family. They knew at once it was a scam and helped you report it. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "The real police said they never ask anyone to move coins, and never by video call. Case cracked.",
+      "mirageSays": "Hmph. They called the real police."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You hung up safely. Reporting would protect others.",
+      "mirageSays": "Fine. Next victim!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
-      "stamp": "SCAMMED",
-      "line": "Your savings moved to a stranger's account while you sat in front of the camera. The \"officer\" vanished.",
-      "mirageSays": "Thanks for the details!"
+      "stamp": "DRAINED",
+      "line": "The coins went to the \"secure wallet\". The officer vanished, and so did your savings.",
+      "mirageSays": "Thanks for the savings!"
     }
   },
   "what_if": {
-    "go_ahead": "Ending the call and telling someone was always allowed. A real case is never closed by moving money.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "Hanging up and calling the police on a number you look up yourself would have ended it in a minute.",
+    "verify": "Checking was smart. Reporting the account helps others.",
+    "ignore": "Hanging up was safe. A quick report protects others."
   },
-  "golden_rule": "No one can arrest you through a screen. End the call, tell someone you trust, and report it to the fraud-reporting service in your country.",
+  "golden_rule": "No real officer asks you to move coins, stay on a call, or keep a secret. Hang up and call them back yourself.",
   "quick_check": {
-    "q": "A video call says you are under \"digital arrest\" and must stay on camera, tell no one and move your savings. What do you do?",
+    "q": "An \"officer\" on video says your account is linked to a crime and tells you to move your coins to a secure wallet. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Obey, the officer sounds serious"
+        "text": "Move them to prove innocence"
       },
       {
         "id": "b",
-        "text": "Obey but ask for a letter"
+        "text": "Hang up and call the police on a number you look up yourself"
       },
       {
         "id": "c",
-        "text": "End the call, tell your family and report it on the cyber helpline"
+        "text": "Move half"
       },
       {
         "id": "d",
-        "text": "Move only half the money"
+        "text": "Stay on the call and think about it"
       }
     ],
-    "answer": "c",
-    "explain": "Panic is the weapon. Ending the call and telling someone breaks the spell."
+    "answer": "b",
+    "explain": "Real authorities never ask you to move coins. A realistic face on video can be a deepfake."
   },
   "hints": {
-    "nudge": "Why would an officer tell you to keep a case secret?",
+    "nudge": "What does the \"officer\" want you to move?",
     "glow_order": [
-      "video",
-      "parcel",
-      "digital",
+      "move",
+      "secret",
       "stay",
-      "tell",
-      "safe"
+      "addr",
+      "crime",
+      "dm"
     ]
   },
-  "sources": [
-    "ftc-government"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the caller",
-      "title": "Inspector Kale",
+      "label": "Check the account",
+      "title": "Officer Brandt",
       "rows": [
         {
-          "k": "Called you first?",
-          "v": "Yes, on video",
-          "clue": "video"
+          "k": "Joined",
+          "v": "3 days ago",
+          "clue": "dm"
         },
         {
-          "k": "Asked you to stay on camera",
-          "v": "Yes",
+          "k": "Official police contact",
+          "v": "Never starts with a surprise video call"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check the request",
+      "title": "What they want",
+      "rows": [
+        {
+          "k": "Move coins to",
+          "v": "A raw wallet address",
+          "clue": "addr"
+        },
+        {
+          "k": "Do not tell anyone",
+          "v": "Said twice",
+          "clue": "secret"
+        },
+        {
+          "k": "Stay on the call",
+          "v": "Until you pay",
           "clue": "stay"
-        },
-        {
-          "k": "Asked you to tell no one",
-          "v": "Yes",
-          "clue": "tell"
         }
       ]
     },
@@ -260,18 +311,28 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What the government says",
+      "title": "What police say",
       "rows": [
         {
-          "k": "Criminals pose as police and other agencies",
-          "v": "They claim a parcel or a relative, then demand money",
-          "clue": "parcel"
+          "k": "Police ask you to move coins",
+          "v": "Never",
+          "clue": "move"
         },
         {
-          "k": "Where to report",
-          "v": "The fraud-reporting service in your country, or the police"
+          "k": "Faces on video",
+          "v": "Can be faked with AI",
+          "clue": "video"
+        },
+        {
+          "k": "If unsure",
+          "v": "Hang up and call the police yourself"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-government",
+    "chainalysis-2026"
+  ],
+  "checked_on": "2026-11-08"
 }

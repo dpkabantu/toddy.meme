@@ -3,236 +3,263 @@
   "type": "hunt",
   "chapter": 4,
   "difficulty": 2,
-  "title": "The Customs Call",
+  "title": "The Customs Fee in Coins",
   "disguise": "admin",
   "intro": [
-    "A call says a parcel in your name was stopped at the airport, with illegal items inside.",
-    "Tap anything that looks odd to sniff it closer. Pin what is suspicious, clear what is harmless.",
-    "When you are sure, decide what to do."
+    "A text says a parcel with your hardware wallet is stuck at customs.",
+    "You did order a wallet last week. It might be real.",
+    "Sniff the text, then decide."
   ],
   "notify": {
-    "app": "Phone",
-    "from": "Customs Desk",
-    "text": "Your parcel was stopped with illegal items"
+    "app": "Messages",
+    "from": "Border Customs",
+    "text": "Your parcel is held. Pay a clearance fee…"
   },
   "screen": {
     "app": "sms",
     "head": {
       "name": [
         {
-          "clue": "name",
-          "text": "Customs Desk"
-        }
-      ],
-      "sub": [
-        {
-          "clue": "num",
-          "text": "Unknown number"
+          "clue": "sender",
+          "text": "Border Customs"
         }
       ]
     },
-    "context": "You have not sent or expected any parcel abroad.",
+    "context": "You did order a hardware wallet last week from the maker's own shop.",
     "items": [
       {
         "time": [
-          "Today 11:40 AM"
+          {
+            "clue": "time",
+            "text": "Today 2:40 PM"
+          }
         ]
       },
       {
         "msg": [
-          "This is the ",
+          "Customs: your parcel is ",
           {
-            "clue": "title",
-            "text": "Customs Department"
-          },
-          ". A ",
-          {
-            "clue": "parcel",
-            "text": "parcel in your name"
-          },
-          " was stopped with ",
-          {
-            "clue": "illegal",
-            "text": "illegal items"
+            "clue": "held",
+            "text": "held for an unpaid import fee"
           },
           "."
         ]
       },
       {
         "msg": [
-          "To avoid arrest, ",
+          "Pay ",
           {
-            "clue": "pay",
-            "text": "pay a clearance fee of $760"
+            "clue": "fee",
+            "text": "€48 in USDT"
           },
-          " today."
+          " to wallet ",
+          {
+            "clue": "addr",
+            "text": "0x91c…ab7"
+          },
+          " and reply with the ",
+          {
+            "clue": "proof",
+            "text": "payment screenshot"
+          },
+          "."
         ]
       },
       {
         "msg": [
-          "Press 1 to connect to the ",
           {
-            "clue": "officer",
-            "text": "senior officer"
+            "clue": "timer",
+            "text": "Parcels are returned or destroyed in",
+            "countdown": 900
           },
-          ". ",
-          {
-            "clue": "noend",
-            "text": "Do not hang up."
-          }
+          "."
         ]
       }
     ]
   },
   "clues": {
-    "parcel": {
-      "label": "A parcel you never sent",
+    "fee": {
+      "label": "A fee in USDT",
       "strength": "strong",
-      "lens": "You sent or expected nothing.",
-      "why": "A parcel you know nothing about is the first thing to doubt."
+      "lens": "Customs charges are paid through official channels, never in crypto.",
+      "why": "Crypto payments cannot be reversed. That is why scammers want them."
     },
-    "illegal": {
-      "label": "\"Illegal items inside\"",
+    "addr": {
+      "label": "A personal wallet address",
       "strength": "strong",
-      "lens": "A frightening claim with no proof.",
-      "why": "Fear is used to stop you thinking."
+      "lens": "A raw address instead of an official payment page.",
+      "why": "Real agencies never ask for a transfer to a private wallet."
     },
-    "pay": {
-      "label": "A fee to avoid arrest",
+    "held": {
+      "label": "Vague \"held\" notice",
       "strength": "strong",
-      "lens": "You must pay $760 today.",
-      "why": "No honest office takes money to \"avoid arrest\" on a phone call."
+      "lens": "It gives no tracking number, no shop and no document.",
+      "why": "Real notices carry details you can match to your order."
     },
-    "officer": {
-      "label": "\"Press 1 for the senior officer\"",
+    "timer": {
+      "label": "Returned or destroyed",
       "strength": "strong",
-      "lens": "They pass you up a ladder of \"officers\".",
-      "why": "More \"officers\" make the story feel real. It is a script."
+      "lens": "A threat on a clock.",
+      "why": "Pressure stops you from checking the shop."
     },
-    "noend": {
-      "label": "\"Do not hang up\"",
+    "proof": {
+      "label": "Send a screenshot",
       "strength": "strong",
-      "lens": "They want to keep you on the line.",
-      "why": "Hanging up is always allowed."
+      "lens": "They want proof so they can take the next payment.",
+      "why": "This is a sign of a scripted scam."
     },
-    "title": {
-      "label": "An official department name",
+    "sender": {
+      "label": "Border Customs",
       "strength": "harmless",
-      "lens": "The call says Customs Department.",
-      "why": "Anyone can say a department's name."
+      "lens": "It sounds official.",
+      "why": "Anyone can type it."
     },
-    "name": {
-      "label": "A formal sender name",
+    "time": {
+      "label": "Sent at 2:40 PM",
       "strength": "harmless",
-      "lens": "Customs Desk.",
-      "why": "A name proves nothing."
-    },
-    "num": {
-      "label": "An unknown number",
-      "strength": "harmless",
-      "lens": "A number you do not know.",
-      "why": "The number alone proves little."
+      "lens": "An ordinary time.",
+      "why": "The time proves nothing."
     }
   },
   "actions": [
     {
       "id": "go_ahead",
-      "label": "Press 1 and pay the fee"
+      "label": "Pay the fee in USDT",
+      "trap": true
+    },
+    {
+      "id": "ignore",
+      "label": "Ignore it"
     },
     {
       "id": "verify",
-      "label": "Hang up and call the official customs office on a number I look up"
+      "label": "Check the order and tracking in the maker's own shop"
     },
     {
       "id": "block_report",
-      "label": "Hang up and report it to your local fraud-reporting service"
+      "label": "Delete it and report the text as junk"
     }
   ],
   "best_action": "block_report",
   "acceptable_actions": [
-    "verify"
+    "verify",
+    "ignore"
   ],
+  "trap": {
+    "title": "Customs Clearance",
+    "url": "wallet transfer",
+    "ask": "Send 48 USDT to 0x91c…ab7 and send the screenshot.",
+    "go": "Send 48 USDT",
+    "back": "Cancel"
+  },
   "outcomes": {
     "block_report": {
       "scene": "safe",
       "mirage": "panic",
-      "stamp": "REPORTED",
-      "line": "You hung up and reported it. The number was traced and blocked.",
-      "mirageSays": "Not my lovely scam!"
+      "stamp": "BLOCKED",
+      "line": "Reported and deleted. Your phone company can block more of these texts.",
+      "mirageSays": "My lovely customs!"
     },
     "verify": {
       "scene": "safe",
       "mirage": "panic",
       "stamp": "CHECKED",
-      "line": "The official office said they had no parcel in your name. The call was a scam. Case cracked.",
-      "mirageSays": "Hmph. They checked."
+      "line": "The shop's tracking showed the parcel on a normal delivery, with no fee. Case cracked.",
+      "mirageSays": "Hmph. They checked the shop."
+    },
+    "ignore": {
+      "scene": "safe",
+      "mirage": "smug",
+      "stamp": "SAFE",
+      "line": "You ignored it safely. Reporting would help protect others.",
+      "mirageSays": "Fine. Next phone!"
     },
     "go_ahead": {
       "scene": "drained",
       "mirage": "smug",
       "stamp": "SCAMMED",
-      "line": "The $760 went to a stranger. Then came a second \"fee\", and a third.",
-      "mirageSays": "Thanks for the details!"
+      "line": "The 48 USDT went to the scammer. The parcel arrived normally two days later, with no fee at all.",
+      "mirageSays": "Thanks for the fee!"
     }
   },
   "what_if": {
-    "go_ahead": "Hanging up and calling the real office would have ended it. A parcel you never sent is no case against you.",
-    "verify": "Checking was smart. Reporting it as well helps protect other people."
+    "go_ahead": "The shop tracking would have shown a normal delivery. Real fees are never paid in USDT.",
+    "verify": "Checking was smart. Reporting helps others.",
+    "ignore": "Ignoring it was safe. A quick report protects others."
   },
-  "golden_rule": "A call that says a parcel was stopped and asks for money is a scam script. Hang up and check on a number you look up yourself.",
+  "golden_rule": "If anyone asks for a fee in crypto, it is a scam. Check your order with the shop yourself.",
   "quick_check": {
-    "q": "A call says a parcel in your name was stopped with illegal items and you must pay a fee to avoid arrest. What do you do?",
+    "q": "A text from \"customs\" asks for a clearance fee paid in USDT to a wallet address. What do you do?",
     "options": [
       {
         "id": "a",
-        "text": "Pay the fee to stay safe"
+        "text": "Pay it, the parcel matters"
       },
       {
         "id": "b",
-        "text": "Press 1 to talk to the officer"
+        "text": "Do not pay. Check the order with the shop and report the text"
       },
       {
         "id": "c",
-        "text": "Hang up. Look up the office yourself and report the call"
+        "text": "Pay half"
       },
       {
         "id": "d",
-        "text": "Ask for a written notice"
+        "text": "Reply asking for a discount"
       }
     ],
-    "answer": "c",
-    "explain": "Fear is the lure. A real office does not take money by phone to avoid arrest."
+    "answer": "b",
+    "explain": "Official fees are never paid in crypto to a private wallet."
   },
   "hints": {
-    "nudge": "Did you send any parcel at all?",
+    "nudge": "How does the text want to be paid?",
     "glow_order": [
-      "parcel",
-      "illegal",
-      "pay",
-      "officer",
-      "noend"
+      "fee",
+      "addr",
+      "held",
+      "timer",
+      "proof"
     ]
   },
-  "sources": [
-    "ftc-government"
-  ],
-  "checked_on": "2026-10-21",
   "kit": [
     {
       "id": "profile",
       "icon": "🔍",
-      "label": "Check the caller",
-      "title": "Customs Desk",
+      "label": "Check sender",
+      "title": "Who sent this text",
       "rows": [
         {
-          "k": "Parcels you sent",
-          "v": "None",
-          "clue": "parcel"
+          "k": "Number",
+          "v": "Not a number you know",
+          "clue": "sender"
         },
         {
-          "k": "Asked for money?",
-          "v": "Yes, to avoid arrest",
-          "clue": "pay"
+          "k": "Your order",
+          "v": "Shipped normally, no fee due",
+          "clue": "held"
+        }
+      ]
+    },
+    {
+      "id": "link",
+      "icon": "🔗",
+      "label": "Check payment",
+      "title": "How it wants to be paid",
+      "rows": [
+        {
+          "k": "Pay in",
+          "v": "USDT",
+          "clue": "fee"
+        },
+        {
+          "k": "To",
+          "v": "A raw wallet address",
+          "clue": "addr"
+        },
+        {
+          "k": "Then",
+          "v": "Send a screenshot",
+          "clue": "proof"
         }
       ]
     },
@@ -240,18 +267,22 @@
       "id": "source",
       "icon": "📖",
       "label": "Official advice",
-      "title": "What the government says",
+      "title": "What customs say",
       "rows": [
         {
-          "k": "Parcel with illegal goods claim",
-          "v": "A pattern the government warns about",
-          "clue": "illegal"
+          "k": "Official fees",
+          "v": "Paid through official channels, never crypto"
         },
         {
-          "k": "Where to report",
-          "v": "The fraud-reporting service in your country, or the police"
+          "k": "Check your parcel",
+          "v": "With the shop or the courier yourself"
         }
       ]
     }
-  ]
+  ],
+  "sources": [
+    "ftc-impersonator",
+    "ftc-crypto"
+  ],
+  "checked_on": "2026-11-08"
 }
