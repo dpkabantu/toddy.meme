@@ -2079,21 +2079,46 @@ a.game-card:focus-visible { outline: 2px solid var(--gold-light); outline-offset
 .faq { background: linear-gradient(180deg, var(--brown-deep), #24120A); }
 .tokenomics, .howtobuy { background-image: radial-gradient(circle at 12% 10%, rgba(255,170,70,.10), transparent 40%); }
 
-/* Play: cream day band, dark game cards pop against it */
+/* Play stays coffee, with a lamp glow so the game cards feel lit */
 .play {
   background:
-    radial-gradient(circle at 15% 10%, rgba(255,255,255,.55), transparent 40%),
-    radial-gradient(circle at 90% 100%, rgba(255,170,70,.28), transparent 45%),
-    linear-gradient(180deg, #F8EBD2 0%, #F1DDB7 100%);
+    radial-gradient(ellipse at 50% 0%, rgba(255,170,70,.20), transparent 55%),
+    radial-gradient(circle at 15% 20%, rgba(255,150,50,.10), transparent 34%),
+    var(--brown-deep);
 }
-.play .section-title { color: #3A1E0E; }
-.play .section-title .gold-text { color: #B4541A; }
-.play .section-lead { color: #5A3A22; }
-.play .game-card {
-  background: linear-gradient(145deg, #3A1E0E, #2B160B);
-  border-color: rgba(212,175,90,.55);
-  box-shadow: 0 20px 44px rgba(60,30,10,.32);
+
+/* ---- CREAM "daylight" bands: About, Launch & Safety, Community ----
+   Text colours are forced (!important) inside these three sections only,
+   so nothing can end up light-on-light. */
+.about, .howtobuy, .community {
+  background:
+    radial-gradient(circle at 12% 0%, rgba(255,255,255,.6), transparent 42%),
+    radial-gradient(circle at 92% 100%, rgba(255,170,70,.22), transparent 45%),
+    linear-gradient(180deg, #F8EBD2 0%, #F2DFBC 100%);
+  color: #3A1E0E;
 }
-.play .play-safety { color: #4A2E1A; background: rgba(255,255,255,.55); border-color: rgba(139,105,20,.4); }
-.play .play-all { color: #3A1E0E; background: #F0C96B; border-color: #C9A84C; }
-.play .play-all:hover { background: #F5D783; }
+.about-bg { opacity: .06; }
+.about :is(h1,h2,h3,h4,p,li,span,small,strong,label,div),
+.howtobuy :is(h1,h2,h3,h4,p,li,span,small,strong,label,div),
+.community :is(h1,h2,h3,h4,p,li,span,small,strong,label,div) { color: #3A1E0E !important; }
+.about .gold-text, .howtobuy .gold-text, .community .gold-text { color: #9A4410 !important; }
+.about .section-lead, .howtobuy .section-lead, .about-whisper, .community-invite,
+.step-content p, .safety-text p, .stat-label { color: #5A3A22 !important; }
+.about a:not(.btn), .howtobuy a, .community a:not(.social-icon-btn) { color: #8A3F0E !important; }
+.howtobuy .btn, .community .btn, .official-links-btn { color: #2B160B !important; }
+/* cards inside cream */
+.stat, .step, .safety-banner, .verify-strip, .official-links, .night-shift-card {
+  background: rgba(255,255,255,.62) !important;
+  border-color: rgba(139,105,20,.38) !important;
+  box-shadow: 0 8px 22px rgba(90,50,15,.10) !important;
+}
+.stat-number, .step-number, .safety-text strong, .safety-ca-value, .night-shift-card strong { color: #9A4410 !important; }
+.safety-ca { background: rgba(255,255,255,.7) !important; border-color: rgba(139,105,20,.4) !important; }
+.night-shift-pills span { background: rgba(255,255,255,.6) !important; border-color: rgba(139,105,20,.35) !important; color: #4A2E1A !important; }
+/* social buttons: dark discs, light icons, so brand colours still work */
+.social-icon-btn { background: #3A1E0E !important; border-color: #3A1E0E !important; color: #F6E9D0 !important; }
+.social-icon-btn svg { color: inherit; }
+.official-links-list li::before { color: #9A4410; }
+.howtobuy a.official-links-btn { background: #3A1E0E; border-color: #3A1E0E; color: #F6E9D0 !important; }
+.howtobuy a.official-links-btn:hover { background: #5A2D12; color: #fff !important; }
+.safety-ca-label { opacity: .9 !important; }
