@@ -2048,11 +2048,11 @@ a.game-card:focus-visible { outline: 2px solid var(--gold-light); outline-offset
 @media (prefers-reduced-motion: reduce) { .play-all { transition: none; } .play-all:hover { transform: none; } }
 
 /* ==========================================
-   WARMER HOME (test branch): same night-café story, but lit by lamplight.
-   Lifts the flat dark browns to warm coffee, brightens the hero video and
-   gives Play a cream "day" band. Header and footer stay night.
+   WARMER HOME (test branch): original colours, just a little brighter.
+   Hero video brighter with a soft amber glow; section backgrounds are the
+   same dark coffee as before, lifted slightly. Layout unchanged.
    ========================================== */
-:root { --brown-deep: #2B160B; --brown-dark: #3A1E0E; }
+:root { --brown-deep: #261106; --brown-dark: #3A1C0A; }
 .hero-bg-video { opacity: 1; filter: brightness(1.32) saturate(1.18) contrast(1.04); }
 .hero-bg::before {
   content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
@@ -2073,27 +2073,3 @@ a.game-card:focus-visible { outline: 2px solid var(--gold-light); outline-offset
       linear-gradient(180deg, rgba(34,16,6,.22) 0%, rgba(34,16,6,.56) 28%, rgba(34,16,6,.58) 66%, rgba(34,16,6,.1) 84%, rgba(34,16,6,0) 100%);
   }
 }
-.about { background: radial-gradient(circle at 85% 20%, rgba(255,170,70,.16), transparent 40%), var(--brown-dark); }
-.roadmap { background: radial-gradient(circle at 50% 0%, rgba(255,170,70,.14), transparent 42%), var(--brown-deep); }
-.community { background: radial-gradient(circle at 75% 35%, rgba(255,150,50,.16), transparent 38%), radial-gradient(circle at 20% 70%, rgba(240,201,107,.12), transparent 30%), var(--brown-dark); }
-.faq { background: linear-gradient(180deg, var(--brown-deep), #24120A); }
-.tokenomics, .howtobuy { background-image: radial-gradient(circle at 12% 10%, rgba(255,170,70,.10), transparent 40%); }
-
-/* Whole site a little less dark: lighter coffee tones, Play included */
-:root { --brown-deep: #5B3720; --brown-dark: #68412A; }
-.play {
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(255,170,70,.16), transparent 55%),
-    radial-gradient(circle at 15% 20%, rgba(139,92,246,.08), transparent 34%),
-    #5B3720;
-}
-.faq { background: linear-gradient(180deg, #5B3720, #4E2E1A); }
-.footer { background: #2E1C10; }
-
-/* Uniform: every content section uses the same coffee background (owner request) */
-.about, .play, .tokenomics, .howtobuy, .roadmap, .community, .faq {
-  background:
-    radial-gradient(ellipse at 50% 0%, rgba(255,170,70,.12), transparent 55%),
-    #5B3720;
-}
-.about-bg { opacity: .06; }
