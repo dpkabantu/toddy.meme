@@ -2079,12 +2079,11 @@ a.game-card:focus-visible { outline: 2px solid var(--gold-light); outline-offset
 .faq { background: linear-gradient(180deg, var(--brown-deep), #24120A); }
 .tokenomics, .howtobuy { background-image: radial-gradient(circle at 12% 10%, rgba(255,170,70,.10), transparent 40%); }
 
-/* Play stays coffee, with a lamp glow so the game cards feel lit */
+/* Play keeps its original dark background (owner request) */
 .play {
   background:
-    radial-gradient(ellipse at 50% 0%, rgba(255,170,70,.20), transparent 55%),
-    radial-gradient(circle at 15% 20%, rgba(255,150,50,.10), transparent 34%),
-    var(--brown-deep);
+    radial-gradient(circle at 15% 20%, rgba(139,92,246,.10), transparent 34%),
+    #1A0A00;
 }
 
 /* ---- CREAM "daylight" bands: About, Launch & Safety, Community ----
