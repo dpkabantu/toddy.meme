@@ -2073,3 +2073,152 @@ a.game-card:focus-visible { outline: 2px solid var(--gold-light); outline-offset
       linear-gradient(180deg, rgba(34,16,6,.22) 0%, rgba(34,16,6,.56) 28%, rgba(34,16,6,.58) 66%, rgba(34,16,6,.1) 84%, rgba(34,16,6,0) 100%);
   }
 }
+
+/* ==========================================================================
+   CLASSY REFRESH (test branch "classy-redesign-test")
+   Direction: quiet luxury café. Elegant serif headings, hairline gold rules,
+   glass cards, calmer spacing, refined buttons. Colours, copy and layout of
+   the page are unchanged. CSS only: no new scripts, fonts or origins.
+   ========================================================================== */
+:root {
+  --ink: #1B0E05;
+  --surface: rgba(255,244,225,.045);
+  --surface-hi: rgba(255,244,225,.075);
+  --hairline: rgba(240,201,107,.20);
+  --hairline-hi: rgba(240,201,107,.42);
+  --text-soft: rgba(246,233,208,.80);
+  --ease: cubic-bezier(.22,.8,.3,1);
+}
+html { scroll-behavior: smooth; }
+body { -webkit-font-smoothing: antialiased; text-rendering: optimizeLegibility; letter-spacing: .005em; }
+::selection { background: rgba(240,201,107,.35); color: #fff; }
+
+/* ---- Header: frosted glass with a hairline ---- */
+.navbar {
+  background: rgba(24,12,5,.62) !important;
+  -webkit-backdrop-filter: blur(16px) saturate(140%); backdrop-filter: blur(16px) saturate(140%);
+  border-bottom: 1px solid var(--hairline) !important;
+  box-shadow: none !important;
+}
+.nav-links a { font-size: .78rem; letter-spacing: .06em; text-transform: uppercase; font-weight: 600; opacity: .88; }
+.nav-links a:hover, .nav-links a.active { opacity: 1; }
+.nav-logo span { letter-spacing: .18em; }
+.nav-btn, .btn-primary {
+  border-radius: 999px; letter-spacing: .03em; font-weight: 700;
+  background: linear-gradient(180deg, #F7DB8E 0%, #E2B857 100%);
+  color: #25130A; border: 1px solid rgba(255,238,190,.55);
+  box-shadow: 0 8px 24px rgba(226,184,87,.22), inset 0 1px 0 rgba(255,255,255,.5);
+  transition: transform .3s var(--ease), box-shadow .3s var(--ease), filter .3s var(--ease);
+}
+.nav-btn:hover, .btn-primary:hover { transform: translateY(-2px); box-shadow: 0 14px 34px rgba(226,184,87,.34), inset 0 1px 0 rgba(255,255,255,.6); filter: brightness(1.04); }
+.btn-secondary {
+  border-radius: 999px; letter-spacing: .03em; font-weight: 600;
+  background: rgba(255,244,225,.06); color: #F6E9D0;
+  border: 1px solid var(--hairline-hi);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  transition: transform .3s var(--ease), background .3s var(--ease), border-color .3s var(--ease);
+}
+.btn-secondary:hover { transform: translateY(-2px); background: rgba(255,244,225,.12); border-color: var(--gold-light); }
+
+/* ---- Hero: editorial type ---- */
+.hero-badge {
+  background: rgba(24,12,5,.45); border: 1px solid var(--hairline-hi);
+  -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px);
+  letter-spacing: .2em; text-transform: uppercase; font-size: .72rem; font-weight: 600;
+}
+.hero-title {
+  font-family: 'Playfair Display', 'Cinzel', serif; font-weight: 700;
+  letter-spacing: -.02em; line-height: 1.04;
+}
+.hero-title .gold-text { font-style: italic; font-weight: 700; }
+.hero-subtitle { letter-spacing: .01em; }
+.hero-snapshot span, .hero-contract { -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+
+/* ---- Sections: calmer rhythm, same colours ---- */
+.about, .play, .tokenomics, .howtobuy, .roadmap, .community, .faq { padding-top: 120px; padding-bottom: 120px; }
+@media (max-width: 768px) {
+  .about, .play, .tokenomics, .howtobuy, .roadmap, .community, .faq { padding-top: 78px; padding-bottom: 78px; }
+}
+.container { max-width: 1160px; }
+
+/* Ornate image divider becomes a single hairline of light */
+.section-divider { padding: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--hairline-hi), transparent); margin: 0 auto; max-width: 1160px; }
+.section-divider img { display: none; }
+
+/* Section titles: serif, with a short gold rule */
+.section-title {
+  font-family: 'Playfair Display', 'Cinzel', serif; font-weight: 700;
+  letter-spacing: -.02em; line-height: 1.12;
+}
+.section-title.center::after, .about-heading::after {
+  content: ""; display: block; width: 56px; height: 2px; margin: 18px auto 0;
+  background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+}
+.about-heading::after { margin-left: 0; background: linear-gradient(90deg, var(--gold-light), transparent); }
+.section-lead, .center-lead, .faq-subtitle { color: var(--text-soft); letter-spacing: .01em; line-height: 1.7; }
+
+/* ---- Cards: glass, hairline border, soft lift ---- */
+.stat, .token-card, .step, .phase, .faq-item, .game-card, .why-item, .night-shift-card,
+.safety-banner, .verify-strip, .official-links, .toddy-principles, .play-safety, .trust-bar, .safety-ca {
+  background: linear-gradient(160deg, var(--surface-hi), var(--surface)) !important;
+  border: 1px solid var(--hairline) !important;
+  border-radius: 18px;
+  box-shadow: 0 18px 44px rgba(10,4,0,.22), inset 0 1px 0 rgba(255,244,225,.06) !important;
+  -webkit-backdrop-filter: blur(6px); backdrop-filter: blur(6px);
+  transition: transform .35s var(--ease), border-color .35s var(--ease), box-shadow .35s var(--ease);
+}
+.token-card:hover, .step:hover, .phase:hover, .game-card:hover, .why-item:hover, .stat:hover {
+  transform: translateY(-4px);
+  border-color: var(--hairline-hi) !important;
+  box-shadow: 0 26px 56px rgba(10,4,0,.30), inset 0 1px 0 rgba(255,244,225,.10) !important;
+}
+.faq-item:hover { border-color: var(--hairline-hi) !important; }
+.game-card { overflow: hidden; }
+.game-card img { transition: transform .7s var(--ease); }
+.game-card:hover img { transform: scale(1.04); }
+.game-card-title, .token-value, .stat-number, .phase-title {
+  font-family: 'Playfair Display', 'Cinzel', serif; font-weight: 700; letter-spacing: -.01em;
+}
+.game-tag, .phase-tag, .night-shift-pills span, .trust-badge {
+  letter-spacing: .14em; text-transform: uppercase; font-size: .68rem; font-weight: 700;
+}
+.token-label, .stat-label, .why-label, .game-meta { letter-spacing: .06em; }
+.step-number { font-family: 'Playfair Display', 'Cinzel', serif; font-weight: 700; opacity: .9; }
+.faq-question { letter-spacing: .005em; }
+
+/* Secondary pill buttons (See all games, official links) */
+.play-all, .official-links-btn {
+  border-radius: 999px; letter-spacing: .04em; font-weight: 700;
+  border: 1px solid var(--hairline-hi); background: rgba(255,244,225,.06);
+  transition: transform .3s var(--ease), background .3s var(--ease), border-color .3s var(--ease);
+}
+.play-all:hover, .official-links-btn:hover { background: rgba(240,201,107,.16); border-color: var(--gold-light); transform: translateY(-2px); }
+
+/* Social buttons: quiet glass discs */
+.social-icon-btn, .footer-icon-btn { border: 1px solid var(--hairline-hi); transition: transform .3s var(--ease), box-shadow .3s var(--ease); }
+.social-icon-btn:hover, .footer-icon-btn:hover { transform: translateY(-3px); box-shadow: 0 10px 24px rgba(0,0,0,.3); }
+
+/* Mascots sit softly instead of glowing */
+.about-mascot, .tokenomics-mascot, .howtobuy-mascot, .roadmap-mascot-row img, .community-mascot { filter: drop-shadow(0 22px 40px rgba(0,0,0,.35)); }
+
+/* ---- Footer: quiet, spaced ---- */
+.footer { border-top: 1px solid var(--hairline) !important; }
+.footer-nav a, .footer-legal a { letter-spacing: .08em; text-transform: uppercase; font-size: .72rem; }
+.footer-name { letter-spacing: .2em; }
+
+/* Respect reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  .game-card, .game-card img, .token-card, .step, .phase, .why-item, .stat, .btn-primary, .btn-secondary, .nav-btn { transition: none !important; transform: none !important; }
+}
+
+/* One continuous background for every content section (no banding) */
+.about, .play, .tokenomics, .howtobuy, .roadmap, .community, .faq {
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(255,170,70,.07), transparent 55%),
+    var(--brown-deep) !important;
+}
+.about-bg { opacity: .05; }
+@media (max-width: 768px) {
+  .about-heading::after { margin-left: auto; background: linear-gradient(90deg, transparent, var(--gold-light), transparent); }
+}
