@@ -2046,3 +2046,54 @@ a.game-card:focus-visible { outline: 2px solid var(--gold-light); outline-offset
   .games-filter { flex: 0 0 auto; }
 }
 @media (prefers-reduced-motion: reduce) { .play-all { transition: none; } .play-all:hover { transform: none; } }
+
+/* ==========================================
+   WARMER HOME (test branch): same night-café story, but lit by lamplight.
+   Lifts the flat dark browns to warm coffee, brightens the hero video and
+   gives Play a cream "day" band. Header and footer stay night.
+   ========================================== */
+:root { --brown-deep: #2B160B; --brown-dark: #3A1E0E; }
+.hero-bg-video { opacity: 1; filter: brightness(1.32) saturate(1.18) contrast(1.04); }
+.hero-bg::before {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background:
+    radial-gradient(ellipse at 78% 22%, rgba(255,176,72,.30), transparent 52%),
+    radial-gradient(ellipse at 50% 100%, rgba(255,140,40,.22), transparent 55%);
+  mix-blend-mode: screen;
+}
+.hero-bg::after {
+  background:
+    linear-gradient(90deg, rgba(34,16,6,.74) 0%, rgba(34,16,6,.52) 34%, rgba(34,16,6,.10) 60%, rgba(34,16,6,0) 74%),
+    linear-gradient(0deg, rgba(34,16,6,.5) 0%, rgba(34,16,6,0) 28%);
+}
+@media (max-width: 768px) {
+  .hero-bg::after {
+    background:
+      linear-gradient(0deg, rgba(34,16,6,.55) 0%, rgba(34,16,6,0) 14%),
+      linear-gradient(180deg, rgba(34,16,6,.22) 0%, rgba(34,16,6,.56) 28%, rgba(34,16,6,.58) 66%, rgba(34,16,6,.1) 84%, rgba(34,16,6,0) 100%);
+  }
+}
+.about { background: radial-gradient(circle at 85% 20%, rgba(255,170,70,.16), transparent 40%), var(--brown-dark); }
+.roadmap { background: radial-gradient(circle at 50% 0%, rgba(255,170,70,.14), transparent 42%), var(--brown-deep); }
+.community { background: radial-gradient(circle at 75% 35%, rgba(255,150,50,.16), transparent 38%), radial-gradient(circle at 20% 70%, rgba(240,201,107,.12), transparent 30%), var(--brown-dark); }
+.faq { background: linear-gradient(180deg, var(--brown-deep), #24120A); }
+.tokenomics, .howtobuy { background-image: radial-gradient(circle at 12% 10%, rgba(255,170,70,.10), transparent 40%); }
+
+/* Play: cream day band, dark game cards pop against it */
+.play {
+  background:
+    radial-gradient(circle at 15% 10%, rgba(255,255,255,.55), transparent 40%),
+    radial-gradient(circle at 90% 100%, rgba(255,170,70,.28), transparent 45%),
+    linear-gradient(180deg, #F8EBD2 0%, #F1DDB7 100%);
+}
+.play .section-title { color: #3A1E0E; }
+.play .section-title .gold-text { color: #B4541A; }
+.play .section-lead { color: #5A3A22; }
+.play .game-card {
+  background: linear-gradient(145deg, #3A1E0E, #2B160B);
+  border-color: rgba(212,175,90,.55);
+  box-shadow: 0 20px 44px rgba(60,30,10,.32);
+}
+.play .play-safety { color: #4A2E1A; background: rgba(255,255,255,.55); border-color: rgba(139,105,20,.4); }
+.play .play-all { color: #3A1E0E; background: #F0C96B; border-color: #C9A84C; }
+.play .play-all:hover { background: #F5D783; }
