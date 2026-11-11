@@ -2080,20 +2080,20 @@ a.game-card:focus-visible { outline: 2px solid var(--gold-light); outline-offset
 .tokenomics, .howtobuy { background-image: radial-gradient(circle at 12% 10%, rgba(255,170,70,.10), transparent 40%); }
 
 /* Whole site a little less dark: lighter coffee tones, Play included */
-:root { --brown-deep: #3B2113; --brown-dark: #4B2B18; }
+:root { --brown-deep: #5B3720; --brown-dark: #68412A; }
 .play {
   background:
     radial-gradient(ellipse at 50% 0%, rgba(255,170,70,.16), transparent 55%),
     radial-gradient(circle at 15% 20%, rgba(139,92,246,.08), transparent 34%),
-    #3B2113;
+    #5B3720;
 }
-.faq { background: linear-gradient(180deg, #3B2113, #301A0E); }
-.footer { background: #1E1109; }
+.faq { background: linear-gradient(180deg, #5B3720, #4E2E1A); }
+.footer { background: #2E1C10; }
 
 /* Uniform: every content section uses the same coffee background (owner request) */
 .about, .play, .tokenomics, .howtobuy, .roadmap, .community, .faq {
   background:
     radial-gradient(ellipse at 50% 0%, rgba(255,170,70,.12), transparent 55%),
-    #3B2113;
+    #5B3720;
 }
 .about-bg { opacity: .06; }
