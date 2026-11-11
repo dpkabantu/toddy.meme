@@ -2079,12 +2079,16 @@ a.game-card:focus-visible { outline: 2px solid var(--gold-light); outline-offset
 .faq { background: linear-gradient(180deg, var(--brown-deep), #24120A); }
 .tokenomics, .howtobuy { background-image: radial-gradient(circle at 12% 10%, rgba(255,170,70,.10), transparent 40%); }
 
-/* Play keeps its original dark background (owner request) */
+/* Whole site a little less dark: lighter coffee tones, Play included */
+:root { --brown-deep: #3B2113; --brown-dark: #4B2B18; }
 .play {
   background:
-    radial-gradient(circle at 15% 20%, rgba(139,92,246,.10), transparent 34%),
-    #1A0A00;
+    radial-gradient(ellipse at 50% 0%, rgba(255,170,70,.16), transparent 55%),
+    radial-gradient(circle at 15% 20%, rgba(139,92,246,.08), transparent 34%),
+    #3B2113;
 }
+.faq { background: linear-gradient(180deg, #3B2113, #301A0E); }
+.footer { background: #1E1109; }
 
 /* ---- CREAM "daylight" bands: About, Launch & Safety, Community ----
    Text colours are forced (!important) inside these three sections only,
